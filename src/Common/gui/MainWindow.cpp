@@ -17,6 +17,7 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QRect>
+#include <QDateTime>
 #include "MainController.h"
 #include "ThemeLoader.h"
 #include "performance/PerformanceMonitor.h"
@@ -949,13 +950,15 @@ void MainWindow::timerEvent(QTimerEvent *)
             ninjamWindow->updatePeaks();
     }
 
- // update cpu and memmory usage
-qint64 now = QDateTime::currentMSecsSinceEpoch();
-if(now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME){
-//ui.tabWidget->setResourcesUsage(performanceMonitor.getCpuUsage(), performanceMonitor.getMemmoryUsage());
-ui.contentTabWidget->setResourcesUsage(performanceMonitor.getMemmoryUsed());
-lastPerformanceMonitorUpdate = now;
-}
+    // update cpu and memmory usage
+    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME) {
+        ui.contentTabWidget->setResourcesUsage(performanceMonitor.getMemmoryUsed());
+        lastPerformanceMonitorUpdate = now;
+    }
+
+    if (mainController->isPlayingInNinjamRoom())
+        screensaverBlocker.update(); // prevent screen saver if user is playing
 
     // update room stream plot
     if (mainController->isPlayingRoomStream()) {

@@ -158,6 +158,7 @@ macx{
         LIBS_PATH = "static/mac64"
     }
     LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+    LIBS += -framework IOKit
     LIBS += -framework CoreAudio
     LIBS += -framework CoreMidi
     LIBS += -framework AudioToolbox

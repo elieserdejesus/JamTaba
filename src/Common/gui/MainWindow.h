@@ -7,6 +7,8 @@
 #include "BusyDialog.h"
 #include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
+#include "ScreensaverBlocker.h"
+
 #include <QTranslator>
 
 #include "performance/PerformanceMonitor.h"
@@ -232,6 +234,8 @@ private:
     BusyDialog busyDialog;
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
     QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
+
+    ScreensaverBlocker screensaverBlocker;
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();

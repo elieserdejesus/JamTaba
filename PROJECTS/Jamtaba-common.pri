@@ -14,6 +14,7 @@ INCLUDEPATH += $$SOURCE_PATH/Common/gui
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/widgets
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chords
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chat
+INCLUDEPATH += $$SOURCE_PATH/Common/gui/screensaver
 
 VPATH       += $$SOURCE_PATH/Common
 VPATH       += $$SOURCE_PATH
@@ -89,6 +90,7 @@ HEADERS += gui/chat/ChatPanel.h
 HEADERS += gui/chat/ChatMessagePanel.h
 HEADERS += gui/chat/NinjamVotingMessageParser.h
 HEADERS += gui/chat/ChatTextEditor.h
+HEADERS += gui/screensaver/ScreensaverBlocker.h
 HEADERS += gui/Highligther.h
 HEADERS += gui/TrackGroupView.h
 HEADERS += gui/LocalTrackGroupView.h
@@ -186,6 +188,10 @@ SOURCES += gui/chat/ChatPanel.cpp
 SOURCES += gui/chat/ChatMessagePanel.cpp
 SOURCES += gui/chat/ChatTextEditor.cpp
 SOURCES += gui/chat/NinjamVotingMessageParser.cpp
+win32:SOURCES += gui/screensaver/WindowsScreensaverBlocker.cpp
+linux:SOURCES += gui/screensaver/LinuxScreensaverBlocker.cpp
+OBJECTIVE_SOURCES += gui/screensaver/MacScreensaverBlocker.mm
+
 SOURCES += gui/Highligther.cpp
 SOURCES += gui/TrackGroupView.cpp
 SOURCES += gui/LocalTrackGroupView.cpp
@@ -227,7 +233,8 @@ SOURCES += UploadIntervalData.cpp
 
 #multiplatform implementations
 win32:SOURCES += performance/WindowsPerformanceMonitor.cpp
-#macx:SOURCES += $$PWD/src/performance/MacPerformanceMonitor.cpp
+macx:SOURCES += performance/MacPerformanceMonitor.cpp
+linux:SOURCES += performance/LinuxPerformanceMonitor.cpp
 
 FORMS += gui/PreferencesDialog.ui
 FORMS += gui/PluginScanDialog.ui

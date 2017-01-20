@@ -9,12 +9,6 @@ PerformanceMonitor::~PerformanceMonitor(){
 
 }
 
-/*
-double PerformanceMonitor::getCpuUsage(){
-    return 0;
-}
-*/
-
 int PerformanceMonitor::getMemmoryUsed(){
 
     return 0;
