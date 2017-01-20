@@ -38,7 +38,7 @@ QString Configurator::getDebugColor(const QMessageLogContext &context)
     return COLOR_DEBUG;
 }
 
-void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QByteArray localMsg = msg.toLocal8Bit();
     QString stringMsg;
@@ -129,11 +129,6 @@ QStringList Configurator::getPresetFilesNames(bool fullpath)
     return filesPaths;
 }
 
-bool Configurator::needExportThemes() const
-{
-    return themesDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot).isEmpty();
-}
-
 QDir Configurator::getApplicationDataDir()
 {
     QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
@@ -144,6 +139,10 @@ QDir Configurator::getApplicationDataDir()
 
 bool Configurator::setUp()
 {
+    exportLogIniFile(); //copy log config file from resources to user hard disk
+
+    setupLogConfigFile();
+
     initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
 
     // themes dir is the same for Standalone and Vst plugin
@@ -152,12 +151,9 @@ bool Configurator::setUp()
     if (!folderTreeExists())
         createFoldersTree();
 
-    exportLogIniFile(); //copy log config file from resources to user hard disk
 
-    if (needExportThemes()) // copy default themes from resources to user hard disk
-        exportThemes();
 
-    setupLogConfigFile();
+    exportThemes();
 
     qInfo() << "JamTaba Base dir:" << baseDir.absolutePath();
 
@@ -178,24 +174,44 @@ void Configurator::exportThemes() const
     // copy default themes from resources to user hard disk
     QDir resourceDir(THEMES_FOLDER_IN_RESOURCES);
     QDir themesDir = getThemesDir();
-    qDebug() << "Exporting themes from " << resourceDir.absolutePath() << " to " << themesDir.absolutePath();
     QStringList themesInResources = resourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    QDateTime jamTabaCompilationDate = QDateTime::fromString(QString(__DATE__).simplified() + " " + QString(__TIME__).simplified(), "MMM d yyyy hh:mm:ss");
+
     for (const QString &themeDir : themesInResources) {
-        QDir themeFolderInResources(resourceDir.absoluteFilePath(themeDir));
-        themesDir.mkdir(themeDir);
+
         QDir destinationDir(themesDir.absoluteFilePath(themeDir));
-        qDebug() << "Exporting theme " << themeDir << " from " << themeFolderInResources.absolutePath() << " to " << destinationDir.absolutePath();
+        if (!destinationDir.exists())
+            themesDir.mkdir(themeDir);
+
+        QDir themeFolderInResources(resourceDir.absoluteFilePath(themeDir));
+
         QString fullPath = themeFolderInResources.absolutePath() + "/css/themes/" + themeDir;
         QDir pathInResources(fullPath);
         QStringList themeFiles = pathInResources.entryList(QDir::Files); // css files
-        for (const QString &themeCSSFile : themeFiles) {
-            QString sourcePath = pathInResources.absoluteFilePath(themeCSSFile);
-            QString destinationPath = destinationDir.absoluteFilePath(themeCSSFile);
-            if (QFile::copy(sourcePath, destinationPath))
-                QFile(destinationPath).setPermissions(QFile::ReadOwner | QFile::WriteOwner);
-            else
-                qDebug(jtConfigurator) << "Can't copy " << sourcePath << " to " << destinationPath;
 
+        for (const QString &themeCSSFile : themeFiles) {
+
+            QFileInfo sourceFileInfo(pathInResources.absoluteFilePath(themeCSSFile));
+            QFileInfo destinationFileInfo(destinationDir.absoluteFilePath(themeCSSFile));
+            //qDebug() << "source:" << jamTabaCompilationDate << " dest: " << destinationFileInfo.lastModified();
+            if (!destinationFileInfo.exists() || jamTabaCompilationDate > destinationFileInfo.lastModified()) {
+
+                // QFile::copy can't replace existing files, so is necessary existing file before call QFile::copy
+                if (destinationFileInfo.exists())
+                    QFile(destinationFileInfo.absoluteFilePath()).remove();
+
+                if (QFile::copy(sourceFileInfo.absoluteFilePath(), destinationFileInfo.absoluteFilePath())) {
+
+                    qDebug() << "Exporting " << themeDir << "=>" << sourceFileInfo.fileName() << " to " << destinationDir.absolutePath();
+
+                    bool permissionSetted = QFile(destinationFileInfo.absoluteFilePath()).setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+                    if (!permissionSetted)
+                        qCritical() << "Can't set permission in file " << destinationFileInfo.absoluteFilePath();
+                }
+                else {
+                    qCritical() << "Can't copy " << sourceFileInfo.absoluteFilePath() << " to " << destinationFileInfo.absoluteFilePath();
+                }
+            }
         }
     }
 }
@@ -205,7 +221,7 @@ void Configurator::setupLogConfigFile()
     QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
     if (!logConfigFilePath.isEmpty()) {
         qputenv("QT_LOGGING_CONF", QByteArray(logConfigFilePath.toUtf8()));
-        qInstallMessageHandler(&Configurator::LogHandler);
+        qInstallMessageHandler(&Configurator::logHandler);
     }
     else {
         qWarning() << "Log file path is empty!";
