@@ -151,8 +151,6 @@ bool Configurator::setUp()
     if (!folderTreeExists())
         createFoldersTree();
 
-
-
     exportThemes();
 
     qInfo() << "JamTaba Base dir:" << baseDir.absolutePath();
@@ -176,6 +174,8 @@ void Configurator::exportThemes() const
     QDir themesDir = getThemesDir();
     QStringList themesInResources = resourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     QDateTime jamTabaCompilationDate = QDateTime::fromString(QString(__DATE__).simplified() + " " + QString(__TIME__).simplified(), "MMM d yyyy hh:mm:ss");
+
+    qDebug() << "Trying to export themes files JamTabaa compilationDate:" << jamTabaCompilationDate;
 
     for (const QString &themeDir : themesInResources) {
 
@@ -211,6 +211,13 @@ void Configurator::exportThemes() const
                 else {
                     qCritical() << "Can't copy " << sourceFileInfo.absoluteFilePath() << " to " << destinationFileInfo.absoluteFilePath();
                 }
+            }
+            else
+            {
+                if (destinationFileInfo.exists())
+                    qDebug() << destinationFileInfo.absoluteFilePath() << " exists in appFolder and will not be exported!";
+                else
+                    qDebug() << destinationFileInfo.absoluteFilePath() << " not exists, but will not be exported because the file in resources is not newer";
             }
         }
     }
