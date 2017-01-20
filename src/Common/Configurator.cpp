@@ -87,7 +87,7 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
     }
     if (outFile.open(ioFlags)) {
         QTextStream ts(&outFile);
-        ts << stringMsg;
+        ts << stringMsg.replace(QRegularExpression("\\033\\[[0-6]{1,2}(;1)?m"), ""); // remove ANSI color codes from log file
     }
 
     if (type == QtFatalMsg)
@@ -199,10 +199,10 @@ void Configurator::exportThemes() const
 
             QFileInfo sourceFileInfo(pathInResources.absoluteFilePath(themeCSSFile));
             QFileInfo destinationFileInfo(destinationDir.absoluteFilePath(themeCSSFile));
-            //qDebug() << "source:" << jamTabaCompilationDate << " dest: " << destinationFileInfo.lastModified();
+
             if (!destinationFileInfo.exists() || jamTabaCompilationDate > destinationFileInfo.lastModified()) {
 
-                // QFile::copy can't replace existing files, so is necessary existing file before call QFile::copy
+                // QFile::copy can't replace existing files, so is necessary delete existing file before call QFile::copy
                 if (destinationFileInfo.exists())
                     QFile(destinationFileInfo.absoluteFilePath()).remove();
 
