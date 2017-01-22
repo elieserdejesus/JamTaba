@@ -10,10 +10,7 @@ class NinjamControllerPlugin : public Controller::NinjamController
 public:
     explicit NinjamControllerPlugin(MainControllerPlugin *controller);
 
-    inline bool isWaitingForHostSync() const
-    {
-        return waitingForHostSync;
-    }
+    bool isWaitingForHostSync() const;
 
     void startSynchronizedWithHost(qint32 startPosition);
     void stopAndWaitForHostSync();
@@ -22,8 +19,19 @@ public:
     void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 
 private:
+
+    MainControllerPlugin *controller; // just a casted version of mainController instance
+
     bool waitingForHostSync;
+
+    void deactivateNinjamAudioNodes(); // ninjam related audio nodes will not be rendered
+    void activateNinjamAudioNodes();
 };
 
+
+inline bool NinjamControllerPlugin::isWaitingForHostSync() const
+{
+    return waitingForHostSync;
+}
 
 #endif

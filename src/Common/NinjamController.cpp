@@ -218,6 +218,7 @@ void NinjamController::removeEncoder(int groupChannelIndex){
 void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
     QMutexLocker locker(&mutex);
+
     if(!running || samplesInInterval <= 0){
         return;//not initialized
     }

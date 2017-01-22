@@ -11,6 +11,9 @@ class JamTabaPlugin;
 
 class MainControllerPlugin : public Controller::MainController
 {
+
+    friend class NinjamControllerPlugin;
+
 public:
     MainControllerPlugin(const Persistence::Settings &settings, JamTabaPlugin *plugin);
     virtual ~MainControllerPlugin();

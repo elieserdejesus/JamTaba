@@ -120,15 +120,16 @@ protected:
     long intervalPosition;
     long samplesInInterval;
 
+    QMap<QString, NinjamTrackNode *> trackNodes;// the other users channels
+
+    Controller::MainController *mainController;
+
+    Audio::MetronomeTrackNode *metronomeTrackNode;
+
 private slots:
     void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
 
 private:
-    Controller::MainController *mainController;
-    Audio::MetronomeTrackNode *metronomeTrackNode;
-
-    QMap<QString, NinjamTrackNode *> trackNodes;// the other users channels
-
     static QString getUniqueKeyForChannel(const Ninjam::UserChannel &channel);
     static QString getUniqueKeyForUser(const Ninjam::User& user);
 
