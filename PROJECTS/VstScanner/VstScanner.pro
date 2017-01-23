@@ -15,9 +15,9 @@ macx:DESTDIR = $$OUT_PWD/../Standalone/Jamtaba2.app/Contents/MacOS
 linux:DESTDIR = $$OUT_PWD/../Standalone
 win32{
     CONFIG(debug, debug|release) {
-        DESTDIR = $$OUT_PWD/../Standalone/Debug
+        DESTDIR = $$OUT_PWD/../Standalone/debug
     } else {
-        DESTDIR = $$OUT_PWD/../Standalone/Release
+        DESTDIR = $$OUT_PWD/../Standalone/release
     }
 }
 message("Generating VstScanner executable in" $$DESTDIR)

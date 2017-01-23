@@ -9,7 +9,7 @@
 
 QT       += core gui network widgets
 
-TARGET = "JamtabaVST"
+TARGET = "JamtabaVST2"  #using this name (with a '2' suffix) to match the previons JTBA versions and avoid duplicated plugin in used machines
 TEMPLATE = lib
 CONFIG += shared
 
