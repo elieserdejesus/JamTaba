@@ -139,11 +139,11 @@ QDir Configurator::getApplicationDataDir()
 
 bool Configurator::setUp()
 {
+    initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
+
     exportLogIniFile(); //copy log config file from resources to user hard disk
 
     setupLogConfigFile();
-
-    initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
 
     // themes dir is the same for Standalone and Vst plugin
     themesDir = QDir(getApplicationDataDir().absoluteFilePath(THEMES_FOLDER_NAME));
