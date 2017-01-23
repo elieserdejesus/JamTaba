@@ -57,6 +57,7 @@ Source: {#BuildDir}\Standalone\release\Jamtaba2.exe; DestDir: {app}; Flags: igno
 Source: {#BuildDir}\Standalone\release\VstScanner.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#BuildDir}\VstPlugin\release\JamtabaVST2.dll; DestDir: {code:GetVST2Dir}; Flags: ignoreversion replacesameversion
 Source: ..\..\PROJECTS\Jamtaba2.ico; DestDir: {app}; Flags: ignoreversion
+Source: {localappdata}/Jamtaba 2/*.*; DestDir: {userappdata}/JamTaba 2; Flags: external recursesubdirs skipifsourcedoesntexist
 
 [Icons]
 Name: {group}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
@@ -162,7 +163,7 @@ begin
 end;
 
 
-//removing Jamtaba 2 from AppData
+//removing Jamtaba 2 from AppData - Since JTBA 2.0.19 the appData changed from 'appData/Local/Jamtaba 2' to 'appData/Roaming/JamTaba 2'
 procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
  var
      msgBoxResult : integer;
@@ -172,8 +173,8 @@ procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
         begin
           msgBoxResult := MsgBox('Do you want to delete Jamtaba settings?', mbConfirmation, MB_YESNO or MB_DEFBUTTON2)
           if msgBoxResult = IDYES then begin
-            MsgBox('trying to remove ' + ExpandConstant('{localappdata}\Jamtaba 2'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2)
-            DelTree(ExpandConstant('{localappdata}\Jamtaba 2'), True, True, True);
+            MsgBox('trying to remove ' + ExpandConstant('{userappdata}\JamTaba 2'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2)
+            DelTree(ExpandConstant('{userappdata}\JamTaba 2'), True, True, True);
           end;
        end;
    end;
