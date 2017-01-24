@@ -47,16 +47,6 @@ void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView,
     }
 }
 
-// ++++++++++++++++++++++++++++
-
-void MainWindowPlugin::setFullViewStatus(bool fullViewActivated)
-{
-    MainWindow::setFullViewStatus(fullViewActivated);
-    MainControllerPlugin *controller = getMainController();
-    controller->storeWindowSettings(isMaximized(), fullViewActivated, QPointF());
-    controller->resizePluginEditor(width(), height());
-}
-
 
 PreferencesDialog *MainWindowPlugin::createPreferencesDialog()
 {

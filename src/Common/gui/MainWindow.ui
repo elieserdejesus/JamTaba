@@ -161,7 +161,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>268</height>
+            <height>274</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -209,7 +209,7 @@
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
@@ -388,7 +388,7 @@
              <x>0</x>
              <y>0</y>
              <width>843</width>
-             <height>308</height>
+             <height>314</height>
             </rect>
            </property>
           </widget>
@@ -481,9 +481,6 @@
      <addaction name="actionShowMaxPeaks"/>
     </widget>
     <addaction name="menuMetering"/>
-    <addaction name="separator"/>
-    <addaction name="actionFullView"/>
-    <addaction name="actionMiniView"/>
     <addaction name="separator"/>
     <addaction name="actionFullscreenMode"/>
    </widget>
@@ -691,6 +688,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

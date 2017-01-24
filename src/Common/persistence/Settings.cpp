@@ -284,16 +284,14 @@ void MetronomeSettings::write(QJsonObject &out) const
 WindowSettings::WindowSettings() :
     SettingsObject("window"),
     maximized(false),
-    fullViewMode(true),
-    fullScreenViewMode(false)
+    fullScreenMode(false)
 {
 }
 
 void WindowSettings::read(const QJsonObject &in)
 {
     maximized = getValueFromJson(in, "maximized", false);// not maximized as default
-    fullViewMode = getValueFromJson(in, "fullView", true);// use full view mode as default
-    fullScreenViewMode = getValueFromJson(in, "fullScreenView", false);// use normal mode as default;
+    fullScreenMode = getValueFromJson(in, "fullScreenView", false);// use normal mode as default;
     if (in.contains("location")) {
         QJsonObject locationObj = in["location"].toObject();
         location.setX(getValueFromJson(locationObj, "x", (float)0));
@@ -304,8 +302,7 @@ void WindowSettings::read(const QJsonObject &in)
 void WindowSettings::write(QJsonObject &out) const
 {
     out["maximized"] = maximized;
-    out["fullView"] = fullViewMode;
-    out["fullScreenView"] = fullScreenViewMode;
+    out["fullScreenView"] = fullScreenMode;
     QJsonObject locationObject;
     locationObject["x"] = this->location.x();
     locationObject["y"] = this->location.y();
@@ -690,11 +687,11 @@ void Settings::setCustomMetronome(const QString &primaryBeatAudioFile, const QSt
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Settings::setFullScreenView(bool v)
 {
-    windowSettings.fullScreenViewMode = v;
+    windowSettings.fullScreenMode = v;
 }
 
 // +++++++++   Window Location  +++++++++++++++++++++++
-void Settings::setWindowSettings(bool windowIsMaximized, bool usingFullView, QPointF location)
+void Settings::setWindowSettings(bool windowIsMaximized, QPointF location)
 {
     double x = (location.x() >= 0) ? location.x() : 0;
     double y = (location.x() >= 0) ? location.y() : 0;
@@ -704,7 +701,6 @@ void Settings::setWindowSettings(bool windowIsMaximized, bool usingFullView, QPo
         location.setY(0);
     windowSettings.location = location;
     windowSettings.maximized = windowIsMaximized;
-    windowSettings.fullViewMode = usingFullView;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++

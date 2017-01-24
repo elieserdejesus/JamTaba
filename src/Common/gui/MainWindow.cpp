@@ -28,9 +28,8 @@ using namespace Controller;
 using namespace Ninjam;
 using namespace Persistence;
 
-const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
-const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1100, 665);
-const int MainWindow::MINI_MODE_MAX_LOCAL_TRACKS_WIDTH = 185;
+//const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
+const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
 const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
@@ -45,7 +44,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     mainController(mainController),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
-    fullViewMode(true),
     chordsPanel(nullptr),
     lastPerformanceMonitorUpdate(0)
 {
@@ -252,8 +250,7 @@ void MainWindow::doWindowInitialization()
 
     initializeLocalInputChannels(); // create the local tracks, load plugins, etc.
 
-    // set window mode: mini mode or full view mode
-    setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
+    initializeWindowSize();
 }
 
 // ++++++++++++++++++++++++=
@@ -277,21 +274,11 @@ void MainWindow::updateLocalInputChannelsGeometry()
     int minWidth = ui.localTracksWidget->sizeHint().width();
     minWidth += 12;
     int maxWidth = minWidth;
-    bool showingPeakMeterOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
-    Qt::ScrollBarPolicy scrollPolicy = Qt::ScrollBarAlwaysOff;
 
-    // limit the local inputs widget in mini mode
-    if (!showingPeakMeterOnly && isRunningInMiniMode()) {
-        if (minWidth > MINI_MODE_MAX_LOCAL_TRACKS_WIDTH) {
-            minWidth = maxWidth = MINI_MODE_MAX_LOCAL_TRACKS_WIDTH;
-            scrollPolicy = Qt::ScrollBarAlwaysOn;
-        }
-    }
     ui.leftPanel->setMaximumWidth(maxWidth);
     ui.leftPanel->setMinimumWidth(minWidth);
-    ui.scrollArea->setHorizontalScrollBarPolicy(scrollPolicy);
 
-    if (isRunningInMiniMode() && localGroupChannels.count() > 1) {
+    if (localGroupChannels.count() > 1) {
         foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
             trackGroup->setToNarrow();
     }
@@ -458,8 +445,6 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
 
     if (createFirstSubchannel)
         localChannel->addTrackView(channelGroupIndex);
-
-    localChannel->useSmallSpacingInLayouts(isRunningInMiniMode());
 
     ui.localTracksWidget->updateGeometry();
 
@@ -652,13 +637,8 @@ JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &room
 
 bool MainWindow::canUseTwoColumnLayout() const
 {
-    if (isFullScreen() || isMaximized())
-        return true;
-
     if (mainController->isPlayingInNinjamRoom())
         return false;
-    else
-        return fullViewMode;// if is in mini mode (!fullViewMode) we are using just 1 collumn layout
 
     return true;
 }
@@ -781,7 +761,6 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
-    ninjamWindow->setFullViewStatus(this->fullViewMode);
     int index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabName);
     ui.contentTabWidget->setCurrentIndex(index);
 
@@ -802,7 +781,6 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->addWidget(ninjamPanel, 0,
                                                                      Qt::AlignHCenter);
     ninjamPanel->addMasterControls(ui.masterControlsPanel);
-    ninjamPanel->setFullViewStatus(fullViewMode);
 
     // show chat area
     setChatVisibility(true);
@@ -989,16 +967,21 @@ void MainWindow::resizeEvent(QResizeEvent *ev)
     Q_UNUSED(ev)
     if (busyDialog.isVisible())
         centerBusyDialog();
+
+    if (ninjamWindow) {
+        NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
+        if (ninjamPanel) {
+            bool usingLargeWindow = width() >= MAIN_WINDOW_MIN_SIZE.width();
+            ninjamPanel->maximizeControlsWidget(usingLargeWindow);
+        }
+    }
 }
 
 void MainWindow::changeEvent(QEvent *ev)
 {
     if (ev->type() == QEvent::WindowStateChange && mainController) {
-        mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation());
+        mainController->storeWindowSettings(isMaximized(), computeLocation());
 
-        // show only the peak meters if user is in mini mode and is not maximized or full screen
-        showPeakMetersOnlyInLocalControls(
-            isRunningInMiniMode() && width() <= MINI_MODE_MIN_SIZE.width());
         updatePublicRoomsListLayout();
     } else if (ev->type() == QEvent::LanguageChange) {
         ui.retranslateUi(this);
@@ -1020,7 +1003,7 @@ QPointF MainWindow::computeLocation() const
 void MainWindow::closeEvent(QCloseEvent *)
 {
     if (mainController)
-        mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation());
+        mainController->storeWindowSettings(isMaximized(), computeLocation());
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1199,9 +1182,6 @@ void MainWindow::setRecordingPath(const QString &newRecordingPath)
 
 void MainWindow::initializeViewMenu()
 {
-    connect(ui.actionMiniView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
-    connect(ui.actionFullView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
-
     connect(ui.menuMetering, SIGNAL(aboutToShow()), this, SLOT(updateMeteringMenu()));
 
     connect(ui.menuMetering, SIGNAL(triggered(QAction*)), this, SLOT(handleMenuMeteringAction(QAction*)));
@@ -1210,11 +1190,6 @@ void MainWindow::initializeViewMenu()
     meteringActionGroup->addAction(ui.actionShowPeaksOnly);
     meteringActionGroup->addAction(ui.actionShowRmsOnly);
     meteringActionGroup->addAction(ui.actionShowPeakAndRMS);
-
-    QActionGroup *viewModeActionGroup = new QActionGroup(this);
-    ui.actionFullView->setActionGroup(viewModeActionGroup);
-    ui.actionMiniView->setActionGroup(viewModeActionGroup);
-
 }
 
 void MainWindow::handleMenuMeteringAction(QAction *action)
@@ -1255,16 +1230,13 @@ void MainWindow::updateMeteringMenu()
     }
 }
 
-void MainWindow::changeViewMode()
-{
-    setFullViewStatus(ui.actionFullView->isChecked());
-}
-
 void MainWindow::updatePublicRoomsListLayout()
 {
     QList<Login::RoomInfo> roomInfos;
-    foreach (JamRoomViewPanel *roomView, roomViewPanels)
+
+    for (JamRoomViewPanel *roomView: roomViewPanels)
         roomInfos.append(roomView->getRoomInfo());
+
     refreshPublicRoomsList(roomInfos);
 }
 
@@ -1289,61 +1261,39 @@ QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWin
     return QSize(minimumWidth, minimumHeight);
 }
 
-void MainWindow::setFullViewStatus(bool fullViewActivated)
+void MainWindow::initializeWindowSize()
 {
-    this->fullViewMode = fullViewActivated;
-    if (isRunningInMiniMode())
-        setMinimumSize(getSanitizedMinimumWindowSize(MINI_MODE_MIN_SIZE));
-    else // full view
-        setMinimumSize(getSanitizedMinimumWindowSize(FULL_VIEW_MODE_MIN_SIZE));
+    setMinimumSize(getSanitizedMinimumWindowSize(MAIN_WINDOW_MIN_SIZE));
 
     if (!isMaximized() && !isFullScreen()) {
         showNormal();
         resize(minimumSize());
     }
 
-    int tabLayoutMargim = 6;
-    ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
-                                     tabLayoutMargim);
-    ui.allRoomsContent->layout()->setSpacing(tabLayoutMargim);
+    const int spaces = 6;
+    ui.tabLayout->setContentsMargins(spaces, spaces, spaces, spaces);
+    ui.allRoomsContent->layout()->setSpacing(spaces);
 
-    // show only the peak meters if user is in mini mode and is not maximized or full screen
-    showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && !isMaximized() && !isFullScreen());
-
-    ui.chatTabWidget->setMinimumWidth(isRunningInFullViewMode() ? 280 : 180); // TODO Refactoring: remove these 'Magic Numbers'
+    ui.chatTabWidget->setMinimumWidth(230); // TODO Refactoring: remove these 'Magic Numbers'
 
     // refresh the public rooms list
     if (!mainController->isPlayingInNinjamRoom()) {
         updatePublicRoomsListLayout();
-    } else {
-        if (ninjamWindow)
-            ninjamWindow->setFullViewStatus(isRunningInFullViewMode());
     }
 
     // local tracks are narrowed in mini mode if user is using more than 1 subchannel
+    bool usingSmallWindow = width() < MAIN_WINDOW_MIN_SIZE.width();
     foreach (LocalTrackGroupView *localTrackGroup, localGroupChannels) {
-        if (isRunningInMiniMode()
-            && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1))
+        if (usingSmallWindow && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1))
             localTrackGroup->setToNarrow();
         else
             localTrackGroup->setToWide();
-
-        bool useSmallSpacing = isRunningInMiniMode();
-        localTrackGroup->useSmallSpacingInLayouts(useSmallSpacing);
     }
 
-    ui.actionFullView->setChecked(isRunningInFullViewMode());
-    ui.actionMiniView->setChecked(isRunningInMiniMode());
-
-    int margim = isRunningInFullViewMode() ? 6 : 2;
-    ui.bottomPanelLayout->setContentsMargins(margim, margim, margim, margim);
-    ui.bottomPanelLayout->setSpacing(isRunningInFullViewMode() ? 6 : 2);
+    ui.bottomPanelLayout->setContentsMargins(spaces, spaces, spaces, spaces);
+    ui.bottomPanelLayout->setSpacing(spaces);
 
     if (ninjamWindow) {
-        NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
-        if (ninjamPanel)
-            ninjamPanel->setFullViewStatus(isRunningInFullViewMode());
-
         ChatPanel *chatPanel = ninjamWindow->getChatPanel();
         if (chatPanel)
             chatPanel->updateMessagesGeometry();

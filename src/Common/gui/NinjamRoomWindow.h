@@ -49,8 +49,6 @@ public:
         return ninjamPanel;
     }
 
-    void setFullViewStatus(bool fullView);
-
     void setTracksOrientation(Qt::Orientation orientation);
 
     enum TracksSize
@@ -77,8 +75,6 @@ private:
 
     QTimer *bpmVotingExpirationTimer;
     QTimer *bpiVotingExpiratonTimer;
-
-    bool fullViewMode;
 
     Login::RoomInfo roomInfo;
 

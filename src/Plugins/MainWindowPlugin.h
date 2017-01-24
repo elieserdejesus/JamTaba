@@ -20,8 +20,6 @@ public:
 protected:
     NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) override;
 
-    void setFullViewStatus(bool fullViewActivated);
-
     void initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel) override;
 
     void removeAllInputLocalTracks() override;

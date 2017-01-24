@@ -36,9 +36,19 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->peakMeterLeft->setOrientation(Qt::Horizontal);
     ui->peakMeterRight->setOrientation(Qt::Horizontal);
 
+    ui->horizontalLayout->setSpacing(0);
+    ui->intervalPanel->setMinimumHeight(110);
+
+    maximizeControlsWidget(true);
+
     setupSignals();
 
     translate();
+}
+
+void NinjamPanel::maximizeControlsWidget(bool maximize)
+{
+     ui->intervalPanel->setMaximumWidth(maximize ? 32767 : 300);
 }
 
 void NinjamPanel::setBpiComboPendingStatus(bool enabled)
@@ -152,14 +162,6 @@ void NinjamPanel::deleteFloatWindow()
 void NinjamPanel::setLowContrastPaintInIntervalPanel(bool useLowContrastColors)
 {
     ui->intervalPanel->setPaintUsingLowContrastColors(useLowContrastColors);
-}
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamPanel::setFullViewStatus(bool fullView)
-{
-    ui->horizontalLayout->setSpacing(fullView ? 6 : 2);
-    ui->intervalPanel->setMinimumHeight(fullView ? 120 : (hostSyncButton ? 110 : 90));
-    ui->intervalPanel->setMaximumWidth(fullView ? 32768 : 300);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++

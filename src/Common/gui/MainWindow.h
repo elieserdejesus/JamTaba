@@ -59,16 +59,6 @@ public:
 
     void exitFromRoom(bool normalDisconnection, QString disconnectionMessage = "");
 
-    inline bool isRunningInMiniMode() const
-    {
-        return !fullViewMode;
-    }
-
-    inline bool isRunningInFullViewMode() const
-    {
-        return fullViewMode;
-    }
-
     virtual inline Controller::MainController *getMainController()
     {
         return mainController;
@@ -96,8 +86,6 @@ protected:
 
     virtual NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &,
                                                  Controller::MainController *) = 0;
-
-    virtual void setFullViewStatus(bool fullViewActivated);
 
     bool eventFilter(QObject *target, QEvent *event);
 
@@ -150,8 +138,7 @@ protected slots:
 
     void showPrivateServerDialog();
 
-    // view mode menu
-    void changeViewMode();
+    // view menu
     void updateMeteringMenu();
     void handleMenuMeteringAction(QAction *);
 
@@ -242,6 +229,8 @@ private:
     void hideBusyDialog();
     void centerBusyDialog();
 
+    void initializeWindowSize();
+
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
     void setTheme(const QString &themeName);
@@ -280,8 +269,6 @@ private:
 
     void updateUserNameLabel();
 
-    bool fullViewMode;// full view or mini view mode? This is not the FullScreen mode, full screen is available only in Standalone.
-
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
     void setInputTracksPreparingStatus(bool preparing);
@@ -319,11 +306,7 @@ private:
     qint64 lastPerformanceMonitorUpdate;
     static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
-    // TODO:group these 2 related constants?
-    static const QSize MINI_MODE_MIN_SIZE;
-    static const QSize FULL_VIEW_MODE_MIN_SIZE;
-
-    static const int MINI_MODE_MAX_LOCAL_TRACKS_WIDTH;
+    static const QSize MAIN_WINDOW_MIN_SIZE;
 
     static const QString NIGHT_MODE_SUFFIX;
 };

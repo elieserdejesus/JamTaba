@@ -106,8 +106,7 @@ public:
     WindowSettings();
     QPointF location;
     bool maximized;
-    bool fullViewMode;
-    bool fullScreenViewMode;
+    bool fullScreenMode;
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
 };
@@ -528,20 +527,15 @@ public:
         return windowSettings.location;
     }
 
-    void setWindowSettings(bool windowIsMaximized, bool usingFullView, QPointF location);
+    void setWindowSettings(bool windowIsMaximized, QPointF location);
     inline bool windowWasMaximized() const
     {
         return windowSettings.maximized;
     }
 
-    inline bool windowsWasFullViewMode() const
-    {
-        return windowSettings.fullViewMode;
-    }
-
     inline bool windowsWasFullScreenViewMode() const
     {
-        return windowSettings.fullScreenViewMode;
+        return windowSettings.fullScreenMode;
     }
 
     void setFullScreenView(bool v);

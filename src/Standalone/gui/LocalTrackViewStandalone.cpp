@@ -326,9 +326,9 @@ void LocalTrackViewStandalone::setActivatedStatus(bool unlighted)
     }
 }
 
-void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode)
+void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly)
 {
-    LocalTrackView::setPeakMetersOnlyMode(peakMetersOnly, runningInMiniMode);
+    LocalTrackView::setPeakMetersOnlyMode(peakMetersOnly);
 
     Q_ASSERT(fxPanel);
     fxPanel->setVisible(!peakMetersOnly);
