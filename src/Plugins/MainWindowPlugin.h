@@ -30,6 +30,10 @@ protected:
 
     void initializeWindowMinimumSize() override;
 
+    bool canUseTwoColumnLayout() const override;
+
+    void resizeEvent(QResizeEvent *) override;
+
 private slots:
 
     void zoomIn();

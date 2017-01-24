@@ -868,8 +868,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     // remove ninjam panel from main window
     if (ninjamWindow)
         ui.bottomPanel->layout()->removeWidget(ninjamWindow->getNinjamPanel());
-    dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->addWidget(ui.masterControlsPanel, 0,
-                                                                     Qt::AlignHCenter);
+    dynamic_cast<QGridLayout *>(ui.bottomPanel->layout())->addWidget(ui.masterControlsPanel, 0, 0, 1, 1, Qt::AlignHCenter);
     hideChordsPanel();
 
     ninjamWindow.reset();
@@ -894,6 +893,8 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
             passwordToJump = "";
         }
     }
+
+    updatePublicRoomsListLayout();
 }
 
 void MainWindow::setChatVisibility(bool chatVisible)
@@ -1376,6 +1377,7 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
             chordsPanel = createChordsPanel();
         else
             chordsPanel->setVisible(true);
+
         bool needStrech = progression.getBeatsPerInterval() != currentBpi;
         if (needStrech)
             chordsPanel->setChords(progression.getStretchedVersion(currentBpi));
@@ -1383,9 +1385,15 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
             chordsPanel->setChords(progression);
 
         // add the chord panel in top of bottom panel in main window
-        dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);
-        if (ninjamWindow)
-            ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(true);
+        QGridLayout *bottomLayout = dynamic_cast<QGridLayout *>(ui.bottomPanel->layout());
+        if (bottomLayout) {
+            bottomLayout->addWidget(chordsPanel, 0, 0, 1, 1);
+            if (ninjamWindow) {
+                NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
+                bottomLayout->addWidget(ninjamPanel, 1, 0, 1, 1, Qt::AlignCenter);
+                ninjamPanel->setLowContrastPaintInIntervalPanel(true);
+            }
+        }
 
         sendAcceptedChordProgressionToServer(progression);
 

@@ -100,6 +100,13 @@ void MainWindowPlugin::zoomIn()
     getMainController()->resizePluginEditor(newSize.width(), newSize.height());
 }
 
+void MainWindowPlugin::resizeEvent(QResizeEvent *ev)
+{
+    MainWindow::resizeEvent(ev);
+
+    updatePublicRoomsListLayout();
+}
+
 void MainWindowPlugin::zoomOut()
 {
     if (isMaximized() || isFullScreen())
@@ -114,4 +121,12 @@ void MainWindowPlugin::zoomOut()
     resize(newSize);
 
     getMainController()->resizePluginEditor(newSize.width(), newSize.height());
+}
+
+bool MainWindowPlugin::canUseTwoColumnLayout() const
+{
+    if (width() >= MAIN_WINDOW_MIN_SIZE.width())
+        return true;
+
+    return false;
 }

@@ -161,7 +161,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>274</height>
+            <height>271</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -212,12 +212,15 @@
         <number>3</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="rightMargin">
         <number>3</number>
        </property>
        <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="verticalSpacing">
         <number>0</number>
        </property>
        <item row="0" column="0" alignment="Qt::AlignHCenter">
@@ -458,7 +461,7 @@
              <x>0</x>
              <y>0</y>
              <width>843</width>
-             <height>314</height>
+             <height>311</height>
             </rect>
            </property>
           </widget>

@@ -113,7 +113,7 @@ protected:
 
     void updatePublicRoomsListLayout();
 
-    bool canUseTwoColumnLayout() const;
+    virtual bool canUseTwoColumnLayout() const;
 
     virtual PreferencesDialog *createPreferencesDialog() = 0;
 
@@ -127,6 +127,8 @@ protected:
     virtual void initializeWindowMinimumSize();
 
     virtual void doWindowInitialization();
+
+    static const QSize MAIN_WINDOW_MIN_SIZE;
 
 protected slots:
     void closeTab(int index);
@@ -307,8 +309,6 @@ private:
     PerformanceMonitor performanceMonitor;//cpu and memmory usage
     qint64 lastPerformanceMonitorUpdate;
     static const int PERFORMANCE_MONITOR_REFRESH_TIME;
-
-    static const QSize MAIN_WINDOW_MIN_SIZE;
 
     static const QString NIGHT_MODE_SUFFIX;
 
