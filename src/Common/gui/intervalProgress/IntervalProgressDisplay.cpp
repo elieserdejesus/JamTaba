@@ -167,6 +167,11 @@ void IntervalProgressDisplay::resizeEvent(QResizeEvent *e)
     }
 }
 
+QSize IntervalProgressDisplay::sizeHint() const
+{
+    return minimumSizeHint();
+}
+
 QSize IntervalProgressDisplay::minimumSizeHint() const
 {
     QSize size = QWidget::minimumSizeHint();

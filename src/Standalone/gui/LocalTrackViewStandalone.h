@@ -19,7 +19,7 @@ public:
 
     LocalTrackViewStandalone(Controller::MainControllerStandalone* mainController, int channelID);
 
-    void setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode) override;
+    void setPeakMetersOnlyMode(bool peakMetersOnly) override;
     void setActivatedStatus(bool unlighted) override;
 
     void updateGuiElements() override;

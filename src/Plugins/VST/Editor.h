@@ -21,10 +21,12 @@ class VstEditor : public AEffEditor
 public:
     VstEditor(JamTabaVSTPlugin *jamtaba);
     ~VstEditor();
-    bool getRect(ERect **rect);
+
+    bool getRect(ERect **rect) override;
+    bool open(void *ptr) override;
+    void close() override;
+
     void resize(int width, int height);
-    bool open(void *ptr);
-    void close();
     void detachMainController();
     void deleteMainWindow();
 };

@@ -45,7 +45,6 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     mainWindow(parent),
     mainController(mainController),
     chatPanel(new ChatPanel(mainController->getBotNames(), &usersColorsPool)),
-    fullViewMode(true),
     ninjamPanel(nullptr),
     tracksOrientation(Qt::Vertical),
     tracksSize(TracksSize::WIDE),
@@ -128,7 +127,7 @@ void NinjamRoomWindow::translate()
 void NinjamRoomWindow::updateUserNameLabel()
 {
     QString userName = mainController->getUserName();
-    QString labelText = fullViewMode ? tr("Connected as %1").arg(userName) : userName;
+    QString labelText = tr("Connected as %1").arg(userName);
     ui->labelUserName->setText(labelText);
 }
 
@@ -251,17 +250,6 @@ void NinjamRoomWindow::showMetronomePreferences()
     Q_ASSERT(mainWindow);
 
     mainWindow->showMetronomePreferencesDialog();
-}
-
-// +++++++++=
-void NinjamRoomWindow::setFullViewStatus(bool fullView)
-{
-    if (fullView == fullViewMode)
-        return;
-
-    fullViewMode = fullView;
-
-    updateUserNameLabel();
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

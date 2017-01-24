@@ -5,19 +5,65 @@
 #include "LocalTrackView.h"
 #include "audio/core/LocalInputNode.h"
 
+#include <QDesktopWidget>
+
+const QSize MainWindowPlugin::PLUGIN_WINDOW_MIN_SIZE = QSize(990, 600);
+
+const quint32 MainWindowPlugin::ZOOM_STEP = 100;
+
 MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
-    firstChannelIsInitialized(false)
+    firstChannelIsInitialized(false),
+    increaseWindowSizeAction(nullptr),
+    decreaseWindowSizeAction(nullptr)
 {
     ui.actionVstPreferences->setVisible(false);
     ui.actionAudioPreferences->setVisible(false);
     ui.actionMidiPreferences->setVisible(false);
     ui.actionQuit->setVisible(false);
     ui.actionFullscreenMode->setVisible(false);
+
+    initializeWindowSizeMenu();
     
 #ifdef Q_OS_MAC
     ui.menuBar->setNativeMenuBar(false); // avoid show the JamTaba menu bar in top of screen (the common behavior for mac apps)
 #endif
+}
+
+void MainWindowPlugin::updateLocalInputChannelsGeometry()
+{
+    MainWindow::updateLocalInputChannelsGeometry();
+
+    bool usingMinimumSize = !canDecreaseWindowSize();
+    int localChannels = localGroupChannels.size();
+    for(LocalTrackGroupView *localChannel : localGroupChannels) {
+        if (usingMinimumSize && localChannels > 1)
+            localChannel->setToNarrow();
+        else
+            localChannel->setToWide();
+    }
+}
+
+void MainWindowPlugin::initializeWindowSizeMenu()
+{
+
+    QMenu *windowSizeMenu = new QMenu(tr("Window Size"));
+    increaseWindowSizeAction = windowSizeMenu->addAction(tr("Increase"), this, SLOT(zoomIn()));
+    decreaseWindowSizeAction = windowSizeMenu->addAction(tr("Decrease"), this, SLOT(zoomOut()));
+
+    connect(windowSizeMenu, &QMenu::aboutToShow, this, &MainWindowPlugin::updateWindowSizeMenu);
+
+    ui.menuView->addSeparator();
+    ui.menuView->addMenu(windowSizeMenu);
+}
+
+void MainWindowPlugin::updateWindowSizeMenu()
+{
+    if (!increaseWindowSizeAction || !decreaseWindowSizeAction)
+        return;
+
+    increaseWindowSizeAction->setEnabled(canIncreaseWindowSize());
+    decreaseWindowSizeAction->setEnabled(canDecreaseWindowSize());
 }
 
 NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const Login::RoomInfo &roomInfo,
@@ -47,20 +93,100 @@ void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView,
     }
 }
 
-// ++++++++++++++++++++++++++++
-
-void MainWindowPlugin::setFullViewStatus(bool fullViewActivated)
-{
-    MainWindow::setFullViewStatus(fullViewActivated);
-    MainControllerPlugin *controller = getMainController();
-    controller->storeWindowSettings(isMaximized(), fullViewActivated, QPointF());
-    controller->resizePluginEditor(width(), height());
-}
-
-
 PreferencesDialog *MainWindowPlugin::createPreferencesDialog()
 {
     PreferencesDialog * dialog = new PreferencesDialogPlugin(this);
     setupPreferencesDialogSignals(dialog);
     return dialog;
+}
+
+QSize MainWindowPlugin::getZoomStepSize() const
+{
+    float scaleFactor = (float)width()/height();
+
+    const int widthStep = ZOOM_STEP * scaleFactor;
+    const int heightStep = ZOOM_STEP;
+
+    return QSize(widthStep, heightStep);
+}
+
+QSize MainWindowPlugin::getMaxWindowSize() const
+{
+    QDesktopWidget desktop;
+    QSize screenSize = desktop.availableGeometry().size();
+
+    QSize stepSize = getZoomStepSize();
+
+    const int maxWidth = screenSize.width() - stepSize.width();
+    const int maxHeight = screenSize.height() - stepSize.height();
+
+    return QSize(maxWidth, maxHeight);
+}
+
+bool MainWindowPlugin::canIncreaseWindowSize() const
+{
+    QSize stepSize = getZoomStepSize();
+    QSize maxWindowsSize = getMaxWindowSize();
+
+    const int newWidth = width() + stepSize.width();
+    const int newHeight = height() + stepSize.height();
+    const int maxWidth = maxWindowsSize.width();
+    const int maxHeight= maxWindowsSize.height();
+
+    return newWidth <= maxWidth && newHeight <= maxHeight;
+}
+
+bool MainWindowPlugin::canDecreaseWindowSize() const
+{
+    QSize stepSize = getZoomStepSize();
+    QSize minWindowsSize = PLUGIN_WINDOW_MIN_SIZE;
+
+    const int newWidth = width() - stepSize.width();
+    const int newHeight = height() - stepSize.height();
+    const int minWidth = minWindowsSize.width();
+    const int minHeight= minWindowsSize.height();
+
+    return newWidth >= minWidth && newHeight >= minHeight;
+}
+
+void MainWindowPlugin::zoomIn()
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    if (!canIncreaseWindowSize())
+        return;
+
+    QSize stepSize = getZoomStepSize();
+    const int newWidth = width() + stepSize.width();
+    const int newHeight = height() + stepSize.height();
+
+    resize(newWidth, newHeight);
+
+    getMainController()->resizePluginEditor(newWidth, newHeight);
+
+}
+
+void MainWindowPlugin::zoomOut()
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    if (!canDecreaseWindowSize())
+        return;
+
+    QSize stepSize = getZoomStepSize();
+    const int newWidth = width() - stepSize.width();
+    const int newHeight = height() - stepSize.height();
+
+    resize(newWidth, newHeight);
+
+    getMainController()->resizePluginEditor(newWidth, newHeight);
+}
+
+void MainWindowPlugin::resizeEvent(QResizeEvent *ev)
+{
+    MainWindow::resizeEvent(ev);
+
+    updatePublicRoomsListLayout();
 }

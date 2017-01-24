@@ -35,8 +35,8 @@ public:
 
     virtual void setActivatedStatus(bool unlighted);
 
-    virtual void setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode);
-    void togglePeakMetersOnlyMode(bool runninsInMiniMode);
+    virtual void setPeakMetersOnlyMode(bool peakMetersOnly);
+    void togglePeakMetersOnlyMode();
 
     inline bool isShowingPeakMetersOnly() const { return peakMetersOnly; }
 
@@ -47,9 +47,6 @@ public:
     void mute(bool b);
     void solo(bool b);
     void initializeBoostButtons(Boost boostValue);
-
-    void useSmallSpacingInLayouts(bool useSmallSpacing);
-    inline bool isUsingSmallSpacingInLayouts() const { return usingSmallSpacing; }
 
 protected:
     Audio::LocalInputNode *inputNode;
@@ -62,7 +59,6 @@ protected:
     void bindThisViewWithTrackNodeSignals() override;
 
 private:
-    bool usingSmallSpacing;
     QPushButton *createStereoInversionButton();
 
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;

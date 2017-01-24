@@ -161,7 +161,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>267</height>
+            <height>274</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -204,30 +204,36 @@
       <property name="styleSheet">
        <string notr="true"/>
       </property>
-      <layout class="QVBoxLayout" name="bottomPanelLayout">
+      <layout class="QGridLayout" name="gridLayout_2" columnstretch="1">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
        <property name="leftMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="topMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+       <property name="verticalSpacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="0" alignment="Qt::AlignHCenter">
         <widget class="QFrame" name="masterControlsPanel">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>140</width>
+           <width>180</width>
            <height>0</height>
           </size>
          </property>
@@ -241,13 +247,16 @@
           <property name="spacing">
            <number>0</number>
           </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
           <property name="leftMargin">
            <number>0</number>
           </property>
           <property name="rightMargin">
            <number>0</number>
           </property>
-          <item alignment="Qt::AlignBottom">
+          <item alignment="Qt::AlignVCenter">
            <widget class="QLabel" name="masterTitleLabel">
             <property name="text">
              <string>master</string>
@@ -259,7 +268,7 @@
           </item>
           <item>
            <layout class="QHBoxLayout" name="masterFaderLayout">
-            <item>
+            <item alignment="Qt::AlignVCenter">
              <widget class="QLabel" name="speakerIconLeft">
               <property name="text">
                <string/>
@@ -269,7 +278,7 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item alignment="Qt::AlignVCenter">
              <widget class="QSlider" name="masterFader">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -291,7 +300,7 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item alignment="Qt::AlignVCenter">
              <widget class="QLabel" name="speakerIconRight">
               <property name="text">
                <string/>
@@ -306,7 +315,7 @@
           <item>
            <layout class="QVBoxLayout" name="masterMetersLayout">
             <property name="spacing">
-             <number>3</number>
+             <number>2</number>
             </property>
             <item>
              <widget class="AudioMeter" name="masterMeterL" native="true"/>
@@ -388,7 +397,7 @@
              <x>0</x>
              <y>0</y>
              <width>843</width>
-             <height>307</height>
+             <height>314</height>
             </rect>
            </property>
           </widget>
@@ -481,9 +490,6 @@
      <addaction name="actionShowMaxPeaks"/>
     </widget>
     <addaction name="menuMetering"/>
-    <addaction name="separator"/>
-    <addaction name="actionFullView"/>
-    <addaction name="actionMiniView"/>
     <addaction name="separator"/>
     <addaction name="actionFullscreenMode"/>
    </widget>
@@ -691,6 +697,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

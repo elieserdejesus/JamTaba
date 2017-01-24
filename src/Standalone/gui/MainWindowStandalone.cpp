@@ -164,7 +164,7 @@ void MainWindowStandalone::setFullScreenStatus(bool fullScreen)
 
     QApplication::processEvents(); //process the window resize pending events before call setFullViewStatus and resize the JTB window
 
-    setFullViewStatus(isRunningInFullViewMode()); //update the window size
+    //setFullViewStatus(isRunningInFullViewMode()); //update the window size
 
     updatePublicRoomsListLayout();
 }

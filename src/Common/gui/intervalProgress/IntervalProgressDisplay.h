@@ -51,7 +51,9 @@ public:
     void setPaintMode(PaintShape mode);
     inline PaintShape getPaintMode() const{ return paintMode; }
 
-    QSize minimumSizeHint() const;
+    QSize minimumSizeHint() const override;
+
+    QSize sizeHint() const override;
 
     void setPaintUsingLowContrastColors(bool state);
 
