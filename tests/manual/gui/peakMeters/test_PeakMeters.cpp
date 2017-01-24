@@ -31,13 +31,14 @@ public:
         const int METER_WIDTH = 5;
         QHBoxLayout *layout = new QHBoxLayout();
         for (int var = 0; var < METERS; ++var) {
-            PeakMeter *meter = new PeakMeter();
+            AudioMeter *meter = new AudioMeter(this);
             meter->setMinimumWidth(METER_WIDTH);
             layout->addWidget(meter, 1);
         }
         setLayout(layout);
 
         setMinimumWidth(METERS * METER_WIDTH);
+        setMinimumHeight(400);
 
     }
 
@@ -48,7 +49,8 @@ public:
 
 protected:
 
-    void paintEvent(QPaintEvent *ev){
+    void paintEvent(QPaintEvent *ev) override
+    {
         QFrame::paintEvent(ev);
         frameCount++;
 
@@ -60,13 +62,15 @@ protected:
         }
     }
 
-    void timerEvent(QTimerEvent *){
+    void timerEvent(QTimerEvent *) override
+    {
         static float peak = 0;
-        QList<PeakMeter *> meters = findChildren<PeakMeter *>();
-        foreach (PeakMeter *meter, meters) {
-            meter->setPeak(peak);
+        QList<AudioMeter *> meters = findChildren<AudioMeter *>();
+        foreach (AudioMeter *meter, meters) {
+            meter->setPeak(peak, peak);
         }
         peak += 0.00001f;
+        //peak = 0.11f;
         if(peak >= 1)
             peak = 0;
         update();

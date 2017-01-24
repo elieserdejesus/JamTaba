@@ -61,15 +61,9 @@ private:
     static const QColor MAX_PEAK_COLOR;
     static const int MAX_PEAK_MARKER_SIZE;
 
-    QLinearGradient gradient;
-
-    QLinearGradient createGradient();
-
-    static const QColor GRADIENT_FIRST_COLOR;
-    static const QColor GRADIENT_MIDDLE_COLOR;
-    static const QColor GRADIENT_LAST_COLOR;
-
     static const QColor RMS_COLOR;
+
+    std::vector<QColor> peakColors;
 
     //static painting flags. Turning on/off will affect all audio meters.
     static bool paintingMaxPeakMarker;
@@ -81,6 +75,8 @@ private:
     float currentRms;
 
     qint64 lastMaxPeakTime;
+
+    static const quint8 segmentsSize;
 
 };
 

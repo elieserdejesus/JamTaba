@@ -8,11 +8,8 @@
 
 const int BaseMeter::LINES_MARGIN = 3;
 const int BaseMeter::MIN_SIZE = 1;
-const int BaseMeter::DEFAULT_DECAY_TIME = 3000;
+const int BaseMeter::DEFAULT_DECAY_TIME = 2000;
 
-const QColor AudioMeter::GRADIENT_FIRST_COLOR = QColor(255, 0, 0); //red
-const QColor AudioMeter::GRADIENT_MIDDLE_COLOR = QColor(0, 220, 0); //mid green
-const QColor AudioMeter::GRADIENT_LAST_COLOR = QColor(0, 100, 0); //dark green
 const QColor AudioMeter::MAX_PEAK_COLOR = QColor(0, 0, 0, 80);
 const QColor AudioMeter::RMS_COLOR = QColor(255, 255, 255, 120);
 
@@ -22,6 +19,8 @@ const int AudioMeter::MAX_PEAK_SHOW_TIME = 1500;
 bool AudioMeter::paintingMaxPeakMarker = true;
 bool AudioMeter::paintingPeaks = true;
 bool AudioMeter::paintingRMS = true;
+
+const quint8 AudioMeter::segmentsSize = 6;
 
 BaseMeter::BaseMeter(QWidget *parent) :
     QFrame(parent),
@@ -60,6 +59,14 @@ void BaseMeter::setDecayTime(quint32 decayTimeInMiliseconds)
     update();
 }
 
+QRectF BaseMeter::getPaintRect(float peakValue) const
+{
+    bool isVerticalMeter = isVertical();
+    return QRectF(isVerticalMeter ? 1.0f : 0.0f,                // x
+               isVerticalMeter ? height() - peakValue : 1.0f,   // y
+               isVerticalMeter ? width()-2.0f : peakValue,      // width
+               height() - (isVerticalMeter ? 0.0f : 2.0f));     // height
+}
 
 float BaseMeter::limitFloatValue(float value, float minValue, float maxValue)
 {
@@ -70,15 +77,6 @@ float BaseMeter::limitFloatValue(float value, float minValue, float maxValue)
         return maxValue;
 
     return value;
-}
-
-QRectF BaseMeter::getPaintRect(float peakValue) const
-{
-    bool isVerticalMeter = isVertical();
-    return QRectF(isVerticalMeter ? 1.0f : 0.0f,                // x
-               isVerticalMeter ? height() - peakValue : 1.0f,   // y
-               isVerticalMeter ? width()-2.0f : peakValue,      // width
-               height() - (isVerticalMeter ? 0.0f : 2.0f));     // height
 }
 
 //--------------------------------------------------------------------------------
@@ -96,27 +94,26 @@ AudioMeter::AudioMeter(QWidget *parent)
 void AudioMeter::setOrientation(Qt::Orientation orientation)
 {
     BaseMeter::setOrientation(orientation);
-    this->gradient = createGradient();
     update();
 }
 
 
 void AudioMeter::resizeEvent(QResizeEvent * /*ev*/)
 {
-    gradient = createGradient();
-}
+    update();
 
-QLinearGradient AudioMeter::createGradient()
-{
-    int x1 = isVertical() ? 0 : width()-1;
-    int y1 = 0;
-    int x2 = 0;
-    int y2 = isVertical() ? height()-1 : 0;
-    QLinearGradient linearGradient(x1, y1, x2, y2);
-    linearGradient.setColorAt(0, GRADIENT_FIRST_COLOR);
-    linearGradient.setColorAt(0.3, GRADIENT_MIDDLE_COLOR);
-    linearGradient.setColorAt(0.8, GRADIENT_LAST_COLOR);
-    return linearGradient;
+    // rebuild the peak colors vector
+    peakColors.clear();
+
+    const quint32 size = isVertical() ? height() : width();
+    const quint32 segments = size/segmentsSize;
+    int alpha = 225;
+    for (quint32 i = 0; i < segments; ++i) {
+        int r = std::pow(((float)i/segments), 2) * 255; // will be 255 when i == segments (max 'i' value)
+        int g = (float)(segments - i)/segments * 200;
+        int b = 0;
+        peakColors.push_back(QColor(r, g, b, alpha));
+    }
 }
 
 void AudioMeter::paintEvent(QPaintEvent *)
@@ -126,21 +123,34 @@ void AudioMeter::paintEvent(QPaintEvent *)
     // meter
     if (isEnabled()) {
         bool isVerticalMeter = isVertical();
-        int rectSize = isVerticalMeter ? height() : width();
+        const int rectSize = isVerticalMeter ? height() : width();
 
         if (currentPeak && paintingPeaks) {
             float peakValue = Utils::poweredGainToLinear(currentPeak) * rectSize;
-            painter.fillRect(getPaintRect(peakValue), gradient);
+            const quint32 segmentsToPaint = (quint32)peakValue / segmentsSize;
+
+            int x = 1;
+            int y = isVerticalMeter ? (height() - 1) : 1;
+            const int w = isVerticalMeter ? (width() - 2) : segmentsSize - 1;
+            const int h = isVerticalMeter ? (segmentsSize - 1) : height() - 2;
+            for (quint32 i = 0; i < segmentsToPaint; ++i) {
+                QColor color = Qt::green;
+                if (i < peakColors.size())
+                    color = peakColors[i];
+                painter.fillRect(x, y, w, h, color);
+
+                if (isVerticalMeter)
+                    y -= segmentsSize;
+                else
+                    x += segmentsSize;
+            }
         }
 
         //draw the rms rect in the top layer
         if (currentRms && paintingRMS) {
             float rmsValue = Utils::poweredGainToLinear(currentRms) * rectSize;
             QRectF rmsRect = getPaintRect(rmsValue);
-            if (paintingPeaks)
                 painter.fillRect(rmsRect, RMS_COLOR); //paint the "transparent white" rect to highlight the rms meter
-            else
-                painter.fillRect(rmsRect, gradient);
         }
 
         // draw max peak marker
