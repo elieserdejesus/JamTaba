@@ -204,30 +204,33 @@
       <property name="styleSheet">
        <string notr="true"/>
       </property>
-      <layout class="QVBoxLayout" name="bottomPanelLayout">
+      <layout class="QGridLayout" name="gridLayout_2" columnstretch="1">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
        <property name="leftMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="topMargin">
         <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+       <item row="0" column="0" alignment="Qt::AlignHCenter">
         <widget class="QFrame" name="masterControlsPanel">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>140</width>
+           <width>180</width>
            <height>0</height>
           </size>
          </property>
@@ -241,13 +244,16 @@
           <property name="spacing">
            <number>0</number>
           </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
           <property name="leftMargin">
            <number>0</number>
           </property>
           <property name="rightMargin">
            <number>0</number>
           </property>
-          <item alignment="Qt::AlignBottom">
+          <item alignment="Qt::AlignVCenter">
            <widget class="QLabel" name="masterTitleLabel">
             <property name="text">
              <string>master</string>
@@ -259,7 +265,7 @@
           </item>
           <item>
            <layout class="QHBoxLayout" name="masterFaderLayout">
-            <item>
+            <item alignment="Qt::AlignVCenter">
              <widget class="QLabel" name="speakerIconLeft">
               <property name="text">
                <string/>
@@ -269,7 +275,7 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item alignment="Qt::AlignVCenter">
              <widget class="QSlider" name="masterFader">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -291,7 +297,7 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item alignment="Qt::AlignVCenter">
              <widget class="QLabel" name="speakerIconRight">
               <property name="text">
                <string/>
@@ -315,6 +321,70 @@
              <widget class="AudioMeter" name="masterMeterR" native="true"/>
             </item>
            </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="0" alignment="Qt::AlignRight">
+        <widget class="QWidget" name="zoomControlsWidget" native="true">
+         <layout class="QHBoxLayout" name="zoomControlsLayout">
+          <property name="spacing">
+           <number>2</number>
+          </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item alignment="Qt::AlignRight|Qt::AlignBottom">
+           <widget class="QPushButton" name="zoomOutButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string extracomment="decrease window size button for VST/AU plugin">Decrease window size</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../../resources/jamtaba.qrc">
+              <normaloff>:/images/zoom_out.png</normaloff>:/images/zoom_out.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item alignment="Qt::AlignBottom">
+           <widget class="QPushButton" name="zoomInButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string extracomment="increase window size button for VST/AU plugin">Increase Window Size</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../../resources/jamtaba.qrc">
+              <normaloff>:/images/zoom_in.png</normaloff>:/images/zoom_in.png</iconset>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

@@ -124,6 +124,8 @@ protected:
     void timerEvent(QTimerEvent *) override;
     void resizeEvent(QResizeEvent *) override;
 
+    virtual void initializeWindowMinimumSize();
+
     virtual void doWindowInitialization();
 
 protected slots:
@@ -309,6 +311,7 @@ private:
     static const QSize MAIN_WINDOW_MIN_SIZE;
 
     static const QString NIGHT_MODE_SUFFIX;
+
 };
 
 #endif

@@ -9,6 +9,27 @@
 }
 
 
+/* Zoom buttons in main window right bottom corner */
+#zoomInButton,
+#zoomOutButton
+{
+    background: rgba(0, 0, 0, 25);
+    max-width: 16px;
+    max-height: 16px;
+    width: 16px;
+    height: 16px;
+    padding: 1px;
+    margin: 1px;
+    border: none;
+}
+
+#zoomInButton:hover,
+#zoomOutButton:hover
+{
+    background-color: rgba(255, 255, 255, 60);
+}
+
+
 
 /* The small arrow used to collapse the local tracks
 ------------------------------------------------------*/

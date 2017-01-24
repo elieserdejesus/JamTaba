@@ -5,6 +5,12 @@
 #include "LocalTrackView.h"
 #include "audio/core/LocalInputNode.h"
 
+#include <QDesktopWidget>
+
+const QSize MainWindowPlugin::PLUGIN_WINDOW_MIN_SIZE = QSize(800, 600);
+
+const quint32 MainWindowPlugin::ZOOM_STEP = 100;
+
 MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
     firstChannelIsInitialized(false)
@@ -14,10 +20,26 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     ui.actionMidiPreferences->setVisible(false);
     ui.actionQuit->setVisible(false);
     ui.actionFullscreenMode->setVisible(false);
+
+    initializeWindowSizeControls();
     
 #ifdef Q_OS_MAC
     ui.menuBar->setNativeMenuBar(false); // avoid show the JamTaba menu bar in top of screen (the common behavior for mac apps)
 #endif
+}
+
+void MainWindowPlugin::initializeWindowSizeControls()
+{
+    // zoom controls
+    ui.zoomControlsWidget->setVisible(true);
+    connect(ui.zoomInButton, &QPushButton::clicked, this, &MainWindowPlugin::zoomIn);
+    connect(ui.zoomOutButton, &QPushButton::clicked, this, &MainWindowPlugin::zoomOut);
+
+    QMenu *windowSizeMenu = new QMenu(tr("Window Size"));
+    windowSizeMenu->addAction(tr("Increase"), this, SLOT(zoomIn()));
+    windowSizeMenu->addAction(tr("Decrease"), this, SLOT(zoomOut()));
+    ui.menuView->addSeparator();
+    ui.menuView->addMenu(windowSizeMenu);
 }
 
 NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const Login::RoomInfo &roomInfo,
@@ -47,10 +69,49 @@ void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView,
     }
 }
 
-
 PreferencesDialog *MainWindowPlugin::createPreferencesDialog()
 {
     PreferencesDialog * dialog = new PreferencesDialogPlugin(this);
     setupPreferencesDialogSignals(dialog);
     return dialog;
+}
+
+void MainWindowPlugin::initializeWindowMinimumSize()
+{
+    setMinimumSize(PLUGIN_WINDOW_MIN_SIZE);
+}
+
+void MainWindowPlugin::zoomIn()
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    QDesktopWidget desktop;
+    QSize screenSize = desktop.availableGeometry().size();
+
+    float scaleFactor = (float)width()/height();
+
+    int newWidth = width() + (ZOOM_STEP * scaleFactor);
+    int newHeight = height() + ZOOM_STEP;
+    QSize newSize(qMin(screenSize.width(), newWidth), qMin(screenSize.height(), newHeight));
+
+    resize(newSize);
+
+    getMainController()->resizePluginEditor(newSize.width(), newSize.height());
+}
+
+void MainWindowPlugin::zoomOut()
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    float scaleFactor = (float)width()/height();
+
+    int newWidth = width() - (ZOOM_STEP * scaleFactor);
+    int newHeight = height() - ZOOM_STEP;
+    QSize newSize(qMax(minimumSize().width(), newWidth), qMax(minimumSize().height(), newHeight));
+
+    resize(newSize);
+
+    getMainController()->resizePluginEditor(newSize.width(), newSize.height());
 }

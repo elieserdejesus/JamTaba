@@ -9,6 +9,8 @@ class NinjamRoomWindowPlugin;
 
 class MainWindowPlugin : public MainWindow
 {
+    Q_OBJECT
+
 public:
     MainWindowPlugin(MainControllerPlugin *mainController);
 
@@ -25,8 +27,22 @@ protected:
     void removeAllInputLocalTracks() override;
 
     PreferencesDialog * createPreferencesDialog() override;
+
+    void initializeWindowMinimumSize() override;
+
+private slots:
+
+    void zoomIn();
+    void zoomOut();
+
 private:
     bool firstChannelIsInitialized;
+
+    void initializeWindowSizeControls();
+
+    static const QSize PLUGIN_WINDOW_MIN_SIZE;
+
+    static const quint32 ZOOM_STEP;
 
 };
 

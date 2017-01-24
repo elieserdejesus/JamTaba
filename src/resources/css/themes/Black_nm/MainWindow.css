@@ -1,3 +1,9 @@
+#zoomInButton,
+#zoomOutButton
+{
+    background: rgba(255, 255, 255, 80);
+}
+
 #userNamePanel
 {
     color: rgb(140, 140, 140);

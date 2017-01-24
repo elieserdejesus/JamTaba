@@ -49,10 +49,13 @@ void VstEditor::resize(int width, int height)
 {
     if (widget)
         widget->resize(width, height);
+
     if (mainWindow)
         mainWindow->resize(width, height);
+
     rectangle.right = width;
     rectangle.bottom = height;
+    rectangle.left = rectangle.top = 0;
 
     // clientResize( (HWND)systemWindow, width, height );
 }

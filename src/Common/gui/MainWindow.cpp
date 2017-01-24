@@ -28,7 +28,6 @@ using namespace Controller;
 using namespace Ninjam;
 using namespace Persistence;
 
-//const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
 const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
@@ -50,6 +49,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     qCDebug(jtGUI) << "Creating MainWindow...";
 
     ui.setupUi(this);
+
+    ui.zoomControlsWidget->setVisible(false); // zoom controls are showed in VST/AU plugin only
 
     setWindowTitle("JamTaba");
 
@@ -778,9 +779,9 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "adding ninjam panel...";
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
     ui.bottomPanel->layout()->removeWidget(ui.masterControlsPanel);
-    dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->addWidget(ninjamPanel, 0,
-                                                                     Qt::AlignHCenter);
-    ninjamPanel->addMasterControls(ui.masterControlsPanel);
+
+    dynamic_cast<QGridLayout *>(ui.bottomPanel->layout())->addWidget(ninjamPanel, 0, 0, 1, 1, Qt::AlignHCenter);
+    ninjamPanel->addMasterControls(ui.masterControlsPanel) ;
 
     // show chat area
     setChatVisibility(true);
@@ -983,6 +984,7 @@ void MainWindow::changeEvent(QEvent *ev)
         mainController->storeWindowSettings(isMaximized(), computeLocation());
 
         updatePublicRoomsListLayout();
+
     } else if (ev->type() == QEvent::LanguageChange) {
         ui.retranslateUi(this);
         if (ninjamWindow)
@@ -1261,13 +1263,18 @@ QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWin
     return QSize(minimumWidth, minimumHeight);
 }
 
-void MainWindow::initializeWindowSize()
+void MainWindow::initializeWindowMinimumSize()
 {
     setMinimumSize(getSanitizedMinimumWindowSize(MAIN_WINDOW_MIN_SIZE));
+}
+
+void MainWindow::initializeWindowSize()
+{
+    initializeWindowMinimumSize();
 
     if (!isMaximized() && !isFullScreen()) {
-        showNormal();
         resize(minimumSize());
+        showNormal();
     }
 
     const int spaces = 6;
@@ -1289,9 +1296,6 @@ void MainWindow::initializeWindowSize()
         else
             localTrackGroup->setToWide();
     }
-
-    ui.bottomPanelLayout->setContentsMargins(spaces, spaces, spaces, spaces);
-    ui.bottomPanelLayout->setSpacing(spaces);
 
     if (ninjamWindow) {
         ChatPanel *chatPanel = ninjamWindow->getChatPanel();
@@ -1551,3 +1555,4 @@ void MainWindow::initializeMasterFader()
     ui.masterFader->setValue(faderPosition);
     setMasterGain(faderPosition);
 }
+
