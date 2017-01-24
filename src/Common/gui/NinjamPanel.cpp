@@ -36,9 +36,6 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->peakMeterLeft->setOrientation(Qt::Horizontal);
     ui->peakMeterRight->setOrientation(Qt::Horizontal);
 
-    //ui->horizontalLayout->setSpacing(0);
-    //ui->intervalPanel->setMinimumHeight(110);
-
     maximizeControlsWidget(true);
 
     setupSignals();

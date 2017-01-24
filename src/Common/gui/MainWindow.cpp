@@ -50,8 +50,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     ui.setupUi(this);
 
-    ui.zoomControlsWidget->setVisible(false); // zoom controls are showed in VST/AU plugin only
-
     setWindowTitle("JamTaba");
 
     initializeLoginService();

@@ -21,19 +21,15 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     ui.actionQuit->setVisible(false);
     ui.actionFullscreenMode->setVisible(false);
 
-    initializeWindowSizeControls();
+    initializeWindowSizeMenu();
     
 #ifdef Q_OS_MAC
     ui.menuBar->setNativeMenuBar(false); // avoid show the JamTaba menu bar in top of screen (the common behavior for mac apps)
 #endif
 }
 
-void MainWindowPlugin::initializeWindowSizeControls()
+void MainWindowPlugin::initializeWindowSizeMenu()
 {
-    // zoom controls
-    ui.zoomControlsWidget->setVisible(true);
-    connect(ui.zoomInButton, &QPushButton::clicked, this, &MainWindowPlugin::zoomIn);
-    connect(ui.zoomOutButton, &QPushButton::clicked, this, &MainWindowPlugin::zoomOut);
 
     QMenu *windowSizeMenu = new QMenu(tr("Window Size"));
     windowSizeMenu->addAction(tr("Increase"), this, SLOT(zoomIn()));

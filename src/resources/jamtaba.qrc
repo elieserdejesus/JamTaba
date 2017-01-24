@@ -137,8 +137,6 @@
         <file>low_cut_off.png</file>
         <file>low_cut_normal.png</file>
         <file>low_cut_drastic.png</file>
-        <file>zoom_in.png</file>
-        <file>zoom_out.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

@@ -42,7 +42,7 @@ private slots:
 private:
     bool firstChannelIsInitialized;
 
-    void initializeWindowSizeControls();
+    void initializeWindowSizeMenu();
 
     static const QSize PLUGIN_WINDOW_MIN_SIZE;
 
