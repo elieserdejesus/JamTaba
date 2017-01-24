@@ -462,7 +462,7 @@
         <property name="minimumSize">
          <size>
           <width>150</width>
-          <height>120</height>
+          <height>110</height>
          </size>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2"/>
