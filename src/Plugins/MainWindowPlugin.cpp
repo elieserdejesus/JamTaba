@@ -72,11 +72,6 @@ PreferencesDialog *MainWindowPlugin::createPreferencesDialog()
     return dialog;
 }
 
-void MainWindowPlugin::initializeWindowMinimumSize()
-{
-    setMinimumSize(PLUGIN_WINDOW_MIN_SIZE);
-}
-
 void MainWindowPlugin::zoomIn()
 {
     if (isMaximized() || isFullScreen())

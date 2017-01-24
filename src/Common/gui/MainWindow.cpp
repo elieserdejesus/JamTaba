@@ -980,7 +980,7 @@ void MainWindow::resizeEvent(QResizeEvent *ev)
 void MainWindow::changeEvent(QEvent *ev)
 {
     if (ev->type() == QEvent::WindowStateChange && mainController) {
-        mainController->storeWindowSettings(isMaximized(), computeLocation());
+        mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
 
         updatePublicRoomsListLayout();
 
@@ -1004,7 +1004,7 @@ QPointF MainWindow::computeLocation() const
 void MainWindow::closeEvent(QCloseEvent *)
 {
     if (mainController)
-        mainController->storeWindowSettings(isMaximized(), computeLocation());
+        mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1241,7 +1241,7 @@ void MainWindow::updatePublicRoomsListLayout()
     refreshPublicRoomsList(roomInfos);
 }
 
-QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWindowSize) const
+QSize MainWindow::getSanitizedWindowSize(const QSize &size, const QSize &minimumSize) const
 {
     // fixing #343. If MainWindow::showFullScreen() is called after a setMinimumSize(), and the current
     // minimum size is less then desktop size the fullScreen is buggy because we are forcing an
@@ -1255,24 +1255,35 @@ QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWin
     if (topBarHeight == 0) // when the window is fullscreen the topBarHeight is zero (no title window).
         topBarHeight = frameGeometry().height() - geometry().height(); // geometry is the 'window client area', frameGeometry contain the window title bar area. http://doc.qt.io/qt-4.8/application-windows.html#window-geometry
 
-    int minimumWidth = qMin(prefferedMinimumWindowSize.width(), screenSize.width());
-    int minimumHeight
-        = qMin(prefferedMinimumWindowSize.height(), screenSize.height() - topBarHeight);
+    const int minimumWidth = minimumSize.width();
+    const int maximumWidth = screenSize.width();
+    const int minimumHeight = minimumSize.height();
+    const int maximumHeight = screenSize.height() - topBarHeight;
 
-    return QSize(minimumWidth, minimumHeight);
-}
+    QSize finalSize(size);
+    if (finalSize.width() < minimumWidth)
+        finalSize.setWidth(minimumWidth);
+    else
+        if (finalSize.width() > maximumWidth)
+            finalSize.setWidth(maximumWidth);
 
-void MainWindow::initializeWindowMinimumSize()
-{
-    setMinimumSize(getSanitizedMinimumWindowSize(MAIN_WINDOW_MIN_SIZE));
+    if (finalSize.height() < minimumHeight)
+        finalSize.setHeight(minimumHeight);
+    else
+        if (finalSize.height() > maximumHeight)
+            finalSize.setHeight(maximumHeight);
+
+    return finalSize;
 }
 
 void MainWindow::initializeWindowSize()
 {
-    initializeWindowMinimumSize();
+    setMinimumSize(getMinimumWindowSize());
 
     if (!isMaximized() && !isFullScreen()) {
-        resize(minimumSize());
+        QSize lastSize = mainController->getSettings().getLastWindowSize();
+        QSize newSize = getSanitizedWindowSize(lastSize, minimumSize());
+        resize(newSize);
         showNormal();
     }
 

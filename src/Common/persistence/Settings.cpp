@@ -297,16 +297,28 @@ void WindowSettings::read(const QJsonObject &in)
         location.setX(getValueFromJson(locationObj, "x", (float)0));
         location.setY(getValueFromJson(locationObj, "y", (float)0));
     }
+
+    if (in.contains("size")) {
+        QJsonObject sizeObject = in["size"].toObject();
+        size.setWidth(getValueFromJson(sizeObject, "width", (int)800));
+        size.setHeight(getValueFromJson(sizeObject, "height", (int)600));
+    }
 }
 
 void WindowSettings::write(QJsonObject &out) const
 {
     out["maximized"] = maximized;
     out["fullScreenView"] = fullScreenMode;
+
     QJsonObject locationObject;
     locationObject["x"] = this->location.x();
     locationObject["y"] = this->location.y();
     out["location"] = locationObject;
+
+    QJsonObject sizeObject;
+    sizeObject["width"] = this->size.width();
+    sizeObject["height"] = this->size.height();
+    out["size"] = sizeObject;
 }
 
 // +++++++++++++++++++++++++++++++++++++++
@@ -691,16 +703,19 @@ void Settings::setFullScreenView(bool v)
 }
 
 // +++++++++   Window Location  +++++++++++++++++++++++
-void Settings::setWindowSettings(bool windowIsMaximized, QPointF location)
+void Settings::setWindowSettings(bool windowIsMaximized, const QPointF &location, const QSize &size)
 {
-    double x = (location.x() >= 0) ? location.x() : 0;
-    double y = (location.x() >= 0) ? location.y() : 0;
+    QPointF newLocation(location);
+    double x = (newLocation.x() >= 0) ? newLocation.x() : 0;
+    double y = (newLocation.x() >= 0) ? newLocation.y() : 0;
     if (x > 1)
-        location.setX(0);
+        newLocation.setX(0);
     if (y > 1)
-        location.setY(0);
-    windowSettings.location = location;
+        newLocation.setY(0);
+
+    windowSettings.location = newLocation;
     windowSettings.maximized = windowIsMaximized;
+    windowSettings.size = size;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++

@@ -110,8 +110,11 @@ bool VstEditor::open(void *ptr)
 void VstEditor::close()
 {
     qCDebug(jtVstPlugin) << "VstEditor::close()...";
-    if (mainWindow)
+    if (mainWindow) {
+        jamtaba->getController()->storeWindowSettings(false, QPointF(), mainWindow->size());
         mainWindow->setParent(nullptr);
+    }
+
     if (widget) {
         delete widget;
         widget = nullptr;

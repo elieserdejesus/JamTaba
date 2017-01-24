@@ -124,9 +124,9 @@ protected:
     void timerEvent(QTimerEvent *) override;
     void resizeEvent(QResizeEvent *) override;
 
-    virtual void initializeWindowMinimumSize();
-
     virtual void doWindowInitialization();
+
+    virtual inline QSize getMinimumWindowSize() const { return MAIN_WINDOW_MIN_SIZE; }
 
     static const QSize MAIN_WINDOW_MIN_SIZE;
 
@@ -192,7 +192,7 @@ protected slots:
 
     void initializeLocalInputChannels();
 
-    QSize getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWindowSize) const;
+    QSize getSanitizedWindowSize(const QSize &size, const QSize &minimumSize) const;
 
 private slots:
 
