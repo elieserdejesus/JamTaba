@@ -242,15 +242,13 @@ void AudioMeter::paintEvent(QPaintEvent *)
         const bool halfSizePainting = paintingPeaks && paintingRMS;
 
         if (currentPeak && paintingPeaks) {
-            const float peakValue = Utils::poweredGainToLinear(currentPeak);
             const int offset = paintingRMS ? 0 : 1;
-            paintSegments(painter, peakValue, peakColors, offset, halfSizePainting);
+            paintSegments(painter, currentPeak, peakColors, offset, halfSizePainting);
         }
 
         if (currentRms && paintingRMS) {
-            const float rmsValue = Utils::poweredGainToLinear(currentRms);
             const int offset = paintingPeaks ? (isVertical() ? width()/2 : height()/2) : 1;
-            paintSegments(painter, rmsValue, rmsColors, offset + 1, halfSizePainting);
+            paintSegments(painter, currentRms, rmsColors, offset + 1, halfSizePainting);
         }
 
         if (maxPeak && paintingMaxPeakMarker)
