@@ -28,8 +28,6 @@ protected:
 
     PreferencesDialog * createPreferencesDialog() override;
 
-    bool canUseTwoColumnLayout() const override;
-
     virtual inline QSize getMinimumWindowSize() const override { return PLUGIN_WINDOW_MIN_SIZE; }
 
     void resizeEvent(QResizeEvent *) override;

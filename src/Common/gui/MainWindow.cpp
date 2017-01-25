@@ -630,10 +630,7 @@ JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &room
 
 bool MainWindow::canUseTwoColumnLayout() const
 {
-    if (mainController->isPlayingInNinjamRoom())
-        return false;
-
-    return true;
+    return ui.contentTabWidget->width() >= 830;
 }
 
 void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms)
@@ -647,9 +644,9 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
     qSort(sortedRooms.begin(), sortedRooms.end(), jamRoomLessThan);
 
     int index = 0;
+    bool twoCollumns = canUseTwoColumnLayout();
     foreach (const Login::RoomInfo &roomInfo, sortedRooms) {
         if (roomInfo.getType() == Login::RoomTYPE::NINJAM) {// skipping other rooms at moment
-            bool twoCollumns = canUseTwoColumnLayout();
             int rowIndex = twoCollumns ? (index / 2) : (index);
             int collumnIndex = twoCollumns ? (index % 2) : 0;
             JamRoomViewPanel *roomViewPanel = roomViewPanels[roomInfo.getID()];
@@ -975,14 +972,13 @@ void MainWindow::changeEvent(QEvent *ev)
 {
     if (ev->type() == QEvent::WindowStateChange && mainController) {
         mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
-
-        updatePublicRoomsListLayout();
-
-    } else if (ev->type() == QEvent::LanguageChange) {
+    }
+    else if (ev->type() == QEvent::LanguageChange) {
         ui.retranslateUi(this);
         if (ninjamWindow)
             updateChatTabTitle(); // translate the chat tab title
     }
+
     QMainWindow::changeEvent(ev);
 }
 
@@ -1287,11 +1283,6 @@ void MainWindow::initializeWindowSize()
 
     ui.chatTabWidget->setMinimumWidth(230); // TODO Refactoring: remove these 'Magic Numbers'
 
-    // refresh the public rooms list
-    if (!mainController->isPlayingInNinjamRoom()) {
-        updatePublicRoomsListLayout();
-    }
-
     // local tracks are narrowed in mini mode if user is using more than 1 subchannel
     bool usingSmallWindow = width() < MAIN_WINDOW_MIN_SIZE.width();
     foreach (LocalTrackGroupView *localTrackGroup, localGroupChannels) {
@@ -1315,6 +1306,10 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         if (target == ui.localTracksWidget) {
             updateLocalInputChannelsGeometry();
             return true;
+        }
+        else if (target == ui.contentTabWidget) {
+            updatePublicRoomsListLayout();
+            return false;
         }
     } else {
         if (target == ui.masterFader && event->type() == QEvent::MouseButtonDblClick) {
@@ -1551,6 +1546,8 @@ void MainWindow::setupSignals()
     connect(ui.userNameLineEdit, SIGNAL(editingFinished()), this, SLOT(updateUserName()));
 
     connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::updateNightModeInWorldMaps);
+
+    ui.contentTabWidget->installEventFilter(this);
 }
 
 void MainWindow::updateUserName()

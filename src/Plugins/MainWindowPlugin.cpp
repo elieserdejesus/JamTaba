@@ -176,11 +176,3 @@ void MainWindowPlugin::resizeEvent(QResizeEvent *ev)
 
     updatePublicRoomsListLayout();
 }
-
-bool MainWindowPlugin::canUseTwoColumnLayout() const
-{
-    if (width() >= MAIN_WINDOW_MIN_SIZE.width())
-        return true;
-
-    return false;
-}
