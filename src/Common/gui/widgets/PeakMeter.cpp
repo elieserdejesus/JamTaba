@@ -10,8 +10,6 @@ const int BaseMeter::LINES_MARGIN = 3;
 const int BaseMeter::MIN_SIZE = 1;
 const int BaseMeter::DEFAULT_DECAY_TIME = 2000;
 
-const QColor AudioMeter::MAX_PEAK_COLOR = QColor(0, 0, 0, 80);
-
 const int AudioMeter::MAX_PEAK_MARKER_SIZE = 2;
 const int AudioMeter::MAX_PEAK_SHOW_TIME = 1500;
 
@@ -88,9 +86,11 @@ AudioMeter::AudioMeter(QWidget *parent)
       lastMaxPeakTime(0),
       rmsColor(QColor(255, 255, 255, 200)),
       peakStartColor(Qt::darkGreen),
-      peakEndColor(Qt::red)
+      peakEndColor(Qt::red),
+      maxPeakColor(QColor(0, 0, 0, 80))
 {
-
+    setAttribute(Qt::WA_NoBackground);
+    setAutoFillBackground(false);
 }
 
 void AudioMeter::setOrientation(Qt::Orientation orientation)
@@ -111,6 +111,13 @@ QColor AudioMeter::interpolateColor(const QColor &start, const QColor &end, floa
 
 void AudioMeter::setRmsColor(const QColor &newColor){
     this->rmsColor = newColor;
+    recreateInterpolatedColors();
+    update();
+}
+
+void AudioMeter::setMaxPeakColor(const QColor &newColor)
+{
+    this->maxPeakColor = newColor;
     recreateInterpolatedColors();
     update();
 }
@@ -199,7 +206,7 @@ void AudioMeter::paintMaxPeakMarker(QPainter &painter, bool halfSize)
     }
 
 
-    painter.fillRect(maxPeakRect, MAX_PEAK_COLOR);
+    painter.fillRect(maxPeakRect, maxPeakColor);
 }
 
 void AudioMeter::updateInternalValues()
@@ -232,7 +239,7 @@ void AudioMeter::paintEvent(QPaintEvent *)
 
     if (isEnabled()) {
 
-        const bool halfSizePainting = paintingPeaks && paintingRMS; //
+        const bool halfSizePainting = paintingPeaks && paintingRMS;
 
         if (currentPeak && paintingPeaks) {
             const float peakValue = Utils::poweredGainToLinear(currentPeak);

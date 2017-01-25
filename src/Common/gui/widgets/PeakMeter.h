@@ -39,6 +39,7 @@ class AudioMeter : public BaseMeter
 
     // custom properties defined in CSS files
     Q_PROPERTY(QColor rmsColor MEMBER rmsColor WRITE setRmsColor)
+    Q_PROPERTY(QColor maxPeakColor MEMBER maxPeakColor WRITE setMaxPeakColor)
     Q_PROPERTY(QColor peakStartColor MEMBER peakStartColor WRITE setPeaksStartColor)
     Q_PROPERTY(QColor peakEndColor MEMBER peakEndColor WRITE setPeaksEndColor)
 
@@ -62,6 +63,7 @@ public:
     void setOrientation(Qt::Orientation orientation) override;
 
     void setRmsColor(const QColor &newColor);
+    void setMaxPeakColor(const QColor &newColor);
     void setPeaksStartColor(const QColor &newColor);
     void setPeaksEndColor(const QColor &newColor);
 
@@ -71,10 +73,10 @@ protected:
 
 private:
     static const int MAX_PEAK_SHOW_TIME;
-    static const QColor MAX_PEAK_COLOR;
     static const int MAX_PEAK_MARKER_SIZE;
 
     QColor rmsColor;
+    QColor maxPeakColor;
     QColor peakStartColor;  // start gradient color
     QColor peakEndColor;    // end gradient color
 
