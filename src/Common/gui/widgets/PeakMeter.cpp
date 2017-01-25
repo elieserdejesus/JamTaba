@@ -11,7 +11,6 @@ const int BaseMeter::MIN_SIZE = 1;
 const int BaseMeter::DEFAULT_DECAY_TIME = 2000;
 
 const QColor AudioMeter::MAX_PEAK_COLOR = QColor(0, 0, 0, 80);
-const QColor AudioMeter::RMS_COLOR = QColor(255, 255, 255, 120);
 
 const int AudioMeter::MAX_PEAK_MARKER_SIZE = 2;
 const int AudioMeter::MAX_PEAK_SHOW_TIME = 1500;
@@ -86,7 +85,10 @@ AudioMeter::AudioMeter(QWidget *parent)
       currentPeak(0.0f),
       currentRms(0.0f),
       maxPeak(0),
-      lastMaxPeakTime(0)
+      lastMaxPeakTime(0),
+      rmsColor(QColor(255, 255, 255, 200)),
+      peakStartColor(Qt::darkGreen),
+      peakEndColor(Qt::red)
 {
 
 }
@@ -98,28 +100,60 @@ void AudioMeter::setOrientation(Qt::Orientation orientation)
 }
 
 
+QColor AudioMeter::interpolateColor(const QColor &start, const QColor &end, float ratio)
+{
+    int r = (int)(ratio * end.red()   + (1 - ratio) * start.red());
+    int g = (int)(ratio * end.green() + (1 - ratio) * start.green());
+    int b = (int)(ratio * end.blue()  + (1 - ratio) * start.blue());
+
+    return QColor::fromRgb(r, g, b);
+}
+
+void AudioMeter::setRmsColor(const QColor &newColor){
+    this->rmsColor = newColor;
+    recreateInterpolatedColors();
+    update();
+}
+
+void AudioMeter::setPeaksStartColor(const QColor &newColor)
+{
+    this->peakStartColor = newColor;
+    recreateInterpolatedColors();
+    update();
+}
+
+void AudioMeter::setPeaksEndColor(const QColor &newColor)
+{
+    this->peakEndColor = newColor;
+    recreateInterpolatedColors();
+    update();
+}
+
 void AudioMeter::resizeEvent(QResizeEvent * /*ev*/)
 {
-    update();
+    recreateInterpolatedColors();
 
+    update();
+}
+
+void AudioMeter::recreateInterpolatedColors()
+{
     // rebuild the peak and RMS colors vector
     peakColors.clear();
     rmsColors.clear();
 
     const quint32 size = isVertical() ? height() : width();
     const quint32 segments = size/segmentsSize;
-    const int rmsInitialAlpha = RMS_COLOR.alpha() * 0.7;
+    const int rmsInitialAlpha = rmsColor.alpha() * 0.6; // interpolate rms colors alpha from 60% to 100%
+
     for (quint32 i = 0; i < segments; ++i) {
+        float interpolationPosition = std::pow(((float)i/segments), 2);
+        peakColors.push_back(interpolateColor(peakStartColor, peakEndColor, interpolationPosition));
 
-        int r = std::pow(((float)i/segments), 2) * 255; // will be 255 when i == segments (max 'i' value)
-        int g = (float)(segments - i)/segments * 200;
-        int b = 0;
-        peakColors.push_back(QColor(r, g, b));
-
-        QColor rmsColor(RMS_COLOR);
-        int newAlpha = (float)i/segments * RMS_COLOR.alpha();
-        rmsColor.setAlpha(qMin(newAlpha, 255) + rmsInitialAlpha);
-        rmsColors.push_back(rmsColor);
+        QColor newRmsColor(rmsColor);
+        int newAlpha = (float)i/segments * rmsColor.alpha();
+        rmsColor.setAlpha(qMin(newAlpha + rmsInitialAlpha, 255));
+        rmsColors.push_back(newRmsColor);
     }
 }
 

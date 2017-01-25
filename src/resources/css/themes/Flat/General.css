@@ -229,3 +229,13 @@ QMenu
     stop:0 rgb(250, 250, 250),
     stop:1 rgb(230, 230, 230));
 }
+
+
+AudioMeter
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(120, 120, 120);
+    qproperty-peakStartColor: rgb(0, 180, 0);
+    qproperty-peakEndColor: rgb(255, 50, 50);
+}
+

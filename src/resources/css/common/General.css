@@ -108,3 +108,12 @@ QMenu::item::enabled:selected
 {
     background-color: rgba(0, 0, 0, 30);
 }
+
+
+AudioMeter
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: white;
+    qproperty-peakStartColor: green;
+    qproperty-peakEndColor: red;
+}
