@@ -194,11 +194,11 @@ protected slots:
 
     QSize getSanitizedWindowSize(const QSize &size, const QSize &minimumSize) const;
 
+    virtual void updateLocalInputChannelsGeometry();
+
 private slots:
 
     void showJamtabaCurrentVersion();
-
-    void updateLocalInputChannelsGeometry();
 
     void refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms);
 

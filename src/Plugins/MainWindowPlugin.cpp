@@ -30,6 +30,20 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
 #endif
 }
 
+void MainWindowPlugin::updateLocalInputChannelsGeometry()
+{
+    MainWindow::updateLocalInputChannelsGeometry();
+
+    bool usingMinimumSize = !canDecreaseWindowSize();
+    int localChannels = localGroupChannels.size();
+    for(LocalTrackGroupView *localChannel : localGroupChannels) {
+        if (usingMinimumSize && localChannels > 1)
+            localChannel->setToNarrow();
+        else
+            localChannel->setToWide();
+    }
+}
+
 void MainWindowPlugin::initializeWindowSizeMenu()
 {
 

@@ -32,6 +32,9 @@ protected:
 
     void resizeEvent(QResizeEvent *) override;
 
+protected slots:
+    void updateLocalInputChannelsGeometry() override;
+
 private slots:
 
     void zoomIn();
