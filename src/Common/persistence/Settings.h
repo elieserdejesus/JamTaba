@@ -105,9 +105,9 @@ class WindowSettings : public SettingsObject
 public:
     WindowSettings();
     QPointF location;
+    QSize size;
     bool maximized;
-    bool fullViewMode;
-    bool fullScreenViewMode;
+    bool fullScreenMode;
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
 };
@@ -528,20 +528,21 @@ public:
         return windowSettings.location;
     }
 
-    void setWindowSettings(bool windowIsMaximized, bool usingFullView, QPointF location);
+    inline QSize getLastWindowSize() const
+    {
+        return windowSettings.size;
+    }
+
+    void setWindowSettings(bool windowIsMaximized, const QPointF &location, const QSize &size);
+
     inline bool windowWasMaximized() const
     {
         return windowSettings.maximized;
     }
 
-    inline bool windowsWasFullViewMode() const
-    {
-        return windowSettings.fullViewMode;
-    }
-
     inline bool windowsWasFullScreenViewMode() const
     {
-        return windowSettings.fullScreenViewMode;
+        return windowSettings.fullScreenMode;
     }
 
     void setFullScreenView(bool v);

@@ -29,15 +29,6 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     translateUi();
 }
 
-void LocalTrackGroupView::useSmallSpacingInLayouts(bool useSmallSpacing)
-{
-    this->usingSmallSpacingInLayouts = useSmallSpacing;
-    QList<LocalTrackView*> tracks = getTracks<LocalTrackView*>();
-    foreach (LocalTrackView *trackView, tracks) {
-        trackView->useSmallSpacingInLayouts(useSmallSpacing);
-    }
-}
-
 void LocalTrackGroupView::refreshStyleSheet()
 {
     TrackGroupView::refreshStyleSheet();
@@ -239,9 +230,8 @@ LocalTrackView *LocalTrackGroupView::addTrackView(long trackID)
         return nullptr;
 
     LocalTrackView *newTrack = dynamic_cast<LocalTrackView *>(TrackGroupView::addTrackView(trackID));
-    newTrack->useSmallSpacingInLayouts(usingSmallSpacingInLayouts);
-
-    emit trackAdded();
+    if (newTrack)
+        emit trackAdded();
 
     return newTrack;
 }
@@ -357,7 +347,7 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
         this->peakMeterOnly = peakMeterOnly;
         topPanel->setVisible(!this->peakMeterOnly);
         foreach (LocalTrackView *view, getTracks<LocalTrackView *>()) {
-            view->setPeakMetersOnlyMode(peakMeterOnly, mainFrame->isRunningInMiniMode());
+            view->setPeakMetersOnlyMode(peakMeterOnly);
         }
 
         updateXmitButtonText();

@@ -49,10 +49,13 @@ void VstEditor::resize(int width, int height)
 {
     if (widget)
         widget->resize(width, height);
+
     if (mainWindow)
         mainWindow->resize(width, height);
+
     rectangle.right = width;
     rectangle.bottom = height;
+    rectangle.left = rectangle.top = 0;
 
     // clientResize( (HWND)systemWindow, width, height );
 }
@@ -107,8 +110,11 @@ bool VstEditor::open(void *ptr)
 void VstEditor::close()
 {
     qCDebug(jtVstPlugin) << "VstEditor::close()...";
-    if (mainWindow)
+    if (mainWindow) {
+        jamtaba->getController()->storeWindowSettings(false, QPointF(), mainWindow->size());
         mainWindow->setParent(nullptr);
+    }
+
     if (widget) {
         delete widget;
         widget = nullptr;

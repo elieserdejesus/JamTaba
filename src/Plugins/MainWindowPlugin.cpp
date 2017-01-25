@@ -5,6 +5,12 @@
 #include "LocalTrackView.h"
 #include "audio/core/LocalInputNode.h"
 
+#include <QDesktopWidget>
+
+const QSize MainWindowPlugin::PLUGIN_WINDOW_MIN_SIZE = QSize(800, 600);
+
+const quint32 MainWindowPlugin::ZOOM_STEP = 100;
+
 MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
     firstChannelIsInitialized(false)
@@ -14,10 +20,22 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     ui.actionMidiPreferences->setVisible(false);
     ui.actionQuit->setVisible(false);
     ui.actionFullscreenMode->setVisible(false);
+
+    initializeWindowSizeMenu();
     
 #ifdef Q_OS_MAC
     ui.menuBar->setNativeMenuBar(false); // avoid show the JamTaba menu bar in top of screen (the common behavior for mac apps)
 #endif
+}
+
+void MainWindowPlugin::initializeWindowSizeMenu()
+{
+
+    QMenu *windowSizeMenu = new QMenu(tr("Window Size"));
+    windowSizeMenu->addAction(tr("Increase"), this, SLOT(zoomIn()));
+    windowSizeMenu->addAction(tr("Decrease"), this, SLOT(zoomOut()));
+    ui.menuView->addSeparator();
+    ui.menuView->addMenu(windowSizeMenu);
 }
 
 NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const Login::RoomInfo &roomInfo,
@@ -47,20 +65,59 @@ void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView,
     }
 }
 
-// ++++++++++++++++++++++++++++
-
-void MainWindowPlugin::setFullViewStatus(bool fullViewActivated)
-{
-    MainWindow::setFullViewStatus(fullViewActivated);
-    MainControllerPlugin *controller = getMainController();
-    controller->storeWindowSettings(isMaximized(), fullViewActivated, QPointF());
-    controller->resizePluginEditor(width(), height());
-}
-
-
 PreferencesDialog *MainWindowPlugin::createPreferencesDialog()
 {
     PreferencesDialog * dialog = new PreferencesDialogPlugin(this);
     setupPreferencesDialogSignals(dialog);
     return dialog;
+}
+
+void MainWindowPlugin::zoomIn()
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    QDesktopWidget desktop;
+    QSize screenSize = desktop.availableGeometry().size();
+
+    float scaleFactor = (float)width()/height();
+
+    int newWidth = width() + (ZOOM_STEP * scaleFactor);
+    int newHeight = height() + ZOOM_STEP;
+    QSize newSize(qMin(screenSize.width(), newWidth), qMin(screenSize.height(), newHeight));
+
+    resize(newSize);
+
+    getMainController()->resizePluginEditor(newSize.width(), newSize.height());
+}
+
+void MainWindowPlugin::resizeEvent(QResizeEvent *ev)
+{
+    MainWindow::resizeEvent(ev);
+
+    updatePublicRoomsListLayout();
+}
+
+void MainWindowPlugin::zoomOut()
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    float scaleFactor = (float)width()/height();
+
+    int newWidth = width() - (ZOOM_STEP * scaleFactor);
+    int newHeight = height() - ZOOM_STEP;
+    QSize newSize(qMax(minimumSize().width(), newWidth), qMax(minimumSize().height(), newHeight));
+
+    resize(newSize);
+
+    getMainController()->resizePluginEditor(newSize.width(), newSize.height());
+}
+
+bool MainWindowPlugin::canUseTwoColumnLayout() const
+{
+    if (width() >= MAIN_WINDOW_MIN_SIZE.width())
+        return true;
+
+    return false;
 }

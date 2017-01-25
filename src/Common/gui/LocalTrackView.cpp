@@ -10,7 +10,6 @@
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),
     inputNode(nullptr),
-    usingSmallSpacing(false),
     peakMetersOnly(false),
     buttonStereoInversion(createStereoInversionButton())
 {
@@ -33,14 +32,6 @@ void LocalTrackView::bindThisViewWithTrackNodeSignals()
     BaseTrackView::bindThisViewWithTrackNodeSignals();
 
     connect(inputNode, &Audio::LocalInputNode::stereoInversionChanged, this, &LocalTrackView::setStereoInversion);
-}
-
-void LocalTrackView::useSmallSpacingInLayouts(bool useSmallSpacing)
-{
-    int spacing = useSmallSpacing ? 6 : 12;
-    secondaryChildsLayout->setSpacing(spacing );
-    mainLayout->setVerticalSpacing(spacing);
-    this->usingSmallSpacing = useSmallSpacing;
 }
 
 void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost boostValue,
@@ -105,7 +96,7 @@ void LocalTrackView::setupMetersLayout()
     metersLayout->addWidget(peakMeterRight);
 }
 
-void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode)
+void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
 {
     if (this->peakMetersOnly != peakMetersOnly) {
         this->peakMetersOnly = peakMetersOnly;
@@ -120,14 +111,17 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
         else{// put the meter in the original layout
             setupMetersLayout();
         }
-        mainLayout->setHorizontalSpacing( peakMetersOnly ? 0 : 6 );
+
+        const static int spacing = 3;
+
+        mainLayout->setHorizontalSpacing(spacing);
 
         peakMeterLeft->setVisible(true);//peak meters are always visible
         peakMeterRight->setVisible(true);
 
         QMargins margins = layout()->contentsMargins();
-        margins.setLeft((peakMetersOnly || runningInMiniMode) ? 2 : 6);
-        margins.setRight((peakMetersOnly || runningInMiniMode) ? 2 : 6);
+        margins.setLeft(spacing);
+        margins.setRight(spacing);
         layout()->setContentsMargins(margins);
 
         soloButton->setVisible(!peakMetersOnly);
@@ -146,9 +140,9 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
     }
 }
 
-void LocalTrackView::togglePeakMetersOnlyMode(bool runninsInMiniMode)
+void LocalTrackView::togglePeakMetersOnlyMode()
 {
-    setPeakMetersOnlyMode(!peakMetersOnly, runninsInMiniMode);
+    setPeakMetersOnlyMode(!peakMetersOnly);
 }
 
 void LocalTrackView::setActivatedStatus(bool unlighted)

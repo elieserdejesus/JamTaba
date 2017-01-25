@@ -9,6 +9,8 @@ class NinjamRoomWindowPlugin;
 
 class MainWindowPlugin : public MainWindow
 {
+    Q_OBJECT
+
 public:
     MainWindowPlugin(MainControllerPlugin *mainController);
 
@@ -20,15 +22,31 @@ public:
 protected:
     NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) override;
 
-    void setFullViewStatus(bool fullViewActivated);
-
     void initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel) override;
 
     void removeAllInputLocalTracks() override;
 
     PreferencesDialog * createPreferencesDialog() override;
+
+    bool canUseTwoColumnLayout() const override;
+
+    virtual inline QSize getMinimumWindowSize() const override { return PLUGIN_WINDOW_MIN_SIZE; }
+
+    void resizeEvent(QResizeEvent *) override;
+
+private slots:
+
+    void zoomIn();
+    void zoomOut();
+
 private:
     bool firstChannelIsInitialized;
+
+    void initializeWindowSizeMenu();
+
+    static const QSize PLUGIN_WINDOW_MIN_SIZE;
+
+    static const quint32 ZOOM_STEP;
 
 };
 

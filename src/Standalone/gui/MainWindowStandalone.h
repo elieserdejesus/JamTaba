@@ -27,7 +27,7 @@ public:
     }
 
 protected:
-    void closeEvent(QCloseEvent *);
+    void closeEvent(QCloseEvent *) override;
 
     NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, MainController *) override;
 

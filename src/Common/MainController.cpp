@@ -386,9 +386,9 @@ void MainController::storeIntervalProgressShape(int shape)
     settings.setIntervalProgressShape(shape);
 }
 
-void MainController::storeWindowSettings(bool maximized, bool usingFullViewMode, QPointF location)
+void MainController::storeWindowSettings(bool maximized, const QPointF &location, const QSize &size)
 {
-    settings.setWindowSettings(maximized, usingFullViewMode, location);
+    settings.setWindowSettings(maximized, location, size);
 }
 
 void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut,

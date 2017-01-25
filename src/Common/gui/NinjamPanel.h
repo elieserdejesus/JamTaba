@@ -52,9 +52,9 @@ public:
 
     void addMasterControls(QWidget *masterControlsPanel);
 
-    void setFullViewStatus(bool fullView);
-
     void setLowContrastPaintInIntervalPanel(bool useLowContrastColors);
+
+    void maximizeControlsWidget(bool maximize);
 
 signals:
     void bpiComboActivated(const QString &);
