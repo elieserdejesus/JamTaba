@@ -161,7 +161,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>268</height>
+            <height>267</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -306,7 +306,7 @@
           <item>
            <layout class="QVBoxLayout" name="masterMetersLayout">
             <property name="spacing">
-             <number>2</number>
+             <number>3</number>
             </property>
             <item>
              <widget class="AudioMeter" name="masterMeterL" native="true"/>
@@ -388,7 +388,7 @@
              <x>0</x>
              <y>0</y>
              <width>843</width>
-             <height>308</height>
+             <height>307</height>
             </rect>
            </property>
           </widget>

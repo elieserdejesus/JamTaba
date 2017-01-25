@@ -64,6 +64,7 @@ private:
     static const QColor RMS_COLOR;
 
     std::vector<QColor> peakColors;
+    std::vector<QColor> rmsColors;
 
     //static painting flags. Turning on/off will affect all audio meters.
     static bool paintingMaxPeakMarker;
@@ -77,6 +78,12 @@ private:
     qint64 lastMaxPeakTime;
 
     static const quint8 segmentsSize;
+
+    void paintSegments(QPainter &painter, float rawPeakValue, const std::vector<QColor> &segmentsColors, int offset, bool halfSize);
+
+    void paintMaxPeakMarker(QPainter &painter, bool halfSize);
+
+    void updateInternalValues();
 
 };
 
