@@ -39,10 +39,20 @@ private slots:
     void zoomIn();
     void zoomOut();
 
+    void updateWindowSizeMenu();
+
 private:
     bool firstChannelIsInitialized;
 
+    bool canDecreaseWindowSize() const;
+    bool canIncreaseWindowSize() const;
+    QSize getZoomStepSize() const;
+    QSize getMaxWindowSize() const;
+
     void initializeWindowSizeMenu();
+
+    QAction *increaseWindowSizeAction;
+    QAction *decreaseWindowSizeAction;
 
     static const QSize PLUGIN_WINDOW_MIN_SIZE;
 
