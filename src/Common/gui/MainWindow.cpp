@@ -276,12 +276,6 @@ void MainWindow::updateLocalInputChannelsGeometry()
 
     ui.leftPanel->setMaximumWidth(maxWidth);
     ui.leftPanel->setMinimumWidth(minWidth);
-
-    if (localGroupChannels.count() > 1) {
-        foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
-            trackGroup->setToNarrow();
-    }
-
 }
 
 void MainWindow::toggleLocalInputsCollapseStatus()
