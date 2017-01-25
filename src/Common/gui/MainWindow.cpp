@@ -122,6 +122,7 @@ void MainWindow::setTheme(const QString &themeName)
         QString errorMessage = tr("Error loading the theme %1").arg(themeName);
         QMessageBox::critical(this, tr("Error!"), errorMessage);
     }
+
 }
 
 void MainWindow::changeTheme(QAction *action)

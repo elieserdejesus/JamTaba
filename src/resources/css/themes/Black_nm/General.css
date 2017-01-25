@@ -315,3 +315,14 @@ QTabWidget::pane
 {
     background-color: transparent;
 }
+
+
+
+AudioMeter
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(110, 110, 110);
+    qproperty-peakStartColor: rgb(90, 90, 90);
+    qproperty-peakEndColor: white;
+    qproperty-maxPeakColor: rgb(240, 240, 240);
+}
