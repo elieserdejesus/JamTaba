@@ -303,12 +303,20 @@ QTabWidget::pane
     background-color: transparent;
 }
 
-
 AudioMeter
 {
     /* changing Audio Peak meter custom CSS properties */
-    qproperty-rmsColor: yellow;
+    qproperty-rmsColor: rgb(190, 90, 29);
     qproperty-peakStartColor: orange;
     qproperty-peakEndColor: red;
+    qproperty-maxPeakColor: rgb(190, 90, 20);
+}
+
+AudioMeter#masterMeterL,
+AudioMeter#masterMeterR,
+NinjamPanel #peakMeterLeft,
+NinjamPanel #peakMeterRight
+{
+    qproperty-peakStartColor: rgb(190, 90, 29);
 }
 
