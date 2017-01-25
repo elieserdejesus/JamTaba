@@ -241,7 +241,7 @@ QTabBar::tab:selected
     background-color: rgb(239, 114, 24);
 }
 
-QTabBar::tab:hover
+QTabBar::tab:!selected:hover
 {
     background-color: rgba(239, 114, 24, 150);
 }
