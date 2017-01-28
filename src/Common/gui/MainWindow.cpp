@@ -467,6 +467,8 @@ void MainWindow::loadPreset(const Preset &preset)
 
 void MainWindow::removeAllInputLocalTracks()
 {
+    mainController->removeAllInputTracks();
+
     while (!localGroupChannels.isEmpty()) {
         LocalTrackGroupView *view = localGroupChannels.first();
         ui.localTracksLayout->removeWidget(view);

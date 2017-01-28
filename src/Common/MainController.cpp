@@ -257,6 +257,13 @@ void MainController::saveEncodedAudio(const QString &userName, quint8 channelInd
 
 // +++++++++++++++++++++++++++++++++++++++++++++++
 
+void MainController::removeAllInputTracks()
+{
+    for(int trackID : inputTracks.keys()) {
+        removeInputTrackNode(trackID);
+    }
+}
+
 void MainController::removeInputTrackNode(int inputTrackIndex)
 {
     QMutexLocker locker(&mutex);

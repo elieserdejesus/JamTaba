@@ -89,6 +89,7 @@ LocalInputNode::LocalInputNode(Controller::MainController *mainController, int p
 
 LocalInputNode::~LocalInputNode()
 {
+    //
 }
 
 bool LocalInputNode::isMono() const
@@ -227,6 +228,10 @@ void LocalInputNode::setRoutingMidiInput(bool routeMidiInput)
 {
     quint8 subchannelIndex = 0; // first subchannel
     LocalInputNode *firstSubchannel = mainController->getInputTrackInGroup(channelGroupIndex, subchannelIndex);
+
+    if (firstSubchannel == this)
+        return; //midi routing is not allows in first subchannel
+
     if (firstSubchannel) {
         routingMidiInput = routeMidiInput;
 

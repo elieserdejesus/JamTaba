@@ -170,6 +170,7 @@ public:
     Audio::LocalInputNode *getInputTrack(int localInputIndex);
     virtual int addInputTrackNode(Audio::LocalInputNode *inputTrackNode);
     void removeInputTrackNode(int inputTrackIndex);
+    void removeAllInputTracks();
 
     Audio::LocalInputNode *getInputTrackInGroup(quint8 groupIndex, quint8 trackIndex) const;
 
