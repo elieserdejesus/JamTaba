@@ -35,6 +35,11 @@ MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higher
     connect(ui->checkBoxMidiRouting, &QCheckBox::toggled, this, &MidiToolsDialog::midiRoutingCheckBoxClicked);
 }
 
+void MidiToolsDialog::hideMidiRoutingControls()
+{
+    ui->checkBoxMidiRouting->hide();
+}
+
 MidiToolsDialog::~MidiToolsDialog()
 {
     delete ui;

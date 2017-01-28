@@ -16,6 +16,8 @@ public:
     explicit MidiToolsDialog(const QString &lowerNote, const QString &higherNote, qint8 transpose, bool routingMidiInput);
     ~MidiToolsDialog();
     void setLearnedMidiNote(const QString &learnedNote);
+    void hideMidiRoutingControls();
+
 signals:
     void dialogClosed();
     void lowerNoteChanged(const QString &newLowerNote);

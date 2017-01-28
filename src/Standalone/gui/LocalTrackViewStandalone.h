@@ -105,8 +105,10 @@ private:
     void startMidiNoteLearn();
     void stopMidiNoteLearn();
 
-    bool canShowMidiToolsButton();
-    bool canShowInputTypeIcon();
+    bool canShowMidiToolsButton() const;
+    bool canShowInputTypeIcon() const;
+
+    bool isFirstSubchannel() const;
 
     void updateInputText();
     void updateInputIcon();

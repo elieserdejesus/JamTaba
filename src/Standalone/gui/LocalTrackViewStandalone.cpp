@@ -239,6 +239,13 @@ void LocalTrackViewStandalone::changeMidiRoutingStatus(bool routingMidiToFirstSu
     update();
 }
 
+bool LocalTrackViewStandalone::isFirstSubchannel() const
+{
+    Audio::LocalInputNode *firstSubchannel = mainController->getInputTrackInGroup(inputNode->getChanneGrouplIndex(), 0);
+
+    return firstSubchannel == this->inputNode;
+}
+
 void LocalTrackViewStandalone::openMidiToolsDialog()
 {
     if (!midiToolsDialog) {
@@ -248,7 +255,11 @@ void LocalTrackViewStandalone::openMidiToolsDialog()
         QString lowerNote = getMidiNoteText(inputNode->getMidiLowerNote());
         qint8 transpose = inputNode->getTranspose();
         bool routingMidiInput = inputNode->isRoutingMidiInput();
+
         midiToolsDialog = new MidiToolsDialog(lowerNote, higherNote, transpose, routingMidiInput);
+        if (isFirstSubchannel())
+            midiToolsDialog->hideMidiRoutingControls(); // midi routing is available only in second subchannel
+
         connect(midiToolsDialog, &MidiToolsDialog::dialogClosed, this, &LocalTrackViewStandalone::onMidiToolsDialogClosed);
         connect(midiToolsDialog, &MidiToolsDialog::lowerNoteChanged, this, &LocalTrackViewStandalone::setMidiLowerNote);
         connect(midiToolsDialog, &MidiToolsDialog::higherNoteChanged, this, &LocalTrackViewStandalone::setMidiHigherNote);
@@ -719,12 +730,12 @@ void LocalTrackViewStandalone::updateInputText()
     inputSelectionButton->setText(elidedName);
 }
 
-bool LocalTrackViewStandalone::canShowInputTypeIcon()
+bool LocalTrackViewStandalone::canShowInputTypeIcon() const
 {
     return !inputNode->isMidi() && !isShowingPeakMetersOnly();
 }
 
-bool LocalTrackViewStandalone::canShowMidiToolsButton()
+bool LocalTrackViewStandalone::canShowMidiToolsButton() const
 {
     return inputNode->isMidi() && !isShowingPeakMetersOnly();
 }
