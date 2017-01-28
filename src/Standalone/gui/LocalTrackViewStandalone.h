@@ -118,7 +118,7 @@ private:
     QString getInputTypeIconFile();
     bool canUseMidiDeviceIndex(int midiDeviceIndex) const;
 
-    void paintRoutingMidiArrow(const QColor &color, int topMargin, int arrowSize, bool drawSolidLine);
+    void paintRoutingMidiArrow(const QColor &color, int topMargin, int arrowSize, bool drawSolidLine, bool drawMidiWord);
     void paintReceivingRoutedMidiIndicator(const QColor &color, int topMargin, int arrowSize);
 
     MidiToolsDialog *midiToolsDialog;
