@@ -171,6 +171,8 @@ public:
     virtual int addInputTrackNode(Audio::LocalInputNode *inputTrackNode);
     void removeInputTrackNode(int inputTrackIndex);
 
+    Audio::LocalInputNode *getInputTrackInGroup(quint8 groupIndex, quint8 trackIndex) const;
+
     inline int getInputTracksCount() const
     {
         return inputTracks.size();// return the individual tracks (subchannels) count

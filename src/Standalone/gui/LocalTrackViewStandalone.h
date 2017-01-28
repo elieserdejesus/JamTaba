@@ -39,20 +39,22 @@ public:
 
     void refreshInputSelectionName();
 
+signals:
+    void trackInputChanged();
+
 public slots:
     void setToNoInput();
+
+protected:
+    void paintEvent(QPaintEvent *ev) override;
+    void translateUI() override;
+    bool eventFilter(QObject *target, QEvent *event) override;
+    void setupMetersLayout() override;
 
 protected slots:
     void setToMono(QAction *action) ;
     void setToStereo(QAction *action) ;
     void setToMidi(QAction *action) ;
-
-protected:
-    void translateUI() override;
-
-    bool eventFilter(QObject *target, QEvent *event) override;
-
-    void setupMetersLayout() override;
 
 private slots:
     void showInputSelectionMenu();// build and show the input selection menu
@@ -66,8 +68,10 @@ private slots:
     void toggleMidiNoteLearn(bool);
 
     void useLearnedMidiNote(quint8 midiNote);
-private:
 
+    void changeMidiRoutingStatus(bool routingMidiToFirstSubchannel);
+
+private:
     Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience
 
     QMenu *createMonoInputsMenu(QMenu *parentMenu);
@@ -109,6 +113,9 @@ private:
     QString getMidiInputText();
     QString getInputTypeIconFile();
     bool canUseMidiDeviceIndex(int midiDeviceIndex) const;
+
+    void paintRoutingMidiArrow(const QColor &color, int topMargin, int arrowSize, bool drawSolidLine);
+    void paintReceivingRoutedMidiIndicator(const QColor &color, int topMargin, int arrowSize);
 
     MidiToolsDialog *midiToolsDialog;
 

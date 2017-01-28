@@ -4,6 +4,7 @@
 #include "FxPanelItem.h"
 #include <QGridLayout>
 #include <QStyle>
+#include <QPainter>
 #include <QDesktopWidget>
 
 const QString LocalTrackViewStandalone::MIDI_ICON = ":/images/input_midi.png";
@@ -47,6 +48,99 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     connect(inputNode, &Audio::LocalInputNode::midiNoteLearned, this, &LocalTrackViewStandalone::useLearnedMidiNote);
 
     translateUI();
+}
+
+void LocalTrackViewStandalone::paintRoutingMidiArrow(const QColor &color, int topMargin, int arrowSize, bool drawSolidLine)
+{
+    QPainter painter(this);
+
+    QPen pen(color);
+    if (!drawSolidLine)
+        pen.setStyle(Qt::DashLine);
+
+    painter.setPen(pen);
+
+    const int leftMargin = 2;
+
+    // draw a horizontal line in top of peak meters
+    int metersCenter = peakMeterLeft->x() + (peakMeterRight->x() + peakMeterRight->width() - peakMeterLeft->x())/2;
+    int x1 = metersCenter - 2;
+    int y = midiPeakMeter->y() - 2;
+    int x2 = metersCenter + 2;
+    painter.drawLine(x1, y, x2, y);
+
+    // draw the vertical line
+    int x = x1 + (x2 - x1)/2.0;
+    painter.drawLine(x, y-1, x, topMargin);
+
+    // draw the horizontal line pointing to left subchannel
+    y = topMargin;
+    painter.drawLine(x-1, y, leftMargin + arrowSize, y);
+
+    // draw MIDI word
+    QString text("MIDI");
+    int textWidth = fontMetrics().width(text);
+    int textX = metersCenter/2 - textWidth/2;
+    painter.drawText(textX, y-1, "MIDI");
+
+    // draw arrow in left side
+    QPainterPath arrow(QPointF(leftMargin, y+1));
+    arrow.lineTo(QPointF(leftMargin + arrowSize, y - arrowSize));
+    arrow.lineTo(QPointF(leftMargin + arrowSize, y + arrowSize));
+    arrow.closeSubpath();
+
+    painter.setBrush(color);
+    painter.setPen(Qt::NoPen);
+    painter.drawPath(arrow);
+
+
+}
+
+void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(const QColor &color, int topMargin, int arrowSize)
+{
+    QPainter painter(this);
+
+    painter.setPen(QPen(color));
+
+    const int rightMargin = 2;
+
+    // draw a horizontal line in top of peak meters
+    int metersCenter = peakMeterLeft->x() + (peakMeterRight->x() + peakMeterRight->width() - peakMeterLeft->x())/2;
+    int x1 = metersCenter - 2;
+    int y = peakMeterLeft->y() - 2;
+    int x2 = metersCenter + 2;
+    painter.drawLine(x1, y, x2, y);
+
+    // draw the vertical line
+    int x = x1 + (x2 - x1)/2.0;
+    painter.drawLine(x, y-1, x, topMargin);
+
+    // draw the horizontal line pointing to right subchannel
+    y = topMargin;
+    x2 = width() - rightMargin - arrowSize;
+    painter.drawLine(x+1, y, x2, y);
+
+    x2++;
+    painter.drawLine(x2,     y - arrowSize, x2,     y + arrowSize);
+    painter.drawLine(x2 + 1, y - arrowSize, x2 + 1, y + arrowSize);
+}
+
+void LocalTrackViewStandalone::paintEvent(QPaintEvent *ev)
+{
+    LocalTrackView::paintEvent(ev);
+
+    static const QColor redColor(255, 0, 0, 100);
+    static const int topMargin = 7;
+    static const int arrowSize = 4;
+
+    if (inputNode->isRoutingMidiInput()) {
+        Audio::LocalInputNode *firstSubchannel = mainController->getInputTrackInGroup(inputNode->getChanneGrouplIndex(), 0);
+        bool drawSolidLine = firstSubchannel && firstSubchannel->isReceivingRoutedMidiInput();
+        paintRoutingMidiArrow(redColor, topMargin, arrowSize, drawSolidLine);
+    }
+
+    if (inputNode->isReceivingRoutedMidiInput())
+        paintReceivingRoutedMidiIndicator(redColor, topMargin, arrowSize);
 }
 
 void LocalTrackViewStandalone::translateUI()
@@ -134,6 +228,12 @@ QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
     return button;
 }
 
+void LocalTrackViewStandalone::changeMidiRoutingStatus(bool routingMidiToFirstSubchannel)
+{
+    inputNode->setRoutingMidiInput(routingMidiToFirstSubchannel);
+    update();
+}
+
 void LocalTrackViewStandalone::openMidiToolsDialog()
 {
     if (!midiToolsDialog) {
@@ -142,12 +242,14 @@ void LocalTrackViewStandalone::openMidiToolsDialog()
         QString higherNote = getMidiNoteText(inputNode->getMidiHigherNote());
         QString lowerNote = getMidiNoteText(inputNode->getMidiLowerNote());
         qint8 transpose = inputNode->getTranspose();
-        midiToolsDialog = new MidiToolsDialog(lowerNote, higherNote, transpose);
+        bool routingMidiInput = inputNode->isRoutingMidiInput();
+        midiToolsDialog = new MidiToolsDialog(lowerNote, higherNote, transpose, routingMidiInput);
         connect(midiToolsDialog, &MidiToolsDialog::dialogClosed, this, &LocalTrackViewStandalone::onMidiToolsDialogClosed);
         connect(midiToolsDialog, &MidiToolsDialog::lowerNoteChanged, this, &LocalTrackViewStandalone::setMidiLowerNote);
         connect(midiToolsDialog, &MidiToolsDialog::higherNoteChanged, this, &LocalTrackViewStandalone::setMidiHigherNote);
         connect(midiToolsDialog, &MidiToolsDialog::transposeChanged, this, &LocalTrackViewStandalone::setTranspose);
         connect(midiToolsDialog, &MidiToolsDialog::learnMidiNoteClicked, this, &LocalTrackViewStandalone::toggleMidiNoteLearn);
+        connect(midiToolsDialog, &MidiToolsDialog::midiRoutingCheckBoxClicked, this, &LocalTrackViewStandalone::changeMidiRoutingStatus);
     }
 
     QRect desktopRect = QApplication::desktop()->availableGeometry();
@@ -482,6 +584,8 @@ void LocalTrackViewStandalone::setToNoInput()
     if (inputNode) {
         inputNode->setToNoInput();
         refreshInputSelectionName();
+
+        emit trackInputChanged();
     }
 }
 
@@ -631,6 +735,8 @@ void LocalTrackViewStandalone::setToMono(QAction *action)
     int selectedInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
+
+    emit trackInputChanged();
 }
 
 void LocalTrackViewStandalone::setToStereo(QAction *action)
@@ -638,6 +744,8 @@ void LocalTrackViewStandalone::setToStereo(QAction *action)
     int firstInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
+
+    emit trackInputChanged();
 }
 
 void LocalTrackViewStandalone::setToMidi(QAction *action)
@@ -654,6 +762,8 @@ void LocalTrackViewStandalone::setToMidi(QAction *action)
     int midiDeviceIndex = midiDeviceString.toInt();
 
     controller->setInputTrackToMIDI(getTrackID(), midiDeviceIndex, midiChannel);
+
+    emit trackInputChanged();
 }
 
 bool LocalTrackViewStandalone::eventFilter(QObject *target, QEvent *event)

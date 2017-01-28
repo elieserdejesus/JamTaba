@@ -56,9 +56,7 @@ protected slots: //TODO change to private slots?
 
 private slots:
     void toggleFullScreen();
-
     void closePluginScanDialog();
-
     void restartAudioAndMidi();
 
 private:

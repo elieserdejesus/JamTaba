@@ -63,7 +63,7 @@
             }
             if (isPlayingInNinjamRoom()) {
                 if (ninjamController)// just in case
-                    ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+                    ninjamController->scheduleEncoderChangeForChannel(inputTrack->getChanneGrouplIndex());
 
             }
         }
@@ -183,7 +183,7 @@
                 window->refreshTrackInputSelection(localChannelIndex);
             if (isPlayingInNinjamRoom()) {
                 if (ninjamController)
-                    ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+                    ninjamController->scheduleEncoderChangeForChannel(inputTrack->getChanneGrouplIndex());
 
             }
         }
@@ -202,7 +202,7 @@
                         intervalsToUpload[localChannelIndex]->getGUID(), QByteArray(), true);
                     if (ninjamController)
                         ninjamController->scheduleEncoderChangeForChannel(
-                            inputTrack->getGroupChannelIndex());
+                            inputTrack->getChanneGrouplIndex());
                 }
             }
         }
@@ -229,7 +229,7 @@
                 window->refreshTrackInputSelection(localChannelIndex);
             if (isPlayingInNinjamRoom()) {
                 if (ninjamController)
-                    ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+                    ninjamController->scheduleEncoderChangeForChannel(inputTrack->getChanneGrouplIndex());
 
             }
         }

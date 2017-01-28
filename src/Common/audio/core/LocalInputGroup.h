@@ -14,17 +14,11 @@ public:
     LocalInputGroup(int groupIndex, Audio::LocalInputNode *firstInput);
     ~LocalInputGroup();
 
-    inline bool isEmpty() const
-    {
-        return groupedInputs.empty();
-    }
+    bool isEmpty() const;
 
-    void addInput(Audio::LocalInputNode *input);
+    void addInputNode(Audio::LocalInputNode *input);
 
-    inline int getIndex() const
-    {
-        return groupIndex;
-    }
+    int getIndex() const;
 
     void mixGroupedInputs(Audio::SamplesBuffer &out);
 
@@ -32,18 +26,32 @@ public:
 
     int getMaxInputChannelsForEncoding() const;
 
-    inline bool isTransmiting() const
-    {
-        return transmiting;
-    }
+    bool isTransmiting() const;
 
     void setTransmitingStatus(bool transmiting);
+
+    Audio::LocalInputNode *getInputNode(quint8 index) const;
 
 private:
     int groupIndex;
     QList<Audio::LocalInputNode *> groupedInputs;
     bool transmiting;
 };
+
+inline bool LocalInputGroup::isTransmiting() const
+{
+    return transmiting;
+}
+
+inline int LocalInputGroup::getIndex() const
+{
+    return groupIndex;
+}
+
+inline bool LocalInputGroup::isEmpty() const
+{
+    return groupedInputs.empty();
+}
 
 }//namespace
 

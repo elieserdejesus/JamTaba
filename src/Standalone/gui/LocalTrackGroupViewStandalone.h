@@ -26,6 +26,9 @@ protected:
 private:
     void createSubChannelActions(QMenu &menu);
 
+private slots:
+     void repaintLocalTracks();
+
 };
 
 #endif
