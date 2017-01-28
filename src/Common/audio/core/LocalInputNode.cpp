@@ -217,6 +217,10 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
                 processMidiInput(midiBuffer, filteredMidiBuffer);
         }
         else if (isMidi()) {
+
+            if (isRoutingMidiInput())
+                return; // when routing midi this track will not render midi data, this data will be rendered by first subchannel
+
             processMidiInput(midiBuffer, filteredMidiBuffer);
         }
     }
