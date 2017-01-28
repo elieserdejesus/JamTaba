@@ -79,9 +79,8 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(const QColor &color, int to
 
     // draw MIDI word
     QString text("MIDI");
-    int textWidth = fontMetrics().width(text);
-    int textX = metersCenter/2 - textWidth/2;
-    painter.drawText(textX, y-1, "MIDI");
+    int textX = leftMargin + arrowSize + 2;
+    painter.drawText(textX, y + fontMetrics().height() - 2, text);
 
     // draw arrow in left side
     QPainterPath arrow(QPointF(leftMargin, y+1));
@@ -130,7 +129,7 @@ void LocalTrackViewStandalone::paintEvent(QPaintEvent *ev)
     LocalTrackView::paintEvent(ev);
 
     static const QColor redColor(255, 0, 0, 100);
-    static const int topMargin = 7;
+    static const int topMargin = 4;
     static const int arrowSize = 4;
 
     if (inputNode->isRoutingMidiInput()) {
