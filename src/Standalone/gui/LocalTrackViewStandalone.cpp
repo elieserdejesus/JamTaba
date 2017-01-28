@@ -227,7 +227,7 @@ QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
     return button;
 }
 
-void LocalTrackViewStandalone::changeMidiRoutingStatus(bool routingMidiToFirstSubchannel)
+void LocalTrackViewStandalone::setMidiRouting(bool routingMidiToFirstSubchannel)
 {
     inputNode->setRoutingMidiInput(routingMidiToFirstSubchannel);
 
@@ -265,7 +265,7 @@ void LocalTrackViewStandalone::openMidiToolsDialog()
         connect(midiToolsDialog, &MidiToolsDialog::higherNoteChanged, this, &LocalTrackViewStandalone::setMidiHigherNote);
         connect(midiToolsDialog, &MidiToolsDialog::transposeChanged, this, &LocalTrackViewStandalone::setTranspose);
         connect(midiToolsDialog, &MidiToolsDialog::learnMidiNoteClicked, this, &LocalTrackViewStandalone::toggleMidiNoteLearn);
-        connect(midiToolsDialog, &MidiToolsDialog::midiRoutingCheckBoxClicked, this, &LocalTrackViewStandalone::changeMidiRoutingStatus);
+        connect(midiToolsDialog, &MidiToolsDialog::midiRoutingCheckBoxClicked, this, &LocalTrackViewStandalone::setMidiRouting);
     }
 
     QRect desktopRect = QApplication::desktop()->availableGeometry();

@@ -173,7 +173,7 @@ class Subchannel
 {
 public:
     Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain,
-               int boost, float pan, bool muted, bool stereoInverted, qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote);
+               int boost, float pan, bool muted, bool stereoInverted, qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote, bool routingMidiToFirstSubchannel);
     int firstInput;
     int channelsCount;
     int midiDevice;
@@ -186,6 +186,7 @@ public:
     qint8 transpose; //midi transpose
     quint8 lowerMidiNote; //midi rey range
     quint8 higherMidiNote;
+    bool routingMidiToFirstSubchannel;
 
     inline QList<Persistence::Plugin> getPlugins() const
     {
@@ -240,7 +241,7 @@ public:
     LocalInputTrackSettings(bool createOneTrack = false);
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
-    void read(const QJsonObject &in, bool allowMultiSubchannels);
+    void read(const QJsonObject &in, bool allowSubchannels);
     QList<Channel> channels;
 
     static Plugin jsonObjectToPlugin(QJsonObject jsonObject);

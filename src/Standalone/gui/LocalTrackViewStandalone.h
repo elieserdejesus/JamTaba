@@ -47,6 +47,7 @@ signals:
 
 public slots:
     void setToNoInput();
+    void setMidiRouting(bool routingMidiToFirstSubchannel);
 
 protected:
     void paintEvent(QPaintEvent *ev) override;
@@ -71,8 +72,6 @@ private slots:
     void toggleMidiNoteLearn(bool);
 
     void useLearnedMidiNote(quint8 midiNote);
-
-    void changeMidiRoutingStatus(bool routingMidiToFirstSubchannel);
 
 private:
     Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience

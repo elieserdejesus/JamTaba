@@ -238,11 +238,13 @@ void MainWindowStandalone::initializeLocalSubChannel(LocalTrackView *subChannelV
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
 
+    auto trackView = dynamic_cast<LocalTrackViewStandalone *>(subChannelView);
+    trackView->setMidiRouting(subChannel.routingMidiToFirstSubchannel);
+
     // check if the loaded input selections (midi, audio mono, audio stereo) are stil valid and fallback if not
     sanitizeSubchannelInputSelections(subChannelView, subChannel);
 
-    restoreLocalSubchannelPluginsList(dynamic_cast<LocalTrackViewStandalone *>(subChannelView),
-                                      subChannel);
+    restoreLocalSubchannelPluginsList(trackView, subChannel);
 }
 
 LocalTrackGroupViewStandalone *MainWindowStandalone::createLocalTrackGroupView(int channelGroupIndex)
@@ -268,8 +270,7 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
 
     // recreate the settings including the plugins
     LocalInputTrackSettings settings;
-    QList<LocalTrackGroupViewStandalone *> groups
-        = getLocalChannels<LocalTrackGroupViewStandalone *>();
+    QList<LocalTrackGroupViewStandalone *> groups = getLocalChannels<LocalTrackGroupViewStandalone *>();
     Q_ASSERT(groups.size() == baseSettings.channels.size());
 
     int channelID = 0;
@@ -280,8 +281,7 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
         Channel newChannel = channel;
         newChannel.subChannels.clear();
         int subChannelID = 0;
-        QList<LocalTrackViewStandalone *> trackViews
-            = trackGroupView->getTracks<LocalTrackViewStandalone *>();
+        QList<LocalTrackViewStandalone *> trackViews = trackGroupView->getTracks<LocalTrackViewStandalone *>();
         foreach (Subchannel subchannel, channel.subChannels) {
             Subchannel newSubChannel = subchannel;
             LocalTrackViewStandalone *trackView = trackViews.at(subChannelID);
