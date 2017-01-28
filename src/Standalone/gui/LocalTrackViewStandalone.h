@@ -121,6 +121,8 @@ private:
     void paintRoutingMidiArrow(const QColor &color, int topMargin, int arrowSize, bool drawSolidLine, bool drawMidiWord);
     void paintReceivingRoutedMidiIndicator(const QColor &color, int topMargin, int arrowSize);
 
+    void setAudioRelatedControlsStatus(bool enableControls);
+
     MidiToolsDialog *midiToolsDialog;
 
     QColor midiRoutingArrowColor;

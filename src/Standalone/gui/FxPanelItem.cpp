@@ -92,6 +92,9 @@ void FxPanelItem::unsetPlugin()
 
 void FxPanelItem::mousePressEvent(QMouseEvent *event)
 {
+    if (!isEnabled())
+        return;
+
     if (event->button() == Qt::LeftButton) {
         if (!containPlugin()) {
             on_contextMenu(event->pos());
@@ -104,12 +107,18 @@ void FxPanelItem::mousePressEvent(QMouseEvent *event)
 
 void FxPanelItem::enterEvent(QEvent *)
 {
+    if (!isEnabled())
+        return;
+
     if (!containPlugin())
         label->setText(tr("new effect..."));
 }
 
 void FxPanelItem::leaveEvent(QEvent *)
 {
+    if (!isEnabled())
+        return;
+
     if (!containPlugin())
         label->setText("");
 }

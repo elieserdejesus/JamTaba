@@ -230,14 +230,28 @@ QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
     return button;
 }
 
+void LocalTrackViewStandalone::setAudioRelatedControlsStatus(bool enableControls)
+{
+    QWidget *controls[] = {
+        buttonBoostMinus12, buttonBoostPlus12, buttonBoostZero,
+        soloButton, muteButton, buttonStereoInversion,
+        panSlider, levelSlider
+    };
+
+    for (QWidget *control: controls) {
+        control->setEnabled(enableControls);
+    }
+
+    fxPanel->setEnabled(enableControls);
+
+}
+
 void LocalTrackViewStandalone::setMidiRouting(bool routingMidiToFirstSubchannel)
 {
     inputNode->setRoutingMidiInput(routingMidiToFirstSubchannel);
 
-    QPushButton *buttons[] = { buttonStereoInversion, buttonBoostMinus12, buttonBoostPlus12, buttonBoostZero, soloButton, muteButton };
-    for (QPushButton *button : buttons) {
-        button->setEnabled(!routingMidiToFirstSubchannel);
-    }
+    bool enableAudioControls = !routingMidiToFirstSubchannel;
+    setAudioRelatedControlsStatus(enableAudioControls);
 
     update();
 }

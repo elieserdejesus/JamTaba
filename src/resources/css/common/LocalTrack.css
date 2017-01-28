@@ -8,6 +8,22 @@ FxPanelItem[containPlugin="false"]
     min-height: 14px; /* fixing #442 */
 }
 
+FxPanelItem:disabled
+{
+    background-color: none;
+    border: 1px solid rgba(0, 0, 0 , 10);
+}
+
+FxPanelItem QLabel:disabled
+{
+    color: rgba(0, 0, 0, 140);
+}
+
+FxPanelItem:disabled QPushButton:disabled
+{
+    background-color: rgba(255, 255, 255, 20);
+    border: 1px solid rgba(0, 0, 0, 50);
+}
 
 /* LocalTrackView is widget used to show the user tracks/subchannels.
 ----------------------------------------------------------------------*/
