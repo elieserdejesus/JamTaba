@@ -231,6 +231,12 @@ QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
 void LocalTrackViewStandalone::changeMidiRoutingStatus(bool routingMidiToFirstSubchannel)
 {
     inputNode->setRoutingMidiInput(routingMidiToFirstSubchannel);
+
+    QPushButton *buttons[] = { buttonStereoInversion, buttonBoostMinus12, buttonBoostPlus12, buttonBoostZero, soloButton, muteButton };
+    for (QPushButton *button : buttons) {
+        button->setEnabled(!routingMidiToFirstSubchannel);
+    }
+
     update();
 }
 

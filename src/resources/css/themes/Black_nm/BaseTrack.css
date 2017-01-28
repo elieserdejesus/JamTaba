@@ -34,6 +34,13 @@
    border-radius: 1px;
 }
 
+#buttonBoostMinus12:disabled,
+#buttonBoostPlus12:disabled,
+#buttonBoostZero:disabled
+{
+    color: rgba(0, 0, 0, 100);
+}
+
 #buttonBoostMinus12:checked,
 #buttonBoostPlus12:checked,
 #buttonBoostZero:checked
