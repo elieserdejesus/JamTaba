@@ -15,6 +15,9 @@ class LocalTrackViewStandalone : public LocalTrackView
 {
     Q_OBJECT
 
+    // custom properties defined in CSS files
+    Q_PROPERTY(QColor midiRoutingArrowColor MEMBER midiRoutingArrowColor)
+
 public:
 
     LocalTrackViewStandalone(Controller::MainControllerStandalone* mainController, int channelID);
@@ -118,6 +121,8 @@ private:
     void paintReceivingRoutedMidiIndicator(const QColor &color, int topMargin, int arrowSize);
 
     MidiToolsDialog *midiToolsDialog;
+
+    QColor midiRoutingArrowColor;
 
     static const QString MIDI_ICON;
     static const QString MONO_ICON;

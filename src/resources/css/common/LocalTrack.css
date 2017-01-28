@@ -148,3 +148,9 @@ LocalTrackGroupView #groupNameField             /* The channel name for local tr
     padding-right: 0px;
     margin: 0px;
 }
+
+
+LocalTrackViewStandalone
+{
+    qproperty-midiRoutingArrowColor: rgba(255, 0, 0, 120);
+}

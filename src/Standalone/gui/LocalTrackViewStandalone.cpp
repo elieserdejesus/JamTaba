@@ -16,7 +16,8 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     Controller::MainControllerStandalone *mainController, int channelIndex) :
     LocalTrackView(mainController, channelIndex),
     controller(mainController),
-    midiToolsDialog(nullptr)
+    midiToolsDialog(nullptr),
+    midiRoutingArrowColor(QColor(255, 0, 0, 100))
 {
     fxPanel = createFxPanel();
 
@@ -128,18 +129,17 @@ void LocalTrackViewStandalone::paintEvent(QPaintEvent *ev)
 {
     LocalTrackView::paintEvent(ev);
 
-    static const QColor redColor(255, 0, 0, 100);
     static const int topMargin = 4;
     static const int arrowSize = 4;
 
     if (inputNode->isRoutingMidiInput()) {
         Audio::LocalInputNode *firstSubchannel = mainController->getInputTrackInGroup(inputNode->getChanneGrouplIndex(), 0);
         bool drawSolidLine = firstSubchannel && firstSubchannel->isReceivingRoutedMidiInput();
-        paintRoutingMidiArrow(redColor, topMargin, arrowSize, drawSolidLine);
+        paintRoutingMidiArrow(midiRoutingArrowColor, topMargin, arrowSize, drawSolidLine);
     }
 
     if (inputNode->isReceivingRoutedMidiInput())
-        paintReceivingRoutedMidiIndicator(redColor, topMargin, arrowSize);
+        paintReceivingRoutedMidiIndicator(midiRoutingArrowColor, topMargin, arrowSize);
 }
 
 void LocalTrackViewStandalone::translateUI()
