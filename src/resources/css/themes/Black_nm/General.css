@@ -248,13 +248,6 @@ QTabBar::tab:selected
     background-color: rgb(20, 20, 20);
 }
 
-QTabBar::tab:hover,
-QTabBar::tab:hover:checked
-{
-    color: rgb(140, 140,140);
-    background-color: rgb(30, 30, 30);
-}
-
 QTabBar::tab:!selected
 {
     margin-top: 3px; /* make non-selected tabs look smaller */
@@ -264,7 +257,7 @@ QTabBar::tab:!selected
 
 QTabBar::tab:!selected:hover
 {
-    background-color: rgb(20, 20, 20);
+    background-color: rgb(30, 30, 30);
 }
 
 QMenuBar::item
@@ -314,4 +307,13 @@ QMenu::item::enabled:selected
 QTabWidget::pane
 {
     background-color: transparent;
+}
+
+
+
+AudioMeter
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(110, 110, 110);
+    qproperty-maxPeakColor: rgb(110, 110, 110);
 }
