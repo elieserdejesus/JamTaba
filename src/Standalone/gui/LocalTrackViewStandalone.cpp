@@ -185,6 +185,8 @@ void LocalTrackViewStandalone::reset()
         fxPanel->removePlugins();
 
     setMidiRouting(false);
+  
+    refreshInputSelectionName();
 }
 
 QLabel *LocalTrackViewStandalone::createInputTypeIconLabel(QWidget *parent)
