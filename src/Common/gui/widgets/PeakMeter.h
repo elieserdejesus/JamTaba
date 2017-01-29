@@ -15,9 +15,14 @@ public:
     QSize minimumSizeHint() const override;
 
 protected:
-    inline bool isVertical() const { return orientation == Qt::Vertical; }
 
-    QRectF getPaintRect(float peakValue) const;
+    virtual void recreateInterpolatedColors() = 0;
+
+    void resizeEvent(QResizeEvent *) override;
+
+    void paintSegments(QPainter &painter, float rawPeakValue, const std::vector<QColor> &segmentsColors, int offset = 0, bool halfSize = false);
+
+    inline bool isVertical() const { return orientation == Qt::Vertical; }
 
     static float limitFloatValue(float value, float minValue = 0.0f, float maxValue = 1.0f);
 
@@ -26,6 +31,8 @@ protected:
     int decayTime;
 
     Qt::Orientation orientation;
+
+    static const quint8 SEGMENTS_SIZE;
 
     static const int LINES_MARGIN;
     static const int MIN_SIZE;
@@ -69,7 +76,8 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
-    void resizeEvent(QResizeEvent *) override;
+
+    void recreateInterpolatedColors() override;
 
 private:
     static const int MAX_PEAK_SHOW_TIME;
@@ -94,19 +102,14 @@ private:
 
     qint64 lastMaxPeakTime;
 
-    static const quint8 segmentsSize;
-
-    void paintSegments(QPainter &painter, float rawPeakValue, const std::vector<QColor> &segmentsColors, int offset, bool halfSize);
-
     void paintMaxPeakMarker(QPainter &painter, bool halfSize);
 
     void updateInternalValues();
 
     QColor interpolateColor(const QColor &start, const QColor &end, float ratio);
 
-    void recreateInterpolatedColors();
-
 };
+
 
 class MidiActivityMeter : public BaseMeter
 {
@@ -117,10 +120,13 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
-
+    void recreateInterpolatedColors() override;
 private:
-    QColor solidColor;
+    QColor midiActivityColor;
+    std::vector<QColor> colors;
     float activityValue;
+
+    void updateInternalValues();
 };
 
 #endif
