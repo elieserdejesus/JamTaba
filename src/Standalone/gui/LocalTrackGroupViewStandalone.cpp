@@ -1,6 +1,7 @@
 #include "LocalTrackGroupViewStandalone.h"
 #include "LocalTrackViewStandalone.h"
 #include "MainWindowStandalone.h"
+#include "audio/core/LocalInputNode.h"
 
 LocalTrackGroupViewStandalone::LocalTrackGroupViewStandalone(int index,
                                                              MainWindowStandalone *mainWindow) :
@@ -12,6 +13,21 @@ void LocalTrackGroupViewStandalone::populateMenu(QMenu &menu)
 {
     LocalTrackGroupView::populateMenu(menu);
     createSubChannelActions(menu);
+}
+
+void LocalTrackGroupViewStandalone::removeSubchannel()
+{
+    if (trackViews.size() > 1) { // only the second subchannel can be removed
+         LocalTrackViewStandalone *secondTrack = getTracks<LocalTrackViewStandalone *>().at(1);
+         if (secondTrack) {
+             Audio::LocalInputNode *inputNode = secondTrack->getInputNode();
+             if (inputNode->isRoutingMidiInput()) {
+                 secondTrack->setMidiRouting(false); // deactivate midi routing before delete the subchannel
+             }
+         }
+    }
+
+    LocalTrackGroupView::removeSubchannel();
 }
 
 void LocalTrackGroupViewStandalone::createSubChannelActions(QMenu &menu)

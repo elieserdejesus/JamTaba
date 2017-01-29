@@ -29,6 +29,9 @@ private:
 private slots:
      void repaintLocalTracks();
 
+protected slots:
+     void removeSubchannel() override;
+
 };
 
 #endif

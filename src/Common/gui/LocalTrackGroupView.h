@@ -87,6 +87,9 @@ signals:
     void presetLoaded();
     void presetSaved();
 
+protected slots:
+    virtual void removeSubchannel();
+
 private slots:
     void showMenu();
 
@@ -96,7 +99,6 @@ private slots:
     void highlightHoveredSubchannel();
     void highlightHoveredChannel();
 
-    void removeSubchannel();
     void removeChannel();
 
     void loadPreset(QAction *action);
