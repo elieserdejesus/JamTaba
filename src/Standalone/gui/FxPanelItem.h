@@ -41,9 +41,9 @@ public:
     Q_PROPERTY(bool containPlugin READ containPlugin())// to use in stylesheet
 
 protected:
-    void mousePressEvent(QMouseEvent *event);
-    void enterEvent(QEvent *);
-    void leaveEvent(QEvent *);
+    void mousePressEvent(QMouseEvent *event) override;
+    void enterEvent(QEvent *) override;
+    void leaveEvent(QEvent *) override;
 
 private slots:
     void on_contextMenu(QPoint p);

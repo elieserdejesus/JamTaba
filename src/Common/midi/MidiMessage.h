@@ -26,7 +26,7 @@ public:
 
     quint8 getNoteVelocity() const;
 
-    int getSourceID() const;
+    int getSourceDeviceIndex() const;
 
     int getStatus() const;
 
@@ -46,7 +46,7 @@ inline int MidiMessage::getChannel() const
     return data & 0x0000000F;
 }
 
-inline int MidiMessage::getSourceID() const
+inline int MidiMessage::getSourceDeviceIndex() const
 {
     return sourceID;
 }

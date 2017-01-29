@@ -151,7 +151,9 @@ PeakMeter
 
 }
 
-BaseTrackView[unlighted="true"] QSlider#panSlider::groove   /* pan slider 'track' when not xmiting */
+BaseTrackView[unlighted="true"] QSlider#panSlider::groove,   /* pan slider 'track' when not xmiting */
+#panSlider::handle:disabled,
+QSlider::handle:vertical:disabled
 {
     border: 1px solid rgba(0, 0, 0, 30);
 }

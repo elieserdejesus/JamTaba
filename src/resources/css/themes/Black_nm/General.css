@@ -31,7 +31,7 @@ QPushButton:hover:checked
     border: 1px outset rgb(10, 10, 10);
 }
 
-QPushButton[enabled="false"]
+QPushButton:disabled
 {
     background-color: rgba(0, 0, 0, 40);
     color: rgba(0, 0, 0, 100);

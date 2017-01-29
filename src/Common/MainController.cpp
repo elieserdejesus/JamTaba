@@ -257,13 +257,20 @@ void MainController::saveEncodedAudio(const QString &userName, quint8 channelInd
 
 // +++++++++++++++++++++++++++++++++++++++++++++++
 
+void MainController::removeAllInputTracks()
+{
+    for(int trackID : inputTracks.keys()) {
+        removeInputTrackNode(trackID);
+    }
+}
+
 void MainController::removeInputTrackNode(int inputTrackIndex)
 {
     QMutexLocker locker(&mutex);
     if (inputTracks.contains(inputTrackIndex)) {
         // remove from group
         Audio::LocalInputNode *inputTrack = inputTracks[inputTrackIndex];
-        int trackGroupIndex = inputTrack->getGroupChannelIndex();
+        int trackGroupIndex = inputTrack->getChanneGrouplIndex();
         if (trackGroups.contains(trackGroupIndex)) {
             trackGroups[trackGroupIndex]->removeInput(inputTrack);
             if (trackGroups[trackGroupIndex]->isEmpty())
@@ -281,12 +288,12 @@ int MainController::addInputTrackNode(Audio::LocalInputNode *inputTrackNode)
     inputTracks.insert(inputTrackID, inputTrackNode);
     addTrack(inputTrackID, inputTrackNode);
 
-    int trackGroupIndex = inputTrackNode->getGroupChannelIndex();
+    int trackGroupIndex = inputTrackNode->getChanneGrouplIndex();
     if (!trackGroups.contains(trackGroupIndex))
         trackGroups.insert(trackGroupIndex,
                            new Audio::LocalInputGroup(trackGroupIndex, inputTrackNode));
     else
-        trackGroups[trackGroupIndex]->addInput(inputTrackNode);
+        trackGroups[trackGroupIndex]->addInputNode(inputTrackNode);
 
     return inputTrackID;
 }
@@ -833,4 +840,13 @@ void MainController::storeMeteringSettings(bool showingMaxPeaks, quint8 meterOpt
 {
     settings.storeMeterOption(meterOption);
     settings.storeMeterShowingMaxPeaks(showingMaxPeaks);
+}
+
+Audio::LocalInputNode *MainController::getInputTrackInGroup(quint8 groupIndex, quint8 trackIndex) const
+{
+    Audio::LocalInputGroup *trackGroup = trackGroups[groupIndex];
+    if (!trackGroup)
+        return nullptr;
+
+    return trackGroup->getInputNode(trackIndex);
 }

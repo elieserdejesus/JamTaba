@@ -417,8 +417,9 @@ Plugin::Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const Q
 }
 
 Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel,
-                       float gain, int boost, float pan, bool muted, bool stereoInverted, qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote) :
-    firstInput(firstInput),
+                       float gain, int boost, float pan, bool muted, bool stereoInverted,
+                       qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote, bool routingMidiToFirstSubchannel)
+    :firstInput(firstInput),
     channelsCount(channelsCount),
     midiDevice(midiDevice),
     midiChannel(midiChannel),
@@ -429,7 +430,8 @@ Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int mi
     stereoInverted(stereoInverted),
     transpose(transpose),
     lowerMidiNote(lowerMidiNote),
-    higherMidiNote(higherMidiNote)
+    higherMidiNote(higherMidiNote),
+    routingMidiToFirstSubchannel(routingMidiToFirstSubchannel)
 {
 
 }
@@ -443,7 +445,17 @@ LocalInputTrackSettings::LocalInputTrackSettings(bool createOneTrack) :
         qint8 transpose = 0;
         quint8 lowerNote = 0;
         quint8 higherNote = 127;
-        Subchannel subchannel(0, 2, -1, -1, 1.0f, 1.0f, 0.0f, false, false, transpose, lowerNote, higherNote);
+        int firstInput = 0;
+        int channelsCount = 2;
+        int midiDevice = -1;
+        int midiChannel = -1;
+        float gain = 1.0f;
+        float boost = 1.0f;
+        float pan = 0.0f;
+        bool muted = false;
+        bool stereoInverted = false;
+        bool routingMidi = false;
+        Subchannel subchannel(firstInput, channelsCount, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote, routingMidi);
         channel.subChannels.append(subchannel);
         this->channels.append(channel);
     }
@@ -456,20 +468,24 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
         QJsonObject channelObject;
         channelObject["name"] = channel.name;
         QJsonArray subchannelsArrays;
+        int subchannelsCount = 0;
         foreach (const Subchannel &sub, channel.subChannels) {
             QJsonObject subChannelObject;
-            subChannelObject["firstInput"] = sub.firstInput;
-            subChannelObject["channelsCount"] = sub.channelsCount;
-            subChannelObject["midiDevice"] = sub.midiDevice;
-            subChannelObject["midiChannel"] = sub.midiChannel;
-            subChannelObject["gain"] = sub.gain;
-            subChannelObject["boost"] = sub.boost;
-            subChannelObject["pan"] = sub.pan;
-            subChannelObject["muted"] = sub.muted;
-            subChannelObject["stereoInverted"] = sub.stereoInverted;
-            subChannelObject["transpose"] = sub.transpose;
-            subChannelObject["lowerNote"] = sub.lowerMidiNote;
-            subChannelObject["higherNote"] = sub.higherMidiNote;
+            subChannelObject["firstInput"]       = sub.firstInput;
+            subChannelObject["channelsCount"]    = sub.channelsCount;
+            subChannelObject["midiDevice"]       = sub.midiDevice;
+            subChannelObject["midiChannel"]      = sub.midiChannel;
+            subChannelObject["gain"]             = sub.gain;
+            subChannelObject["boost"]            = sub.boost;
+            subChannelObject["pan"]              = sub.pan;
+            subChannelObject["muted"]            = sub.muted;
+            subChannelObject["stereoInverted"]   = sub.stereoInverted;
+            subChannelObject["transpose"]        = sub.transpose;
+            subChannelObject["lowerNote"]        = sub.lowerMidiNote;
+            subChannelObject["higherNote"]       = sub.higherMidiNote;
+
+            if (subchannelsCount > 0) // skip midiRouting in first subchannel
+                subChannelObject["routingMidiInput"] = sub.routingMidiToFirstSubchannel;
 
             QJsonArray pluginsArray;
             foreach (const Persistence::Plugin &plugin, sub.getPlugins()) {
@@ -494,6 +510,8 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
             subChannelObject["plugins"] = pluginsArray;
 
             subchannelsArrays.append(subChannelObject);
+
+            subchannelsCount++;
         }
         channelObject["subchannels"] = subchannelsArrays;
         channelsArray.append(channelObject);
@@ -522,7 +540,7 @@ Plugin LocalInputTrackSettings::jsonObjectToPlugin(QJsonObject pluginObject)
     return Persistence::Plugin(descriptor, bypassed, QByteArray::fromBase64(rawByteArray));
 }
 
-void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchannels)
+void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
 {
     if (in.contains("channels")) {
         QJsonArray channelsArray = in["channels"].toArray();
@@ -531,7 +549,7 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchan
             Persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
             if (channelObject.contains("subchannels")) {
                 QJsonArray subChannelsArray = channelObject["subchannels"].toArray();
-                int subChannelsLimit = allowMultiSubchannels ? subChannelsArray.size() : 1;
+                int subChannelsLimit = allowSubchannels ? subChannelsArray.size() : 1;
                 for (int k = 0; k < subChannelsLimit; ++k) {
                     QJsonObject subChannelObject = subChannelsArray.at(k).toObject();
                     int firstInput = getValueFromJson(subChannelObject, "firstInput", 0);
@@ -546,6 +564,7 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchan
                     qint8 transpose = getValueFromJson(subChannelObject, "transpose", (qint8)0);
                     quint8 lowerNote = getValueFromJson(subChannelObject, "lowerNote", (quint8)0);
                     quint8 higherNote = getValueFromJson(subChannelObject, "higherNote", (quint8)127);
+                    bool routingMidi = k > 0 && getValueFromJson(subChannelObject, "routingMidiInput", false);
 
                     QList<Plugin> plugins;
                     if (subChannelObject.contains("plugins")) {
@@ -562,7 +581,7 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchan
                         }
                     }
                     Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,
-                                                       midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote);
+                                                       midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote, routingMidi);
                     subChannel.setPlugins(plugins);
                     channel.subChannels.append(subChannel);
                 }

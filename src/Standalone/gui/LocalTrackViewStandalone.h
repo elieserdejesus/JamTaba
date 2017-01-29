@@ -15,6 +15,9 @@ class LocalTrackViewStandalone : public LocalTrackView
 {
     Q_OBJECT
 
+    // custom properties defined in CSS files
+    Q_PROPERTY(QColor midiRoutingArrowColor MEMBER midiRoutingArrowColor)
+
 public:
 
     LocalTrackViewStandalone(Controller::MainControllerStandalone* mainController, int channelID);
@@ -39,20 +42,23 @@ public:
 
     void refreshInputSelectionName();
 
+signals:
+    void trackInputChanged();
+
 public slots:
     void setToNoInput();
+    void setMidiRouting(bool routingMidiToFirstSubchannel);
+
+protected:
+    void paintEvent(QPaintEvent *ev) override;
+    void translateUI() override;
+    bool eventFilter(QObject *target, QEvent *event) override;
+    void setupMetersLayout() override;
 
 protected slots:
     void setToMono(QAction *action) ;
     void setToStereo(QAction *action) ;
     void setToMidi(QAction *action) ;
-
-protected:
-    void translateUI() override;
-
-    bool eventFilter(QObject *target, QEvent *event) override;
-
-    void setupMetersLayout() override;
 
 private slots:
     void showInputSelectionMenu();// build and show the input selection menu
@@ -66,8 +72,8 @@ private slots:
     void toggleMidiNoteLearn(bool);
 
     void useLearnedMidiNote(quint8 midiNote);
-private:
 
+private:
     Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience
 
     QMenu *createMonoInputsMenu(QMenu *parentMenu);
@@ -98,8 +104,10 @@ private:
     void startMidiNoteLearn();
     void stopMidiNoteLearn();
 
-    bool canShowMidiToolsButton();
-    bool canShowInputTypeIcon();
+    bool canShowMidiToolsButton() const;
+    bool canShowInputTypeIcon() const;
+
+    bool isFirstSubchannel() const;
 
     void updateInputText();
     void updateInputIcon();
@@ -110,7 +118,14 @@ private:
     QString getInputTypeIconFile();
     bool canUseMidiDeviceIndex(int midiDeviceIndex) const;
 
+    void paintRoutingMidiArrow(const QColor &color, int topMargin, int arrowSize, bool drawSolidLine, bool drawMidiWord);
+    void paintReceivingRoutedMidiIndicator(const QColor &color, int topMargin, int arrowSize);
+
+    void setAudioRelatedControlsStatus(bool enableControls);
+
     MidiToolsDialog *midiToolsDialog;
+
+    QColor midiRoutingArrowColor;
 
     static const QString MIDI_ICON;
     static const QString MONO_ICON;

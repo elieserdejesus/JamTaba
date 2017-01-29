@@ -17,7 +17,7 @@ bool AudioMeter::paintingMaxPeakMarker = true;
 bool AudioMeter::paintingPeaks = true;
 bool AudioMeter::paintingRMS = true;
 
-const quint8 AudioMeter::segmentsSize = 6;
+const quint8 BaseMeter::SEGMENTS_SIZE = 6;
 
 BaseMeter::BaseMeter(QWidget *parent) :
     QFrame(parent),
@@ -32,6 +32,36 @@ BaseMeter::BaseMeter(QWidget *parent) :
 BaseMeter::~BaseMeter()
 {
 
+}
+
+void BaseMeter::resizeEvent(QResizeEvent * /*ev*/)
+{
+    recreateInterpolatedColors();
+
+    update();
+}
+
+
+void BaseMeter::paintSegments(QPainter &painter, float peakValue, const std::vector<QColor> &segmentsColors, int offset, bool halfSize)
+{
+    const quint32 segmentsToPaint = (quint32)peakValue /SEGMENTS_SIZE;
+
+    if (segmentsColors.size() < segmentsToPaint)
+        return;
+
+    const bool isVerticalMeter = isVertical();
+
+    int x = isVerticalMeter ? offset : 0;
+    int y = isVerticalMeter ? (height() - SEGMENTS_SIZE) : offset;
+    const int w = isVerticalMeter ? (halfSize ? width()/2 : width()) : SEGMENTS_SIZE - 1;
+    const int h = isVerticalMeter ? (SEGMENTS_SIZE - 1) : (halfSize ? height()/2 : height() - 2);
+    for (quint32 i = 0; i < segmentsToPaint; ++i) {
+        painter.fillRect(x, y, w, h, segmentsColors[i]);
+        if (isVerticalMeter)
+            y -= SEGMENTS_SIZE;
+        else
+            x += SEGMENTS_SIZE;
+    }
 }
 
 QSize BaseMeter::minimumSizeHint() const
@@ -54,15 +84,6 @@ void BaseMeter::setDecayTime(quint32 decayTimeInMiliseconds)
 {
     this->decayTime = decayTimeInMiliseconds;
     update();
-}
-
-QRectF BaseMeter::getPaintRect(float peakValue) const
-{
-    bool isVerticalMeter = isVertical();
-    return QRectF(isVerticalMeter ? 1.0f : 0.0f,                // x
-               isVerticalMeter ? height() - peakValue : 1.0f,   // y
-               isVerticalMeter ? width()-2.0f : peakValue,      // width
-               height() - (isVerticalMeter ? 0.0f : 2.0f));     // height
 }
 
 float BaseMeter::limitFloatValue(float value, float minValue, float maxValue)
@@ -136,13 +157,6 @@ void AudioMeter::setPeaksEndColor(const QColor &newColor)
     update();
 }
 
-void AudioMeter::resizeEvent(QResizeEvent * /*ev*/)
-{
-    recreateInterpolatedColors();
-
-    update();
-}
-
 void AudioMeter::recreateInterpolatedColors()
 {
     // rebuild the peak and RMS colors vector
@@ -150,7 +164,7 @@ void AudioMeter::recreateInterpolatedColors()
     rmsColors.clear();
 
     const quint32 size = isVertical() ? height() : width();
-    const quint32 segments = size/segmentsSize;
+    const quint32 segments = size/SEGMENTS_SIZE;
     const int rmsInitialAlpha = rmsColor.alpha() * 0.6; // interpolate rms colors alpha from 60% to 100%
 
     for (quint32 i = 0; i < segments; ++i) {
@@ -161,31 +175,6 @@ void AudioMeter::recreateInterpolatedColors()
         int newAlpha = (float)i/segments * rmsColor.alpha();
         rmsColor.setAlpha(qMin(newAlpha + rmsInitialAlpha, 255));
         rmsColors.push_back(newRmsColor);
-    }
-}
-
-void AudioMeter::paintSegments(QPainter &painter, float rawPeakValue, const std::vector<QColor> &segmentsColors, int offset, bool halfSize)
-{
-    bool isVerticalMeter = isVertical();
-    const int rectSize = isVerticalMeter ? height() : width();
-
-    float peakValue = Utils::poweredGainToLinear(rawPeakValue) * rectSize;
-    const quint32 segmentsToPaint = (quint32)peakValue /segmentsSize;
-
-    if (segmentsColors.size() < segmentsToPaint)
-        return;
-
-    int x = isVerticalMeter ? offset : 0;
-    int y = isVerticalMeter ? (height() - segmentsSize) : offset;
-    const int w = isVerticalMeter ? (halfSize ? width()/2 : width()) : segmentsSize - 1;
-    const int h = isVerticalMeter ? (segmentsSize - 1) : (halfSize ? height()/2 : height() - 2);
-    for (quint32 i = 0; i < segmentsToPaint; ++i) {
-        painter.fillRect(x, y, w, h, segmentsColors[i]);
-
-        if (isVerticalMeter)
-            y -= segmentsSize;
-        else
-            x += segmentsSize;
     }
 }
 
@@ -240,15 +229,18 @@ void AudioMeter::paintEvent(QPaintEvent *)
     if (isEnabled()) {
 
         const bool halfSizePainting = paintingPeaks && paintingRMS;
+        const int rectSize = isVertical() ? height() : width();
 
         if (currentPeak && paintingPeaks) {
             const int offset = paintingRMS ? 0 : 1;
-            paintSegments(painter, currentPeak, peakColors, offset, halfSizePainting);
+            float peakValue = Utils::poweredGainToLinear(currentPeak) * rectSize;
+            paintSegments(painter, peakValue, peakColors, offset, halfSizePainting);
         }
 
         if (currentRms && paintingRMS) {
             const int offset = paintingPeaks ? (isVertical() ? width()/2 : height()/2) : 1;
-            paintSegments(painter, currentRms, rmsColors, offset + 1, halfSizePainting);
+            float rmsValue = Utils::poweredGainToLinear(currentRms) * rectSize;
+            paintSegments(painter, rmsValue, rmsColors, offset + 1, halfSizePainting);
         }
 
         if (maxPeak && paintingMaxPeakMarker)
@@ -316,37 +308,56 @@ bool AudioMeter::isPaintingRmsOnly()
 
 MidiActivityMeter::MidiActivityMeter(QWidget *parent)
     : BaseMeter(parent),
-      solidColor(Qt::red)
+      midiActivityColor(Qt::red)
 {
 
+}
+
+void MidiActivityMeter::recreateInterpolatedColors()
+{
+    colors.clear();
+
+    const quint32 size = isVertical() ? height() : width();
+    const quint32 segments = size/SEGMENTS_SIZE;
+    const int initialAlpha = midiActivityColor.alpha() * 0.6; // interpolate colors alpha from 60% to 100%
+
+    for (quint32 i = 0; i < segments; ++i) {
+        int newAlpha = (float)i/segments * midiActivityColor.alpha();
+        QColor newColor(midiActivityColor);
+        newColor.setAlpha(qMin(newAlpha + initialAlpha, 255));
+        colors.push_back(newColor);
+    }
 }
 
 void MidiActivityMeter::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
-    // meter
     if (isEnabled()) {
         float value = (isVertical() ? height() : width()) * activityValue;
-        painter.fillRect(getPaintRect(value), solidColor);
-
-        quint64 now = QDateTime::currentMSecsSinceEpoch();
-
-        // decay
-        long ellapsedTimeFromLastUpdate = now - lastUpdate;
-        float deltaTime = (float)ellapsedTimeFromLastUpdate/decayTime;
-        activityValue -= deltaTime;
-
-        if (activityValue < 0)
-            activityValue = 0;
-
-        lastUpdate = now;
+        paintSegments(painter, value, colors);
+        updateInternalValues();
     }
+}
+
+void MidiActivityMeter::updateInternalValues()
+{
+    quint64 now = QDateTime::currentMSecsSinceEpoch();
+
+    // decay
+    long ellapsedTimeFromLastUpdate = now - lastUpdate;
+    float deltaTime = (float)ellapsedTimeFromLastUpdate/decayTime;
+    activityValue -= deltaTime;
+
+    if (activityValue < 0)
+        activityValue = 0;
+
+    lastUpdate = now;
 }
 
 void MidiActivityMeter::setSolidColor(const QColor &color)
 {
-    this->solidColor = color;
+    this->midiActivityColor = color;
     update();
 }
 

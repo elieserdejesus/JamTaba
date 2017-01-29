@@ -7,7 +7,7 @@ LocalInputGroup::LocalInputGroup(int groupIndex, Audio::LocalInputNode *firstInp
     groupIndex(groupIndex),
     transmiting(true)
 {
-    addInput(firstInput);
+    addInputNode(firstInput);
 }
 
 LocalInputGroup::~LocalInputGroup()
@@ -15,10 +15,20 @@ LocalInputGroup::~LocalInputGroup()
     groupedInputs.clear();
 }
 
-void LocalInputGroup::addInput(Audio::LocalInputNode *input)
+void LocalInputGroup::addInputNode(Audio::LocalInputNode *input)
 {
     groupedInputs.append(input);
 }
+
+LocalInputNode *LocalInputGroup::getInputNode(quint8 index) const
+{
+    if (index < groupedInputs.size()) {
+        return groupedInputs.at(index);
+    }
+
+    return nullptr;
+}
+
 
 void LocalInputGroup::mixGroupedInputs(Audio::SamplesBuffer &out)
 {

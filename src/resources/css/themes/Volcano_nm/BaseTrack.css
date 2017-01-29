@@ -172,10 +172,12 @@ stop: 1.0 #EF820D);
 /* Setting colors when the track is 'not transmiting'
 -----------------------------------------------------*/
 BaseTrackView[unlighted="true"] #panSlider::handle,         /* pan slider handle */
-BaseTrackView[unlighted="true"] QSlider::handle:vertical    /* track fader handle */
+BaseTrackView[unlighted="true"] QSlider::handle:vertical,    /* track fader handle */
+#panSlider::handle:disabled,
+QSlider::handle:vertical:disabled
 {
-background: rgb(179, 89, 37);
-Border: none;
+    background: rgb(179, 89, 37);
+    Border: none;
 }
 
 BaseTrackView[unlighted="true"],                            /* the track */

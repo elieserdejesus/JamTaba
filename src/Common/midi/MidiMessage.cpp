@@ -46,7 +46,7 @@ MidiMessage MidiMessage::fromArray(const char array[4], qint32 deviceIndex)
 
 void MidiMessage::transpose(qint8 semitones)
 {
-    if (!isNote()) {
+    if (!isNote() || semitones == 0) {
         return;
     }
     quint32 newValue = data + (semitones << 8);

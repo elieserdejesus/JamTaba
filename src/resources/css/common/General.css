@@ -31,7 +31,7 @@ QPushButton:checked
     color: rgb(0,0,0);
 }
 
-QPushButton[enabled="false"]        /* disabled buttons */
+QPushButton:disabled
 {
     background: none;
     color: rgba(0, 0, 0, 30);

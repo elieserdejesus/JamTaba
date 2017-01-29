@@ -291,6 +291,7 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
     LocalInputTrackSettings settings;
     foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
         Channel channel(trackGroupView->getGroupName());
+        int subchannelsCount = 0;
         foreach (LocalTrackView *trackView, trackGroupView->getTracks<LocalTrackView *>()) {
             LocalInputNode *inputNode = trackView->getInputNode();
             ChannelRange inputNodeRange = inputNode->getAudioInputRange();
@@ -306,10 +307,13 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
             qint8 transpose = inputNode->getTranspose();
             quint8 lowerNote = inputNode->getMidiLowerNote();
             quint8 higherNote = inputNode->getMidiHigherNote();
+            bool routindMidiInput = subchannelsCount > 0 && inputNode->isRoutingMidiInput(); // midi routing is not allowed in first subchannel
 
             Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted,
-                           transpose, lowerNote, higherNote);
+                                                                    transpose, lowerNote, higherNote, routindMidiInput);
             channel.subChannels.append(sub);
+
+            subchannelsCount++;
         }
         settings.channels.append(channel);
     }
@@ -463,6 +467,8 @@ void MainWindow::loadPreset(const Preset &preset)
 
 void MainWindow::removeAllInputLocalTracks()
 {
+    mainController->removeAllInputTracks();
+
     while (!localGroupChannels.isEmpty()) {
         LocalTrackGroupView *view = localGroupChannels.first();
         ui.localTracksLayout->removeWidget(view);

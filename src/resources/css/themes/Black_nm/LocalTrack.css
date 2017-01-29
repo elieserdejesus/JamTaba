@@ -181,3 +181,10 @@ LocalTrackGroupView #groupNameField
             stop:1 rgba(25, 25, 25));
     border: 1px solid rgb(55, 55, 55);
 }
+
+
+
+LocalTrackViewStandalone
+{
+    qproperty-midiRoutingArrowColor: rgba(255, 255, 255, 80);
+}

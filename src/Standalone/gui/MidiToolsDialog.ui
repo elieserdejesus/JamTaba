@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>237</width>
-    <height>208</height>
+    <height>257</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -200,6 +200,13 @@
        </layout>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="checkBoxMidiRouting">
+     <property name="text">
+      <string>Route MIDI input to first subchannel</string>
+     </property>
     </widget>
    </item>
   </layout>
