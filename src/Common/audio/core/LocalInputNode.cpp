@@ -221,8 +221,11 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
         }
     }
 
-    if (isRoutingMidiInput())
+    if (isRoutingMidiInput()) {
+        lastPeak.update(AudioPeak()); // ensure the audio meters will be ZERO
+
         return; // when routing midi this track will not render midi data, this data will be rendered by first subchannel. But the midi data is processed above to update MIDI activity meter
+    }
 
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer);
 }
