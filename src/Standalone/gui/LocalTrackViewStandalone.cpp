@@ -180,8 +180,11 @@ void LocalTrackViewStandalone::updateGuiElements()
 void LocalTrackViewStandalone::reset()
 {
     LocalTrackView::reset();
+
     if (fxPanel)
         fxPanel->removePlugins();
+
+    setMidiRouting(false);
 }
 
 QLabel *LocalTrackViewStandalone::createInputTypeIconLabel(QWidget *parent)

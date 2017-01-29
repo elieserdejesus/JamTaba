@@ -365,5 +365,6 @@ void LocalInputNode::reset()
     setToNoInput();
 
     stereoInverted = false;
+
     emit stereoInversionChanged(stereoInverted);
 }
