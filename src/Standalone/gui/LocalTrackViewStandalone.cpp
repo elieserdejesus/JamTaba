@@ -615,7 +615,12 @@ QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
 void LocalTrackViewStandalone::setToNoInput()
 {
     if (inputNode) {
+
+        if (inputNode->isRoutingMidiInput())
+            setMidiRouting(false);
+
         inputNode->setToNoInput();
+
         refreshInputSelectionName();
 
         emit trackInputChanged();
@@ -765,6 +770,9 @@ void LocalTrackViewStandalone::setMidiPeakMeterVisibility(bool visible)
 
 void LocalTrackViewStandalone::setToMono(QAction *action)
 {
+    if (inputNode->isRoutingMidiInput())
+        setMidiRouting(false);
+
     int selectedInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
@@ -774,6 +782,9 @@ void LocalTrackViewStandalone::setToMono(QAction *action)
 
 void LocalTrackViewStandalone::setToStereo(QAction *action)
 {
+    if (inputNode->isRoutingMidiInput())
+        setMidiRouting(false);
+
     int firstInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
