@@ -637,7 +637,7 @@ JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &room
 
 bool MainWindow::canUseTwoColumnLayout() const
 {
-    return ui.contentTabWidget->width() >= 830;
+    return ui.contentTabWidget->width() >= 860;
 }
 
 void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms)
