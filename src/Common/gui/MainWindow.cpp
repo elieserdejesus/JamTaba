@@ -963,8 +963,8 @@ void MainWindow::timerEvent(QTimerEvent *)
 void MainWindow::resizeEvent(QResizeEvent *ev)
 {
     Q_UNUSED(ev)
-    if (busyDialog.isVisible())
-        centerBusyDialog();
+
+    centerBusyDialog();
 
     if (ninjamWindow) {
         NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
