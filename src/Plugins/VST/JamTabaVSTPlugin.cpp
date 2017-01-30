@@ -65,7 +65,7 @@ bool JamTabaVSTPlugin::hostIsPlaying() const
 int JamTabaVSTPlugin::getHostBpm() const
 {
     if (timeInfo)
-        return (int)timeInfo->tempo;
+        return std::round(timeInfo->tempo);
     return 0;
 }
 
