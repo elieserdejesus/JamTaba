@@ -302,5 +302,5 @@ AudioMeter
     qproperty-rmsColor: rgb(40, 90, 130);
     qproperty-peakStartColor: rgb(40, 90, 160);
     qproperty-peakEndColor: red;
-    qproperty-maxPeakColor: rgb(0, 30, 180);
+    qproperty-maxPeakColor: rgb(0, 90, 160);
 }
