@@ -328,6 +328,11 @@
 		2A3D0AA31E06D4FE00789D68 /* JamTaba.component in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01CCD20486CAD60068D4B7 /* JamTaba.component */; };
 		2A3FC8401E15BCD5005227F4 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700D1E08113100A4B6C2 /* Carbon.framework */; };
 		2A488F041E2C04C70097C505 /* PluginDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2C1E0AF46800BEF1FF /* PluginDescriptor.cpp */; };
+		2A67BD9F1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A67BD9B1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp */; };
+		2A67BDA01E410F3200A8FFF1 /* PerformanceMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A67BD9C1E410F3200A8FFF1 /* PerformanceMonitor.h */; };
+		2A67BDA81E410FE400A8FFF1 /* MacScreensaverBlocker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A67BDA41E410FE400A8FFF1 /* MacScreensaverBlocker.mm */; };
+		2A67BDA91E410FE400A8FFF1 /* ScreensaverBlocker.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A67BDA51E410FE400A8FFF1 /* ScreensaverBlocker.h */; };
+		2A67BDAB1E41112600A8FFF1 /* MainWindowPlugin.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3D81E0AB913005A940A /* MainWindowPlugin.h */; };
 		2AB5C82E1E076776007BD342 /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; };
 		2AC0D3E41E0AB913005A940A /* JamTabaPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */; };
 		2AC0D3E81E0AB913005A940A /* MainControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D61E0AB913005A940A /* MainControllerPlugin.h */; };
@@ -662,6 +667,10 @@
 		2A3669121E0DBFA9006CD583 /* JamTabaAUPlugin.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = JamTabaAUPlugin.mm; path = ../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm; sourceTree = "<group>"; };
 		2A3669131E0DBFA9006CD583 /* JamTabaAUPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTabaAUPlugin.h; path = ../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.h; sourceTree = "<group>"; };
 		2A4CE4181E13E50E009601F6 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		2A67BD9B1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MacPerformanceMonitor.cpp; sourceTree = "<group>"; };
+		2A67BD9C1E410F3200A8FFF1 /* PerformanceMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformanceMonitor.h; sourceTree = "<group>"; };
+		2A67BDA41E410FE400A8FFF1 /* MacScreensaverBlocker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MacScreensaverBlocker.mm; sourceTree = "<group>"; };
+		2A67BDA51E410FE400A8FFF1 /* ScreensaverBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreensaverBlocker.h; sourceTree = "<group>"; };
 		2AC0D3D21E0AB913005A940A /* ConfiguratorPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConfiguratorPlugin.cpp; path = ../../src/Plugins/ConfiguratorPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3D31E0AB913005A940A /* JamTabaPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JamTabaPlugin.cpp; path = ../../src/Plugins/JamTabaPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTabaPlugin.h; path = ../../src/Plugins/JamTabaPlugin.h; sourceTree = "<group>"; };
@@ -891,6 +900,7 @@
 		2A0DBB131E0AF46800BEF1FF /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				2A67BD991E410F3200A8FFF1 /* performance */,
 				2A0DBB141E0AF46800BEF1FF /* audio */,
 				2A0DBB571E0AF46900BEF1FF /* Configurator.cpp */,
 				2A0DBB581E0AF46900BEF1FF /* Configurator.h */,
@@ -1030,6 +1040,7 @@
 		2A0DBB661E0AF46900BEF1FF /* gui */ = {
 			isa = PBXGroup;
 			children = (
+				2A67BDA21E410FE400A8FFF1 /* screensaver */,
 				2A0DBB671E0AF46900BEF1FF /* BaseTrackView.cpp */,
 				2A0DBB681E0AF46900BEF1FF /* BaseTrackView.h */,
 				2A0DBB691E0AF46900BEF1FF /* BpiUtils.cpp */,
@@ -1290,6 +1301,24 @@
 			path = recorder;
 			sourceTree = "<group>";
 		};
+		2A67BD991E410F3200A8FFF1 /* performance */ = {
+			isa = PBXGroup;
+			children = (
+				2A67BD9B1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp */,
+				2A67BD9C1E410F3200A8FFF1 /* PerformanceMonitor.h */,
+			);
+			path = performance;
+			sourceTree = "<group>";
+		};
+		2A67BDA21E410FE400A8FFF1 /* screensaver */ = {
+			isa = PBXGroup;
+			children = (
+				2A67BDA41E410FE400A8FFF1 /* MacScreensaverBlocker.mm */,
+				2A67BDA51E410FE400A8FFF1 /* ScreensaverBlocker.h */,
+			);
+			path = screensaver;
+			sourceTree = "<group>";
+		};
 		2AC0D3A61E0AB696005A940A /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -1442,6 +1471,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A67BDA01E410F3200A8FFF1 /* PerformanceMonitor.h in Headers */,
 				2A0DBE671E0AF46E00BEF1FF /* ReaperProjectGenerator.h in Headers */,
 				2A0DBDC71E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */,
 				2A0DBD951E0AF46B00BEF1FF /* NinjamRoomWindow.h in Headers */,
@@ -1542,6 +1572,7 @@
 				2A0DBE111E0AF46D00BEF1FF /* MidiDriver.h in Headers */,
 				2A0DBDF91E0AF46C00BEF1FF /* WavePeakPanel.h in Headers */,
 				2A0DBDFD1E0AF46C00BEF1FF /* Logging.h in Headers */,
+				2A67BDA91E410FE400A8FFF1 /* ScreensaverBlocker.h in Headers */,
 				2A0DBC8F1E0AF46900BEF1FF /* WaveFileReader.h in Headers */,
 				2A0DBCA31E0AF46900BEF1FF /* MetronomeTrackNode.h in Headers */,
 			);
@@ -1685,6 +1716,7 @@
 				2A0DBE9E1E0AF7EE00BEF1FF /* NinjamRoomWindow.ui in Sources */,
 				2A0DBEA01E0AF80600BEF1FF /* PreferencesDialog.ui in Sources */,
 				2A0DBEA11E0AF82700BEF1FF /* UserNameDialog.ui in Sources */,
+				2A67BDAB1E41112600A8FFF1 /* MainWindowPlugin.h in Sources */,
 				2A120A571E0BEF2100E0E596 /* BaseTrackView.h in Sources */,
 				2A120A831E0BF32700E0E596 /* MultiStateButton.h in Sources */,
 				2A120A801E0BF28F00E0E596 /* AudioDriver.cpp in Sources */,
@@ -1786,6 +1818,7 @@
 				2A1C7A611E0B5F2C00C7984D /* NinjamTrackView.cpp in Sources */,
 				2A1C7A631E0B5F2C00C7984D /* PreferencesDialog.cpp in Sources */,
 				2A1C7A641E0B5F2C00C7984D /* PrivateServerDialog.cpp in Sources */,
+				2A67BD9F1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp in Sources */,
 				2A1C7A651E0B5F2C00C7984D /* ThemeLoader.cpp in Sources */,
 				2A1C7A661E0B5F2C00C7984D /* TrackGroupView.cpp in Sources */,
 				2A1C7A671E0B5F2C00C7984D /* UserNameDialog.cpp in Sources */,
@@ -1793,6 +1826,7 @@
 				2A1C7A691E0B5F2C00C7984D /* CustomTabWidget.cpp in Sources */,
 				2A1C7A6A1E0B5F2C00C7984D /* IntervalChunksDisplay.cpp in Sources */,
 				2A1C7A6B1E0B5F2C00C7984D /* MapMarker.cpp in Sources */,
+				2A67BDA81E410FE400A8FFF1 /* MacScreensaverBlocker.mm in Sources */,
 				2A1C7A6C1E0B5F2C00C7984D /* MapWidget.cpp in Sources */,
 				2A1C7A6D1E0B5F2C00C7984D /* MarqueeLabel.cpp in Sources */,
 				2A1C7A6E1E0B5F2C00C7984D /* MultiStateButton.cpp in Sources */,
