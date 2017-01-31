@@ -169,7 +169,7 @@ inline bool LocalInputNode::isRoutingMidiInput() const
 
 inline bool LocalInputNode::isReceivingRoutedMidiInput() const
 {
-    return isAudio() &&  receivingRoutedMidiInput;
+    return receivingRoutedMidiInput;
 }
 
 inline bool LocalInputNode::isLearningMidiNote() const
