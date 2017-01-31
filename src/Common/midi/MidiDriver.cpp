@@ -47,10 +47,11 @@ void MidiMessageBuffer::addMessage(const MidiMessage &m)
     }
 }
 
-MidiMessage MidiMessageBuffer::getMessage(int index) const
+MidiMessage& MidiMessageBuffer::getMessage(int index) const
 {
     if (index >= 0 && index < messagesCount)
         return messages[index];
+
     return MidiMessage();
 }
 

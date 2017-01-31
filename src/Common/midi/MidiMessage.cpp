@@ -6,7 +6,8 @@ using namespace Midi;
 
 MidiMessage::MidiMessage(qint32 data, int sourceID)
     : data(data),
-      sourceID(sourceID)
+      sourceID(sourceID),
+      consumed(false)
 {
 
 }
@@ -14,14 +15,16 @@ MidiMessage::MidiMessage(qint32 data, int sourceID)
 
 MidiMessage::MidiMessage()
     :data(-1),
-     sourceID(-1)
+     sourceID(-1),
+     consumed(false)
 {
 
 }
 
 MidiMessage::MidiMessage(const MidiMessage &other)
     : data(other.data),
-      sourceID(other.sourceID)
+      sourceID(other.sourceID),
+      consumed(other.consumed)
 {
 
 }

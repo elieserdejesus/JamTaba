@@ -36,10 +36,27 @@ public:
 
     bool isControl() const;
 
+    void consume();
+
+    bool isConsumed() const;
+
+    static const MidiMessage EMPTY_MESSAGE;
+
 private:
     qint32 data;
     int sourceID; //the id of the midi device generating the message.
+    bool consumed;
 };
+
+inline void MidiMessage::consume()
+{
+    consumed = true;
+}
+
+inline bool MidiMessage::isConsumed() const
+{
+    return consumed;
+}
 
 inline int MidiMessage::getChannel() const
 {

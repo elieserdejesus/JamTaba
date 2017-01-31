@@ -214,12 +214,12 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
 
             internalInputBuffer.set(in, audioInputRange.getFirstChannel(), audioInputRange.getChannels());
         }
-        else if (isMidi()) {
+        else if (isMidi() && !midiBuffer.isEmpty()) {
             processIncommingMidi(midiBuffer, filteredMidiBuffer);
         }
     }
 
-    if (receivingRoutedMidiInput) { // vocoders, for example, can receive midi input from second subchannel
+    if (receivingRoutedMidiInput && !midiBuffer.isEmpty()) { // vocoders, for example, can receive midi input from second subchannel
         quint8 subchannelIndex = 1;// second subchannel
         LocalInputNode *secondSubchannel = mainController->getInputTrackInGroup(channelGroupIndex, subchannelIndex);
         if (secondSubchannel && secondSubchannel->isMidi()) {
@@ -269,8 +269,8 @@ void LocalInputNode::processIncommingMidi(const Midi::MidiMessageBuffer &inBuffe
 {
     int messagesCount = inBuffer.getMessagesCount();
     for (int m = 0; m < messagesCount; ++m) {
-        Midi::MidiMessage message = inBuffer.getMessage(m);
-        if (canProcessMidiMessage(message)) {
+        Midi::MidiMessage &message = inBuffer.getMessage(m);
+        if (!message.isConsumed() && canProcessMidiMessage(message)) {
 
             message.transpose(getTranspose());
 
@@ -278,6 +278,8 @@ void LocalInputNode::processIncommingMidi(const Midi::MidiMessageBuffer &inBuffe
 
             // save the midi activity peak value for notes or controls
             midiInput.updateActivity(message);
+
+            message.consume(); // mark this message as consumed
         }
     }
 }
