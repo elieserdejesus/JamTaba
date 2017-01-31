@@ -51,15 +51,10 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     translateUI();
 }
 
-void LocalTrackViewStandalone::paintRoutingMidiArrow(const QColor &color, int topMargin, int arrowSize, bool drawSolidLine, bool drawMidiWord)
+void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSize, bool drawMidiWord)
 {
     QPainter painter(this);
-
-    QPen pen(color);
-    if (!drawSolidLine)
-        pen.setStyle(Qt::DashLine);
-
-    painter.setPen(pen);
+    painter.setPen(QPen(midiRoutingArrowColor));
 
     const int leftMargin = 2;
 
@@ -93,16 +88,16 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(const QColor &color, int to
     arrow.lineTo(QPointF(leftMargin + arrowSize, y + arrowSize));
     arrow.closeSubpath();
 
-    painter.setBrush(color);
+    painter.setBrush(midiRoutingArrowColor);
     painter.setPen(Qt::NoPen);
     painter.drawPath(arrow);
 }
 
-void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(const QColor &color, int topMargin, int arrowSize)
+void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin, int arrowSize)
 {
     QPainter painter(this);
 
-    painter.setPen(QPen(color));
+    painter.setPen(QPen(midiRoutingArrowColor));
 
     const int rightMargin = 2;
 
@@ -135,14 +130,14 @@ void LocalTrackViewStandalone::paintEvent(QPaintEvent *ev)
     static const int arrowSize = 4;
 
     if (inputNode->isRoutingMidiInput()) {
-        Audio::LocalInputNode *firstSubchannel = mainController->getInputTrackInGroup(inputNode->getChanneGrouplIndex(), 0);
-        bool drawSolidLine = firstSubchannel && firstSubchannel->isReceivingRoutedMidiInput();
         bool drawMidiWord = !isShowingPeakMetersOnly();
-        paintRoutingMidiArrow(midiRoutingArrowColor, topMargin, arrowSize, drawSolidLine, drawMidiWord);
+        paintRoutingMidiArrow(topMargin, arrowSize, drawMidiWord);
     }
-
-    if (inputNode->isReceivingRoutedMidiInput())
-        paintReceivingRoutedMidiIndicator(midiRoutingArrowColor, topMargin, arrowSize);
+    else {
+        if (inputNode->isReceivingRoutedMidiInput()) {
+            paintReceivingRoutedMidiIndicator(topMargin, arrowSize);
+        }
+    }
 }
 
 void LocalTrackViewStandalone::translateUI()
