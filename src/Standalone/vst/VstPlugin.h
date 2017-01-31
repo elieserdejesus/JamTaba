@@ -23,8 +23,7 @@ public:
     explicit VstPlugin(Vst::VstHost *host, const QString &pluginPath);
     ~VstPlugin();
 
-    void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer,
-                         const QList<Midi::MidiMessage> &midiBuffer) override;
+    void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer, std::vector<Midi::MidiMessage> &midiBuffer) override;
     void openEditor(const QPoint &centerOfScreen) override;
 
     void closeEditor() override;
@@ -84,7 +83,7 @@ private:
     float **vstInputArray;
 
     // VstEvents* vstEvents;
-    void fillVstEventsList(const QList<Midi::MidiMessage> &midiBuffer);
+    void fillVstEventsList(const std::vector<Midi::MidiMessage> &midiBuffer);
 
     template<int N>
     struct VSTEventBlock

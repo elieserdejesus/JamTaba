@@ -30,7 +30,7 @@ public:
         return blockSize;
     }
 
-    QList<Midi::MidiMessage> pullReceivedMidiMessages() override;
+    std::vector<Midi::MidiMessage> pullReceivedMidiMessages() override;
 
     void setSampleRate(int sampleRate) override;
     void setBlockSize(int blockSize) override;

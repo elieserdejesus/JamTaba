@@ -37,8 +37,7 @@ AudioMixer::~AudioMixer()
     qCDebug(jtAudio) << "Audio mixer destructor finished!";
 }
 
-void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                         const Midi::MidiMessageBuffer &midiBuffer, bool attenuateAfterSumming)
+void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer, bool attenuateAfterSumming)
 {
     static int soloedBuffersInLastProcess = 0;
     // --------------------------------------

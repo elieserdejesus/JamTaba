@@ -3,11 +3,13 @@
 
 #include <QtGlobal>
 #include <QMap>
-#include "MidiMessageBuffer.h"
+
+#include "MidiMessage.h"
+
+#include <vector>
 
 namespace Midi {
 
-class MidiMessage;
 
 class MidiDriver
 {
@@ -24,7 +26,7 @@ public:
     virtual int getMaxInputDevices() const = 0;
 
     virtual QString getInputDeviceName(uint index) const = 0;
-    virtual MidiMessageBuffer getBuffer() = 0;
+    virtual std::vector<MidiMessage> getBuffer() = 0;
 
     virtual bool deviceIsGloballyEnabled(int deviceIndex) const;
     int getFirstGloballyEnableInputDevice() const;
@@ -65,9 +67,9 @@ class NullMidiDriver : public MidiDriver
         return "";
     }
 
-    inline virtual MidiMessageBuffer getBuffer() override
+    inline std::vector<MidiMessage> getBuffer() override
     {
-        return MidiMessageBuffer(0);
+        return std::vector<MidiMessage>();
     }
 };
 }

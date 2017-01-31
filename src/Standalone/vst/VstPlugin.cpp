@@ -12,7 +12,6 @@
 #include "audio/core/AudioDriver.h"
 #include "audio/core/SamplesBuffer.h"
 #include "midi/MidiMessage.h"
-#include "midi/MidiMessageBuffer.h"
 #include "log/Logging.h"
 
 #include <QLibrary>
@@ -222,8 +221,8 @@ void VstPlugin::unload(){
     }
 }
 
-void VstPlugin::fillVstEventsList(const QList<Midi::MidiMessage> &midiBuffer){
-    int midiMessages = qMin( midiBuffer.count(), MAX_MIDI_EVENTS);
+void VstPlugin::fillVstEventsList(const std::vector<Midi::MidiMessage> &midiBuffer){
+    int midiMessages = qMin((int)midiBuffer.size(), (int)MAX_MIDI_EVENTS);
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
         Midi::MidiMessage message = midiBuffer.at(m);
@@ -239,7 +238,7 @@ void VstPlugin::fillVstEventsList(const QList<Midi::MidiMessage> &midiBuffer){
     }
 }
 
-void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const QList<Midi::MidiMessage> &midiBuffer){
+void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, std::vector<Midi::MidiMessage> &midiBuffer){
 
     Q_UNUSED(in)
     if( isBypassed() || !effect || !loaded || !started){

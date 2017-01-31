@@ -421,8 +421,7 @@ void MainController::removeTrack(long trackID)
     }
 }
 
-void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                                    int sampleRate)
+void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate)
 {
     audioMixer.process(in, out, sampleRate, pullMidiMessagesFromDevices());
 

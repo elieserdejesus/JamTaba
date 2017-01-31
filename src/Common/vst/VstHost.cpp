@@ -56,9 +56,9 @@ void VstHost::setPlayingFlag(bool playing)
         clearVstTimeInfoFlags();
 }
 
-QList<Midi::MidiMessage> VstHost::pullReceivedMidiMessages()
+std::vector<Midi::MidiMessage> VstHost::pullReceivedMidiMessages()
 {
-    QList<Midi::MidiMessage> messages(receivedMidiMessages);
+    std::vector<Midi::MidiMessage> messages(receivedMidiMessages);
     receivedMidiMessages.clear();
     return messages;
 }
@@ -199,7 +199,7 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
                 if (vstEvents->events[i]->type == kVstMidiType) {
                     VstMidiEvent *vstMidiEvent = (VstMidiEvent *)vstEvents->events[i];
                     Midi::MidiMessage msg = Midi::MidiMessage::fromArray(vstMidiEvent->midiData);
-                    hostInstance->receivedMidiMessages.append(msg);
+                    hostInstance->receivedMidiMessages.push_back(msg);
                 }
             }
         }

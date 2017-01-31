@@ -13,7 +13,7 @@ public:
 
     ~MetronomeTrackNode();
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate,
-                                  const Midi::MidiMessageBuffer &midiBuffer);
+                                  std::vector<Midi::MidiMessage> &midiBuffer);
     void setSamplesPerBeat(long samplesPerBeat);
     void setIntervalPosition(long intervalPosition);
     void resetInterval();

@@ -51,17 +51,15 @@ public:
 
     Persistence::Preset loadPreset(const QString &name) override;
 
-    inline Midi::MidiMessageBuffer pullMidiMessagesFromPlugins() override
+    inline std::vector<Midi::MidiMessage> pullMidiMessagesFromPlugins() override
     {
-        static Midi::MidiMessageBuffer emptyBuffer(0);
-        return emptyBuffer;
+        return std::vector<Midi::MidiMessage>(); // empty buffer
     }
 
 protected:
-    inline Midi::MidiMessageBuffer pullMidiMessagesFromDevices() override
+    inline std::vector<Midi::MidiMessage> pullMidiMessagesFromDevices() override
     {
-        static Midi::MidiMessageBuffer emptyBuffer(0);
-        return emptyBuffer;
+        return std::vector<Midi::MidiMessage>(); // empty buffer
     }
 
     JamTabaPlugin *plugin;

@@ -13,7 +13,7 @@ public:
     virtual int getSampleRate() const = 0;
     virtual int getBufferSize() const = 0;
 
-    virtual QList<Midi::MidiMessage> pullReceivedMidiMessages() = 0;
+    virtual std::vector<Midi::MidiMessage> pullReceivedMidiMessages() = 0;
 
     virtual void setSampleRate(int sampleRate) = 0;
     virtual void setBlockSize(int blockSize) = 0;
@@ -22,7 +22,7 @@ public:
     virtual void setPositionInSamples(int position) = 0;
 
 protected:
-    QList<Midi::MidiMessage> receivedMidiMessages;
+    std::vector<Midi::MidiMessage> receivedMidiMessages;
 
 };
 

@@ -38,7 +38,6 @@ PRECOMPILED_HEADER += PreCompiledHeaders.h
 
 HEADERS += midi/MidiDriver.h
 HEADERS += midi/MidiMessage.h
-HEADERS += midi/MidiMessageBuffer.h
 HEADERS += audio/core/AudioDriver.h
 HEADERS += audio/core/AudioNode.h
 HEADERS += audio/core/LocalInputNode.h
@@ -138,7 +137,6 @@ SOURCES += NinjamController.cpp
 SOURCES += MetronomeUtils.cpp
 SOURCES += midi/MidiDriver.cpp
 SOURCES += midi/MidiMessage.cpp
-SOURCES += midi/MidiMessageBuffer.cpp
 SOURCES += audio/core/AudioDriver.cpp
 SOURCES += audio/core/AudioNode.cpp
 SOURCES += audio/core/LocalInputNode.cpp

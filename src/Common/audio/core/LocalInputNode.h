@@ -20,8 +20,7 @@ class LocalInputNode : public AudioNode
 public:
     LocalInputNode(Controller::MainController *mainController, int parentChannelIndex, bool isMono = true);
     ~LocalInputNode();
-    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiMessageBuffer &midiBuffer) override;
+    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
     virtual int getSampleRate() const;
 
     int getChannels() const;
@@ -52,7 +51,7 @@ public:
 
     bool isReceivingAllMidiChannels() const;
 
-    QList<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const override;
+    std::vector<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const override;
 
     ChannelRange getAudioInputRange() const;
 
@@ -158,7 +157,7 @@ private:
 
     bool canProcessMidiMessage(const Midi::MidiMessage &msg) const;
 
-    void processIncommingMidi(const Midi::MidiMessageBuffer &inBuffer, Midi::MidiMessageBuffer &outBuffer);
+    void processIncommingMidi(std::vector<Midi::MidiMessage> &inBuffer, std::vector<Midi::MidiMessage> &outBuffer);
 
 };
 

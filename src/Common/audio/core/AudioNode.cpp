@@ -18,8 +18,7 @@ const double AudioNode::PI_OVER_2 = 3.141592653589793238463 * 0.5;
 
 // +++++++++++++++
 
-void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                 const Midi::MidiMessageBuffer &midiBuffer)
+void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer)
 {
     Q_UNUSED(in);
 
@@ -41,8 +40,6 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
 
     static SamplesBuffer tempInputBuffer(2);
 
-    QList<Midi::MidiMessage> midiMessages = midiBuffer.toList();
-
     // process inserted plugins
     for (int i=0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
         AudioNodeProcessor *processor = processors[i];
@@ -50,13 +47,15 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
             tempInputBuffer.setFrameLenght(internalOutputBuffer.getFrameLenght());
             tempInputBuffer.set(internalOutputBuffer); //the output from previous plugin is used as input to the next plugin in the chain
 
-            processor->process(tempInputBuffer, internalOutputBuffer, midiMessages);
+            processor->process(tempInputBuffer, internalOutputBuffer, midiBuffer);
 
             // some plugins are blocking the midi messages. If a VSTi can't generate messages the previous messages list will be sended for the next plugin in the chain. The messages list is cleared only when the plugin can generate midi messages.
             if (processor->isVirtualInstrument() && processor->canGenerateMidiMessages())
-                midiMessages.clear(); // only the fresh messages will be passed by the next plugin in the chain
+                midiBuffer.clear(); // only the fresh messages will be passed by the next plugin in the chain
 
-            midiMessages.append(pullMidiMessagesGeneratedByPlugins());
+
+            auto pulledMessages = pullMidiMessagesGeneratedByPlugins();
+            midiBuffer.insert(midiBuffer.end(), pulledMessages.begin(), pulledMessages.end());
         }
     }
 
@@ -92,9 +91,9 @@ AudioNode::AudioNode() :
         processors[i] = nullptr;
 }
 
-QList<Midi::MidiMessage> AudioNode::pullMidiMessagesGeneratedByPlugins() const
+std::vector<Midi::MidiMessage> AudioNode::pullMidiMessagesGeneratedByPlugins() const
 {
-    return QList<Midi::MidiMessage>(); // returning empty list by default, is overrided in LocalInputNode
+    return std::vector<Midi::MidiMessage>(); // returning empty vector by default, is overrided in LocalInputNode
 }
 
 int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRate,

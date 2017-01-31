@@ -24,7 +24,7 @@ public:
     virtual ~NinjamTrackNode();
     void addVorbisEncodedInterval(const QByteArray &encodedBytes);
     void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate,
-                          const Midi::MidiMessageBuffer &midiBuffer);
+                          std::vector<Midi::MidiMessage> &midiBuffer);
 
     void setLowCutState(LowCutState newState);
     LowCutState setLowCutToNextState();

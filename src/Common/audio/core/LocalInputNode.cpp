@@ -1,6 +1,5 @@
 #include "LocalInputNode.h"
 #include "audio/core/AudioNodeProcessor.h"
-#include "midi/MidiMessageBuffer.h"
 #include "midi/MidiMessage.h"
 #include "MainController.h"
 
@@ -189,7 +188,7 @@ bool LocalInputNode::isReceivingAllMidiChannels() const
 }
 
 void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
-                                           int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
+                                           int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer)
 {
     Q_UNUSED(sampleRate);
 
@@ -201,7 +200,7 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
      * Other LocalInputAudioNode instances will read other channels from input SamplesBuffer.
      */
 
-    Midi::MidiMessageBuffer filteredMidiBuffer(midiBuffer.getMessagesCount());
+    std::vector<Midi::MidiMessage> filteredMidiBuffer(midiBuffer.size());
     internalInputBuffer.setFrameLenght(out.getFrameLenght());
     internalOutputBuffer.setFrameLenght(out.getFrameLenght());
     internalInputBuffer.zero();
@@ -214,12 +213,12 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
 
             internalInputBuffer.set(in, audioInputRange.getFirstChannel(), audioInputRange.getChannels());
         }
-        else if (isMidi() && !midiBuffer.isEmpty()) {
+        else if (isMidi() && !midiBuffer.empty()) {
             processIncommingMidi(midiBuffer, filteredMidiBuffer);
         }
     }
 
-    if (receivingRoutedMidiInput && !midiBuffer.isEmpty()) { // vocoders, for example, can receive midi input from second subchannel
+    if (receivingRoutedMidiInput && !midiBuffer.empty()) { // vocoders, for example, can receive midi input from second subchannel
         quint8 subchannelIndex = 1;// second subchannel
         LocalInputNode *secondSubchannel = mainController->getInputTrackInGroup(channelGroupIndex, subchannelIndex);
         if (secondSubchannel && secondSubchannel->isMidi()) {
@@ -265,21 +264,23 @@ void LocalInputNode::setReceivingRoutedMidiInput(bool receiveRoutedMidiInput)
         routingMidiInput = false;
 }
 
-void LocalInputNode::processIncommingMidi(const Midi::MidiMessageBuffer &inBuffer, Midi::MidiMessageBuffer &outBuffer)
+void LocalInputNode::processIncommingMidi(std::vector<Midi::MidiMessage> &inBuffer, std::vector<Midi::MidiMessage> &outBuffer)
 {
-    int messagesCount = inBuffer.getMessagesCount();
-    for (int m = 0; m < messagesCount; ++m) {
-        Midi::MidiMessage &message = inBuffer.getMessage(m);
-        if (!message.isConsumed() && canProcessMidiMessage(message)) {
-
+    std::vector<Midi::MidiMessage>::iterator iterator = inBuffer.begin();
+    while(iterator != inBuffer.end()) {
+        Midi::MidiMessage message(*iterator);
+        if (canProcessMidiMessage(message)) {
             message.transpose(getTranspose());
 
-            outBuffer.addMessage(message);
+            outBuffer.push_back(message);
 
             // save the midi activity peak value for notes or controls
             midiInput.updateActivity(message);
 
-            message.consume(); // mark this message as consumed
+            iterator = inBuffer.erase(iterator);
+        }
+        else {
+            ++iterator;
         }
     }
 }
@@ -342,9 +343,9 @@ bool LocalInputNode::canProcessMidiMessage(const Midi::MidiMessage &message) con
 
 }
 
-QList<Midi::MidiMessage> LocalInputNode::pullMidiMessagesGeneratedByPlugins() const
+std::vector<Midi::MidiMessage> LocalInputNode::pullMidiMessagesGeneratedByPlugins() const
 {
-    return mainController->pullMidiMessagesFromPlugins().toList();
+    return mainController->pullMidiMessagesFromPlugins();
 }
 
 void LocalInputNode::startMidiNoteLearn()
