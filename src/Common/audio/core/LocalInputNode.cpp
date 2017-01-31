@@ -232,7 +232,7 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
         return; // when routing midi this track will not render midi data, this data will be rendered by first subchannel. But the midi data is processed above to update MIDI activity meter
     }
 
-    AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer);
+    AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer); // only the filtered midi messages are sended to rendering code
 }
 
 void LocalInputNode::setRoutingMidiInput(bool routeMidiInput)

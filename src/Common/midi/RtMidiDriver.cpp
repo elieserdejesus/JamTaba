@@ -135,7 +135,7 @@ void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, 
 }
 
 std::vector<MidiMessage> RtMidiDriver::getBuffer(){
-    std::vector<Midi::MidiMessage> buffer(64);//max 64 midi messages in each audio callback
+    std::vector<Midi::MidiMessage> buffer;
     int deviceIndex = 0;
     foreach (RtMidiIn* stream, midiStreams) {
         consumeMessagesFromStream(stream, deviceIndex, buffer);
