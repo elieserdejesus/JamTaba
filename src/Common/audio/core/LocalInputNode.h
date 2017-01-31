@@ -158,7 +158,7 @@ private:
 
     bool canProcessMidiMessage(const Midi::MidiMessage &msg) const;
 
-    void processMidiInput(const Midi::MidiMessageBuffer &inBuffer, Midi::MidiMessageBuffer &outBuffer);
+    void processIncommingMidi(const Midi::MidiMessageBuffer &inBuffer, Midi::MidiMessageBuffer &outBuffer);
 
 };
 

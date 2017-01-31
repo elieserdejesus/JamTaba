@@ -211,13 +211,19 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
         if (isAudio()) {// using audio input
             if (audioInputRange.isEmpty())
                 return;
-            internalInputBuffer.set(in, audioInputRange.getFirstChannel(), audioInputRange.getChannels());
 
-            if (receivingRoutedMidiInput) // vocoders, for example, can receive midi input from second subchannel
-                processMidiInput(midiBuffer, filteredMidiBuffer);
+            internalInputBuffer.set(in, audioInputRange.getFirstChannel(), audioInputRange.getChannels());
         }
         else if (isMidi()) {
-            processMidiInput(midiBuffer, filteredMidiBuffer);
+            processIncommingMidi(midiBuffer, filteredMidiBuffer);
+        }
+    }
+
+    if (receivingRoutedMidiInput) { // vocoders, for example, can receive midi input from second subchannel
+        quint8 subchannelIndex = 1;// second subchannel
+        LocalInputNode *secondSubchannel = mainController->getInputTrackInGroup(channelGroupIndex, subchannelIndex);
+        if (secondSubchannel && secondSubchannel->isMidi()) {
+            secondSubchannel->processIncommingMidi(midiBuffer, filteredMidiBuffer);
         }
     }
 
@@ -259,7 +265,7 @@ void LocalInputNode::setReceivingRoutedMidiInput(bool receiveRoutedMidiInput)
         routingMidiInput = false;
 }
 
-void LocalInputNode::processMidiInput(const Midi::MidiMessageBuffer &inBuffer, Midi::MidiMessageBuffer &outBuffer)
+void LocalInputNode::processIncommingMidi(const Midi::MidiMessageBuffer &inBuffer, Midi::MidiMessageBuffer &outBuffer)
 {
     int messagesCount = inBuffer.getMessagesCount();
     for (int m = 0; m < messagesCount; ++m) {
@@ -329,19 +335,9 @@ bool LocalInputNode::canProcessMidiMessage(const Midi::MidiMessage &message) con
         return false; //when learning all messages are bypassed
     }
 
-    if (!receivingRoutedMidiInput) {
-        return midiInput.accept(message);
-    }
-    else {
-        // receiving routed midi input
-        quint8 subchannelIndex = 1;// second subchannel
-        LocalInputNode *secondSubchannel = mainController->getInputTrackInGroup(channelGroupIndex, subchannelIndex);
-        if (secondSubchannel && secondSubchannel->isMidi()) {
-            return secondSubchannel->midiInput.accept(message);
-        }
-    }
 
-    return false;
+    return midiInput.accept(message);
+
 }
 
 QList<Midi::MidiMessage> LocalInputNode::pullMidiMessagesGeneratedByPlugins() const
