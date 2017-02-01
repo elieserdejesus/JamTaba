@@ -2,7 +2,7 @@
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QDebug>
-#include <QEvent>
+#include <QKeyEvent>
 #include <QLineEdit>
 
 /**
@@ -34,10 +34,13 @@ public:
 
         connect(internalLineEdit, &QLineEdit::editingFinished, [=]{
 
-            hackedLineEdit->setText(internalLineEdit->text());
-            hackedLineEdit->returnPressed(); // simulate the RETURN key pressing
-
             close(); // close and delete the dialog
+
+            if (hackedLineEdit) { // avoid duplicated editingFinished
+                hackedLineEdit->setText(internalLineEdit->text());
+                hackedLineEdit->returnPressed(); // simulate the RETURN key pressing
+                hackedLineEdit = nullptr;
+            }
         });
     }
 

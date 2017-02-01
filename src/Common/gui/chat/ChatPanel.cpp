@@ -22,9 +22,9 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
     contentLayout->setContentsMargins(0, 0, 0, 0);
     ui->scrollContent->setLayout(contentLayout);
 
-    textEditorModifier->installModifier(ui->chatText);
-
     connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
+
+    textEditorModifier->installModifier(ui->chatText);
 
     // this event is used to auto scroll down when new messages are added
     connect(ui->chatScroll->verticalScrollBar(), &QScrollBar::rangeChanged, this, &ChatPanel::autoScroll);
