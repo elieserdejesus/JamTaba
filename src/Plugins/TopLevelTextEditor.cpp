@@ -24,6 +24,9 @@ public:
         layout->setContentsMargins(0, 0, 0, 0);
         setLayout(layout);
         lineEdit = new QLineEdit(textEditor->text(), this);
+        lineEdit->setObjectName(textEditor->objectName());
+        lineEdit->setAlignment(textEditor->alignment());
+
         layout->addWidget(lineEdit);
 
         connect(lineEdit, &QLineEdit::editingFinished, [=]{
