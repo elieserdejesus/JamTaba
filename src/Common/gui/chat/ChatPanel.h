@@ -8,6 +8,7 @@
 #include <QTimer>
 #include "chords/ChordProgression.h"
 #include "UsersColorsPool.h"
+#include "TextEditorFactory.h"
 
 namespace Ui {
 class ChatPanel;
@@ -20,7 +21,7 @@ class ChatPanel : public QWidget
     Q_OBJECT
 
 public:
-    ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool);
+    ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorFactory *textEditorFactory);
     virtual ~ChatPanel();
     void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
     void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));

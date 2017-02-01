@@ -6,7 +6,8 @@
 #include <QInputDialog>
 #include "MainController.h"
 
-LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame) :
+LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame)
+    : TrackGroupView(mainFrame->getTextEditorFactory()),
     index(channelIndex),
     mainFrame(mainFrame),
     peakMeterOnly(false),

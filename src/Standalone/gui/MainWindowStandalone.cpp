@@ -12,6 +12,17 @@ using namespace Persistence;
 using namespace Controller;
 using namespace audio;  // TODO rewrite namespaces using lower case
 
+class SimpleTextEditorFactory : public TextEditorFactory
+{
+public:
+    QLineEdit *createTextEditor(QWidget *parent, const QString &initialText = "") override
+    {
+        return new QLineEdit(initialText, parent);
+    }
+};
+
+// ------------------------
+
 MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainController) :
     MainWindow(mainController),
     controller(mainController),
@@ -24,6 +35,11 @@ MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainControl
     setupShortcuts();
 
     initializePluginFinder();
+}
+
+TextEditorFactory *MainWindowStandalone::createTextEditorFactory()
+{
+    return new SimpleTextEditorFactory();
 }
 
 void MainWindowStandalone::setupShortcuts()

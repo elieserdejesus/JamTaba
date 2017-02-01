@@ -29,6 +29,8 @@ public:
 protected:
     void closeEvent(QCloseEvent *) override;
 
+    TextEditorFactory *createTextEditorFactory() override;
+
     NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, MainController *) override;
 
     LocalTrackGroupViewStandalone *createLocalTrackGroupView(int channelGroupIndex) override;

@@ -7,14 +7,13 @@ class TopLevelTextEditor : public QLineEdit
 {
 
 public:
-    TopLevelTextEditor(QWidget *parent);
+    TopLevelTextEditor(const QString &text, QWidget *parent);
 
 protected:
     void focusInEvent(QFocusEvent *ev) override;
 
 private:
     class Dialog;
-
     Dialog *dialog;
 
     void showDialog();

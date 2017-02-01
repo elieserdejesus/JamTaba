@@ -32,6 +32,8 @@ protected:
 
     void resizeEvent(QResizeEvent *) override;
 
+    TextEditorFactory *createTextEditorFactory() override;
+
 protected slots:
     void updateLocalInputChannelsGeometry() override;
 

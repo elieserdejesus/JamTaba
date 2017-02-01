@@ -38,13 +38,13 @@ using namespace Persistence;
 const QString NinjamRoomWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
 
 // +++++++++++++++++++++++++
-NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &roomInfo,
+NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo &roomInfo,
                                    Controller::MainController *mainController) :
-    QWidget(parent),
+    QWidget(mainWindow),
     ui(new Ui::NinjamRoomWindow),
-    mainWindow(parent),
+    mainWindow(mainWindow),
     mainController(mainController),
-    chatPanel(new ChatPanel(mainController->getBotNames(), &usersColorsPool)),
+    chatPanel(new ChatPanel(mainController->getBotNames(), &usersColorsPool, mainWindow->getTextEditorFactory())),
     ninjamPanel(nullptr),
     tracksOrientation(Qt::Vertical),
     tracksSize(TracksSize::WIDE),

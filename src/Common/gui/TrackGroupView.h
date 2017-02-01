@@ -5,6 +5,8 @@
 #include <QLineEdit>
 #include <QBoxLayout>
 
+#include "TextEditorFactory.h"
+
 namespace Ui {
 class TrackGroupView;
 }
@@ -17,7 +19,7 @@ class TrackGroupView : public QFrame
     Q_OBJECT
 
 public:
-    explicit TrackGroupView(QWidget *parent = 0);
+    explicit TrackGroupView(TextEditorFactory *textEditorFactory, QWidget *parent = 0);
     virtual ~TrackGroupView();
     virtual void setGroupName(const QString &groupName);
     virtual QString getGroupName() const;
@@ -79,7 +81,7 @@ private slots:
     void showMaxPeakMarker(bool showMarker);
 
 private:
-    void setupUI();
+    void setupUI(TextEditorFactory *textEditorFactory);
 };
 
 #endif // TRACKGROUPVIEW_H

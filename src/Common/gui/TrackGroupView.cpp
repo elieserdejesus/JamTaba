@@ -9,10 +9,10 @@
 #include <QActionGroup>
 #include "PeakMeter.h"
 
-TrackGroupView::TrackGroupView(QWidget *parent) :
+TrackGroupView::TrackGroupView(TextEditorFactory *textEditorFactory, QWidget *parent) :
     QFrame(parent)
 {
-    setupUI();
+    setupUI(textEditorFactory);
 
     //context menu
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -51,7 +51,7 @@ void TrackGroupView::showMaxPeakMarker(bool showMarker)
     AudioMeter::setPaintMaxPeakMarker(showMarker);
 }
 
-void TrackGroupView::setupUI()
+void TrackGroupView::setupUI(TextEditorFactory *textEditorFactory)
 {
     setObjectName(QStringLiteral("TrackGroupView"));
     setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
@@ -63,7 +63,7 @@ void TrackGroupView::setupUI()
     topPanel = new QWidget(this);
     topPanel->setObjectName(QStringLiteral("topPanel"));
 
-    groupNameField = new QLineEdit(topPanel);
+    groupNameField = textEditorFactory->createTextEditor(topPanel);
     groupNameField->setObjectName(QStringLiteral("groupNameField"));
     groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0);// disable blue border when QLineEdit has focus in mac
 
