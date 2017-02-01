@@ -92,14 +92,11 @@ void MetronomeUtils::removeSilenceInBufferStart(Audio::SamplesBuffer &buffer)
 
     if (audioStartingIndex > 0){
         buffer.discardFirstSamples(audioStartingIndex);
-        qDebug() << "Discarding " << audioStartingIndex << " samples";
     }
 }
 
 void MetronomeUtils::createBuffer(const QString &audioFilePath, Audio::SamplesBuffer &outBuffer, quint32 localSampleRate)
 {
-    qDebug() << "Creating audio buffer to file " << audioFilePath;
-
     std::unique_ptr<Audio::FileReader> reader = Audio::FileReaderFactory::createFileReader(audioFilePath);
     quint32 audioFileSampleRate; //will be changed inside reader->read
     Audio::SamplesBuffer originalBuffer(1);//assuming mono for while
