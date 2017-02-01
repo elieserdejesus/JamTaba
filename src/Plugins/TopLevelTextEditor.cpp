@@ -25,10 +25,11 @@ public:
         setLayout(layout);
         lineEdit = new QLineEdit(textEditor->text(), this);
         layout->addWidget(lineEdit);
-        lineEdit->setStyleSheet("background: rgba(255, 0, 0, 80);");
 
-        connect(lineEdit, &QLineEdit::returnPressed, textEditor, &TopLevelTextEditor::returnPressed);
-        connect(lineEdit, &QLineEdit::editingFinished, this, &Dialog::close);
+        connect(lineEdit, &QLineEdit::editingFinished, [=]{
+            close();
+            textEditor->returnPressed(); // simulate the RETURN key pressing
+        });
     }
 
 protected:
