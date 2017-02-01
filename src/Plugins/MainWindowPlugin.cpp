@@ -4,7 +4,7 @@
 #include "PreferencesDialogPlugin.h"
 #include "LocalTrackView.h"
 #include "audio/core/LocalInputNode.h"
-#include "TextEditorModifierPlugin.h"
+#include "TopLevelTextEditorModifier.h"
 
 #include <QDesktopWidget>
 

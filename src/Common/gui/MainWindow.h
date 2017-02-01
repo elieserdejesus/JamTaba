@@ -75,7 +75,7 @@ public:
 
     void showMetronomePreferencesDialog();
 
-    inline TextEditorModifier *getTextEditorModifier() const { return textEditorModifier; }
+    virtual TextEditorModifier *createTextEditorModifier() = 0;
 
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
@@ -84,9 +84,6 @@ protected:
     Controller::MainController *mainController;
     Ui::MainFrameClass ui;
     QList<LocalTrackGroupView *> localGroupChannels;
-    TextEditorModifier *textEditorModifier;
-
-    virtual TextEditorModifier *createTextEditorModifier() = 0;
 
     void centerDialog(QWidget *dialog);
 

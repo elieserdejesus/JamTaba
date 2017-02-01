@@ -52,7 +52,6 @@ private slots:
     void hideTranslationProgressFeedback();
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
     void changeEvent(QEvent *) override;
 
 private:

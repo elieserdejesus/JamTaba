@@ -7,7 +7,7 @@
 #include "MainController.h"
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame)
-    : TrackGroupView(mainFrame->getTextEditorModifier()),
+    : TrackGroupView(mainFrame->createTextEditorModifier()),
     index(channelIndex),
     mainFrame(mainFrame),
     peakMeterOnly(false),

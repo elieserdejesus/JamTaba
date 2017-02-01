@@ -19,6 +19,8 @@ public:
         return dynamic_cast<MainControllerPlugin *>(mainController);
     }
 
+    TextEditorModifier *createTextEditorModifier() override;
+
 protected:
     NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) override;
 
@@ -31,8 +33,6 @@ protected:
     virtual inline QSize getMinimumWindowSize() const override { return PLUGIN_WINDOW_MIN_SIZE; }
 
     void resizeEvent(QResizeEvent *) override;
-
-    TextEditorModifier *createTextEditorModifier() override;
 
 protected slots:
     void updateLocalInputChannelsGeometry() override;

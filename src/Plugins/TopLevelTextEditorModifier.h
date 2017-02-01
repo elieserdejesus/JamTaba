@@ -4,23 +4,31 @@
 #include "TextEditorModifier.h"
 
 #include <QLineEdit>
+#include <QSharedPointer>
 
 class TopLevelTextEditorModifier : public QObject, public TextEditorModifier
 {
 
 public:
-    void installModifier(QLineEdit *textEditor) override;
+    TopLevelTextEditorModifier();
+
+    void install(QLineEdit *textEditor, bool finishEditorPressingReturnKey) override;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
 
 private:
-    class Dialog;
-    Dialog *dialog;
+    QSharedPointer<QDialog> dialog;
+
+    QDialog *createDialog() const;
 
     void showDialog();
 
+    void transferTextToHackedLineEdit();
+
     QLineEdit *hackedLineEdit;
+    QLineEdit *topLevelLineEdit;
+    bool finishPressingReturnKey;
 };
 
 #endif // TOP_LEVEL_TEXT_EDITOR_MODIFIER_H

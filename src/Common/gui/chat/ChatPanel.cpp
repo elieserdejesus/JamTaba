@@ -24,7 +24,8 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
 
     connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
 
-    textEditorModifier->installModifier(ui->chatText);
+    bool finishEditorPressingReturnKey = false;
+    textEditorModifier->install(ui->chatText, finishEditorPressingReturnKey);
 
     // this event is used to auto scroll down when new messages are added
     connect(ui->chatScroll->verticalScrollBar(), &QScrollBar::rangeChanged, this, &ChatPanel::autoScroll);
@@ -32,8 +33,6 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
     connect(ui->buttonClear, &QPushButton::clicked, this, &ChatPanel::clearMessages);
 
     connect(ui->buttonAutoTranslate, &QPushButton::clicked, this, &ChatPanel::toggleAutoTranslate);
-
-    ui->chatText->installEventFilter(this);
 
     // disable blue border when QLineEdit has focus in mac
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -45,13 +44,6 @@ void ChatPanel::changeEvent(QEvent *e)
         ui->retranslateUi(this);
     }
     QWidget::changeEvent(e);
-}
-
-bool ChatPanel::eventFilter(QObject *obj, QEvent *event)
-{
-    if (obj == ui->chatText && event->type() == QEvent::MouseButtonPress)
-        ui->chatText->setFocus();
-    return QWidget::eventFilter(obj, event);
 }
 
 void ChatPanel::createVoteButton(const QString &voteType, quint32 value, quint32 expireTime)
@@ -127,6 +119,9 @@ void ChatPanel::sendNewMessage()
     if (!messageText.isEmpty()) {
         emit userSendingNewMessage(messageText);
         ui->chatText->clear();
+        qDebug() << "mensagem enviada, chat line edit cleared";
+//        qDebug() << "setando foco novamente";
+//        ui->chatText->setFocus();
     }
 }
 

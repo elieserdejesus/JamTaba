@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include <QLineEdit>
+#include <QTimer>
 
 /**
 
@@ -12,58 +13,66 @@
 
 */
 
-// Nested class used to show a frameless dialog behaving like a QLineEdit
-class TopLevelTextEditorModifier::Dialog : public QDialog
+TopLevelTextEditorModifier::TopLevelTextEditorModifier()
+    : dialog(nullptr),
+      topLevelLineEdit(nullptr),
+      hackedLineEdit(nullptr),
+      finishPressingReturnKey(false)
 {
+    //
+}
 
-public:
-    TopLevelTextEditorModifier::Dialog(QLineEdit *lineEditToHack)
-        : QDialog(nullptr, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint),
-        hackedLineEdit(lineEditToHack)
-    {
-        setAttribute(Qt::WA_DeleteOnClose);
+QDialog *TopLevelTextEditorModifier::createDialog() const
+{
+    QDialog *newDialog = new QDialog(nullptr, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    newDialog->setAttribute(Qt::WA_DeleteOnClose);
 
-        QLayout *layout = new QVBoxLayout();
-        layout->setContentsMargins(0, 0, 0, 0);
-        setLayout(layout);
-        internalLineEdit = new QLineEdit(lineEditToHack->text(), this);
-        internalLineEdit->setObjectName(lineEditToHack->objectName());
-        internalLineEdit->setAlignment(lineEditToHack->alignment());
+    QLayout *layout = new QVBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+    newDialog->setLayout(layout);
 
-        layout->addWidget(internalLineEdit);
+    return newDialog;
+}
 
-        connect(internalLineEdit, &QLineEdit::editingFinished, [=]{
-
-            close(); // close and delete the dialog
-
-            if (hackedLineEdit) { // avoid duplicated editingFinished
-                hackedLineEdit->setText(internalLineEdit->text());
-                hackedLineEdit->returnPressed(); // simulate the RETURN key pressing
-                hackedLineEdit = nullptr;
-            }
-        });
-    }
-
-private:
-    QLineEdit *hackedLineEdit;
-    QLineEdit *internalLineEdit;
-
-};
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-void TopLevelTextEditorModifier::installModifier(QLineEdit *lineEdit)
+void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool finishEditorPressingReturnKey)
 {
     if (!lineEdit)
         return;
 
     hackedLineEdit = lineEdit;
 
-    lineEdit->installEventFilter(this);
+    hackedLineEdit->installEventFilter(this);
+
+    this->finishPressingReturnKey = finishEditorPressingReturnKey;
+
+    topLevelLineEdit = new QLineEdit();
+    topLevelLineEdit->setObjectName(hackedLineEdit->objectName());
+
+    QObject::connect(topLevelLineEdit, &QLineEdit::returnPressed, [=]{
+        if (dialog) {
+            if (finishPressingReturnKey) {
+                topLevelLineEdit->clearFocus(); //force the focusOut event
+            }
+            else { // transfer data to hacked line edit when return is pressed
+                hackedLineEdit->setText(topLevelLineEdit->text());
+                hackedLineEdit->returnPressed();
+                topLevelLineEdit->clear();
+            }
+         }
+    });
+
+    topLevelLineEdit->installEventFilter(this);
 }
 
 void TopLevelTextEditorModifier::showDialog()
 {
-    dialog = new TopLevelTextEditorModifier::Dialog(hackedLineEdit);
+    if (!dialog) {
+        dialog.reset(createDialog());
+        dialog->layout()->addWidget(topLevelLineEdit); // topLevelLineEdit will be owned by Dialog
+    }
+
+    topLevelLineEdit->setAlignment(hackedLineEdit->alignment());
+    topLevelLineEdit->setText(hackedLineEdit->text());
 
     dialog->resize(hackedLineEdit->frameSize());
     QPoint hackedLineEditTopLeft = hackedLineEdit->rect().topLeft();
@@ -79,6 +88,13 @@ bool TopLevelTextEditorModifier::eventFilter(QObject *obj, QEvent *ev)
 {
     if (obj == hackedLineEdit && ev->type() == QEvent::FocusIn) {
         showDialog();
+    }
+    else if (obj == topLevelLineEdit && ev->type() == QEvent::FocusOut) {
+        if (dialog) {
+            dialog->hide();
+
+            hackedLineEdit->setText(topLevelLineEdit->text());
+        }
     }
 
     return false;
