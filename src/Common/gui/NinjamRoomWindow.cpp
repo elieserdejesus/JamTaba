@@ -44,7 +44,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
     ui(new Ui::NinjamRoomWindow),
     mainWindow(mainWindow),
     mainController(mainController),
-    chatPanel(new ChatPanel(mainController->getBotNames(), &usersColorsPool, mainWindow->getTextEditorFactory())),
+    chatPanel(new ChatPanel(mainController->getBotNames(), &usersColorsPool, mainWindow->getTextEditorModifier())),
     ninjamPanel(nullptr),
     tracksOrientation(Qt::Vertical),
     tracksSize(TracksSize::WIDE),

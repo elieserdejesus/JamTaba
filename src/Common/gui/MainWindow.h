@@ -8,7 +8,7 @@
 #include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
 #include "ScreensaverBlocker.h"
-#include "TextEditorFactory.h"
+#include "TextEditorModifier.h"
 
 #include <QTranslator>
 
@@ -75,7 +75,7 @@ public:
 
     void showMetronomePreferencesDialog();
 
-    inline TextEditorFactory *getTextEditorFactory() const { return textEditorFactory; }
+    inline TextEditorModifier *getTextEditorModifier() const { return textEditorModifier; }
 
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
@@ -84,9 +84,9 @@ protected:
     Controller::MainController *mainController;
     Ui::MainFrameClass ui;
     QList<LocalTrackGroupView *> localGroupChannels;
-    TextEditorFactory *textEditorFactory;
+    TextEditorModifier *textEditorModifier;
 
-    virtual TextEditorFactory *createTextEditorFactory() = 0;
+    virtual TextEditorModifier *createTextEditorModifier() = 0;
 
     void centerDialog(QWidget *dialog);
 

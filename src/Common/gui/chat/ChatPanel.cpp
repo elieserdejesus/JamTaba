@@ -10,7 +10,7 @@
 
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
-ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorFactory *textEditorFactory) :
+ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *textEditorModifier) :
     QWidget(nullptr),
     ui(new Ui::ChatPanel),
     botNames(botNames),
@@ -22,12 +22,7 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
     contentLayout->setContentsMargins(0, 0, 0, 0);
     ui->scrollContent->setLayout(contentLayout);
 
-    // replace chat textEditor
-    QGridLayout *layout = static_cast<QGridLayout *>(this->layout());
-    layout->removeWidget(ui->chatText);
-    ui->chatText->deleteLater();
-    ui->chatText = textEditorFactory->createTextEditor(this);
-    layout->addWidget(ui->chatText, 1, 0, 1, 1);
+    textEditorModifier->installModifier(ui->chatText);
 
     connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
 

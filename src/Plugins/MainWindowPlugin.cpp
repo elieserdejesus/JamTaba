@@ -4,7 +4,7 @@
 #include "PreferencesDialogPlugin.h"
 #include "LocalTrackView.h"
 #include "audio/core/LocalInputNode.h"
-#include "TopLevelTextEditor.h"
+#include "TextEditorModifierPlugin.h"
 
 #include <QDesktopWidget>
 
@@ -12,18 +12,6 @@ const QSize MainWindowPlugin::PLUGIN_WINDOW_MIN_SIZE = QSize(990, 600);
 
 const quint32 MainWindowPlugin::ZOOM_STEP = 100;
 
-// ----------------------------------------------------------------
-
-class TopLevelTextEditorFactory : public TextEditorFactory
-{
-public:
-    QLineEdit *createTextEditor(QWidget *parent, const QString &initialText) override
-    {
-        return new TopLevelTextEditor(initialText, parent);
-    }
-};
-
-// ----------------------------------------------------------------
 
 MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
@@ -44,9 +32,9 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
 #endif
 }
 
-TextEditorFactory *MainWindowPlugin::createTextEditorFactory()
+TextEditorModifier *MainWindowPlugin::createTextEditorModifier()
 {
-    return new TopLevelTextEditorFactory();
+    return new TopLevelTextEditorModifier();
 }
 
 void MainWindowPlugin::updateLocalInputChannelsGeometry()

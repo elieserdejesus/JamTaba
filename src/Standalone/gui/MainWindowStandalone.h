@@ -29,7 +29,7 @@ public:
 protected:
     void closeEvent(QCloseEvent *) override;
 
-    TextEditorFactory *createTextEditorFactory() override;
+    TextEditorModifier *createTextEditorModifier() override;
 
     NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, MainController *) override;
 

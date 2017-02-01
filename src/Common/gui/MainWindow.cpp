@@ -239,7 +239,7 @@ void MainWindow::initialize()
         setTheme(themeName);
     }
 
-    textEditorFactory = createTextEditorFactory();
+    textEditorModifier = createTextEditorModifier();
 
     showBusyDialog(tr("Loading rooms list ..."));
 
