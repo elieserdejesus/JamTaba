@@ -229,6 +229,10 @@ void MainWindow::initializeGuiRefreshTimer()
 
 void MainWindow::initialize()
 {
+    // initialize text modificer here to avoid a pure virtual method call in constructor
+    TextEditorModifier *textEditorModifier = createTextEditorModifier();
+    textEditorModifier->install(ui.userNameLineEdit, true);
+
     initializeGuiRefreshTimer();
 
     if (qApp->styleSheet().isEmpty()) { // allow custom stylesheet via app arguments

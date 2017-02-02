@@ -34,6 +34,11 @@ QDialog *TopLevelTextEditorModifier::createDialog() const
     return newDialog;
 }
 
+void TopLevelTextEditorModifier::transferTextToHackedLineEdit()
+{
+    hackedLineEdit->setText(topLevelLineEdit->text());
+}
+
 void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool finishEditorPressingReturnKey)
 {
     if (!lineEdit)
@@ -47,6 +52,7 @@ void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool finishEditorP
 
     topLevelLineEdit = new QLineEdit();
     topLevelLineEdit->setObjectName(hackedLineEdit->objectName());
+    topLevelLineEdit->setValidator(hackedLineEdit->validator());
 
     QObject::connect(topLevelLineEdit, &QLineEdit::returnPressed, [=]{
         if (dialog) {
@@ -54,8 +60,9 @@ void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool finishEditorP
                 topLevelLineEdit->clearFocus(); //force the focusOut event
             }
             else { // transfer data to hacked line edit when return is pressed
-                hackedLineEdit->setText(topLevelLineEdit->text());
+                transferTextToHackedLineEdit();
                 hackedLineEdit->returnPressed();
+
                 topLevelLineEdit->clear();
             }
          }
@@ -92,8 +99,7 @@ bool TopLevelTextEditorModifier::eventFilter(QObject *obj, QEvent *ev)
     else if (obj == topLevelLineEdit && ev->type() == QEvent::FocusOut) {
         if (dialog) {
             dialog->hide();
-
-            hackedLineEdit->setText(topLevelLineEdit->text());
+            transferTextToHackedLineEdit();
         }
     }
 
