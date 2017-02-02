@@ -75,6 +75,7 @@ protected:
     Ui::NinjamPanel *ui;
     QPushButton *hostSyncButton;// created only when running as vst plugin
     IntervalProgressWindow *metronomeFloatingWindow;
+
 private:
     void buildShapeModel();
     void buildAccentsdModel(int bpi);
@@ -84,6 +85,7 @@ private:
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
     void setupSignals();
     void translate();
+    void initializeCombos();
 
 private slots:
     void updateAccentsStatus(int index);
