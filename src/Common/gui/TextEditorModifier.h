@@ -6,7 +6,7 @@
 class TextEditorModifier
 {
 public:
-    virtual void install(QLineEdit *lineEdit, bool finishOnReturnKeyPressed) = 0;
+    virtual void install(QLineEdit *lineEdit, bool finishOnReturnKeyPressed, const QString &dialogObjectName = "") = 0;
 };
 
 #endif // TEXT_EDITOR_MODIFIER_H

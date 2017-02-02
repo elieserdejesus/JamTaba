@@ -39,20 +39,22 @@ void TopLevelTextEditorModifier::transferTextToHackedLineEdit()
     hackedLineEdit->setText(topLevelLineEdit->text());
 }
 
-void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool finishEditorPressingReturnKey)
+void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool finishEditorPressingReturnKey, const QString &dialogObjectName)
 {
     if (!lineEdit)
         return;
 
-    hackedLineEdit = lineEdit;
+    this->hackedLineEdit = lineEdit;
 
-    hackedLineEdit->installEventFilter(this);
+    this->dialogObjectName = dialogObjectName;
+
+    this->hackedLineEdit->installEventFilter(this);
 
     this->finishPressingReturnKey = finishEditorPressingReturnKey;
 
-    topLevelLineEdit = new QLineEdit();
-    topLevelLineEdit->setObjectName(hackedLineEdit->objectName());
-    topLevelLineEdit->setValidator(hackedLineEdit->validator());
+    this->topLevelLineEdit = new QLineEdit();
+    this->topLevelLineEdit->setObjectName(hackedLineEdit->objectName());
+    this->topLevelLineEdit->setValidator(hackedLineEdit->validator());
 
     QObject::connect(topLevelLineEdit, &QLineEdit::returnPressed, [=]{
         if (dialog) {
@@ -68,7 +70,7 @@ void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool finishEditorP
          }
     });
 
-    topLevelLineEdit->installEventFilter(this);
+    this->topLevelLineEdit->installEventFilter(this);
 }
 
 void TopLevelTextEditorModifier::showDialog()
@@ -76,6 +78,8 @@ void TopLevelTextEditorModifier::showDialog()
     if (!dialog) {
         dialog.reset(createDialog());
         dialog->layout()->addWidget(topLevelLineEdit); // topLevelLineEdit will be owned by Dialog
+        if (!dialogObjectName.isEmpty())
+            dialog->setObjectName(dialogObjectName);
     }
 
     topLevelLineEdit->setAlignment(hackedLineEdit->alignment());

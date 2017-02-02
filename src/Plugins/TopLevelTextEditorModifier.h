@@ -12,7 +12,7 @@ class TopLevelTextEditorModifier : public QObject, public TextEditorModifier
 public:
     TopLevelTextEditorModifier();
 
-    void install(QLineEdit *textEditor, bool finishEditorPressingReturnKey) override;
+    void install(QLineEdit *textEditor, bool finishEditorPressingReturnKey, const QString &dialogObjectName = "") override;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
@@ -29,6 +29,7 @@ private:
     QLineEdit *hackedLineEdit;
     QLineEdit *topLevelLineEdit;
     bool finishPressingReturnKey;
+    QString dialogObjectName;
 };
 
 #endif // TOP_LEVEL_TEXT_EDITOR_MODIFIER_H

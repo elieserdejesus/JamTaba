@@ -15,10 +15,11 @@ using namespace audio;  // TODO rewrite namespaces using lower case
 class NullTextEditorModifier : public TextEditorModifier
 {
 public:
-    void install(QLineEdit *textEditor, bool finishOnReturnPressing)
+    void install(QLineEdit *textEditor, bool finishOnReturnPressing, const QString &dialogObjectName = "") override
     {
         Q_UNUSED(textEditor)
         Q_UNUSED(finishOnReturnPressing)
+        Q_UNUSED(dialogObjectName)
     }
 };
 
