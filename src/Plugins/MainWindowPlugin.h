@@ -34,6 +34,8 @@ protected:
 
     void resizeEvent(QResizeEvent *) override;
 
+    void timerEvent(QTimerEvent *) override;
+
 protected slots:
     void updateLocalInputChannelsGeometry() override;
 
