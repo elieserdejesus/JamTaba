@@ -217,7 +217,8 @@ void NinjamRoomWindow::toggleTracksSize(QAbstractButton *buttonClicked)
 
 NinjamPanel *NinjamRoomWindow::createNinjamPanel()
 {
-    NinjamPanel *panel = new NinjamPanel();
+    TextEditorModifier *textEditorModifier = mainWindow->createTextEditorModifier();
+    NinjamPanel *panel = new NinjamPanel(textEditorModifier);
     float initialMetronomeGain = mainController->getSettings().getMetronomeGain();
     float initialMetronomePan = mainController->getSettings().getMetronomePan();
     bool initialMetronomeMuteStatus = mainController->getSettings().getMetronomeMuteStatus();

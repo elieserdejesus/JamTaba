@@ -3,21 +3,22 @@
 #include "log/Logging.h"
 #include "BpiUtils.h"
 #include "intervalProgress/IntervalProgressWindow.h"
+#include "TextEditorModifier.h"
 
 #include <QDebug>
 #include <QtAlgorithms>
 #include <QtMath>
 #include <QFormLayout>
 
-NinjamPanel::NinjamPanel(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::NinjamPanel),
-    hostSyncButton(nullptr),
-    metronomeFloatingWindow(nullptr)
+NinjamPanel::NinjamPanel(TextEditorModifier *textEditorModifier, QWidget *parent)
+    :   QWidget(parent),
+        ui(new Ui::NinjamPanel),
+        hostSyncButton(nullptr),
+        metronomeFloatingWindow(nullptr)
 {
     ui->setupUi(this);
 
-    initializeCombos();
+    initializeCombos(textEditorModifier);
 
     ui->levelSlider->installEventFilter(this);
     ui->panSlider->installEventFilter(this);
@@ -32,7 +33,7 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     translate();
 }
 
-void NinjamPanel::initializeCombos()
+void NinjamPanel::initializeCombos(TextEditorModifier *textEditorModifier)
 {
     // initialize combos
     const quint16 MIN_BPM = 40;
@@ -48,6 +49,9 @@ void NinjamPanel::initializeCombos()
 
     ui->comboBpi->setCompleter(0);// disabling completer
     ui->comboBpm->setCompleter(0);// disabling completer
+
+    textEditorModifier->install(ui->comboBpi); // modify the comboBox QLineEdit to work in plugins (AU/VST)
+
 }
 
 void NinjamPanel::maximizeControlsWidget(bool maximize)

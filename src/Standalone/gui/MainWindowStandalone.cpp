@@ -21,6 +21,11 @@ public:
         Q_UNUSED(finishOnReturnPressing)
         Q_UNUSED(dialogObjectName)
     }
+
+    void install(QComboBox *comboBox) override
+    {
+        Q_UNUSED(comboBox)
+    }
 };
 
 // ------------------------

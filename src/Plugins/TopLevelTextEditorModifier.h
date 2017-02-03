@@ -3,7 +3,6 @@
 
 #include "TextEditorModifier.h"
 
-#include <QLineEdit>
 #include <QSharedPointer>
 
 class TopLevelTextEditorModifier : public QObject, public TextEditorModifier
@@ -13,6 +12,7 @@ public:
     TopLevelTextEditorModifier();
 
     void install(QLineEdit *textEditor, bool finishEditorPressingReturnKey, const QString &dialogObjectName = "") override;
+    void install(QComboBox *comboBox) override;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
@@ -26,10 +26,15 @@ private:
 
     void transferTextToHackedLineEdit();
 
+    void doInstall(QLineEdit* lineEdit);
+
+    bool isValidFocusInEvent(QEvent *ev) const;
+
     QLineEdit *hackedLineEdit;
     QLineEdit *topLevelLineEdit;
-    bool finishPressingReturnKey;
+    bool hideDialogWhenReturnIsPressed;
     QString dialogObjectName;
+
 };
 
 #endif // TOP_LEVEL_TEXT_EDITOR_MODIFIER_H

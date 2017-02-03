@@ -17,7 +17,7 @@ TopLevelTextEditorModifier::TopLevelTextEditorModifier()
     : dialog(nullptr),
       topLevelLineEdit(nullptr),
       hackedLineEdit(nullptr),
-      finishPressingReturnKey(false)
+      hideDialogWhenReturnIsPressed(false)
 {
     //
 }
@@ -39,38 +39,68 @@ void TopLevelTextEditorModifier::transferTextToHackedLineEdit()
     hackedLineEdit->setText(topLevelLineEdit->text());
 }
 
-void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool finishEditorPressingReturnKey, const QString &dialogObjectName)
+void TopLevelTextEditorModifier::install(QComboBox *comboBox)
 {
-    if (!lineEdit)
+    if (!comboBox) {
+        qCritical() << "comboBox is null!";
         return;
+    }
+
+    if (!comboBox->isEditable()) {
+        qCritical() << "comboBox is not editable!";
+        return;
+    }
+
+    doInstall(comboBox->lineEdit());
+
+    comboBox->installEventFilter(this);
+
+    hideDialogWhenReturnIsPressed = true;
+
+    dialogObjectName = "panelCombos";
+
+}
+
+void TopLevelTextEditorModifier::doInstall(QLineEdit *lineEdit)
+{
+    if (!lineEdit) {
+        qCritical() << "lineEdit is null!";
+        return;
+    }
 
     this->hackedLineEdit = lineEdit;
 
-    this->dialogObjectName = dialogObjectName;
-
-    this->hackedLineEdit->installEventFilter(this);
-
-    this->finishPressingReturnKey = finishEditorPressingReturnKey;
-
     this->topLevelLineEdit = new QLineEdit();
-    this->topLevelLineEdit->setObjectName(hackedLineEdit->objectName());
     this->topLevelLineEdit->setValidator(hackedLineEdit->validator());
+    this->topLevelLineEdit->installEventFilter(this);
 
-    QObject::connect(topLevelLineEdit, &QLineEdit::returnPressed, [=]{
+    connect(topLevelLineEdit, &QLineEdit::returnPressed, [=]{
         if (dialog) {
-            if (finishPressingReturnKey) {
+            if (hideDialogWhenReturnIsPressed) {
                 topLevelLineEdit->clearFocus(); //force the focusOut event
             }
             else { // transfer data to hacked line edit when return is pressed
                 transferTextToHackedLineEdit();
-                hackedLineEdit->returnPressed();
-
                 topLevelLineEdit->clear();
             }
-         }
-    });
 
-    this->topLevelLineEdit->installEventFilter(this);
+            hackedLineEdit->returnPressed();
+        }
+    });
+}
+
+void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool hideWhenReturnIsPressed, const QString &dialogObjectName)
+{
+
+    doInstall(lineEdit);
+
+    this->hackedLineEdit->installEventFilter(this);
+
+    this->hideDialogWhenReturnIsPressed = hideWhenReturnIsPressed;
+
+    this->dialogObjectName = dialogObjectName; // this objectName will be used in QDialog
+
+    this->topLevelLineEdit->setObjectName(hackedLineEdit->objectName());
 }
 
 void TopLevelTextEditorModifier::showDialog()
@@ -95,9 +125,32 @@ void TopLevelTextEditorModifier::showDialog()
     dialog->show();
 }
 
+bool TopLevelTextEditorModifier::isValidFocusInEvent(QEvent *ev) const
+{
+    bool hackingComboBox = qobject_cast<QComboBox*>(hackedLineEdit->parentWidget()) != nullptr;
+    if (!hackingComboBox) {
+        return ev->type() == QEvent::FocusIn;
+    }
+
+
+    // hacking a combo box
+    if (ev->type() == QEvent::FocusIn) {
+        QFocusEvent *focusEvent = static_cast<QFocusEvent *>(ev);
+        if (focusEvent && focusEvent->reason() == Qt::MouseFocusReason) { // we are interested only in focusIn when user is clicking
+            QComboBox* combo = qobject_cast<QComboBox*>(hackedLineEdit->parentWidget());
+            if (combo) {
+                QPoint mousePos = combo->mapFromGlobal(QCursor::pos());
+                return combo->lineEdit()->rect().contains(mousePos); // check if click was in lineEdit, not in combo box drop down arrow
+            }
+        }
+    }
+
+    return false;
+}
+
 bool TopLevelTextEditorModifier::eventFilter(QObject *obj, QEvent *ev)
 {
-    if (obj == hackedLineEdit && ev->type() == QEvent::FocusIn) {
+    if (isValidFocusInEvent(ev)) {
         showDialog();
     }
     else if (obj == topLevelLineEdit && ev->type() == QEvent::FocusOut) {

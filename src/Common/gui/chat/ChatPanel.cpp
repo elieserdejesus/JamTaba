@@ -119,9 +119,6 @@ void ChatPanel::sendNewMessage()
     if (!messageText.isEmpty()) {
         emit userSendingNewMessage(messageText);
         ui->chatText->clear();
-        qDebug() << "mensagem enviada, chat line edit cleared";
-//        qDebug() << "setando foco novamente";
-//        ui->chatText->setFocus();
     }
 }
 

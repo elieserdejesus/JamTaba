@@ -10,6 +10,7 @@ class QAbstractSlider;
 class QPushButton;
 class QObject;
 class QEvent;
+class TextEditorModifier;
 
 namespace Ui {
 class NinjamPanel;
@@ -20,7 +21,7 @@ class NinjamPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamPanel(QWidget *parent = 0);
+    explicit NinjamPanel(TextEditorModifier *textEditorModifier, QWidget *parent = 0);
     ~NinjamPanel();
 
     void createHostSyncButton(const QString &buttonText);
@@ -85,7 +86,7 @@ private:
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
     void setupSignals();
     void translate();
-    void initializeCombos();
+    void initializeCombos(TextEditorModifier *textEditorModifier);
 
 private slots:
     void updateAccentsStatus(int index);
