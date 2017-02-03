@@ -39,7 +39,7 @@ void TopLevelTextEditorModifier::transferTextToHackedLineEdit()
     hackedLineEdit->setText(topLevelLineEdit->text());
 }
 
-void TopLevelTextEditorModifier::install(QComboBox *comboBox)
+void TopLevelTextEditorModifier::modify(QComboBox *comboBox)
 {
     if (!comboBox) {
         qCritical() << "comboBox is null!";
@@ -89,7 +89,7 @@ void TopLevelTextEditorModifier::doInstall(QLineEdit *lineEdit)
     });
 }
 
-void TopLevelTextEditorModifier::install(QLineEdit *lineEdit, bool hideWhenReturnIsPressed, const QString &dialogObjectName)
+void TopLevelTextEditorModifier::modify(QLineEdit *lineEdit, bool hideWhenReturnIsPressed, const QString &dialogObjectName)
 {
 
     doInstall(lineEdit);

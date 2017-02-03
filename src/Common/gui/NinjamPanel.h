@@ -21,7 +21,7 @@ class NinjamPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamPanel(TextEditorModifier *textEditorModifier, QWidget *parent = 0);
+    explicit NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, QWidget *parent = 0);
     ~NinjamPanel();
 
     void createHostSyncButton(const QString &buttonText);
@@ -86,7 +86,7 @@ private:
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
     void setupSignals();
     void translate();
-    void initializeCombos(TextEditorModifier *textEditorModifier);
+    void initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier);
 
 private slots:
     void updateAccentsStatus(int index);

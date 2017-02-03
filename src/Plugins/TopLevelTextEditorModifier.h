@@ -11,8 +11,8 @@ class TopLevelTextEditorModifier : public QObject, public TextEditorModifier
 public:
     TopLevelTextEditorModifier();
 
-    void install(QLineEdit *textEditor, bool finishEditorPressingReturnKey, const QString &dialogObjectName = "") override;
-    void install(QComboBox *comboBox) override;
+    void modify(QLineEdit *textEditor, bool finishEditorPressingReturnKey, const QString &dialogObjectName = "") override;
+    void modify(QComboBox *comboBox) override;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;

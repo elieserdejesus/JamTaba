@@ -10,7 +10,7 @@
 #include <QtMath>
 #include <QFormLayout>
 
-NinjamPanel::NinjamPanel(TextEditorModifier *textEditorModifier, QWidget *parent)
+NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, QWidget *parent)
     :   QWidget(parent),
         ui(new Ui::NinjamPanel),
         hostSyncButton(nullptr),
@@ -18,7 +18,7 @@ NinjamPanel::NinjamPanel(TextEditorModifier *textEditorModifier, QWidget *parent
 {
     ui->setupUi(this);
 
-    initializeCombos(textEditorModifier);
+    initializeCombos(bpiComboModifier, bpmComboModifier);
 
     ui->levelSlider->installEventFilter(this);
     ui->panSlider->installEventFilter(this);
@@ -33,7 +33,7 @@ NinjamPanel::NinjamPanel(TextEditorModifier *textEditorModifier, QWidget *parent
     translate();
 }
 
-void NinjamPanel::initializeCombos(TextEditorModifier *textEditorModifier)
+void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier)
 {
     // initialize combos
     const quint16 MIN_BPM = 40;
@@ -50,7 +50,8 @@ void NinjamPanel::initializeCombos(TextEditorModifier *textEditorModifier)
     ui->comboBpi->setCompleter(0);// disabling completer
     ui->comboBpm->setCompleter(0);// disabling completer
 
-    textEditorModifier->install(ui->comboBpi); // modify the comboBox QLineEdit to work in plugins (AU/VST)
+    bpiModifier->modify(ui->comboBpi); // modify the comboBox QLineEdit to work in plugins (AU/VST)
+    bpmModifier->modify(ui->comboBpm);
 
 }
 
