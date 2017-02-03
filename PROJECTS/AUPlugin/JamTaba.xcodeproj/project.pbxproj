@@ -333,6 +333,8 @@
 		2A67BDA81E410FE400A8FFF1 /* MacScreensaverBlocker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A67BDA41E410FE400A8FFF1 /* MacScreensaverBlocker.mm */; };
 		2A67BDA91E410FE400A8FFF1 /* ScreensaverBlocker.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A67BDA51E410FE400A8FFF1 /* ScreensaverBlocker.h */; };
 		2A67BDAB1E41112600A8FFF1 /* MainWindowPlugin.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3D81E0AB913005A940A /* MainWindowPlugin.h */; };
+		2A73C8141E44F84900DF124A /* TopLevelTextEditorModifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A73C8131E44F84900DF124A /* TopLevelTextEditorModifier.h */; };
+		2A73C8161E44F85C00DF124A /* TopLevelTextEditorModifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A73C8151E44F85C00DF124A /* TopLevelTextEditorModifier.cpp */; };
 		2AB5C82E1E076776007BD342 /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; };
 		2AC0D3E41E0AB913005A940A /* JamTabaPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */; };
 		2AC0D3E81E0AB913005A940A /* MainControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D61E0AB913005A940A /* MainControllerPlugin.h */; };
@@ -671,6 +673,8 @@
 		2A67BD9C1E410F3200A8FFF1 /* PerformanceMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformanceMonitor.h; sourceTree = "<group>"; };
 		2A67BDA41E410FE400A8FFF1 /* MacScreensaverBlocker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MacScreensaverBlocker.mm; sourceTree = "<group>"; };
 		2A67BDA51E410FE400A8FFF1 /* ScreensaverBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreensaverBlocker.h; sourceTree = "<group>"; };
+		2A73C8131E44F84900DF124A /* TopLevelTextEditorModifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TopLevelTextEditorModifier.h; path = ../../src/Plugins/TopLevelTextEditorModifier.h; sourceTree = "<group>"; };
+		2A73C8151E44F85C00DF124A /* TopLevelTextEditorModifier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TopLevelTextEditorModifier.cpp; path = ../../src/Plugins/TopLevelTextEditorModifier.cpp; sourceTree = "<group>"; };
 		2AC0D3D21E0AB913005A940A /* ConfiguratorPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConfiguratorPlugin.cpp; path = ../../src/Plugins/ConfiguratorPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3D31E0AB913005A940A /* JamTabaPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JamTabaPlugin.cpp; path = ../../src/Plugins/JamTabaPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTabaPlugin.h; path = ../../src/Plugins/JamTabaPlugin.h; sourceTree = "<group>"; };
@@ -1322,6 +1326,8 @@
 		2AC0D3A61E0AB696005A940A /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				2A73C8151E44F85C00DF124A /* TopLevelTextEditorModifier.cpp */,
+				2A73C8131E44F84900DF124A /* TopLevelTextEditorModifier.h */,
 				2AC0D3D21E0AB913005A940A /* ConfiguratorPlugin.cpp */,
 				2AC0D3D31E0AB913005A940A /* JamTabaPlugin.cpp */,
 				2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */,
@@ -1483,6 +1489,7 @@
 				2A0DBCDF1E0AF46900BEF1FF /* BpiUtils.h in Headers */,
 				2A0DBC631E0AF46900BEF1FF /* AudioPeak.h in Headers */,
 				2A0DBE631E0AF46E00BEF1FF /* JamRecorder.h in Headers */,
+				2A73C8141E44F84900DF124A /* TopLevelTextEditorModifier.h in Headers */,
 				2AC0D3E81E0AB913005A940A /* MainControllerPlugin.h in Headers */,
 				2A0DBE5F1E0AF46E00BEF1FF /* ClipSortLogGenerator.h in Headers */,
 				2A0DBC531E0AF46900BEF1FF /* AudioDriver.h in Headers */,
@@ -1805,6 +1812,7 @@
 				2A1C7A551E0B5F2C00C7984D /* EllipticalPaintStrategy.cpp in Sources */,
 				2A1C7A561E0B5F2C00C7984D /* IntervalProgressDisplay.cpp in Sources */,
 				2A1C7A571E0B5F2C00C7984D /* IntervalProgressWindow.cpp in Sources */,
+				2A73C8161E44F85C00DF124A /* TopLevelTextEditorModifier.cpp in Sources */,
 				2A1C7A581E0B5F2C00C7984D /* LinearPaintStrategy.cpp in Sources */,
 				2A1C7A591E0B5F2C00C7984D /* PiePaintStrategy.cpp in Sources */,
 				2A1C7A5A1E0B5F2C00C7984D /* JamRoomViewPanel.cpp in Sources */,
