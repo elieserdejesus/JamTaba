@@ -10,6 +10,7 @@ class TopLevelTextEditorModifier : public QObject, public TextEditorModifier
 
 public:
     TopLevelTextEditorModifier();
+    ~TopLevelTextEditorModifier();
 
     void modify(QLineEdit *textEditor, bool finishEditorPressingReturnKey, const QString &dialogObjectName = "") override;
     void modify(QComboBox *comboBox) override;

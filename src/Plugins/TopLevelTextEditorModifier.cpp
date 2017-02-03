@@ -22,6 +22,11 @@ TopLevelTextEditorModifier::TopLevelTextEditorModifier()
     //
 }
 
+TopLevelTextEditorModifier::~TopLevelTextEditorModifier()
+{
+    qDebug() << "destroying top level text modifier";
+}
+
 QDialog *TopLevelTextEditorModifier::createDialog() const
 {
     QDialog *newDialog = new QDialog(nullptr, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
