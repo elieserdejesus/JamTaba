@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QTime>
+#include <QRegularExpression>
 
 #include "log/Logging.h"
 
