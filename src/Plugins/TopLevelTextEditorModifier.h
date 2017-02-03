@@ -30,6 +30,8 @@ private:
 
     bool isValidFocusInEvent(QEvent *ev) const;
 
+    bool isHackingComboBox() const;
+
     QLineEdit *hackedLineEdit;
     QLineEdit *topLevelLineEdit;
     bool hideDialogWhenReturnIsPressed;

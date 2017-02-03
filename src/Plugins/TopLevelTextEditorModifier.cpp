@@ -108,12 +108,21 @@ void TopLevelTextEditorModifier::showDialog()
     if (!dialog) {
         dialog.reset(createDialog());
         dialog->layout()->addWidget(topLevelLineEdit); // topLevelLineEdit will be owned by Dialog
+        dialog->setAttribute(Qt::WA_TranslucentBackground);
         if (!dialogObjectName.isEmpty())
             dialog->setObjectName(dialogObjectName);
+
     }
 
     topLevelLineEdit->setAlignment(hackedLineEdit->alignment());
     topLevelLineEdit->setText(hackedLineEdit->text());
+
+    topLevelLineEdit->setContentsMargins(hackedLineEdit->contentsMargins());
+    QString styleSheet("border-color: transparent;");
+    if (isHackingComboBox())
+        styleSheet += "padding: 0px; margin: 0px; border: none;";
+
+    topLevelLineEdit->setStyleSheet(styleSheet);
 
     dialog->resize(hackedLineEdit->frameSize());
     QPoint hackedLineEditTopLeft = hackedLineEdit->rect().topLeft();
@@ -125,10 +134,14 @@ void TopLevelTextEditorModifier::showDialog()
     dialog->show();
 }
 
+bool TopLevelTextEditorModifier::isHackingComboBox() const
+{
+    return qobject_cast<QComboBox*>(hackedLineEdit->parentWidget()) != nullptr;
+}
+
 bool TopLevelTextEditorModifier::isValidFocusInEvent(QEvent *ev) const
 {
-    bool hackingComboBox = qobject_cast<QComboBox*>(hackedLineEdit->parentWidget()) != nullptr;
-    if (!hackingComboBox) {
+    if (!isHackingComboBox()) {
         return ev->type() == QEvent::FocusIn;
     }
 

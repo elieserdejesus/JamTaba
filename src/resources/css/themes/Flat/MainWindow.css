@@ -6,9 +6,15 @@
 
 #userNamePanel
 {
-    background-color: rgb(250, 250, 250);
     border-color: rgb(95, 95, 95);
     padding: 1px;
+}
+
+/* these two elements need use the same NON-transparent color to work ok in AU and VSt plugin (using top level text editor) */
+#userNameLineEdit,
+#userNamePanel
+{
+        background-color: rgb(250, 250, 250);
 }
 
 #labelYourControls
@@ -32,7 +38,6 @@
 
 #userNameLineEdit
 {
-    background-color: transparent;
     border: none;
 }
 
