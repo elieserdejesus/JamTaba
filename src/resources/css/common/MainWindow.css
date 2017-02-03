@@ -75,3 +75,8 @@ QTabBar::tab
     font-size: 11px;
     color: black;
  }
+
+QTabWidget::tab-bar
+{
+    left: 0;
+}
