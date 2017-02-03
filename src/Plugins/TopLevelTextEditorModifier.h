@@ -38,6 +38,8 @@ private:
     bool hideDialogWhenReturnIsPressed;
     QString dialogObjectName;
 
+    static QList<QSharedPointer<TopLevelTextEditorModifier>> createdModifiers;
+
 };
 
 #endif // TOP_LEVEL_TEXT_EDITOR_MODIFIER_H

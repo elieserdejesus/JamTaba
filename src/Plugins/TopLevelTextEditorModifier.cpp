@@ -5,6 +5,9 @@
 #include <QKeyEvent>
 #include <QLineEdit>
 #include <QTimer>
+#include <QSharedPointer>
+
+QList<QSharedPointer<TopLevelTextEditorModifier>> TopLevelTextEditorModifier::createdModifiers;
 
 /**
 
@@ -19,12 +22,12 @@ TopLevelTextEditorModifier::TopLevelTextEditorModifier()
       hackedLineEdit(nullptr),
       hideDialogWhenReturnIsPressed(false)
 {
-    //
+    TopLevelTextEditorModifier::createdModifiers.append(QSharedPointer<TopLevelTextEditorModifier>(this));
 }
 
 TopLevelTextEditorModifier::~TopLevelTextEditorModifier()
 {
-    qDebug() << "destroying top level text modifier";
+    //qDebug() << "destroying top level text modifier";
 }
 
 QDialog *TopLevelTextEditorModifier::createDialog() const
