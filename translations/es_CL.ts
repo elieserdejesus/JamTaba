@@ -559,7 +559,7 @@
     <name>MainWindowPlugin</name>
     <message>
         <source>Window Size</source>
-        <translation>Tamaño de la ventana</translation>
+        <translation>Tamaño de la Ventana</translation>
     </message>
     <message>
         <source>Increase</source>
