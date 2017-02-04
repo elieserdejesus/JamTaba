@@ -9,10 +9,6 @@
 #include <QDebug>
 #include <QList>
 
-namespace Midi   {
-class MidiMessageBuffer;
-}
-
 namespace Audio {
 
 class AudioNodeProcessor;
