@@ -34,6 +34,7 @@ public:
 
 #ifdef Q_OS_MAC
     void initializeAudioUnitPluginsList(const QStringList &paths);
+    void scanAudioUnitPlugins();
 #endif
 
     void addDefaultPluginsScanPath();// add vst path from registry
@@ -104,8 +105,8 @@ public slots:
     void addBlackVstToSettings(const QString &path);
     void removeBlackVstFromSettings(const QString &pluginPath);
 
-    void scanAllPlugins();
-    void scanOnlyNewPlugins();
+    void scanAllVstPlugins();
+    void scanOnlyNewVstPlugins();
 
     void openExternalAudioControlPanel();
 
@@ -160,7 +161,7 @@ private:
     QScopedPointer<audio::VSTPluginFinder> vstPluginFinder;
 #ifdef Q_OS_MAC
     QScopedPointer<audio::AudioUnitPluginFinder> auPluginFinder;
-#endif
+ #endif
 
     // used to sort plugins list
     static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
@@ -168,7 +169,8 @@ private:
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
-    void scanPlugins(bool scanOnlyNewPlugins);
+    void scanVstPlugins(bool scanOnlyNewVstPlugins);
+
 
 };
 }

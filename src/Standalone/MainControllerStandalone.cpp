@@ -622,20 +622,20 @@
         }
     }
 
-    void MainControllerStandalone::scanAllPlugins()
+    void MainControllerStandalone::scanAllVstPlugins()
     {
         saveLastUserSettings(settings.getInputsSettings());// save the config file before start scanning
         clearPluginsCache();
-        scanPlugins(false);
+        scanVstPlugins(false);
     }
 
-    void MainControllerStandalone::scanOnlyNewPlugins()
+    void MainControllerStandalone::scanOnlyNewVstPlugins()
     {
         saveLastUserSettings(settings.getInputsSettings());// save the config file before start scanning
-        scanPlugins(true);
+        scanVstPlugins(true);
     }
 
-    void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
+    void MainControllerStandalone::scanVstPlugins(bool scanOnlyNewPlugins)
     {
         if (vstPluginFinder) {
             if (!scanOnlyNewPlugins)
@@ -650,13 +650,15 @@
             QStringList foldersToScan = settings.getVstScanFolders();
             vstPluginFinder->scan(foldersToScan, skipList);
         }
+    }
 
-    #ifdef Q_OS_MAC
+#ifdef Q_OS_MAC
+    void MainControllerStandalone::scanAudioUnitPlugins()
+    {
         if (auPluginFinder)
             auPluginFinder->scan();
-    #endif
-
     }
+#endif
 
     void MainControllerStandalone::openExternalAudioControlPanel()
     {

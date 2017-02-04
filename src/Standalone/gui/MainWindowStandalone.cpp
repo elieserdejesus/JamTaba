@@ -398,8 +398,8 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     connect(dialog, &PreferencesDialogStandalone::vstPluginAddedInBlackList, controller, &MainControllerStandalone::addBlackVstToSettings);
     connect(dialog, &PreferencesDialogStandalone::vstPluginRemovedFromBlackList, controller, &MainControllerStandalone::removeBlackVstFromSettings);
 
-    connect(dialog, &PreferencesDialogStandalone::startingFullPluginsScan, controller, &MainControllerStandalone::scanAllPlugins);
-    connect(dialog, &PreferencesDialogStandalone::startingOnlyNewPluginsScan, controller, &MainControllerStandalone::scanOnlyNewPlugins);
+    connect(dialog, &PreferencesDialogStandalone::startingFullPluginsScan, controller, &MainControllerStandalone::scanAllVstPlugins);
+    connect(dialog, &PreferencesDialogStandalone::startingOnlyNewPluginsScan, controller, &MainControllerStandalone::scanOnlyNewVstPlugins);
 
     connect(dialog, &PreferencesDialogStandalone::openingExternalAudioControlPanel, controller, &MainControllerStandalone::openExternalAudioControlPanel);
 
@@ -440,8 +440,11 @@ void MainWindowStandalone::initializePluginFinder()
     if (controller->vstScanIsNeeded()) {// no vsts in database cache or new plugins detected in scan folders?
         if (settings.getVstScanFolders().isEmpty())
             controller->addDefaultPluginsScanPath();
-        controller->scanOnlyNewPlugins();
+        controller->scanOnlyNewVstPlugins();
     }
+
+    // always checking for new AU plugins
+    controller->scanAudioUnitPlugins();
 }
 
 void MainWindowStandalone::handleServerConnectionError(const QString &msg)
