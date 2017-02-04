@@ -51,7 +51,7 @@ HEADERS += MainControllerVST.h
 HEADERS += NinjamControllerPlugin.h
 HEADERS += NinjamRoomWindowPlugin.h
 HEADERS += MainWindowPlugin.h
-HEADERS += KeyboardHook.h
+HEADERS += TopLevelTextEditorModifier.h
 HEADERS += PreferencesDialogPlugin.h
 
 SOURCES += main.cpp
@@ -64,7 +64,7 @@ SOURCES += ConfiguratorPlugin.cpp
 SOURCES += NinjamRoomWindowPlugin.cpp
 SOURCES += NinjamControllerPlugin.cpp
 SOURCES += MainWindowPlugin.cpp
-SOURCES += KeyboardHook.cpp
+SOURCES += TopLevelTextEditorModifier.cpp
 SOURCES += PreferencesDialogPlugin.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffectx.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffect.cpp

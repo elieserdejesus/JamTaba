@@ -229,6 +229,12 @@ void MainWindow::initializeGuiRefreshTimer()
 
 void MainWindow::initialize()
 {
+    // initialize text modifier here to avoid a pure virtual method call in constructor
+    TextEditorModifier *textEditorModifier = createTextEditorModifier();
+    bool finishEditorPressingReturnKey = true;
+    QString dialogObjectName(QStringLiteral("userNamePanel")); // in plugins the text editor are QDialog containing another text editor. This string (dialogObjectName) is used to set dialog with the same object name used in Standalone and achieve the same visual result.
+    textEditorModifier->modify(ui.userNameLineEdit, finishEditorPressingReturnKey, dialogObjectName);
+
     initializeGuiRefreshTimer();
 
     if (qApp->styleSheet().isEmpty()) { // allow custom stylesheet via app arguments
@@ -242,7 +248,6 @@ void MainWindow::initialize()
     showBusyDialog(tr("Loading rooms list ..."));
 
     doWindowInitialization();
-
 }
 
 void MainWindow::doWindowInitialization()

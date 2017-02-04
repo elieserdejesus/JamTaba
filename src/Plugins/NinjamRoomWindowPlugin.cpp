@@ -2,14 +2,15 @@
 #include "ui_NinjamRoomWindow.h"
 #include "MainControllerPlugin.h"
 #include "NinjamControllerPlugin.h"
+#include "MainWindowPlugin.h"
 #include <QToolTip>
 
 using namespace Controller;
 
 // +++++++++++++++++++++++++++++++++++++++++++++
-NinjamRoomWindowPlugin::NinjamRoomWindowPlugin(MainWindow *parent, const Login::RoomInfo &roomInfo,
+NinjamRoomWindowPlugin::NinjamRoomWindowPlugin(MainWindowPlugin *mainWindow, const Login::RoomInfo &roomInfo,
                                          MainControllerPlugin *mainController) :
-    NinjamRoomWindow(parent, roomInfo, mainController),
+    NinjamRoomWindow(mainWindow, roomInfo, mainController),
     controller(mainController)
 {
     QString hostName = mainController->getHostName();

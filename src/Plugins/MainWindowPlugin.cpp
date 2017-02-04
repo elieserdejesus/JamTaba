@@ -4,12 +4,14 @@
 #include "PreferencesDialogPlugin.h"
 #include "LocalTrackView.h"
 #include "audio/core/LocalInputNode.h"
+#include "TopLevelTextEditorModifier.h"
 
 #include <QDesktopWidget>
 
 const QSize MainWindowPlugin::PLUGIN_WINDOW_MIN_SIZE = QSize(990, 600);
 
 const quint32 MainWindowPlugin::ZOOM_STEP = 100;
+
 
 MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
@@ -28,6 +30,25 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
 #ifdef Q_OS_MAC
     ui.menuBar->setNativeMenuBar(false); // avoid show the JamTaba menu bar in top of screen (the common behavior for mac apps)
 #endif
+}
+
+
+#ifndef Q_OS_MAC  // this function is NOT used in Mac
+void MainWindowPlugin::timerEvent(QTimerEvent *ev)
+{
+    MainWindow::timerEvent(ev);
+
+    //check if mouse is outsize window and clear focus. This is necessary to avoid 'floating' QLineEdits when user drag AU/VSt window with some QLineEdit focused.
+    if (QApplication::focusWidget()) {
+        if (!rect().contains(mapFromGlobal(QCursor::pos())))
+            QApplication::focusWidget()->clearFocus();
+    }
+}
+#endif
+
+TextEditorModifier *MainWindowPlugin::createTextEditorModifier()
+{
+    return new TopLevelTextEditorModifier();
 }
 
 void MainWindowPlugin::updateLocalInputChannelsGeometry()

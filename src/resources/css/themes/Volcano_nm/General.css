@@ -164,7 +164,7 @@ QLineEdit
 QLineEdit:focus
 {
     border-color: rgba(0, 0, 0, 90);
-    background-color: rgba(254, 181, 102, 150);
+    background-color: rgb(247, 153, 70);
     color: black;
     selection-background-color: rgb(179, 89, 37);
     selection-color: rgb(254, 181, 102);

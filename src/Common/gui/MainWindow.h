@@ -8,6 +8,7 @@
 #include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
 #include "ScreensaverBlocker.h"
+#include "TextEditorModifier.h"
 
 #include <QTranslator>
 
@@ -73,6 +74,8 @@ public:
     QStringList getChannelsNames() const;
 
     void showMetronomePreferencesDialog();
+
+    virtual TextEditorModifier *createTextEditorModifier() = 0;
 
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);

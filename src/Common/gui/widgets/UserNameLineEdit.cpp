@@ -12,7 +12,7 @@ UserNameLineEdit::UserNameLineEdit(QWidget *parent)
 
     setMaxLength(16); //this maxLength need be changed if we decide support non ASCII user names
 
-    connect(this, SIGNAL(editingFinished()), this, SLOT(updateText()));
+    connect(this, &UserNameLineEdit::textChanged, this, &UserNameLineEdit::updateText);
 
     setAttribute(Qt::WA_MacShowFocusRect, 0); // remove focus border in Mac
 }

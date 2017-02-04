@@ -3,32 +3,22 @@
 #include "log/Logging.h"
 #include "BpiUtils.h"
 #include "intervalProgress/IntervalProgressWindow.h"
+#include "TextEditorModifier.h"
 
 #include <QDebug>
 #include <QtAlgorithms>
 #include <QtMath>
 #include <QFormLayout>
 
-NinjamPanel::NinjamPanel(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::NinjamPanel),
-    hostSyncButton(nullptr),
-    metronomeFloatingWindow(nullptr)
+NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, QWidget *parent)
+    :   QWidget(parent),
+        ui(new Ui::NinjamPanel),
+        hostSyncButton(nullptr),
+        metronomeFloatingWindow(nullptr)
 {
     ui->setupUi(this);
 
-    // initialize combos
-    for (int bpm = 40; bpm <= 200; bpm += 5)
-        ui->comboBpm->addItem(QString::number(bpm), bpm);
-    int bpis[] = {8, 12, 16, 24, 32, 48, 64};
-    for (int i = 0; i < 7; ++i)
-        ui->comboBpi->addItem(QString::number(bpis[i]), bpis[i]);
-
-    ui->comboBpm->setValidator(new QIntValidator(40, 400, ui->comboBpm));
-    ui->comboBpi->setValidator(new QIntValidator(2, 64, ui->comboBpi));
-
-    ui->comboBpi->setCompleter(0);// disabling completer
-    ui->comboBpm->setCompleter(0);// disabling completer
+    initializeCombos(bpiComboModifier, bpmComboModifier);
 
     ui->levelSlider->installEventFilter(this);
     ui->panSlider->installEventFilter(this);
@@ -41,6 +31,28 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     setupSignals();
 
     translate();
+}
+
+void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier)
+{
+    // initialize combos
+    const quint16 MIN_BPM = 40;
+    for (quint16 bpm = MIN_BPM; bpm <= 200; bpm += 5)
+        ui->comboBpm->addItem(QString::number(bpm), bpm);
+
+    int bpis[] = {8, 12, 16, 24, 32, 48, 64};
+    for (int bpi : bpis)
+        ui->comboBpi->addItem(QString::number(bpi), bpi);
+
+    ui->comboBpm->setValidator(new QIntValidator(MIN_BPM, 400, ui->comboBpm));
+    ui->comboBpi->setValidator(new QIntValidator(2, 64, ui->comboBpi));
+
+    ui->comboBpi->setCompleter(0);// disabling completer
+    ui->comboBpm->setCompleter(0);// disabling completer
+
+    bpiModifier->modify(ui->comboBpi); // modify the comboBox QLineEdit to work in plugins (AU/VST)
+    bpmModifier->modify(ui->comboBpm);
+
 }
 
 void NinjamPanel::maximizeControlsWidget(bool maximize)

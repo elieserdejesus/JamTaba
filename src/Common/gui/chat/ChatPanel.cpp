@@ -6,10 +6,11 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include <QWidget>
+#include <QGridLayout>
 
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
-ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
+ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *textEditorModifier) :
     QWidget(nullptr),
     ui(new Ui::ChatPanel),
     botNames(botNames),
@@ -17,11 +18,14 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
     colorsPool(colorsPool)
 {
     ui->setupUi(this);
-    QVBoxLayout *layout = new QVBoxLayout(ui->scrollContent);
-    layout->setContentsMargins(0, 0, 0, 0);
-    ui->scrollContent->setLayout(layout);
+    QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
+    ui->scrollContent->setLayout(contentLayout);
 
     connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
+
+    bool finishEditorPressingReturnKey = false;
+    textEditorModifier->modify(ui->chatText, finishEditorPressingReturnKey);
 
     // this event is used to auto scroll down when new messages are added
     connect(ui->chatScroll->verticalScrollBar(), &QScrollBar::rangeChanged, this, &ChatPanel::autoScroll);
@@ -29,8 +33,6 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
     connect(ui->buttonClear, &QPushButton::clicked, this, &ChatPanel::clearMessages);
 
     connect(ui->buttonAutoTranslate, &QPushButton::clicked, this, &ChatPanel::toggleAutoTranslate);
-
-    ui->chatText->installEventFilter(this);
 
     // disable blue border when QLineEdit has focus in mac
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -42,13 +44,6 @@ void ChatPanel::changeEvent(QEvent *e)
         ui->retranslateUi(this);
     }
     QWidget::changeEvent(e);
-}
-
-bool ChatPanel::eventFilter(QObject *obj, QEvent *event)
-{
-    if (obj == ui->chatText && event->type() == QEvent::MouseButtonPress)
-        ui->chatText->setFocus();
-    return QWidget::eventFilter(obj, event);
 }
 
 void ChatPanel::createVoteButton(const QString &voteType, quint32 value, quint32 expireTime)

@@ -4,7 +4,6 @@
 #include "MainWindowPlugin.h"
 #include "MainControllerVST.h"
 #include "log/Logging.h"
-#include "KeyboardHook.h"
 #include <QTimer>
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -74,7 +73,6 @@ bool VstEditor::open(void *ptr)
     AEffEditor::open(ptr);
     widget = new QWinWidget(static_cast<HWND>(ptr));
     widget->setAutoFillBackground(false);
-    KeyboardHook::installLowLevelKeyboardHook();
 
     if (!mainWindow) {
         qCDebug(jtVstPlugin) << "Creating MainWindow...";
@@ -118,7 +116,6 @@ void VstEditor::close()
     if (widget) {
         delete widget;
         widget = nullptr;
-        KeyboardHook::uninstallLowLevelKeyboardKook();
     }
     AEffEditor::close();
     qCDebug(jtVstPlugin) << "VstEditor::close() done.";

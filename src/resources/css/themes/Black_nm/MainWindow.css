@@ -7,13 +7,19 @@
 #userNamePanel
 {
     color: rgb(140, 140, 140);
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop:0 rgb(85, 85, 85),
-            stop:0.1 rgb(65, 65, 65)
-            stop:0.9 rgba(45, 45, 45),
-            stop:1 rgba(25, 25, 25));
     border: 1px solid rgb(55, 55, 55);
     padding: 1px;
+}
+
+/* these two elements need use the same NON-transparent color to work ok in AU and VSt plugin (using top level text editor) */
+#userNameLineEdit,
+#userNamePanel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(85, 85, 85),
+        stop:0.1 rgb(65, 65, 65)
+        stop:0.9 rgba(45, 45, 45),
+        stop:1 rgba(25, 25, 25));
 }
 
 #labelYourControls
@@ -38,7 +44,6 @@
 #userNameLineEdit
 {
     color: rgb(150, 150, 150);
-    background-color: transparent;
     border: none;
 }
 

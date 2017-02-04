@@ -10,6 +10,7 @@ class QAbstractSlider;
 class QPushButton;
 class QObject;
 class QEvent;
+class TextEditorModifier;
 
 namespace Ui {
 class NinjamPanel;
@@ -20,7 +21,7 @@ class NinjamPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamPanel(QWidget *parent = 0);
+    explicit NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, QWidget *parent = 0);
     ~NinjamPanel();
 
     void createHostSyncButton(const QString &buttonText);
@@ -75,6 +76,7 @@ protected:
     Ui::NinjamPanel *ui;
     QPushButton *hostSyncButton;// created only when running as vst plugin
     IntervalProgressWindow *metronomeFloatingWindow;
+
 private:
     void buildShapeModel();
     void buildAccentsdModel(int bpi);
@@ -84,6 +86,7 @@ private:
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
     void setupSignals();
     void translate();
+    void initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier);
 
 private slots:
     void updateAccentsStatus(int index);

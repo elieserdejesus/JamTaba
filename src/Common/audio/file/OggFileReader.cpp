@@ -15,8 +15,6 @@ void OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffe
         return; // Done, out buffer is not changed
     }
     else{
-        qDebug() << "Opening " << filePath;
-
         VorbisDecoder decoder;
         decoder.setInputData(oggFile.readAll());
         decoder.initialize(); //read the ogg headers from file

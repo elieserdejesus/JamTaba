@@ -4,12 +4,13 @@
 #include "gui/NinjamRoomWindow.h"
 
 class MainControllerPlugin;
+class MainWindowPlugin;
 
 class NinjamRoomWindowPlugin : public NinjamRoomWindow
 {
     Q_OBJECT
 public:
-    NinjamRoomWindowPlugin(MainWindow *parent, const Login::RoomInfo &roomInfo, MainControllerPlugin *mainController);
+    NinjamRoomWindowPlugin(MainWindowPlugin *parent, const Login::RoomInfo &roomInfo, MainControllerPlugin *mainController);
 
 private slots:
     void setHostSyncState(bool syncWithHost);

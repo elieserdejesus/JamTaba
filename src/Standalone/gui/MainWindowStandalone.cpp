@@ -7,10 +7,47 @@
 
 #include <QTimer>
 #include <QDesktopWidget>
+#include <QSharedPointer>
 
 using namespace Persistence;
 using namespace Controller;
 using namespace audio;  // TODO rewrite namespaces using lower case
+
+class NullTextEditorModifier : public TextEditorModifier
+{
+public:
+
+    void modify(QLineEdit *textEditor, bool finishOnReturnPressing, const QString &dialogObjectName = "") override
+    {
+        Q_UNUSED(textEditor)
+        Q_UNUSED(finishOnReturnPressing)
+        Q_UNUSED(dialogObjectName)
+    }
+
+    void modify(QComboBox *comboBox) override
+    {
+        Q_UNUSED(comboBox)
+    }
+
+    static NullTextEditorModifier *getInstance()
+    {
+        if (instance.isNull())
+            instance.reset(new NullTextEditorModifier());
+
+        return instance.data();
+    }
+
+private:
+    NullTextEditorModifier() {
+        // private construtor to force getInstance usage
+    }
+
+    static QSharedPointer<NullTextEditorModifier> instance;
+};
+
+QSharedPointer<NullTextEditorModifier> NullTextEditorModifier::instance;
+
+// ------------------------
 
 MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainController) :
     MainWindow(mainController),
@@ -24,6 +61,11 @@ MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainControl
     setupShortcuts();
 
     initializePluginFinder();
+}
+
+TextEditorModifier *MainWindowStandalone::createTextEditorModifier()
+{
+    return NullTextEditorModifier::getInstance();
 }
 
 void MainWindowStandalone::setupShortcuts()
