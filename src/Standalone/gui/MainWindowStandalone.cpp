@@ -434,6 +434,9 @@ void MainWindowStandalone::initializePluginFinder()
 
 #ifdef Q_OS_MAC
     controller->initializeAudioUnitPluginsList(settings.getAudioUnitsPaths());
+
+    // always checking for new AU plugins
+    controller->scanAudioUnitPlugins();
 #endif
 
     // checking for new plugins...
@@ -442,9 +445,6 @@ void MainWindowStandalone::initializePluginFinder()
             controller->addDefaultPluginsScanPath();
         controller->scanOnlyNewVstPlugins();
     }
-
-    // always checking for new AU plugins
-    controller->scanAudioUnitPlugins();
 }
 
 void MainWindowStandalone::handleServerConnectionError(const QString &msg)

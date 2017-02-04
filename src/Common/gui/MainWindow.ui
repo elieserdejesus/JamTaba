@@ -642,11 +642,6 @@
     <string>Show max peaks</string>
    </property>
   </action>
-  <action name="actionAsd">
-   <property name="text">
-    <string>asd</string>
-   </property>
-  </action>
   <action name="actionSoundWave">
    <property name="checkable">
     <bool>true</bool>
