@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -420,23 +420,23 @@
     </message>
     <message>
         <source>Sound Wave</source>
-        <translation type="unfinished"></translation>
+        <translation>Onda de Sonido</translation>
     </message>
     <message>
         <source>Buildings</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloques</translation>
     </message>
     <message>
         <source>Gradient</source>
-        <translation type="unfinished"></translation>
+        <translation>Gradiente</translation>
     </message>
     <message>
         <source>Pixelated Sound Wave</source>
-        <translation type="unfinished"></translation>
+        <translation>Onda de Sonido Pixelada</translation>
     </message>
     <message>
         <source>Pixelated Buildings</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloques Pixelados</translation>
     </message>
 </context>
 <context>
@@ -552,22 +552,22 @@
     </message>
     <message>
         <source>Ice</source>
-        <translation type="unfinished"></translation>
+        <translation>Congelado</translation>
     </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
     <message>
         <source>Window Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamaño de la ventana</translation>
     </message>
     <message>
         <source>Increase</source>
-        <translation type="unfinished"></translation>
+        <translation>Aumentar</translation>
     </message>
     <message>
         <source>Decrease</source>
-        <translation type="unfinished"></translation>
+        <translation>Reducir</translation>
     </message>
 </context>
 <context>
@@ -621,7 +621,7 @@
     </message>
     <message>
         <source>Route MIDI input to first subchannel</source>
-        <translation type="unfinished"></translation>
+        <translation>Rutear la entrada MIDI al primer subcanal</translation>
     </message>
 </context>
 <context>
@@ -795,32 +795,32 @@
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished">Sincronizar con %1</translation>
+        <translation>Sincronizar con %1</translation>
     </message>
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished">Sincronizar con el anfitrión</translation>
+        <translation>Sincronizar con el anfitrión</translation>
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡El valor de BPM ha cambiado! Por favor detenga %1 y cámbielo a %2!</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation type="unfinished">Sincronizando...</translation>
+        <translation>Sincronizando...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation type="unfinished">¡Presione play/comenzar en %1 para sincronizar con Jamtaba!</translation>
+        <translation>¡Presione play/comenzar en %1 para sincronizar con Jamtaba!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation type="unfinished">Intentando sincronizar ...</translation>
+        <translation>Intentando Sincronizar ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation type="unfinished">¡Cambie BPM de %1 a %2 e intente sincronizar nuevamente!</translation>
+        <translation>¡Cambie el valor de BPM en %1 a %2 e intente sincronizar nuevamente!</translation>
     </message>
 </context>
 <context>
@@ -1074,23 +1074,23 @@
     <name>PreferencesDialogStandalone</name>
     <message>
         <source>Adding VST path ...</source>
-        <translation type="unfinished">Agregando carpeta VST ...</translation>
+        <translation>Agregando carpeta VST ...</translation>
     </message>
     <message>
         <source>scanning %1</source>
-        <translation type="unfinished">buscando %1</translation>
+        <translation>buscando %1</translation>
     </message>
     <message>
         <source>Add Vst(s) to Black list ...</source>
-        <translation type="unfinished">Agregar Vst(s) a la lista negra ...</translation>
+        <translation>Agregar Vst(s) a la lista negra ...</translation>
     </message>
     <message>
         <source>Remove Vst(s) from Black List ...</source>
-        <translation type="unfinished">Sacar Vst(s) de la lista negra ...</translation>
+        <translation>Sacar Vst(s) de la lista negra ...</translation>
     </message>
     <message>
         <source>No midi input device detected!</source>
-        <translation type="unfinished">¡No se ha detectado ningún dispositivo de entrada midi!</translation>
+        <translation>¡No se ha detectado ningún dispositivo de entrada midi!</translation>
     </message>
 </context>
 <context>
@@ -1137,7 +1137,7 @@
     </message>
     <message>
         <source>User name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombre de Usuario:</translation>
     </message>
 </context>
 <context>
