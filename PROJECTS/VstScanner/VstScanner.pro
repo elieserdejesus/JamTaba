@@ -53,7 +53,7 @@ SOURCES += log/logging.cpp
 #including the correct implementation for VstPluginChecker
 INCLUDEPATH += $$SOURCE_PATH/Standalone/vst #to allow a simple '#include "VstPluginChecker.h"' in the code
 win32:SOURCES += $$SOURCE_PATH/Standalone/vst/WindowsVstPluginChecker.cpp
-macx:SOURCES  += $$SOURCE_PATH/Standalone/vst/MacVstPluginChecker.cpp
+macx:OBJECTIVE_SOURCES  += $$SOURCE_PATH/Standalone/vst/MacVstPluginChecker.mm
 linux:SOURCES += $$SOURCE_PATH/Standalone/vst/LinuxVstPluginChecker.cpp
 
 win32{

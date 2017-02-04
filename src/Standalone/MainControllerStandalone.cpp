@@ -571,14 +571,8 @@
     bool MainControllerStandalone::vstScanIsNeeded() const
     {
         bool vstCacheIsEmpty = settings.getVstPluginsPaths().isEmpty();
-    #ifdef Q_OS_MAC
-        bool audioUnitCacheIsEmpty = settings.getAudioUnitsPaths().isEmpty();
-        if (vstCacheIsEmpty || audioUnitCacheIsEmpty)
-            return true;
-    #else
         if (vstCacheIsEmpty)
             return true;
-    #endif
 
         // checking for new vst plugins in scan folders
         QStringList foldersToScan = settings.getVstScanFolders();
@@ -601,30 +595,10 @@
                 break;
         }
 
-
-
-    #ifdef Q_OS_WIN
         return newVstFounded;
-    #endif
-
-    #ifdef Q_OS_MAC
-        //check for new AU plugins
-        //QList<Audio::PluginDescriptor> aus = AU::scanAudioUnitPlugins();
-        //QStringList cachedPlugins = settings.getAudioUnitsPaths();
-        bool newAudioUnitFounded = false;
-        //for (const auto &au : aus) {
-        //    if (!cachedPlugins.contains(au.getPath())) {
-        //        newAudioUnitFounded = true;
-        //        break;
-        //    }
-        //}
-        return newVstFounded || newAudioUnitFounded;
-    #endif
-
-        return false;
     }
 
-    #ifdef Q_OS_MAC
+#ifdef Q_OS_MAC
 
     void MainControllerStandalone::initializeAudioUnitPluginsList(const QStringList &paths)
     {
@@ -633,7 +607,7 @@
         }
     }
 
-    #endif
+#endif
 
     void MainControllerStandalone::initializeVstPluginsList(const QStringList &paths)
     {

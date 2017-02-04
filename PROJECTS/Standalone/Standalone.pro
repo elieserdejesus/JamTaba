@@ -88,7 +88,7 @@ macx{
     VPATH += $$AU_SDK_PATH
 
     SOURCES += audio/MacPortAudioDriver.cpp
-    SOURCES += vst/MacVstPluginChecker.cpp
+    OBJECTIVE_SOURCES += vst/MacVstPluginChecker.mm
 
     HEADERS += AU/AudioUnitPlugin.h
     OBJECTIVE_SOURCES += AU/AudioUnitPlugin.mm
