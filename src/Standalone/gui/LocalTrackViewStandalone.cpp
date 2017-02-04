@@ -4,6 +4,7 @@
 #include "FxPanelItem.h"
 #include <QGridLayout>
 #include <QStyle>
+#include <QSlider>
 #include <QPainter>
 #include <QDesktopWidget>
 
@@ -237,10 +238,12 @@ QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
 
 void LocalTrackViewStandalone::setAudioRelatedControlsStatus(bool enableControls)
 {
+
     QWidget *controls[] = {
         buttonBoostMinus12, buttonBoostPlus12, buttonBoostZero,
         soloButton, muteButton, buttonStereoInversion,
-        panSlider, levelSlider
+        dynamic_cast<QWidget *>(panSlider),
+        dynamic_cast<QWidget *>(levelSlider)
     };
 
     for (QWidget *control: controls) {

@@ -31,6 +31,9 @@ PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainContro
     ui->textFieldUserName->setAlignment(Qt::AlignLeft);
 
     ui->textFieldPassword->setEchoMode(QLineEdit::Password);
+
+    ui->textFieldPassword->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove focus border in Mac
+    ui->textFieldPort->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove focus border in Mac
 }
 
 void PrivateServerDialog::buildComboBoxItems()

@@ -8,6 +8,7 @@
 #include <QMap>
 #include <QStringList>
 #include <QFile>
+#include <QSize>
 #include "Configurator.h"
 #include "audio/core/PluginDescriptor.h"
 
