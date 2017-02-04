@@ -27,7 +27,7 @@ private:
 public:
     AudioMixer(int sampleRate);
     ~AudioMixer();
-    void process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer, bool attenuateAfterSumming = false);
+    void process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const std::vector<Midi::MidiMessage> &midiBuffer, bool attenuateAfterSumming = false);
     void addNode(AudioNode *node);
     void removeNode(AudioNode *node);
 

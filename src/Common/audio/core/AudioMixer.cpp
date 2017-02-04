@@ -37,21 +37,27 @@ AudioMixer::~AudioMixer()
     qCDebug(jtAudio) << "Audio mixer destructor finished!";
 }
 
-void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer, bool attenuateAfterSumming)
+void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const std::vector<Midi::MidiMessage> &midiBuffer, bool attenuateAfterSumming)
 {
     static int soloedBuffersInLastProcess = 0;
     // --------------------------------------
     bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
     soloedBuffersInLastProcess = 0;
     foreach (AudioNode *node, nodes) {
-        bool canProcess = (!hasSoloedBuffers && !node->isMuted())
-                          || (hasSoloedBuffers && node->isSoloed());
+        bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
         if (canProcess) {
-            node->processReplacing(in, out, sampleRate, midiBuffer);
-        } else {// just discard the samples if node is muted, the internalBuffer is not copyed to out buffer
+
+            // each channel (not subchannel) will receibe a full copy of incomming midi messages
+            std::vector<Midi::MidiMessage> midiMessages(midiBuffer.size());
+            midiMessages.insert(midiMessages.begin(), midiBuffer.begin(), midiBuffer.end());
+
+            node->processReplacing(in, out, sampleRate, midiMessages);
+        }
+        else { // just discard the samples if node is muted, the internalBuffer is not copyed to out buffer
             static Audio::SamplesBuffer internalBuffer(2);
+            static std::vector<Midi::MidiMessage> emptyMidiBuffer;
             internalBuffer.setFrameLenght(out.getFrameLenght());
-            node->processReplacing(in, internalBuffer, sampleRate, midiBuffer);
+            node->processReplacing(in, internalBuffer, sampleRate, emptyMidiBuffer);
         }
         if (node->isSoloed())
             soloedBuffersInLastProcess++;
