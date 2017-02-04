@@ -32,6 +32,8 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
 #endif
 }
 
+
+#ifndef Q_OS_MAC  // this function is NOT used in Mac
 void MainWindowPlugin::timerEvent(QTimerEvent *ev)
 {
     MainWindow::timerEvent(ev);
@@ -42,6 +44,7 @@ void MainWindowPlugin::timerEvent(QTimerEvent *ev)
             QApplication::focusWidget()->clearFocus();
     }
 }
+#endif
 
 TextEditorModifier *MainWindowPlugin::createTextEditorModifier()
 {

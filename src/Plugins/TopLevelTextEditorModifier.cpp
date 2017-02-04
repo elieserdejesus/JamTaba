@@ -32,7 +32,8 @@ TopLevelTextEditorModifier::~TopLevelTextEditorModifier()
 
 QDialog *TopLevelTextEditorModifier::createDialog() const
 {
-    QDialog *newDialog = new QDialog(nullptr, Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint|Qt::NoDropShadowWindowHint);
+    Qt::WindowFlags flags = Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::NoDropShadowWindowHint;
+    QDialog *newDialog = new QDialog(nullptr, flags);
     newDialog->setAttribute(Qt::WA_DeleteOnClose);
 
     QLayout *layout = new QVBoxLayout();
@@ -124,6 +125,9 @@ void TopLevelTextEditorModifier::showDialog()
 
     }
 
+    if (dialog->isVisible())
+        return;
+    
     topLevelLineEdit->setAlignment(hackedLineEdit->alignment());
     topLevelLineEdit->setText(hackedLineEdit->text());
 
@@ -152,7 +156,11 @@ bool TopLevelTextEditorModifier::isHackingComboBox() const
 bool TopLevelTextEditorModifier::isValidFocusInEvent(QEvent *ev) const
 {
     if (!isHackingComboBox()) {
-        return ev->type() == QEvent::FocusIn;
+        if (ev->type() == QEvent::FocusIn) {
+            QFocusEvent *focusEvent = static_cast<QFocusEvent *>(ev);
+            return focusEvent->reason() == Qt::MouseFocusReason;
+        }
+        return false;
     }
 
 
@@ -177,7 +185,7 @@ bool TopLevelTextEditorModifier::eventFilter(QObject *obj, QEvent *ev)
         showDialog();
     }
     else if (obj == topLevelLineEdit && ev->type() == QEvent::FocusOut) {
-        if (dialog) {
+        if (dialog && dialog->isVisible()) {
             dialog->hide();
             transferTextToHackedLineEdit();
         }
