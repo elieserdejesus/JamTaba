@@ -224,9 +224,9 @@ void Configurator::setupLogConfigFile()
     if (!logConfigFilePath.isEmpty()) {
         qputenv("QT_LOGGING_CONF", QByteArray(logConfigFilePath.toUtf8()));
         qInstallMessageHandler(&Configurator::logHandler);
-    }
+     }
     else {
-        qWarning() << "Log file path is empty!";
+        qCritical() << "Logging config file path is empty!";
     }
 }
 

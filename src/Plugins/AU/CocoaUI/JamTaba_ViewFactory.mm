@@ -25,15 +25,20 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 
 - (NSView *)uiViewForAudioUnit:(AudioUnit)inAU withSize:(NSSize)inPreferredSize {
     
-    [self createQtEnvironment];
+    QApplication::setApplicationName("JamTaba 2");
+    QApplication::setAttribute(Qt::AA_MacPluginApplication);
+    QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar); // not working in qt 5.6.2
     
     Configurator *configurator = Configurator::getInstance();
     if (!configurator->setUp())
         qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
     
-    
-    
-    
+    if (!QApplication::instance())
+    {
+        int argc = 0;
+        new QApplication(argc, 0);
+    }
+
     uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];
     
     JamTabaAUPlugin *auPlugin = JamTabaAUPlugin::getInstance(inAU);
@@ -93,18 +98,5 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     return [returnView autorelease];
 }
 
-- (void) createQtEnvironment {
-    QApplication::setApplicationName("JamTaba 2");
-    QApplication::setAttribute(Qt::AA_MacPluginApplication);
-    QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar); // not working in qt 5.6.2
-    
-    if (!QApplication::instance())
-    {
-        int argc = 0;
-        new QApplication(argc, 0);
-       
-    }
-    
-}
 
 @end
