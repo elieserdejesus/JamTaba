@@ -241,15 +241,15 @@ void LocalInputNode::setRoutingMidiInput(bool routeMidiInput)
     LocalInputNode *firstSubchannel = mainController->getInputTrackInGroup(channelGroupIndex, subchannelIndex);
 
     if (firstSubchannel == this)
-        return; //midi routing is not allows in first subchannel
+        return; // midi routing is not allowed in first subchannel
 
     if (firstSubchannel) {
-        routingMidiInput = routeMidiInput;
+        routingMidiInput = isMidi() && routeMidiInput;
 
         if (routingMidiInput)
             receivingRoutedMidiInput = false;
 
-        firstSubchannel->setReceivingRoutedMidiInput(routeMidiInput);
+        firstSubchannel->setReceivingRoutedMidiInput(routingMidiInput);
     }
     else {
         qCritical() << "First subchannel is null!";

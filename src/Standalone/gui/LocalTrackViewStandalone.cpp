@@ -250,7 +250,7 @@ void LocalTrackViewStandalone::setMidiRouting(bool routingMidiToFirstSubchannel)
 {
     inputNode->setRoutingMidiInput(routingMidiToFirstSubchannel);
 
-    bool enableAudioControls = !routingMidiToFirstSubchannel;
+    bool enableAudioControls = !inputNode->isRoutingMidiInput();
     setAudioRelatedControlsStatus(enableAudioControls);
 
     update();
