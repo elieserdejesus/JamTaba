@@ -22,6 +22,8 @@ void CustomTabWidget::setResourcesUsage(int memoryUsage)
 void CustomTabWidget::paintEvent(QPaintEvent *e){
     QTabWidget::paintEvent(e);
 
+#ifndef Q_OS_MAC // skip memory usage painting in Mac, not implemented yet
+
     QPainter painter(this);
     //draw the cpu/memory usage background
     //QString string = "CPU: " + QString::number(cpuUsage, 'f', 1) + "%  MEM: " + QString::number(memoryUsage) + " MB";
@@ -42,5 +44,6 @@ void CustomTabWidget::paintEvent(QPaintEvent *e){
     painter.setPen(RESOURCES_USAGE_TEXT_COLOR);
     int textY = rectHeight - painter.fontMetrics().descent();
     painter.drawText(x + H_MARGIM, textY, string);
+#endif
 
 }
