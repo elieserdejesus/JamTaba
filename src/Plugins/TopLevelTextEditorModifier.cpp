@@ -32,12 +32,14 @@ TopLevelTextEditorModifier::~TopLevelTextEditorModifier()
 
 QDialog *TopLevelTextEditorModifier::createDialog() const
 {
-    QDialog *newDialog = new QDialog(nullptr, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    QDialog *newDialog = new QDialog(nullptr, Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint|Qt::NoDropShadowWindowHint);
     newDialog->setAttribute(Qt::WA_DeleteOnClose);
 
     QLayout *layout = new QVBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
     newDialog->setLayout(layout);
+    
+    newDialog->setAttribute(Qt::WA_TranslucentBackground);
 
     return newDialog;
 }
@@ -81,6 +83,7 @@ void TopLevelTextEditorModifier::doInstall(QLineEdit *lineEdit)
     this->topLevelLineEdit = new QLineEdit();
     this->topLevelLineEdit->setValidator(hackedLineEdit->validator());
     this->topLevelLineEdit->installEventFilter(this);
+    this->topLevelLineEdit->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove border focus on Mac
 
     connect(topLevelLineEdit, &QLineEdit::returnPressed, [=]{
         if (dialog) {
@@ -116,7 +119,6 @@ void TopLevelTextEditorModifier::showDialog()
     if (!dialog) {
         dialog.reset(createDialog());
         dialog->layout()->addWidget(topLevelLineEdit); // topLevelLineEdit will be owned by Dialog
-        dialog->setAttribute(Qt::WA_TranslucentBackground);
         if (!dialogObjectName.isEmpty())
             dialog->setObjectName(dialogObjectName);
 
