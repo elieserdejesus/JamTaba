@@ -42,6 +42,11 @@ public:
 
     void refreshInputSelectionName();
 
+    bool isMidi() const;
+    bool isNoInput() const;
+
+    void setToMidi();
+
 signals:
     void trackInputChanged();
 

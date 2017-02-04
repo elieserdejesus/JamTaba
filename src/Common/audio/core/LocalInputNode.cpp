@@ -132,17 +132,6 @@ void LocalInputNode::closeProcessorsWindows()
     }
 }
 
-void LocalInputNode::addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex)
-{
-    AudioNode::addProcessor(newProcessor, slotIndex);
-
-    // if newProcessor is the first added processor and is a virtual instrument (VSTi) change the input selection to midi
-    if (slotIndex == 0 && newProcessor->isVirtualInstrument()) {
-        if (!isMidi())
-            setMidiInputSelection(0, -1);// select the first midi device, all channels (-1)
-    }
-}
-
 void LocalInputNode::setAudioInputSelection(int firstChannelIndex, int channelCount)
 {
     audioInputRange = ChannelRange(firstChannelIndex, channelCount);

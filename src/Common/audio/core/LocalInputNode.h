@@ -85,8 +85,6 @@ public:
     void stopMidiNoteLearn();
     bool isLearningMidiNote() const;
 
-    void addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex) override;
-
     void reset() override;
 
     /** local input tracks are always activated, so is possible play offline while listening to a room.

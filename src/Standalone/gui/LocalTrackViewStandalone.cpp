@@ -51,6 +51,26 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     translateUI();
 }
 
+void LocalTrackViewStandalone::setToMidi()
+{
+    int midiChannel = -1;
+    int midiDeviceIndex = 0;
+
+    controller->setInputTrackToMIDI(getTrackID(), midiDeviceIndex, midiChannel);
+
+    emit trackInputChanged();
+}
+
+bool LocalTrackViewStandalone::isNoInput() const
+{
+    return inputNode->isNoInput();
+}
+
+bool LocalTrackViewStandalone::isMidi() const
+{
+    return inputNode->isMidi();
+}
+
 void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSize, bool drawMidiWord)
 {
     QPainter painter(this);
