@@ -27,12 +27,12 @@ namespace AU {
         void start() override;
 
         inline QByteArray getSerializedData() const override { return QByteArray(); }
-        inline void restoreFromSerializedData(const QByteArray &data) override { Q_UNUSED(data) };
+        inline void restoreFromSerializedData(const QByteArray &data) override { Q_UNUSED(data); }
 
         void setSampleRate(int newSampleRate) override;
 
         void process(const Audio::SamplesBuffer &inBuffer, Audio::SamplesBuffer &outBuffer,
-                             const QList<Midi::MidiMessage> &midiBuffer) override;
+                             std::vector<Midi::MidiMessage> &midiBuffer) override;
 
         void suspend() override;
         void resume() override;

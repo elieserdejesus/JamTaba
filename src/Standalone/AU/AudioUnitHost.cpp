@@ -27,9 +27,9 @@ AudioUnitHost::AudioUnitHost()
 
 }
 
-QList<Midi::MidiMessage> AudioUnitHost::pullReceivedMidiMessages()
+std::vector<Midi::MidiMessage> AudioUnitHost::pullReceivedMidiMessages()
 {
-    return QList<Midi::MidiMessage>();
+    return std::vector<Midi::MidiMessage>();
 }
 
 void AudioUnitHost::setSampleRate(int sampleRate)

@@ -406,7 +406,7 @@ OSStatus AudioUnitPlugin::inputCallback (void* hostRef, AudioUnitRenderActionFla
 }
 
 void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::SamplesBuffer &outBuffer,
-                     const QList<Midi::MidiMessage> &midiBuffer)
+                     std::vector<Midi::MidiMessage> &midiBuffer)
 {
 
     AudioUnitRenderActionFlags flags = 0;
@@ -428,7 +428,7 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
         bufferList->mBuffers[i].mData = internalOutBuffer.getSamplesArray(i);
     }
 
-    if (wantsMidiMessages && !midiBuffer.isEmpty())
+    if (wantsMidiMessages && !midiBuffer.empty())
     {
         UInt32 midiEventPosition = 0; // in jamtaba all MIDI messages are real time
         for (const Midi::MidiMessage &message : midiBuffer) {
