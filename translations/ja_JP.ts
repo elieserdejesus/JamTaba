@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ja_JP">
+<TS version="2.1" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -129,10 +129,6 @@
     <message>
         <source>new effect...</source>
         <translation>エフェクトを追加...</translation>
-    </message>
-    <message>
-        <source>No plugin found! Check the &apos;Preferences -&gt; Vst plugins&apos; menu.</source>
-        <translation>プラグインが検出されませんでした! 設定メニューのVSTプラグインを見直してください.</translation>
     </message>
     <message>
         <source>bypass</source>
@@ -427,6 +423,26 @@
         <source>Show max peaks</source>
         <translation>最大ピークを表示</translation>
     </message>
+    <message>
+        <source>Sound Wave</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buildings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gradient</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixelated Sound Wave</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixelated Buildings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -541,6 +557,25 @@
         <source>Error loading the theme %1</source>
         <translation>テーマ%1の読み込み中にエラーが発生しました</translation>
     </message>
+    <message>
+        <source>Ice</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MainWindowPlugin</name>
+    <message>
+        <source>Window Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decrease</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowStandalone</name>
@@ -590,6 +625,10 @@
     <message>
         <source>Semitones:</source>
         <translation>セミトーン:</translation>
+    </message>
+    <message>
+        <source>Route MIDI input to first subchannel</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -761,36 +800,36 @@
     </message>
 </context>
 <context>
-    <name>NinjamRoomWindowVST</name>
-    <message>
-        <source>Host sync</source>
-        <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation>ホスト同期</translation>
-    </message>
-    <message>
-        <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
-        <translation>BPMが変更されました！%1を停止してBPMを%2に変更してください!</translation>
-    </message>
+    <name>NinjamRoomWindowPlugin</name>
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation>%1と同期する</translation>
+        <translation type="unfinished">%1と同期する</translation>
+    </message>
+    <message>
+        <source>Host sync</source>
+        <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
+        <translation type="unfinished">ホスト同期</translation>
+    </message>
+    <message>
+        <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation>同期中...</translation>
+        <translation type="unfinished">同期中...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation>Jamtabaと同期するには%1で再生/開始を押してください!</translation>
+        <translation type="unfinished">Jamtabaと同期するには%1で再生/開始を押してください!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation>私たちは同期しようとしている ...</translation>
+        <translation type="unfinished">私たちは同期しようとしている ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation>%1のBPMを%2に変更して、もう一度同期を試みてください!</translation>
+        <translation type="unfinished">%1のBPMを%2に変更して、もう一度同期を試みてください!</translation>
     </message>
 </context>
 <context>
@@ -1041,6 +1080,29 @@
     </message>
 </context>
 <context>
+    <name>PreferencesDialogStandalone</name>
+    <message>
+        <source>Adding VST path ...</source>
+        <translation type="unfinished">追加するVSTの場所...</translation>
+    </message>
+    <message>
+        <source>scanning %1</source>
+        <translation type="unfinished">%1を走査中</translation>
+    </message>
+    <message>
+        <source>Add Vst(s) to Black list ...</source>
+        <translation type="unfinished">VSTをブラックリストへ追加...</translation>
+    </message>
+    <message>
+        <source>Remove Vst(s) from Black List ...</source>
+        <translation type="unfinished">VSTをブラックリストから解除...</translation>
+    </message>
+    <message>
+        <source>No midi input device detected!</source>
+        <translation type="unfinished">MIDIデバイスが検出されませんでした!</translation>
+    </message>
+</context>
+<context>
     <name>PrivateServerDialog</name>
     <message>
         <source>This the private server dialog</source>
@@ -1082,6 +1144,10 @@
     <message>
         <source>Connecting with private Ninjam server ...</source>
         <translation>プライベート Ninjam サーバへ接続中...</translation>
+    </message>
+    <message>
+        <source>User name:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1134,25 +1200,6 @@
     <message>
         <source>Remove this folder from scanning</source>
         <translation>この場所の走査を取り消す</translation>
-    </message>
-</context>
-<context>
-    <name>StandalonePreferencesDialog</name>
-    <message>
-        <source>Adding VST path ...</source>
-        <translation>追加するVSTの場所...</translation>
-    </message>
-    <message>
-        <source>Add Vst(s) to Black list ...</source>
-        <translation>VSTをブラックリストへ追加...</translation>
-    </message>
-    <message>
-        <source>Remove Vst(s) from Black List ...</source>
-        <translation>VSTをブラックリストから解除...</translation>
-    </message>
-    <message>
-        <source>No midi input device detected!</source>
-        <translation>MIDIデバイスが検出されませんでした!</translation>
     </message>
 </context>
 <context>

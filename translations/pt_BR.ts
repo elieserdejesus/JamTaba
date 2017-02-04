@@ -129,10 +129,6 @@
         <translation>novo efeito...</translation>
     </message>
     <message>
-        <source>No plugin found! Check the &apos;Preferences -&gt; Vst plugins&apos; menu.</source>
-        <translation>Nenhum plugin encontrado! Verifique o menu &apos;Preferências -&gt; Vst Plugins&apos;.</translation>
-    </message>
-    <message>
         <source>bypass</source>
         <translation>Desativa</translation>
     </message>
@@ -425,6 +421,26 @@
         <source>Show max peaks</source>
         <translation>Mostrar picos máximos</translation>
     </message>
+    <message>
+        <source>Sound Wave</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buildings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gradient</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixelated Sound Wave</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixelated Buildings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -537,6 +553,25 @@
         <source>Error loading the theme %1</source>
         <translation>Erro carregando o tema %1</translation>
     </message>
+    <message>
+        <source>Ice</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MainWindowPlugin</name>
+    <message>
+        <source>Window Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decrease</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowStandalone</name>
@@ -586,6 +621,10 @@
     <message>
         <source>Semitones:</source>
         <translation>Semitons:</translation>
+    </message>
+    <message>
+        <source>Route MIDI input to first subchannel</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -755,36 +794,36 @@
     </message>
 </context>
 <context>
-    <name>NinjamRoomWindowVST</name>
-    <message>
-        <source>Host sync</source>
-        <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation>Sincando com o Host</translation>
-    </message>
-    <message>
-        <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
-        <translation>O BPM mudou! Por favor pare o %1 e mude o BPM para %2!</translation>
-    </message>
+    <name>NinjamRoomWindowPlugin</name>
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation>Sincando com %1</translation>
+        <translation type="unfinished">Sincando com %1</translation>
+    </message>
+    <message>
+        <source>Host sync</source>
+        <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
+        <translation type="unfinished">Sincando com o Host</translation>
+    </message>
+    <message>
+        <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation>Sincando ...</translation>
+        <translation type="unfinished">Sincando ...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation>Pressiona play/start no %1 para sincronizar com o JamTaba!</translation>
+        <translation type="unfinished">Pressiona play/start no %1 para sincronizar com o JamTaba!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation>Tentando sincronizar ...</translation>
+        <translation type="unfinished">Tentando sincronizar ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation>Mude o BPM do %1 para %2 e tente sincronizar novamente!</translation>
+        <translation type="unfinished">Mude o BPM do %1 para %2 e tente sincronizar novamente!</translation>
     </message>
 </context>
 <context>
@@ -1035,6 +1074,29 @@
     </message>
 </context>
 <context>
+    <name>PreferencesDialogStandalone</name>
+    <message>
+        <source>Adding VST path ...</source>
+        <translation type="unfinished">Adicionando um diretório para os VSTs ...</translation>
+    </message>
+    <message>
+        <source>scanning %1</source>
+        <translation type="unfinished">escaneando %1</translation>
+    </message>
+    <message>
+        <source>Add Vst(s) to Black list ...</source>
+        <translation type="unfinished">Adiciona VSTs  para a lista de excluídos ...</translation>
+    </message>
+    <message>
+        <source>Remove Vst(s) from Black List ...</source>
+        <translation type="unfinished">Remove VSTs da lista de excluídos ...</translation>
+    </message>
+    <message>
+        <source>No midi input device detected!</source>
+        <translation type="unfinished">Nenhum dispositivo de MIDI foi detectado!</translation>
+    </message>
+</context>
+<context>
     <name>PrivateServerDialog</name>
     <message>
         <source>This the private server dialog</source>
@@ -1075,6 +1137,10 @@
     <message>
         <source>Connecting with private Ninjam server ...</source>
         <translation>Conectando em servidor Ninjam privado ...</translation>
+    </message>
+    <message>
+        <source>User name:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1127,25 +1193,6 @@
     <message>
         <source>Remove this folder from scanning</source>
         <translation>Remove este diretório do escaneamento</translation>
-    </message>
-</context>
-<context>
-    <name>StandalonePreferencesDialog</name>
-    <message>
-        <source>Adding VST path ...</source>
-        <translation>Adicionando um diretório para os VSTs ...</translation>
-    </message>
-    <message>
-        <source>Add Vst(s) to Black list ...</source>
-        <translation>Adiciona VSTs  para a lista de excluídos ...</translation>
-    </message>
-    <message>
-        <source>Remove Vst(s) from Black List ...</source>
-        <translation>Remove VSTs da lista de excluídos ...</translation>
-    </message>
-    <message>
-        <source>No midi input device detected!</source>
-        <translation>Nenhum dispositivo de MIDI foi detectado!</translation>
     </message>
 </context>
 <context>
