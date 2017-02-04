@@ -150,6 +150,9 @@ void TopLevelTextEditorModifier::showDialog()
 
 bool TopLevelTextEditorModifier::isHackingComboBox() const
 {
+    if (!hackedLineEdit || !(hackedLineEdit->parentWidget()))
+        return false;
+    
     return qobject_cast<QComboBox*>(hackedLineEdit->parentWidget()) != nullptr;
 }
 
@@ -181,6 +184,9 @@ bool TopLevelTextEditorModifier::isValidFocusInEvent(QEvent *ev) const
 
 bool TopLevelTextEditorModifier::eventFilter(QObject *obj, QEvent *ev)
 {
+    if (ev->type() != QEvent::FocusIn || ev->type() != QEvent::FocusOut)
+        return false; // skip all other events
+    
     if (isValidFocusInEvent(ev)) {
         showDialog();
     }
