@@ -20,8 +20,7 @@ class LocalInputNode : public AudioNode
 public:
     LocalInputNode(Controller::MainController *mainController, int parentChannelIndex, bool isMono = true);
     ~LocalInputNode();
-    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiMessageBuffer &midiBuffer) override;
+    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
     virtual int getSampleRate() const;
 
     int getChannels() const;
@@ -52,7 +51,7 @@ public:
 
     bool isReceivingAllMidiChannels() const;
 
-    QList<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const override;
+    std::vector<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const override;
 
     ChannelRange getAudioInputRange() const;
 
@@ -85,8 +84,6 @@ public:
     void startMidiNoteLearn();
     void stopMidiNoteLearn();
     bool isLearningMidiNote() const;
-
-    void addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex) override;
 
     void reset() override;
 
@@ -127,7 +124,6 @@ private:
         void setTranspose(quint8 newTranspose);
         inline bool isLearning() const { return learning; }
 
-
         int device; // setted when user choose MIDI as input method
         int channel;
         quint8 lastMidiActivity;// last max velocity or control value
@@ -135,6 +131,7 @@ private:
         quint8 higherNote;
         qint8 transpose;
         bool learning; //is waiting to learn a midi note?
+
     };
 
     MidiInput midiInput;
@@ -158,7 +155,7 @@ private:
 
     bool canProcessMidiMessage(const Midi::MidiMessage &msg) const;
 
-    void processMidiInput(const Midi::MidiMessageBuffer &inBuffer, Midi::MidiMessageBuffer &outBuffer);
+    void processIncommingMidi(std::vector<Midi::MidiMessage> &inBuffer, std::vector<Midi::MidiMessage> &outBuffer);
 
 };
 
@@ -169,7 +166,7 @@ inline bool LocalInputNode::isRoutingMidiInput() const
 
 inline bool LocalInputNode::isReceivingRoutedMidiInput() const
 {
-    return isAudio() &&  receivingRoutedMidiInput;
+    return receivingRoutedMidiInput;
 }
 
 inline bool LocalInputNode::isLearningMidiNote() const

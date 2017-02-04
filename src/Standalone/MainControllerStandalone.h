@@ -92,7 +92,7 @@ public:
     QMap<QString, QList<Audio::PluginDescriptor> > getPluginsDescriptors(Audio::PluginDescriptor::Category category);
     Audio::Plugin *addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex, const Audio::PluginDescriptor &descriptor);
 
-    Midi::MidiMessageBuffer pullMidiMessagesFromPlugins() override;
+    std::vector<Midi::MidiMessage> pullMidiMessagesFromPlugins() override;
 
 public slots:
     void setSampleRate(int newSampleRate) override;
@@ -121,7 +121,7 @@ protected:
 
     void setupNinjamControllerSignals() override;
 
-    Midi::MidiMessageBuffer pullMidiMessagesFromDevices() override;
+    std::vector<Midi::MidiMessage> pullMidiMessagesFromDevices() override;
 
 protected slots:
     void updateBpm(int newBpm) override;

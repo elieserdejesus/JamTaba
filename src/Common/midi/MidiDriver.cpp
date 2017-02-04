@@ -3,58 +3,7 @@
 #include "MidiMessage.h"
 
 using namespace Midi;
-// +++++++++++++++++++++++
 
-// +++++++++++++++++++++++++++++++++++++
-
-MidiMessageBuffer::MidiMessageBuffer(int maxMessages) :
-    maxMessages(maxMessages),
-    messages(new MidiMessage[maxMessages]),
-    messagesCount(0)
-{
-}
-
-MidiMessageBuffer::MidiMessageBuffer(const MidiMessageBuffer &other) :
-    maxMessages(other.maxMessages),
-    messages(new MidiMessage[other.maxMessages]),
-    messagesCount(other.messagesCount)
-{
-    for (int m = 0; m < other.messagesCount; ++m)
-        this->messages[m] = other.messages[m];
-}
-
-MidiMessageBuffer::~MidiMessageBuffer()
-{
-    delete [] messages;
-}
-
-QList<Midi::MidiMessage> MidiMessageBuffer::toList() const
-{
-    QList<Midi::MidiMessage> list;
-    for (int m = 0; m < messagesCount; ++m) {
-        list.append(messages[m]);
-    }
-    return list;
-}
-
-void MidiMessageBuffer::addMessage(const MidiMessage &m)
-{
-    if (messagesCount < maxMessages) {
-        messages[messagesCount] = m;
-        messagesCount++;
-    } else {
-        qWarning() << "MidiBuffer full, discarding the message!";
-    }
-}
-
-MidiMessage MidiMessageBuffer::getMessage(int index) const
-{
-    if (index >= 0 && index < messagesCount)
-        return messages[index];
-    return MidiMessage();
-}
-
-// ++++++++++++++++
 MidiDriver::MidiDriver()
 {
 }

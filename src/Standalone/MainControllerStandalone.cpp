@@ -681,26 +681,24 @@
         application->quit();
     }
 
-    Midi::MidiMessageBuffer MainControllerStandalone::pullMidiMessagesFromPlugins()
+    std::vector<Midi::MidiMessage> MainControllerStandalone::pullMidiMessagesFromPlugins()
     {
         // return midi messages created by vst and AU plugins, not by midi controllers.
-        QList<Midi::MidiMessage> receivedMidiMessages;
-        for(Host *host : hosts)
-            receivedMidiMessages.append(host->pullReceivedMidiMessages());
-
-        Midi::MidiMessageBuffer midiBuffer(receivedMidiMessages.count());
-        foreach (const Midi::MidiMessage &vstMidiMessage, receivedMidiMessages) {
-            midiBuffer.addMessage(vstMidiMessage);
+        std::vector<Midi::MidiMessage> receivedMidiMessages;
+        for(Host *host : hosts) {
+            std::vector<Midi::MidiMessage> pulledMessages = host->pullReceivedMidiMessages();
+            receivedMidiMessages.insert(receivedMidiMessages.end(), pulledMessages.begin(), pulledMessages.end());
         }
-        return midiBuffer;
+
+        return receivedMidiMessages;
     }
 
-    Midi::MidiMessageBuffer MainControllerStandalone::pullMidiMessagesFromDevices()
+    std::vector<Midi::MidiMessage> MainControllerStandalone::pullMidiMessagesFromDevices()
     {
         if (!midiDriver)
-            return Midi::MidiMessageBuffer(0);
+            return std::vector<Midi::MidiMessage>();
 
-        return Midi::MidiMessageBuffer(midiDriver->getBuffer());
+        return midiDriver->getBuffer();
     }
 
     bool MainControllerStandalone::isUsingNullAudioDriver() const

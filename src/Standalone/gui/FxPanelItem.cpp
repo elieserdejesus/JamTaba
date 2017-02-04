@@ -200,6 +200,13 @@ void FxPanelItem::loadSelectedPlugin()
         if (plugin) {
             localTrackView->addPlugin(plugin, pluginSlotIndex);
             showPluginGui(plugin);
+
+            // if newProcessor is the first added processor, and is a virtual instrument (VSTi), and the subchannel is 'no input' then change the input selection to midi
+            if (pluginSlotIndex == 0 && plugin->isVirtualInstrument()) {
+                if (localTrackView->isNoInput()) {
+                    localTrackView->setToMidi();// select the first midi device, all channels
+                }
+            }
         }
         else {
             qCritical() << "Can´t instantiate the plugin " << descriptor.getName() << " -> " << descriptor.getPath();

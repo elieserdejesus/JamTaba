@@ -280,13 +280,14 @@ void MainWindowStandalone::initializeLocalSubChannel(LocalTrackView *subChannelV
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
 
-    auto trackView = dynamic_cast<LocalTrackViewStandalone *>(subChannelView);
-    trackView->setMidiRouting(subChannel.routingMidiToFirstSubchannel);
-
     // check if the loaded input selections (midi, audio mono, audio stereo) are stil valid and fallback if not
     sanitizeSubchannelInputSelections(subChannelView, subChannel);
 
+    auto trackView = dynamic_cast<LocalTrackViewStandalone *>(subChannelView);
+
     restoreLocalSubchannelPluginsList(trackView, subChannel);
+
+    trackView->setMidiRouting(subChannel.routingMidiToFirstSubchannel);
 }
 
 LocalTrackGroupViewStandalone *MainWindowStandalone::createLocalTrackGroupView(int channelGroupIndex)

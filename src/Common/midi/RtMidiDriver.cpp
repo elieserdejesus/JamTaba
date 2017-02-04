@@ -116,15 +116,15 @@ QString RtMidiDriver::getInputDeviceName(uint index) const{
     return "";
 }
 
-void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, MidiMessageBuffer &outBuffer)
+void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<Midi::MidiMessage> &outBuffer)
 {
     //qCDebug(jtMidi) << "consuming messages from stream - RtMidiDriver";
     std::vector<unsigned char> messageBytes;
     do{
         messageBytes.clear();
         stream->getMessage(&messageBytes);
-        if (messageBytes.size() == 3) { // Jamtaba is handling only the 3 bytes commond midi messages. Uncommon midi messages will be ignored.
-            outBuffer.addMessage(Midi::MidiMessage::fromVector(messageBytes, deviceIndex));
+        if (messageBytes.size() == 3) { // Jamtaba is handling only the 3 bytes common midi messages. Uncommon midi messages will be ignored.
+            outBuffer.push_back(Midi::MidiMessage::fromVector(messageBytes, deviceIndex));
         }
         else{
             if (!messageBytes.empty())
@@ -134,8 +134,8 @@ void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, 
     while(!messageBytes.empty());
 }
 
-MidiMessageBuffer RtMidiDriver::getBuffer(){
-    MidiMessageBuffer buffer(64);//max 64 midi messages in each audio callback
+std::vector<MidiMessage> RtMidiDriver::getBuffer(){
+    std::vector<Midi::MidiMessage> buffer;
     int deviceIndex = 0;
     foreach (RtMidiIn* stream, midiStreams) {
         consumeMessagesFromStream(stream, deviceIndex, buffer);

@@ -77,8 +77,7 @@ void JamtabaDelay::start()
 {
 }
 
-void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out,
-                           const QList<Midi::MidiMessage> &midiBuffer)
+void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out, std::vector<Midi::MidiMessage> &midiBuffer)
 {
     Q_UNUSED(midiBuffer)
     Q_UNUSED(in)

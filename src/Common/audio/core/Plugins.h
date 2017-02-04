@@ -54,8 +54,7 @@ class JamtabaDelay : public Plugin
 public:
     explicit JamtabaDelay(int sampleRate);
     ~JamtabaDelay();
-    virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                         const QList<Midi::MidiMessage> &midiBuffer);
+    virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, std::vector<Midi::MidiMessage> &midiBuffer);
     void setDelayTime(int delayTimeInMs);
     void setFeedback(float feedback);
     void setLevel(float level);

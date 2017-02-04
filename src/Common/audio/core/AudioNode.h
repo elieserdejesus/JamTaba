@@ -9,10 +9,6 @@
 #include <QDebug>
 #include <QList>
 
-namespace Midi   {
-class MidiMessageBuffer;
-}
-
 namespace Audio {
 
 class AudioNodeProcessor;
@@ -25,9 +21,9 @@ public:
     virtual ~AudioNode();
 
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiMessageBuffer &midiBuffer);
+                                  std::vector<Midi::MidiMessage> &midiBuffer);
 
-    virtual QList<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const;
+    virtual std::vector<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const;
 
     virtual void setMute(bool muted);
 

@@ -42,6 +42,11 @@ public:
 
     void refreshInputSelectionName();
 
+    bool isMidi() const;
+    bool isNoInput() const;
+
+    void setToMidi();
+
 signals:
     void trackInputChanged();
 
@@ -118,8 +123,8 @@ private:
     QString getInputTypeIconFile();
     bool canUseMidiDeviceIndex(int midiDeviceIndex) const;
 
-    void paintRoutingMidiArrow(const QColor &color, int topMargin, int arrowSize, bool drawSolidLine, bool drawMidiWord);
-    void paintReceivingRoutedMidiIndicator(const QColor &color, int topMargin, int arrowSize);
+    void paintRoutingMidiArrow(int topMargin, int arrowSize, bool drawMidiWord);
+    void paintReceivingRoutedMidiIndicator(int topMargin, int arrowSize);
 
     void setAudioRelatedControlsStatus(bool enableControls);
 

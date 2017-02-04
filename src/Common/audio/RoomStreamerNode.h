@@ -4,7 +4,6 @@
 #include "core/AudioNode.h"
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
-// #include <deque>
 #include "SamplesBufferResampler.h"
 
 class QIODevice;
@@ -18,8 +17,8 @@ class AbstractMp3Streamer : public AudioNode
 public:
     explicit AbstractMp3Streamer(Audio::Mp3Decoder *decoder);
     ~AbstractMp3Streamer();
-    virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                                  int sampleRate, const Midi::MidiMessageBuffer &midiBuffer);
+    void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
+                          int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
     virtual void stopCurrentStream();
     virtual void setStreamPath(const QString &streamPath);
     inline bool isStreaming() const
@@ -61,9 +60,8 @@ public:
     NinjamRoomStreamerNode(const QUrl &streamPath = QUrl(""));
     ~NinjamRoomStreamerNode();
 
-    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiMessageBuffer &midiBuffer);
-    virtual bool needResamplingFor(int targetSampleRate) const;
+    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
+    bool needResamplingFor(int targetSampleRate) const override;
 
     inline bool isBuffering() const override { return buffering; }
 
@@ -90,8 +88,8 @@ protected:
 public:
     explicit AudioFileStreamerNode(const QString &file);
     ~AudioFileStreamerNode();
-    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiMessageBuffer &midiBuffer);
+    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
+                                  std::vector<Midi::MidiMessage> &midiBuffer) override;
 };
 
 // ++++++++++++++++++++++
