@@ -17,7 +17,7 @@ QList<QSharedPointer<TopLevelTextEditorModifier>> TopLevelTextEditorModifier::cr
 */
 
 TopLevelTextEditorModifier::TopLevelTextEditorModifier()
-    : dialog(nullptr),
+    :
       topLevelLineEdit(nullptr),
       hackedLineEdit(nullptr),
       hideDialogWhenReturnIsPressed(false)
@@ -27,27 +27,42 @@ TopLevelTextEditorModifier::TopLevelTextEditorModifier()
 
 TopLevelTextEditorModifier::~TopLevelTextEditorModifier()
 {
-    //qDebug() << "destroying top level text modifier";
-}
-
-QDialog *TopLevelTextEditorModifier::createDialog() const
-{
-    Qt::WindowFlags flags = Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::NoDropShadowWindowHint;
-    QDialog *newDialog = new QDialog(nullptr, flags);
-    newDialog->setAttribute(Qt::WA_DeleteOnClose);
-
-    QLayout *layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    newDialog->setLayout(layout);
-    
-    newDialog->setAttribute(Qt::WA_TranslucentBackground);
-
-    return newDialog;
+    //
 }
 
 void TopLevelTextEditorModifier::transferTextToHackedLineEdit()
 {
     hackedLineEdit->setText(topLevelLineEdit->text());
+}
+
+void TopLevelTextEditorModifier::doInstall(QLineEdit *lineEdit)
+{
+    if (!lineEdit) {
+        qCritical() << "lineEdit is null!";
+        return;
+    }
+
+    this->hackedLineEdit = lineEdit;
+
+    this->topLevelLineEdit = new QLineEdit();
+    this->topLevelLineEdit->setValidator(hackedLineEdit->validator());
+    this->topLevelLineEdit->installEventFilter(this);
+    this->topLevelLineEdit->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove border focus on Mac
+    this->topLevelLineEdit->setWindowFlags(Qt::Popup | Qt::Window | Qt::WindowStaysOnTopHint | Qt::NoDropShadowWindowHint);
+
+    connect(topLevelLineEdit, &QLineEdit::returnPressed, [=]{
+
+        if (hideDialogWhenReturnIsPressed) {
+            topLevelLineEdit->clearFocus(); //force the focusOut event
+        }
+        else { // transfer data to hacked line edit when return is pressed
+            transferTextToHackedLineEdit();
+            topLevelLineEdit->clear();
+        }
+
+        hackedLineEdit->returnPressed();
+
+    });
 }
 
 void TopLevelTextEditorModifier::modify(QComboBox *comboBox)
@@ -67,67 +82,25 @@ void TopLevelTextEditorModifier::modify(QComboBox *comboBox)
     comboBox->installEventFilter(this);
 
     hideDialogWhenReturnIsPressed = true;
-
-    dialogObjectName = "panelCombos";
-
 }
 
-void TopLevelTextEditorModifier::doInstall(QLineEdit *lineEdit)
-{
-    if (!lineEdit) {
-        qCritical() << "lineEdit is null!";
-        return;
-    }
-
-    this->hackedLineEdit = lineEdit;
-
-    this->topLevelLineEdit = new QLineEdit();
-    this->topLevelLineEdit->setValidator(hackedLineEdit->validator());
-    this->topLevelLineEdit->installEventFilter(this);
-    this->topLevelLineEdit->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove border focus on Mac
-
-    connect(topLevelLineEdit, &QLineEdit::returnPressed, [=]{
-        if (dialog) {
-            if (hideDialogWhenReturnIsPressed) {
-                topLevelLineEdit->clearFocus(); //force the focusOut event
-            }
-            else { // transfer data to hacked line edit when return is pressed
-                transferTextToHackedLineEdit();
-                topLevelLineEdit->clear();
-            }
-
-            hackedLineEdit->returnPressed();
-        }
-    });
-}
-
-void TopLevelTextEditorModifier::modify(QLineEdit *lineEdit, bool hideWhenReturnIsPressed, const QString &dialogObjectName)
+void TopLevelTextEditorModifier::modify(QLineEdit *lineEdit, bool hideWhenReturnIsPressed)
 {
 
     doInstall(lineEdit);
+
+    this->hackedLineEdit->setFocusPolicy(Qt::NoFocus);
 
     this->hackedLineEdit->installEventFilter(this);
 
     this->hideDialogWhenReturnIsPressed = hideWhenReturnIsPressed;
 
-    this->dialogObjectName = dialogObjectName; // this objectName will be used in QDialog
-
-    this->topLevelLineEdit->setObjectName(hackedLineEdit->objectName());
+    this->topLevelLineEdit->setObjectName(hackedLineEdit->objectName() + "-topLevel");
 }
 
 void TopLevelTextEditorModifier::showDialog()
 {
-    if (!dialog) {
-        dialog.reset(createDialog());
-        dialog->layout()->addWidget(topLevelLineEdit); // topLevelLineEdit will be owned by Dialog
-        if (!dialogObjectName.isEmpty())
-            dialog->setObjectName(dialogObjectName);
 
-    }
-
-    if (dialog->isVisible())
-        return;
-    
     topLevelLineEdit->setAlignment(hackedLineEdit->alignment());
     topLevelLineEdit->setText(hackedLineEdit->text());
 
@@ -138,14 +111,14 @@ void TopLevelTextEditorModifier::showDialog()
 
     topLevelLineEdit->setStyleSheet(styleSheet);
 
-    dialog->resize(hackedLineEdit->frameSize());
+    topLevelLineEdit->resize(hackedLineEdit->frameSize());
     QPoint hackedLineEditTopLeft = hackedLineEdit->rect().topLeft();
-    dialog->move(hackedLineEdit->mapToGlobal(hackedLineEditTopLeft));
+    topLevelLineEdit->move(hackedLineEdit->mapToGlobal(hackedLineEditTopLeft));
 
-    dialog->raise();
-    dialog->activateWindow();
-
-    dialog->show();
+    topLevelLineEdit->show();
+    topLevelLineEdit->raise();
+    topLevelLineEdit->activateWindow();
+    topLevelLineEdit->setFocus();
 }
 
 bool TopLevelTextEditorModifier::isHackingComboBox() const
@@ -159,22 +132,17 @@ bool TopLevelTextEditorModifier::isHackingComboBox() const
 bool TopLevelTextEditorModifier::isValidFocusInEvent(QEvent *ev) const
 {
     if (!isHackingComboBox()) {
-        if (ev->type() == QEvent::FocusIn) {
-            QFocusEvent *focusEvent = static_cast<QFocusEvent *>(ev);
-            return focusEvent->reason() == Qt::MouseFocusReason;
-        }
-        return false;
+        return ev->type() == QEvent::MouseButtonPress && !hackedLineEdit->isReadOnly(); // user name line edit can't be edited when playing in ninjam server
     }
-
 
     // hacking a combo box
     if (ev->type() == QEvent::FocusIn) {
         QFocusEvent *focusEvent = static_cast<QFocusEvent *>(ev);
-        if (focusEvent && focusEvent->reason() == Qt::MouseFocusReason) { // we are interested only in focusIn when user is clicking
+        if (focusEvent->reason() == Qt::MouseFocusReason) { // we are interested only in focusIn when user is clicking
             QComboBox* combo = qobject_cast<QComboBox*>(hackedLineEdit->parentWidget());
             if (combo) {
-                QPoint mousePos = combo->mapFromGlobal(QCursor::pos());
-                return combo->lineEdit()->rect().contains(mousePos); // check if click was in lineEdit, not in combo box drop down arrow
+                QPoint mousePos = hackedLineEdit->mapFromGlobal(QCursor::pos());
+                return hackedLineEdit->rect().contains(mousePos); // check if click was in lineEdit, not in combo box drop down arrow
             }
         }
     }
@@ -184,17 +152,30 @@ bool TopLevelTextEditorModifier::isValidFocusInEvent(QEvent *ev) const
 
 bool TopLevelTextEditorModifier::eventFilter(QObject *obj, QEvent *ev)
 {
-    if (ev->type() != QEvent::FocusIn && ev->type() != QEvent::FocusOut)
+    if (ev->type() != QEvent::FocusIn && ev->type() != QEvent::FocusOut && ev->type() != QEvent::MouseButtonPress)
         return false; // skip all other events
-    
+
+    // clear focus when mouse is pressed in non top level LineEdit area
+    if (QApplication::focusWidget() == obj && obj == topLevelLineEdit && ev->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(ev);
+        if (mouseEvent->button() == Qt::RightButton)
+            return false;
+
+        if (!topLevelLineEdit->rect().contains(mouseEvent->pos())) {
+            topLevelLineEdit->clearFocus();
+            return false;
+        }
+    }
+
     if (isValidFocusInEvent(ev)) {
         showDialog();
+        return true;
     }
-    else if (obj == topLevelLineEdit && ev->type() == QEvent::FocusOut) {
-        if (dialog && dialog->isVisible()) {
-            dialog->hide();
-            transferTextToHackedLineEdit();
-        }
+    else if (ev->type() == QEvent::FocusOut && obj == topLevelLineEdit) {
+        topLevelLineEdit->hide();
+        transferTextToHackedLineEdit();
+        hackedLineEdit->clearFocus();
+        return true;
     }
 
     return false;

@@ -233,8 +233,7 @@ void MainWindow::initialize()
     TextEditorModifier *textEditorModifier = createTextEditorModifier();
     if (textEditorModifier) {
         bool finishEditorPressingReturnKey = true;
-        QString dialogObjectName(QStringLiteral("userNamePanel")); // in plugins the text editor are QDialog containing another text editor. This string (dialogObjectName) is used to set dialog with the same object name used in Standalone and achieve the same visual result.
-        textEditorModifier->modify(ui.userNameLineEdit, finishEditorPressingReturnKey, dialogObjectName);
+        textEditorModifier->modify(ui.userNameLineEdit, finishEditorPressingReturnKey);
     }
 
     initializeGuiRefreshTimer();

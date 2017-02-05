@@ -34,10 +34,6 @@ protected:
 
     void resizeEvent(QResizeEvent *) override;
 
-#ifndef Q_OS_MAC  // this function is NOT used in Mac
-    void timerEvent(QTimerEvent *) override;
-#endif
-
 protected slots:
     void updateLocalInputChannelsGeometry() override;
 

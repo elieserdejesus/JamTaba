@@ -121,8 +121,8 @@ void NinjamPanel::setupSignals()
     connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAccentsStatus(int)));
     connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this, SLOT(updateIntervalProgressShape(int)));
 
-    connect(ui->comboBpi, SIGNAL(activated(QString)), this, SIGNAL(bpiComboActivated(QString)));
-    connect(ui->comboBpm, SIGNAL(activated(QString)), this, SIGNAL(bpmComboActivated(QString)));
+    connect(ui->comboBpi, SIGNAL(activated(QString)), this, SLOT(handleBpiComboActication(QString)));
+    connect(ui->comboBpm, SIGNAL(activated(QString)), this, SLOT(handleBpmComboActication(QString)));
     connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), SIGNAL(accentsComboChanged(int)));
     connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SIGNAL(gainSliderChanged(
                                                                                   int)));
@@ -135,6 +135,21 @@ void NinjamPanel::setupSignals()
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
+
+void NinjamPanel::handleBpiComboActication(const QString &newBpi)
+{
+    ui->comboBpi->clearFocus();
+    emit bpiComboActivated(newBpi);
+}
+
+void NinjamPanel::handleBpmComboActication(const QString &newBpm)
+{
+    ui->comboBpm->clearFocus();
+    emit bpmComboActivated(newBpm);
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++
+
 void NinjamPanel::toggleMetronomeFloatingWindowVisibility(bool showFloatingWindow)
 {
     if (showFloatingWindow){

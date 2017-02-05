@@ -32,20 +32,6 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
 #endif
 }
 
-
-#ifndef Q_OS_MAC  // this function is NOT used in Mac
-void MainWindowPlugin::timerEvent(QTimerEvent *ev)
-{
-    MainWindow::timerEvent(ev);
-
-    //check if mouse is outsize window and clear focus. This is necessary to avoid 'floating' QLineEdits when user drag AU/VSt window with some QLineEdit focused.
-    if (QApplication::focusWidget()) {
-        if (!rect().contains(mapFromGlobal(QCursor::pos())))
-            QApplication::focusWidget()->clearFocus();
-    }
-}
-#endif
-
 TextEditorModifier *MainWindowPlugin::createTextEditorModifier()
 {
     return new TopLevelTextEditorModifier();

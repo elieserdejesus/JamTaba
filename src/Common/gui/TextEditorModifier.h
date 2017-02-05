@@ -7,7 +7,7 @@
 class TextEditorModifier
 {
 public:
-    virtual void modify(QLineEdit *lineEdit, bool finishOnReturnKeyPressed, const QString &dialogObjectName = "") = 0;
+    virtual void modify(QLineEdit *lineEdit, bool finishOnReturnKeyPressed) = 0;
     virtual void modify(QComboBox *comboBox) = 0;
 };
 

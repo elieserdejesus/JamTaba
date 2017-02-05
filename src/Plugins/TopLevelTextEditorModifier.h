@@ -12,17 +12,13 @@ public:
     TopLevelTextEditorModifier();
     ~TopLevelTextEditorModifier();
 
-    void modify(QLineEdit *textEditor, bool finishEditorPressingReturnKey, const QString &dialogObjectName = "") override;
+    void modify(QLineEdit *textEditor, bool finishEditorPressingReturnKey) override;
     void modify(QComboBox *comboBox) override;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
 
 private:
-    QSharedPointer<QDialog> dialog;
-
-    QDialog *createDialog() const;
-
     void showDialog();
 
     void transferTextToHackedLineEdit();
@@ -36,7 +32,6 @@ private:
     QLineEdit *hackedLineEdit;
     QLineEdit *topLevelLineEdit;
     bool hideDialogWhenReturnIsPressed;
-    QString dialogObjectName;
 
     static QList<QSharedPointer<TopLevelTextEditorModifier>> createdModifiers;
 

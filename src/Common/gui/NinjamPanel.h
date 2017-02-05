@@ -93,6 +93,9 @@ private slots:
     void updateIntervalProgressShape(int index);
     void toggleMetronomeFloatingWindowVisibility(bool showFloatingWindow);
     void deleteFloatWindow();
+
+    void handleBpiComboActication(const QString &);
+    void handleBpmComboActication(const QString &);
 };
 
 #endif // NINJAMPANEL_H
