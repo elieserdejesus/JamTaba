@@ -170,7 +170,10 @@ QLineEdit:focus
     selection-color: rgb(254, 181, 102);
 }
 
-
+QLineEdit#groupNameField:focus
+{
+    background-color: transparent;
+}
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
 

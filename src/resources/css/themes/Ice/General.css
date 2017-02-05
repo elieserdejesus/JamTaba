@@ -143,7 +143,8 @@ QLineEdit:focus
 
 QLineEdit#groupNameField:focus
 {
-    border-color: rgba(0, 0, 0, 120)
+    border-color: rgba(0, 0, 0, 120);
+    background-color: transparent;
 }
 
 
