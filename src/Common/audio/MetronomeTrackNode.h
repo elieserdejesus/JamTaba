@@ -12,8 +12,8 @@ public:
     MetronomeTrackNode(const Audio::SamplesBuffer &firstBeatSamples, const Audio::SamplesBuffer &secondaryBeatSamples);
 
     ~MetronomeTrackNode();
-    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate,
-                                  std::vector<Midi::MidiMessage> &midiBuffer);
+    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate,
+                                  std::vector<Midi::MidiMessage> &midiBuffer) override;
     void setSamplesPerBeat(long samplesPerBeat);
     void setIntervalPosition(long intervalPosition);
     void resetInterval();

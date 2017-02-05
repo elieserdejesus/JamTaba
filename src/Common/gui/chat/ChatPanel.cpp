@@ -24,8 +24,10 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
 
     connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
 
-    bool finishEditorPressingReturnKey = false;
-    textEditorModifier->modify(ui->chatText, finishEditorPressingReturnKey);
+    if (textEditorModifier) {
+        bool finishEditorPressingReturnKey = false;
+        textEditorModifier->modify(ui->chatText, finishEditorPressingReturnKey);
+    }
 
     // this event is used to auto scroll down when new messages are added
     connect(ui->chatScroll->verticalScrollBar(), &QScrollBar::rangeChanged, this, &ChatPanel::autoScroll);

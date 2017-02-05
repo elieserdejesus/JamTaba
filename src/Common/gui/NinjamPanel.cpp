@@ -50,8 +50,11 @@ void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorMo
     ui->comboBpi->setCompleter(0);// disabling completer
     ui->comboBpm->setCompleter(0);// disabling completer
 
-    bpiModifier->modify(ui->comboBpi); // modify the comboBox QLineEdit to work in plugins (AU/VST)
-    bpmModifier->modify(ui->comboBpm);
+    if (bpiModifier) // just to be sure
+        bpiModifier->modify(ui->comboBpi); // modify the comboBox QLineEdit to work in plugins (AU/VST)
+
+    if (bpmModifier)
+        bpmModifier->modify(ui->comboBpm);
 
 }
 

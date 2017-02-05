@@ -67,8 +67,10 @@ void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
     groupNameField->setObjectName(QStringLiteral("groupNameField"));
     groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0);// disable blue border when QLineEdit has focus in mac
 
-    bool finishEditorPressingReturnKey = true;
-    textEditorModifier->modify(groupNameField, finishEditorPressingReturnKey);
+    if (textEditorModifier) {
+        bool finishEditorPressingReturnKey = true;
+        textEditorModifier->modify(groupNameField, finishEditorPressingReturnKey);
+    }
 
     topPanelLayout = new QHBoxLayout(topPanel);
     topPanelLayout->setSpacing(3);
