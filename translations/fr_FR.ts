@@ -432,7 +432,7 @@
     </message>
     <message>
         <source>Pixelated Sound Wave</source>
-        <translation type="unfinished">Onde sonore Pixélisé</translation>
+        <translation>Onde sonore Pixélisée</translation>
     </message>
     <message>
         <source>Pixelated Buildings</source>
@@ -552,7 +552,7 @@
     </message>
     <message>
         <source>Ice</source>
-        <translation type="unfinished">Glacé</translation>
+        <translation>Glace</translation>
     </message>
 </context>
 <context>
@@ -567,7 +567,7 @@
     </message>
     <message>
         <source>Decrease</source>
-        <translation type="unfinished">Diminution</translation>
+        <translation>Diminuer</translation>
     </message>
 </context>
 <context>
