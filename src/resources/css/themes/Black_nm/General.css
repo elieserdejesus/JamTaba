@@ -174,12 +174,21 @@ QLineEdit:focus
     selection-color: rgb(140, 140, 140);
 }
 
-QLineEdit#groupNameField:focus, #userNameLineEdit:focus
+QLineEdit#groupNameField:focus
 {
     color: rgb(200, 200, 200);
     selection-background-color: rgb(120, 120, 120);
     selection-color: rgb(40, 40, 40);
-    background-color: transparent;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+         stop: 0.0 rgb(61, 61, 61),
+         stop: 0.5 rgb(43, 43, 43));
+}
+
+QLineEdit#userNameLineEdit:focus
+{
+    color: rgb(200, 200, 200);
+    selection-background-color: rgb(120, 120, 120);
+    selection-color: rgb(40, 40, 40);
 }
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
