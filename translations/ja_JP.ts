@@ -847,23 +847,23 @@
     <name>NinjamTrackView</name>
     <message>
         <source>Low cut</source>
-        <translation>ローカット</translation>
+        <translation type="unfinished">ローカット</translation>
     </message>
     <message>
         <source>Receive</source>
-        <translation>受け取る</translation>
+        <translation type="unfinished">受け取る</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>オフ</translation>
+        <translation type="unfinished">オフ</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>中</translation>
+        <translation type="unfinished">中</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation>抜本的</translation>
+        <translation type="unfinished">抜本的</translation>
     </message>
 </context>
 <context>
