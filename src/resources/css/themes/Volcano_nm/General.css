@@ -172,7 +172,9 @@ QLineEdit:focus
 
 QLineEdit#groupNameField:focus
 {
-    background-color: transparent;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(244, 178, 74),
+        stop: 0.5 rgb(250, 208, 110));
 }
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
