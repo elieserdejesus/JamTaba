@@ -144,7 +144,9 @@ QLineEdit:focus
 QLineEdit#groupNameField:focus
 {
     border-color: rgba(0, 0, 0, 120);
-    background-color: transparent;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(86, 167, 225),
+        stop: 0.5 rgb(108, 171, 239));
 }
 
 
