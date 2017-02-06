@@ -46,6 +46,5 @@ Makefile*
 
 libs/
 VST_SDK/
-translations/*.qm
 GeneratedFiles/
 JamTaba.xcodeproj/
