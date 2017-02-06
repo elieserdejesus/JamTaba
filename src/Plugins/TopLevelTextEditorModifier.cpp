@@ -85,6 +85,8 @@ void TopLevelTextEditorModifier::modify(QComboBox *comboBox)
 
     doInstall(comboBox->lineEdit());
 
+    topLevelLineEdit->setObjectName(comboBox->objectName() + "-topLevel");
+
     comboBox->installEventFilter(this);
 
     hideDialogWhenReturnIsPressed = true;
