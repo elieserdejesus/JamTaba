@@ -134,8 +134,8 @@ QLineEdit
 QLineEdit:focus
 {
     border-radius: 6px;
-    border-color: rgba(0, 0, 0, 90);
-    background-color: rgb(143, 188, 250);
+    border-color: rgba(90, 90, 90, 90);
+    /*background-color: rgb(143, 188, 250); */
     color: black;
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;

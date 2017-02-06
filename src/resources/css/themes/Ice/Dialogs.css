@@ -149,7 +149,7 @@ PrivateServerDialog #comboBoxServers
 
 PrivateServerDialog #comboBoxServers:focus
 {
-    border-color: rgba(0, 0, 0, 100);
+    border-color: rgba(90, 90, 90, 90);
     color: black;
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;;
