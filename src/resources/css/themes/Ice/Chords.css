@@ -7,6 +7,7 @@ ChordLabel
     color: rgb(90, 90, 90);
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
+    border-radius: 6px;
 }
 
 ChordLabel[current="true"]
