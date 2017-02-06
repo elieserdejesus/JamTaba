@@ -82,12 +82,8 @@ int PerformanceMonitor::getMemmoryUsed(){
     MEMORYSTATUSEX memInfo;
     memInfo.dwLength = sizeof(MEMORYSTATUSEX);
     bool result = GlobalMemoryStatusEx(&memInfo);
-    static const int DIVIDER = 1024 * 1024;
     if(result){
-        //        qInfo() << "PrivateUsage:" << pmc.PrivateUsage/1024/1024;
-        //        qInfo() << "WorkingSetSize:" << pmc.WorkingSetSize/1024/1024;
-        //        qInfo() << "------------------------------";
-        return (100-((memInfo.ullAvailPageFile/DIVIDER) * 100)/(memInfo.ullTotalPageFile/DIVIDER));
+        return 100 - (memInfo.ullAvailPhys * 100 / memInfo.ullTotalPhys);
     }
     else{
         qWarning() << "Can't get total memory available! GlobalMemoryStatusEx fail!";
