@@ -13,12 +13,6 @@ ChatPanel #chatText
     background-color: rgba(255, 255, 255, 130);
 }
 
-ChatPanel #chatText:focus                   /* text input field focused */
-{
-    border-color: rgba(0, 0, 0, 160);
-}
-
-
 
 /* ChatMessagePanel is the widget used to show ONE chat message
 ----------------------------------------------------------------*/

@@ -68,3 +68,8 @@ ChatMessagePanel #labelMessage
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
 }
+
+ChatPanel #chatText:focus                   /* text input field focused */
+{
+    border-color: rgba(90, 90, 90, 90);
+}
