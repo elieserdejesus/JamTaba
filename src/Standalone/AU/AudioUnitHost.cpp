@@ -57,5 +57,5 @@ void AudioUnitHost::setPlayingFlag(bool playing)
 
 void AudioUnitHost::setPositionInSamples(int intervalPosition)
 {
-    this->position = position;
+    this->position = intervalPosition;
 }

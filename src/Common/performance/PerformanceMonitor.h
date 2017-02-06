@@ -14,8 +14,10 @@ public:
       int getMemmoryUsed();
     //double getCpuUsage();
     //double getTotalCpuUsage();
-private:
-    int processorsCount;
+
+//private:
+//    int processorsCount;
+
 };
 
 #endif // PERFORMANCE_MONITOR_H

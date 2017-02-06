@@ -23,7 +23,7 @@ public:
     static const float QUALITY_HIGH;
 
 private:
-    float quality;
+
     ogg_stream_state streamState; /* take physical pages, weld into a logical stream of packets */
     vorbis_info      info; /* struct that stores all the static vorbis bitstream settings */
     vorbis_comment   comment; /* struct that stores all the user comments */

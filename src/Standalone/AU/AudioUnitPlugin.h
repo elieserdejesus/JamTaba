@@ -97,7 +97,7 @@ namespace AU {
 
     bool getComponentDescriptionFromPath(const QString &path, AudioComponentDescription &desc);
 
-    AudioUnitPlugin *audioUnitPluginfromPath(const QString &path, int initialSampleRate, int blockSize);
+    AudioUnitPlugin *audioUnitPluginfromPath(const QString &path);
 
     Audio::PluginDescriptor createPluginDescriptor(const QString &name, const QString &path);
 

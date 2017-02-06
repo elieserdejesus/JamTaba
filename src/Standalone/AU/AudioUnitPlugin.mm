@@ -531,7 +531,7 @@ void AudioUnitPlugin::setSampleRate(int newSampleRate)
 
 
 
-AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path, int initialSampleRate, int blockSize)
+AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path)
 {
     AudioComponentDescription auDescription;
     if (!getComponentDescriptionFromPath(path, auDescription))

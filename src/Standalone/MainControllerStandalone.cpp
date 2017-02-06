@@ -500,9 +500,7 @@
         }
     #ifdef Q_OS_MAC
         else if(descriptor.isAU()) {
-            int initialSampleRate = audioDriver->getSampleRate();
-            int blockSize = audioDriver->getBufferSize();
-            return AU::audioUnitPluginfromPath(descriptor.getPath(), initialSampleRate, blockSize);
+            return AU::audioUnitPluginfromPath(descriptor.getPath());
         }
     #endif
 

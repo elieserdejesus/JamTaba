@@ -14,7 +14,7 @@ private:
     static QColor RESOURCES_USAGE_BG_COLOR;
     static QColor RESOURCES_USAGE_TEXT_COLOR;
 
-    double cpuUsage;
+    //double cpuUsage;
     int memoryUsage;
 };
 
