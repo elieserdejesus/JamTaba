@@ -48,7 +48,13 @@ void TopLevelTextEditorModifier::doInstall(QLineEdit *lineEdit)
     this->topLevelLineEdit->setValidator(hackedLineEdit->validator());
     this->topLevelLineEdit->installEventFilter(this);
     this->topLevelLineEdit->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove border focus on Mac
-    this->topLevelLineEdit->setWindowFlags(Qt::Popup | Qt::Window | Qt::WindowStaysOnTopHint | Qt::NoDropShadowWindowHint);
+    Qt::WindowFlags flags = Qt::Window | Qt::WindowStaysOnTopHint | Qt::NoDropShadowWindowHint;
+#ifdef Q_OS_MAC
+    flags |= Qt::Tool | Qt::FramelessWindowHint;
+#else
+    flags |= Qt::Popup; // Popup works nice in Windows, the focus is handled correctly
+#endif
+     this->topLevelLineEdit->setWindowFlags(flags);
 
     connect(topLevelLineEdit, &QLineEdit::returnPressed, [=]{
 
