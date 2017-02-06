@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.0" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -217,15 +217,15 @@
     </message>
     <message>
         <source>Delete preset</source>
-        <translation>プリセット削除</translation>
+        <translation type="unfinished">プリセット削除</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation>プリセットを削除しています...</translation>
+        <translation type="unfinished">プリセットを削除しています...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation>プリセット&apos;%1&apos;を削除しますか</translation>
+        <translation type="unfinished">プリセット&apos;%1&apos;を削除しますか</translation>
     </message>
 </context>
 <context>
@@ -425,23 +425,23 @@
     </message>
     <message>
         <source>Sound Wave</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">音波</translation>
     </message>
     <message>
         <source>Buildings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">建物</translation>
     </message>
     <message>
         <source>Gradient</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">勾配</translation>
     </message>
     <message>
         <source>Pixelated Sound Wave</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ピクセル化された音波</translation>
     </message>
     <message>
         <source>Pixelated Buildings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ピクセル化された建物</translation>
     </message>
 </context>
 <context>
@@ -559,22 +559,22 @@
     </message>
     <message>
         <source>Ice</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">氷</translation>
     </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
     <message>
         <source>Window Size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ウィンドウサイズ</translation>
     </message>
     <message>
         <source>Increase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">増加する</translation>
     </message>
     <message>
         <source>Decrease</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">減少</translation>
     </message>
 </context>
 <context>
@@ -608,15 +608,15 @@
     </message>
     <message>
         <source>Lower note:</source>
-        <translation>低いノート:</translation>
+        <translation type="unfinished">低いノート:</translation>
     </message>
     <message>
         <source>learn</source>
-        <translation>学ぶ</translation>
+        <translation type="unfinished">学ぶ</translation>
     </message>
     <message>
         <source>Higher note:</source>
-        <translation>高いノート:</translation>
+        <translation type="unfinished">高いノート:</translation>
     </message>
     <message>
         <source>Transpose:</source>
@@ -628,7 +628,7 @@
     </message>
     <message>
         <source>Route MIDI input to first subchannel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MIDI入力を最初のサブチャンネルにルーティングする</translation>
     </message>
 </context>
 <context>
@@ -813,7 +813,7 @@
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">BPMが変更されました！%1を停止してBPMを%2に変更してください!</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
@@ -847,23 +847,23 @@
     <name>NinjamTrackView</name>
     <message>
         <source>Low cut</source>
-        <translation>ローカット</translation>
+        <translation type="unfinished">ローカット</translation>
     </message>
     <message>
         <source>Receive</source>
-        <translation>受け取る</translation>
+        <translation type="unfinished">受け取る</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>オフ</translation>
+        <translation type="unfinished">オフ</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>中</translation>
+        <translation type="unfinished">中</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation>抜本的</translation>
+        <translation type="unfinished">抜本的</translation>
     </message>
 </context>
 <context>
@@ -1147,7 +1147,7 @@
     </message>
     <message>
         <source>User name:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ユーザー名:</translation>
     </message>
 </context>
 <context>

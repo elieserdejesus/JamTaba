@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.0" language="fr_FR">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -212,15 +212,15 @@
     </message>
     <message>
         <source>Delete preset</source>
-        <translation>Supprimer le preset</translation>
+        <translation type="unfinished">Supprimer le preset</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation>Suppression du preset ...</translation>
+        <translation type="unfinished">Suppression du preset ...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation>Vous voulez supprimer le preset &apos;%1&apos;</translation>
+        <translation type="unfinished">Vous voulez supprimer le preset &apos;%1&apos;</translation>
     </message>
 </context>
 <context>
@@ -420,23 +420,23 @@
     </message>
     <message>
         <source>Sound Wave</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Onde sonore</translation>
     </message>
     <message>
         <source>Buildings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bâtiments</translation>
     </message>
     <message>
         <source>Gradient</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gradient</translation>
     </message>
     <message>
         <source>Pixelated Sound Wave</source>
-        <translation type="unfinished"></translation>
+        <translation>Onde sonore Pixélisée</translation>
     </message>
     <message>
         <source>Pixelated Buildings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bâtiments Pixélisé</translation>
     </message>
 </context>
 <context>
@@ -552,22 +552,22 @@
     </message>
     <message>
         <source>Ice</source>
-        <translation type="unfinished"></translation>
+        <translation>Glace</translation>
     </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
     <message>
         <source>Window Size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Taille de la Fenêtre</translation>
     </message>
     <message>
         <source>Increase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Augmenter</translation>
     </message>
     <message>
         <source>Decrease</source>
-        <translation type="unfinished"></translation>
+        <translation>Diminuer</translation>
     </message>
 </context>
 <context>
@@ -621,7 +621,7 @@
     </message>
     <message>
         <source>Route MIDI input to first subchannel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Acheminer l&apos;entrée MIDI au premier sous-canal</translation>
     </message>
 </context>
 <context>
@@ -804,7 +804,7 @@
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Le BPM a changé! Arrêtez %1 et changer BPM à %2!</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
@@ -838,23 +838,23 @@
     <name>NinjamTrackView</name>
     <message>
         <source>Low cut</source>
-        <translation>Coupe bas</translation>
+        <translation type="unfinished">Coupe bas</translation>
     </message>
     <message>
         <source>Receive</source>
-        <translation>Recevoir</translation>
+        <translation type="unfinished">Recevoir</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Off</translation>
+        <translation type="unfinished">Off</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>Normal</translation>
+        <translation type="unfinished">Normal</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation>Drastique</translation>
+        <translation type="unfinished">Drastique</translation>
     </message>
 </context>
 <context>
@@ -1137,7 +1137,7 @@
     </message>
     <message>
         <source>User name:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nom d&apos;utilisateur:</translation>
     </message>
 </context>
 <context>
