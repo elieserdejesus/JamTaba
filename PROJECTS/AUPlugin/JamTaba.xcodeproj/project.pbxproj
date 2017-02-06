@@ -94,7 +94,6 @@
 		2A0DBE0D1E0AF46C00BEF1FF /* MetronomeUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC0E1E0AF46900BEF1FF /* MetronomeUtils.h */; };
 		2A0DBE111E0AF46D00BEF1FF /* MidiDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC111E0AF46900BEF1FF /* MidiDriver.h */; };
 		2A0DBE151E0AF46D00BEF1FF /* MidiMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC131E0AF46900BEF1FF /* MidiMessage.h */; };
-		2A0DBE191E0AF46D00BEF1FF /* MidiMessageBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC151E0AF46900BEF1FF /* MidiMessageBuffer.h */; };
 		2A0DBE1D1E0AF46D00BEF1FF /* RtMidiDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC171E0AF46900BEF1FF /* RtMidiDriver.h */; };
 		2A0DBE291E0AF46D00BEF1FF /* ClientMessages.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC1F1E0AF46900BEF1FF /* ClientMessages.h */; };
 		2A0DBE2F1E0AF46D00BEF1FF /* Server.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC231E0AF46900BEF1FF /* Server.h */; };
@@ -172,7 +171,6 @@
 		2A120A7C1E0BF18000E0E596 /* IntervalChunksDisplay.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF31E0AF46900BEF1FF /* IntervalChunksDisplay.h */; };
 		2A120A7D1E0BF25F00E0E596 /* MidiDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC101E0AF46900BEF1FF /* MidiDriver.cpp */; };
 		2A120A7E1E0BF26100E0E596 /* MidiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC121E0AF46900BEF1FF /* MidiMessage.cpp */; };
-		2A120A7F1E0BF26300E0E596 /* MidiMessageBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC141E0AF46900BEF1FF /* MidiMessageBuffer.cpp */; };
 		2A120A801E0BF28F00E0E596 /* AudioDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB181E0AF46800BEF1FF /* AudioDriver.cpp */; };
 		2A120A811E0BF2C300E0E596 /* RoomStreamerNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB4D1E0AF46900BEF1FF /* RoomStreamerNode.h */; };
 		2A120A821E0BF2F800E0E596 /* UserNameLineEdit.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBFF1E0AF46900BEF1FF /* UserNameLineEdit.h */; };
@@ -614,8 +612,6 @@
 		2A0DBC111E0AF46900BEF1FF /* MidiDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MidiDriver.h; sourceTree = "<group>"; };
 		2A0DBC121E0AF46900BEF1FF /* MidiMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MidiMessage.cpp; sourceTree = "<group>"; };
 		2A0DBC131E0AF46900BEF1FF /* MidiMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MidiMessage.h; sourceTree = "<group>"; };
-		2A0DBC141E0AF46900BEF1FF /* MidiMessageBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MidiMessageBuffer.cpp; sourceTree = "<group>"; };
-		2A0DBC151E0AF46900BEF1FF /* MidiMessageBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MidiMessageBuffer.h; sourceTree = "<group>"; };
 		2A0DBC161E0AF46900BEF1FF /* RtMidiDriver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RtMidiDriver.cpp; sourceTree = "<group>"; };
 		2A0DBC171E0AF46900BEF1FF /* RtMidiDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtMidiDriver.h; sourceTree = "<group>"; };
 		2A0DBC1E1E0AF46900BEF1FF /* ClientMessages.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientMessages.cpp; sourceTree = "<group>"; };
@@ -1241,8 +1237,6 @@
 				2A0DBC111E0AF46900BEF1FF /* MidiDriver.h */,
 				2A0DBC121E0AF46900BEF1FF /* MidiMessage.cpp */,
 				2A0DBC131E0AF46900BEF1FF /* MidiMessage.h */,
-				2A0DBC141E0AF46900BEF1FF /* MidiMessageBuffer.cpp */,
-				2A0DBC151E0AF46900BEF1FF /* MidiMessageBuffer.h */,
 				2A0DBC161E0AF46900BEF1FF /* RtMidiDriver.cpp */,
 				2A0DBC171E0AF46900BEF1FF /* RtMidiDriver.h */,
 			);
@@ -1549,7 +1543,6 @@
 				2A0DBD1B1E0AF46A00BEF1FF /* ChordsPanel.h in Headers */,
 				2A0DBDB91E0AF46B00BEF1FF /* ThemeLoader.h in Headers */,
 				2A0DBE3B1E0AF46D00BEF1FF /* Service.h in Headers */,
-				2A0DBE191E0AF46D00BEF1FF /* MidiMessageBuffer.h in Headers */,
 				2A0DBE091E0AF46C00BEF1FF /* MainController.h in Headers */,
 				2A0DBDC11E0AF46B00BEF1FF /* UserNameDialog.h in Headers */,
 				2A0DBC571E0AF46900BEF1FF /* AudioMixer.h in Headers */,
@@ -1780,7 +1773,6 @@
 				2A1C7A381E0B5F2C00C7984D /* FileReaderFactory.cpp in Sources */,
 				2A1C7A391E0B5F2C00C7984D /* OggFileReader.cpp in Sources */,
 				2A120A7D1E0BF25F00E0E596 /* MidiDriver.cpp in Sources */,
-				2A120A7F1E0BF26300E0E596 /* MidiMessageBuffer.cpp in Sources */,
 				2A120A7E1E0BF26100E0E596 /* MidiMessage.cpp in Sources */,
 				2A1C7A3A1E0B5F2C00C7984D /* WaveFileReader.cpp in Sources */,
 				2A1C7A3B1E0B5F2C00C7984D /* MetronomeTrackNode.cpp in Sources */,
