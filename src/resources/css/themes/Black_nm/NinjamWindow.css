@@ -256,6 +256,16 @@ IntervalProgressWindow
     selection-color: black;
 }
 
+#comboBpi-topLevel
+{
+        background-color: rgb(34, 34, 34);
+}
+
+#comboBpm-topLevel
+{
+        background-color: rgb(29, 29, 29);
+}
+
 NinjamPanel #intervalPanel,
 IntervalProgressWindow #intervalPanel
 {

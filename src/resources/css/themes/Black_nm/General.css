@@ -174,22 +174,36 @@ QLineEdit:focus
     selection-color: rgb(140, 140, 140);
 }
 
-QLineEdit#groupNameField:focus
+QLineEdit#groupNameField:focus, #userNameLineEdit:focus
 {
     color: rgb(200, 200, 200);
     selection-background-color: rgb(120, 120, 120);
     selection-color: rgb(40, 40, 40);
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-         stop: 0.0 rgb(61, 61, 61),
-         stop: 0.5 rgb(43, 43, 43));
 }
 
-QLineEdit#userNameLineEdit:focus
+QLineEdit#groupNameField-topLevel,
+#userNameLineEdit-topLevel
 {
-    color: rgb(200, 200, 200);
-    selection-background-color: rgb(120, 120, 120);
-    selection-color: rgb(40, 40, 40);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+         stop: 0.2 rgb(63, 63, 63),
+         stop: 0.8 rgb(47, 47, 47));
 }
+
+QLineEdit#chatText-topLevel
+{
+    background-color: rgb(180, 180, 180);
+}
+
+QLineEdit#panelCombos-topLevel
+{
+    background-color: red;
+}
+
+QLineEdit#chatText-topLevel
+{
+    background-color: rgb(180, 180, 180);
+}
+
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
 

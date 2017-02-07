@@ -248,3 +248,17 @@ NinjamPanel QComboBox               /* bpi, bpm, accents and shape comboboxes */
 {
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
 }
+
+#comboBpi-topLevel
+{
+        background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1,
+        stop:0 rgb(192, 192, 192),
+        stop:1 rgb(158, 158, 158));
+}
+
+#comboBpm-topLevel
+{
+        background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1,
+        stop:0 rgb(177, 177, 177),
+        stop:1 rgb(156, 156, 156));
+}

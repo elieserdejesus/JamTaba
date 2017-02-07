@@ -134,8 +134,8 @@ QLineEdit
 QLineEdit:focus
 {
     border-radius: 6px;
-    border-color: rgba(90, 90, 90, 90);
-    /*background-color: rgb(143, 188, 250); */
+    border-color: rgba(0, 0, 0, 90);
+    background-color: rgb(143, 188, 250);
     color: black;
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
@@ -143,10 +143,22 @@ QLineEdit:focus
 
 QLineEdit#groupNameField:focus
 {
-    border-color: rgba(90, 90, 90, 40);
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop: 0.0 rgb(86, 167, 225),
-        stop: 0.5 rgb(108, 171, 239));
+    border-color: rgba(0, 0, 0, 120)
+}
+
+QLineEdit#groupNameField-topLevel
+{
+    background-color: rgb(96, 169, 232);
+}
+
+#userNameLineEdit-topLevel
+{
+    background-color: rgb(129, 194, 230);
+}
+
+QLineEdit#chatText-topLevel
+{
+    background-color: rgb(180, 207, 250);
 }
 
 

@@ -14,6 +14,13 @@ ChatPanel #chatText
     border-radius: 6px;
 }
 
+ChatPanel #chatText:focus                   /* text input field focused */
+{
+    border-color: rgba(0, 0, 0, 160);
+    background-color: rgb(180, 207, 250);
+}
+
+
 
 /* ChatMessagePanel is the widget used to show ONE chat message
 ----------------------------------------------------------------*/

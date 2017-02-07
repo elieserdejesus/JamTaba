@@ -171,8 +171,16 @@ QLineEdit[enabled="false"]
     border: none;
 }
 
+QLineEdit#groupNameField-topLevel,
+#userNameLineEdit-topLevel
+{
+    background-color: rgb(197, 197, 197);
+}
 
-
+QLineEdit#chatText-topLevel
+{
+    background-color: rgb(197, 197, 197);
+}
 
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
