@@ -145,7 +145,10 @@ QLineEdit#groupNameField-topLevel,
 
 QLineEdit#chatText-topLevel
 {
-    background-color: white;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(160, 160, 160),
+        stop: 0.5 white,
+        stop: 1.0 rgb(160, 160, 160));
     border-color: rgba(0, 0, 0, 160);
 }
 
