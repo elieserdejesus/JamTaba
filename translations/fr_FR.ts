@@ -424,7 +424,7 @@
     </message>
     <message>
         <source>Buildings</source>
-        <translation type="unfinished">Bâtiments</translation>
+        <translation type="unfinished">Rectangles</translation>
     </message>
     <message>
         <source>Gradient</source>
@@ -436,7 +436,7 @@
     </message>
     <message>
         <source>Pixelated Buildings</source>
-        <translation type="unfinished">Bâtiments Pixélisé</translation>
+        <translation type="unfinished">Rectangles Pixélisés</translation>
     </message>
 </context>
 <context>
