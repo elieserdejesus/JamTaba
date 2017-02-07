@@ -194,11 +194,6 @@ QLineEdit#chatText-topLevel
     background-color: rgb(180, 180, 180);
 }
 
-QLineEdit#panelCombos-topLevel
-{
-    background-color: red;
-}
-
 QLineEdit#chatText-topLevel
 {
     background-color: rgb(180, 180, 180);
