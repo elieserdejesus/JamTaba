@@ -174,7 +174,10 @@ QLineEdit[enabled="false"]
 QLineEdit#groupNameField-topLevel,
 #userNameLineEdit-topLevel
 {
-    background-color: rgb(197, 197, 197);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(197, 197, 197),
+        stop: 0.5 white,
+        stop: 1.0 rgb(197, 197, 197));
 }
 
 #userNameLineEdit-topLevel
