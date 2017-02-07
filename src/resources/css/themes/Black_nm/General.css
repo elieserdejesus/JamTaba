@@ -189,6 +189,11 @@ QLineEdit#groupNameField-topLevel,
          stop: 0.8 rgb(47, 47, 47));
 }
 
+#userNameLineEdit-topLevel
+{
+    border: none;
+}
+
 QLineEdit#chatText-topLevel
 {
     background-color: rgb(180, 180, 180);

@@ -138,6 +138,11 @@ QLineEdit#groupNameField-topLevel,
     background-color: white;
 }
 
+#userNameLineEdit-topLevel
+{
+    border: none;
+}
+
 QLineEdit#chatText-topLevel
 {
     background-color: white;

@@ -180,6 +180,7 @@ QLineEdit#groupNameField-topLevel
 #userNameLineEdit-topLevel
 {
     background-color: rgb(210, 142, 100);
+    border: none;
 }
 
 QLineEdit#chatText-topLevel
