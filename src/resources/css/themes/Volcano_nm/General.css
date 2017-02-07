@@ -173,9 +173,9 @@ QLineEdit:focus
 QLineEdit#groupNameField-topLevel
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-         stop: 0.2 rgb(244, 178, 74),
+         stop: 0.1 rgb(244, 178, 74),
          stop: 0.5 rgb(250, 208, 110));
-    border-color: rgba(90, 90, 90, 60);
+    border-color: rgba(90, 90, 90, 90);
 }
 
 #userNameLineEdit-topLevel
