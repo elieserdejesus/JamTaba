@@ -168,7 +168,8 @@ NinjamPanel QComboBox
 #comboBpi-topLevel,
 #comboBpm-topLevel
 {
-        background-color: rgb(182, 182, 182);
+    border: none;
+    background-color: rgb(182, 182, 182);
 }
 
 

@@ -258,12 +258,14 @@ IntervalProgressWindow
 
 #comboBpi-topLevel
 {
-        background-color: rgb(34, 34, 34);
+    background-color: rgb(34, 34, 34);
+    border: none;
 }
 
 #comboBpm-topLevel
 {
-        background-color: rgb(29, 29, 29);
+    background-color: rgb(29, 29, 29);
+    border: none;
 }
 
 NinjamPanel #intervalPanel,

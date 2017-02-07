@@ -247,12 +247,14 @@ NinjamPanel QComboBox QAbstractItemView
 
 #comboBpi-topLevel
 {
-        background-color: rgb(117, 154, 174);
+    border: none;
+    background-color: rgb(117, 154, 174);
 }
 
 #comboBpm-topLevel
 {
-        background-color: rgb(107, 147, 178);
+    border: none;
+    background-color: rgb(107, 147, 178);
 }
 
 NinjamTrackGroupView                        /* ninjam track group. If a ninjamer is using 2 channels they will appear grouped */
