@@ -113,9 +113,9 @@ void TopLevelTextEditorModifier::showDialog()
     topLevelLineEdit->setText(hackedLineEdit->text());
 
     topLevelLineEdit->setContentsMargins(hackedLineEdit->contentsMargins());
-    QString styleSheet("border-color: transparent;");
+    QString styleSheet;
     if (isHackingComboBox())
-        styleSheet += "padding: 0px; margin: 0px; border: none;";
+        styleSheet += "padding: 0px; margin: 0px;";
 
     topLevelLineEdit->setStyleSheet(styleSheet);
 
