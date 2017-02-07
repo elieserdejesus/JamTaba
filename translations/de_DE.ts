@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.1" language="de_DE">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -420,24 +420,23 @@
     </message>
     <message>
         <source>Sound Wave</source>
-        <translation type="unfinished">Schallwelle</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Buildings</source>
-        <translation type="unfinished">Gebäude</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Gradient</source>
-        <translation type="unfinished">Gradient</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Pixelated Sound Wave</source>
-        <translation type="unfinished">
-Pixelierte Schallwelle</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Pixelated Buildings</source>
-        <translation type="unfinished">Pixelierte Gebäude</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -554,22 +553,22 @@ Pixelierte Schallwelle</translation>
     </message>
     <message>
         <source>Ice</source>
-        <translation type="unfinished">Eis</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
     <message>
         <source>Window Size</source>
-        <translation type="unfinished">Fenstergröße</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Increase</source>
-        <translation type="unfinished">Erhöhen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Decrease</source>
-        <translation type="unfinished">Verringern</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -623,7 +622,7 @@ Pixelierte Schallwelle</translation>
     </message>
     <message>
         <source>Route MIDI input to first subchannel</source>
-        <translation type="unfinished">MIDI-Eingang in den ersten Subchannel verlegen</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -806,7 +805,7 @@ Pixelierte Schallwelle</translation>
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished">die BPM ist geändert! bitte stoppe %1 und ändere BPM zu %2!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Synchronizing...</source>
@@ -1139,7 +1138,7 @@ Pixelierte Schallwelle</translation>
     </message>
     <message>
         <source>User name:</source>
-        <translation type="unfinished">User name:</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
