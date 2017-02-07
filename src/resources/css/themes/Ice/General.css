@@ -149,6 +149,8 @@ QLineEdit#groupNameField:focus
 QLineEdit#groupNameField-topLevel
 {
     background-color: rgb(96, 169, 232);
+    border-color: rgba(0, 0, 0, 120);
+    border-radius: 6px;
 }
 
 #userNameLineEdit-topLevel
