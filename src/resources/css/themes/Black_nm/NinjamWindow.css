@@ -258,13 +258,23 @@ IntervalProgressWindow
 
 #comboBpi-topLevel
 {
-    background-color: rgb(34, 34, 34);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(34, 34, 34),
+        stop: 0.1 rgb(48, 48, 48),
+        stop: 0.45 rgb(48, 48, 48),
+        stop: 0.6 rgb(34, 34, 34),
+        stop: 1.0 rgb(34, 34, 34));
     border: none;
 }
 
 #comboBpm-topLevel
 {
-    background-color: rgb(29, 29, 29);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(29, 29, 29),
+        stop: 0.1 rgb(48, 48, 48),
+        stop: 0.45 rgb(48, 48, 48),
+        stop: 0.6 rgb(29, 29, 29),
+        stop: 1.0 rgb(29, 29, 29));
     border: none;
 }
 
