@@ -146,6 +146,7 @@ QLineEdit#groupNameField-topLevel,
 QLineEdit#chatText-topLevel
 {
     background-color: white;
+    border-color: rgba(0, 0, 0, 160);
 }
 
 
