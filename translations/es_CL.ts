@@ -184,7 +184,7 @@
     </message>
     <message>
         <source>Reset Track Controls</source>
-        <translation>Reiniciar la  pista</translation>
+        <translation>Reiniciar Controles</translation>
     </message>
     <message>
         <source>Add channel</source>
@@ -404,15 +404,15 @@
     </message>
     <message>
         <source>Show peak meter only</source>
-        <translation>Mostrar solo medidor de nivel de picos</translation>
+        <translation>Solo medidor de nivel de picos</translation>
     </message>
     <message>
         <source>Show RMS meter only</source>
-        <translation>Mostrar solo medidor de nivel RMS</translation>
+        <translation>Solo medidor de nivel RMS</translation>
     </message>
     <message>
         <source>Show peak + RMS meters</source>
-        <translation>Mostrar medidor de nivel de picos + RMS</translation>
+        <translation>Medidor de nivel de picos + RMS</translation>
     </message>
     <message>
         <source>Show max peaks</source>
