@@ -165,7 +165,17 @@ NinjamPanel QComboBox
     background-color: rgba(0, 0, 0, 30);
 }
 
-
+#comboBpi-topLevel,
+#comboBpm-topLevel
+{
+    border: none;
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(182, 182, 182),
+        stop: 0.1 rgb(224, 224, 224),
+        stop: 0.45 rgb(224, 224, 224),
+        stop: 0.6 rgb(182, 182, 182),
+        stop: 1.0 rgb(182, 182, 182));
+}
 
 
 NinjamTrackGroupView                        /* ninjam track group. If a ninjamer is using 2 channels they will appear grouped */

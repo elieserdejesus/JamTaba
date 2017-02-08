@@ -256,6 +256,28 @@ IntervalProgressWindow
     selection-color: black;
 }
 
+#comboBpi-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(34, 34, 34),
+        stop: 0.1 rgb(63, 63, 63),
+        stop: 0.45 rgb(63, 63, 63),
+        stop: 0.6 rgb(34, 34, 34),
+        stop: 1.0 rgb(34, 34, 34));
+    border: none;
+}
+
+#comboBpm-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(29, 29, 29),
+        stop: 0.1 rgb(63, 63, 63),
+        stop: 0.45 rgb(63, 63, 63),
+        stop: 0.6 rgb(29, 29, 29),
+        stop: 1.0 rgb(29, 29, 29));
+    border: none;
+}
+
 NinjamPanel #intervalPanel,
 IntervalProgressWindow #intervalPanel
 {

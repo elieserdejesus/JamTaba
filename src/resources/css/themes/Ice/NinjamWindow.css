@@ -245,6 +245,28 @@ NinjamPanel QComboBox QAbstractItemView
     selection-color: white;
 }
 
+#comboBpi-topLevel
+{
+    border: none;
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(117, 154, 174),
+        stop: 0.1 rgb(117, 171, 225),
+        stop: 0.45 rgb(117, 171, 225),
+        stop: 0.6 rgb(117, 154, 174),
+        stop: 1.0 rgb(117, 154, 174));
+}
+
+#comboBpm-topLevel
+{
+    border: none;
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(107, 147, 178),
+        stop: 0.1 rgb(117, 171, 225),
+        stop: 0.45 rgb(117, 171, 225),
+        stop: 0.6 rgb(107, 147, 178),
+        stop: 1.0 rgb(107, 147, 178));
+}
+
 NinjamTrackGroupView                        /* ninjam track group. If a ninjamer is using 2 channels they will appear grouped */
 {
     border: 1px solid rgb(130, 130, 130);

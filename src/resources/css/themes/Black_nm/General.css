@@ -181,6 +181,35 @@ QLineEdit#groupNameField:focus, #userNameLineEdit:focus
     selection-color: rgb(40, 40, 40);
 }
 
+QLineEdit#groupNameField-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1 y2:0,
+         stop: 0.1 rgb(47, 47, 47),
+         stop: 0.5 rgb(85, 85, 85),
+         stop: 1.0 rgb(47, 47, 47));
+}
+
+#userNameLineEdit-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1 y2:0,
+         stop: 0.1 rgb(55, 55, 55),
+         stop: 0.5 rgb(85, 85, 85),
+         stop: 1.0 rgb(55, 55, 55));
+    border: none;
+}
+
+QLineEdit#chatText-topLevel
+{
+    color: black;
+    border-color: rgba(0, 0, 0, 160);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(140, 140, 140),
+        stop: 0.3 rgb(180, 180, 180),
+        stop: 0.7 rgb(180, 180, 180),
+        stop: 1.0 rgb(140, 140, 140));
+}
+
+
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
 
 QSlider::groove:vertical
