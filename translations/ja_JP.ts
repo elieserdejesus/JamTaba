@@ -570,7 +570,7 @@
     </message>
     <message>
         <source>Increase</source>
-        <translation type="unfinished">増加する</translation>
+        <translation type="unfinished">増加</translation>
     </message>
     <message>
         <source>Decrease</source>
