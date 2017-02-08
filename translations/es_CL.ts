@@ -632,7 +632,7 @@
     </message>
     <message>
         <source>Slider to change the BPM of the metronome</source>
-        <translation>Deslizador para cambiar los BPM dem metrónomo</translation>
+        <translation>Deslizador para cambiar los BPM del metrónomo</translation>
     </message>
     <message>
         <source>L</source>
