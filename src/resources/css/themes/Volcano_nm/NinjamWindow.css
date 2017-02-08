@@ -227,7 +227,9 @@ NinjamTrackView  #channelName
 /* The floating window showing the metronome/interval progress */
 IntervalProgressWindow
 {
-    background-color: rgb(176, 128, 94);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(184, 149, 124),
+        stop: 1.0 rgb(209, 169, 141));
 }
 
 IntervalProgressDisplay
