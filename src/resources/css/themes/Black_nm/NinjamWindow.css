@@ -231,8 +231,8 @@ NinjamTrackGroupView                        /* ninjam track group. If a ninjamer
 IntervalProgressWindow
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop: 0.8     rgb(50, 50, 50),
-    stop: 1.0   rgba(30, 30, 30));
+    stop: 0.8     rgb(41, 41, 41),
+    stop: 1.0   rgba(13, 13, 13));
 }
 
 #panelCombos QLabel             /* The labels in left side of comboboxes (bpi, bpm, accents and shape) */
