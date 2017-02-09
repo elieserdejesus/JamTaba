@@ -192,7 +192,7 @@ BaseTrackView[unlighted="true"] QSlider::handle:vertical,    /* track fader hand
 QSlider::handle:vertical:disabled
 {
     background: rgba(0, 107, 206);
-    Border: indent;
+    border: 1px outset rgb(0, 80, 151);
 }
 
 BaseTrackView[unlighted="true"],                            /* the track */
