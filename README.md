@@ -1,7 +1,7 @@
 
 **JamTaba 2** is a software to play online music jam sessions. At moment you can use JamTaba to play with musicians around the world using [ninjam ](http://www.cockos.com/ninjam/) servers.
 
-![JamTaba](http://jamtaba-music-web-site.appspot.com/img/Jamtaba_2_0_14_jamming.png)
+![JamTaba](http://jamtaba-music-web-site.appspot.com/img/Jamtaba_2_0_19.png)
 
 JamTaba can be used as a **standalone** software, **VST** *(Windows)* or **AU** *(Mac OSX)* plugin. Using the standalone version you can use your audio and MIDI devices and load VST/AU plugins inside JamTaba (JamTaba standalone is a VST/AU host). Using the VST/AU plugin you can use JamTaba in your preferred DAW and send your audio tracks to JamTaba, and Jamtaba will stream these audio tracks to *ninjam servers*. Off course JamTaba will receive and play the other musicians audio streams, so you can play with others and have some fun playing online!
 
