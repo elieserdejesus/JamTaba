@@ -72,7 +72,7 @@ PreferencesDialog #vstListWidget
     stop:1 rgb(120, 120, 120));;
 }
 
-MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNote
+MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNote, #checkBoxMidiRouting
 {
     color: rgb(160, 160, 160);
 }

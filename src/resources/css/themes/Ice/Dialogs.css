@@ -82,7 +82,7 @@ PreferencesDialog #blackListWidget
     border-radius:6px;
 }
 
-MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNote
+MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNote, #checkBoxMidiRouting
 {
     color: white;
 }
