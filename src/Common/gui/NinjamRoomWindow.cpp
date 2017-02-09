@@ -614,7 +614,6 @@ void NinjamRoomWindow::disconnectFromNinjamControllerSignals(Controller::NinjamC
 
 NinjamRoomWindow::~NinjamRoomWindow()
 {
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow destructor";
     Controller::NinjamController *ninjamController = mainController->getNinjamController();
     if (ninjamController) {
         disconnectFromNinjamControllerSignals(ninjamController);
@@ -841,4 +840,17 @@ void NinjamRoomWindow::updateTracksSizeButtons()
 
     narrowButton->setEnabled(enableButtons);
     wideButton->setEnabled(enableButtons);
+}
+
+
+bool NinjamRoomWindow::metronomeFloatingWindowIsVisible() const
+{
+    return ninjamPanel && ninjamPanel->metronomeFloatingWindowIsVisible();
+}
+
+void NinjamRoomWindow::closeMetronomeFloatingWindow()
+{
+    if (metronomeFloatingWindowIsVisible()) {
+        ninjamPanel->setMetronomeFloatingWindowVisibility(false);
+    }
 }

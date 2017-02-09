@@ -62,6 +62,9 @@ public:
 
     Login::RoomInfo getRoomInfo() const { return roomInfo; }
 
+    bool metronomeFloatingWindowIsVisible() const;
+    void closeMetronomeFloatingWindow();
+
 protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController *mainController;

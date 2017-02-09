@@ -57,6 +57,8 @@ public:
 
     void maximizeControlsWidget(bool maximize);
 
+    bool metronomeFloatingWindowIsVisible() const;
+
 signals:
     void bpiComboActivated(const QString &);
     void bpmComboActivated(const QString &);
@@ -68,6 +70,9 @@ signals:
     void preferencesButtonClicked();
     void hostSyncStateChanged(bool syncWithHost);
     void intervalShapeChanged(int newShape);
+
+public slots:
+    void setMetronomeFloatingWindowVisibility(bool showFloatingWindow);
 
 protected:
     bool eventFilter(QObject *source, QEvent *ev);
@@ -91,7 +96,6 @@ private:
 private slots:
     void updateAccentsStatus(int index);
     void updateIntervalProgressShape(int index);
-    void toggleMetronomeFloatingWindowVisibility(bool showFloatingWindow);
     void deleteFloatWindow();
 
     void handleBpiComboActication(const QString &);

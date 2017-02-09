@@ -1008,6 +1008,8 @@ void MainWindow::closeEvent(QCloseEvent *)
 {
     if (mainController)
         mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
+
+    closeAllFloatingWindows();
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1577,3 +1579,9 @@ void MainWindow::initializeMasterFader()
     setMasterGain(faderPosition);
 }
 
+void MainWindow::closeAllFloatingWindows()
+{
+    if (mainController->isPlayingInNinjamRoom() && ninjamWindow) {
+        ninjamWindow->closeMetronomeFloatingWindow();
+    }
+}

@@ -236,6 +236,8 @@ private:
     void hideBusyDialog();
     void centerBusyDialog();
 
+    void closeAllFloatingWindows();
+
     void initializeWindowSize();
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);

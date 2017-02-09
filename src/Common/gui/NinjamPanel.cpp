@@ -131,7 +131,7 @@ void NinjamPanel::setupSignals()
     connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
     connect(ui->preferencesButton, SIGNAL(clicked(bool)), this, SIGNAL(preferencesButtonClicked()));
 
-    connect(ui->floatingWindowButton, SIGNAL(toggled(bool)), this, SLOT(toggleMetronomeFloatingWindowVisibility(bool)));
+    connect(ui->floatingWindowButton, SIGNAL(toggled(bool)), this, SLOT(setMetronomeFloatingWindowVisibility(bool)));
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -150,7 +150,12 @@ void NinjamPanel::handleBpmComboActication(const QString &newBpm)
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
 
-void NinjamPanel::toggleMetronomeFloatingWindowVisibility(bool showFloatingWindow)
+bool NinjamPanel::metronomeFloatingWindowIsVisible() const
+{
+    return metronomeFloatingWindow && metronomeFloatingWindow->isVisible();
+}
+
+void NinjamPanel::setMetronomeFloatingWindowVisibility(bool showFloatingWindow)
 {
     if (showFloatingWindow){
         if (!metronomeFloatingWindow) {
@@ -455,5 +460,7 @@ void NinjamPanel::setBpm(int bpm)
 
 NinjamPanel::~NinjamPanel()
 {
+    deleteFloatWindow();
+
     delete ui;
 }
