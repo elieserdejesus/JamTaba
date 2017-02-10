@@ -279,17 +279,16 @@ public:
         return userName;
     }
 
-    inline bool isValidOggDownload() const
-    {
-        return isValidOgg;
-    }
+    bool isAudio() const;
 
-    inline bool downloadShouldBeStopped() const
+    bool isVideo() const;
+
+    inline bool shouldBeStopped() const
     {
         return GUID.at(0) == '0' && GUID.at(GUID.size()-1) == '0';
     }
 
-    inline bool downloadIsComplete() const
+    inline bool isComplete() const
     {
         return fourCC[0] == 0 && fourCC[3] == 0;
     }
@@ -300,11 +299,12 @@ private:
     quint8 fourCC[4];// = new byte[4];
     quint8 channelIndex;
     QString userName;
-    bool isValidOgg;
 
     void readFrom(QDataStream &stream) override;
     void printDebug(QDebug &dbg) const override;
 };
+
+
 // ++++++++++++++++++
 /*
   Offset Type        Field
@@ -324,7 +324,7 @@ public:
         return GUID;
     }
 
-    inline QByteArray getEncodedAudioData() const
+    inline QByteArray getEncodedData() const
     {
         return encodedAudioData;
     }

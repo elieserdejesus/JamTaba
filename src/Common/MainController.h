@@ -15,6 +15,7 @@
 #include "midi/MidiDriver.h"
 #include "UploadIntervalData.h"
 #include "audio/core/LocalInputGroup.h"
+#include "video/VideoCodec.h"
 
 class MainWindow;
 
@@ -258,7 +259,7 @@ public:
     }
 
     // used to recreate audio encoder with enough channels
-    int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
+    int getMaxAudioChannelsForEncoding(uint trackGroupIndex) const;
 
     bool setTheme(const QString &themeName);
 
@@ -327,6 +328,8 @@ protected:
     // audio process is here too (see MainController::process)
     virtual void doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 
+    VideoEncoder *videoEncoder;
+
 private:
     void setAllTracksActivation(bool activated);
 
@@ -365,6 +368,12 @@ private:
     int lastInputTrackID; //used to generate a unique key/ID for each input track
 
 
+    const static quint8 VIDEO_FPS;
+
+    bool canGrabNewFrameFromCamera() const;
+
+    quint64 lastFrameGrabbedTimeStamp;
+
     void recreateMetronome();
 
 protected slots:
@@ -373,13 +382,18 @@ protected slots:
     virtual void connectedNinjamServer(const Ninjam::Server &server);
     virtual void disconnectFromNinjamServer(const Ninjam::Server &server);
     virtual void quitFromNinjamServer(const QString &error);
-    virtual void enqueueAudioDataToUpload(const QByteArray &, quint8 channelIndex,
-                                          bool isFirstPart, bool isLastPart);
+
+    virtual void enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart, bool isLastPart);
+
     virtual void updateBpi(int newBpi);
     virtual void updateBpm(int newBpm);
 
     // TODO move this slot to NinjamController
     virtual void on_newNinjamInterval();
+
+    void processCameraVideo(int intervalPosition);
+
+    void uploadEncodedVideoFrame(const QByteArray &encodedData, int intervalPosition);
 
 };
 }

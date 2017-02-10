@@ -42,7 +42,7 @@ public:
 
     }
 
-    inline void appendVorbisData(const QByteArray &data)
+    inline void appendEncodedData(const QByteArray &data)
     {
         this->vorbisData.append(data);
     }
@@ -62,7 +62,7 @@ public:
         return GUID;
     }
 
-    inline QByteArray getVorbisData() const
+    inline QByteArray getEncodedData() const
     {
         return vorbisData;
     }
@@ -110,19 +110,20 @@ void Service::setupSocketSignals()
     connect(socket, SIGNAL(connected()), this, SLOT(handleSocketConnection()));
 }
 
-void Service::sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &encodedAudioBuffer,
+void Service::sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &encodedData,
                                     bool isLastPart)
 {
     if (!initialized)
         return;
-    sendMessageToServer(ClientIntervalUploadWrite(GUID, encodedAudioBuffer, isLastPart));
+    sendMessageToServer(ClientIntervalUploadWrite(GUID, encodedData, isLastPart));
 }
 
-void Service::sendAudioIntervalBegin(const QByteArray &GUID, quint8 channelIndex)
+void Service::sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, bool isAudioInterval)
 {
     if (!initialized)
         return;
-    sendMessageToServer(ClientUploadIntervalBegin(GUID, channelIndex, this->userName));
+
+    sendMessageToServer(ClientUploadIntervalBegin(GUID, channelIndex, this->userName, isAudioInterval));
 }
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -284,7 +285,7 @@ void Service::setChannelReceiveStatus(const QString &userFullName, quint8 channe
 
 void Service::process(const DownloadIntervalBegin &msg)
 {
-    if (!msg.downloadShouldBeStopped() && msg.isValidOggDownload()) {
+    if (!msg.shouldBeStopped() && (msg.isAudio() || msg.isVideo())) {
         quint8 channelIndex = msg.getChannelIndex();
         QString userFullName = msg.getUserName();
         QByteArray GUID = msg.getGUID();
@@ -296,14 +297,14 @@ void Service::process(const DownloadIntervalWrite &msg)
 {
     if (downloads.contains(msg.getGUID())) {
         Download &download = downloads[msg.getGUID()];
-        download.appendVorbisData(msg.getEncodedAudioData());
+        download.appendEncodedData(msg.getEncodedData());
         User user = currentServer->getUser(download.getUserFullName());
         if (user.getChannel(download.getChannelIndex()).isActive()) {
             if (msg.downloadIsComplete()) {
-                emit audioIntervalCompleted(user, download.getChannelIndex(), download.getVorbisData());
+                emit audioIntervalCompleted(user, download.getChannelIndex(), download.getEncodedData());
                 downloads.remove(msg.getGUID());
             } else {
-                emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedAudioData().size());
+                emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData().size());
             }
         }
     } else {

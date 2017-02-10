@@ -200,18 +200,26 @@ void ChatMessage::printDebug(QDebug &dbg) const{
 
 //+++++++++++++++++++++++++
 
-ClientUploadIntervalBegin::ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName)
+ClientUploadIntervalBegin::ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName, bool isAudioInterval)
     :ClientMessage( 0x83, 16 + 4 + 4 + 1 + userName.size()),
       GUID(GUID),
       estimatedSize(0),
-      //fourCC{'O', 'G', 'G', 'v'},
       channelIndex(channelIndex),
       userName(userName)
 {
-	fourCC[0] = 'O';
-	fourCC[1] = 'G';
-	fourCC[2] = 'G';
-	fourCC[3] = 'v';
+    if (isAudioInterval) {
+        this->fourCC[0] = 'O';
+        this->fourCC[1] = 'G';
+        this->fourCC[2] = 'G';
+        this->fourCC[3] = 'v';
+    }
+    else {
+        // JamTaba Video prefix
+        this->fourCC[0] = 'J';
+        this->fourCC[1] = 'T';
+        this->fourCC[2] = 'B';
+        this->fourCC[3] = 'v';
+    }
 }
 
 void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer) const{
@@ -236,16 +244,17 @@ void ClientUploadIntervalBegin::printDebug(QDebug &dbg) const{
 }
 
 //+++++++++++++++++++++
-ClientIntervalUploadWrite::ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart)
-    :ClientMessage(0x84, 16 + 1 + encodedAudioBuffer.size()),
-    GUID(GUID),
-      encodedAudioBuffer(encodedAudioBuffer),
-    isLastPart(isLastPart)
+ClientIntervalUploadWrite::ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedData, bool isLastPart)
+    :   ClientMessage(0x84, 16 + 1 + encodedData.size()),
+        GUID(GUID),
+        encodedData(encodedData),
+        isLastPart(isLastPart)
 {
 
 }
 
-void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const{
+void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const
+{
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << msgType;
@@ -254,13 +263,14 @@ void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const{
     stream.writeRawData(GUID.data(), 16);
     quint8 intervalCompleted = isLastPart ? (quint8) 1 : (quint8) 0;//If the Flag field bit 0 is set then the upload is complete.
     stream << intervalCompleted;
-    stream.writeRawData( encodedAudioBuffer.data(), encodedAudioBuffer.size() );
+    stream.writeRawData(encodedData.data(), encodedData.size());
 
     Q_ASSERT(buffer.size() == (int)(payload + 5));
 }
 
 
- void ClientIntervalUploadWrite::printDebug(QDebug &dbg) const{
+void ClientIntervalUploadWrite::printDebug(QDebug &dbg) const
+{
     dbg << "SEND ClientIntervalUploadWrite{" << "GUID=" << QString(GUID) << ", encodedAudioBuffer= " << payload << " bytes, isLastPart=" << isLastPart << '}';
 }
 

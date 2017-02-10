@@ -25,6 +25,7 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     setActivatedStatus(false);
 
     secondaryChildsLayout->addWidget(buttonStereoInversion);
+
 }
 
 void LocalTrackView::bindThisViewWithTrackNodeSignals()

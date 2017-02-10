@@ -1,5 +1,5 @@
 #include "RoomStreamerNode.h"
-#include "codec.h"
+#include "Mp3Decoder.h"
 #include "core/AudioDriver.h"
 #include "core/SamplesBuffer.h"
 #include "log/Logging.h"

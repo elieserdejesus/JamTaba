@@ -5,7 +5,7 @@
 #include <QMutex>
 #include "ninjam/User.h"
 #include "ninjam/Server.h"
-#include "audio/vorbis/VorbisEncoder.h"
+#include "audio/Encoder.h"
 
 #include <QThread>
 
@@ -126,9 +126,6 @@ protected:
 
     Audio::MetronomeTrackNode *metronomeTrackNode;
 
-private slots:
-    void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
-
 private:
     static QString getUniqueKeyForChannel(const Ninjam::UserChannel &channel);
     static QString getUniqueKeyForUser(const Ninjam::User& user);
@@ -163,8 +160,8 @@ private:
 
     Audio::MetronomeTrackNode *createMetronomeTrackNode(int sampleRate);
 
-    QMap<int, VorbisEncoder *> encoders;
-    VorbisEncoder *getEncoder(quint8 channelIndex);
+    QMap<int, AudioEncoder *> encoders;
+    AudioEncoder *getEncoder(quint8 channelIndex);
 
     void handleNewInterval();
     void recreateEncoderForChannel(int channelIndex);
@@ -197,6 +194,7 @@ private slots:
     void on_ninjamUserChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void on_ninjamUserExited(const Ninjam::User &user);
     void on_ninjamUserEntered(const Ninjam::User &user);
+    void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
 };
 }
 #endif // NINJAMJAMROOMCONTROLLER_H

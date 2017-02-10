@@ -12,10 +12,15 @@
 #include "audio/core/LocalInputNode.h"
 #include "ThemeLoader.h"
 
+#include <QBuffer>
+#include <QByteArray>
+
 using namespace Persistence;
 using namespace Midi;
 using namespace Ninjam;
 using namespace Controller;
+
+const quint8 MainController::VIDEO_FPS = 1;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++
 MainController::MainController(const Settings &settings) :
@@ -29,7 +34,9 @@ MainController::MainController(const Settings &settings) :
     mainWindow(nullptr),
     masterGain(1),
     lastInputTrackID(0),
-    usersDataCache(Configurator::getInstance()->getCacheDir())
+    usersDataCache(Configurator::getInstance()->getCacheDir()),
+    lastFrameGrabbedTimeStamp(0),
+    videoEncoder(nullptr)
 {
 
     QDir cacheDir = Configurator::getInstance()->getCacheDir();
@@ -40,6 +47,9 @@ MainController::MainController(const Settings &settings) :
     // Register known JamRecorders here:
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ReaperProjectGenerator()));
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ClipSortLogGenerator()));
+
+    videoEncoder = nullptr;
+    connect(videoEncoder, &VideoEncoder::frameEncoded, this, &MainController::uploadEncodedVideoFrame);
 }
 
 void MainController::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
@@ -114,10 +124,11 @@ void MainController::disconnectFromNinjamServer(const Server &server)
 
 void MainController::setupNinjamControllerSignals(){
     Q_ASSERT(ninjamController.data());
-    connect(ninjamController.data(), SIGNAL(encodedAudioAvailableToSend(const QByteArray &, quint8, bool, bool)), this, SLOT(enqueueAudioDataToUpload(const QByteArray &, quint8, bool, bool)));
+    connect(ninjamController.data(), SIGNAL(encodedAudioAvailableToSend(const QByteArray &, quint8, bool, bool)), this, SLOT(enqueueDataToUpload(const QByteArray &, quint8, bool, bool)));
     connect(ninjamController.data(), SIGNAL(startingNewInterval()), this, SLOT(on_newNinjamInterval()));
     connect(ninjamController.data(), SIGNAL(currentBpiChanged(int)), this, SLOT(updateBpi(int)));
     connect(ninjamController.data(), SIGNAL(currentBpmChanged(int)), this, SLOT(updateBpm(int)));
+    connect(ninjamController.data(), SIGNAL(startProcessing(int)), this, SLOT(processCameraVideo(int)));
 }
 
 void MainController::connectedNinjamServer(const Ninjam::Server &server)
@@ -163,6 +174,26 @@ void MainController::on_newNinjamInterval()
             jamRecorder->newInterval();
 }
 
+void MainController::processCameraVideo(int intervalPosition)
+{
+    if (isPlayingInNinjamRoom() && mainWindow->cameraIsActivated()) {
+        bool isFirstPart = intervalPosition == 0;
+        if (isFirstPart || canGrabNewFrameFromCamera()) {
+            if (videoEncoder) {
+                videoEncoder->encodeFrame(mainWindow->grabCameraFrame(), intervalPosition); // video encoder will emit a signal when video frame is encoded
+                lastFrameGrabbedTimeStamp = QDateTime::currentMSecsSinceEpoch();
+            }
+        }
+    }
+}
+
+void MainController::uploadEncodedVideoFrame(const QByteArray &encodedData, int intervalPosition)
+{
+    int videoChannelIndex = 1;
+    bool isFirstPart = intervalPosition == 0;
+    enqueueDataToUpload(encodedData, videoChannelIndex, isFirstPart, false);
+}
+
 void MainController::updateBpi(int newBpi)
 {
     if (settings.isSaveMultiTrackActivated())
@@ -177,7 +208,7 @@ void MainController::updateBpm(int newBpm)
             jamRecorder->setBpm(newBpm);
 }
 
-void MainController::enqueueAudioDataToUpload(const QByteArray &encodedAudio, quint8 channelIndex,
+void MainController::enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex,
                                               bool isFirstPart, bool isLastPart)
 {
     /** The audio thread is firing this event. This thread (main/gui thread) write the encoded bytes in socket.
@@ -186,11 +217,13 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedAudio, qu
         if (intervalsToUpload.contains(channelIndex))
             delete intervalsToUpload[channelIndex];
         intervalsToUpload.insert(channelIndex, new UploadIntervalData());
-        ninjamService.sendAudioIntervalBegin(intervalsToUpload[channelIndex]->getGUID(), channelIndex);
+        bool isAudioData = encodedData.left(4) == "OggS"; // all ogg chunks are prefixed with 'OggS' string
+        ninjamService.sendIntervalBegin(intervalsToUpload[channelIndex]->getGUID(), channelIndex, isAudioData);
     }
+
     if (intervalsToUpload[channelIndex]) {// just in case...
         UploadIntervalData *upload = intervalsToUpload[channelIndex];
-        upload->appendData(encodedAudio);
+        upload->appendData(encodedData);
         bool canSend = upload->getTotalBytes() >= 4096 || isLastPart;
         if (canSend) {
             ninjamService.sendAudioIntervalPart(upload->getGUID(),
@@ -201,11 +234,11 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedAudio, qu
 
     if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom())
         foreach(Recorder::JamRecorder *jamRecorder, getActiveRecorders())
-            jamRecorder->appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
+            jamRecorder->appendLocalUserAudio(encodedData, channelIndex, isFirstPart, isLastPart);
 }
 
 // ++++++++++++++++++++
-int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const
+int MainController::getMaxAudioChannelsForEncoding(uint trackGroupIndex) const
 {
     if (trackGroups.contains(trackGroupIndex)) {
         Audio::LocalInputGroup *group = trackGroups[trackGroupIndex];
@@ -850,3 +883,15 @@ Audio::LocalInputNode *MainController::getInputTrackInGroup(quint8 groupIndex, q
 
     return trackGroup->getInputNode(trackIndex);
 }
+
+bool MainController::canGrabNewFrameFromCamera() const
+{
+    static const quint64 timeBetweenFrames = 1000/VIDEO_FPS;
+
+    const quint64 now = QDateTime::currentMSecsSinceEpoch();
+
+    return (now - lastFrameGrabbedTimeStamp) >= timeBetweenFrames;
+}
+
+
+

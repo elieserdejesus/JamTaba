@@ -128,7 +128,7 @@ Offset Type        Field
 class ClientUploadIntervalBegin : public ClientMessage
 {
 public:
-    ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName);
+    ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName, bool isAudioInterval);
 
     static QByteArray createGUID();
 
@@ -153,12 +153,12 @@ class ClientIntervalUploadWrite : public ClientMessage
 {
 
 public:
-    ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedAudioBuffer,
+    ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedData,
                               bool isLastPart);
 
 private:
     QByteArray GUID;
-    QByteArray encodedAudioBuffer;
+    QByteArray encodedData;
     bool isLastPart;
 
     void serializeTo(QByteArray &buffer) const override;

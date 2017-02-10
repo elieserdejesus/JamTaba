@@ -18,6 +18,8 @@
 #include <QDesktopServices>
 #include <QRect>
 #include <QDateTime>
+#include <QImage>
+
 #include "MainController.h"
 #include "ThemeLoader.h"
 #include "performance/PerformanceMonitor.h"
@@ -44,7 +46,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ninjamWindow(nullptr),
     roomToJump(nullptr),
     chordsPanel(nullptr),
-    lastPerformanceMonitorUpdate(0)
+    lastPerformanceMonitorUpdate(0),
+    camera(nullptr)
 {
     qCDebug(jtGUI) << "Creating MainWindow...";
 
@@ -60,11 +63,31 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeTranslator();
     initializeThemeMenu();
     initializeMeteringOptions();
+    initializeCamera();
     setupWidgets();
     setupSignals();
 
     qCDebug(jtGUI) << "MainWindow created!";
 }
+
+void MainWindow::initializeCamera()
+{
+    this->camera = nullptr;
+}
+
+bool MainWindow::cameraIsActivated() const
+{
+    return camera != nullptr;
+}
+
+QPixmap MainWindow::grabCameraFrame() const
+{
+    if (camera)
+        return camera->getFrame();
+
+    return QPixmap();
+}
+
 
 void MainWindow::initializeMeteringOptions()
 {
@@ -447,8 +470,9 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
     localChannel->setGroupName(channelName);
     ui.localTracksLayout->addWidget(localChannel);
 
-    if (createFirstSubchannel)
-        localChannel->addTrackView(channelGroupIndex);
+    if (createFirstSubchannel) {
+         localChannel->addTrackView(channelGroupIndex);
+    }
 
     ui.localTracksWidget->updateGeometry();
 

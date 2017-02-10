@@ -1,33 +1,35 @@
 #include "NinjamController.h"
 #include "MainController.h"
-#include "audio/core/AudioDriver.h"
-#include "audio/core/SamplesBuffer.h"
+
 #include "ninjam/Service.h"
 #include "ninjam/User.h"
 #include "ninjam/UserChannel.h"
 #include "ninjam/Server.h"
 #include "audio/core/AudioNode.h"
 #include "audio/core/SamplesBuffer.h"
-#include "gui/NinjamRoomWindow.h"
-#include "audio/NinjamTrackNode.h"
-#include "persistence/Settings.h"
-#include "audio/MetronomeTrackNode.h"
+#include "audio/core/AudioDriver.h"
+#include "audio/core/SamplesBuffer.h"
 #include "audio/file/FileReaderFactory.h"
 #include "audio/file/FileReader.h"
-#include "MetronomeUtils.h"
+#include "audio/NinjamTrackNode.h"
+#include "audio/MetronomeTrackNode.h"
 #include "audio/Resampler.h"
+#include "audio/SamplesBufferRecorder.h"
+#include "audio/vorbis/VorbisEncoder.h"
+#include "gui/NinjamRoomWindow.h"
+#include "log/Logging.h"
+#include "MetronomeUtils.h"
+#include "persistence/Settings.h"
+#include "Utils.h"
 
-#include <cmath>
-#include <cassert>
 #include <QMutexLocker>
 #include <QDebug>
 #include <QThread>
 #include <QFileInfo>
-
-#include "audio/SamplesBufferRecorder.h"
-#include "Utils.h"
 #include <QWaitCondition>
-#include "log/Logging.h"
+
+#include <cmath>
+#include <cassert>
 
 using namespace Controller;
 
@@ -77,9 +79,9 @@ protected:
             chunksToEncode.removeFirst();
             mutex.unlock();
             if (chunk){
-                QByteArray encodedBytes( controller->encode(chunk->buffer, chunk->channelIndex));
+                QByteArray encodedBytes(controller->encode(chunk->buffer, chunk->channelIndex));
                 if (chunk->lastPart){
-                    encodedBytes.append( controller->encodeLastPartOfInterval(chunk->channelIndex));
+                    encodedBytes.append(controller->encodeLastPartOfInterval(chunk->channelIndex));
                 }
 
                 if(!encodedBytes.isEmpty()){
@@ -243,37 +245,37 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
         tempInBuffer.set(in, offset, samplesToProcessInThisStep, 0);
 
         bool newInterval = intervalPosition == 0;
-        if(newInterval){//starting new interval
+        if (newInterval) { // starting new interval
             handleNewInterval();
         }
 
         metronomeTrackNode->setIntervalPosition(this->intervalPosition);
         int currentBeat = intervalPosition / getSamplesPerBeat();
-        if(currentBeat != lastBeat){
+        if (currentBeat != lastBeat) {
             lastBeat = currentBeat;
             emit intervalBeatChanged(currentBeat);
         }
 
         //+++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
         bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
-        foreach (NinjamTrackNode* track, trackNodes) {
+        for (NinjamTrackNode* track : trackNodes) {
             track->setProcessingLastPartOfInterval(isLastPart);//TODO resampler still need a flag indicating the last part?
         }
         mainController->doAudioProcess(tempInBuffer, tempOutBuffer, sampleRate);
         out.add(tempOutBuffer, offset); //generate audio output
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        if(preparedForTransmit){
-            //1) mix input subchannels, 2) encode and 3) send the encoded audio
+        if (preparedForTransmit) {
+            // 1) mix input subchannels, 2) encode and 3) send the encoded audio
             bool isFirstPart = intervalPosition == 0;
             int groupedChannels = mainController->getInputTrackGroupsCount();
             for (int groupIndex = 0; groupIndex < groupedChannels; ++groupIndex) {
-                if(mainController->isTransmiting(groupIndex)){
-                    int channels = mainController->getMaxChannelsForEncodingInTrackGroup(groupIndex);
-                    if(channels > 0){
+                if (mainController->isTransmiting(groupIndex)) {
+                    int channels = mainController->getMaxAudioChannelsForEncoding(groupIndex);
+                    if (channels > 0) {
                         Audio::SamplesBuffer inputMixBuffer(channels, samplesToProcessInThisStep);
 
-                        if(encoders.contains(groupIndex)){
+                        if (encoders.contains(groupIndex)) {
                             inputMixBuffer.zero();
                             mainController->mixGroupedInputs(groupIndex, inputMixBuffer);
 
@@ -285,12 +287,11 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
             }
         }
 
-        //++++++++++++++++++++++++++++++++++++++++
         samplesProcessed += samplesToProcessInThisStep;
         offset += samplesToProcessInThisStep;
         this->intervalPosition = (this->intervalPosition + samplesToProcessInThisStep) % samplesInInterval;
     }
-    while( samplesProcessed < totalSamplesToProcess);
+    while(samplesProcessed < totalSamplesToProcess);
 }
 
 //++++++++++++++
@@ -366,13 +367,13 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
         encodingThread = nullptr;
     }
 
-    foreach (VorbisEncoder* encoder, encoders.values()) {
+    for (AudioEncoder* encoder : encoders.values()) {
         delete encoder;
     }
     encoders.clear();
 
     //delete possible non consumed events
-    foreach (SchedulableEvent *e, scheduledEvents)
+    for (SchedulableEvent *e : scheduledEvents)
         delete e;
     scheduledEvents.clear();
 
@@ -703,26 +704,26 @@ void NinjamController::on_ninjamServerBpmChanged(quint16 newBpm){
     scheduledEvents.append(new BpmChangeEvent(this, newBpm));
 }
 
-void NinjamController::on_ninjamAudiointervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData){
-
-    if(mainController->isRecordingMultiTracksActivated()){
+void NinjamController::on_ninjamAudiointervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedData)
+{
+    if (mainController->isRecordingMultiTracksActivated()) {
         Geo::Location geoLocation = mainController->getGeoLocation(user.getIp());
         QString userName = user.getName() + " from " + geoLocation.getCountryName();
-        mainController->saveEncodedAudio(userName, channelIndex, encodedAudioData);
+        mainController->saveEncodedAudio(userName, channelIndex, encodedData);
     }
 
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKeyForChannel(channel);
     QMutexLocker locker(&mutex);
-    if(trackNodes.contains(channelKey)){
+    if (trackNodes.contains(channelKey)) {
         NinjamTrackNode* trackNode = trackNodes[channelKey];
-        if(trackNode){
-            trackNode->addVorbisEncodedInterval(encodedAudioData);
+        if (trackNode) {
+            trackNode->addVorbisEncodedInterval(encodedData);
             emit channelAudioFullyDownloaded(trackNode->getID());
         }
     }
-    else{
-        qWarning() << "o canal " << channelIndex << " do usuário " << user.getName() << " não foi encontrado no mapa!";
+    else {
+        qWarning() << "The channel " << channelIndex << " of user " << user.getName() << " not founded in map!";
     }
 }
 
@@ -746,7 +747,10 @@ QByteArray NinjamController::encode(const Audio::SamplesBuffer &buffer, uint cha
     return QByteArray();
 }
 
-QByteArray NinjamController::encodeLastPartOfInterval(uint channelIndex){
+
+
+QByteArray NinjamController::encodeLastPartOfInterval(uint channelIndex)
+{
     QMutexLocker locker(&encodersMutex);
     if(encoders.contains(channelIndex)){
         return encoders[channelIndex]->finishIntervalEncoding();
@@ -754,26 +758,28 @@ QByteArray NinjamController::encodeLastPartOfInterval(uint channelIndex){
     return QByteArray();
 }
 
-void NinjamController::recreateEncoderForChannel(int channelIndex){
+void NinjamController::recreateEncoderForChannel(int channelIndex)
+{
 
     QMutexLocker locker(&encodersMutex);
-    int maxChannelsForEncoding = mainController->getMaxChannelsForEncodingInTrackGroup(channelIndex);
-    //qWarning() << "recreating encoding using " << maxChannelsForEncoding << " channels";
-    if(maxChannelsForEncoding <= 0){//input tracks are setted as noInput?
+    int maxChannelsForEncoding = mainController->getMaxAudioChannelsForEncoding(channelIndex);
+
+    if (maxChannelsForEncoding <= 0) // input track is setted as noInput?
         return;
-    }
+
     bool currentEncoderIsInvalid = encoders.contains(channelIndex) &&
             (encoders[channelIndex]->getChannels() != maxChannelsForEncoding
                 || encoders[channelIndex]->getSampleRate() != mainController->getSampleRate());
 
-    if(!encoders.contains(channelIndex) || currentEncoderIsInvalid){//a new encoder is necessary?
-        //qDebug() << "recreating encoder for channel index" << channelIndex;
-        if(currentEncoderIsInvalid){
+    if (!encoders.contains(channelIndex) || currentEncoderIsInvalid) {// a new encoder is necessary?
+
+        if (currentEncoderIsInvalid && encoders.contains(channelIndex)) {
             delete encoders[channelIndex];
         }
 
         int sampleRate = mainController->getSampleRate();
         float encodingQuality = mainController->getEncodingQuality();
+
         encoders[channelIndex] = new VorbisEncoder(maxChannelsForEncoding, sampleRate, encodingQuality);
     }
 }

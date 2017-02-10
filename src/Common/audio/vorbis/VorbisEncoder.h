@@ -2,10 +2,13 @@
 #define VORBISENCODER_H
 
 #include "vorbis/vorbisenc.h"
+
 #include "audio/core/SamplesBuffer.h"
+#include "audio/Encoder.h"
+
 #include <QByteArray>
 
-class VorbisEncoder
+class VorbisEncoder : public AudioEncoder
 {
 
 public:
@@ -13,8 +16,9 @@ public:
     VorbisEncoder(int channels, int sampleRate, float quality);
     ~VorbisEncoder();
 
-    QByteArray encode(const Audio::SamplesBuffer& in);
-    QByteArray finishIntervalEncoding();
+    QByteArray encode(const Audio::SamplesBuffer &audioBuffer) override;
+    QByteArray finishIntervalEncoding() override;
+
     inline int getChannels() const{return info.channels;}
     inline int getSampleRate() const{return info.rate;}
 

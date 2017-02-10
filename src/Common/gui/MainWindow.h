@@ -2,17 +2,17 @@
 #define MAIN_WINDOW_H
 
 #include "ui_MainWindow.h"
-#include <QMainWindow>
-#include <QMessageBox>
 #include "BusyDialog.h"
 #include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
 #include "ScreensaverBlocker.h"
 #include "TextEditorModifier.h"
+#include "video/Camera.h"
+#include "performance/PerformanceMonitor.h"
 
 #include <QTranslator>
-
-#include "performance/PerformanceMonitor.h"
+#include <QMainWindow>
+#include <QMessageBox>
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -77,6 +77,9 @@ public:
 
     virtual TextEditorModifier *createTextEditorModifier() = 0;
 
+    QPixmap grabCameraFrame() const;
+    bool cameraIsActivated() const;
+
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
 
@@ -132,6 +135,8 @@ protected:
     virtual inline QSize getMinimumWindowSize() const { return MAIN_WINDOW_MIN_SIZE; }
 
     static const QSize MAIN_WINDOW_MIN_SIZE;
+
+    Camera *camera;
 
 protected slots:
     void closeTab(int index);
@@ -275,6 +280,8 @@ private:
     void initializeMeteringOptions();
 
     void initializeGuiRefreshTimer();
+
+    void initializeCamera();
 
     void updateUserNameLabel();
 

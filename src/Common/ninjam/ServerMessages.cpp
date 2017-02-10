@@ -270,9 +270,7 @@ void ServerChatMessage::printDebug(QDebug &dbg) const
 DownloadIntervalBegin::DownloadIntervalBegin(quint32 payload) :
     ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_BEGIN, payload)
 {
-    // for (int i = 0; i < 4; ++i)
-    // this->fourCC[i] = fourCC[i];
-    // isValidOgg = fourCC[0] == 'O' && fourCC[1] == 'G' && fourCC[2] == 'G' && fourCC[3] == 'v';
+    //
 }
 
 void DownloadIntervalBegin::readFrom(QDataStream &stream)
@@ -288,8 +286,22 @@ void DownloadIntervalBegin::readFrom(QDataStream &stream)
         stream >> fourCC[i];
     stream >> channelIndex;
     userName = Ninjam::extractString(stream);
+}
 
-    isValidOgg = fourCC[0] == 'O' && fourCC[1] == 'G' && fourCC[2] == 'G' && fourCC[3] == 'v';
+bool DownloadIntervalBegin::isAudio() const
+{
+   return  fourCC[0] == 'O' &&
+           fourCC[1] == 'G' &&
+           fourCC[2] == 'G' &&
+           fourCC[3] == 'v';
+}
+
+bool DownloadIntervalBegin::isVideo() const
+{
+   return  fourCC[0] == 'J' &&
+           fourCC[1] == 'T' &&
+           fourCC[2] == 'B' &&
+           fourCC[3] == 'v';
 }
 
 void DownloadIntervalBegin::printDebug(QDebug &dbg) const
@@ -297,9 +309,9 @@ void DownloadIntervalBegin::printDebug(QDebug &dbg) const
     dbg << "DownloadIntervalBegin{ " <<endl
         << "\tfourCC='"<< fourCC[0] << fourCC[1] << fourCC[2] << fourCC[3] << endl
         << "\tGUID={"<< GUID << "} " << endl
-        << "\tisValidOggDownload="<< isValidOggDownload() << endl
-        << "\tdownloadShoudBeStopped="<< downloadShouldBeStopped() << endl
-        << "\tdownloadIsComplete="<< downloadIsComplete() << endl
+        << "\tisValidOggDownload="<< isAudio() << endl
+        << "\tdownloadShoudBeStopped="<< shouldBeStopped() << endl
+        << "\tdownloadIsComplete="<< isComplete() << endl
         << "\testimatedSize=" << estimatedSize << endl
         << "\tchannelIndex=" << channelIndex  << endl
         << "\tuserName=" << userName << endl <<"}" << endl;

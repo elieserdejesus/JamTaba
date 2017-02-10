@@ -82,8 +82,15 @@ void VorbisEncoder::encodeFirstVorbisHeaders(){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++
-QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
-    //qCDebug(vorbisEncoder) << "Encoding " << samples.getFrameLenght() << " samples.";
+/**
+ * @brief VorbisEncoder::encode
+ * @param data array
+ * @param dataLenght Data Lenght in bytes
+ * @param channels number of channels
+ * @return
+ */
+QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer &audioBuffer)
+{
     if (!initialized) {
         if(!isFirstEncoding){
             clearState();
@@ -94,17 +101,19 @@ QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
         outBuffer.clear();
     }
 
-    if (samples.getFrameLenght() > 0) {//is not the end
-        //copy the samples to encode to vorbis input buffer
-        float** vorbisBuffer = vorbis_analysis_buffer(&dspState, samples.getFrameLenght());
+    int samples = audioBuffer.getFrameLenght();
 
-        int channels = std::min(info.channels, samples.getChannels());
-        for (int c = 0; c < channels; c++) {
-            memcpy(vorbisBuffer[c], samples.getSamplesArray(c), samples.getFrameLenght() * sizeof(float));
+    if (samples > 0) {//is not the end
+        float** vorbisBuffer = vorbis_analysis_buffer(&dspState, samples); // copy the samples to encode to vorbis input buffer
+
+        int maxChannels = std::min(info.channels, audioBuffer.getChannels());
+        int dataLenght = samples * sizeof(float);
+        for (int c = 0; c < maxChannels; c++) {
+            memcpy(vorbisBuffer[c], audioBuffer.getSamplesArray(c), dataLenght);
         }
     }
-    //lenght == 0 in the end of interval
-    int result = vorbis_analysis_wrote(&dspState, samples.getFrameLenght()); // tell the library how much we actually submitted
+    // lenght == 0 in the end of interval
+    int result = vorbis_analysis_wrote(&dspState, samples); // tell the library how much we actually submitted
     if(result != 0){
         qCritical() << "encoder error!";
     }

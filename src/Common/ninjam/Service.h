@@ -52,7 +52,7 @@ public:
 
     // audio interval upload
     void sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart);
-    void sendAudioIntervalBegin(const QByteArray &GUID, quint8 channelIndex);
+    void sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, bool isAudioInterval);
 
     void sendNewChannelsListToServer(const QStringList &channelsNames);
     void sendRemovedChannelIndex(int removedChannelIndex);
