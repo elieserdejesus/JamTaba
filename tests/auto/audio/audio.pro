@@ -8,10 +8,15 @@ INCLUDEPATH += .
 INCLUDEPATH += ../../../src/Common
 VPATH += ../../../src/Common
 
+HEADERS += TestSamplesBuffer.h
+HEADERS += TestLooper.h
 HEADERS += audio/core/SamplesBuffer.h
-SOURCES += audio/core/SamplesBuffer.cpp
-
 HEADERS += audio/core/AudioPeak.h
+
+SOURCES += TestSamplesBuffer.cpp
+SOURCES += TestLooper.cpp
+SOURCES += audio/core/SamplesBuffer.cpp
 SOURCES += audio/core/AudioPeak.cpp
+SOURCES += audio/AudioLooper.cpp
 
 SOURCES += test_Audio.cpp

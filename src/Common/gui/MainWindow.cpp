@@ -14,6 +14,8 @@
 #include "ChordsPanel.h"
 #include "MapWidget.h"
 
+#include "LooperWindow.h"
+
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QRect>
@@ -828,6 +830,12 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     QObject::connect(mainController->getNinjamController(), SIGNAL(intervalBeatChanged(
                                                                        int)), this,
                      SLOT(updateCurrentIntervalBeat(int)));
+
+
+    // TEST ONLY
+    LocalInputNode *inputTrack = mainController->getInputTrack(0);
+    LooperWindow *looperWindow = new LooperWindow(inputTrack->getLooper());
+    looperWindow->show();
 }
 
 void MainWindow::setUserNameReadOnlyStatus(bool readOnly)

@@ -80,7 +80,8 @@ LocalInputNode::LocalInputNode(Controller::MainController *mainController, int p
     mainController(mainController),
     stereoInverted(false),
     receivingRoutedMidiInput(false),
-    routingMidiInput(false)
+    routingMidiInput(false),
+    looper(new Audio::Looper())
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -88,7 +89,18 @@ LocalInputNode::LocalInputNode(Controller::MainController *mainController, int p
 
 LocalInputNode::~LocalInputNode()
 {
-    //
+    delete looper;
+}
+
+void LocalInputNode::setLooperState(bool looperActivated)
+{
+    looper->playBufferedSamples(looperActivated);
+}
+
+void LocalInputNode::startNewLoopCycle()
+{
+    setLooperState(true); // auto activate when enter in a server
+    looper->startNewCycle();
 }
 
 bool LocalInputNode::isMono() const
@@ -222,6 +234,9 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
     }
 
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer); // only the filtered midi messages are sended to rendering code
+
+    looper->process(out); // rec current samples and mix previous interval samples in the same buffer
+
 }
 
 void LocalInputNode::setRoutingMidiInput(bool routeMidiInput)

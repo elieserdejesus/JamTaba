@@ -172,6 +172,10 @@ void MainController::on_newNinjamInterval()
     if (settings.isSaveMultiTrackActivated())
         foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
             jamRecorder->newInterval();
+
+    for (Audio::LocalInputNode *inputTrack : inputTracks.values()) {
+        inputTrack->startNewLoopCycle();
+    }
 }
 
 void MainController::processCameraVideo(int intervalPosition)

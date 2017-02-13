@@ -16,7 +16,10 @@ public:
 
     enum WaveDrawingMode
     {
-        SOUND_WAVE, BUILDINGS, PIXELED_SOUND_WAVE, PIXELED_BUILDINGS
+        SOUND_WAVE,
+        BUILDINGS,
+        PIXELED_SOUND_WAVE,
+        PIXELED_BUILDINGS
     };
 
     void addPeak(float peak);
