@@ -12,6 +12,7 @@ HEADERS += TestSamplesBuffer.h
 HEADERS += TestLooper.h
 HEADERS += audio/core/SamplesBuffer.h
 HEADERS += audio/core/AudioPeak.h
+HEADERS += audio/AudioLooper.h
 
 SOURCES += TestSamplesBuffer.cpp
 SOURCES += TestLooper.cpp

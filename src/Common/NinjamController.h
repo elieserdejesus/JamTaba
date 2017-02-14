@@ -89,6 +89,8 @@ public:
 
     Ninjam::User getUserByName(const QString &userName) const;
 
+    uint getSamplesPerInterval() const;
+
 signals:
     void currentBpiChanged(int newBpi); //emitted when a scheduled bpi change is processed in interval start (first beat).
     void currentBpmChanged(int newBpm);
@@ -195,6 +197,13 @@ private slots:
     void on_ninjamUserExited(const Ninjam::User &user);
     void on_ninjamUserEntered(const Ninjam::User &user);
     void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
-};
+
+}; // end of class
+
+inline uint NinjamController::getSamplesPerInterval() const
+{
+    return samplesInInterval;
+}
+
 }
 #endif // NINJAMJAMROOMCONTROLLER_H

@@ -173,8 +173,9 @@ void MainController::on_newNinjamInterval()
         foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
             jamRecorder->newInterval();
 
+    uint samplesPerInterval = ninjamController->getSamplesPerInterval();
     for (Audio::LocalInputNode *inputTrack : inputTracks.values()) {
-        inputTrack->startNewLoopCycle();
+        inputTrack->startNewLoopCycle(samplesPerInterval);
     }
 }
 

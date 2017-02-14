@@ -14,12 +14,14 @@ void TestLooper::multiBufferTest()
     Audio::Looper looper;
     looper.playBufferedSamples(true);
 
-    looper.startNewCycle();
+    const uint cycleLenghtInSamples = 6;
+
+    looper.startNewCycle(cycleLenghtInSamples);
     looper.process(createBuffer("1,2,3"));
     looper.process(createBuffer("4,5,6"));
 
     SamplesBuffer out(1, 3);
-    looper.startNewCycle();
+    looper.startNewCycle(cycleLenghtInSamples);
     looper.process(out);
     checkExpectedValues("1,2,3", out);
     out.zero();
@@ -28,7 +30,7 @@ void TestLooper::multiBufferTest()
 
     out.zero();
 
-    looper.startNewCycle();
+    looper.startNewCycle(cycleLenghtInSamples);
     looper.process(out);
     checkExpectedValues("0, 0, 0", out);
     //out.zero();
@@ -45,7 +47,9 @@ void TestLooper::basicTest()
     Audio::Looper looper;
     looper.playBufferedSamples(true);
 
-    looper.startNewCycle();
+    const uint cycleLenghtInSamples = 3;
+
+    looper.startNewCycle(cycleLenghtInSamples);
     looper.process(samples);
 
     // in first cycle we have all ZERO in looper buffered layer, the expected result is the same as initial samples
@@ -53,17 +57,17 @@ void TestLooper::basicTest()
 
     samples.add(createBuffer("1, 1, 1")); // samples is 2,2,2 now
 
-    looper.startNewCycle();
+    looper.startNewCycle(cycleLenghtInSamples);
     looper.process(samples); // now samples will be summed/mixed with previous samples
 
     checkExpectedValues("3, 3, 3", samples);
 
-    looper.startNewCycle();
+    looper.startNewCycle(cycleLenghtInSamples);
     looper.process(samples); // now samples will be summed/mixed with previous samples
 
     checkExpectedValues("5,5,5", samples);
 
-    looper.startNewCycle();
+    looper.startNewCycle(cycleLenghtInSamples);
     looper.process(samples); // now samples will be summed/mixed with previous samples
 
     checkExpectedValues("8,8,8", samples);

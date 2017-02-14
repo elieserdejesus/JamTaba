@@ -155,7 +155,7 @@ void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain,
 void SamplesBuffer::zero()
 {
     for (unsigned int c = 0; c < channels; ++c)
-        std::fill(samples[c].begin(), samples[c].end(), (float)0);
+        std::fill(samples[c].begin(), samples[c].end(), static_cast<float>(0));
 }
 
 AudioPeak SamplesBuffer::computePeak()
@@ -201,7 +201,7 @@ int SamplesBuffer::computeRmsWindowSize(int sampleRate, int windowTimeInMs)
 
 void SamplesBuffer::add(const SamplesBuffer &buffer, int internalWriteOffset)
 {
-    unsigned int framesToProcess = std::min((int)frameLenght, buffer.getFrameLenght());
+    uint framesToProcess = std::min((uint)frameLenght, buffer.getFrameLenght());
     if (buffer.channels >= channels) {
         for (unsigned int c = 0; c < channels; ++c) {
             for (unsigned int s = 0; s < framesToProcess; ++s)
@@ -221,7 +221,7 @@ void SamplesBuffer::add(unsigned int channel, float *samples, int samplesToAdd)
         void *dest = &(this->samples[channel][0]);
         memcpy(dest, samples, std::min((int)frameLenght, samplesToAdd) * sizeof(float));
     } else {
-        qWarning() << "wrong channel " << channel;
+        qCritical() << "wrong channel " << channel;
     }
 }
 
@@ -230,7 +230,7 @@ void SamplesBuffer::add(int channel, int sampleIndex, float sampleValue)
     if (channelIsValid(channel) && sampleIndexIsValid(sampleIndex))
         samples[channel][sampleIndex] += sampleValue;
     else
-        qWarning() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+        qCritical() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
 }
 
 void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue)
@@ -238,10 +238,10 @@ void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue)
     if (channelIsValid(channel) && sampleIndexIsValid(sampleIndex))
         samples[channel][sampleIndex] = sampleValue;
     else
-        qWarning() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+        qCritical() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
 }
 
-int SamplesBuffer::getFrameLenght() const
+unsigned int SamplesBuffer::getFrameLenght() const
 {
     return this->frameLenght;
 }
@@ -292,7 +292,7 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, int bufferChannelOffset, in
 {
     if (buffer.channels <= 0 || channels <= 0)
         return;
-    int framesToCopy = std::min(buffer.getFrameLenght(), (int)frameLenght);
+    int framesToCopy = std::min(buffer.getFrameLenght(), frameLenght);
     int channelsToProcess = std::min(channelsToCopy, std::min(buffer.getChannels(), (int)channels));
     if (channelsToProcess + bufferChannelOffset <= buffer.getChannels()) {// avoid invalid channel index
         int bytesToCopy = framesToCopy * sizeof(float);
