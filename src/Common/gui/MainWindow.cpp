@@ -834,7 +834,9 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 
     // TEST ONLY
     LocalInputNode *inputTrack = mainController->getInputTrack(0);
-    LooperWindow *looperWindow = new LooperWindow(inputTrack->getLooper());
+    QString looperWindowTitle("Looper - [Track name]");
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    LooperWindow *looperWindow = new LooperWindow(inputTrack->getLooper(), ninjamController, looperWindowTitle);
     looperWindow->show();
 }
 

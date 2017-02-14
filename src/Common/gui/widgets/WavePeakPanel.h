@@ -13,6 +13,7 @@ class WavePeakPanel : public QWidget
 
 public:
     explicit WavePeakPanel(QWidget *parent = 0);
+    virtual ~WavePeakPanel();
 
     enum WaveDrawingMode
     {
@@ -22,7 +23,7 @@ public:
         PIXELED_BUILDINGS
     };
 
-    void addPeak(float peak);
+    virtual void addPeak(float peak, uint samples = 0); // samples = how many samples was used to compute this peak value?
     void clearPeaks();
 
     QSize minimumSizeHint() const;

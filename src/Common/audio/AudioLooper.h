@@ -17,13 +17,13 @@ public:
     void process(SamplesBuffer &samples);
     void startNewCycle(uint samplesInCycle); // create a new layer
 
+    static const quint8 MAX_LOOP_LAYERS = 2;
+
 signals:
-    void bufferedSamplesPeakAvailable(float peak, quint8 layerIndex);
+    void bufferedSamplesPeakAvailable(float peak, uint samplesCount, quint8 layerIndex);
 
 private:
     bool playingBufferedSamples;
-
-    static const quint8 MAX_LOOP_LAYERS = 2;
 
     class Layer;
     Layer* layers[MAX_LOOP_LAYERS];

@@ -117,7 +117,8 @@ void Looper::process(SamplesBuffer &samples)
     // store/rec current samples
     layers[currentLayerIndex]->append(samples);
 
-    emit bufferedSamplesPeakAvailable(samples.computePeak().getMaxPeak(), currentLayerIndex);
+    Audio::AudioPeak peak = samples.computePeak();
+    emit bufferedSamplesPeakAvailable(peak.getMaxPeak(), samples.getFrameLenght(), currentLayerIndex);
 
     if (!playingBufferedSamples) {
         return;

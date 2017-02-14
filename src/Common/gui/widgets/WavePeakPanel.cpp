@@ -20,6 +20,11 @@ WavePeakPanel::WavePeakPanel(QWidget *parent) :
     recreatePeaksArray();
 }
 
+WavePeakPanel::~WavePeakPanel()
+{
+
+}
+
 void WavePeakPanel::setDrawingMode(WaveDrawingMode mode)
 {
     this->drawingMode = mode;
@@ -81,7 +86,7 @@ QSize WavePeakPanel::minimumSizeHint()  const
     return QWidget::minimumSizeHint();
 }
 
-void WavePeakPanel::addPeak(float peak)
+void WavePeakPanel::addPeak(float peak, uint samples)
 {
     if(showingBuffering) {
         qCritical() << "Adding peak while is buffering!";
