@@ -16,12 +16,15 @@ public:
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void resizeEvent(QResizeEvent *event) override;
+
 private:
     uint beatsPerInterval;
     uint samplesPerInterval;
     uint samplesPerPixel;
 
     void drawBpiVerticalLines(QPainter &painter);
+
+    uint calculateSamplePerPixel() const;
 
     float lastMaxPeak;
     uint accumulatedSamples;

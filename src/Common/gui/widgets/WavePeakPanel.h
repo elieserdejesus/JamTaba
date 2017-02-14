@@ -36,6 +36,9 @@ protected:
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
 
+    virtual int getPeaksPad() const;
+    virtual int getPeaksWidth() const;
+
 private:
     QColor peaksColor;
     QColor loadingColor; //color for the loading circle
@@ -56,8 +59,6 @@ private:
 
     WaveDrawingMode drawingMode;
 
-    int getPeaksPad() const;
-    int getPeaksWidth() const;
 };
 
 #endif

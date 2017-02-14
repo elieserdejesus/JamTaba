@@ -8,7 +8,7 @@ LooperWavePanel::LooperWavePanel(uint bpi, uint samplesPerInterval)
       samplesPerInterval(0)
 
 {
-   setDrawingMode(WavePeakPanel::SOUND_WAVE);
+   setDrawingMode(WavePeakPanel::PIXELED_SOUND_WAVE);
 
    setBeatsPerInteval(bpi, samplesPerInterval);
 }
@@ -34,14 +34,20 @@ void LooperWavePanel::resizeEvent(QResizeEvent *event)
 {
     WavePeakPanel::resizeEvent(event);
 
-    samplesPerPixel = samplesPerInterval/width();
+    samplesPerPixel = calculateSamplePerPixel();
+}
+
+uint LooperWavePanel::calculateSamplePerPixel() const
+{
+    uint pixelWidth = getPeaksWidth() + getPeaksPad();
+    return samplesPerInterval/(width()/pixelWidth);
 }
 
 void LooperWavePanel::setBeatsPerInteval(uint bpi, uint samplesPerInterval)
 {
     this->beatsPerInterval = bpi;
     this->samplesPerInterval = samplesPerInterval;
-    this->samplesPerPixel = samplesPerInterval/width();
+    this->samplesPerPixel = calculateSamplePerPixel();
     update();
 }
 
