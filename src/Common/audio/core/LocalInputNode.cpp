@@ -3,6 +3,8 @@
 #include "midi/MidiMessage.h"
 #include "MainController.h"
 
+#include <QDateTime>
+
 using namespace Audio;
 
 LocalInputNode::MidiInput::MidiInput()
@@ -236,7 +238,6 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer); // only the filtered midi messages are sended to rendering code
 
     looper->process(out); // rec current samples and mix previous interval samples in the same buffer
-
 }
 
 void LocalInputNode::setRoutingMidiInput(bool routeMidiInput)

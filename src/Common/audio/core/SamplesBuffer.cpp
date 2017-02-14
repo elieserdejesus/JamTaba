@@ -227,10 +227,10 @@ void SamplesBuffer::add(unsigned int channel, float *samples, int samplesToAdd)
 
 void SamplesBuffer::add(int channel, int sampleIndex, float sampleValue)
 {
-    if (channelIsValid(channel) && sampleIndexIsValid(sampleIndex))
+    //if (channelIsValid(channel) && sampleIndexIsValid(sampleIndex))
         samples[channel][sampleIndex] += sampleValue;
-    else
-        qCritical() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+    //else
+    //    qCritical() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
 }
 
 void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue)

@@ -50,10 +50,12 @@ public:
         const int samplesToMix = qMin(outBuffer.getFrameLenght(), availableSamples);
         if (samplesToMix > 0) {
             uint readOffset = cycleLenght - availableSamples;
-            std::vector<float> internalChannels[] = {leftChannel, rightChannel};
-            for (int c = 0; c < outBuffer.getChannels(); ++c) {
+            float* internalChannels[] = {&(leftChannel[0]), &(rightChannel[0])};
+            const uint channels = outBuffer.getChannels();
+            for (uint c = 0; c < channels; ++c) {
+                float *out = outBuffer.getSamplesArray(c);
                 for (int s = 0; s < samplesToMix; ++s) {
-                    outBuffer.add(c, s, internalChannels[c][s + readOffset]);
+                    out[s] += internalChannels[c][s + readOffset];
                 }
             }
             availableSamples -= samplesToMix;
@@ -115,7 +117,7 @@ void Looper::process(SamplesBuffer &samples)
     // store/rec current samples
     layers[currentLayerIndex]->append(samples);
 
-    //emit bufferedSamplesPeakAvailable(samples.computePeak().getMaxPeak(), currentLayerIndex);
+    emit bufferedSamplesPeakAvailable(samples.computePeak().getMaxPeak(), currentLayerIndex);
 
     if (!playingBufferedSamples) {
         return;
