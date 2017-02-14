@@ -17,6 +17,9 @@ public:
     void process(SamplesBuffer &samples);
     void startNewCycle(uint samplesInCycle); // create a new layer
 
+    quint8 getCurrentLayerIndex() const;
+
+
     static const quint8 MAX_LOOP_LAYERS = 2;
 
 signals:
@@ -32,6 +35,11 @@ private:
     quint8 getPreviousLayerIndex() const;
 
 };
+
+inline quint8 Looper::getCurrentLayerIndex() const
+{
+    return currentLayerIndex;
+}
 
 } // namespace
 

@@ -24,8 +24,8 @@ public:
 
 private slots:
     void addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex);
-
-    void updateBeats(int newBpi);
+    void updateBeatsPerInterval(int newBpi);
+    void updateCurrentBeat(uint currentIntervalBeat);
 
 private:
     Ui::LooperWindow *ui;

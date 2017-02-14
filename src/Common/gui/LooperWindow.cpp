@@ -21,10 +21,11 @@ LooperWindow::LooperWindow(Audio::Looper *looper, Controller::NinjamController *
     setLayout(new QVBoxLayout());
 
     connect(looper, &Audio::Looper::bufferedSamplesPeakAvailable, this, &LooperWindow::addSamplesPeak);
-    connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeats);
-    connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeats);
+    connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
+    connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
+    connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
 
-    updateBeats(controller->getCurrentBpi());
+    updateBeatsPerInterval(controller->getCurrentBpi());
 }
 
 LooperWindow::~LooperWindow()
@@ -32,7 +33,16 @@ LooperWindow::~LooperWindow()
     delete ui;
 }
 
-void LooperWindow::updateBeats(int newBpi)
+void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
+{
+    quint8 currentLayer = looper->getCurrentLayerIndex();
+    LooperWavePanel *wavePanel = wavePanels[currentLayer];
+    if (wavePanel) {
+        wavePanel->setCurrentIntervalBet(currentIntervalBeat);
+    }
+}
+
+void LooperWindow::updateBeatsPerInterval(int newBpi)
 {
     for (LooperWavePanel *wavePanel : wavePanels.values()) {
         uint samplesPerInterval = controller->getSamplesPerInterval();

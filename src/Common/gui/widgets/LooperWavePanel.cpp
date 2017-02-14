@@ -1,5 +1,7 @@
 #include "LooperWavePanel.h"
 
+LooperWavePanel * LooperWavePanel::currentWavePanel = nullptr;
+
 LooperWavePanel::LooperWavePanel(uint bpi, uint samplesPerInterval)
     : beatsPerInterval(16),
       lastMaxPeak(0),
@@ -15,6 +17,13 @@ LooperWavePanel::LooperWavePanel(uint bpi, uint samplesPerInterval)
 
 void LooperWavePanel::addPeak(float peak, uint samples)
 {
+    if (LooperWavePanel::currentWavePanel != this) {
+        if (LooperWavePanel::currentWavePanel)
+            LooperWavePanel::currentWavePanel->update(); // repaint and erase the last rect
+
+        LooperWavePanel::currentWavePanel = this;
+    }
+
     if (peak > lastMaxPeak) {
         lastMaxPeak = peak;
     }
@@ -28,6 +37,11 @@ void LooperWavePanel::addPeak(float peak, uint samples)
             lastMaxPeak = 0;
         }
     }
+}
+
+void LooperWavePanel::setCurrentIntervalBet(quint8 currentIntervalBeat)
+{
+    this->currentIntervalBeat = currentIntervalBeat;
 }
 
 void LooperWavePanel::resizeEvent(QResizeEvent *event)
@@ -57,16 +71,24 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
 
     if (beatsPerInterval) {
         QPainter painter(this);
+
         static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
         painter.setPen(pen);
 
-        int spaceBetweenLines = width()/beatsPerInterval;
+        int pixelsPerBeat = width()/beatsPerInterval;
 
         const int top = 0;
         const int bottom = height();
         for (uint beat = 0; beat < beatsPerInterval; ++beat) {
-            const int x = beat * spaceBetweenLines;
+            const int x = beat * pixelsPerBeat;
             painter.drawLine(x, top, x, bottom);
+        }
+
+        // draw a transparent rect in current interval beat
+        if (currentWavePanel == this) {
+            static const QColor rectColor(0, 0, 0, 15);
+            uint x = currentIntervalBeat * pixelsPerBeat;
+            painter.fillRect(x, 0, pixelsPerBeat, height(), rectColor);
         }
     }
 }
