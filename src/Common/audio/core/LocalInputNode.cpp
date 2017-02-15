@@ -99,10 +99,9 @@ void LocalInputNode::setLooperState(bool looperActivated)
     looper->playBufferedSamples(looperActivated);
 }
 
-void LocalInputNode::startNewLoopCycle(uint cycleLenghtInSamples)
+void LocalInputNode::startNewLoopCycle(uint intervalLenght)
 {
-    setLooperState(true); // auto activate when enter in a server
-    looper->startNewCycle(cycleLenghtInSamples);
+    looper->startNewCycle(intervalLenght);
 }
 
 bool LocalInputNode::isMono() const

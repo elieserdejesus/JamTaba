@@ -19,7 +19,6 @@ public:
 
     quint8 getCurrentLayerIndex() const;
 
-
     static const quint8 MAX_LOOP_LAYERS = 2;
 
 signals:
@@ -28,12 +27,14 @@ signals:
 private:
     bool playingBufferedSamples;
 
+    uint intervalLenght; // in samples
+    uint intervalPosition; // in samples
+
     class Layer;
     Layer* layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex;
 
     quint8 getPreviousLayerIndex() const;
-
 };
 
 inline quint8 Looper::getCurrentLayerIndex() const

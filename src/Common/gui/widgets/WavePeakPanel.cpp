@@ -88,6 +88,8 @@ QSize WavePeakPanel::minimumSizeHint()  const
 
 void WavePeakPanel::addPeak(float peak, uint samples)
 {
+    Q_UNUSED(samples)
+
     if(showingBuffering) {
         qCritical() << "Adding peak while is buffering!";
         return;

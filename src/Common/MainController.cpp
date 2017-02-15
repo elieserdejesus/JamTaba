@@ -172,11 +172,6 @@ void MainController::on_newNinjamInterval()
     if (settings.isSaveMultiTrackActivated())
         foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
             jamRecorder->newInterval();
-
-    uint samplesPerInterval = ninjamController->getSamplesPerInterval();
-    for (Audio::LocalInputNode *inputTrack : inputTracks.values()) {
-        inputTrack->startNewLoopCycle(samplesPerInterval);
-    }
 }
 
 void MainController::processCameraVideo(int intervalPosition)
@@ -480,6 +475,13 @@ void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffe
     } else {
         if (ninjamController)
             ninjamController->process(in, out, sampleRate);
+    }
+}
+
+void MainController::syncWithNinjamIntervalStart(uint intervalLenght)
+{
+    for (Audio::LocalInputNode *inputTrack : inputTracks.values()) {
+        inputTrack->startNewLoopCycle(intervalLenght);
     }
 }
 

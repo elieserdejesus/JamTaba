@@ -643,7 +643,9 @@ void NinjamController::handleNewInterval(){
         }
     }
 
-    emit startingNewInterval();
+    emit startingNewInterval(); // update the UI
+
+    mainController->syncWithNinjamIntervalStart(samplesInInterval);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::processScheduledChanges(){

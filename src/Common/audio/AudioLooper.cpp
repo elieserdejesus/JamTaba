@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <QThread>
 
 using namespace Audio;
 
@@ -15,8 +16,7 @@ class Looper::Layer
 public:
 
     Layer()
-        : availableSamples(0),
-          cycleLenght(0)
+        : availableSamples(0)
     {
         //
     }
@@ -29,52 +29,42 @@ public:
         availableSamples = 0;
     }
 
-    void append(const SamplesBuffer &samples)
+    void append(const SamplesBuffer &samples, uint samplesToAppend)
     {
-        const uint freeSpace = cycleLenght - availableSamples;
-        const uint samplesToAppend = qMin(samples.getFrameLenght(), freeSpace);
         const uint sizeInBytes = samplesToAppend * sizeof(float);
 
-        if (freeSpace) {
+        std::memcpy(&(leftChannel[0]) + availableSamples, samples.getSamplesArray(0), sizeInBytes);
+        const int secondChannelIndex = samples.isMono() ? 0 : 1;
+        std::memcpy(&(rightChannel[0]) + availableSamples, samples.getSamplesArray(secondChannelIndex), sizeInBytes);
 
-            std::memcpy(&(leftChannel[0]) + availableSamples, samples.getSamplesArray(0), sizeInBytes);
-            const int secondChannelIndex = samples.isMono() ? 0 : 1;
-            std::memcpy(&(rightChannel[0]) + availableSamples, samples.getSamplesArray(secondChannelIndex), sizeInBytes);
-
-            availableSamples += samplesToAppend;
-        }
+        availableSamples += samplesToAppend;
     }
 
-    void mixTo(SamplesBuffer &outBuffer)
+    void mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition)
     {
-        const int samplesToMix = qMin(outBuffer.getFrameLenght(), availableSamples);
         if (samplesToMix > 0) {
-            uint readOffset = cycleLenght - availableSamples;
             float* internalChannels[] = {&(leftChannel[0]), &(rightChannel[0])};
             const uint channels = outBuffer.getChannels();
             for (uint c = 0; c < channels; ++c) {
                 float *out = outBuffer.getSamplesArray(c);
-                for (int s = 0; s < samplesToMix; ++s) {
-                    out[s] += internalChannels[c][s + readOffset];
+                for (uint s = 0; s < samplesToMix; ++s) {
+                    out[s] += internalChannels[c][s + intervalPosition];
                 }
             }
             availableSamples -= samplesToMix;
         }
     }
 
-    void setCycleLenghtInSamples(quint32 samples)
+    void resize(quint32 samples)
     {
         if (samples > leftChannel.capacity())
             leftChannel.resize(samples);
 
         if (samples > rightChannel.capacity())
             rightChannel.resize(samples);
-
-        this->cycleLenght = samples;
     }
 
     uint availableSamples;
-    uint cycleLenght;
 
 private:
     std::vector<float> leftChannel;
@@ -86,11 +76,15 @@ private:
 
 Looper::Looper()
     : playingBufferedSamples(false),
-      currentLayerIndex(0)
+      currentLayerIndex(0),
+      intervalLenght(0),
+      intervalPosition(0)
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
         layers[l] = new Looper::Layer();
     }
+
+    playBufferedSamples(true); // TEST ONLY
 }
 
 Looper::~Looper()
@@ -102,10 +96,17 @@ Looper::~Looper()
 
 void Looper::startNewCycle(uint samplesInCycle)
 {
-    currentLayerIndex = (currentLayerIndex + 1) % MAX_LOOP_LAYERS; // pointing to next layer
+    if (samplesInCycle != intervalLenght) {
+        intervalLenght = samplesInCycle;
+        for (Looper::Layer *layer : layers) {
+            layer->resize(intervalLenght);
+        }
+    }
 
-    layers[currentLayerIndex]->setCycleLenghtInSamples(samplesInCycle);
-    layers[currentLayerIndex]->zero(); // clear the new current layer before start buffering loop samples
+    intervalPosition = 0;
+
+    currentLayerIndex = (currentLayerIndex + 1) % MAX_LOOP_LAYERS;
+    layers[currentLayerIndex]->zero();
 }
 
 void Looper::playBufferedSamples(bool playBufferedSamples) {
@@ -114,13 +115,19 @@ void Looper::playBufferedSamples(bool playBufferedSamples) {
 
 void Looper::process(SamplesBuffer &samples)
 {
+    if (!intervalLenght)
+        return;
+
+    uint samplesToAppend = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
+
     // store/rec current samples
-    layers[currentLayerIndex]->append(samples);
+    layers[currentLayerIndex]->append(samples, samplesToAppend);
 
     Audio::AudioPeak peak = samples.computePeak();
-    emit bufferedSamplesPeakAvailable(peak.getMaxPeak(), samples.getFrameLenght(), currentLayerIndex);
+    emit bufferedSamplesPeakAvailable(peak.getMaxPeak(), samplesToAppend, currentLayerIndex);
 
     if (!playingBufferedSamples) {
+        qDebug() << "not playing";
         return;
     }
 
@@ -128,10 +135,12 @@ void Looper::process(SamplesBuffer &samples)
     quint8 previousLayer = getPreviousLayerIndex();
     Looper::Layer *loopLayer = layers[previousLayer];
 
-    int samplesToProcess = qMin(samples.getFrameLenght(), loopLayer->availableSamples);
-    if (samplesToProcess) {
-        loopLayer->mixTo(samples); // mix buffered samples
+    int samplesToMix= qMin(samplesToAppend, loopLayer->availableSamples);
+    if (samplesToMix) {
+        loopLayer->mixTo(samples, samplesToMix, intervalPosition); // mix buffered samples
     }
+
+    intervalPosition = (intervalPosition + samplesToAppend) % intervalLenght;
 }
 
 quint8 Looper::getPreviousLayerIndex() const
