@@ -131,10 +131,8 @@ void Looper::process(SamplesBuffer &samples)
         return;
     }
 
-    // render samples from previous interval
-    quint8 previousLayer = getPreviousLayerIndex();
-    Looper::Layer *loopLayer = layers[previousLayer];
-
+    // render samples from previous interval layer
+    Looper::Layer *loopLayer = getPreviousLayer();
     int samplesToMix= qMin(samplesToAppend, loopLayer->availableSamples);
     if (samplesToMix) {
         loopLayer->mixTo(samples, samplesToMix, intervalPosition); // mix buffered samples
@@ -143,10 +141,10 @@ void Looper::process(SamplesBuffer &samples)
     intervalPosition = (intervalPosition + samplesToAppend) % intervalLenght;
 }
 
-quint8 Looper::getPreviousLayerIndex() const
+Looper::Layer* Looper::getPreviousLayer() const
 {
     if (currentLayerIndex > 0)
-        return currentLayerIndex - 1;
+        return layers[currentLayerIndex - 1];
 
-    return MAX_LOOP_LAYERS - 1; // current layer is ZERO, returning the last layer index
+    return layers[MAX_LOOP_LAYERS - 1]; // current layer index is ZERO, returning the last layer
 }

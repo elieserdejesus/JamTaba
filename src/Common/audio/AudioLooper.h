@@ -34,7 +34,7 @@ private:
     Layer* layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex;
 
-    quint8 getPreviousLayerIndex() const;
+    Layer *getPreviousLayer() const;
 };
 
 inline quint8 Looper::getCurrentLayerIndex() const
