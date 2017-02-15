@@ -14,7 +14,7 @@ public:
     Looper();
     ~Looper();
     void playBufferedSamples(bool playBufferedSamples);
-    void process(SamplesBuffer &samples);
+    void process(SamplesBuffer &samples, const AudioPeak &peak);
     void startNewCycle(uint samplesInCycle); // create a new layer
 
     quint8 getCurrentLayerIndex() const;

@@ -113,7 +113,7 @@ void Looper::playBufferedSamples(bool playBufferedSamples) {
     this->playingBufferedSamples = playBufferedSamples;
 }
 
-void Looper::process(SamplesBuffer &samples)
+void Looper::process(SamplesBuffer &samples, const Audio::AudioPeak &peak)
 {
     if (!intervalLenght)
         return;
@@ -123,7 +123,6 @@ void Looper::process(SamplesBuffer &samples)
     // store/rec current samples
     layers[currentLayerIndex]->append(samples, samplesToAppend);
 
-    Audio::AudioPeak peak = samples.computePeak();
     emit bufferedSamplesPeakAvailable(peak.getMaxPeak(), samplesToAppend, currentLayerIndex);
 
     if (!playingBufferedSamples) {
