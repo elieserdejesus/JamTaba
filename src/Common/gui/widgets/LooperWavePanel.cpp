@@ -32,7 +32,7 @@ void LooperWavePanel::updateDrawings()
     update();
 }
 
-void LooperWavePanel::setCurrentIntervalBeat(quint8 currentIntervalBeat)
+void LooperWavePanel::setCurrentBeat(quint8 currentIntervalBeat)
 {
     this->currentIntervalBeat = currentIntervalBeat;
 }

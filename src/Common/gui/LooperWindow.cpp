@@ -34,7 +34,8 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
     QDialog::paintEvent(ev);
 
     if (looper && looper->isWaiting()) {
-        QString text = tr("wait ...");
+        uint waitBeats = controller->getCurrentBpi() - currentBeat;
+        QString text = tr("wait (%1)").arg(QString::number(waitBeats));
         uint textWidth = fontMetrics().width(text);
         QPainter painter(this);
         painter.drawText(width()/2 - textWidth/2, height()/2, text);
@@ -121,8 +122,10 @@ void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
     quint8 currentLayer = looper->getCurrentLayerIndex();
     LooperWavePanel *wavePanel = wavePanels[currentLayer];
     if (wavePanel) {
-        wavePanel->setCurrentIntervalBeat(currentIntervalBeat);
+        wavePanel->setCurrentBeat(currentIntervalBeat);
     }
+
+    currentBeat = currentIntervalBeat;
 }
 
 void LooperWindow::updateBeatsPerInterval()

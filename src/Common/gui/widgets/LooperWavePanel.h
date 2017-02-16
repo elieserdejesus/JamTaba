@@ -15,7 +15,7 @@ public:
     LooperWavePanel(Audio::Looper *looper, quint8 layerIndex);
     ~LooperWavePanel();
     void setBeatsPerInteval(uint bpi, uint samplesPerInterval);
-    void setCurrentIntervalBeat(quint8 currentIntervalBeat);
+    void setCurrentBeat(quint8 currentIntervalBeat);
     void updateDrawings();
 
 protected:

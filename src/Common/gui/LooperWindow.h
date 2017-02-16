@@ -43,6 +43,7 @@ private:
 
     void addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex);
 
+    uint currentBeat;
 };
 
 #endif // LOOPERWINDOW_H
