@@ -6,6 +6,10 @@ PluginScanDialog
     background-color: rgb(250, 250, 250);
 }
 
+LooperWindow
+{
+    background-color: rgb(160, 160, 160);
+}
 
 PluginScanDialog QPlainTextEdit
 {

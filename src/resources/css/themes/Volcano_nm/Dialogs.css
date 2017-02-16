@@ -19,6 +19,12 @@ PrivateServerDialog
         stop: 1.0 rgb(197, 34, 1));
 }
 
+LooperWindow
+{
+    /* using the same bottom pane color */
+    background-color: rgb(227, 183, 153);
+}
+
 PrivateServerDialog #label, #label_2, #label_3
 {
     color: rgb(160, 160, 160);
