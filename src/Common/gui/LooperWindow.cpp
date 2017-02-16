@@ -19,6 +19,12 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
     setWindowTitle(windowTitle);
 
     setLayout(new QVBoxLayout());
+
+    // set as non resizable
+    setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    setMinimumSize(size());
+    setMaximumSize(size());
+    setSizeGripEnabled(false);
 }
 
 void LooperWindow::detachCurrentLooper()

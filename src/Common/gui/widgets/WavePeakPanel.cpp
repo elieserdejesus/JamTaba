@@ -14,7 +14,8 @@ WavePeakPanel::WavePeakPanel(QWidget *parent) :
     bufferingPercentage(0),
     peaksColor(QColor(90, 90, 90)),
     loadingColor(Qt::gray),
-    drawingMode(WavePeakPanel::PIXELED_BUILDINGS)
+    drawingMode(WavePeakPanel::PIXELED_BUILDINGS),
+    useAlphaInPreviousSamples(true)
 {
     setAutoFillBackground(false);
     recreatePeaksArray();
@@ -101,7 +102,7 @@ void WavePeakPanel::addPeak(float peak, uint samples)
     update();// repaint
 }
 
-void WavePeakPanel::paintSoundWave(QPainter &painter)
+void WavePeakPanel::paintSoundWave(QPainter &painter, bool useAlpha)
 {
     size_t size = peaksArray.size();
     if (size <= 0) // avoid divide by zero
@@ -110,10 +111,11 @@ void WavePeakPanel::paintSoundWave(QPainter &painter)
     qreal maxPeakHeight = height()/2.0;
 
     for (uint i = 0; i < size; i++) {
-        float alpha = (float)i/size;
-
         QColor color(peaksColor); //using the color defined in stylesheet
-        color.setAlpha(std::pow(alpha, 2) * 255);
+        if (useAlpha) {
+            float alpha = (float)i/size;
+            color.setAlpha(std::pow(alpha, 2) * 255);
+        }
 
         int peaksRectWidth = getPeaksWidth();
         int peaksPad = getPeaksPad();
@@ -135,7 +137,7 @@ void WavePeakPanel::paintSoundWave(QPainter &painter)
     }
 }
 
-void WavePeakPanel::paintBuildings(QPainter &painter, bool pixeled)
+void WavePeakPanel::paintBuildings(QPainter &painter, bool pixeled, bool useAlpha)
 {
     size_t size = peaksArray.size();
     if (size <= 0) // avoid divide by zero
@@ -146,10 +148,11 @@ void WavePeakPanel::paintBuildings(QPainter &painter, bool pixeled)
     int maxPeakHeight = (int)(height() * 0.75);
 
     for (uint i = 0; i < size; i++) {
-        float alpha = (float)i/size;
-
         QColor color(peaksColor); //using the color defined in stylesheet
-        color.setAlpha(std::pow(alpha, 3) * 255);
+        if (useAlpha) {
+            float alpha = (float)i/size;
+            color.setAlpha(std::pow(alpha, 3) * 255);
+        }
 
         int xPos = i * (peaksRectWidth + peaksPad);
 
@@ -271,16 +274,16 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
         if (!showingBuffering) {
             switch (drawingMode) {
             case WavePeakPanel::BUILDINGS:
-                paintBuildings(painter, false);
+                paintBuildings(painter, false, useAlphaInPreviousSamples);
                 break;
             case WavePeakPanel::SOUND_WAVE:
-                paintSoundWave(painter);
+                paintSoundWave(painter, useAlphaInPreviousSamples);
                 break;
             case WavePeakPanel::PIXELED_SOUND_WAVE:
                 paintPixeledSoundWave(painter);
                 break;
             case WavePeakPanel::PIXELED_BUILDINGS:
-                paintBuildings(painter, true);
+                paintBuildings(painter, true, useAlphaInPreviousSamples);
                 break;
             }
         }

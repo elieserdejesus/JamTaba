@@ -10,9 +10,11 @@ LooperWavePanel::LooperWavePanel(uint bpi, uint samplesPerInterval)
       samplesPerInterval(0)
 
 {
-   setDrawingMode(WavePeakPanel::PIXELED_SOUND_WAVE);
-
    setBeatsPerInteval(bpi, samplesPerInterval);
+
+   setDrawingMode(WavePeakPanel::SOUND_WAVE);
+
+   this->useAlphaInPreviousSamples = false; // all samples are painted without alpha
 }
 
 LooperWavePanel::~LooperWavePanel()
@@ -91,11 +93,11 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
             painter.drawLine(x, top, x, bottom);
         }
 
-        // draw a transparent red rect in current interval beat
+        // draw a transparent red rect from left to current interval beat
         if (currentWavePanel == this) {
-            static const QColor rectColor(255, 0, 0, 30);
-            uint x = currentIntervalBeat * pixelsPerBeat;
-            painter.fillRect(x, 0, pixelsPerBeat, height(), rectColor);
+            static const QColor rectColor(255, 0, 0, 15);
+            uint width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
+            painter.fillRect(0, 0, width, height(), rectColor);
         }
     }
 }

@@ -1,12 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>LooperWindow</class>
- <widget name="LooperWindow" class="QDialog">
+ <widget class="QDialog" name="LooperWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>589</width>
+    <height>305</height>
    </rect>
   </property>
   <property name="windowTitle">

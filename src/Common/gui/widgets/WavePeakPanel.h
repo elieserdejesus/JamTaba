@@ -39,6 +39,8 @@ protected:
     virtual int getPeaksPad() const;
     virtual int getPeaksWidth() const;
 
+    bool useAlphaInPreviousSamples;
+
 private:
     QColor peaksColor;
     QColor loadingColor; //color for the loading circle
@@ -53,8 +55,8 @@ private:
     int computeMaxPeaks();
     void recreatePeaksArray();
 
-    void paintBuildings(QPainter &painter, bool pixeled);
-    void paintSoundWave(QPainter &painter);
+    void paintBuildings(QPainter &painter, bool pixeled, bool useAlpha);
+    void paintSoundWave(QPainter &painter, bool useAlpha);
     void paintPixeledSoundWave(QPainter &painter);
 
     WaveDrawingMode drawingMode;
