@@ -29,10 +29,9 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
 
 void LooperWindow::detachCurrentLooper()
 {
-    deleteWavePanels();
-
     if (this->looper) {
         this->looper->disconnect();
+        this->looper = nullptr;
         this->controller = nullptr;
     }
 }
@@ -43,6 +42,9 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
     Q_ASSERT(controller);
 
     if (looper != this->looper) { // check if user is not just reopening the looper editor
+
+        deleteWavePanels();
+
         detachCurrentLooper();
 
         connect(looper, &Audio::Looper::samplesPeakAvailable, this, &LooperWindow::addSamplesPeak);

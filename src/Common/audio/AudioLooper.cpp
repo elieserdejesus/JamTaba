@@ -78,7 +78,7 @@ Looper::Looper()
     : currentLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0),
-      state(LoopState::STOPPED)
+      state(LooperState::STOPPED)
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
         layers[l] = new Looper::Layer();
@@ -103,10 +103,12 @@ void Looper::startNewCycle(uint samplesInCycle)
 
     intervalPosition = 0;
 
-    if (state == LoopState::WAITING)
-        state = LoopState::RECORDING;
+    if (state == LooperState::WAITING) {
+        state = LooperState::RECORDING;
+        qDebug() << "Looper state changed to Recording " << this;
+    }
 
-    if (state == LoopState::RECORDING) {
+    if (state == LooperState::RECORDING) {
         currentLayerIndex = (currentLayerIndex + 1) % MAX_LOOP_LAYERS;
         layers[currentLayerIndex]->zero();
     }
@@ -115,11 +117,14 @@ void Looper::startNewCycle(uint samplesInCycle)
 void Looper::setActivated(bool activated)
 {
     if (activated) {
-        if (state == LoopState::STOPPED)
-            state = LoopState::WAITING;
+        if (state == LooperState::STOPPED) {
+            state = LooperState::WAITING;
+            qDebug() << "Looper state changed to waiting";
+        }
     }
     else {
-        state = LoopState::STOPPED;
+        state = LooperState::STOPPED;
+        qDebug() << "Looper state changed to Stopped";
         if (!activated)
             disconnect();
     }
@@ -127,7 +132,7 @@ void Looper::setActivated(bool activated)
 
 void Looper::process(SamplesBuffer &samples, const Audio::AudioPeak &peak)
 {
-    if (state == LoopState::STOPPED)
+    if (state == LooperState::STOPPED)
         return;
 
     uint samplesToAppend = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);

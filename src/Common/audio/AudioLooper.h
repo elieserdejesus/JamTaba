@@ -40,7 +40,7 @@ private:
 
     Layer *getPreviousLayer() const;
 
-    enum LoopState
+    enum LooperState
     {
         STOPPED,
         WAITING,
@@ -48,27 +48,27 @@ private:
         PLAYING
     };
 
-    LoopState state;
+    LooperState state;
 };
 
 inline bool Looper::isWaiting() const
 {
-    return state == LoopState::WAITING;
+    return state == LooperState::WAITING;
 }
 
 inline bool Looper::isPlaying() const
 {
-    return state == LoopState::PLAYING;
+    return state == LooperState::PLAYING;
 }
 
 inline bool Looper::isRecording() const
 {
-    return state == LoopState::RECORDING;
+    return state == LooperState::RECORDING;
 }
 
 inline bool Looper::isStopped() const
 {
-    return state == LoopState::STOPPED;
+    return state == LooperState::STOPPED;
 }
 
 inline quint8 Looper::getCurrentLayerIndex() const
