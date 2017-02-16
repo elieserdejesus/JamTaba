@@ -71,11 +71,11 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
     static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
     painter.setPen(pen);
 
-    int pixelsPerBeat = width()/beatsPerInterval;
+    int pixelsPerBeat = (width()/beatsPerInterval) + 1;
 
     const int top = 0;
     const int bottom = height();
-    for (uint beat = 0; beat <= beatsPerInterval; ++beat) {
+    for (uint beat = 0; beat < beatsPerInterval; ++beat) {
         const int x = beat * pixelsPerBeat;
         painter.drawLine(x, top, x, bottom);
     }
