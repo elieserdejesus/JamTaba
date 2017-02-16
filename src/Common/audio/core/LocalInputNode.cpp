@@ -236,7 +236,7 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
 
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer); // only the filtered midi messages are sended to rendering code
 
-    looper->process(out, lastPeak); // rec current samples and mix previous interval samples in the same buffer
+    looper->process(out); // rec current samples and mix previous interval samples in the same buffer
 }
 
 void LocalInputNode::setRoutingMidiInput(bool routeMidiInput)

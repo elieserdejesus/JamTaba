@@ -23,7 +23,7 @@ public:
         PIXELED_BUILDINGS
     };
 
-    virtual void addPeak(float peak, uint samples = 0); // samples = how many samples was used to compute this peak value?
+    void addPeak(float peak);
     void clearPeaks();
 
     QSize minimumSizeHint() const;
@@ -41,14 +41,14 @@ protected:
 
     bool useAlphaInPreviousSamples;
 
+    std::vector<float> peaksArray;
+
 private:
     QColor peaksColor;
     QColor loadingColor; //color for the loading circle
 
     bool showingBuffering;
     int bufferingPercentage;
-
-    std::vector<float> peaksArray;
 
     uint maxPeaks;// change when widget resize
 

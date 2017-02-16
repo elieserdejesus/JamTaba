@@ -2,20 +2,22 @@
 #define _AUDIO_LOOPER_
 
 #include "core/SamplesBuffer.h"
-#include <QObject>
+
+#include <QtGlobal>
 
 namespace Audio {
 
-class Looper : public QObject
+class Looper
 {
-    Q_OBJECT
 
 public:
     Looper();
     ~Looper();
     void setActivated(bool setActivated);
-    void process(SamplesBuffer &samples, const AudioPeak &peak);
+    void process(SamplesBuffer &samples);
     void startNewCycle(uint samplesInCycle); // create a new layer
+
+    const std::vector<float> getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const;
 
     quint8 getCurrentLayerIndex() const;
 
@@ -26,11 +28,7 @@ public:
 
     static const quint8 MAX_LOOP_LAYERS = 4;
 
-signals:
-    void samplesPeakAvailable(float peak, uint samplesCount, quint8 layerIndex);
-
 private:
-
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples
 

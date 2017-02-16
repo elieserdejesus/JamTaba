@@ -3,16 +3,16 @@
 
 LooperWavePanel * LooperWavePanel::currentWavePanel = nullptr;
 
-LooperWavePanel::LooperWavePanel(uint bpi, uint samplesPerInterval, Audio::Looper *looper)
+LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
     : beatsPerInterval(16),
       lastMaxPeak(0),
       accumulatedSamples(0),
       samplesPerPixel(0),
       samplesPerInterval(0),
-      looper(looper)
+      looper(looper),
+      layerID(layerIndex)
 
 {
-   setBeatsPerInteval(bpi, samplesPerInterval);
 
    setDrawingMode(WavePeakPanel::SOUND_WAVE);
 
@@ -26,28 +26,14 @@ LooperWavePanel::~LooperWavePanel()
     }
 }
 
-void LooperWavePanel::addPeak(float peak, uint samples)
+void LooperWavePanel::updateDrawings()
 {
-    if (LooperWavePanel::currentWavePanel != this) {
-        if (LooperWavePanel::currentWavePanel)
-            LooperWavePanel::currentWavePanel->update(); // repaint and erase the last rect
+    if (!looper)
+        return;
 
-        LooperWavePanel::currentWavePanel = this;
-    }
+    peaksArray = looper->getLayerPeaks(layerID, samplesPerPixel);
 
-    if (peak > lastMaxPeak) {
-        lastMaxPeak = peak;
-    }
-
-    accumulatedSamples += samples;
-    if (samplesPerPixel) { // avoid division by zero
-        if (accumulatedSamples >= samplesPerPixel) {
-            WavePeakPanel::addPeak(lastMaxPeak);
-
-            accumulatedSamples = accumulatedSamples % samplesPerPixel;
-            lastMaxPeak = 0;
-        }
-    }
+    update();
 }
 
 void LooperWavePanel::setCurrentIntervalBeat(quint8 currentIntervalBeat)
@@ -78,6 +64,7 @@ void LooperWavePanel::setBeatsPerInteval(uint bpi, uint samplesPerInterval)
 
 void LooperWavePanel::paintEvent(QPaintEvent *ev)
 {
+
     WavePeakPanel::paintEvent(ev);
 
     if (beatsPerInterval) {
@@ -90,7 +77,7 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
 
         const int top = 0;
         const int bottom = height();
-        for (uint beat = 0; beat < beatsPerInterval; ++beat) {
+        for (uint beat = 0; beat <= beatsPerInterval; ++beat) {
             const int x = beat * pixelsPerBeat;
             painter.drawLine(x, top, x, bottom);
         }

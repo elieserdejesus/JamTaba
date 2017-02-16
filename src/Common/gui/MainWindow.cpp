@@ -1002,10 +1002,11 @@ void MainWindow::timerEvent(QTimerEvent *)
         lastPerformanceMonitorUpdate = now;
     }
 
+    // prevent screen saver if user is playing
     if (mainController->isPlayingInNinjamRoom())
-        screensaverBlocker.update(); // prevent screen saver if user is playing
+        screensaverBlocker.update();
 
-    // update room stream plot
+    // update public server stream plot
     if (mainController->isPlayingRoomStream()) {
         long long roomID = mainController->getCurrentStreamingRoomID();
         JamRoomViewPanel *roomView = roomViewPanels[roomID];
@@ -1020,6 +1021,11 @@ void MainWindow::timerEvent(QTimerEvent *)
                 roomView->setBufferingPercentage(percentage);
             }
         }
+    }
+
+    // update looper window sound waves
+    if (looperWindow && looperWindow->isVisible()) {
+        looperWindow->updateDrawings();
     }
 
     // update master peaks

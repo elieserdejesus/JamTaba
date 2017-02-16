@@ -87,18 +87,20 @@ QSize WavePeakPanel::minimumSizeHint()  const
     return QWidget::minimumSizeHint();
 }
 
-void WavePeakPanel::addPeak(float peak, uint samples)
+void WavePeakPanel::addPeak(float peak)
 {
-    Q_UNUSED(samples)
-
     if(showingBuffering) {
         qCritical() << "Adding peak while is buffering!";
         return;
     }
 
-    if (peaksArray.size() >= maxPeaks)
+    if (peaksArray.size() >= maxPeaks) {
         peaksArray.clear();
+        qDebug() << "Clearing peaks array";
+    }
+
     peaksArray.push_back(peak);
+
     update();// repaint
 }
 

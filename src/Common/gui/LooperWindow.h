@@ -24,9 +24,9 @@ public:
 
     void setLooper(Audio::Looper *looper, Controller::NinjamController *controller);
     void detachCurrentLooper();
+    void updateDrawings();
 
 private slots:
-    void addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex);
     void updateBeatsPerInterval();
     void updateCurrentBeat(uint currentIntervalBeat);
 
@@ -37,6 +37,8 @@ private:
     Controller::NinjamController *controller;
 
     void deleteWavePanels();
+
+    void addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex);
 
 };
 

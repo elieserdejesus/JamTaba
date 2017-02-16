@@ -12,11 +12,11 @@ class LooperWavePanel : public WavePeakPanel
 {
 
 public:
-    LooperWavePanel(uint bpi, uint samplesPerInterval, Audio::Looper *looper);
+    LooperWavePanel(Audio::Looper *looper, quint8 layerIndex);
     ~LooperWavePanel();
     void setBeatsPerInteval(uint bpi, uint samplesPerInterval);
     void setCurrentIntervalBeat(quint8 currentIntervalBeat);
-    void addPeak(float peak, uint samples) override;
+    void updateDrawings();
 
 protected:
     void paintEvent(QPaintEvent *ev) override;
@@ -38,7 +38,10 @@ private:
 
     Audio::Looper *looper;
 
+    const quint8 layerID;
+
     static LooperWavePanel *currentWavePanel;
+
 };
 
 #endif

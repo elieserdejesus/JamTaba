@@ -40,6 +40,27 @@ public:
         availableSamples += samplesToAppend;
     }
 
+    std::vector<float> getSamplesPeaks(uint samplesPerPeak) const
+    {
+        std::vector<float> maxPeaks;
+
+        if (samplesPerPeak) {
+            float lastMaxPeak = 0;
+            for (uint i = 0; i < availableSamples; ++i) {
+                float peak = qMax(qAbs(leftChannel[i]), qAbs(rightChannel[i]));
+                if (peak > lastMaxPeak)
+                    lastMaxPeak = peak;
+
+                if (i % samplesPerPeak == 0) {
+                    maxPeaks.push_back(lastMaxPeak);
+                    lastMaxPeak = 0;
+                }
+            }
+        }
+
+        return maxPeaks;
+    }
+
     void mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition)
     {
         if (samplesToMix > 0) {
@@ -125,12 +146,21 @@ void Looper::setActivated(bool activated)
     else {
         state = LooperState::STOPPED;
         qDebug() << "Looper state changed to Stopped";
-        if (!activated)
-            disconnect();
     }
 }
 
-void Looper::process(SamplesBuffer &samples, const Audio::AudioPeak &peak)
+const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const
+{
+    if (layerIndex < MAX_LOOP_LAYERS)
+    {
+        Audio::Looper::Layer *layer = layers[layerIndex];
+        return layer->getSamplesPeaks(samplesPerPeak);
+    }
+
+    return std::vector<float>(); // empty vector
+}
+
+void Looper::process(SamplesBuffer &samples)
 {
     if (state == LooperState::STOPPED)
         return;
@@ -139,8 +169,6 @@ void Looper::process(SamplesBuffer &samples, const Audio::AudioPeak &peak)
 
     // store/rec current samples
     layers[currentLayerIndex]->append(samples, samplesToAppend);
-
-    emit samplesPeakAvailable(peak.getMaxPeak(), samplesToAppend, currentLayerIndex);
 
     // render samples from previous interval layer
     Looper::Layer *loopLayer = getPreviousLayer();

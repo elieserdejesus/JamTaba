@@ -18,7 +18,9 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
 
     setWindowTitle(windowTitle);
 
-    setLayout(new QVBoxLayout());
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->setSpacing(12);
+    setLayout(layout);
 
     // set as non resizable
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
@@ -27,10 +29,21 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
     setSizeGripEnabled(false);
 }
 
+void LooperWindow::updateDrawings()
+{
+    uint currentLayer = looper->getCurrentLayerIndex();
+    LooperWavePanel *wavePanel = wavePanels[currentLayer];
+    if (wavePanel)
+        wavePanel->updateDrawings();
+    else
+        qCritical() << "wave panel null wavePanel keys:" << wavePanels.keys() << " currentLayer:" << currentLayer;
+
+    update();
+}
+
 void LooperWindow::detachCurrentLooper()
 {
     if (this->looper) {
-        this->looper->disconnect();
         this->looper = nullptr;
         this->controller = nullptr;
     }
@@ -43,11 +56,19 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
 
     if (looper != this->looper) { // check if user is not just reopening the looper editor
 
+        qDebug() << "Setting looper in LooperWindow";
+
         deleteWavePanels();
 
         detachCurrentLooper();
 
-        connect(looper, &Audio::Looper::samplesPeakAvailable, this, &LooperWindow::addSamplesPeak);
+        // create wave panels (layers view)
+        for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
+            LooperWavePanel *wavePanel = new LooperWavePanel(looper, layerIndex);
+            wavePanels.insert(layerIndex, wavePanel);
+            layout()->addWidget(wavePanel);
+        }
+
         connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
@@ -78,10 +99,6 @@ LooperWindow::~LooperWindow()
         disconnect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         disconnect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
     }
-
-    if (looper) {
-        looper->disconnect();
-    }
 }
 
 void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
@@ -107,21 +124,4 @@ void LooperWindow::updateBeatsPerInterval()
     for (LooperWavePanel *wavePanel : wavePanels.values()) {
         wavePanel->setBeatsPerInteval(beatsPerInterval, samplesPerInterval);
     }
-}
-
-void LooperWindow::addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex)
-{
-    if (!controller || !looper)
-        return;
-
-    LooperWavePanel *wavePanel = wavePanels[layerIndex];
-    if (!wavePanel) {
-        uint currentBpi = controller->getCurrentBpi();
-        uint samplesPerInterval = controller->getSamplesPerInterval();
-        wavePanel = new LooperWavePanel(currentBpi, samplesPerInterval, looper);
-        wavePanels[layerIndex] = wavePanel;
-        layout()->addWidget(wavePanel);
-    }
-
-    wavePanel->addPeak(peak, samplesCount);
 }
