@@ -75,7 +75,7 @@ private:
 // ------------------------------------------------------------------------------------
 
 Looper::Looper()
-    : playingBufferedSamples(false),
+    : activated(false),
       currentLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0)
@@ -83,8 +83,6 @@ Looper::Looper()
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
         layers[l] = new Looper::Layer();
     }
-
-    playBufferedSamples(true); // TEST ONLY
 }
 
 Looper::~Looper()
@@ -109,13 +107,16 @@ void Looper::startNewCycle(uint samplesInCycle)
     layers[currentLayerIndex]->zero();
 }
 
-void Looper::playBufferedSamples(bool playBufferedSamples) {
-    this->playingBufferedSamples = playBufferedSamples;
+void Looper::setActivated(bool activated) {
+    this->activated = activated;
+
+    if (!activated)
+        disconnect();
 }
 
 void Looper::process(SamplesBuffer &samples, const Audio::AudioPeak &peak)
 {
-    if (!intervalLenght)
+    if (!activated || !intervalLenght)
         return;
 
     uint samplesToAppend = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
@@ -123,12 +124,7 @@ void Looper::process(SamplesBuffer &samples, const Audio::AudioPeak &peak)
     // store/rec current samples
     layers[currentLayerIndex]->append(samples, samplesToAppend);
 
-    emit bufferedSamplesPeakAvailable(peak.getMaxPeak(), samplesToAppend, currentLayerIndex);
-
-    if (!playingBufferedSamples) {
-        qDebug() << "not playing";
-        return;
-    }
+    emit samplesPeakAvailable(peak.getMaxPeak(), samplesToAppend, currentLayerIndex);
 
     // render samples from previous interval layer
     Looper::Layer *loopLayer = getPreviousLayer();

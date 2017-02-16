@@ -6,35 +6,81 @@
 
 using namespace Controller;
 
-LooperWindow::LooperWindow(Audio::Looper *looper, Controller::NinjamController *controller, const QString &windowTitle) :
-    QDialog(nullptr),
+LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
+    QDialog(parent),
     ui(new Ui::LooperWindow),
-    looper(looper),
-    controller(controller)
+    looper(nullptr),
+    controller(nullptr)
 {
-    ui->setupUi(this);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint); // remove help/question marker
 
-    setAttribute(Qt::WA_DeleteOnClose);
+    ui->setupUi(this);
 
     setWindowTitle(windowTitle);
 
     setLayout(new QVBoxLayout());
+}
 
-    connect(looper, &Audio::Looper::bufferedSamplesPeakAvailable, this, &LooperWindow::addSamplesPeak);
-    connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
-    connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
-    connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
+void LooperWindow::detachCurrentLooper()
+{
+    deleteWavePanels();
 
-    updateBeatsPerInterval(controller->getCurrentBpi());
+    if (this->looper) {
+        this->looper->disconnect();
+        this->controller = nullptr;
+    }
+}
+
+void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController *controller)
+{
+    Q_ASSERT(looper);
+    Q_ASSERT(controller);
+
+    detachCurrentLooper();
+
+    if (looper && controller) {
+        connect(looper, &Audio::Looper::samplesPeakAvailable, this, &LooperWindow::addSamplesPeak);
+        connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
+        connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
+        connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
+
+        this->looper = looper;
+        this->controller = controller;
+
+        updateBeatsPerInterval();
+    }
+}
+
+void LooperWindow::deleteWavePanels()
+{
+    for (quint8 key : wavePanels.keys())
+        wavePanels[key]->deleteLater();
+
+    wavePanels.clear();
 }
 
 LooperWindow::~LooperWindow()
 {
     delete ui;
+
+    deleteWavePanels();
+
+    if (controller) {
+        disconnect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
+        disconnect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
+        disconnect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
+    }
+
+    if (looper) {
+        looper->disconnect();
+    }
 }
 
 void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
 {
+    if (!looper)
+        return;
+
     quint8 currentLayer = looper->getCurrentLayerIndex();
     LooperWavePanel *wavePanel = wavePanels[currentLayer];
     if (wavePanel) {
@@ -42,16 +88,24 @@ void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
     }
 }
 
-void LooperWindow::updateBeatsPerInterval(int newBpi)
+void LooperWindow::updateBeatsPerInterval()
 {
+    if (!controller)
+        return;
+
+    uint samplesPerInterval = controller->getSamplesPerInterval();
+    uint beatsPerInterval = controller->getCurrentBpi();
+
     for (LooperWavePanel *wavePanel : wavePanels.values()) {
-        uint samplesPerInterval = controller->getSamplesPerInterval();
-        wavePanel->setBeatsPerInteval(newBpi, samplesPerInterval);
+        wavePanel->setBeatsPerInteval(beatsPerInterval, samplesPerInterval);
     }
 }
 
 void LooperWindow::addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex)
 {
+    if (!controller || !looper)
+        return;
+
     LooperWavePanel *wavePanel = wavePanels[layerIndex];
     if (!wavePanel) {
         uint currentBpi = controller->getCurrentBpi();

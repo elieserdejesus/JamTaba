@@ -15,6 +15,13 @@ LooperWavePanel::LooperWavePanel(uint bpi, uint samplesPerInterval)
    setBeatsPerInteval(bpi, samplesPerInterval);
 }
 
+LooperWavePanel::~LooperWavePanel()
+{
+    if (LooperWavePanel::currentWavePanel == this) {
+        LooperWavePanel::currentWavePanel = nullptr;
+    }
+}
+
 void LooperWavePanel::addPeak(float peak, uint samples)
 {
     if (LooperWavePanel::currentWavePanel != this) {
@@ -84,9 +91,9 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
             painter.drawLine(x, top, x, bottom);
         }
 
-        // draw a transparent rect in current interval beat
+        // draw a transparent red rect in current interval beat
         if (currentWavePanel == this) {
-            static const QColor rectColor(0, 0, 0, 15);
+            static const QColor rectColor(255, 0, 0, 30);
             uint x = currentIntervalBeat * pixelsPerBeat;
             painter.fillRect(x, 0, pixelsPerBeat, height(), rectColor);
         }

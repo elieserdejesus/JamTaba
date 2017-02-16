@@ -49,7 +49,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     roomToJump(nullptr),
     chordsPanel(nullptr),
     lastPerformanceMonitorUpdate(0),
-    camera(nullptr)
+    camera(nullptr),
+    looperWindow(nullptr)
 {
     qCDebug(jtGUI) << "Creating MainWindow...";
 
@@ -511,11 +512,29 @@ void MainWindow::removeAllInputLocalTracks()
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // this function is overrided in MainWindowStandalone to load input selections and plugins
-void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView,
-                                           const Subchannel &subChannel)
+void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const Subchannel &subChannel)
 {
     BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted, subChannel.stereoInverted);
+
+    connect(localTrackView, &LocalTrackView::looperActivated, this, &MainWindow::openLooperWindow);
+}
+
+void MainWindow::openLooperWindow(uint trackID)
+{
+     Audio::LocalInputNode *inputTrack = mainController->getInputTrack(trackID);
+     Controller::NinjamController *ninjamController = mainController->getNinjamController();
+     if (inputTrack && ninjamController) {
+        if (!looperWindow) {
+            QString windowTitle("Looper");
+            looperWindow = new LooperWindow(windowTitle, this);
+        }
+
+        looperWindow->setLooper(inputTrack->getLooper(), ninjamController);
+
+        looperWindow->raise();
+        looperWindow->show();
+     }
 }
 
 void MainWindow::initializeLocalInputChannels()
@@ -817,27 +836,23 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     ui.leftPanel->adjustSize();
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
 
-    QObject::connect(mainController->getNinjamController(), SIGNAL(
-                         preparedToTransmit()), this, SLOT(startTransmission()));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(
-                         preparingTransmission()), this, SLOT(prepareTransmission()));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpiChanged(
-                                                                       int)), this,
-                     SLOT(updateBpi(int)));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpmChanged(
-                                                                       int)), this,
-                     SLOT(updateBpm(int)));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(intervalBeatChanged(
-                                                                       int)), this,
-                     SLOT(updateCurrentIntervalBeat(int)));
+    connect(mainController->getNinjamController(), SIGNAL(preparedToTransmit()), this, SLOT(startTransmission()));
+    connect(mainController->getNinjamController(), SIGNAL(preparingTransmission()), this, SLOT(prepareTransmission()));
+    connect(mainController->getNinjamController(), SIGNAL(currentBpiChanged(int)), this, SLOT(updateBpi(int)));
+    connect(mainController->getNinjamController(), SIGNAL(currentBpmChanged(int)), this, SLOT(updateBpm(int)));
+    connect(mainController->getNinjamController(), SIGNAL(intervalBeatChanged(int)), this, SLOT(updateCurrentIntervalBeat(int)));
 
+    enableLooperButtonInLocalTracks(true); // looper buttons are enabled when entering in a server
+}
 
-    // TEST ONLY
-    LocalInputNode *inputTrack = mainController->getInputTrack(0);
-    QString looperWindowTitle("Looper - [Track name]");
-    Controller::NinjamController *ninjamController = mainController->getNinjamController();
-    LooperWindow *looperWindow = new LooperWindow(inputTrack->getLooper(), ninjamController, looperWindowTitle);
-    looperWindow->show();
+void MainWindow::enableLooperButtonInLocalTracks(bool enable)
+{
+    for ( LocalTrackGroupView *trackGroupView : localGroupChannels) {
+        QList<LocalTrackView *> tracks = trackGroupView->getTracks<LocalTrackView *>();
+        for (LocalTrackView *track : tracks) {
+            track->enableLopperButton(enable);
+        }
+    }
 }
 
 void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
@@ -931,6 +946,20 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     }
 
     updatePublicRoomsListLayout();
+
+    enableLooperButtonInLocalTracks(false); // disable looper buttons when exiting from server
+
+    // deactivate looper
+    if (looperWindow) {
+        looperWindow->close();
+        looperWindow->detachCurrentLooper();
+    }
+
+    for (LocalTrackGroupView *trackGroup : localGroupChannels) {
+        for (LocalTrackView *trackView : trackGroup->getTracks<LocalTrackView*>()) {
+            trackView->getInputNode()->setLooperState(false);
+        }
+    }
 }
 
 void MainWindow::setChatVisibility(bool chatVisible)

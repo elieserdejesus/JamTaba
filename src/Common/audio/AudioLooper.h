@@ -13,7 +13,7 @@ class Looper : public QObject
 public:
     Looper();
     ~Looper();
-    void playBufferedSamples(bool playBufferedSamples);
+    void setActivated(bool setActivated);
     void process(SamplesBuffer &samples, const AudioPeak &peak);
     void startNewCycle(uint samplesInCycle); // create a new layer
 
@@ -22,10 +22,10 @@ public:
     static const quint8 MAX_LOOP_LAYERS = 2;
 
 signals:
-    void bufferedSamplesPeakAvailable(float peak, uint samplesCount, quint8 layerIndex);
+    void samplesPeakAvailable(float peak, uint samplesCount, quint8 layerIndex);
 
 private:
-    bool playingBufferedSamples;
+    bool activated;
 
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples

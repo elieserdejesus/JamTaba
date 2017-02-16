@@ -11,7 +11,8 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     BaseTrackView(mainController, channelIndex),
     inputNode(nullptr),
     peakMetersOnly(false),
-    buttonStereoInversion(createStereoInversionButton())
+    buttonStereoInversion(createStereoInversionButton()),
+    buttonLooper(createLooperButton())
 {
     Q_ASSERT(mainController);
 
@@ -24,8 +25,8 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
 
     setActivatedStatus(false);
 
+    secondaryChildsLayout->addWidget(buttonLooper);
     secondaryChildsLayout->addWidget(buttonStereoInversion);
-
 }
 
 void LocalTrackView::bindThisViewWithTrackNodeSignals()
@@ -168,6 +169,25 @@ LocalTrackView::~LocalTrackView()
         mainController->removeInputTrackNode(getTrackID());
 }
 
+QPushButton *LocalTrackView::createLooperButton()
+{
+    QPushButton *button = new QPushButton(QStringLiteral("L"));
+    button->setObjectName(QStringLiteral("buttonLooper"));
+    button->setToolTip(tr("Looper (Available when jamming)"));
+    button->setEnabled(false); // disaled by default
+
+    connect(button, &QPushButton::clicked, [=]{
+        inputNode->setLooperState(true);
+        emit looperActivated(this->trackID);
+    });
+
+    return button;
+}
+
+void LocalTrackView::enableLopperButton(bool enabled)
+{
+    buttonLooper->setEnabled(enabled);
+}
 
 QPushButton *LocalTrackView::createStereoInversionButton()
 {
@@ -175,7 +195,7 @@ QPushButton *LocalTrackView::createStereoInversionButton()
     button->setObjectName(QStringLiteral("buttonStereoInversion"));
     button->setToolTip(tr("Invert stereo"));
     button->setCheckable(true);
-    connect(button, SIGNAL(clicked(bool)), this, SLOT(setStereoInversion(bool)));
+    connect(button, &QPushButton::clicked, this, &LocalTrackView::setStereoInversion);
     return button;
 }
 

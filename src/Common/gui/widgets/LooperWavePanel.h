@@ -9,6 +9,7 @@ class LooperWavePanel : public WavePeakPanel
 
 public:
     LooperWavePanel(uint bpi, uint samplesPerInterval);
+    ~LooperWavePanel();
     void setBeatsPerInteval(uint bpi, uint samplesPerInterval);
     void setCurrentIntervalBet(quint8 currentIntervalBeat);
     void addPeak(float peak, uint samples) override;

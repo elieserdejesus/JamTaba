@@ -11,6 +11,8 @@ namespace Audio {
 class LocalInputNode;
 }
 
+class LooperWindow;
+
 class LocalTrackView : public BaseTrackView
 {
     Q_OBJECT
@@ -21,6 +23,8 @@ public:
     void setInitialValues(float initialGain, BaseTrackView::Boost boostValue, float initialPan, bool muted, bool stereoInverted);
 
     virtual ~LocalTrackView();
+
+    void enableLopperButton(bool enabled);
 
     void closeAllPlugins();
 
@@ -48,9 +52,14 @@ public:
     void solo(bool b);
     void initializeBoostButtons(Boost boostValue);
 
+signals:
+    void looperActivated(uint trackIndex);
+
 protected:
     Audio::LocalInputNode *inputNode;
+
     QPushButton *buttonStereoInversion;
+    QPushButton *buttonLooper;
 
     void refreshStyleSheet() override;
 
@@ -60,6 +69,7 @@ protected:
 
 private:
     QPushButton *createStereoInversionButton();
+    QPushButton *createLooperButton();
 
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
     bool peakMetersOnly;

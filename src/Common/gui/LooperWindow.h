@@ -19,12 +19,15 @@ class LooperWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit LooperWindow(Audio::Looper *looper, Controller::NinjamController *controller, const QString &windowTitle);
+    explicit LooperWindow(const QString &windowTitle, QWidget *parent);
     ~LooperWindow();
+
+    void setLooper(Audio::Looper *looper, Controller::NinjamController *controller);
+    void detachCurrentLooper();
 
 private slots:
     void addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex);
-    void updateBeatsPerInterval(int newBpi);
+    void updateBeatsPerInterval();
     void updateCurrentBeat(uint currentIntervalBeat);
 
 private:
@@ -32,6 +35,8 @@ private:
     Audio::Looper *looper;
     QMap<quint8, LooperWavePanel*> wavePanels;
     Controller::NinjamController *controller;
+
+    void deleteWavePanels();
 
 };
 

@@ -96,7 +96,7 @@ LocalInputNode::~LocalInputNode()
 
 void LocalInputNode::setLooperState(bool looperActivated)
 {
-    looper->playBufferedSamples(looperActivated);
+    looper->setActivated(looperActivated);
 }
 
 void LocalInputNode::startNewLoopCycle(uint intervalLenght)

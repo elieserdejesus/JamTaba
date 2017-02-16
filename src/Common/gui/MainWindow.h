@@ -9,6 +9,7 @@
 #include "TextEditorModifier.h"
 #include "video/Camera.h"
 #include "performance/PerformanceMonitor.h"
+#include "LooperWindow.h"
 
 #include <QTranslator>
 #include <QMainWindow>
@@ -228,11 +229,15 @@ private slots:
 
     void updateNightModeInWorldMaps();
 
+    void openLooperWindow(uint trackID);
+
 private:
 
     BusyDialog busyDialog;
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
     QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
+
+    LooperWindow *looperWindow;
 
     ScreensaverBlocker screensaverBlocker;
 
@@ -313,6 +318,8 @@ private:
     void sendAcceptedChordProgressionToServer(const ChordProgression &progression);
 
     QString getTranslatedThemeName(const QString &themeName);
+
+    void enableLooperButtonInLocalTracks(bool enable);
 
     static bool themeCanUseNightModeWorldMaps(const QString &themeName);
 
