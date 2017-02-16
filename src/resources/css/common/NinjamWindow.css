@@ -309,3 +309,8 @@ IntervalProgressDisplay
     qproperty-disabledBeatsColor: rgba(0, 0, 0, 15);
     qproperty-linesColor: rgba(0, 0, 0, 40);
 }
+
+LooperWindow
+{
+    font-size: 24pt; /* size of 'wait' text in LooperWindow */
+}

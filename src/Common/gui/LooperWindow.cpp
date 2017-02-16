@@ -34,10 +34,25 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
     QDialog::paintEvent(ev);
 
     if (looper && looper->isWaiting()) {
-        uint waitBeats = controller->getCurrentBpi() - currentBeat;
+        QPainter painter(this);
+
+        static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
+        painter.setPen(pen);
+        uint bpi = controller->getCurrentBpi();
+        int pixelsPerBeat = (width()/bpi) + 1;
+        for (uint beat = 0; beat < bpi; ++beat) {
+            const int x = beat * pixelsPerBeat;
+            painter.drawLine(x, 0, x, height());
+        }
+
+        // draw a transparent red rect in current beat
+        static const QColor redColor(255, 0, 0, 25);
+        uint x = currentBeat * pixelsPerBeat;
+        painter.fillRect(x, 0, pixelsPerBeat, height(), redColor);
+
+        uint waitBeats = (controller->getCurrentBpi() - currentBeat) - 1;
         QString text = tr("wait (%1)").arg(QString::number(waitBeats));
         uint textWidth = fontMetrics().width(text);
-        QPainter painter(this);
         painter.drawText(width()/2 - textWidth/2, height()/2, text);
     }
 }
