@@ -90,7 +90,7 @@ void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
     quint8 currentLayer = looper->getCurrentLayerIndex();
     LooperWavePanel *wavePanel = wavePanels[currentLayer];
     if (wavePanel) {
-        wavePanel->setCurrentIntervalBet(currentIntervalBeat);
+        wavePanel->setCurrentIntervalBeat(currentIntervalBeat);
     }
 }
 
@@ -116,7 +116,7 @@ void LooperWindow::addSamplesPeak(float peak, uint samplesCount, quint8 layerInd
     if (!wavePanel) {
         uint currentBpi = controller->getCurrentBpi();
         uint samplesPerInterval = controller->getSamplesPerInterval();
-        wavePanel = new LooperWavePanel(currentBpi, samplesPerInterval);
+        wavePanel = new LooperWavePanel(currentBpi, samplesPerInterval, looper);
         wavePanels[layerIndex] = wavePanel;
         layout()->addWidget(wavePanel);
     }

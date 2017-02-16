@@ -75,10 +75,10 @@ private:
 // ------------------------------------------------------------------------------------
 
 Looper::Looper()
-    : activated(false),
-      currentLayerIndex(0),
+    : currentLayerIndex(0),
       intervalLenght(0),
-      intervalPosition(0)
+      intervalPosition(0),
+      state(LoopState::STOPPED)
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
         layers[l] = new Looper::Layer();
@@ -103,20 +103,31 @@ void Looper::startNewCycle(uint samplesInCycle)
 
     intervalPosition = 0;
 
-    currentLayerIndex = (currentLayerIndex + 1) % MAX_LOOP_LAYERS;
-    layers[currentLayerIndex]->zero();
+    if (state == LoopState::WAITING)
+        state = LoopState::RECORDING;
+
+    if (state == LoopState::RECORDING) {
+        currentLayerIndex = (currentLayerIndex + 1) % MAX_LOOP_LAYERS;
+        layers[currentLayerIndex]->zero();
+    }
 }
 
-void Looper::setActivated(bool activated) {
-    this->activated = activated;
-
-    if (!activated)
-        disconnect();
+void Looper::setActivated(bool activated)
+{
+    if (activated) {
+        if (state == LoopState::STOPPED)
+            state = LoopState::WAITING;
+    }
+    else {
+        state = LoopState::STOPPED;
+        if (!activated)
+            disconnect();
+    }
 }
 
 void Looper::process(SamplesBuffer &samples, const Audio::AudioPeak &peak)
 {
-    if (!activated || !intervalLenght)
+    if (state == LoopState::STOPPED)
         return;
 
     uint samplesToAppend = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);

@@ -4,14 +4,18 @@
 #include "WavePeakPanel.h"
 #include <QPainter>
 
+namespace Audio {
+class Looper;
+}
+
 class LooperWavePanel : public WavePeakPanel
 {
 
 public:
-    LooperWavePanel(uint bpi, uint samplesPerInterval);
+    LooperWavePanel(uint bpi, uint samplesPerInterval, Audio::Looper *looper);
     ~LooperWavePanel();
     void setBeatsPerInteval(uint bpi, uint samplesPerInterval);
-    void setCurrentIntervalBet(quint8 currentIntervalBeat);
+    void setCurrentIntervalBeat(quint8 currentIntervalBeat);
     void addPeak(float peak, uint samples) override;
 
 protected:
@@ -27,10 +31,12 @@ private:
 
     void drawBpiVerticalLines(QPainter &painter);
 
-    uint calculateSamplePerPixel() const;
+    uint calculateSamplesPerPixel() const;
 
     float lastMaxPeak;
     uint accumulatedSamples;
+
+    Audio::Looper *looper;
 
     static LooperWavePanel *currentWavePanel;
 };

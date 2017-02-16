@@ -1,13 +1,15 @@
 #include "LooperWavePanel.h"
+#include "audio/AudioLooper.h"
 
 LooperWavePanel * LooperWavePanel::currentWavePanel = nullptr;
 
-LooperWavePanel::LooperWavePanel(uint bpi, uint samplesPerInterval)
+LooperWavePanel::LooperWavePanel(uint bpi, uint samplesPerInterval, Audio::Looper *looper)
     : beatsPerInterval(16),
       lastMaxPeak(0),
       accumulatedSamples(0),
       samplesPerPixel(0),
-      samplesPerInterval(0)
+      samplesPerInterval(0),
+      looper(looper)
 
 {
    setBeatsPerInteval(bpi, samplesPerInterval);
@@ -48,7 +50,7 @@ void LooperWavePanel::addPeak(float peak, uint samples)
     }
 }
 
-void LooperWavePanel::setCurrentIntervalBet(quint8 currentIntervalBeat)
+void LooperWavePanel::setCurrentIntervalBeat(quint8 currentIntervalBeat)
 {
     this->currentIntervalBeat = currentIntervalBeat;
 }
@@ -57,10 +59,10 @@ void LooperWavePanel::resizeEvent(QResizeEvent *event)
 {
     WavePeakPanel::resizeEvent(event);
 
-    samplesPerPixel = calculateSamplePerPixel();
+    samplesPerPixel = calculateSamplesPerPixel();
 }
 
-uint LooperWavePanel::calculateSamplePerPixel() const
+uint LooperWavePanel::calculateSamplesPerPixel() const
 {
     uint pixelWidth = getPeaksWidth() + getPeaksPad();
     return samplesPerInterval/(width()/pixelWidth);
@@ -70,7 +72,7 @@ void LooperWavePanel::setBeatsPerInteval(uint bpi, uint samplesPerInterval)
 {
     this->beatsPerInterval = bpi;
     this->samplesPerInterval = samplesPerInterval;
-    this->samplesPerPixel = calculateSamplePerPixel();
+    this->samplesPerPixel = calculateSamplesPerPixel();
     update();
 }
 
@@ -95,9 +97,16 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
 
         // draw a transparent red rect from left to current interval beat
         if (currentWavePanel == this) {
-            static const QColor rectColor(255, 0, 0, 15);
-            uint width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
-            painter.fillRect(0, 0, width, height(), rectColor);
+            if (looper->isRecording()) {
+                static const QColor redColor(255, 0, 0, 15);
+                uint width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
+                painter.fillRect(0, 0, width, height(), redColor);
+            }
+            else if (looper->isWaiting()) {
+                QString text = tr("wait ...");
+                uint textWidth = fontMetrics().width(text);
+                painter.drawText(width()/2 - textWidth/2, height()/2, text);
+            }
         }
     }
 }
