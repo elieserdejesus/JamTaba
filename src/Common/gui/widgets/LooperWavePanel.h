@@ -40,8 +40,6 @@ private:
 
     const quint8 layerID;
 
-    static LooperWavePanel *currentWavePanel;
-
 };
 
 #endif
