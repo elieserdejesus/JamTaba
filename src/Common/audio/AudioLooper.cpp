@@ -124,13 +124,18 @@ void Looper::startNewCycle(uint samplesInCycle)
 
     intervalPosition = 0;
 
+    LooperState previousState = state;
+
     if (state == LooperState::WAITING) {
         state = LooperState::RECORDING;
-        qDebug() << "Looper state changed to Recording " << this;
     }
 
     if (state == LooperState::RECORDING) {
-        currentLayerIndex = (currentLayerIndex + 1) % MAX_LOOP_LAYERS;
+        if (previousState == LooperState::WAITING)
+            currentLayerIndex = 0; // start recording in first layer
+        else
+            currentLayerIndex = (currentLayerIndex + 1) % MAX_LOOP_LAYERS;
+
         layers[currentLayerIndex]->zero();
     }
 }
@@ -140,18 +145,16 @@ void Looper::setActivated(bool activated)
     if (activated) {
         if (state == LooperState::STOPPED) {
             state = LooperState::WAITING;
-            qDebug() << "Looper state changed to waiting";
         }
     }
     else {
         state = LooperState::STOPPED;
-        qDebug() << "Looper state changed to Stopped";
     }
 }
 
 const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const
 {
-    if (layerIndex < MAX_LOOP_LAYERS)
+    if (layerIndex < MAX_LOOP_LAYERS && state != LooperState::WAITING)
     {
         Audio::Looper::Layer *layer = layers[layerIndex];
         return layer->getSamplesPeaks(samplesPerPeak);
@@ -162,7 +165,7 @@ const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPe
 
 void Looper::process(SamplesBuffer &samples)
 {
-    if (state == LooperState::STOPPED)
+    if (state == LooperState::STOPPED || state == LooperState::WAITING)
         return;
 
     uint samplesToAppend = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);

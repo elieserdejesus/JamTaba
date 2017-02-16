@@ -26,6 +26,9 @@ public:
     void detachCurrentLooper();
     void updateDrawings();
 
+protected:
+    void paintEvent(QPaintEvent *ev) override;
+
 private slots:
     void updateBeatsPerInterval();
     void updateCurrentBeat(uint currentIntervalBeat);

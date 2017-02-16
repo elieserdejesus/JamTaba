@@ -61,41 +61,35 @@ void LooperWavePanel::setBeatsPerInteval(uint bpi, uint samplesPerInterval)
 void LooperWavePanel::paintEvent(QPaintEvent *ev)
 {
 
+    if (!beatsPerInterval || looper->isWaiting())
+        return;
+
     WavePeakPanel::paintEvent(ev);
 
-    if (beatsPerInterval) {
-        QPainter painter(this);
+    QPainter painter(this);
 
-        static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
-        painter.setPen(pen);
+    static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
+    painter.setPen(pen);
 
-        int pixelsPerBeat = width()/beatsPerInterval;
+    int pixelsPerBeat = width()/beatsPerInterval;
 
-        const int top = 0;
-        const int bottom = height();
-        for (uint beat = 0; beat <= beatsPerInterval; ++beat) {
-            const int x = beat * pixelsPerBeat;
-            painter.drawLine(x, top, x, bottom);
-        }
+    const int top = 0;
+    const int bottom = height();
+    for (uint beat = 0; beat <= beatsPerInterval; ++beat) {
+        const int x = beat * pixelsPerBeat;
+        painter.drawLine(x, top, x, bottom);
+    }
 
-        // draw a transparent red rect from left to current interval beat
-        bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
-        if (drawingCurrentLayer) {
-            if (looper->isRecording()) {
-                static const QColor redColor(255, 0, 0, 25);
-                uint width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
-                painter.fillRect(0, 0, width, height(), redColor);
-            }
-            else if (looper->isWaiting()) {
-                QString text = tr("wait ...");
-                uint textWidth = fontMetrics().width(text);
-                painter.drawText(width()/2 - textWidth/2, height()/2, text);
-            }
-        }
-        else {
-            //draw a transparent black rect in all layer, except the current one
-            static const QColor blackColor(0, 0, 0, 8);
-            painter.fillRect(0, 0, width(), height(), blackColor);
-        }
+    // draw a transparent red rect from left to current interval beat
+    bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
+    if (drawingCurrentLayer && looper->isRecording()) {
+        static const QColor redColor(255, 0, 0, 25);
+        uint width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
+        painter.fillRect(0, 0, width, height(), redColor);
+    }
+    else {
+        //draw a transparent black rect in all layer, except the current one
+        static const QColor blackColor(0, 0, 0, 8);
+        painter.fillRect(0, 0, width(), height(), blackColor);
     }
 }

@@ -29,6 +29,18 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
     setSizeGripEnabled(false);
 }
 
+void LooperWindow::paintEvent(QPaintEvent *ev)
+{
+    QDialog::paintEvent(ev);
+
+    if (looper && looper->isWaiting()) {
+        QString text = tr("wait ...");
+        uint textWidth = fontMetrics().width(text);
+        QPainter painter(this);
+        painter.drawText(width()/2 - textWidth/2, height()/2, text);
+    }
+}
+
 void LooperWindow::updateDrawings()
 {
     uint currentLayer = looper->getCurrentLayerIndex();
