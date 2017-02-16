@@ -42,9 +42,9 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
     Q_ASSERT(looper);
     Q_ASSERT(controller);
 
-    detachCurrentLooper();
+    if (looper != this->looper) { // check if user is not just reopening the looper editor
+        detachCurrentLooper();
 
-    if (looper && controller) {
         connect(looper, &Audio::Looper::samplesPeakAvailable, this, &LooperWindow::addSamplesPeak);
         connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
@@ -52,9 +52,9 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
 
         this->looper = looper;
         this->controller = controller;
-
-        updateBeatsPerInterval();
     }
+
+    updateBeatsPerInterval();
 }
 
 void LooperWindow::deleteWavePanels()
