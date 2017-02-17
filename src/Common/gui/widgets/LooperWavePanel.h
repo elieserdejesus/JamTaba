@@ -33,6 +33,8 @@ private:
 
     uint calculateSamplesPerPixel() const;
 
+    bool canUseHighlightPainting() const;
+
     float lastMaxPeak;
     uint accumulatedSamples;
 

@@ -58,14 +58,25 @@ void LooperWavePanel::setBeatsPerInteval(uint bpi, uint samplesPerInterval)
     update();
 }
 
+bool LooperWavePanel::canUseHighlightPainting() const
+{
+    if (looper->isPlaying() || looper->isRecording()) {
+        const bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
+        return drawingCurrentLayer || looper->getPlayMode() == Audio::Looper::ALL_LAYERS;
+    }
+
+    return false;
+}
+
+
 void LooperWavePanel::paintEvent(QPaintEvent *ev)
 {
 
-    if (!beatsPerInterval || looper->isWaiting())
+    if (!beatsPerInterval || looper->isWaiting()) {
         return;
+    }
 
-    const bool drawintCurrentLayer = looper->getCurrentLayerIndex() == layerID;
-    const bool useHighlightPainting = drawintCurrentLayer && (looper->isPlaying() || looper->isRecording());
+    const bool useHighlightPainting = canUseHighlightPainting();
 
     QColor previousPeakColor(peaksColor);
 
@@ -89,7 +100,6 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
         }
     }
 
-    // draw a transparent red rect from left to current interval beat
     if (useHighlightPainting) {
         if (looper->isPlaying()) {
             qreal x = currentIntervalBeat * pixelsPerBeat;
@@ -97,7 +107,7 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
             color.setAlpha(30);
             painter.fillRect(QRectF(x, 0, pixelsPerBeat, height()), color);
         }
-        else if (looper->isRecording()) {
+        else if (looper->isRecording()) {     // draw a transparent red rect from left to current interval beat
             static const QColor redColor(255, 0, 0, 30);
             qreal width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
             painter.fillRect(QRectF(0, 0, width, height()), redColor);

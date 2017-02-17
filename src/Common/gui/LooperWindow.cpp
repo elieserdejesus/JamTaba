@@ -69,12 +69,8 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 
 void LooperWindow::updateDrawings()
 {
-    quint8 currentLayer = looper->getCurrentLayerIndex();
-    LooperWavePanel *wavePanel = wavePanels[currentLayer];
-    if (wavePanel)
+    for (LooperWavePanel *wavePanel : wavePanels.values())
         wavePanel->updateDrawings();
-    else
-        qCritical() << "wave panel null wavePanel keys:" << wavePanels.keys() << " currentLayer:" << currentLayer;
 
     update();
 }
@@ -181,9 +177,7 @@ void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
     if (!looper)
         return;
 
-    quint8 currentLayer = looper->getCurrentLayerIndex();
-    LooperWavePanel *wavePanel = wavePanels[currentLayer];
-    if (wavePanel) {
+    for (LooperWavePanel *wavePanel : wavePanels.values()) {
         wavePanel->setCurrentBeat(currentIntervalBeat);
     }
 
