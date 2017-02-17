@@ -84,6 +84,7 @@
         <file alias="qtbase_pt.qm">../../translations/Qt/qtbase_pt.qm</file>
     </qresource>
     <qresource prefix="/images">
+        <file>loop.png</file>
         <file>wave_normal.png</file>
         <file>wave_pixelated.png</file>
         <file>wave_buildings.png</file>

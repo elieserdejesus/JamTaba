@@ -97,6 +97,13 @@ LocalTrackView #midiPeakMeter                   /* The thin line/meter used to s
     border: none;
 }
 
+LocalTrackView #buttonLooper
+{
+    background-image: url(':/images/loop.png');
+    background-repeat: none;
+    background-position: center center;
+}
+
  /* The transmiting (xmit) button.
  ----------------------------------*/
 #xmitButton

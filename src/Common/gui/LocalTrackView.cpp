@@ -171,7 +171,7 @@ LocalTrackView::~LocalTrackView()
 
 QPushButton *LocalTrackView::createLooperButton()
 {
-    QPushButton *button = new QPushButton(QStringLiteral("L"));
+    QPushButton *button = new QPushButton(" ");
     button->setObjectName(QStringLiteral("buttonLooper"));
     button->setToolTip(tr("Looper (Available when jamming)"));
     button->setEnabled(false); // disaled by default
