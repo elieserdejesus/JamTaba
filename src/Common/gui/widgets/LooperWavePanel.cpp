@@ -64,11 +64,12 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
     if (!beatsPerInterval || looper->isWaiting())
         return;
 
-    bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
+    const bool drawintCurrentLayer = looper->getCurrentLayerIndex() == layerID;
+    const bool useHighlightPainting = drawintCurrentLayer && (looper->isPlaying() || looper->isRecording());
 
     QColor previousPeakColor(peaksColor);
 
-    if (!drawingCurrentLayer) // not-current layers are painted with a transparent black color
+    if (!useHighlightPainting) // not-current layers are painted with a transparent black color
         peaksColor = QColor(0, 0, 0, 40);
 
     WavePeakPanel::paintEvent(ev);
@@ -79,7 +80,7 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
 
     qreal pixelsPerBeat = (width()/static_cast<qreal>(beatsPerInterval));
 
-    if (drawingCurrentLayer) {
+    if (useHighlightPainting) {
         static const QPen dotPen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
         for (uint beat = 0; beat < beatsPerInterval; ++beat) {
             const qreal x = beat * pixelsPerBeat;
@@ -89,7 +90,7 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
     }
 
     // draw a transparent red rect from left to current interval beat
-    if (drawingCurrentLayer) {
+    if (useHighlightPainting) {
         if (looper->isPlaying()) {
             qreal x = currentIntervalBeat * pixelsPerBeat;
             QColor color(peaksColor);
