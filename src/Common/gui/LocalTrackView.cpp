@@ -177,8 +177,7 @@ QPushButton *LocalTrackView::createLooperButton()
     button->setEnabled(false); // disaled by default
 
     connect(button, &QPushButton::clicked, [=]{
-        inputNode->setLooperState(true);
-        emit looperActivated(this->trackID);
+        emit openLoopEditor(this->trackID);
     });
 
     return button;

@@ -517,7 +517,7 @@ void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const
     BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted, subChannel.stereoInverted);
 
-    connect(localTrackView, &LocalTrackView::looperActivated, this, &MainWindow::openLooperWindow);
+    connect(localTrackView, &LocalTrackView::openLoopEditor, this, &MainWindow::openLooperWindow);
 }
 
 void MainWindow::openLooperWindow(uint trackID)
@@ -957,7 +957,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     for (LocalTrackGroupView *trackGroup : localGroupChannels) {
         for (LocalTrackView *trackView : trackGroup->getTracks<LocalTrackView*>()) {
-            trackView->getInputNode()->setLooperState(false);
+            trackView->getInputNode()->stopLooper();
         }
     }
 }

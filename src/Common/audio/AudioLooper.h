@@ -15,7 +15,6 @@ class Looper : public QObject
 public:
     Looper();
     ~Looper();
-    void setActivated(bool setActivated);
     void process(SamplesBuffer &samples);
     void startNewCycle(uint samplesInCycle);
 

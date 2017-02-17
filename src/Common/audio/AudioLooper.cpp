@@ -175,17 +175,17 @@ void Looper::setState(LooperState state)
     }
 }
 
-void Looper::setActivated(bool activated)
-{
-    if (activated) {
-        if (state == LooperState::STOPPED) {
-            setState(LooperState::WAITING);
-        }
-    }
-    else {
-        setState(LooperState::STOPPED);
-    }
-}
+//void Looper::setActivated(bool activated)
+//{
+//    if (activated) {
+//        if (state == LooperState::STOPPED) {
+//            setState(LooperState::WAITING);
+//        }
+//    }
+//    else {
+//        setState(LooperState::STOPPED);
+//    }
+//}
 
 const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const
 {

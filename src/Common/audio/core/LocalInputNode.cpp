@@ -94,9 +94,9 @@ LocalInputNode::~LocalInputNode()
     delete looper;
 }
 
-void LocalInputNode::setLooperState(bool looperActivated)
+void LocalInputNode::stopLooper()
 {
-    looper->setActivated(looperActivated);
+    looper->setState(Looper::STOPPED);
 }
 
 void LocalInputNode::startNewLoopCycle(uint intervalLenght)

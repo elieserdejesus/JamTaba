@@ -97,8 +97,8 @@ public:
     bool isRoutingMidiInput() const;
     void setRoutingMidiInput(bool routeMidiInput);
 
-    void setLooperState(bool looperActivated);
     void startNewLoopCycle(uint intervalLenght);
+    void stopLooper();
 
     Audio::Looper *getLooper() const;
 
