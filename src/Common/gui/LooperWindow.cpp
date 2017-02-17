@@ -45,9 +45,9 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
         static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
         painter.setPen(pen);
         uint bpi = controller->getCurrentBpi();
-        qreal pixelsPerBeat = (width()/static_cast<qreal>(bpi));
         QPointF rectTop = ui->layersWidget->mapToParent(ui->layersWidget->rect().topLeft());
         QSizeF rectSize = ui->layersWidget->size();
+        qreal pixelsPerBeat = (rectSize.width()/static_cast<qreal>(bpi));
         for (uint beat = 0; beat < bpi; ++beat) {
             const qreal x = rectTop.x() + beat * pixelsPerBeat;
             painter.drawLine(QPointF(x, rectTop.y()), QPointF(x, rectTop.y() + rectSize.height()));
