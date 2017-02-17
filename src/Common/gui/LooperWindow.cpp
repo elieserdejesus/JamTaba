@@ -141,6 +141,18 @@ void LooperWindow::updateControls()
 
         ui->maxLayersSpinBox->setEnabled(looper->isStopped());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
+
+
+        // initial values
+        ui->maxLayersSpinBox->setValue(looper->getMaxLayers());
+
+        QString selectedPlayMode = looper->getPlayModeString(looper->getPlayMode());
+        for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
+            if (ui->comboBoxPlayMode->itemText(i) == selectedPlayMode) {
+                ui->comboBoxPlayMode->setCurrentIndex(i);
+                break;
+            }
+        }
     }
 }
 

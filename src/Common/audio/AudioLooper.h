@@ -38,6 +38,7 @@ public:
     static QString getPlayModeString(PlayMode playMode);
 
     void setPlayMode(PlayMode playMode);
+    PlayMode getPlayMode() const;
 
     const std::vector<float> getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const;
 
@@ -80,6 +81,11 @@ inline void Looper::setPlayMode(PlayMode playMode)
 {
     this->playMode = playMode;
     qDebug() << "playMode setted to:" << playMode;
+}
+
+inline Looper::PlayMode Looper::getPlayMode() const
+{
+    return playMode;
 }
 
 inline quint8 Looper::getMaxLayers() const
