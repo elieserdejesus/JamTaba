@@ -4,11 +4,13 @@
 #include "core/SamplesBuffer.h"
 
 #include <QtGlobal>
+#include <QObject>
 
 namespace Audio {
 
-class Looper
+class Looper : public QObject
 {
+    Q_OBJECT
 
 public:
     Looper();
@@ -25,6 +27,16 @@ public:
         RANDOM_LAYERS
     };
 
+    enum LooperState
+    {
+        STOPPED,
+        WAITING,
+        RECORDING,
+        PLAYING
+    };
+
+    static QString getPlayModeString(PlayMode playMode);
+
     void setPlayMode(PlayMode playMode);
 
     const std::vector<float> getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const;
@@ -39,7 +51,12 @@ public:
     void setMaxLayers(quint8 maxLayers);
     quint8 getMaxLayers() const;
 
+    void setState(LooperState state);
+
     static const quint8 MAX_LOOP_LAYERS = 4;
+
+signals:
+    void stateChanged();
 
 private:
     uint intervalLenght; // in samples
@@ -49,14 +66,6 @@ private:
     Layer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex;
     quint8 maxLayers;
-
-    enum LooperState
-    {
-        STOPPED,
-        WAITING,
-        RECORDING,
-        PLAYING
-    };
 
     LooperState state;
 

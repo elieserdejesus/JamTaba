@@ -85,6 +85,9 @@
     </qresource>
     <qresource prefix="/images">
         <file>loop.png</file>
+        <file>rec.png</file>
+        <file>stop.png</file>
+        <file>play.png</file>
         <file>wave_normal.png</file>
         <file>wave_pixelated.png</file>
         <file>wave_buildings.png</file>
@@ -115,9 +118,6 @@
         <file>mini arrow right.png</file>
         <file>mini arrow left hover.png</file>
         <file>mini arrow right hover.png</file>
-        <file>rec maginifier.png</file>
-        <file>rec off.png</file>
-        <file>rec on.png</file>
         <file>translate.png</file>
         <file>warning.png</file>
         <file>chat_small.png</file>

@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 
 using namespace Controller;
+using namespace Audio;
 
 LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
     QDialog(parent),
@@ -29,6 +30,27 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
     setMinimumSize(size());
     setMaximumSize(size());
     setSizeGripEnabled(false);
+
+    initializePlayModesComboBox();
+    initializeStateControls();
+}
+
+void LooperWindow::initializeStateControls()
+{
+    connect(ui->buttonRec, &QPushButton::clicked, [=]{
+        if (looper)
+            looper->setState(Looper::WAITING);
+    });
+
+    connect(ui->buttonStop, &QPushButton::clicked, [=]{
+        if (looper)
+            looper->setState(Looper::STOPPED);
+    });
+
+    connect(ui->buttonPlay, &QPushButton::clicked, [=]{
+        if (looper)
+            looper->setState(Looper::PLAYING);
+    });
 }
 
 void LooperWindow::paintEvent(QPaintEvent *ev)
@@ -106,12 +128,23 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
+        connect(looper, &Audio::Looper::stateChanged, this, &LooperWindow::updateStateControls);
 
         this->looper = looper;
         this->controller = controller;
     }
 
     updateBeatsPerInterval();
+    updateStateControls();
+}
+
+void LooperWindow::updateStateControls()
+{
+    if (looper) {
+        ui->buttonRec->setChecked(looper->isRecording() || looper->isWaiting());
+        ui->buttonStop->setEnabled(!looper->isStopped());
+        ui->buttonPlay->setEnabled(looper->isStopped());
+    }
 }
 
 void LooperWindow::deleteWavePanels()
@@ -159,5 +192,21 @@ void LooperWindow::updateBeatsPerInterval()
 
     for (LooperWavePanel *wavePanel : wavePanels.values()) {
         wavePanel->setBeatsPerInteval(beatsPerInterval, samplesPerInterval);
+    }
+}
+
+void LooperWindow::initializePlayModesComboBox()
+{
+    ui->comboBoxPlayMode->clear();
+
+    std::vector<Looper::PlayMode> playModes;
+    playModes.push_back(Looper::SEQUENCE);
+    playModes.push_back(Looper::ALL_LAYERS);
+    playModes.push_back(Looper::RANDOM_LAYERS);
+    playModes.push_back(Looper::SELECTED_LAYER_ONLY);
+
+    for (int i = 0; i < 4; ++i) {
+        Looper::PlayMode playMode = playModes[i];
+        ui->comboBoxPlayMode->addItem(Looper::getPlayModeString(playMode), playMode);
     }
 }

@@ -140,7 +140,7 @@ void Looper::startNewCycle(uint samplesInCycle)
     LooperState previousState = state;
 
     if (state == LooperState::WAITING) {
-        state = LooperState::RECORDING;
+        setState(LooperState::RECORDING);
     }
 
     if (state == LooperState::RECORDING || state == LooperState::PLAYING) {
@@ -158,10 +158,18 @@ void Looper::startNewCycle(uint samplesInCycle)
         if (state == LooperState::RECORDING) {
             bool needStopRecording = previousState == LooperState::RECORDING && currentLayerIndex == 0; // stop recording when backing to first layer
             if (needStopRecording)
-                state = LooperState::PLAYING;
+                setState(LooperState::PLAYING);
             else
                 layers[currentLayerIndex]->zero(); // zero current layer if keep recording
         }
+    }
+}
+
+void Looper::setState(LooperState state)
+{
+    if (this->state != state) {
+        this->state = state;
+        emit stateChanged();
     }
 }
 
@@ -169,11 +177,11 @@ void Looper::setActivated(bool activated)
 {
     if (activated) {
         if (state == LooperState::STOPPED) {
-            state = LooperState::WAITING;
+            setState(LooperState::WAITING);
         }
     }
     else {
-        state = LooperState::STOPPED;
+        setState(LooperState::STOPPED);
     }
 }
 
@@ -236,3 +244,15 @@ void Looper::playAllLayers(SamplesBuffer &samples, uint samplesToMix)
         mixLayer(l, samples, samplesToMix);
     }
 }
+
+QString Looper::getPlayModeString(PlayMode playMode)
+{
+    switch (playMode) {
+        case PlayMode::SEQUENCE:        return tr("Sequence");
+        case PlayMode::ALL_LAYERS:      return tr("All Layers");
+        case PlayMode::RANDOM_LAYERS:   return tr("Random");
+    }
+
+    return "Error";
+}
+

@@ -38,12 +38,19 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Rec</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../resources/jamtaba.qrc">
+          <normaloff>:/images/rec.png</normaloff>:/images/rec.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="buttonStop">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -51,7 +58,25 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Stop</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../resources/jamtaba.qrc">
+          <normaloff>:/images/stop.png</normaloff>:/images/stop.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="buttonPlay">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../resources/jamtaba.qrc">
+          <normaloff>:/images/play.png</normaloff>:/images/play.png</iconset>
         </property>
        </widget>
       </item>
@@ -139,6 +164,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../resources/jamtaba.qrc"/>
+  <include location="../../resources/jamtaba.qrc"/>
+ </resources>
  <connections/>
 </ui>
