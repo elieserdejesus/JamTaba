@@ -21,7 +21,8 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setSpacing(12);
-    setLayout(layout);
+    layout->setContentsMargins(0, 0, 0, 0);
+    ui->layersWidget->setLayout(layout);
 
     // set as non resizable
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
@@ -41,21 +42,23 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
         painter.setPen(pen);
         uint bpi = controller->getCurrentBpi();
         qreal pixelsPerBeat = (width()/static_cast<qreal>(bpi));
+        QPointF rectTop = ui->layersWidget->mapToParent(ui->layersWidget->rect().topLeft());
+        QSizeF rectSize = ui->layersWidget->size();
         for (uint beat = 0; beat < bpi; ++beat) {
-            const qreal x = beat * pixelsPerBeat;
-            painter.drawLine(QPointF(x, 0), QPointF(x, height()));
+            const qreal x = rectTop.x() + beat * pixelsPerBeat;
+            painter.drawLine(QPointF(x, rectTop.y()), QPointF(x, rectTop.y() + rectSize.height()));
         }
 
-        // draw a transparent red rect in current beat
+        // draw a transparent red rect in current beat when waiting
         if (currentBeat) {
             static const QColor redColor(255, 0, 0, 25);
-            qreal x = currentBeat * pixelsPerBeat;
-            painter.fillRect(QRectF(x, 0, pixelsPerBeat, height()), redColor);
+            qreal x = rectTop.x() + currentBeat * pixelsPerBeat;
+            painter.fillRect(QRectF(x, rectTop.y(), pixelsPerBeat, rectSize.height()), redColor);
 
             uint waitBeats = controller->getCurrentBpi() - currentBeat;
             QString text = tr("wait (%1)").arg(QString::number(waitBeats));
             qreal textWidth = fontMetrics().width(text);
-            painter.drawText(QPointF(width()/2.0 - textWidth/2.0, height()/2.0), text);
+            painter.drawText(QPointF(rectTop.x() + rectSize.width()/2.0 - textWidth/2.0, rectTop.y() + rectSize.height()/2.0), text);
         }
     }
 }
@@ -96,7 +99,7 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
             LooperWavePanel *wavePanel = new LooperWavePanel(looper, layerIndex);
             wavePanels.insert(layerIndex, wavePanel);
-            layout()->addWidget(wavePanel);
+            ui->layersWidget->layout()->addWidget(wavePanel);
             wavePanel->setVisible(layerIndex < currentMaxLayers);
         }
 
