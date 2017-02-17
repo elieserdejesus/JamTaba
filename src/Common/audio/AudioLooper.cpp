@@ -192,8 +192,7 @@ bool Looper::canPlay(uint intervalLenght) const
 
 const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const
 {
-    if (layerIndex < maxLayers && (state == LooperState::RECORDING || state == LooperState::PLAYING))
-    {
+    if (layerIndex < maxLayers && state != LooperState::WAITING) {
         Audio::Looper::Layer *layer = layers[layerIndex];
         return layer->getSamplesPeaks(samplesPerPeak);
     }
