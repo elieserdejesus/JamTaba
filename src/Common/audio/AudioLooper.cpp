@@ -175,17 +175,20 @@ void Looper::setState(LooperState state)
     }
 }
 
-//void Looper::setActivated(bool activated)
-//{
-//    if (activated) {
-//        if (state == LooperState::STOPPED) {
-//            setState(LooperState::WAITING);
-//        }
-//    }
-//    else {
-//        setState(LooperState::STOPPED);
-//    }
-//}
+
+/**
+ * @return True if any layer has enough available samples
+ */
+bool Looper::canPlay(uint intervalLenght) const
+{
+    for (int l = 0; l < maxLayers; ++l) {
+        if (layers[l]->availableSamples >= intervalLenght) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const
 {

@@ -53,6 +53,8 @@ public:
 
     void setState(LooperState state);
 
+    bool canPlay(uint intervalLenght) const; // all layers have available samples?
+
     static const quint8 MAX_LOOP_LAYERS = 4;
 
 signals:

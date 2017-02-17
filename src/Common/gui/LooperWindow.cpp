@@ -107,6 +107,17 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
             wavePanel->setVisible(layerIndex < currentMaxLayers);
         }
 
+        // initial values
+        ui->maxLayersSpinBox->setValue(looper->getMaxLayers());
+
+        QString selectedPlayMode = looper->getPlayModeString(looper->getPlayMode());
+        for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
+            if (ui->comboBoxPlayMode->itemText(i) == selectedPlayMode) {
+                ui->comboBoxPlayMode->setCurrentIndex(i);
+                break;
+            }
+        }
+
         connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
@@ -131,28 +142,16 @@ void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
 
 void LooperWindow::updateControls()
 {
-    if (looper) {
+    if (looper && controller) {
         ui->buttonRec->setChecked(looper->isRecording() || looper->isWaiting());
         ui->buttonStop->setEnabled(!looper->isStopped());
-        ui->buttonPlay->setEnabled(looper->isStopped());
+        ui->buttonPlay->setEnabled(looper->isStopped() && looper->canPlay(controller->getSamplesPerInterval()));
 
         ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
         ui->labelPlayMode->setEnabled(ui->comboBoxPlayMode->isEnabled());
 
         ui->maxLayersSpinBox->setEnabled(looper->isStopped());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
-
-
-        // initial values
-        ui->maxLayersSpinBox->setValue(looper->getMaxLayers());
-
-        QString selectedPlayMode = looper->getPlayModeString(looper->getPlayMode());
-        for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
-            if (ui->comboBoxPlayMode->itemText(i) == selectedPlayMode) {
-                ui->comboBoxPlayMode->setCurrentIndex(i);
-                break;
-            }
-        }
     }
 }
 
