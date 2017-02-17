@@ -43,8 +43,9 @@ protected:
 
     std::vector<float> peaksArray;
 
-private:
     QColor peaksColor;
+
+private:
     QColor loadingColor; //color for the loading circle
 
     bool showingBuffering;

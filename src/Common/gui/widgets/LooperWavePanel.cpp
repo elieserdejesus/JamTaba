@@ -64,36 +64,42 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
     if (!beatsPerInterval || looper->isWaiting())
         return;
 
+    bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
+
+    QColor previousPeakColor(peaksColor);
+
+    if (!drawingCurrentLayer) // not-current layers are painted with a transparent black color
+        peaksColor = QColor(0, 0, 0, 40);
+
     WavePeakPanel::paintEvent(ev);
+
+    peaksColor = previousPeakColor;
 
     QPainter painter(this);
 
-    static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
-    painter.setPen(pen);
-
     qreal pixelsPerBeat = (width()/static_cast<qreal>(beatsPerInterval));
-    for (uint beat = 0; beat < beatsPerInterval; ++beat) {
-        const qreal x = beat * pixelsPerBeat;
-        painter.drawLine(QPointF(x, 0), QPointF(x, height()));
+
+    if (drawingCurrentLayer) {
+        static const QPen dotPen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
+        for (uint beat = 0; beat < beatsPerInterval; ++beat) {
+            const qreal x = beat * pixelsPerBeat;
+            painter.setPen(dotPen);
+            painter.drawLine(QPointF(x, 0), QPointF(x, height()));
+        }
     }
 
     // draw a transparent red rect from left to current interval beat
-    bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
     if (drawingCurrentLayer) {
         if (looper->isPlaying()) {
-            static const QColor greenColor(0, 255, 0, 15);
             qreal x = currentIntervalBeat * pixelsPerBeat;
-            painter.fillRect(QRectF(x, 0, pixelsPerBeat, height()), greenColor);
+            QColor color(peaksColor);
+            color.setAlpha(30);
+            painter.fillRect(QRectF(x, 0, pixelsPerBeat, height()), color);
         }
         else if (looper->isRecording()) {
-            static const QColor redColor(255, 0, 0, 25);
+            static const QColor redColor(255, 0, 0, 30);
             qreal width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
             painter.fillRect(QRectF(0, 0, width, height()), redColor);
         }
-    }
-    else {
-        //draw a transparent black rect in all layer, except the current one
-        static const QColor blackColor(0, 0, 0, 8);
-        painter.fillRect(QRectF(0, 0, width(), height()), blackColor);
     }
 }

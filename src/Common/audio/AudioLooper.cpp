@@ -98,8 +98,9 @@ Looper::Looper()
     : currentLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0),
-      maxLayers(2),
-      state(LooperState::STOPPED)
+      maxLayers(4),
+      state(LooperState::STOPPED),
+      playMode(PlayMode::SEQUENCE)
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
         layers[l] = new Looper::Layer();
@@ -143,10 +144,15 @@ void Looper::startNewCycle(uint samplesInCycle)
     }
 
     if (state == LooperState::RECORDING || state == LooperState::PLAYING) {
-        if (previousState == LooperState::WAITING)
+        if (previousState == LooperState::WAITING) {
             currentLayerIndex = 0; // start recording in first layer
-        else
-            currentLayerIndex = (currentLayerIndex + 1) % maxLayers;
+        }
+        else {
+            if (state == LooperState::PLAYING && playMode == PlayMode::RANDOM_LAYERS)
+                currentLayerIndex = qrand() % maxLayers;
+            else
+                currentLayerIndex = (currentLayerIndex + 1) % maxLayers;
+        }
 
         // need stop the recording?
         if (state == LooperState::RECORDING) {
@@ -187,20 +193,46 @@ void Looper::process(SamplesBuffer &samples)
     if (state == LooperState::STOPPED || state == LooperState::WAITING)
         return;
 
-    uint samplesToAppend = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
+    uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
 
-    // store/rec current samples
-    if (state == LooperState::RECORDING) {
-        layers[currentLayerIndex]->append(samples, samplesToAppend);
+    if (state == LooperState::RECORDING) { // store/rec current samples
+        layers[currentLayerIndex]->append(samples, samplesToProcess);
     }
     else if (state == LooperState::PLAYING) {
-        // render samples from previous interval layer
-        Looper::Layer *loopLayer = layers[currentLayerIndex];// getPreviousLayer();
-        int samplesToMix= qMin(samplesToAppend, loopLayer->availableSamples);
-        if (samplesToMix) {
-            loopLayer->mixTo(samples, samplesToMix, intervalPosition); // mix buffered samples
+        switch (playMode) {
+        case PlayMode::SEQUENCE:
+        case PlayMode::RANDOM_LAYERS: // layer index in randomized in startNewCycle() function
+            mixLayer(currentLayerIndex, samples, samplesToProcess);
+            break;
+        case PlayMode::ALL_LAYERS:
+            playAllLayers(samples, samplesToProcess);
+            break;
+        default:
+            qCritical() << playMode << " not implemented yet!";
         }
     }
 
-    intervalPosition = (intervalPosition + samplesToAppend) % intervalLenght;
+    intervalPosition = (intervalPosition + samplesToProcess) % intervalLenght;
+}
+
+/**
+ Play one layer per interval
+ */
+void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix)
+{
+    if (layerIndex >= maxLayers)
+        return;
+
+    Looper::Layer *loopLayer = layers[layerIndex];
+    samplesToMix = qMin(samplesToMix, loopLayer->availableSamples);
+    if (samplesToMix) {
+        loopLayer->mixTo(samples, samplesToMix, intervalPosition); // mix buffered samples
+    }
+}
+
+void Looper::playAllLayers(SamplesBuffer &samples, uint samplesToMix)
+{
+    for (int l = 0; l < maxLayers; ++l) {
+        mixLayer(l, samples, samplesToMix);
+    }
 }

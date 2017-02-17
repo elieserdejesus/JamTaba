@@ -15,7 +15,17 @@ public:
     ~Looper();
     void setActivated(bool setActivated);
     void process(SamplesBuffer &samples);
-    void startNewCycle(uint samplesInCycle); // create a new layer
+    void startNewCycle(uint samplesInCycle);
+
+    enum PlayMode
+    {
+        SEQUENCE, // one layer in each interval
+        ALL_LAYERS, // mix and play all layers
+        SELECTED_LAYER_ONLY, // ONE selected layer
+        RANDOM_LAYERS
+    };
+
+    void setPlayMode(PlayMode playMode);
 
     const std::vector<float> getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const;
 
@@ -40,8 +50,6 @@ private:
     quint8 currentLayerIndex;
     quint8 maxLayers;
 
-    //Layer *getPreviousLayer() const;
-
     enum LooperState
     {
         STOPPED,
@@ -51,7 +59,17 @@ private:
     };
 
     LooperState state;
+
+    PlayMode playMode;
+
+    void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix);
+    void playAllLayers(SamplesBuffer &samples, uint samplesToMix);
 };
+
+inline void Looper::setPlayMode(PlayMode playMode)
+{
+    this->playMode = playMode;
+}
 
 inline quint8 Looper::getMaxLayers() const
 {
