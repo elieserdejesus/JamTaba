@@ -72,7 +72,6 @@ public:
                     out[s] += internalChannels[c][s + intervalPosition];
                 }
             }
-            availableSamples -= samplesToMix;
         }
     }
 
@@ -99,9 +98,10 @@ Looper::Looper()
     : currentLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0),
+      maxLayers(2),
       state(LooperState::STOPPED)
 {
-    for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
+    for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
         layers[l] = new Looper::Layer();
     }
 }
@@ -111,6 +111,18 @@ Looper::~Looper()
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
         delete layers[l];
     }
+}
+
+void Looper::setMaxLayers(quint8 maxLayers)
+{
+    if (maxLayers < 1) {
+        maxLayers = 1;
+    }
+    else if (maxLayers > MAX_LOOP_LAYERS) {
+        maxLayers = MAX_LOOP_LAYERS;
+    }
+
+    this->maxLayers = maxLayers;
 }
 
 void Looper::startNewCycle(uint samplesInCycle)
@@ -130,13 +142,20 @@ void Looper::startNewCycle(uint samplesInCycle)
         state = LooperState::RECORDING;
     }
 
-    if (state == LooperState::RECORDING) {
+    if (state == LooperState::RECORDING || state == LooperState::PLAYING) {
         if (previousState == LooperState::WAITING)
             currentLayerIndex = 0; // start recording in first layer
         else
-            currentLayerIndex = (currentLayerIndex + 1) % MAX_LOOP_LAYERS;
+            currentLayerIndex = (currentLayerIndex + 1) % maxLayers;
 
-        layers[currentLayerIndex]->zero();
+        // need stop the recording?
+        if (state == LooperState::RECORDING) {
+            bool needStopRecording = previousState == LooperState::RECORDING && currentLayerIndex == 0; // stop recording when backing to first layer
+            if (needStopRecording)
+                state = LooperState::PLAYING;
+            else
+                layers[currentLayerIndex]->zero(); // zero current layer if keep recording
+        }
     }
 }
 
@@ -154,7 +173,7 @@ void Looper::setActivated(bool activated)
 
 const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const
 {
-    if (layerIndex < MAX_LOOP_LAYERS && state != LooperState::WAITING)
+    if (layerIndex < maxLayers && (state == LooperState::RECORDING || state == LooperState::PLAYING))
     {
         Audio::Looper::Layer *layer = layers[layerIndex];
         return layer->getSamplesPeaks(samplesPerPeak);
@@ -171,22 +190,17 @@ void Looper::process(SamplesBuffer &samples)
     uint samplesToAppend = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
 
     // store/rec current samples
-    layers[currentLayerIndex]->append(samples, samplesToAppend);
-
-    // render samples from previous interval layer
-    Looper::Layer *loopLayer = getPreviousLayer();
-    int samplesToMix= qMin(samplesToAppend, loopLayer->availableSamples);
-    if (samplesToMix) {
-        loopLayer->mixTo(samples, samplesToMix, intervalPosition); // mix buffered samples
+    if (state == LooperState::RECORDING) {
+        layers[currentLayerIndex]->append(samples, samplesToAppend);
+    }
+    else if (state == LooperState::PLAYING) {
+        // render samples from previous interval layer
+        Looper::Layer *loopLayer = layers[currentLayerIndex];// getPreviousLayer();
+        int samplesToMix= qMin(samplesToAppend, loopLayer->availableSamples);
+        if (samplesToMix) {
+            loopLayer->mixTo(samples, samplesToMix, intervalPosition); // mix buffered samples
+        }
     }
 
     intervalPosition = (intervalPosition + samplesToAppend) % intervalLenght;
-}
-
-Looper::Layer* Looper::getPreviousLayer() const
-{
-    if (currentLayerIndex > 0)
-        return layers[currentLayerIndex - 1];
-
-    return layers[MAX_LOOP_LAYERS - 1]; // current layer index is ZERO, returning the last layer
 }

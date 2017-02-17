@@ -62,7 +62,7 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 
 void LooperWindow::updateDrawings()
 {
-    uint currentLayer = looper->getCurrentLayerIndex();
+    quint8 currentLayer = looper->getCurrentLayerIndex();
     LooperWavePanel *wavePanel = wavePanels[currentLayer];
     if (wavePanel)
         wavePanel->updateDrawings();
@@ -92,10 +92,12 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         detachCurrentLooper();
 
         // create wave panels (layers view)
+        quint8 currentMaxLayers = looper->getMaxLayers();
         for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
             LooperWavePanel *wavePanel = new LooperWavePanel(looper, layerIndex);
             wavePanels.insert(layerIndex, wavePanel);
             layout()->addWidget(wavePanel);
+            wavePanel->setVisible(layerIndex < currentMaxLayers);
         }
 
         connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);

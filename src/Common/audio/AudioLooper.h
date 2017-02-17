@@ -26,17 +26,21 @@ public:
     bool isRecording() const;
     bool isStopped() const;
 
+    void setMaxLayers(quint8 maxLayers);
+    quint8 getMaxLayers() const;
+
     static const quint8 MAX_LOOP_LAYERS = 4;
 
 private:
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples
 
-    class Layer;
+    class Layer; // internal class
     Layer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex;
+    quint8 maxLayers;
 
-    Layer *getPreviousLayer() const;
+    //Layer *getPreviousLayer() const;
 
     enum LooperState
     {
@@ -48,6 +52,11 @@ private:
 
     LooperState state;
 };
+
+inline quint8 Looper::getMaxLayers() const
+{
+    return maxLayers;
+}
 
 inline bool Looper::isWaiting() const
 {

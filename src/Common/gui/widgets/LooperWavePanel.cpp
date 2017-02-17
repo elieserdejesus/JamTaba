@@ -79,10 +79,17 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
 
     // draw a transparent red rect from left to current interval beat
     bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
-    if (drawingCurrentLayer && looper->isRecording()) {
-        static const QColor redColor(255, 0, 0, 25);
-        qreal width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
-        painter.fillRect(QRectF(0, 0, width, height()), redColor);
+    if (drawingCurrentLayer) {
+        if (looper->isPlaying()) {
+            static const QColor greenColor(0, 255, 0, 15);
+            qreal x = currentIntervalBeat * pixelsPerBeat;
+            painter.fillRect(QRectF(x, 0, pixelsPerBeat, height()), greenColor);
+        }
+        else if (looper->isRecording()) {
+            static const QColor redColor(255, 0, 0, 25);
+            qreal width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
+            painter.fillRect(QRectF(0, 0, width, height()), redColor);
+        }
     }
     else {
         //draw a transparent black rect in all layer, except the current one
