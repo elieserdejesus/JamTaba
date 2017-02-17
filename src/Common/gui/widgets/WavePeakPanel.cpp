@@ -94,10 +94,8 @@ void WavePeakPanel::addPeak(float peak)
         return;
     }
 
-    if (peaksArray.size() >= maxPeaks) {
+    if (peaksArray.size() >= maxPeaks)
         peaksArray.clear();
-        qDebug() << "Clearing peaks array";
-    }
 
     peaksArray.push_back(peak);
 

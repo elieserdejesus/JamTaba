@@ -32,7 +32,7 @@ protected:
 private slots:
     void updateBeatsPerInterval();
     void updateCurrentBeat(uint currentIntervalBeat);
-    void updateStateControls();
+    void updateControls();
 private:
     Ui::LooperWindow *ui;
     Audio::Looper *looper;
@@ -43,9 +43,7 @@ private:
 
     void addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex);
 
-    void initializePlayModesComboBox();
-
-    void initializeStateControls();
+    void initializeControls();
 
     int currentBeat;
 };

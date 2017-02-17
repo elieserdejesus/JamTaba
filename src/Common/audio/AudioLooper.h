@@ -78,6 +78,7 @@ private:
 inline void Looper::setPlayMode(PlayMode playMode)
 {
     this->playMode = playMode;
+    qDebug() << "playMode setted to:" << playMode;
 }
 
 inline quint8 Looper::getMaxLayers() const
@@ -109,6 +110,8 @@ inline quint8 Looper::getCurrentLayerIndex() const
 {
     return currentLayerIndex;
 }
+
+Q_DECLARE_METATYPE(Audio::Looper::PlayMode)
 
 } // namespace
 

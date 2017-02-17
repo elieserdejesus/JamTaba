@@ -314,3 +314,8 @@ LooperWindow
 {
     font-size: 24pt; /* size of 'wait' text in LooperWindow */
 }
+
+LooperWindow #layersWidget
+{
+    background-color: rgba(0, 0, 0, 10);
+}

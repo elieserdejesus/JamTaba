@@ -251,6 +251,7 @@ QString Looper::getPlayModeString(PlayMode playMode)
         case PlayMode::SEQUENCE:        return tr("Sequence");
         case PlayMode::ALL_LAYERS:      return tr("All Layers");
         case PlayMode::RANDOM_LAYERS:   return tr("Random");
+        case SELECTED_LAYER_ONLY:       return tr("Selected");
     }
 
     return "Error";

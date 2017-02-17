@@ -3,6 +3,7 @@
 #include "NinjamController.h"
 
 #include <QVBoxLayout>
+#include <QSpinBox>
 
 using namespace Controller;
 using namespace Audio;
@@ -31,26 +32,7 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
     setMaximumSize(size());
     setSizeGripEnabled(false);
 
-    initializePlayModesComboBox();
-    initializeStateControls();
-}
-
-void LooperWindow::initializeStateControls()
-{
-    connect(ui->buttonRec, &QPushButton::clicked, [=]{
-        if (looper)
-            looper->setState(Looper::WAITING);
-    });
-
-    connect(ui->buttonStop, &QPushButton::clicked, [=]{
-        if (looper)
-            looper->setState(Looper::STOPPED);
-    });
-
-    connect(ui->buttonPlay, &QPushButton::clicked, [=]{
-        if (looper)
-            looper->setState(Looper::PLAYING);
-    });
+    initializeControls();
 }
 
 void LooperWindow::paintEvent(QPaintEvent *ev)
@@ -128,22 +110,28 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
-        connect(looper, &Audio::Looper::stateChanged, this, &LooperWindow::updateStateControls);
+        connect(looper, &Audio::Looper::stateChanged, this, &LooperWindow::updateControls);
 
         this->looper = looper;
         this->controller = controller;
     }
 
     updateBeatsPerInterval();
-    updateStateControls();
+    updateControls();
 }
 
-void LooperWindow::updateStateControls()
+void LooperWindow::updateControls()
 {
     if (looper) {
         ui->buttonRec->setChecked(looper->isRecording() || looper->isWaiting());
         ui->buttonStop->setEnabled(!looper->isStopped());
         ui->buttonPlay->setEnabled(looper->isStopped());
+
+        ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
+        ui->labelPlayMode->setEnabled(ui->comboBoxPlayMode->isEnabled());
+
+        ui->maxLayersSpinBox->setEnabled(looper->isStopped());
+        ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
     }
 }
 
@@ -195,8 +183,9 @@ void LooperWindow::updateBeatsPerInterval()
     }
 }
 
-void LooperWindow::initializePlayModesComboBox()
+void LooperWindow::initializeControls()
 {
+    // play modes combo
     ui->comboBoxPlayMode->clear();
 
     std::vector<Looper::PlayMode> playModes;
@@ -205,8 +194,36 @@ void LooperWindow::initializePlayModesComboBox()
     playModes.push_back(Looper::RANDOM_LAYERS);
     playModes.push_back(Looper::SELECTED_LAYER_ONLY);
 
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < playModes.size(); ++i) {
         Looper::PlayMode playMode = playModes[i];
-        ui->comboBoxPlayMode->addItem(Looper::getPlayModeString(playMode), playMode);
+        ui->comboBoxPlayMode->addItem(Looper::getPlayModeString(playMode), qVariantFromValue(playMode));
     }
+
+    // max layer spinbox
+    ui->maxLayersSpinBox->setMinimum(1);
+    ui->maxLayersSpinBox->setMaximum(Looper::MAX_LOOP_LAYERS);
+
+
+    // wire signals/slots
+    connect(ui->buttonRec, &QPushButton::clicked, [=]{
+        if (looper)
+            looper->setState(Looper::WAITING);
+    });
+
+    connect(ui->buttonStop, &QPushButton::clicked, [=]{
+        if (looper)
+            looper->setState(Looper::STOPPED);
+    });
+
+    connect(ui->buttonPlay, &QPushButton::clicked, [=]{
+        if (looper)
+            looper->setState(Looper::PLAYING);
+    });
+
+    connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index){
+        if (index >= 0 && looper) {
+            looper->setPlayMode(ui->comboBoxPlayMode->currentData().value<Looper::PlayMode>());
+        }
+    });
+
 }
