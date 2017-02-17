@@ -71,25 +71,22 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
     static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
     painter.setPen(pen);
 
-    int pixelsPerBeat = (width()/beatsPerInterval) + 1;
-
-    const int top = 0;
-    const int bottom = height();
+    qreal pixelsPerBeat = (width()/static_cast<qreal>(beatsPerInterval));
     for (uint beat = 0; beat < beatsPerInterval; ++beat) {
-        const int x = beat * pixelsPerBeat;
-        painter.drawLine(x, top, x, bottom);
+        const qreal x = beat * pixelsPerBeat;
+        painter.drawLine(QPointF(x, 0), QPointF(x, height()));
     }
 
     // draw a transparent red rect from left to current interval beat
     bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
     if (drawingCurrentLayer && looper->isRecording()) {
         static const QColor redColor(255, 0, 0, 25);
-        uint width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
-        painter.fillRect(0, 0, width, height(), redColor);
+        qreal width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
+        painter.fillRect(QRectF(0, 0, width, height()), redColor);
     }
     else {
         //draw a transparent black rect in all layer, except the current one
         static const QColor blackColor(0, 0, 0, 8);
-        painter.fillRect(0, 0, width(), height(), blackColor);
+        painter.fillRect(QRectF(0, 0, width(), height()), blackColor);
     }
 }

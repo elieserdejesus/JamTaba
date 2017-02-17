@@ -10,7 +10,8 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LooperWindow),
     looper(nullptr),
-    controller(nullptr)
+    controller(nullptr),
+    currentBeat(-1)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint); // remove help/question marker
 
@@ -39,21 +40,23 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
         static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
         painter.setPen(pen);
         uint bpi = controller->getCurrentBpi();
-        int pixelsPerBeat = (width()/bpi) + 1;
+        qreal pixelsPerBeat = (width()/static_cast<qreal>(bpi));
         for (uint beat = 0; beat < bpi; ++beat) {
-            const int x = beat * pixelsPerBeat;
-            painter.drawLine(x, 0, x, height());
+            const qreal x = beat * pixelsPerBeat;
+            painter.drawLine(QPointF(x, 0), QPointF(x, height()));
         }
 
         // draw a transparent red rect in current beat
-        static const QColor redColor(255, 0, 0, 25);
-        uint x = currentBeat * pixelsPerBeat;
-        painter.fillRect(x, 0, pixelsPerBeat, height(), redColor);
+        if (currentBeat) {
+            static const QColor redColor(255, 0, 0, 25);
+            qreal x = currentBeat * pixelsPerBeat;
+            painter.fillRect(QRectF(x, 0, pixelsPerBeat, height()), redColor);
 
-        uint waitBeats = (controller->getCurrentBpi() - currentBeat) - 1;
-        QString text = tr("wait (%1)").arg(QString::number(waitBeats));
-        uint textWidth = fontMetrics().width(text);
-        painter.drawText(width()/2 - textWidth/2, height()/2, text);
+            uint waitBeats = controller->getCurrentBpi() - currentBeat;
+            QString text = tr("wait (%1)").arg(QString::number(waitBeats));
+            qreal textWidth = fontMetrics().width(text);
+            painter.drawText(QPointF(width()/2.0 - textWidth/2.0, height()/2.0), text);
+        }
     }
 }
 
@@ -83,8 +86,6 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
     Q_ASSERT(controller);
 
     if (looper != this->looper) { // check if user is not just reopening the looper editor
-
-        qDebug() << "Setting looper in LooperWindow";
 
         deleteWavePanels();
 
