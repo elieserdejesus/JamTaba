@@ -202,29 +202,33 @@ const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPe
 
 void Looper::process(SamplesBuffer &samples)
 {
-    if (state == LooperState::STOPPED || state == LooperState::WAITING)
-        return;
+    bool canProcess = state == LooperState::RECORDING || state == LooperState::PLAYING;
+    uint samplesToProcess = samples.getFrameLenght();
 
-    uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
+    if (canProcess) {
+        samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
 
-    if (state == LooperState::RECORDING) { // store/rec current samples
-        layers[currentLayerIndex]->append(samples, samplesToProcess);
-    }
-    else if (state == LooperState::PLAYING) {
-        switch (playMode) {
-        case PlayMode::SEQUENCE:
-        case PlayMode::RANDOM_LAYERS: // layer index in randomized in startNewCycle() function
-            mixLayer(currentLayerIndex, samples, samplesToProcess);
-            break;
-        case PlayMode::ALL_LAYERS:
-            playAllLayers(samples, samplesToProcess);
-            break;
-        default:
-            qCritical() << playMode << " not implemented yet!";
+        if (state == LooperState::RECORDING) { // store/rec current samples
+            layers[currentLayerIndex]->append(samples, samplesToProcess);
+        }
+        else if (state == LooperState::PLAYING) {
+            switch (playMode) {
+            case PlayMode::SEQUENCE:
+            case PlayMode::RANDOM_LAYERS: // layer index in randomized in startNewCycle() function
+                mixLayer(currentLayerIndex, samples, samplesToProcess);
+                break;
+            case PlayMode::ALL_LAYERS:
+                playAllLayers(samples, samplesToProcess);
+                break;
+            default:
+                qCritical() << playMode << " not implemented yet!";
+            }
         }
     }
 
-    intervalPosition = (intervalPosition + samplesToProcess) % intervalLenght;
+    // always update intervalPosition to keep the execution in sync when 'play' is pressed
+    if (intervalLenght)
+        intervalPosition = (intervalPosition + samplesToProcess) % intervalLenght;
 }
 
 /**
