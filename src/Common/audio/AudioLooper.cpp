@@ -124,6 +124,8 @@ void Looper::setMaxLayers(quint8 maxLayers)
     }
 
     this->maxLayers = maxLayers;
+
+    emit maxLayersChanged(maxLayers);
 }
 
 void Looper::startNewCycle(uint samplesInCycle)

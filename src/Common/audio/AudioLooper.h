@@ -57,6 +57,7 @@ public:
 
 signals:
     void stateChanged();
+    void maxLayersChanged(quint8 newMaxLayers);
 
 private:
     uint intervalLenght; // in samples

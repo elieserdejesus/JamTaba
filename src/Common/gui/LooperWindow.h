@@ -33,6 +33,8 @@ private slots:
     void updateBeatsPerInterval();
     void updateCurrentBeat(uint currentIntervalBeat);
     void updateControls();
+    void updateLayersVisibility(quint8 newMaxLayers);
+
 private:
     Ui::LooperWindow *ui;
     Audio::Looper *looper;

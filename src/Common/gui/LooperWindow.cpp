@@ -111,6 +111,7 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
         connect(looper, &Audio::Looper::stateChanged, this, &LooperWindow::updateControls);
+        connect(looper, &Audio::Looper::maxLayersChanged, this, &LooperWindow::updateLayersVisibility);
 
         this->looper = looper;
         this->controller = controller;
@@ -118,6 +119,14 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
 
     updateBeatsPerInterval();
     updateControls();
+}
+
+void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
+{
+    for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
+        LooperWavePanel *wavePanel = wavePanels[layerIndex];
+        wavePanel->setVisible(layerIndex < newMaxLayers);
+    }
 }
 
 void LooperWindow::updateControls()
@@ -205,25 +214,35 @@ void LooperWindow::initializeControls()
 
 
     // wire signals/slots
-    connect(ui->buttonRec, &QPushButton::clicked, [=]{
+    connect(ui->buttonRec, &QPushButton::clicked, [=]
+    {
         if (looper)
             looper->setState(Looper::WAITING);
     });
 
-    connect(ui->buttonStop, &QPushButton::clicked, [=]{
+    connect(ui->buttonStop, &QPushButton::clicked, [=]
+    {
         if (looper)
             looper->setState(Looper::STOPPED);
     });
 
-    connect(ui->buttonPlay, &QPushButton::clicked, [=]{
+    connect(ui->buttonPlay, &QPushButton::clicked, [=]
+    {
         if (looper)
             looper->setState(Looper::PLAYING);
     });
 
-    connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index){
+    connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
+    {
         if (index >= 0 && looper) {
             looper->setPlayMode(ui->comboBoxPlayMode->currentData().value<Looper::PlayMode>());
         }
+    });
+
+    connect(ui->maxLayersSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int newMaxLayers)
+    {
+        if (looper)
+            looper->setMaxLayers(newMaxLayers);
     });
 
 }
