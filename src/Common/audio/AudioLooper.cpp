@@ -16,7 +16,10 @@ class Looper::Layer
 public:
 
     Layer()
-        : availableSamples(0)
+        : availableSamples(0),
+          lastSamplesPerPeak(0),
+          lastCacheComputationSample(0)
+
     {
         //
     }
@@ -27,6 +30,9 @@ public:
         std::fill(rightChannel.begin(), rightChannel.end(), static_cast<float>(0));
 
         availableSamples = 0;
+        lastSamplesPerPeak = 0;
+        lastCacheComputationSample = 0;
+        peaksCache.clear();
     }
 
     void append(const SamplesBuffer &samples, uint samplesToAppend)
@@ -38,27 +44,50 @@ public:
         std::memcpy(&(rightChannel[0]) + availableSamples, samples.getSamplesArray(secondChannelIndex), sizeInBytes);
 
         availableSamples += samplesToAppend;
+
+        // build peaks cache
+        if (lastSamplesPerPeak) {
+            if (availableSamples - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
+                peaksCache.push_back(computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak));
+                lastCacheComputationSample += lastSamplesPerPeak;
+            }
+        }
     }
 
-    std::vector<float> getSamplesPeaks(uint samplesPerPeak) const
+    float computeMaxPeak(uint from, uint samplesPerPeak) const
     {
-        std::vector<float> maxPeaks;
-
-        if (samplesPerPeak) {
-            float lastMaxPeak = 0;
-            for (uint i = 0; i < availableSamples; ++i) {
-                float peak = qMax(qAbs(leftChannel[i]), qAbs(rightChannel[i]));
-                if (peak > lastMaxPeak)
-                    lastMaxPeak = peak;
-
-                if (i % samplesPerPeak == 0) {
-                    maxPeaks.push_back(lastMaxPeak);
-                    lastMaxPeak = 0;
+        float maxPeak = 0;
+        uint limit = qMin(samplesPerPeak, availableSamples - from);
+        for (uint i = 0; i < limit; ++i) {
+            const uint offset = from + i;
+            if (offset < leftChannel.size()) {
+                float peak = qMax(qAbs(leftChannel[offset]), qAbs(rightChannel[offset]));
+                if (peak > maxPeak) {
+                    maxPeak = peak;
                 }
             }
         }
 
-        return maxPeaks;
+        return maxPeak;
+    }
+
+    std::vector<float> getSamplesPeaks(uint samplesPerPeak)
+    {
+        if (lastSamplesPerPeak == samplesPerPeak) { // cache hit?
+            return peaksCache;
+        }
+
+        // compute all peaks
+        peaksCache.clear();
+        if (samplesPerPeak) {
+            for (uint i = 0; i < availableSamples; i += samplesPerPeak) {
+                float maxPeak = computeMaxPeak(i, samplesPerPeak);
+                peaksCache.push_back(maxPeak);
+            }
+            lastSamplesPerPeak = samplesPerPeak;
+        }
+
+        return peaksCache;
     }
 
     void mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition)
@@ -90,6 +119,9 @@ private:
     std::vector<float> leftChannel;
     std::vector<float> rightChannel;
 
+    std::vector<float> peaksCache;
+    uint lastSamplesPerPeak;
+    uint lastCacheComputationSample;
 };
 
 // ------------------------------------------------------------------------------------
