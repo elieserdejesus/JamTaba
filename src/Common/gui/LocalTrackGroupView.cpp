@@ -231,6 +231,10 @@ LocalTrackView *LocalTrackGroupView::addTrackView(long trackID)
         return nullptr;
 
     LocalTrackView *newTrack = dynamic_cast<LocalTrackView *>(TrackGroupView::addTrackView(trackID));
+
+    bool enableLooperButton = mainFrame->getMainController()->isPlayingInNinjamRoom();
+    newTrack->enableLopperButton(enableLooperButton);
+
     if (newTrack)
         emit trackAdded();
 
