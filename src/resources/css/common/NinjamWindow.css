@@ -312,7 +312,7 @@ IntervalProgressDisplay
 
 LooperWindow
 {
-    font-size: 24pt; /* size of 'wait' text in LooperWindow */
+    font-size: 18pt; /* size of 'wait' text in LooperWindow */
 }
 
 LooperWindow #layersWidget

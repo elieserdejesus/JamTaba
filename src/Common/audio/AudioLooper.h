@@ -64,7 +64,7 @@ public:
 signals:
     void stateChanged();
     void maxLayersChanged(quint8 newMaxLayers);
-
+    void currentLayerChanged(quint8 currentLayer);
 private:
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples
@@ -73,6 +73,8 @@ private:
     Layer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex;
     quint8 maxLayers;
+
+    void setCurrentLayer(quint8 newLayer);
 
     LooperState state;
 

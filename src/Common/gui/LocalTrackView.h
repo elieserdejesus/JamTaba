@@ -75,8 +75,13 @@ private:
     bool peakMetersOnly;
     void deleteWidget(QWidget *widget);
 
+    class LooperIconFactory;
+
+    static LooperIconFactory looperIconFactory;
+
 private slots:
     void setStereoInversion(bool stereoInverted);
+    void updateLooperButtonIcon();
 
 };
 

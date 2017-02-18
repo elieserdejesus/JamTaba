@@ -182,8 +182,14 @@ void Looper::selectLayer(quint8 layerIndex)
     if (isWaiting() || isRecording()) // can't select layer in these states
         return;
 
-    if (layerIndex < maxLayers) {
-        currentLayerIndex = layerIndex;
+    setCurrentLayer(layerIndex);
+}
+
+void Looper::setCurrentLayer(quint8 newLayer)
+{
+    if (newLayer < maxLayers) {
+        currentLayerIndex = newLayer;
+        emit currentLayerChanged(newLayer);
     }
 }
 
@@ -213,7 +219,7 @@ void Looper::startNewCycle(uint samplesInCycle)
     intervalPosition = 0;
 
     if (isWaiting()) {
-        currentLayerIndex = 0; // always start recording in first layer
+        setCurrentLayer(0);// always start recording in first layer
         layers[currentLayerIndex]->zero();
         setState(LooperState::RECORDING);
         return;
@@ -221,15 +227,15 @@ void Looper::startNewCycle(uint samplesInCycle)
 
     if (isPlaying()) {
         if (playMode == PlayMode::RANDOM_LAYERS)
-            currentLayerIndex = qrand() % maxLayers;
+            setCurrentLayer(qrand() % maxLayers);
         else if (playMode == PlayMode::SEQUENCE)
-            currentLayerIndex = (currentLayerIndex + 1) % maxLayers;
+            setCurrentLayer((currentLayerIndex + 1) % maxLayers);
 
         return;  // ALL_LAYERS and SELECTED_LAYER_ONLY play states are not touching in currentLayerIndex
     }
 
     if (isRecording()) {
-        currentLayerIndex = (currentLayerIndex + 1) % maxLayers; // advance record to next layer
+        setCurrentLayer((currentLayerIndex + 1) % maxLayers); // advance record to next layer
         if (currentLayerIndex == 0) // stop recording when backing to first layer
             setState(LooperState::PLAYING);
         else
