@@ -10,7 +10,8 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
       samplesPerPixel(0),
       samplesPerInterval(0),
       looper(looper),
-      layerID(layerIndex)
+      layerID(layerIndex),
+      drawingLayerNumber(false)
 {
    setDrawingMode(WavePeakPanel::SOUND_WAVE);
    this->useAlphaInPreviousSamples = false; // all samples are painted without alpha
@@ -21,10 +22,12 @@ LooperWavePanel::~LooperWavePanel()
 
 }
 
-void LooperWavePanel::updateDrawings()
+void LooperWavePanel::updateDrawings(bool drawLayerNumber)
 {
     if (!looper)
         return;
+
+    this->drawingLayerNumber = drawLayerNumber;
 
     peaksArray = looper->getLayerPeaks(layerID, samplesPerPixel);
 
@@ -115,5 +118,28 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
             qreal width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
             painter.fillRect(QRectF(0, 0, width, height()), redColor);
         }
+    }
+
+    if (looper->isPlaying() && drawingLayerNumber) {
+
+        painter.setRenderHint(QPainter::Antialiasing);
+
+        static QColor color(0, 0, 0, 20);
+        painter.setBrush(color);
+
+        QString text = QString::number(layerID + 1);
+        qreal textWidth = fontMetrics().width(text);
+        qreal textHeight = fontMetrics().height();
+
+        QRectF textRect(3, 3, textWidth * 2, textHeight);
+        painter.setPen(Qt::NoPen);
+        painter.drawRect(textRect);
+
+        textRect.translate(textWidth/2.0, 0);
+
+
+        painter.setPen(peaksColor);
+        painter.setCompositionMode(QPainter::CompositionMode_Difference);
+        painter.drawText(textRect, text);
     }
 }

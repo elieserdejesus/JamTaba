@@ -16,7 +16,7 @@ public:
     ~LooperWavePanel();
     void setBeatsPerInteval(uint bpi, uint samplesPerInterval);
     void setCurrentBeat(quint8 currentIntervalBeat);
-    void updateDrawings();
+    void updateDrawings(bool drawingLayerNumber);
 
 protected:
     void paintEvent(QPaintEvent *ev) override;
@@ -27,6 +27,8 @@ private:
     uint beatsPerInterval;
     uint samplesPerInterval;
     uint samplesPerPixel;
+
+    bool drawingLayerNumber;
 
     quint8 currentIntervalBeat;
 

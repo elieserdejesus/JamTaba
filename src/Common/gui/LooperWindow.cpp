@@ -50,7 +50,11 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 {
     QDialog::paintEvent(ev);
 
-    if (looper && looper->isWaiting()) {
+    if (!looper)
+        return;
+
+    if (looper->isWaiting()) {
+
         QPainter painter(this);
 
         static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
@@ -80,8 +84,11 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 
 void LooperWindow::updateDrawings()
 {
-    for (LooperWavePanel *wavePanel : wavePanels.values())
-        wavePanel->updateDrawings();
+    bool drawLayersNumbers = looper->getMaxLayers() > 1;
+    for (LooperWavePanel *wavePanel : wavePanels.values()) {
+        if (wavePanel->isVisible())
+            wavePanel->updateDrawings(drawLayersNumbers);
+    }
 
     update();
 }
