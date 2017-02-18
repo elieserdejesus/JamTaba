@@ -116,6 +116,10 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
 
     if (looper != this->looper) { // check if user is not just reopening the looper editor
 
+        if (this->looper && this->looper->isRecording()) {
+            this->looper->stop();
+        }
+
         deleteWavePanels();
 
         detachCurrentLooper();

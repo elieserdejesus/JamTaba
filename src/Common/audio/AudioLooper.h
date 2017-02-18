@@ -20,6 +20,7 @@ public:
     void selectLayer(quint8 layerIndex);
     void clearAllLayers();
     void clearSelectedLayer();
+    void stop();
 
     enum PlayMode
     {

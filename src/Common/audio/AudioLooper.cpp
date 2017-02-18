@@ -151,6 +151,11 @@ Looper::~Looper()
     }
 }
 
+void Looper::stop()
+{
+    setState(Looper::STOPPED);
+}
+
 void Looper::clearSelectedLayer()
 {
     if (isPlaying()) {
