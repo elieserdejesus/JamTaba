@@ -28,9 +28,12 @@ public:
             QPixmap recPixmap = originalIcon.pixmap(iconSizes.first());
 
             QPainter painter(&recPixmap);
-            painter.setBrush(QColor(255, 0, 0, 160));
-            qreal radius = 10;
-            painter.drawEllipse(recPixmap.width() - radius, recPixmap.height() - radius, radius, radius);
+            painter.setRenderHint(QPainter::Antialiasing);
+            painter.setBrush(QColor(255, 0, 0, 120));
+            painter.setPen(Qt::NoPen);
+            QRectF rect(recPixmap.rect());
+            painter.drawEllipse(rect.marginsAdded(QMarginsF(-2, -5, -2, -2)));
+            //painter.drawEllipse(recPixmap.width() - radius, recPixmap.height() - radius, radius, radius);
 
             return QIcon(recPixmap);
         }
