@@ -1,6 +1,8 @@
 #include "LooperWavePanel.h"
 #include "audio/AudioLooper.h"
 
+#include <QKeyEvent>
+
 LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
     : beatsPerInterval(16),
       lastMaxPeak(0),
@@ -9,11 +11,8 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
       samplesPerInterval(0),
       looper(looper),
       layerID(layerIndex)
-
 {
-
    setDrawingMode(WavePeakPanel::SOUND_WAVE);
-
    this->useAlphaInPreviousSamples = false; // all samples are painted without alpha
 }
 
@@ -68,6 +67,12 @@ bool LooperWavePanel::canUseHighlightPainting() const
     return false;
 }
 
+void LooperWavePanel::mousePressEvent(QMouseEvent *ev)
+{
+    Q_UNUSED(ev)
+    looper->selectLayer(this->layerID);
+    update();
+}
 
 void LooperWavePanel::paintEvent(QPaintEvent *ev)
 {
@@ -98,9 +103,7 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
             painter.setPen(dotPen);
             painter.drawLine(QPointF(x, 0), QPointF(x, height()));
         }
-    }
 
-    if (useHighlightPainting) {
         if (looper->isPlaying()) {
             qreal x = currentIntervalBeat * pixelsPerBeat;
             QColor color(peaksColor);

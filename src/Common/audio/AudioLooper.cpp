@@ -24,6 +24,11 @@ public:
         //
     }
 
+    ~Layer()
+    {
+
+    }
+
     void zero()
     {
         std::fill(leftChannel.begin(), leftChannel.end(), static_cast<float>(0));
@@ -146,6 +151,16 @@ Looper::~Looper()
     }
 }
 
+void Looper::selectLayer(quint8 layerIndex)
+{
+    if (isWaiting() || isRecording()) // can't select layer in these states
+        return;
+
+    if (layerIndex < maxLayers) {
+        currentLayerIndex = layerIndex;
+    }
+}
+
 void Looper::setMaxLayers(quint8 maxLayers)
 {
     if (maxLayers < 1) {
@@ -171,31 +186,28 @@ void Looper::startNewCycle(uint samplesInCycle)
 
     intervalPosition = 0;
 
-    LooperState previousState = state;
-
-    if (state == LooperState::WAITING) {
+    if (isWaiting()) {
+        currentLayerIndex = 0; // always start recording in first layer
+        layers[currentLayerIndex]->zero();
         setState(LooperState::RECORDING);
+        return;
     }
 
-    if (state == LooperState::RECORDING || state == LooperState::PLAYING) {
-        if (previousState == LooperState::WAITING) {
-            currentLayerIndex = 0; // start recording in first layer
-        }
-        else {
-            if (state == LooperState::PLAYING && playMode == PlayMode::RANDOM_LAYERS)
-                currentLayerIndex = qrand() % maxLayers;
-            else
-                currentLayerIndex = (currentLayerIndex + 1) % maxLayers;
-        }
+    if (isPlaying()) {
+        if (playMode == PlayMode::RANDOM_LAYERS)
+            currentLayerIndex = qrand() % maxLayers;
+        else if (playMode == PlayMode::SEQUENCE)
+            currentLayerIndex = (currentLayerIndex + 1) % maxLayers;
 
-        // need stop the recording?
-        if (state == LooperState::RECORDING) {
-            bool needStopRecording = previousState == LooperState::RECORDING && currentLayerIndex == 0; // stop recording when backing to first layer
-            if (needStopRecording)
-                setState(LooperState::PLAYING);
-            else
-                layers[currentLayerIndex]->zero(); // zero current layer if keep recording
-        }
+        return;  // ALL_LAYERS and SELECTED_LAYER_ONLY play states are not touching in currentLayerIndex
+    }
+
+    if (isRecording()) {
+        currentLayerIndex = (currentLayerIndex + 1) % maxLayers; // advance record to next layer
+        if (currentLayerIndex == 0) // stop recording when backing to first layer
+            setState(LooperState::PLAYING);
+        else
+            layers[currentLayerIndex]->zero(); // zero current layer if keep recording
     }
 }
 
@@ -224,7 +236,7 @@ bool Looper::canPlay(uint intervalLenght) const
 
 const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const
 {
-    if (layerIndex < maxLayers && state != LooperState::WAITING) {
+    if (layerIndex < maxLayers && !isWaiting()) {
         Audio::Looper::Layer *layer = layers[layerIndex];
         return layer->getSamplesPeaks(samplesPerPeak);
     }
@@ -234,19 +246,20 @@ const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPe
 
 void Looper::process(SamplesBuffer &samples)
 {
-    bool canProcess = state == LooperState::RECORDING || state == LooperState::PLAYING;
+    bool canProcess = isRecording() || isPlaying();
     uint samplesToProcess = samples.getFrameLenght();
 
     if (canProcess) {
         samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
 
-        if (state == LooperState::RECORDING) { // store/rec current samples
+        if (isRecording()) { // store/rec current samples
             layers[currentLayerIndex]->append(samples, samplesToProcess);
         }
-        else if (state == LooperState::PLAYING) {
+        else if (isPlaying()) {
             switch (playMode) {
             case PlayMode::SEQUENCE:
             case PlayMode::RANDOM_LAYERS: // layer index in randomized in startNewCycle() function
+            case PlayMode::SELECTED_LAYER_ONLY:
                 mixLayer(currentLayerIndex, samples, samplesToProcess);
                 break;
             case PlayMode::ALL_LAYERS:

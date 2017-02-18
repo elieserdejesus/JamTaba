@@ -4,6 +4,7 @@
 
 #include <QVBoxLayout>
 #include <QSpinBox>
+#include <QKeyEvent>
 
 using namespace Controller;
 using namespace Audio;
@@ -33,6 +34,16 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
     setSizeGripEnabled(false);
 
     initializeControls();
+}
+
+void LooperWindow::keyPressEvent(QKeyEvent *ev)
+{
+    int key = ev->key();
+    bool pressingNumberKey = key >= Qt::Key_1 && key <= Qt::Key_9;
+    if (pressingNumberKey && looper) {
+        quint8 layerIndex = (key - Qt::Key_0) - 1; // convert key to zero based layer index
+        looper->selectLayer(layerIndex);
+    }
 }
 
 void LooperWindow::paintEvent(QPaintEvent *ev)

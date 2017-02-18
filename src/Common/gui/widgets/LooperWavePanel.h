@@ -21,6 +21,7 @@ public:
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void resizeEvent(QResizeEvent *event) override;
+    void mousePressEvent(QMouseEvent *ev) override;
 
 private:
     uint beatsPerInterval;
@@ -41,7 +42,6 @@ private:
     Audio::Looper *looper;
 
     const quint8 layerID;
-
 };
 
 #endif

@@ -17,6 +17,7 @@ public:
     ~Looper();
     void process(SamplesBuffer &samples);
     void startNewCycle(uint samplesInCycle);
+    void selectLayer(quint8 layerIndex);
 
     enum PlayMode
     {
