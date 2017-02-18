@@ -151,6 +151,17 @@ Looper::~Looper()
     }
 }
 
+void Looper::clearAllLayers()
+{
+    for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
+        if (layers[l]) {
+            layers[l]->zero();
+        }
+    }
+
+    setState(LooperState::STOPPED);
+}
+
 void Looper::selectLayer(quint8 layerIndex)
 {
     if (isWaiting() || isRecording()) // can't select layer in these states

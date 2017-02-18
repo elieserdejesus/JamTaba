@@ -81,11 +81,21 @@ void MainController::setSampleRate(int newSampleRate)
     }
 
     audioMixer.setSampleRate(newSampleRate);
-    if (settings.isSaveMultiTrackActivated())
-        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+
+    if (settings.isSaveMultiTrackActivated()) {
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders) {
             jamRecorder->setSampleRate(newSampleRate);
-    if (isPlayingInNinjamRoom())
+        }
+    }
+
+    if (isPlayingInNinjamRoom()) {
         ninjamController->setSampleRate(newSampleRate);
+
+        for (Audio::LocalInputNode *inputTrack: inputTracks.values()) {
+            inputTrack->getLooper()->clearAllLayers(); // looper samples are discarded when sample rate is changed
+        }
+    }
+
     settings.setSampleRate(newSampleRate);
 }
 
@@ -196,16 +206,26 @@ void MainController::uploadEncodedVideoFrame(const QByteArray &encodedData, int 
 
 void MainController::updateBpi(int newBpi)
 {
-    if (settings.isSaveMultiTrackActivated())
-        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+    if (settings.isSaveMultiTrackActivated()) {
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders) {
             jamRecorder->setBpi(newBpi);
+        }
+    }
 }
 
 void MainController::updateBpm(int newBpm)
 {
-    if (settings.isSaveMultiTrackActivated())
-        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+    if (settings.isSaveMultiTrackActivated()) {
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders) {
             jamRecorder->setBpm(newBpm);
+        }
+    }
+
+    if (isPlayingInNinjamRoom()) {
+        for (Audio::LocalInputNode *inputTrack: inputTracks.values()) {
+            inputTrack->getLooper()->clearAllLayers(); // looper samples are discarded when BPM is changed
+        }
+    }
 }
 
 void MainController::enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex,
