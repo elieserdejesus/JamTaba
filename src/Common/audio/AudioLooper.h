@@ -19,6 +19,7 @@ public:
     void startNewCycle(uint samplesInCycle);
     void selectLayer(quint8 layerIndex);
     void clearAllLayers();
+    void clearSelectedLayer();
 
     enum PlayMode
     {

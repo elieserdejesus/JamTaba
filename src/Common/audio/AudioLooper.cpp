@@ -151,6 +151,16 @@ Looper::~Looper()
     }
 }
 
+void Looper::clearSelectedLayer()
+{
+    if (isPlaying()) {
+        quint8 layerIndex = currentLayerIndex;
+        if (layerIndex < maxLayers) {
+            layers[layerIndex]->zero();
+        }
+    }
+}
+
 void Looper::clearAllLayers()
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {

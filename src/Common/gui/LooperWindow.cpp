@@ -36,11 +36,18 @@ LooperWindow::LooperWindow(QWidget *parent) :
 
 void LooperWindow::keyPressEvent(QKeyEvent *ev)
 {
+    if (!looper)
+        return;
+
     int key = ev->key();
     bool pressingNumberKey = key >= Qt::Key_1 && key <= Qt::Key_9;
-    if (pressingNumberKey && looper) {
+    bool pressingDelete = key == Qt::Key_Delete;
+    if (pressingNumberKey) {
         quint8 layerIndex = (key - Qt::Key_0) - 1; // convert key to zero based layer index
         looper->selectLayer(layerIndex);
+    }
+    else if (pressingDelete) {
+        looper->clearSelectedLayer();
     }
 }
 
