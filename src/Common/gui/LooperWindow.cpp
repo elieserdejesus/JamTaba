@@ -9,7 +9,7 @@
 using namespace Controller;
 using namespace Audio;
 
-LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
+LooperWindow::LooperWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LooperWindow),
     looper(nullptr),
@@ -19,8 +19,6 @@ LooperWindow::LooperWindow(const QString &windowTitle, QWidget *parent) :
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint); // remove help/question marker
 
     ui->setupUi(this);
-
-    setWindowTitle(windowTitle);
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setSpacing(12);

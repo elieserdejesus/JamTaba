@@ -516,8 +516,6 @@ void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const
 {
     BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted, subChannel.stereoInverted);
-
-    connect(localTrackView, &LocalTrackView::openLoopEditor, this, &MainWindow::openLooperWindow);
 }
 
 void MainWindow::openLooperWindow(uint trackID)
@@ -525,15 +523,22 @@ void MainWindow::openLooperWindow(uint trackID)
      Audio::LocalInputNode *inputTrack = mainController->getInputTrack(trackID);
      Controller::NinjamController *ninjamController = mainController->getNinjamController();
      if (inputTrack && ninjamController) {
-        if (!looperWindow) {
-            QString windowTitle("Looper");
-            looperWindow = new LooperWindow(windowTitle, this);
-        }
+        if (!looperWindow)
+            looperWindow = new LooperWindow(this);
 
         looperWindow->setLooper(inputTrack->getLooper(), ninjamController);
 
+        LocalTrackGroupView *channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
+        QString channelName = channel ? channel->getGroupName() : "";
+        QString subchannelName("Subchannel " + QString::number(trackID + 1));
+        QString windowTitle("Looper - " + channelName + " (" + subchannelName + ")");
+        looperWindow->setWindowTitle(windowTitle);
+
         looperWindow->raise();
         looperWindow->show();
+     }
+     else {
+         qCritical() << "inputTrack or ninjamControler are null";
      }
 }
 

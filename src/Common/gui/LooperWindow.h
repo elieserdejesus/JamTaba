@@ -19,7 +19,7 @@ class LooperWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit LooperWindow(const QString &windowTitle, QWidget *parent);
+    explicit LooperWindow(QWidget *parent);
     ~LooperWindow();
 
     void setLooper(Audio::Looper *looper, Controller::NinjamController *controller);

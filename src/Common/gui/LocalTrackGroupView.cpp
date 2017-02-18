@@ -234,6 +234,7 @@ LocalTrackView *LocalTrackGroupView::addTrackView(long trackID)
 
     bool enableLooperButton = mainFrame->getMainController()->isPlayingInNinjamRoom();
     newTrack->enableLopperButton(enableLooperButton);
+    connect(newTrack, &LocalTrackView::openLooperEditor, mainFrame, &MainWindow::openLooperWindow);
 
     if (newTrack)
         emit trackAdded();

@@ -83,6 +83,7 @@ public:
 
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
+    void openLooperWindow(uint trackID);
 
 protected:
     Controller::MainController *mainController;
@@ -228,8 +229,6 @@ private slots:
     void translateThemeMenu();
 
     void updateNightModeInWorldMaps();
-
-    void openLooperWindow(uint trackID);
 
 private:
 

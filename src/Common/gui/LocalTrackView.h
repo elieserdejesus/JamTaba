@@ -53,7 +53,7 @@ public:
     void initializeBoostButtons(Boost boostValue);
 
 signals:
-    void openLoopEditor(uint trackIndex);
+    void openLooperEditor(uint trackIndex);
 
 protected:
     Audio::LocalInputNode *inputNode;
