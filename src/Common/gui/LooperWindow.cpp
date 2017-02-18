@@ -89,13 +89,16 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 
 void LooperWindow::updateDrawings()
 {
-    bool drawLayersNumbers = looper->getMaxLayers() > 1;
-    for (LooperWavePanel *wavePanel : wavePanels.values()) {
-        if (wavePanel->isVisible())
-            wavePanel->updateDrawings(drawLayersNumbers);
+    if (!looper->isWaiting()) {
+        bool drawLayersNumbers = looper->getMaxLayers() > 1;
+        for (LooperWavePanel *wavePanel : wavePanels.values()) {
+            if (wavePanel->isVisible())
+                wavePanel->updateDrawings(drawLayersNumbers);
+        }
     }
-
-    update();
+    else {
+        update(); // paint vertical lines, current beat and wait count
+    }
 }
 
 void LooperWindow::detachCurrentLooper()
@@ -172,6 +175,8 @@ void LooperWindow::updateControls()
         ui->maxLayersSpinBox->setEnabled(looper->isStopped());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
     }
+
+    update();
 }
 
 void LooperWindow::deleteWavePanels()
