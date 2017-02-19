@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "audio/core/AudioPeak.h"
+#include "MultiStateButton.h"
 
 class AudioMeter;
 class QLabel;
@@ -118,10 +119,7 @@ protected:
     QBoxLayout *muteSoloLayout;
 
     // boost
-    QPushButton *buttonBoostPlus12;
-    QPushButton *buttonBoostZero;
-    QPushButton *buttonBoostMinus12;
-    QBoxLayout *boostWidgetsLayout;
+    MultiStateButton *buttonBoost;
 
     // main layout buildind blocks
     QGridLayout *mainLayout;
@@ -136,6 +134,8 @@ private:
     Audio::AudioPeak maxPeak;
 
     void drawFaderDbValue(QPainter &p);
+
+    void updateBoostButtonToolTip();
 
     static const QColor DB_TEXT_COLOR;
 

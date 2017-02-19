@@ -38,39 +38,22 @@
     color: white;
 }
 
-/* boost buttons */
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero
+/* boost button */
+#buttonBoost
 {
    padding: 0px;
    padding-top: 2px;
    padding-bottom: 2px;
-   border: 0px;
-   border-radius: 0px;
-}
 
-
-#buttonBoostMinus12
-{
    border-radius: 0px;
    border-bottom-left-radius: 3px;
    border-bottom-right-radius: 3px;
+
+   border: 0px;
    border-top: 1px solid rgba(0, 0, 0, 10);
 }
 
-#buttonBoostPlus12
-{
-   border-radius: 0px;
-   border-top-left-radius: 3px;
-   border-top-right-radius: 3px;
-   border-bottom: 1px solid rgba(0, 0, 0, 10);
-   margin: 0px;
-}
-
-#buttonBoostMinus12:checked,
-#buttonBoostPlus12:checked,
-#buttonBoostZero:checked,
+#buttonBoost:checked,
 #lowCutButton:checked,
 QPushButton#buttonStereoInversion:checked
 {

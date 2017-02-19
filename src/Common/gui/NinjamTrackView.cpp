@@ -135,13 +135,14 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
     panSlider->setValue(initialValues.getPan() * panSlider->maximum());
     if (initialValues.isMuted())
         muteButton->click();
-    if (initialValues.getBoost() < 1) {
-        buttonBoostMinus12->click();
+
+    if (initialValues.getBoost() < 1.0) {
+        buttonBoost->setState(2); // -12 dB
     } else {
-        if (initialValues.getBoost() > 1)
-            buttonBoostPlus12->click();
+        if (initialValues.getBoost() > 1.0) // +12 dB
+            buttonBoost->setState(1);
         else
-            buttonBoostZero->click();
+            buttonBoost->setState(0);
     }
 
     quint8 lowCutState = initialValues.getLowCutState();
@@ -243,8 +244,6 @@ void NinjamTrackView::setupHorizontalLayout()
 
     levelSlider->setOrientation(Qt::Horizontal);
     levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
-
-    boostWidgetsLayout->setDirection(QHBoxLayout::RightToLeft);
 
     peakMeterLeft->setOrientation(Qt::Horizontal);
     peakMeterLeft->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));

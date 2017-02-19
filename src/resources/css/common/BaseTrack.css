@@ -3,11 +3,9 @@
 */
 
 
-/* Basic boost (-12, 0, +12) buttons stylesheet:
+/* Basic boost (-12, 0, +12) button stylesheet:
 --------------------------------------*/
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero
+#buttonBoost
 {
    margin: 0px;
    font-size: 8px;

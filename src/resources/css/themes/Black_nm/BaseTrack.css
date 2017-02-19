@@ -13,9 +13,7 @@
 
 }
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero,
+#buttonBoost,
 #soloButton,
 #muteButton
 {
@@ -24,9 +22,7 @@
 }
 
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero
+#buttonBoost
 {
    padding: 1px;
    padding-top: 3px;
@@ -34,16 +30,12 @@
    border-radius: 1px;
 }
 
-#buttonBoostMinus12:disabled,
-#buttonBoostPlus12:disabled,
-#buttonBoostZero:disabled
+#buttonBoost:disabled
 {
     color: rgba(0, 0, 0, 100);
 }
 
-#buttonBoostMinus12:checked,
-#buttonBoostPlus12:checked,
-#buttonBoostZero:checked
+#buttonBoost:checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(80, 80, 80));
     color: rgba(0, 0, 0, 160);
@@ -51,9 +43,7 @@
     border-color: rgb(20, 20, 20);
 }
 
-#buttonBoostMinus12:hover,
-#buttonBoostPlus12:hover,
-#buttonBoostZero:hover
+#buttonBoost:hover
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
     color: rgb(80, 80, 80);
@@ -61,9 +51,7 @@
     border-color: rgb(40, 40, 40);
 }
 
-#buttonBoostMinus12:hover:checked,
-#buttonBoostPlus12:hover:checked,
-#buttonBoostZero:hover:checked
+#buttonBoost:hover:checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(80, 80, 80));
     color: rgb(40, 40, 40);
@@ -96,9 +84,7 @@ QPushButton#buttonStereoInversion:hover
 }
 
 /* button colors when the track is NOT xmiting */
-BaseTrackView[unlighted="true"] #buttonBoostMinus12,
-BaseTrackView[unlighted="true"] #buttonBoostZero,
-BaseTrackView[unlighted="true"] #buttonBoostPlus12,
+BaseTrackView[unlighted="true"] #buttonBoost,
 BaseTrackView[unlighted="true"] #soloButton,
 BaseTrackView[unlighted="true"] #muteButton,
 BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
@@ -107,13 +93,13 @@ BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
     border: none;
 }
 
-#buttonBoostZero:buttonStereoInversion
+/*#buttonBoostZero:buttonStereoInversion
 {
     border-bottom: none;
     border-top: none;
     border-style: solid;
     border-color: rgb(20, 20, 20);
-}
+}*/
 
 #soloButton:checked
 {

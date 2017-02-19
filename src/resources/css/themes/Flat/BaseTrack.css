@@ -13,9 +13,7 @@
     color: rgb(50,50,50);
 }
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero,
+#buttonBoost,
 #soloButton,
 #muteButton
 {
@@ -23,9 +21,7 @@
 }
 
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero
+#buttonBoost
 {
    padding: 1px;
    padding-top: 3px;
@@ -33,9 +29,7 @@
    border-radius: 1px;
 }
 
-#buttonBoostMinus12:checked,
-#buttonBoostPlus12:checked,
-#buttonBoostZero:checked,
+#buttonBoost:checked,
 QPushButton#buttonStereoInversion:checked
 {
     background-color: rgb(200, 200, 200);
@@ -49,19 +43,23 @@ QPushButton#buttonStereoInversion:checked
     color: black;
 }
 
-#buttonBoostMinus12:hover:checked,
-#buttonBoostPlus12:hover:checked,
-#buttonBoostZero:hover:checked
+#buttonBoost:hover:checked
 {
     background-color: rgb(200, 200, 200);
     color: rgba(0, 0, 0, 160);
     border-radius: 0px;
 }
 
+#buttonBoost:checked
+{
+    border-bottom: none;
+    border-top: none;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 60);
+}
+
 /* button colors when the track is NOT xmiting */
-BaseTrackView[unlighted="true"] #buttonBoostMinus12,
-BaseTrackView[unlighted="true"] #buttonBoostZero,
-BaseTrackView[unlighted="true"] #buttonBoostPlus12,
+BaseTrackView[unlighted="true"] #buttonBoost,
 BaseTrackView[unlighted="true"] #soloButton,
 BaseTrackView[unlighted="true"] #muteButton,
 BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
@@ -73,14 +71,6 @@ BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
 BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion:hover:checked
 {
     background-color: rgb(200, 200, 200);
-}
-
-#buttonBoostZero:checked
-{
-    border-bottom: none;
-    border-top: none;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 60);
 }
 
 #soloButton:checked

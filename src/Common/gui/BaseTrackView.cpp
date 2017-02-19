@@ -35,23 +35,14 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     connect(soloButton, &QPushButton::clicked, this, &BaseTrackView::toggleSoloStatus);
     connect(levelSlider, &QSlider::valueChanged, this, &BaseTrackView::setGain);
     connect(panSlider, &QSlider::valueChanged, this, &BaseTrackView::setPan);
-    connect(buttonBoostZero, &QPushButton::clicked, this, &BaseTrackView::updateBoostValue);
-    connect(buttonBoostMinus12, &QPushButton::clicked, this, &BaseTrackView::updateBoostValue);
-    connect(buttonBoostPlus12, &QPushButton::clicked, this, &BaseTrackView::updateBoostValue);
+    connect(buttonBoost, &MultiStateButton::stateChanged, this, &BaseTrackView::updateBoostValue);
 
     panSlider->installEventFilter(this);
     levelSlider->installEventFilter(this);
     peaksDbLabel->installEventFilter(this);
 
     // add in static map
-    trackViews.insert(trackID, this);
-
-    QButtonGroup *boostButtonGroup = new QButtonGroup(this);
-    boostButtonGroup->addButton(buttonBoostMinus12);
-    boostButtonGroup->addButton(buttonBoostZero);
-    boostButtonGroup->addButton(buttonBoostPlus12);
-
-    buttonBoostZero->setChecked(true);
+    BaseTrackView::trackViews.insert(trackID, this);
 
     setAttribute(Qt::WA_NoBackground);
 }
@@ -71,10 +62,9 @@ void BaseTrackView::setupVerticalLayout()
     meterWidgetsLayout->setDirection(QHBoxLayout::TopToBottom);
 
     muteSoloLayout->setDirection(QBoxLayout::TopToBottom);
-    boostWidgetsLayout->setDirection(QBoxLayout::TopToBottom);
 
-    mainLayout->setVerticalSpacing(12);
-    mainLayout->setContentsMargins(3, 12, 3, 3);
+    mainLayout->setVerticalSpacing(9);
+    mainLayout->setContentsMargins(3, 0, 3, 3);
 }
 
 void BaseTrackView::createLayoutStructure()
@@ -163,56 +153,48 @@ void BaseTrackView::createLayoutStructure()
     muteSoloLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     muteSoloLayout->setSpacing(1);
     muteSoloLayout->setContentsMargins(0, 0, 0, 0);
-    muteSoloLayout->addWidget(soloButton);
     muteSoloLayout->addWidget(muteButton);
+    muteSoloLayout->addWidget(soloButton);
 
-    boostWidgetsLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-    boostWidgetsLayout->setSpacing(0);
-    boostWidgetsLayout->setContentsMargins(0, 0, 0, 0);
-
-    buttonBoostPlus12 = new QPushButton();
-    buttonBoostPlus12->setObjectName(QStringLiteral("buttonBoostPlus12"));
-    buttonBoostPlus12->setCheckable(true);
-    buttonBoostPlus12->setText("+12");
-
-    buttonBoostZero = new QPushButton();
-    buttonBoostZero->setObjectName(QStringLiteral("buttonBoostZero"));
-    buttonBoostZero->setCheckable(true);
-    buttonBoostZero->setText("0");
-
-    buttonBoostMinus12 = new QPushButton();
-    buttonBoostMinus12->setObjectName(QStringLiteral("buttonBoostMinus12"));
-    buttonBoostMinus12->setCheckable(true);
-    buttonBoostMinus12->setText("-12");
-
-    QButtonGroup *buttonGroup = new QButtonGroup(this);
-    buttonGroup->addButton(buttonBoostMinus12);
-    buttonGroup->addButton(buttonBoostPlus12);
-    buttonGroup->addButton(buttonBoostZero);
-
-    boostWidgetsLayout->addWidget(buttonBoostPlus12);
-    boostWidgetsLayout->addWidget(buttonBoostZero);
-    boostWidgetsLayout->addWidget(buttonBoostMinus12);
+    buttonBoost = new MultiStateButton(3, this); // 3 states: OFF, +12 db and -12 db
+    buttonBoost->setObjectName(QStringLiteral("buttonBoost"));
+    buttonBoost->setCheckable(true);
+    buttonBoost->setText("OFF", 0);
+    buttonBoost->setText("+12", 1);
+    buttonBoost->setText("-12", 2);
 
     primaryChildsLayout = new QVBoxLayout();
     primaryChildsLayout->setSpacing(12);
     primaryChildsLayout->setContentsMargins(0, 0, 0, 0);
 
     secondaryChildsLayout = new QVBoxLayout();
-    secondaryChildsLayout->setSpacing(12);
+    secondaryChildsLayout->setSpacing(6);
     secondaryChildsLayout->setContentsMargins(0, 0, 0, 0);
 
     primaryChildsLayout->addLayout(panWidgetsLayout);
     primaryChildsLayout->addLayout(levelSliderLayout, 1);
 
     secondaryChildsLayout->addLayout(meterWidgetsLayout);
-    secondaryChildsLayout->addLayout(boostWidgetsLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
+    secondaryChildsLayout->addWidget(buttonBoost);
 
     mainLayout->addLayout(primaryChildsLayout, 0, 0);
     mainLayout->addLayout(secondaryChildsLayout, 0, 1);
 
+    updateBoostButtonToolTip();
+
     translateUI();
+}
+
+void BaseTrackView::updateBoostButtonToolTip()
+{
+    QString boostText = " OFF [0 dB]";
+    if (buttonBoost->getCurrentState() > 0) {
+        boostText = " (" + buttonBoost->text() + " dB)";
+    }
+
+    QString toolTipText = tr("Boost") + boostText;
+    buttonBoost->setToolTip(toolTipText);
 }
 
 void BaseTrackView::translateUI()
@@ -248,12 +230,12 @@ methods (like midi messages).
 
 void BaseTrackView::setBoostStatus(float newBoostValue)
 {
-    if (newBoostValue > 1.0)
-        buttonBoostPlus12->setChecked(true);
+    if (newBoostValue > 1.0) // boost value is a gain multiplier, 1.0 means 0 dB boost (boost OFF)
+        buttonBoost->setState(1); // +12 dB
     else if (newBoostValue < 1.0)
-        buttonBoostMinus12->setChecked(true);
+        buttonBoost->setState(2); // -12 dB
     else
-        buttonBoostZero->setChecked(true);
+        buttonBoost->setState(0); // 0 dB - OFF
 }
 
 void BaseTrackView::setGainSliderPosition(float newGainValue)
@@ -283,12 +265,14 @@ void BaseTrackView::setSoloStatus(bool newSoloStatus)
 void BaseTrackView::updateBoostValue()
 {
     float boostValue = 0;
-    if (buttonBoostMinus12->isChecked())
+    if (buttonBoost->getCurrentState() == 2)
         boostValue = -12;
-    else if (buttonBoostPlus12->isChecked())
+    else if (buttonBoost->getCurrentState() == 1)
         boostValue = 12;
     if (mainController)
         mainController->setTrackBoost(getTrackID(), boostValue);
+
+    updateBoostButtonToolTip();
 }
 
 void BaseTrackView::updateGuiElements()
@@ -327,7 +311,6 @@ void BaseTrackView::setToNarrow()
 {
     if (!this->narrowed) {
         this->narrowed = true;
-        // mainLayout->setContentsMargins(3, 3, 3, 3);
         updateGeometry();
     }
 }
@@ -336,7 +319,6 @@ void BaseTrackView::setToWide()
 {
     if (narrowed) {
         this->narrowed = false;
-        // mainLayout->setContentsMargins(3, 3, 3, 3);
         updateGeometry();
     }
 }
@@ -367,14 +349,8 @@ void BaseTrackView::refreshStyleSheet()
     style()->unpolish(soloButton);
     style()->polish(soloButton);
 
-    style()->unpolish(buttonBoostMinus12);
-    style()->polish(buttonBoostMinus12);
-
-    style()->unpolish(buttonBoostPlus12);
-    style()->polish(buttonBoostPlus12);
-
-    style()->unpolish(buttonBoostZero);
-    style()->polish(buttonBoostZero);
+    style()->unpolish(buttonBoost);
+    style()->polish(buttonBoost);
 
     update();
 }

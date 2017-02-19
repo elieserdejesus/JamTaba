@@ -10,13 +10,33 @@ MultiStateButton::MultiStateButton(quint8 states, QWidget *parent) :
 
 }
 
+void MultiStateButton::setState(quint8 newState)
+{
+    if (newState < states && newState != currentState) {
+        currentState = newState;
+        if (texts.contains(currentState))
+            QPushButton::setText(texts[currentState]);
+
+        style()->unpolish(this);
+        style()->polish(this);
+
+        setChecked(currentState > 0);
+        repaint();
+
+        emit stateChanged();
+    }
+}
+
 void MultiStateButton::nextCheckState()
 {
-    currentState = (currentState + 1) % states;
+    setState((currentState + 1) % states);
+}
 
-    style()->unpolish(this);
-    style()->polish(this);
+void MultiStateButton::setText(const QString &text, quint8 state)
+{
+    texts.insert(state, text);
 
-    setChecked(currentState > 0);
-    repaint();
+    if (state == currentState)
+        QPushButton::setText(text);
+
 }
