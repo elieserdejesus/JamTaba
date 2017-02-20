@@ -236,7 +236,7 @@ private:
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
     QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
 
-    LooperWindow *looperWindow;
+    QMap<uint, LooperWindow *> looperWindows;
 
     ScreensaverBlocker screensaverBlocker;
 

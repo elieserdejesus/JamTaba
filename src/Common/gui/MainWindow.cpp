@@ -49,8 +49,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     roomToJump(nullptr),
     chordsPanel(nullptr),
     lastPerformanceMonitorUpdate(0),
-    camera(nullptr),
-    looperWindow(nullptr)
+    camera(nullptr)
 {
     qCDebug(jtGUI) << "Creating MainWindow...";
 
@@ -523,8 +522,11 @@ void MainWindow::openLooperWindow(uint trackID)
      Audio::LocalInputNode *inputTrack = mainController->getInputTrack(trackID);
      Controller::NinjamController *ninjamController = mainController->getNinjamController();
      if (inputTrack && ninjamController) {
-        if (!looperWindow)
+        LooperWindow *looperWindow = looperWindows[trackID];
+        if (!looperWindow) {
             looperWindow = new LooperWindow(this);
+            looperWindows.insert(trackID, looperWindow);
+        }
 
         looperWindow->setLooper(inputTrack->getLooper(), ninjamController);
 
@@ -955,10 +957,14 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     enableLooperButtonInLocalTracks(false); // disable looper buttons when exiting from server
 
     // deactivate looper
-    if (looperWindow) {
-        looperWindow->close();
-        looperWindow->detachCurrentLooper();
+    for (LooperWindow *looperWindow : looperWindows.values()) {
+        if (looperWindow) {
+            looperWindow->close();
+            looperWindow->detachCurrentLooper();
+            looperWindow->deleteLater();
+        }
     }
+    looperWindows.clear();
 
     for (LocalTrackGroupView *trackGroup : localGroupChannels) {
         for (LocalTrackView *trackView : trackGroup->getTracks<LocalTrackView*>()) {
@@ -1029,8 +1035,10 @@ void MainWindow::timerEvent(QTimerEvent *)
     }
 
     // update looper window sound waves
-    if (looperWindow && looperWindow->isVisible()) {
-        looperWindow->updateDrawings();
+    for (LooperWindow *looperWindow : looperWindows.values()) {
+        if (looperWindow && looperWindow->isVisible()) {
+            looperWindow->updateDrawings();
+        }
     }
 
     // update master peaks
