@@ -309,8 +309,9 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, unsigned int bufferOffset,
         return;
 
     unsigned int framesToProcess = std::min(samplesToCopy, buffer.getFrameLenght() - bufferOffset);
-    if (framesToProcess > buffer.frameLenght)// não processa mais samples do que a quantidade existente em buffer
-        framesToProcess = buffer.frameLenght;
+    if (framesToProcess + bufferOffset > buffer.frameLenght) // fixing bug in some built-in metronome sounds
+        return ;
+
     if ((int)(internalOffset + framesToProcess) > this->getFrameLenght())
         framesToProcess = (internalOffset + framesToProcess) - this->getFrameLenght();
 
