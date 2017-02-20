@@ -1,7 +1,7 @@
 #include "AudioLooper.h"
 #include <QDebug>
 
-#include <memory>
+#include <cstring>
 #include <vector>
 #include <QThread>
 

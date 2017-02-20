@@ -125,8 +125,8 @@ inline quint8 Looper::getCurrentLayerIndex() const
     return currentLayerIndex;
 }
 
-Q_DECLARE_METATYPE(Audio::Looper::PlayMode)
-
 } // namespace
+
+Q_DECLARE_METATYPE(Audio::Looper::PlayMode)
 
 #endif

@@ -312,7 +312,7 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, unsigned int bufferOffset,
     if (framesToProcess + bufferOffset > buffer.frameLenght) // fixing bug in some built-in metronome sounds
         return ;
 
-    if ((int)(internalOffset + framesToProcess) > this->getFrameLenght())
+    if ((uint)(internalOffset + framesToProcess) > this->getFrameLenght())
         framesToProcess = (internalOffset + framesToProcess) - this->getFrameLenght();
 
     if (channels == buffer.channels) {// channels number are equal

@@ -240,7 +240,7 @@ void LooperWindow::initializeControls()
     playModes.push_back(Looper::RANDOM_LAYERS);
     playModes.push_back(Looper::SELECTED_LAYER_ONLY);
 
-    for (int i = 0; i < playModes.size(); ++i) {
+    for (uint i = 0; i < playModes.size(); ++i) {
         Looper::PlayMode playMode = playModes[i];
         ui->comboBoxPlayMode->addItem(Looper::getPlayModeString(playMode), qVariantFromValue(playMode));
     }
