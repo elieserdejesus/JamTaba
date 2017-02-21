@@ -175,8 +175,8 @@ void LooperWindow::updateControls()
         ui->buttonRec->style()->polish(ui->buttonRec);
 
         ui->buttonPlay->setChecked(looper->isPlaying());
-        if (!looper->isPlaying())
-            ui->buttonPlay->setEnabled(looper->canPlay(controller->getSamplesPerInterval()));
+        bool canEnablePlayButton = looper->isPlaying() || (!looper->isPlaying() && looper->canPlay(controller->getSamplesPerInterval()));
+            ui->buttonPlay->setEnabled(canEnablePlayButton);
 
         ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
         ui->labelPlayMode->setEnabled(ui->comboBoxPlayMode->isEnabled());
