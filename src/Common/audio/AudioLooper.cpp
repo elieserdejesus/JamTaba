@@ -153,7 +153,7 @@ Looper::~Looper()
 
 void Looper::toggleRecording()
 {
-    if (isRecording())
+    if (isRecording() || isWaiting())
         stop();
     else
         setState(Looper::WAITING);
