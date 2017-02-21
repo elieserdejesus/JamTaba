@@ -55,11 +55,12 @@ public:
     void setMaxLayers(quint8 maxLayers);
     quint8 getMaxLayers() const;
 
-    void setState(LooperState state);
-
     bool canPlay(uint intervalLenght) const; // all layers have available samples?
 
     static const quint8 MAX_LOOP_LAYERS = 4;
+
+    void toggleRecording();
+    void togglePlay();
 
 signals:
     void stateChanged();
@@ -82,6 +83,8 @@ private:
 
     void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix);
     void playAllLayers(SamplesBuffer &samples, uint samplesToMix);
+
+    void setState(LooperState state);
 };
 
 inline void Looper::setPlayMode(PlayMode playMode)

@@ -65,26 +65,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="buttonStop">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../../resources/jamtaba.qrc">
-          <normaloff>:/images/stop.png</normaloff>:/images/stop.png</iconset>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="buttonPlay">
         <property name="text">
          <string/>
@@ -92,6 +72,9 @@
         <property name="icon">
          <iconset resource="../../resources/jamtaba.qrc">
           <normaloff>:/images/play.png</normaloff>:/images/play.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

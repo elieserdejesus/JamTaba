@@ -96,7 +96,7 @@ LocalInputNode::~LocalInputNode()
 
 void LocalInputNode::stopLooper()
 {
-    looper->setState(Looper::STOPPED);
+    looper->stop();
 }
 
 void LocalInputNode::startNewLoopCycle(uint intervalLenght)

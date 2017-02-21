@@ -86,7 +86,6 @@
     <qresource prefix="/images">
         <file>loop.png</file>
         <file>rec.png</file>
-        <file>stop.png</file>
         <file>play.png</file>
         <file>wave_normal.png</file>
         <file>wave_pixelated.png</file>

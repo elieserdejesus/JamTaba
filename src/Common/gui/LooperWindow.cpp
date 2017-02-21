@@ -170,14 +170,21 @@ void LooperWindow::updateControls()
 {
     if (looper && controller) {
         ui->buttonRec->setChecked(looper->isRecording() || looper->isWaiting());
-        ui->buttonStop->setEnabled(!looper->isStopped());
-        ui->buttonPlay->setEnabled(looper->isStopped() && looper->canPlay(controller->getSamplesPerInterval()));
+        ui->buttonRec->setProperty("waiting", looper->isWaiting());
+        ui->buttonRec->style()->unpolish(ui->buttonRec);
+        ui->buttonRec->style()->polish(ui->buttonRec);
+
+        ui->buttonPlay->setChecked(looper->isPlaying());
+        if (!looper->isPlaying())
+            ui->buttonPlay->setEnabled(looper->canPlay(controller->getSamplesPerInterval()));
 
         ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
         ui->labelPlayMode->setEnabled(ui->comboBoxPlayMode->isEnabled());
 
         ui->maxLayersSpinBox->setEnabled(looper->isStopped());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
+
+
     }
 
     update();
@@ -254,19 +261,13 @@ void LooperWindow::initializeControls()
     connect(ui->buttonRec, &QPushButton::clicked, [=]
     {
         if (looper)
-            looper->setState(Looper::WAITING);
-    });
-
-    connect(ui->buttonStop, &QPushButton::clicked, [=]
-    {
-        if (looper)
-            looper->setState(Looper::STOPPED);
+            looper->toggleRecording();
     });
 
     connect(ui->buttonPlay, &QPushButton::clicked, [=]
     {
         if (looper)
-            looper->setState(Looper::PLAYING);
+            looper->togglePlay();
     });
 
     connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)

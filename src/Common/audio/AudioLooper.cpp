@@ -151,6 +151,22 @@ Looper::~Looper()
     }
 }
 
+void Looper::toggleRecording()
+{
+    if (isRecording())
+        stop();
+    else
+        setState(Looper::WAITING);
+}
+
+void Looper::togglePlay()
+{
+    if (isPlaying())
+        stop();
+    else
+        setState(Looper::PLAYING);
+}
+
 void Looper::stop()
 {
     setState(Looper::STOPPED);
