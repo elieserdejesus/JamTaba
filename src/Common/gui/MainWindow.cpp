@@ -531,8 +531,16 @@ void MainWindow::openLooperWindow(uint trackID)
         looperWindow->setLooper(inputTrack->getLooper(), ninjamController);
 
         LocalTrackGroupView *channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
-        QString channelName = channel ? channel->getGroupName() : "";
-        QString subchannelName("Subchannel " + QString::number(trackID + 1));
+        Q_ASSERT(channel);
+
+        int subchannelInternalIndex = channel->getSubchannelInternalIndex(trackID);
+        QString channelName = channel->getGroupName();
+        if (channelName.isEmpty())
+            channelName = tr("Channel %1").arg(QString::number(channel->getChannelIndex() + 1));
+        else
+            channelName = tr("Channel '%1'").arg(channelName);
+
+        QString subchannelName("Subchannel " + QString::number(subchannelInternalIndex + 1));
         QString windowTitle("Looper - " + channelName + " (" + subchannelName + ")");
         looperWindow->setWindowTitle(windowTitle);
 
