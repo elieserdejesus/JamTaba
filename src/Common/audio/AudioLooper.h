@@ -5,6 +5,7 @@
 
 #include <QtGlobal>
 #include <QObject>
+#include <QDebug>
 
 namespace Audio {
 
@@ -17,9 +18,18 @@ public:
     ~Looper();
     void process(SamplesBuffer &samples);
     void startNewCycle(uint samplesInCycle);
+
     void selectLayer(quint8 layerIndex);
+
     void clearAllLayers();
     void clearSelectedLayer();
+
+    void setLayerLockedState(quint8 layerIndex, bool locked);
+    void toggleLayerLockedState(quint8 layerIndex);
+    bool layerIsLocked(quint8 layerIndex) const;
+
+    bool layerIsValid(quint8 layerIndex) const;
+
     void stop();
 
     enum PlayMode
@@ -56,6 +66,7 @@ public:
     quint8 getMaxLayers() const;
 
     bool canPlay(uint intervalLenght) const; // all layers have available samples?
+    bool canRecord() const;
 
     static const quint8 MAX_LOOP_LAYERS = 4;
 
@@ -66,6 +77,7 @@ signals:
     void stateChanged();
     void maxLayersChanged(quint8 newMaxLayers);
     void currentLayerChanged(quint8 currentLayer);
+    void layerLockedStateChanged(quint8 currentLayer, bool locked);
 private:
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples
@@ -85,6 +97,8 @@ private:
     void playAllLayers(SamplesBuffer &samples, uint samplesToMix);
 
     void setState(LooperState state);
+
+    int getFirstUnlockedLayerIndex(quint8 startingFrom = 0) const;
 };
 
 inline void Looper::setPlayMode(PlayMode playMode)

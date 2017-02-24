@@ -3,16 +3,68 @@
 #include <QString>
 #include "audio/core/SamplesBuffer.h"
 #include <QTest>
+#include <QtGlobal>
 
 #include "audio/AudioLooper.h"
 
 using namespace Audio;
 
+void TestLooper::firstUnlockedLayer()
+{
+    QFETCH(quint8, maxLayers);
+    QFETCH(QList<quint8>, lockedLayers);
+    QFETCH(quint8, currentLayer);
+    QFETCH(int, expectedRecordingLayer);
+    QFETCH(bool, isWaiting);
+
+    Looper looper;
+    looper.setMaxLayers(maxLayers);
+    looper.selectLayer(currentLayer);
+
+    for (quint8 layer : lockedLayers)
+        looper.setLayerLockedState(layer, true);
+
+    looper.toggleRecording(); // activate recording and check the currentLayerIndex
+
+    QVERIFY(looper.getCurrentLayerIndex() == expectedRecordingLayer);
+    QVERIFY(looper.isWaiting() == isWaiting);
+
+}
+
+void TestLooper::firstUnlockedLayer_data()
+{
+    QTest::addColumn<quint8>("maxLayers");
+    QTest::addColumn<QList<quint8>>("lockedLayers");
+    QTest::addColumn<quint8>("currentLayer");
+    QTest::addColumn<int>("expectedRecordingLayer");
+    QTest::addColumn<bool>("isWaiting"); //expected looper state
+
+    QTest::newRow("One layer, no lock") << quint8(1) << QList<quint8>() << quint8(0) << int(0) << true;
+    QTest::newRow("One layer, first layer locked") << quint8(1) << (QList<quint8>() << 0) << quint8(0) << int(0) << false;
+
+    QTest::newRow("2 layers, second layer locked, current layer=0") << quint8(2) << (QList<quint8>() << 1) << quint8(0) << int(0) << true;
+    QTest::newRow("2 layers, second layer locked, current layer=1") << quint8(2) << (QList<quint8>() << 1) << quint8(1) << int(0) << true;
+    QTest::newRow("2 layers, first layer locked, current layer=0") << quint8(2) << (QList<quint8>() << 0) << quint8(0) << int(1) << true;
+
+    QTest::newRow("4 layers, no lock, current layer=3") << quint8(4) << QList<quint8>() << quint8(3) << int(3) << true;
+    QTest::newRow("4 layers, fist layer locked, current layer=0") << quint8(4) << (QList<quint8>() << 0) << quint8(0) << int(1) << true;
+    QTest::newRow("4 layers, fist layer locked, current layer=1") << quint8(4) << (QList<quint8>() << 0) << quint8(1) << int(1) << true;
+    QTest::newRow("4 layers, fist layer locked, current layer=2") << quint8(4) << (QList<quint8>() << 0) << quint8(2) << int(2) << true;
+    QTest::newRow("4 layers, third layer locked, current layer=0") << quint8(4) << (QList<quint8>() << 2) << quint8(0) << int(0) << true;
+    QTest::newRow("4 layers, first 3 layers locked, current layer=2") << quint8(4) << (QList<quint8>() << 0 << 1 << 2) << quint8(2) << int(3) << true;
+    QTest::newRow("4 layers, layers 0 and 2 locked, current layer=2") << quint8(4) << (QList<quint8>() << 0 << 2) << quint8(2) << int(3) << true;
+    QTest::newRow("4 layers, layers last 3 layers locked, current layer=2") << quint8(4) << (QList<quint8>() << 1 << 2 << 3) << quint8(2) << int(0) << true;
+
+    QTest::newRow("4 layers, all layers locked, can't record") << quint8(4) << (QList<quint8>() << 0 << 1 << 2 << 3) << quint8(0) << int(0) << false;
+
+}
+
 void TestLooper::multiBufferTest()
 {
 
     Audio::Looper looper;
-    looper.playBufferedSamples(true);
+    looper.setMaxLayers(1);
+    looper.toggleRecording();
 
     const uint cycleLenghtInSamples = 6;
 
@@ -32,10 +84,10 @@ void TestLooper::multiBufferTest()
 
     looper.startNewCycle(cycleLenghtInSamples);
     looper.process(out);
-    checkExpectedValues("0, 0, 0", out);
-    //out.zero();
+    checkExpectedValues("1, 2, 3", out);
+    out.zero();
     looper.process(out);
-    checkExpectedValues("0, 0, 0", out);
+    checkExpectedValues("4, 5, 6", out);
 
 
 }
@@ -45,7 +97,8 @@ void TestLooper::basicTest()
     SamplesBuffer samples = createBuffer("1,1,1");
 
     Audio::Looper looper;
-    looper.playBufferedSamples(true);
+    looper.setMaxLayers(1);
+    looper.toggleRecording();
 
     const uint cycleLenghtInSamples = 3;
 
@@ -65,12 +118,12 @@ void TestLooper::basicTest()
     looper.startNewCycle(cycleLenghtInSamples);
     looper.process(samples); // now samples will be summed/mixed with previous samples
 
-    checkExpectedValues("5,5,5", samples);
+    checkExpectedValues("4,4,4", samples);
 
     looper.startNewCycle(cycleLenghtInSamples);
     looper.process(samples); // now samples will be summed/mixed with previous samples
 
-    checkExpectedValues("8,8,8", samples);
+    checkExpectedValues("5,5,5", samples);
 
 }
 

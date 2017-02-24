@@ -3,6 +3,7 @@
 
 #include "WavePeakPanel.h"
 #include <QPainter>
+#include <QPainterPath>
 
 namespace Audio {
 class Looper;
@@ -23,6 +24,9 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *ev) override;
 
+private slots:
+    void updateLockIconPainterPath();
+
 private:
     uint beatsPerInterval;
     uint samplesPerInterval;
@@ -42,6 +46,9 @@ private:
     uint accumulatedSamples;
 
     Audio::Looper *looper;
+
+    QPainterPath lockIconPainterPath;
+    QPainterPath createLockIconPainterPath(bool lockIsOpened);
 
     const quint8 layerID;
 };

@@ -65,25 +65,37 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
         static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
         painter.setPen(pen);
         uint bpi = controller->getCurrentBpi();
-        QPointF rectTop = ui->layersWidget->mapToParent(ui->layersWidget->rect().topLeft());
-        QSizeF rectSize = ui->layersWidget->size();
+        LooperWavePanel *wavePanel = wavePanels[looper->getCurrentLayerIndex()];
+        if (!wavePanel)
+            return;
+
+        QPointF rectTopLeft = wavePanel->mapTo(this, wavePanel->rect().topLeft());
+        QSizeF rectSize = wavePanel->size();
         qreal pixelsPerBeat = (rectSize.width()/static_cast<qreal>(bpi));
         for (uint beat = 0; beat < bpi; ++beat) {
-            const qreal x = rectTop.x() + beat * pixelsPerBeat;
-            painter.drawLine(QPointF(x, rectTop.y()), QPointF(x, rectTop.y() + rectSize.height()));
+            const qreal x = rectTopLeft.x() + beat * pixelsPerBeat;
+            painter.drawLine(QPointF(x, rectTopLeft.y()), QPointF(x, rectTopLeft.y() + rectSize.height()));
         }
 
         // draw a transparent red rect in current beat when waiting
         if (currentBeat) {
             static const QColor redColor(255, 0, 0, 25);
-            qreal x = rectTop.x() + currentBeat * pixelsPerBeat;
-            painter.fillRect(QRectF(x, rectTop.y(), pixelsPerBeat, rectSize.height()), redColor);
+            const qreal x = rectTopLeft.x() + currentBeat * pixelsPerBeat;
+            painter.fillRect(QRectF(x, rectTopLeft.y(), pixelsPerBeat, rectSize.height()), redColor);
 
-            uint waitBeats = controller->getCurrentBpi() - currentBeat;
+            const uint waitBeats = controller->getCurrentBpi() - currentBeat;
             QString text = tr("wait (%1)").arg(QString::number(waitBeats));
-            qreal textWidth = fontMetrics().width(text);
-            painter.drawText(QPointF(rectTop.x() + rectSize.width()/2.0 - textWidth/2.0, rectTop.y() + rectSize.height()/2.0), text);
+            const qreal textWidth = fontMetrics().width(text);
+            const qreal textX = rectTopLeft.x() + rectSize.width()/2.0 - textWidth/2.0;
+            QFontMetrics metrics = fontMetrics();
+            const qreal textY = rectTopLeft.y() + metrics.height() + metrics.descent();
+            painter.drawText(QPointF(textX, textY), text);
         }
+
+        // draw a red border in current layer
+        static const QColor redColor(255, 0, 0, 30);
+        painter.setPen(redColor);
+        painter.drawRect(QRectF(rectTopLeft, QSizeF(wavePanel->width()-1, wavePanel->height()-1)));
     }
 }
 
@@ -148,6 +160,7 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
         connect(looper, &Audio::Looper::stateChanged, this, &LooperWindow::updateControls);
+        connect(looper, &Audio::Looper::layerLockedStateChanged, this, &LooperWindow::updateControls);
         connect(looper, &Audio::Looper::maxLayersChanged, this, &LooperWindow::updateLayersVisibility);
 
         this->looper = looper;
@@ -173,6 +186,7 @@ void LooperWindow::updateControls()
         ui->buttonRec->setProperty("waiting", looper->isWaiting());
         ui->buttonRec->style()->unpolish(ui->buttonRec);
         ui->buttonRec->style()->polish(ui->buttonRec);
+        ui->buttonRec->setEnabled(looper->canRecord());
 
         ui->buttonPlay->setChecked(looper->isPlaying());
         bool canEnablePlayButton = looper->isPlaying() || (!looper->isPlaying() && looper->canPlay(controller->getSamplesPerInterval()));

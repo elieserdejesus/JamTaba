@@ -15,6 +15,10 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
 {
    setDrawingMode(WavePeakPanel::SOUND_WAVE);
    this->useAlphaInPreviousSamples = false; // all samples are painted without alpha
+
+   lockIconPainterPath = createLockIconPainterPath(true);
+
+   connect(looper, &Audio::Looper::layerLockedStateChanged, this, &LooperWavePanel::updateLockIconPainterPath);
 }
 
 LooperWavePanel::~LooperWavePanel()
@@ -44,6 +48,14 @@ void LooperWavePanel::resizeEvent(QResizeEvent *event)
     WavePeakPanel::resizeEvent(event);
 
     samplesPerPixel = calculateSamplesPerPixel();
+
+    updateLockIconPainterPath();
+}
+
+void LooperWavePanel::updateLockIconPainterPath()
+{
+    bool lockIconIsClosed = looper && looper->layerIsLocked(layerID);
+    lockIconPainterPath = createLockIconPainterPath(!lockIconIsClosed);
 }
 
 uint LooperWavePanel::calculateSamplesPerPixel() const
@@ -62,9 +74,13 @@ void LooperWavePanel::setBeatsPerInteval(uint bpi, uint samplesPerInterval)
 
 bool LooperWavePanel::canUseHighlightPainting() const
 {
+    const bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
+
     if (looper->isPlaying() || looper->isRecording()) {
-        const bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
         return drawingCurrentLayer || looper->getPlayMode() == Audio::Looper::ALL_LAYERS;
+    }
+    else if (looper->isStopped()) {
+        return drawingCurrentLayer;
     }
 
     return false;
@@ -72,15 +88,18 @@ bool LooperWavePanel::canUseHighlightPainting() const
 
 void LooperWavePanel::mousePressEvent(QMouseEvent *ev)
 {
-    Q_UNUSED(ev)
-    looper->selectLayer(this->layerID);
+    if (lockIconPainterPath.boundingRect().contains(ev->pos())) // use is clicking in lock icon?
+        looper->toggleLayerLockedState(layerID);
+    else
+        looper->selectLayer(this->layerID);
+
     update();
 }
 
 void LooperWavePanel::paintEvent(QPaintEvent *ev)
 {
 
-    if (!beatsPerInterval || looper->isWaiting()) {
+    if (!beatsPerInterval || (looper->isWaiting() && looper->getCurrentLayerIndex() == layerID)) {
         return;
     }
 
@@ -115,12 +134,27 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
         }
         else if (looper->isRecording()) {     // draw a transparent red rect from left to current interval beat
             static const QColor redColor(255, 0, 0, 30);
-            qreal width = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
-            painter.fillRect(QRectF(0, 0, width, height()), redColor);
+            qreal redRectWidth = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
+            painter.fillRect(QRectF(0, 0, redRectWidth, height()), redColor);
+
+            painter.setPen(redColor);
+            painter.drawRect(QRectF(0, 0, width() -1, height() -1));
         }
     }
 
-    if (looper->isPlaying() && drawingLayerNumber) {
+    bool layerIsValid = looper->layerIsValid(layerID);
+    bool canDrawLockIcon = !lockIconPainterPath.isEmpty() && layerIsValid;
+    if (canDrawLockIcon) {
+        painter.setRenderHint(QPainter::Antialiasing);
+        static const QColor transparentColor(0, 0, 0, 80);
+
+        bool layerIsLocked = looper->layerIsLocked(layerID);
+        QColor fillColor = layerIsLocked ? peaksColor : transparentColor;
+        painter.fillPath(lockIconPainterPath, fillColor);
+    }
+
+    bool canDrawLayerNumber = drawingLayerNumber && (looper->isPlaying() || looper->isStopped());
+    if (canDrawLayerNumber) {
 
         painter.setRenderHint(QPainter::Antialiasing);
 
@@ -142,4 +176,57 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
         painter.setCompositionMode(QPainter::CompositionMode_Difference);
         painter.drawText(textRect, text);
     }
+}
+
+QPainterPath LooperWavePanel::createLockIconPainterPath(bool lockIsOpened)
+{
+    const qreal lockHeight = lockIsOpened ? 16 : 20;
+
+    const qreal vOffset = 2; // top margim
+
+    const qreal baseRectHeight = lockHeight * 0.55; // lock base rect
+    const qreal baseRectTop = lockHeight - baseRectHeight + vOffset;
+    const qreal baseRectWidth = lockHeight * 0.7;
+    const qreal margin = baseRectWidth * 0.1;
+    const qreal baseRectLeft = width()-1 - baseRectWidth;// - margin;
+    QRectF baseRect(baseRectLeft, baseRectTop, baseRectWidth, baseRectHeight);
+
+    const qreal arcLeft = baseRectLeft + margin;
+    const qreal arcRight = baseRectLeft + baseRectWidth - margin;
+    const qreal arcHeight = baseRectTop - vOffset;
+    const qreal arcWidth = arcRight - arcLeft;
+    const qreal arcTop = vOffset;
+
+    QPainterPath finalPath;
+    finalPath.addRect(baseRect);
+
+    const int startAngle = 0;
+    const int spanAngle = 180;
+    QPainterPath arcPath(QPointF(arcRight, baseRectTop - (lockIsOpened ? (arcHeight * 0.5) : 0.0)));
+    arcPath.lineTo(arcRight, vOffset + arcHeight * 0.5); // outer right vertical line
+    arcPath.arcTo(QRectF(arcLeft, arcTop, arcWidth, arcHeight), startAngle, spanAngle);
+    arcPath.lineTo(arcLeft, baseRectTop); // outer left vertical line
+
+    arcPath.lineTo(arcLeft + margin, baseRectTop); //small bottom horizontal line connect outer and inner arc
+
+    arcPath.lineTo(arcLeft + margin, vOffset + arcHeight * 0.5); // inner left vertical line
+    arcPath.arcTo(QRectF(arcLeft + margin, arcTop + margin, arcWidth - margin*2, arcHeight - margin*2), 180, -spanAngle);
+    if (!lockIsOpened)
+        arcPath.lineTo(arcRight - margin, baseRectTop); // right vertical line
+    arcPath.closeSubpath();
+
+    finalPath.addPath(arcPath);
+
+    QPainterPath keyHoleCirclePath;
+    const qreal keyHoleSize = baseRectWidth/4.0;
+    const qreal keyHoleCircleLeft = baseRectLeft + baseRectWidth/2.0 - keyHoleSize/2.0;
+    const qreal keyHoleCircleTop = baseRectTop + baseRectHeight/6.0;
+    keyHoleCirclePath.addEllipse(QRectF(keyHoleCircleLeft, keyHoleCircleTop, keyHoleSize, keyHoleSize));
+
+    QPainterPath keyHoleRectPath;
+    const qreal keyHoleRectWidth = keyHoleSize * 0.7;
+    QRectF keyHoleRect(baseRect.center().x() - keyHoleRectWidth/2.0, keyHoleCircleTop + keyHoleSize, keyHoleRectWidth, keyHoleSize * 0.7);
+    keyHoleRectPath.addRect(keyHoleRect);
+
+    return finalPath.subtracted(keyHoleCirclePath.united(keyHoleRectPath));
 }

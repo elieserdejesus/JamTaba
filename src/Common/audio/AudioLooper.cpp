@@ -18,7 +18,8 @@ public:
     Layer()
         : availableSamples(0),
           lastSamplesPerPeak(0),
-          lastCacheComputationSample(0)
+          lastCacheComputationSample(0),
+          locked(false)
 
     {
         //
@@ -118,7 +119,13 @@ public:
             rightChannel.resize(samples);
     }
 
+    void setLocked(bool locked)
+    {
+        this->locked = locked;
+    }
+
     uint availableSamples;
+    bool locked;
 
 private:
     std::vector<float> leftChannel;
@@ -127,6 +134,7 @@ private:
     std::vector<float> peaksCache;
     uint lastSamplesPerPeak;
     uint lastCacheComputationSample;
+
 };
 
 // ------------------------------------------------------------------------------------
@@ -151,12 +159,51 @@ Looper::~Looper()
     }
 }
 
+void Looper::toggleLayerLockedState(quint8 layerIndex)
+{
+    setLayerLockedState(layerIndex, !(layers[layerIndex]->locked));
+}
+
+void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
+{
+    bool canLockLayers = isPlaying() || isStopped();
+    if (layerIndex < maxLayers && canLockLayers) {
+        layers[layerIndex]->setLocked(locked);
+        emit layerLockedStateChanged(layerIndex, locked);
+    }
+}
+
+bool Looper::layerIsLocked(quint8 layerIndex) const
+{
+    if (layerIndex < maxLayers)
+        return layers[layerIndex]->locked;
+
+    return false;
+}
+
+bool Looper::layerIsValid(quint8 layerIndex) const
+{
+    if (layerIndex < maxLayers)
+        return layers[layerIndex]->availableSamples > 0;
+
+    return false;
+}
+
 void Looper::toggleRecording()
 {
-    if (isRecording() || isWaiting())
+    if (isRecording() || isWaiting()) {
         stop();
-    else
-        setState(Looper::WAITING);
+    }
+    else {
+        int firstRecordingLayer = getFirstUnlockedLayerIndex(currentLayerIndex);
+        if (firstRecordingLayer >= 0) {
+            setState(Looper::WAITING);
+            setCurrentLayer(firstRecordingLayer);
+        }
+        else {
+            stop();
+        }
+    }
 }
 
 void Looper::togglePlay()
@@ -174,7 +221,8 @@ void Looper::stop()
 
 void Looper::clearSelectedLayer()
 {
-    if (isPlaying()) {
+    bool canClearSelectedLayer = (isPlaying() || isStopped()) && !layerIsLocked(currentLayerIndex);
+    if (canClearSelectedLayer) {
         quint8 layerIndex = currentLayerIndex;
         if (layerIndex < maxLayers) {
             layers[layerIndex]->zero();
@@ -195,7 +243,7 @@ void Looper::clearAllLayers()
 
 void Looper::selectLayer(quint8 layerIndex)
 {
-    if (isWaiting() || isRecording()) // can't select layer in these states
+    if (isRecording()) // can't select layer while recording
         return;
 
     setCurrentLayer(layerIndex);
@@ -223,6 +271,22 @@ void Looper::setMaxLayers(quint8 maxLayers)
     emit maxLayersChanged(maxLayers);
 }
 
+int Looper::getFirstUnlockedLayerIndex(quint8 startingFrom) const
+{
+    quint8 testedLayers = 0;
+    quint8 layer = startingFrom % maxLayers;
+
+    while (testedLayers < maxLayers) {
+        if (!layers[layer]->locked)
+            return layer;
+
+        layer = (layer + 1) % maxLayers;
+        testedLayers++;
+    }
+
+    return -1;
+}
+
 void Looper::startNewCycle(uint samplesInCycle)
 {
     if (samplesInCycle != intervalLenght) {
@@ -235,9 +299,12 @@ void Looper::startNewCycle(uint samplesInCycle)
     intervalPosition = 0;
 
     if (isWaiting()) {
-        setCurrentLayer(0);// always start recording in first layer
-        layers[currentLayerIndex]->zero();
-        setState(LooperState::RECORDING);
+        int firstRecordingLayer = getFirstUnlockedLayerIndex(currentLayerIndex);
+        if (firstRecordingLayer >= 0) {
+            setCurrentLayer(firstRecordingLayer);
+            layers[currentLayerIndex]->zero();
+            setState(LooperState::RECORDING);
+        }
         return;
     }
 
@@ -251,11 +318,20 @@ void Looper::startNewCycle(uint samplesInCycle)
     }
 
     if (isRecording()) {
-        setCurrentLayer((currentLayerIndex + 1) % maxLayers); // advance record to next layer
-        if (currentLayerIndex == 0) // stop recording when backing to first layer
+        quint8 nextLayer = (currentLayerIndex + 1) % maxLayers;
+        while (layers[nextLayer]->locked && nextLayer > 0) { // exit from loop if reach 0
+            nextLayer = (nextLayer + 1) % maxLayers;
+        }
+
+        if (nextLayer == 0 || layers[nextLayer]->locked) { // stop recording when backing to first layer
+            stop();
             setState(LooperState::PLAYING);
-        else
+            setCurrentLayer(nextLayer);
+        }
+        else {
+            setCurrentLayer(nextLayer); // advance record to next layer
             layers[currentLayerIndex]->zero(); // zero current layer if keep recording
+        }
     }
 }
 
@@ -282,9 +358,17 @@ bool Looper::canPlay(uint intervalLenght) const
     return false;
 }
 
+/**
+ * @return True if we have at least one layer unlocked
+ */
+bool Looper::canRecord() const
+{
+    return getFirstUnlockedLayerIndex() >= 0;
+}
+
 const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const
 {
-    if (layerIndex < maxLayers && !isWaiting()) {
+    if (layerIndex < maxLayers) {
         Audio::Looper::Layer *layer = layers[layerIndex];
         return layer->getSamplesPeaks(samplesPerPeak);
     }
@@ -301,7 +385,8 @@ void Looper::process(SamplesBuffer &samples)
         samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
 
         if (isRecording()) { // store/rec current samples
-            layers[currentLayerIndex]->append(samples, samplesToProcess);
+            if (!layerIsLocked(currentLayerIndex)) // avoid recording in locked layers
+                layers[currentLayerIndex]->append(samples, samplesToProcess);
         }
         else if (isPlaying()) {
             switch (playMode) {
