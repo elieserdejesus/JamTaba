@@ -137,10 +137,10 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
         muteButton->click();
 
     if (initialValues.getBoost() < 1.0) {
-        buttonBoost->setState(2); // -12 dB
+        buttonBoost->setState(1); // -12 dB
     } else {
         if (initialValues.getBoost() > 1.0) // +12 dB
-            buttonBoost->setState(1);
+            buttonBoost->setState(2);
         else
             buttonBoost->setState(0);
     }

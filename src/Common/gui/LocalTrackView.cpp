@@ -182,10 +182,10 @@ void LocalTrackView::initializeBoostButtons(Boost boostValue)
 {
     switch (boostValue) {
     case Boost::MINUS:
-        buttonBoost->setState(2);
+        buttonBoost->setState(1);
         break;
     case Boost::PLUS:
-        buttonBoost->setState(1);
+        buttonBoost->setState(2);
         break;
     default:
         buttonBoost->setState(0);

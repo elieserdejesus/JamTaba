@@ -156,12 +156,12 @@ void BaseTrackView::createLayoutStructure()
     muteSoloLayout->addWidget(muteButton);
     muteSoloLayout->addWidget(soloButton);
 
-    buttonBoost = new MultiStateButton(3, this); // 3 states: OFF, +12 db and -12 db
+    buttonBoost = new MultiStateButton(3, this); // 3 states: OFF, -12 db and +12 db
     buttonBoost->setObjectName(QStringLiteral("buttonBoost"));
     buttonBoost->setCheckable(true);
     buttonBoost->setText("OFF", 0);
-    buttonBoost->setText("+12", 1);
-    buttonBoost->setText("-12", 2);
+    buttonBoost->setText("-12", 1);
+    buttonBoost->setText("+12", 2);
 
     primaryChildsLayout = new QVBoxLayout();
     primaryChildsLayout->setSpacing(12);
@@ -231,9 +231,9 @@ methods (like midi messages).
 void BaseTrackView::setBoostStatus(float newBoostValue)
 {
     if (newBoostValue > 1.0) // boost value is a gain multiplier, 1.0 means 0 dB boost (boost OFF)
-        buttonBoost->setState(1); // +12 dB
+        buttonBoost->setState(2); // +12 dB
     else if (newBoostValue < 1.0)
-        buttonBoost->setState(2); // -12 dB
+        buttonBoost->setState(1); // -12 dB
     else
         buttonBoost->setState(0); // 0 dB - OFF
 }
@@ -265,9 +265,9 @@ void BaseTrackView::setSoloStatus(bool newSoloStatus)
 void BaseTrackView::updateBoostValue()
 {
     float boostValue = 0;
-    if (buttonBoost->getCurrentState() == 2)
+    if (buttonBoost->getCurrentState() == 1)
         boostValue = -12;
-    else if (buttonBoost->getCurrentState() == 1)
+    else if (buttonBoost->getCurrentState() == 2)
         boostValue = 12;
     if (mainController)
         mainController->setTrackBoost(getTrackID(), boostValue);

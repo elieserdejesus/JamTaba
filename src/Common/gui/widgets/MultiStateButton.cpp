@@ -14,8 +14,9 @@ void MultiStateButton::setState(quint8 newState)
 {
     if (newState < states && newState != currentState) {
         currentState = newState;
-        if (texts.contains(currentState))
+        if (texts.contains(currentState)) {
             QPushButton::setText(texts[currentState]);
+        }
 
         style()->unpolish(this);
         style()->polish(this);
