@@ -404,6 +404,9 @@ void Looper::process(SamplesBuffer &samples)
         if (isRecording()) { // store/rec current samples
             if (!layerIsLocked(currentLayerIndex)) // avoid recording in locked layers
                 layers[currentLayerIndex]->append(samples, samplesToProcess);
+
+            const quint8 excludeLayer = currentLayerIndex;
+            mixAllLayers(samples, samplesToProcess, excludeLayer); // user can hear other layers while recording
         }
         else if (isPlaying()) {
             switch (playMode) {
@@ -413,7 +416,7 @@ void Looper::process(SamplesBuffer &samples)
                 mixLayer(currentLayerIndex, samples, samplesToProcess);
                 break;
             case PlayMode::ALL_LAYERS:
-                playAllLayers(samples, samplesToProcess);
+                mixAllLayers(samples, samplesToProcess, -1); // mix all layers, no excluded layers
                 break;
             default:
                 qCritical() << playMode << " not implemented yet!";
@@ -441,10 +444,11 @@ void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToM
     }
 }
 
-void Looper::playAllLayers(SamplesBuffer &samples, uint samplesToMix)
+void Looper::mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer)
 {
-    for (int l = 0; l < maxLayers; ++l) {
-        mixLayer(l, samples, samplesToMix);
+    for (uint layerIndex = 0; layerIndex < maxLayers; ++layerIndex) {
+        if (layerIndex != exceptLayer)
+            mixLayer(layerIndex, samples, samplesToMix);
     }
 }
 

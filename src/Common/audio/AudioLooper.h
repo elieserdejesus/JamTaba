@@ -94,7 +94,7 @@ private:
     PlayMode playMode;
 
     void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix);
-    void playAllLayers(SamplesBuffer &samples, uint samplesToMix);
+    void mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer);
 
     void setState(LooperState state);
 
