@@ -85,11 +85,7 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 
             const uint waitBeats = controller->getCurrentBpi() - currentBeat;
             QString text = tr("wait (%1)").arg(QString::number(waitBeats));
-            const qreal textWidth = fontMetrics().width(text);
-            const qreal textX = rectTopLeft.x() + rectSize.width()/2.0 - textWidth/2.0;
-            QFontMetrics metrics = fontMetrics();
-            const qreal textY = rectTopLeft.y() + metrics.height() + metrics.descent();
-            painter.drawText(QPointF(textX, textY), text);
+            painter.drawText(QRectF(rectTopLeft, rectSize), text, QTextOption(Qt::AlignCenter));
         }
 
         // draw a red border in current layer
