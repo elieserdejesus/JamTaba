@@ -9,6 +9,41 @@
 
 using namespace Audio;
 
+void TestLooper::resizeLayersAndCopySamples()
+{
+    QFETCH(QStringList, initialBuffer);
+    QFETCH(QStringList, finalBuffer);
+
+    Looper looper;
+    looper.setMaxLayers(1);
+
+    // simulate recording
+    looper.toggleRecording();
+    looper.startNewCycle(initialBuffer.count());
+    looper.process(createBuffer(initialBuffer.join(',')));
+
+    uint newSamplesPerCycle = finalBuffer.count();
+    looper.startNewCycle(newSamplesPerCycle); // force recording stop, resize and copy samples
+
+    SamplesBuffer out(1, newSamplesPerCycle);
+    looper.process(out);
+    checkExpectedValues(finalBuffer.join(','), out);
+}
+
+void TestLooper::resizeLayersAndCopySamples_data()
+{
+    QTest::addColumn<QStringList>("initialBuffer");
+    QTest::addColumn<QStringList>("finalBuffer");
+
+    QTest::newRow("3 samples resized to 6") << (QStringList() << "1" << "2" << "3") << (QStringList() << "1" << "2" << "3" << "1" << "2" << "3");
+    QTest::newRow("2 samples, resized to 6") << (QStringList() << "1" << "2") << (QStringList() << "1" << "2" << "1" << "2" << "1" << "2");
+    QTest::newRow("2 samples, resized to 8") << (QStringList() << "1" << "2") << (QStringList() << "1" << "2" << "1" << "2" << "1" << "2" << "1" << "2");
+    QTest::newRow("4 samples, resized to 2") << (QStringList() << "1" << "2" << "3" << "4") << (QStringList() << "1" << "2");
+    QTest::newRow("4 samples, resized to 3") << (QStringList() << "1" << "2" << "3" << "4") << (QStringList() << "1" << "2" << "3");
+    QTest::newRow("2 samples, resized to 3") << (QStringList() << "1" << "2") << (QStringList() << "1" << "2" << "1");
+    QTest::newRow("2 samples, resized to 5") << (QStringList() << "1" << "2") << (QStringList() << "1" << "2" << "1" << "2" << "1");
+}
+
 void TestLooper::firstUnlockedLayer()
 {
     QFETCH(quint8, maxLayers);

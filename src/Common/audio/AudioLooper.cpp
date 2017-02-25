@@ -79,7 +79,7 @@ public:
 
     std::vector<float> getSamplesPeaks(uint samplesPerPeak)
     {
-        if (lastSamplesPerPeak == samplesPerPeak) { // cache hit?
+        if (lastSamplesPerPeak == samplesPerPeak && !peaksCache.empty()) { // cache hit?
             return peaksCache;
         }
 
@@ -117,6 +117,23 @@ public:
 
         if (samples > rightChannel.capacity())
             rightChannel.resize(samples);
+
+        if (availableSamples && samples > availableSamples) { // need copy samples?
+            uint initialAvailableSamples = availableSamples;
+            uint totalSamplesToCopy = samples - initialAvailableSamples;
+            while (totalSamplesToCopy > 0){
+                const uint samplesToCopy = qMin(totalSamplesToCopy, initialAvailableSamples);
+                const uint bytesToCopy = samplesToCopy * sizeof(float);
+                std::memcpy(&(leftChannel[availableSamples]), &(leftChannel[0]), bytesToCopy);
+                std::memcpy(&(rightChannel[availableSamples]), &(rightChannel[0]), bytesToCopy);
+                availableSamples += samplesToCopy;
+                totalSamplesToCopy -= samplesToCopy;
+            }
+
+            Q_ASSERT(availableSamples == samples);
+
+            peaksCache.clear(); // invalidate peaks cache
+        }
     }
 
     void setLocked(bool locked)

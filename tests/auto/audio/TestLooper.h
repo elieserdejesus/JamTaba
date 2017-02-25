@@ -15,6 +15,9 @@ private slots:
     void firstUnlockedLayer();
     void firstUnlockedLayer_data();
 
+    void resizeLayersAndCopySamples();
+    void resizeLayersAndCopySamples_data();
+
 private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
     void checkExpectedValues(QString comaSeparatedExpectedValues, const Audio::SamplesBuffer &buffer);
