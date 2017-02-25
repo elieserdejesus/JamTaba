@@ -162,7 +162,8 @@ Looper::Looper()
       intervalPosition(0),
       maxLayers(4),
       state(LooperState::STOPPED),
-      playMode(PlayMode::SEQUENCE)
+      playMode(PlayMode::SEQUENCE),
+      hearingOtherLayersWhileRecording(true)
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
         layers[l] = new Looper::Layer();
@@ -188,6 +189,11 @@ void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
         layers[layerIndex]->setLocked(locked);
         emit layerLockedStateChanged(layerIndex, locked);
     }
+}
+
+void Looper::setHearingOtherLayersWhileRecording(bool hearingOtherLayers)
+{
+    this->hearingOtherLayersWhileRecording = hearingOtherLayers;
 }
 
 bool Looper::layerIsLocked(quint8 layerIndex) const
@@ -405,8 +411,10 @@ void Looper::process(SamplesBuffer &samples)
             if (!layerIsLocked(currentLayerIndex)) // avoid recording in locked layers
                 layers[currentLayerIndex]->append(samples, samplesToProcess);
 
-            const quint8 excludeLayer = currentLayerIndex;
-            mixAllLayers(samples, samplesToProcess, excludeLayer); // user can hear other layers while recording
+            if (hearingOtherLayersWhileRecording) {
+                const quint8 excludeLayer = currentLayerIndex;
+                mixAllLayers(samples, samplesToProcess, excludeLayer); // user can hear other layers while recording
+            }
         }
         else if (isPlaying()) {
             switch (playMode) {

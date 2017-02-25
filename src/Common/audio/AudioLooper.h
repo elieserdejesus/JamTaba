@@ -62,6 +62,9 @@ public:
     bool isRecording() const;
     bool isStopped() const;
 
+    bool isHearingOtherLayersWhileRecording() const;
+    void setHearingOtherLayersWhileRecording(bool hearingOtherLayers);
+
     void setMaxLayers(quint8 maxLayers);
     quint8 getMaxLayers() const;
 
@@ -82,6 +85,8 @@ private:
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples
 
+    bool hearingOtherLayersWhileRecording;
+
     class Layer; // internal class
     Layer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex;
@@ -100,6 +105,11 @@ private:
 
     int getFirstUnlockedLayerIndex(quint8 startingFrom = 0) const;
 };
+
+inline bool Looper::isHearingOtherLayersWhileRecording() const
+{
+    return hearingOtherLayersWhileRecording;
+}
 
 inline void Looper::setPlayMode(PlayMode playMode)
 {

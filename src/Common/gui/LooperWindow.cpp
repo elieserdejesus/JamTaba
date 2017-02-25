@@ -144,6 +144,8 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         // initial values
         ui->maxLayersSpinBox->setValue(looper->getMaxLayers());
 
+        ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingOtherLayersWhileRecording());
+
         QString selectedPlayMode = looper->getPlayModeString(looper->getPlayMode());
         for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
             if (ui->comboBoxPlayMode->itemText(i) == selectedPlayMode) {
@@ -266,7 +268,6 @@ void LooperWindow::initializeControls()
     ui->maxLayersSpinBox->setMinimum(1);
     ui->maxLayersSpinBox->setMaximum(Looper::MAX_LOOP_LAYERS);
 
-
     // wire signals/slots
     connect(ui->buttonRec, &QPushButton::clicked, [=]
     {
@@ -291,6 +292,11 @@ void LooperWindow::initializeControls()
     {
         if (looper)
             looper->setMaxLayers(newMaxLayers);
+    });
+
+    connect(ui->checkBoxHearLayersWhileRecording, &QCheckBox::toggled, [=](bool checked){
+        if (looper)
+            looper->setHearingOtherLayersWhileRecording(checked);
     });
 
 }
