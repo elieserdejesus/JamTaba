@@ -25,7 +25,7 @@ protected:
     void mousePressEvent(QMouseEvent *ev) override;
 
 private slots:
-    void updateLockIconPainterPath();
+    void updateMiniLockIconPainterPath();
 
 private:
     uint beatsPerInterval;
@@ -47,8 +47,10 @@ private:
 
     Audio::Looper *looper;
 
-    QPainterPath lockIconPainterPath;
-    QPainterPath createLockIconPainterPath(bool lockIsOpened);
+    QPainterPath miniLockIcon;
+    QPainterPath bigClosedLockIcon;
+    QPainterPath createLockIconPainterPath(bool lockIsOpened, qreal lockHeight, qreal topMargin);
+    static qreal getMiniLockIconHeight(bool lockOpened);
 
     const quint8 layerID;
 };

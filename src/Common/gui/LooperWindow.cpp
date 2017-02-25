@@ -98,7 +98,7 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 void LooperWindow::updateDrawings()
 {
     if (!looper->isWaiting()) {
-        bool drawLayersNumbers = looper->getMaxLayers() > 1;
+        bool drawLayersNumbers = looper->getMaxLayers() > 1 && looper->getMode() != Looper::ALL_LAYERS;
         for (LooperWavePanel *wavePanel : wavePanels.values()) {
             if (wavePanel->isVisible())
                 wavePanel->updateDrawings(drawLayersNumbers);
@@ -145,8 +145,12 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         ui->maxLayersSpinBox->setValue(looper->getMaxLayers());
 
         ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingOtherLayersWhileRecording());
+        ui->checkBoxHearLayersWhileRecording->setVisible(looper->getMode() == Looper::ALL_LAYERS);
 
-        QString selectedPlayMode = looper->getPlayModeString(looper->getPlayMode());
+        ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER_ONLY);
+        ui->checkBoxOverdub->setChecked(looper->isOverdubbing());
+
+        QString selectedPlayMode = looper->getModeString(looper->getMode());
         for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
             if (ui->comboBoxPlayMode->itemText(i) == selectedPlayMode) {
                 ui->comboBoxPlayMode->setCurrentIndex(i);
@@ -157,9 +161,12 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
-        connect(looper, &Audio::Looper::stateChanged, this, &LooperWindow::updateControls);
-        connect(looper, &Audio::Looper::layerLockedStateChanged, this, &LooperWindow::updateControls);
-        connect(looper, &Audio::Looper::maxLayersChanged, this, &LooperWindow::updateLayersVisibility);
+        connect(looper, &Looper::stateChanged, this, &LooperWindow::updateControls);
+        connect(looper, &Looper::layerLockedStateChanged, this, &LooperWindow::updateControls);
+        connect(looper, &Looper::maxLayersChanged, this, &LooperWindow::updateLayersVisibility);
+        connect(looper, &Looper::maxLayersChanged, this, &LooperWindow::updateControls);
+        connect(looper, &Looper::modeChanged, this, &LooperWindow::updateControls);
+        connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
 
         this->looper = looper;
         this->controller = controller;
@@ -187,8 +194,8 @@ void LooperWindow::updateControls()
         ui->buttonRec->setEnabled(looper->canRecord());
 
         ui->buttonPlay->setChecked(looper->isPlaying());
-        bool canEnablePlayButton = looper->isPlaying() || (!looper->isPlaying() && looper->canPlay(controller->getSamplesPerInterval()));
-            ui->buttonPlay->setEnabled(canEnablePlayButton);
+        bool canEnablePlayButton = !looper->isWaiting() && !looper->isRecording();
+        ui->buttonPlay->setEnabled(canEnablePlayButton);
 
         ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
         ui->labelPlayMode->setEnabled(ui->comboBoxPlayMode->isEnabled());
@@ -196,7 +203,8 @@ void LooperWindow::updateControls()
         ui->maxLayersSpinBox->setEnabled(looper->isStopped());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
 
-
+        ui->checkBoxHearLayersWhileRecording->setVisible(looper->getMode() == Looper::ALL_LAYERS);
+        ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER_ONLY);
     }
 
     update();
@@ -253,15 +261,15 @@ void LooperWindow::initializeControls()
     // play modes combo
     ui->comboBoxPlayMode->clear();
 
-    std::vector<Looper::PlayMode> playModes;
+    std::vector<Looper::Mode> playModes;
     playModes.push_back(Looper::SEQUENCE);
     playModes.push_back(Looper::ALL_LAYERS);
     playModes.push_back(Looper::RANDOM_LAYERS);
     playModes.push_back(Looper::SELECTED_LAYER_ONLY);
 
     for (uint i = 0; i < playModes.size(); ++i) {
-        Looper::PlayMode playMode = playModes[i];
-        ui->comboBoxPlayMode->addItem(Looper::getPlayModeString(playMode), qVariantFromValue(playMode));
+        Looper::Mode playMode = playModes[i];
+        ui->comboBoxPlayMode->addItem(Looper::getModeString(playMode), qVariantFromValue(playMode));
     }
 
     // max layer spinbox
@@ -284,7 +292,7 @@ void LooperWindow::initializeControls()
     connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
     {
         if (index >= 0 && looper) {
-            looper->setPlayMode(ui->comboBoxPlayMode->currentData().value<Looper::PlayMode>());
+            looper->setMode(ui->comboBoxPlayMode->currentData().value<Looper::Mode>());
         }
     });
 
@@ -295,8 +303,12 @@ void LooperWindow::initializeControls()
     });
 
     connect(ui->checkBoxHearLayersWhileRecording, &QCheckBox::toggled, [=](bool checked){
-        if (looper)
+        if (looper && looper->getMode() == Looper::ALL_LAYERS)
             looper->setHearingOtherLayersWhileRecording(checked);
     });
 
+    connect(ui->checkBoxOverdub, &QCheckBox::toggled, [=](bool checked){
+        if (looper && looper->getMode() == Looper::SELECTED_LAYER_ONLY)
+            looper->setOverdubbing(checked);
+    });
 }

@@ -97,7 +97,7 @@
       <item>
        <widget class="QLabel" name="labelPlayMode">
         <property name="text">
-         <string>Play Mode</string>
+         <string>Mode</string>
         </property>
         <property name="buddy">
          <cstring>comboBoxPlayMode</cstring>
@@ -126,7 +126,7 @@
       <item>
        <widget class="QLabel" name="labelMaxLayers">
         <property name="text">
-         <string>Max. Layers</string>
+         <string>Layers</string>
         </property>
         <property name="buddy">
          <cstring>maxLayersSpinBox</cstring>
@@ -159,7 +159,7 @@
       <item>
        <widget class="QCheckBox" name="checkBoxHearLayersWhileRecording">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -168,6 +168,26 @@
          <string>Hear layers while recording</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxOverdub">
+        <property name="text">
+         <string>Overdub</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>

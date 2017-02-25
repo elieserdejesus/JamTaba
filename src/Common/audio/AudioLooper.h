@@ -32,7 +32,7 @@ public:
 
     void stop();
 
-    enum PlayMode
+    enum Mode
     {
         SEQUENCE, // one layer in each interval
         ALL_LAYERS, // mix and play all layers
@@ -48,10 +48,10 @@ public:
         PLAYING
     };
 
-    static QString getPlayModeString(PlayMode playMode);
+    static QString getModeString(Mode mode);
 
-    void setPlayMode(PlayMode playMode);
-    PlayMode getPlayMode() const;
+    void setMode(Mode mode);
+    Mode getMode() const;
 
     const std::vector<float> getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const;
 
@@ -65,10 +65,12 @@ public:
     bool isHearingOtherLayersWhileRecording() const;
     void setHearingOtherLayersWhileRecording(bool hearingOtherLayers);
 
+    bool isOverdubbing() const;
+    void setOverdubbing(bool overdubbing);
+
     void setMaxLayers(quint8 maxLayers);
     quint8 getMaxLayers() const;
 
-    bool canPlay(uint intervalLenght) const; // all layers have available samples?
     bool canRecord() const;
 
     static const quint8 MAX_LOOP_LAYERS = 4;
@@ -78,6 +80,7 @@ public:
 
 signals:
     void stateChanged();
+    void modeChanged();
     void maxLayersChanged(quint8 newMaxLayers);
     void currentLayerChanged(quint8 currentLayer);
     void layerLockedStateChanged(quint8 currentLayer, bool locked);
@@ -86,6 +89,7 @@ private:
     uint intervalPosition; // in samples
 
     bool hearingOtherLayersWhileRecording;
+    bool overdubbing;
 
     class Layer; // internal class
     Layer *layers[MAX_LOOP_LAYERS];
@@ -96,7 +100,7 @@ private:
 
     LooperState state;
 
-    PlayMode playMode;
+    Mode mode;
 
     void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix);
     void mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer);
@@ -106,20 +110,19 @@ private:
     int getFirstUnlockedLayerIndex(quint8 startingFrom = 0) const;
 };
 
+inline bool Looper::isOverdubbing() const
+{
+    return overdubbing;
+}
+
 inline bool Looper::isHearingOtherLayersWhileRecording() const
 {
     return hearingOtherLayersWhileRecording;
 }
 
-inline void Looper::setPlayMode(PlayMode playMode)
+inline Looper::Mode Looper::getMode() const
 {
-    this->playMode = playMode;
-    qDebug() << "playMode setted to:" << playMode;
-}
-
-inline Looper::PlayMode Looper::getPlayMode() const
-{
-    return playMode;
+    return mode;
 }
 
 inline quint8 Looper::getMaxLayers() const
@@ -154,6 +157,6 @@ inline quint8 Looper::getCurrentLayerIndex() const
 
 } // namespace
 
-Q_DECLARE_METATYPE(Audio::Looper::PlayMode)
+Q_DECLARE_METATYPE(Audio::Looper::Mode)
 
 #endif

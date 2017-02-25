@@ -16,14 +16,23 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
    setDrawingMode(WavePeakPanel::SOUND_WAVE);
    this->useAlphaInPreviousSamples = false; // all samples are painted without alpha
 
-   lockIconPainterPath = createLockIconPainterPath(true);
+   bool lockOpened = true;
+   miniLockIcon = createLockIconPainterPath(lockOpened, getMiniLockIconHeight(lockOpened), 2.0);
 
-   connect(looper, &Audio::Looper::layerLockedStateChanged, this, &LooperWavePanel::updateLockIconPainterPath);
+   const qreal topMargin = 6.0;
+   bigClosedLockIcon = createLockIconPainterPath(false, height() - topMargin * 2, topMargin);
+
+   connect(looper, &Audio::Looper::layerLockedStateChanged, this, &LooperWavePanel::updateMiniLockIconPainterPath);
 }
 
 LooperWavePanel::~LooperWavePanel()
 {
 
+}
+
+qreal LooperWavePanel::getMiniLockIconHeight(bool lockOpened)
+{
+    return lockOpened ? 16 : 20;
 }
 
 void LooperWavePanel::updateDrawings(bool drawLayerNumber)
@@ -49,13 +58,17 @@ void LooperWavePanel::resizeEvent(QResizeEvent *event)
 
     samplesPerPixel = calculateSamplesPerPixel();
 
-    updateLockIconPainterPath();
+    updateMiniLockIconPainterPath();
+
+    const qreal topMargin = 6;
+    bigClosedLockIcon = createLockIconPainterPath(false, height() - topMargin * 2, topMargin);
 }
 
-void LooperWavePanel::updateLockIconPainterPath()
+void LooperWavePanel::updateMiniLockIconPainterPath()
 {
-    bool lockIconIsClosed = looper && looper->layerIsLocked(layerID);
-    lockIconPainterPath = createLockIconPainterPath(!lockIconIsClosed);
+    bool lockIconIsOpened = looper && !(looper->layerIsLocked(layerID));
+    const qreal topMargin = 2;
+    miniLockIcon = createLockIconPainterPath(lockIconIsOpened, getMiniLockIconHeight(lockIconIsOpened), topMargin);
 }
 
 uint LooperWavePanel::calculateSamplesPerPixel() const
@@ -77,7 +90,7 @@ bool LooperWavePanel::canUseHighlightPainting() const
     const bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
 
     if (looper->isPlaying() || looper->isRecording()) {
-        return drawingCurrentLayer || looper->getPlayMode() == Audio::Looper::ALL_LAYERS;
+        return drawingCurrentLayer || looper->getMode() == Audio::Looper::ALL_LAYERS;
     }
     else if (looper->isStopped()) {
         return drawingCurrentLayer;
@@ -88,7 +101,7 @@ bool LooperWavePanel::canUseHighlightPainting() const
 
 void LooperWavePanel::mousePressEvent(QMouseEvent *ev)
 {
-    if (lockIconPainterPath.boundingRect().contains(ev->pos())) // use is clicking in lock icon?
+    if (miniLockIcon.boundingRect().contains(ev->pos())) // use is clicking in lock icon?
         looper->toggleLayerLockedState(layerID);
     else
         looper->selectLayer(this->layerID);
@@ -126,31 +139,46 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
             painter.drawLine(QPointF(x, 0), QPointF(x, height()));
         }
 
+        static const QColor redColor(255, 0, 0, 30);
+
+        bool isCurrentLayer = looper->getCurrentLayerIndex() == layerID;
+
         if (looper->isPlaying()) {
+            // draw current beat rect
             qreal x = currentIntervalBeat * pixelsPerBeat;
             QColor color(peaksColor);
             color.setAlpha(30);
             painter.fillRect(QRectF(x, 0, pixelsPerBeat, height()), color);
         }
-        else if (looper->isRecording()) {     // draw a transparent red rect from left to current interval beat
-            static const QColor redColor(255, 0, 0, 30);
+        else if (looper->isRecording() && isCurrentLayer) {     // draw a transparent red rect from left to current interval beat
             qreal redRectWidth = (currentIntervalBeat * pixelsPerBeat) + pixelsPerBeat;
             painter.fillRect(QRectF(0, 0, redRectWidth, height()), redColor);
+        }
 
+        if (isCurrentLayer) {
+            // draw the rect border in current layer
             painter.setPen(redColor);
             painter.drawRect(QRectF(0, 0, width() -1, height() -1));
         }
     }
 
     bool layerIsValid = looper->layerIsValid(layerID);
-    bool canDrawLockIcon = !lockIconPainterPath.isEmpty() && layerIsValid;
-    if (canDrawLockIcon) {
+    bool canDrawLockButton = !miniLockIcon.isEmpty() && !looper->isRecording() && layerIsValid;
+    static const QColor transparentColor(0, 0, 0, 80);
+    if (canDrawLockButton) {
         painter.setRenderHint(QPainter::Antialiasing);
-        static const QColor transparentColor(0, 0, 0, 80);
+
 
         bool layerIsLocked = looper->layerIsLocked(layerID);
         QColor fillColor = layerIsLocked ? peaksColor : transparentColor;
-        painter.fillPath(lockIconPainterPath, fillColor);
+        painter.fillPath(miniLockIcon, fillColor);
+    }
+
+    if (looper->layerIsLocked(layerID)) {
+        qreal xOffset = width()/2.0 - bigClosedLockIcon.boundingRect().width()/2.0;
+        painter.translate(-xOffset, 0.0);
+        painter.fillPath(bigClosedLockIcon, transparentColor);
+        painter.setTransform(QTransform());
     }
 
     bool canDrawLayerNumber = drawingLayerNumber && (looper->isPlaying() || looper->isStopped());
@@ -178,11 +206,9 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
     }
 }
 
-QPainterPath LooperWavePanel::createLockIconPainterPath(bool lockIsOpened)
+QPainterPath LooperWavePanel::createLockIconPainterPath(bool lockIsOpened, qreal lockHeight, qreal topMargin)
 {
-    const qreal lockHeight = lockIsOpened ? 16 : 20;
-
-    const qreal vOffset = 2; // top margim
+    const qreal vOffset = topMargin; // top margim
 
     const qreal baseRectHeight = lockHeight * 0.55; // lock base rect
     const qreal baseRectTop = lockHeight - baseRectHeight + vOffset;

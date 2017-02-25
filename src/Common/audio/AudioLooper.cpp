@@ -41,6 +41,41 @@ public:
         peaksCache.clear();
     }
 
+    void overdub(const SamplesBuffer &samples, uint samplesToMix, uint startPosition)
+    {
+        if (!samples.isMono()) {
+            float *internalChannels[] = {&(leftChannel[startPosition]), &(rightChannel[startPosition])};
+            float *samplesArray[] = {samples.getSamplesArray(0), samples.getSamplesArray(1)};
+            for (uint s = 0; s < samplesToMix; ++s) {
+                internalChannels[0][s] += samplesArray[0][s]; // left channel
+                internalChannels[1][s] += samplesArray[1][s]; // right channel
+            }
+        }
+        else {
+            float *internalChannels[] = {&(leftChannel[startPosition]), &(rightChannel[startPosition])};
+            float *samplesArray = samples.getSamplesArray(0);
+            for (uint s = 0; s < samplesToMix; ++s) {
+                internalChannels[0][s] += samplesArray[s];
+            }
+        }
+
+        if (availableSamples < startPosition + samplesToMix)
+            availableSamples = startPosition + samplesToMix;
+
+        // build peaks cache
+        if (lastSamplesPerPeak) {
+            if (availableSamples - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
+                const int position = (availableSamples/lastSamplesPerPeak) - 1;
+                float lastPeak = computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak);
+                if (position >= 0 && position < peaksCache.size())
+                    peaksCache[position] = lastPeak;
+                else
+                    peaksCache.push_back(lastPeak);
+                lastCacheComputationSample += lastSamplesPerPeak;
+            }
+        }
+    }
+
     void append(const SamplesBuffer &samples, uint samplesToAppend)
     {
         const uint sizeInBytes = samplesToAppend * sizeof(float);
@@ -142,6 +177,7 @@ public:
     }
 
     uint availableSamples;
+    uint lastCacheComputationSample;
     bool locked;
 
 private:
@@ -150,7 +186,7 @@ private:
 
     std::vector<float> peaksCache;
     uint lastSamplesPerPeak;
-    uint lastCacheComputationSample;
+
 
 };
 
@@ -162,8 +198,9 @@ Looper::Looper()
       intervalPosition(0),
       maxLayers(4),
       state(LooperState::STOPPED),
-      playMode(PlayMode::SEQUENCE),
-      hearingOtherLayersWhileRecording(true)
+      mode(Mode::SEQUENCE),
+      hearingOtherLayersWhileRecording(true),
+      overdubbing(true)
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
         layers[l] = new Looper::Layer();
@@ -215,7 +252,10 @@ bool Looper::layerIsValid(quint8 layerIndex) const
 void Looper::toggleRecording()
 {
     if (isRecording() || isWaiting()) {
-        stop();
+        if (mode != SELECTED_LAYER_ONLY)
+            stop();
+        else
+            setState(Looper::PLAYING); // in selected layer mode the looper will auto play when user finish recording
     }
     else {
         int firstRecordingLayer = getFirstUnlockedLayerIndex(currentLayerIndex);
@@ -310,6 +350,48 @@ int Looper::getFirstUnlockedLayerIndex(quint8 startingFrom) const
     return -1;
 }
 
+void Looper::process(SamplesBuffer &samples)
+{
+    const bool canProcess = isRecording() || isPlaying();
+    uint samplesToProcess = samples.getFrameLenght();
+
+    if (canProcess) {
+        samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
+
+        if (isRecording() && !layerIsLocked(currentLayerIndex)) { // store/rec current samples, but avoid recording in locked layers
+
+            if (mode != SELECTED_LAYER_ONLY || (mode == SELECTED_LAYER_ONLY && !overdubbing))
+                layers[currentLayerIndex]->append(samples, samplesToProcess);
+            else
+                layers[currentLayerIndex]->overdub(samples, samplesToProcess, intervalPosition);
+
+            bool hearingLayersWhileRecording = (mode == ALL_LAYERS && hearingOtherLayersWhileRecording) || (mode == SELECTED_LAYER_ONLY && overdubbing);
+            if (hearingLayersWhileRecording) {
+                const quint8 excludeLayer = mode == SELECTED_LAYER_ONLY ? -1 : currentLayerIndex;
+                mixAllLayers(samples, samplesToProcess, excludeLayer); // user can hear other layers while recording
+            }
+        }
+        else if (isPlaying()) {
+            switch (mode) {
+            case Mode::SEQUENCE:
+            case Mode::RANDOM_LAYERS: // layer index in randomized in startNewCycle() function
+            case Mode::SELECTED_LAYER_ONLY:
+                mixLayer(currentLayerIndex, samples, samplesToProcess);
+                break;
+            case Mode::ALL_LAYERS:
+                mixAllLayers(samples, samplesToProcess, -1); // mix all layers, no excluded layers
+                break;
+            default:
+                qCritical() << mode << " not implemented yet!";
+            }
+        }
+    }
+
+    // always update intervalPosition to keep the execution in sync when 'play' is pressed
+    if (intervalLenght)
+        intervalPosition = (intervalPosition + samplesToProcess) % intervalLenght;
+}
+
 void Looper::startNewCycle(uint samplesInCycle)
 {
     if (samplesInCycle != intervalLenght) {
@@ -332,28 +414,42 @@ void Looper::startNewCycle(uint samplesInCycle)
     }
 
     if (isPlaying()) {
-        if (playMode == PlayMode::RANDOM_LAYERS)
+        if (mode == Mode::RANDOM_LAYERS)
             setCurrentLayer(qrand() % maxLayers);
-        else if (playMode == PlayMode::SEQUENCE)
+        else if (mode == Mode::SEQUENCE)
             setCurrentLayer((currentLayerIndex + 1) % maxLayers);
 
         return;  // ALL_LAYERS and SELECTED_LAYER_ONLY play states are not touching in currentLayerIndex
     }
 
     if (isRecording()) {
-        quint8 nextLayer = (currentLayerIndex + 1) % maxLayers;
-        while (layers[nextLayer]->locked && nextLayer > 0) { // exit from loop if reach 0
-            nextLayer = (nextLayer + 1) % maxLayers;
-        }
+        if (mode != SELECTED_LAYER_ONLY) {
+            quint8 nextLayer = (currentLayerIndex + 1) % maxLayers;
+            while (layers[nextLayer]->locked && nextLayer > 0) { // exit from loop if reach 0
+                nextLayer = (nextLayer + 1) % maxLayers;
+            }
 
-        if (nextLayer == 0 || layers[nextLayer]->locked) { // stop recording when backing to first layer
-            stop();
-            setState(LooperState::PLAYING);
-            setCurrentLayer(nextLayer);
+            if (nextLayer == 0 || layers[nextLayer]->locked) { // stop recording when backing to first layer
+                stop();
+                setState(LooperState::PLAYING);
+                setCurrentLayer(nextLayer);
+            }
+            else {
+                setCurrentLayer(nextLayer); // advance record to next layer
+                layers[currentLayerIndex]->zero(); // zero current layer if keep recording
+            }
         }
-        else {
-            setCurrentLayer(nextLayer); // advance record to next layer
-            layers[currentLayerIndex]->zero(); // zero current layer if keep recording
+        else { // SELECTED_LAYER_ONLY when recording
+            if (isOverdubbing()) {
+                for (uint l = 0; l < maxLayers; ++l) {
+                    layers[l]->availableSamples = 0; // this is necessary to rebuild the peaks when overdubbing
+                    layers[l]->lastCacheComputationSample = 0;
+                }
+            }
+            else { // if not overdubbing we need auto stop recording
+                stop();
+                setState(LooperState::PLAYING);
+            }
         }
     }
 }
@@ -368,25 +464,14 @@ void Looper::setState(LooperState state)
 
 
 /**
- * @return True if any layer has enough available samples
- */
-bool Looper::canPlay(uint intervalLenght) const
-{
-    for (int l = 0; l < maxLayers; ++l) {
-        if (layers[l]->availableSamples >= intervalLenght) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-/**
  * @return True if we have at least one layer unlocked
  */
 bool Looper::canRecord() const
 {
-    return getFirstUnlockedLayerIndex() >= 0;
+    if (mode != Looper::SELECTED_LAYER_ONLY)
+        return getFirstUnlockedLayerIndex() >= 0;
+
+    return !layers[currentLayerIndex]->locked; // in SELECTED_LAYER_ONLY mode we can't allow recording in selected layer if this layer is locked
 }
 
 const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const
@@ -399,42 +484,17 @@ const std::vector<float> Looper::getLayerPeaks(quint8 layerIndex, uint samplesPe
     return std::vector<float>(); // empty vector
 }
 
-void Looper::process(SamplesBuffer &samples)
+void Looper::setMode(Mode mode)
 {
-    bool canProcess = isRecording() || isPlaying();
-    uint samplesToProcess = samples.getFrameLenght();
-
-    if (canProcess) {
-        samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
-
-        if (isRecording()) { // store/rec current samples
-            if (!layerIsLocked(currentLayerIndex)) // avoid recording in locked layers
-                layers[currentLayerIndex]->append(samples, samplesToProcess);
-
-            if (hearingOtherLayersWhileRecording) {
-                const quint8 excludeLayer = currentLayerIndex;
-                mixAllLayers(samples, samplesToProcess, excludeLayer); // user can hear other layers while recording
-            }
-        }
-        else if (isPlaying()) {
-            switch (playMode) {
-            case PlayMode::SEQUENCE:
-            case PlayMode::RANDOM_LAYERS: // layer index in randomized in startNewCycle() function
-            case PlayMode::SELECTED_LAYER_ONLY:
-                mixLayer(currentLayerIndex, samples, samplesToProcess);
-                break;
-            case PlayMode::ALL_LAYERS:
-                mixAllLayers(samples, samplesToProcess, -1); // mix all layers, no excluded layers
-                break;
-            default:
-                qCritical() << playMode << " not implemented yet!";
-            }
-        }
+    if (this->mode != mode) {
+        this->mode = mode;
+        emit modeChanged();
     }
+}
 
-    // always update intervalPosition to keep the execution in sync when 'play' is pressed
-    if (intervalLenght)
-        intervalPosition = (intervalPosition + samplesToProcess) % intervalLenght;
+void Looper::setOverdubbing(bool overdubbing)
+{
+    this->overdubbing = overdubbing;
 }
 
 /**
@@ -460,12 +520,12 @@ void Looper::mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptL
     }
 }
 
-QString Looper::getPlayModeString(PlayMode playMode)
+QString Looper::getModeString(Mode mode)
 {
-    switch (playMode) {
-        case PlayMode::SEQUENCE:        return tr("Sequence");
-        case PlayMode::ALL_LAYERS:      return tr("All Layers");
-        case PlayMode::RANDOM_LAYERS:   return tr("Random");
+    switch (mode) {
+        case Mode::SEQUENCE:        return tr("Sequence");
+        case Mode::ALL_LAYERS:      return tr("All Layers");
+        case Mode::RANDOM_LAYERS:   return tr("Random");
         case SELECTED_LAYER_ONLY:       return tr("Selected");
     }
 
