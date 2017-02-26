@@ -36,8 +36,6 @@ private:
 
     quint8 currentIntervalBeat;
 
-    void drawBpiVerticalLines(QPainter &painter);
-
     uint calculateSamplesPerPixel() const;
 
     bool canUseHighlightPainting() const;
@@ -47,10 +45,21 @@ private:
 
     Audio::Looper *looper;
 
-    QPainterPath miniLockIcon;
-    QPainterPath bigClosedLockIcon;
-    QPainterPath createLockIconPainterPath(bool lockIsOpened, qreal lockHeight, qreal topMargin);
+    QPainterPath miniLockIcon;  // used to draw mini lock icon in top right corner
+    QPainterPath bigLockIcon;   // used to draw big lock icon in center when layer is locked
+    QPainterPath discardIcon;   // used to draw the 'X' icon in bottom right corner
+
+    QPainterPath createLockIcon(bool lockIsOpened, qreal lockHeight, qreal topMargin) const;
     static qreal getMiniLockIconHeight(bool lockOpened);
+    QPainterPath createDiscardIcon(qreal topMargin, qreal iconSize) const;
+
+    void drawLayerNumber(QPainter &painter);
+    void drawBpiVerticalLines(QPainter &painter, qreal pixelsPerBeat);
+    void drawCurrentBeatRect(QPainter &painter, qreal pixelsPerBeat);
+    void drawBorder(QPainter &painter, const QColor &color);
+    void drawRecordingRedRect(QPainter &painter, QColor redColor, const qreal pixelsPerBeat);
+    void drawMiniLockIcon(QPainter &painter, const QColor &transparentColor);
+    void drawBigLockIcon(QPainter &painter, const QColor &transparentColor);
 
     const quint8 layerID;
 };
