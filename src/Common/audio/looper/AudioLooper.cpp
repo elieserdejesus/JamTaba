@@ -55,7 +55,7 @@ void Looper::overdubInCurrentLayer(const SamplesBuffer &samples, uint samplesToM
 
 void Looper::mixCurrentLayerTo(SamplesBuffer &samples, uint samplesToMix)
 {
-    mixLayer(currentLayerIndex, samples, samplesToMix);
+    mixLayer(currentLayerIndex, samples, samplesToMix, false);
 }
 
 bool Looper::currentLayerIsLocked() const
@@ -73,7 +73,7 @@ bool Looper::canLockLayer(quint8 layer) const
     if (layer >= maxLayers)
         return false;
 
-    return (isPlaying() || isStopped()) && layerIsValid(layer);
+    return (isPlaying() || isStopped());// && layerIsValid(layer);
 }
 
 void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
@@ -86,7 +86,11 @@ void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
 
 void Looper::setHearingOtherLayersWhileRecording(bool hearingOtherLayers)
 {
-    this->hearingOtherLayers = hearingOtherLayers;
+    if (maxLayers > 1) {
+        this->hearingOtherLayers = hearingOtherLayers;
+    }
+    else
+        this->hearingOtherLayers = false;
 }
 
 bool Looper::layerIsLocked(quint8 layerIndex) const
@@ -200,7 +204,7 @@ void Looper::setCurrentLayer(quint8 newLayer)
     }
 }
 
-void Looper::setMaxLayers(quint8 maxLayers)
+void Looper::setLayers(quint8 maxLayers)
 {
     if (maxLayers < 1) {
         maxLayers = 1;
@@ -298,7 +302,7 @@ void Looper::setMode(Mode mode)
     }
 }
 
-void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix)
+void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix, bool replacing)
 {
     if (layerIndex >= maxLayers)
         return;
@@ -306,7 +310,7 @@ void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToM
     LooperLayer *loopLayer = layers[layerIndex];
     samplesToMix = qMin(samplesToMix, loopLayer->getAvailableSamples());
     if (samplesToMix) {
-        loopLayer->mixTo(samples, samplesToMix, intervalPosition); // mix buffered samples
+        loopLayer->mixTo(samples, samplesToMix, intervalPosition, replacing); // mix buffered samples
     }
 }
 
@@ -314,7 +318,7 @@ void Looper::mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptL
 {
     for (uint layerIndex = 0; layerIndex < maxLayers; ++layerIndex) {
         if (layerIndex != exceptLayer)
-            mixLayer(layerIndex, samples, samplesToMix);
+            mixLayer(layerIndex, samples, samplesToMix, false);
     }
 }
 

@@ -18,6 +18,11 @@ private slots:
     void resizeLayersAndCopySamples();
     void resizeLayersAndCopySamples_data();
 
+    void overdubbing();
+    void hearingAnotherLayersInSelectedLayerMode();
+    void hearingAnotherLayersInAllLayersMode();
+    void hearingAnotherLayersAndOverdubInSelectedLayerMode();
+
 private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
     void checkExpectedValues(QString comaSeparatedExpectedValues, const Audio::SamplesBuffer &buffer);

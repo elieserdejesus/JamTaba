@@ -145,9 +145,9 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         ui->maxLayersSpinBox->setValue(looper->getMaxLayers());
 
         ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingLayersWhileRecording());
-        ui->checkBoxHearLayersWhileRecording->setVisible(looper->getMode() == Looper::ALL_LAYERS);
+        //ui->checkBoxHearLayersWhileRecording->setVisible(looper->getMode() == Looper::ALL_LAYERS);
 
-        ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER);
+        //ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER);
         ui->checkBoxOverdub->setChecked(looper->isOverdubbing());
 
         QString selectedPlayMode = looper->getModeString(looper->getMode());
@@ -203,13 +203,15 @@ void LooperWindow::updateControls()
         ui->maxLayersSpinBox->setEnabled(looper->isStopped());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
 
-        ui->checkBoxHearLayersWhileRecording->setVisible(looper->getMode() == Looper::ALL_LAYERS);
+        bool canEnableHearLayerCheckBox = looper->getMaxLayers() > 1 && (looper->getMode() == Looper::ALL_LAYERS || looper->getMode() == Looper::SELECTED_LAYER);
+        ui->checkBoxHearLayersWhileRecording->setEnabled(canEnableHearLayerCheckBox);
         ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingLayersWhileRecording());
 
-
-        ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER);
-        ui->checkBoxOverdub->setEnabled(!looper->isRecording());
+        bool canEnableOverdubCheckBox = looper->getMode() == Looper::SELECTED_LAYER && !looper->isRecording();
+        ui->checkBoxOverdub->setEnabled(canEnableOverdubCheckBox);
         ui->checkBoxOverdub->setChecked(looper->isOverdubbing());
+
+        ui->labelRecording->setEnabled(ui->checkBoxOverdub->isEnabled() || ui->checkBoxHearLayersWhileRecording->isEnabled());
     }
 
     update();
@@ -304,16 +306,16 @@ void LooperWindow::initializeControls()
     connect(ui->maxLayersSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int newMaxLayers)
     {
         if (looper)
-            looper->setMaxLayers(newMaxLayers);
+            looper->setLayers(newMaxLayers);
     });
 
     connect(ui->checkBoxHearLayersWhileRecording, &QCheckBox::toggled, [=](bool checked){
-        if (looper && looper->getMode() == Looper::ALL_LAYERS)
+        if (looper)
             looper->setHearingOtherLayersWhileRecording(checked);
     });
 
     connect(ui->checkBoxOverdub, &QCheckBox::toggled, [=](bool checked){
-        if (looper && looper->getMode() == Looper::SELECTED_LAYER)
+        if (looper)
             looper->setOverdubbing(checked);
     });
 }

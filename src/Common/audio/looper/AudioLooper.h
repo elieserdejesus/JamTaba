@@ -77,7 +77,7 @@ public:
     bool isOverdubbing() const;
     void setOverdubbing(bool overdubbing);
 
-    void setMaxLayers(quint8 maxLayers);
+    void setLayers(quint8 maxLayers);
     quint8 getMaxLayers() const;
 
     bool canRecord() const;
@@ -111,7 +111,7 @@ private:
     bool overdubbing;
     bool hearingOtherLayers;
 
-    void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix);
+    void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix, bool replacing);
     void mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer = -1);
 
     void setState(LooperState *state);
@@ -144,7 +144,7 @@ inline bool Looper::isOverdubbing() const
 
 inline bool Looper::isHearingLayersWhileRecording() const
 {
-    return hearingOtherLayers && mode == Looper::ALL_LAYERS;
+    return hearingOtherLayers && maxLayers > 1 && (mode == Looper::ALL_LAYERS || mode == Looper::SELECTED_LAYER);
 }
 
 inline Looper::Mode Looper::getMode() const

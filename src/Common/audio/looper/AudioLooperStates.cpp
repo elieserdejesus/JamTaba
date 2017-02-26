@@ -101,16 +101,19 @@ void RecordingState::process(SamplesBuffer &samples, uint samplesToProcess)
     if (looper->currentLayerIsLocked()) // avoid recording in locked layers
         return;
 
-
     if (looper->mode != Looper::SELECTED_LAYER || !looper->isOverdubbing())
         looper->appendInCurrentLayer(samples, samplesToProcess);
     else
         looper->overdubInCurrentLayer(samples, samplesToProcess);
 
-    bool hearingLayersWhileRecording = looper->isHearingLayersWhileRecording() || looper->isOverdubbing();
-    if (hearingLayersWhileRecording) {
-        const quint8 excludedLayer = looper->mode == Looper::SELECTED_LAYER ? -1 : looper->currentLayerIndex;
+
+    const bool willMixAllLayers = looper->isHearingLayersWhileRecording();
+    if (willMixAllLayers) {
+        const quint8 excludedLayer = looper->currentLayerIndex;
         looper->mixAllLayers(samples, samplesToProcess, excludedLayer); // user can hear other layers while recording
+    }
+    else if (looper->isOverdubbing()) { // overdubbing only
+        looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess, true); // mix replacing
     }
 }
 

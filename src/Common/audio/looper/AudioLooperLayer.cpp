@@ -131,15 +131,25 @@ std::vector<float> LooperLayer::getSamplesPeaks(uint samplesPerPeak)
     return peaksCache;
 }
 
-void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition)
+void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition, bool replacing)
 {
     if (samplesToMix > 0) {
-        float* internalChannels[] = {&(leftChannel[0]), &(rightChannel[0])};
-        const uint channels = outBuffer.getChannels();
-        for (uint c = 0; c < channels; ++c) {
-            float *out = outBuffer.getSamplesArray(c);
-            for (uint s = 0; s < samplesToMix; ++s) {
-                out[s] += internalChannels[c][s + intervalPosition];
+        float *internalChannels[] = {&(leftChannel[0]), &(rightChannel[0])};
+        const uint secondChannelIndex = (outBuffer.isMono()) ? 0 : 1;
+        float *bufferChannels[] = {outBuffer.getSamplesArray(0), outBuffer.getSamplesArray(secondChannelIndex)};
+        uint channels = outBuffer.getChannels();
+        if (!replacing) {
+            for (uint c = 0; c < channels; ++c) {
+                for (uint s = 0; s < samplesToMix; ++s) {
+                    const uint offset = s + intervalPosition;
+                    bufferChannels[c][s] += internalChannels[c][offset];
+                }
+            }
+        }
+        else { // replacing
+            uint bytes = samplesToMix * sizeof(float);
+            for (uint c = 0; c < channels; ++c) {
+                std::memcpy(bufferChannels[c], internalChannels[c] + intervalPosition, bytes);
             }
         }
     }
