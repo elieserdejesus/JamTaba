@@ -36,6 +36,9 @@ public:
 
     void clearAllLayers();
     void clearCurrentLayer();
+    void clearLayer(quint8 layer);
+    bool canClearLayer(quint8 layer) const;
+    bool canLockLayer(quint8 layer) const;
 
     void setLayerLockedState(quint8 layerIndex, bool locked);
     void toggleLayerLockedState(quint8 layerIndex);
@@ -126,7 +129,8 @@ private:
     void randomizeCurrentLayer();
 
     bool currentLayerIsLocked() const;
-};
+
+ };
 
 inline void Looper::setOverdubbing(bool overdubbing)
 {

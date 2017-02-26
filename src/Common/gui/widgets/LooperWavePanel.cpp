@@ -16,17 +16,23 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
    setDrawingMode(WavePeakPanel::SOUND_WAVE);
    this->useAlphaInPreviousSamples = false; // all samples are painted without alpha
 
-   bool lockOpened = true;
+   const qreal rightMargin = 3.0;
+   const bool lockOpened = true;
+
    qreal miniLockIconHeight = getMiniLockIconHeight(lockOpened);
-   miniLockIcon = createLockIcon(lockOpened, miniLockIconHeight, 2.0);
+   miniLockIcon = createLockIcon(lockOpened, miniLockIconHeight, 2.0, rightMargin);
 
-   const qreal margin = 6.0;
-   bigLockIcon = createLockIcon(false, height() - margin * 2, margin);
+   const qreal topMargin = 6.0;
+   bigLockIcon = createLockIcon(false, height() - topMargin * 2, topMargin, rightMargin);
 
-   const qreal discardIconTopMargin = height() - margin - miniLockIconHeight;
-   discardIcon = createDiscardIcon(discardIconTopMargin, miniLockIconHeight);
+   const qreal discardIconTopMargin = height() - topMargin - miniLockIconHeight;
+
+   const qreal discardIconHeight = miniLockIconHeight * 0.6;
+   discardIcon = createDiscardIcon(discardIconTopMargin, rightMargin, discardIconHeight);
 
    connect(looper, &Audio::Looper::layerLockedStateChanged, this, &LooperWavePanel::updateMiniLockIconPainterPath);
+
+   setMouseTracking(true);
 }
 
 LooperWavePanel::~LooperWavePanel()
@@ -64,19 +70,23 @@ void LooperWavePanel::resizeEvent(QResizeEvent *event)
 
     updateMiniLockIconPainterPath();
 
-    const qreal margin = 6;
-    bigLockIcon = createLockIcon(false, height() - margin * 2, margin);
+    const qreal topMargin = 6.0;
+    const qreal rightMargin = 3.0;
+    bigLockIcon = createLockIcon(false, height() - topMargin * 2, topMargin, rightMargin);
 
-    qreal miniLockIconHeight = getMiniLockIconHeight(false);
-    const qreal discardIconTopMargin = height() - margin - miniLockIconHeight;
-    discardIcon = createDiscardIcon(discardIconTopMargin, miniLockIconHeight);
+    qreal miniLockIconHeight = getMiniLockIconHeight(true);
+    const qreal discardIconRightMargin = 3.0;
+    const qreal discardIconHeight = miniLockIconHeight * 0.6;
+    const qreal discardIconTopMargin = height() - topMargin - discardIconHeight;
+    discardIcon = createDiscardIcon(discardIconTopMargin, discardIconRightMargin, discardIconHeight);
 }
 
 void LooperWavePanel::updateMiniLockIconPainterPath()
 {
     bool lockIconIsOpened = looper && !(looper->layerIsLocked(layerID));
     const qreal topMargin = 2;
-    miniLockIcon = createLockIcon(lockIconIsOpened, getMiniLockIconHeight(lockIconIsOpened), topMargin);
+    const qreal rightMargin = 3;
+    miniLockIcon = createLockIcon(lockIconIsOpened, getMiniLockIconHeight(lockIconIsOpened), topMargin, rightMargin);
 }
 
 uint LooperWavePanel::calculateSamplesPerPixel() const
@@ -109,12 +119,21 @@ bool LooperWavePanel::canUseHighlightPainting() const
 
 void LooperWavePanel::mousePressEvent(QMouseEvent *ev)
 {
-    if (miniLockIcon.boundingRect().contains(ev->pos())) // use is clicking in lock icon?
+    bool lockIconClicked = looper->canLockLayer(layerID) && miniLockIcon.boundingRect().contains(ev->pos());
+    bool discardIconClicked = looper->canClearLayer(layerID) && discardIcon.boundingRect().contains(ev->pos());
+    if (lockIconClicked) // user is clicking in lock icon?
         looper->toggleLayerLockedState(layerID);
+    else if(discardIconClicked)
+        looper->clearLayer(layerID);
     else
-        looper->selectLayer(this->layerID);
+        looper->selectLayer(layerID);
 
     update();
+}
+
+void LooperWavePanel::mouseMoveEvent(QMouseEvent *ev)
+{
+    lastMousePos = ev->pos();
 }
 
 void LooperWavePanel::paintEvent(QPaintEvent *ev)
@@ -156,19 +175,29 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
     }
 
     const bool layerIsValid = looper->layerIsValid(layerID);
-    const bool canDrawMiniLockIcon = !miniLockIcon.isEmpty() && !looper->isRecording() && layerIsValid;
-
-    if (canDrawMiniLockIcon)
-        drawMiniLockIcon(painter, transparentColor);
-
-
+    const bool canUseMiniLockIcon = !miniLockIcon.isEmpty() && !looper->isRecording() && layerIsValid;
     const bool canDrawBigLockIcon = looper->layerIsLocked(layerID);
+    const bool canDrawLayerNumber = drawingLayerNumber && (looper->isPlaying() || looper->isStopped());
+    const bool canUseDiscardIcon = looper->canClearLayer(layerID);
+
+    if (canUseMiniLockIcon)
+        drawMiniLockIcon(painter, (miniLockIcon.boundingRect().contains(lastMousePos)) ? peaksColor : transparentColor);
+
+    if (canUseDiscardIcon)
+        drawDiscardIcon(painter, (discardIcon.boundingRect().contains(lastMousePos)) ? peaksColor : transparentColor);
+
     if (canDrawBigLockIcon)
         drawBigLockIcon(painter, transparentColor);
 
-    const bool canDrawLayerNumber = drawingLayerNumber && (looper->isPlaying() || looper->isStopped());
     if (canDrawLayerNumber)
         drawLayerNumber(painter);
+}
+
+void LooperWavePanel::drawDiscardIcon(QPainter &painter, const QColor &color)
+{
+    QPen pen(QBrush(color), 2.0, Qt::SolidLine, Qt::RoundCap);
+    painter.setPen(pen);
+    painter.drawPath(discardIcon);
 }
 
 void LooperWavePanel::drawBigLockIcon(QPainter &painter, const QColor &transparentColor)
@@ -240,10 +269,10 @@ void LooperWavePanel::drawLayerNumber(QPainter &painter)
     painter.drawText(textRect, text);
 }
 
-QPainterPath LooperWavePanel::createDiscardIcon(qreal topMargin, qreal iconSize) const
+QPainterPath LooperWavePanel::createDiscardIcon(qreal topMargin, qreal rightMargin, qreal iconSize) const
 {
     QPainterPath path;
-    qreal right = width() - 1;
+    qreal right = width() - 1 - rightMargin;
     path.moveTo(QPointF(right - iconSize, topMargin));
     path.lineTo(QPointF(right, topMargin + iconSize));
 
@@ -253,7 +282,7 @@ QPainterPath LooperWavePanel::createDiscardIcon(qreal topMargin, qreal iconSize)
     return path;
 }
 
-QPainterPath LooperWavePanel::createLockIcon(bool lockIsOpened, qreal lockHeight, qreal topMargin) const
+QPainterPath LooperWavePanel::createLockIcon(bool lockIsOpened, qreal lockHeight, qreal topMargin, qreal rightMargin) const
 {
     const qreal vOffset = topMargin; // top margim
 
@@ -261,7 +290,7 @@ QPainterPath LooperWavePanel::createLockIcon(bool lockIsOpened, qreal lockHeight
     const qreal baseRectTop = lockHeight - baseRectHeight + vOffset;
     const qreal baseRectWidth = lockHeight * 0.7;
     const qreal margin = baseRectWidth * 0.1;
-    const qreal baseRectLeft = width()-1 - baseRectWidth;// - margin;
+    const qreal baseRectLeft = width() - 1 - baseRectWidth - rightMargin;
     QRectF baseRect(baseRectLeft, baseRectTop, baseRectWidth, baseRectHeight);
 
     const qreal arcLeft = baseRectLeft + margin;

@@ -23,6 +23,7 @@ protected:
     void paintEvent(QPaintEvent *ev) override;
     void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *ev) override;
+    void mouseMoveEvent(QMouseEvent *ev) override;
 
 private slots:
     void updateMiniLockIconPainterPath();
@@ -31,6 +32,8 @@ private:
     uint beatsPerInterval;
     uint samplesPerInterval;
     uint samplesPerPixel;
+
+    QPoint lastMousePos;
 
     bool drawingLayerNumber;
 
@@ -49,9 +52,9 @@ private:
     QPainterPath bigLockIcon;   // used to draw big lock icon in center when layer is locked
     QPainterPath discardIcon;   // used to draw the 'X' icon in bottom right corner
 
-    QPainterPath createLockIcon(bool lockIsOpened, qreal lockHeight, qreal topMargin) const;
+    QPainterPath createLockIcon(bool lockIsOpened, qreal lockHeight, qreal topMargin, qreal rightMargin) const;
     static qreal getMiniLockIconHeight(bool lockOpened);
-    QPainterPath createDiscardIcon(qreal topMargin, qreal iconSize) const;
+    QPainterPath createDiscardIcon(qreal topMargin, qreal rightMargin, qreal iconSize) const;
 
     void drawLayerNumber(QPainter &painter);
     void drawBpiVerticalLines(QPainter &painter, qreal pixelsPerBeat);
@@ -60,6 +63,7 @@ private:
     void drawRecordingRedRect(QPainter &painter, QColor redColor, const qreal pixelsPerBeat);
     void drawMiniLockIcon(QPainter &painter, const QColor &transparentColor);
     void drawBigLockIcon(QPainter &painter, const QColor &transparentColor);
+    void drawDiscardIcon(QPainter &painter, const QColor &color);
 
     const quint8 layerID;
 };

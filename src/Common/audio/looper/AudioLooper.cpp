@@ -68,10 +68,17 @@ void Looper::toggleLayerLockedState(quint8 layerIndex)
     setLayerLockedState(layerIndex, !(layers[layerIndex]->isLocked()));
 }
 
+bool Looper::canLockLayer(quint8 layer) const
+{
+    if (layer >= maxLayers)
+        return false;
+
+    return (isPlaying() || isStopped()) && layerIsValid(layer);
+}
+
 void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
 {
-    bool canLockLayers = isPlaying() || isStopped();
-    if (layerIndex < maxLayers && canLockLayers) {
+    if (canLockLayer(layerIndex)) {
         layers[layerIndex]->setLocked(locked);
         emit layerLockedStateChanged(layerIndex, locked);
     }
@@ -147,15 +154,23 @@ void Looper::play()
     setState(new PlayingState(this));
 }
 
+bool Looper::canClearLayer(quint8 layer) const
+{
+    if (layer >= maxLayers)
+        return false;
+
+    return (isPlaying() || isStopped()) && !layerIsLocked(layer) && layerIsValid(layer);
+}
+
+void Looper::clearLayer(quint8 layer)
+{
+    if (canClearLayer(layer))
+        layers[layer]->zero();
+}
+
 void Looper::clearCurrentLayer()
 {
-    bool canClearSelectedLayer = (isPlaying() || isStopped()) && !layerIsLocked(currentLayerIndex);
-    if (canClearSelectedLayer) {
-        quint8 layerIndex = currentLayerIndex;
-        if (layerIndex < maxLayers) {
-            layers[layerIndex]->zero();
-        }
-    }
+    clearLayer(currentLayerIndex);
 }
 
 void Looper::clearAllLayers()
