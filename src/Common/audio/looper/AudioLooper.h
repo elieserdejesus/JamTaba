@@ -1,17 +1,30 @@
 #ifndef _AUDIO_LOOPER_
 #define _AUDIO_LOOPER_
 
-#include "core/SamplesBuffer.h"
+#include "../core/SamplesBuffer.h"
 
 #include <QtGlobal>
 #include <QObject>
 #include <QDebug>
+#include <QSharedPointer>
 
 namespace Audio {
+
+class LooperState;
+class PlayingState;
+class RecordingState;
+class WaitingState;
+class LooperLayer;
+
+// +++++++++++++++++++++++++++++=
 
 class Looper : public QObject
 {
     Q_OBJECT
+
+    friend class PlayingState;
+    friend class RecordingState;
+    friend class WaitingState;
 
 public:
     Looper();
@@ -22,7 +35,7 @@ public:
     void selectLayer(quint8 layerIndex);
 
     void clearAllLayers();
-    void clearSelectedLayer();
+    void clearCurrentLayer();
 
     void setLayerLockedState(quint8 layerIndex, bool locked);
     void toggleLayerLockedState(quint8 layerIndex);
@@ -31,21 +44,14 @@ public:
     bool layerIsValid(quint8 layerIndex) const;
 
     void stop();
+    void play();
 
     enum Mode
     {
         SEQUENCE, // one layer in each interval
         ALL_LAYERS, // mix and play all layers
-        SELECTED_LAYER_ONLY, // ONE selected layer
+        SELECTED_LAYER, // ONE selected layer
         RANDOM_LAYERS
-    };
-
-    enum LooperState
-    {
-        STOPPED,
-        WAITING,
-        RECORDING,
-        PLAYING
     };
 
     static QString getModeString(Mode mode);
@@ -62,7 +68,7 @@ public:
     bool isRecording() const;
     bool isStopped() const;
 
-    bool isHearingOtherLayersWhileRecording() const;
+    bool isHearingLayersWhileRecording() const;
     void setHearingOtherLayersWhileRecording(bool hearingOtherLayers);
 
     bool isOverdubbing() const;
@@ -88,36 +94,53 @@ private:
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples
 
-    bool hearingOtherLayersWhileRecording;
-    bool overdubbing;
-
-    class Layer; // internal class
-    Layer *layers[MAX_LOOP_LAYERS];
+    LooperLayer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex;
     quint8 maxLayers;
 
     void setCurrentLayer(quint8 newLayer);
 
-    LooperState state;
+    QSharedPointer<LooperState> state;
 
     Mode mode;
 
-    void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix);
-    void mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer);
+    // recording attributes
+    bool overdubbing;
+    bool hearingOtherLayers;
 
-    void setState(LooperState state);
+    void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix);
+    void mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer = -1);
+
+    void setState(LooperState *state);
 
     int getFirstUnlockedLayerIndex(quint8 startingFrom = 0) const;
+    int getNextUnlockedLayerIndex() const;
+
+    void appendInCurrentLayer(const SamplesBuffer &samples, uint samplesToAppend);
+    void overdubInCurrentLayer(const SamplesBuffer &samples, uint samplesToMix);
+    void mixCurrentLayerTo(SamplesBuffer &samples, uint samplesToMix);
+
+    void startRecording();
+
+    void incrementCurrentLayer();
+    void randomizeCurrentLayer();
+
+    bool currentLayerIsLocked() const;
 };
+
+inline void Looper::setOverdubbing(bool overdubbing)
+{
+    this->overdubbing = overdubbing;
+}
 
 inline bool Looper::isOverdubbing() const
 {
-    return overdubbing;
+    return overdubbing && mode == Looper::SELECTED_LAYER;
 }
 
-inline bool Looper::isHearingOtherLayersWhileRecording() const
+inline bool Looper::isHearingLayersWhileRecording() const
 {
-    return hearingOtherLayersWhileRecording;
+    return hearingOtherLayers && mode == Looper::ALL_LAYERS;
 }
 
 inline Looper::Mode Looper::getMode() const
@@ -128,26 +151,6 @@ inline Looper::Mode Looper::getMode() const
 inline quint8 Looper::getMaxLayers() const
 {
     return maxLayers;
-}
-
-inline bool Looper::isWaiting() const
-{
-    return state == LooperState::WAITING;
-}
-
-inline bool Looper::isPlaying() const
-{
-    return state == LooperState::PLAYING;
-}
-
-inline bool Looper::isRecording() const
-{
-    return state == LooperState::RECORDING;
-}
-
-inline bool Looper::isStopped() const
-{
-    return state == LooperState::STOPPED;
 }
 
 inline quint8 Looper::getCurrentLayerIndex() const

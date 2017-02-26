@@ -5,7 +5,7 @@
 #include <QTest>
 #include <QtGlobal>
 
-#include "audio/AudioLooper.h"
+#include "audio/looper/AudioLooper.h"
 
 using namespace Audio;
 

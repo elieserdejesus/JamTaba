@@ -2,7 +2,7 @@
 #define _LOCAL_INPUT_NODE_H_
 
 #include "AudioNode.h"
-#include "../AudioLooper.h"
+#include "../looper/AudioLooper.h"
 
 namespace Midi {
     class MidiMessage;

@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "audio/AudioLooper.h"
+#include "audio/looper/AudioLooper.h"
 #include "LooperWavePanel.h"
 
 namespace Controller {

@@ -172,7 +172,7 @@
       <item>
        <widget class="QCheckBox" name="checkBoxOverdub">
         <property name="text">
-         <string>Overdub</string>
+         <string>Overdub recording</string>
         </property>
        </widget>
       </item>

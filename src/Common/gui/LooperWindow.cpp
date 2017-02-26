@@ -47,7 +47,7 @@ void LooperWindow::keyPressEvent(QKeyEvent *ev)
         looper->selectLayer(layerIndex);
     }
     else if (pressingDelete) {
-        looper->clearSelectedLayer();
+        looper->clearCurrentLayer();
     }
 }
 
@@ -144,10 +144,10 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         // initial values
         ui->maxLayersSpinBox->setValue(looper->getMaxLayers());
 
-        ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingOtherLayersWhileRecording());
+        ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingLayersWhileRecording());
         ui->checkBoxHearLayersWhileRecording->setVisible(looper->getMode() == Looper::ALL_LAYERS);
 
-        ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER_ONLY);
+        ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER);
         ui->checkBoxOverdub->setChecked(looper->isOverdubbing());
 
         QString selectedPlayMode = looper->getModeString(looper->getMode());
@@ -204,7 +204,12 @@ void LooperWindow::updateControls()
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
 
         ui->checkBoxHearLayersWhileRecording->setVisible(looper->getMode() == Looper::ALL_LAYERS);
-        ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER_ONLY);
+        ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingLayersWhileRecording());
+
+
+        ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER);
+        ui->checkBoxOverdub->setEnabled(!looper->isRecording());
+        ui->checkBoxOverdub->setChecked(looper->isOverdubbing());
     }
 
     update();
@@ -264,8 +269,8 @@ void LooperWindow::initializeControls()
     std::vector<Looper::Mode> playModes;
     playModes.push_back(Looper::SEQUENCE);
     playModes.push_back(Looper::ALL_LAYERS);
+    playModes.push_back(Looper::SELECTED_LAYER);
     playModes.push_back(Looper::RANDOM_LAYERS);
-    playModes.push_back(Looper::SELECTED_LAYER_ONLY);
 
     for (uint i = 0; i < playModes.size(); ++i) {
         Looper::Mode playMode = playModes[i];
@@ -308,7 +313,7 @@ void LooperWindow::initializeControls()
     });
 
     connect(ui->checkBoxOverdub, &QCheckBox::toggled, [=](bool checked){
-        if (looper && looper->getMode() == Looper::SELECTED_LAYER_ONLY)
+        if (looper && looper->getMode() == Looper::SELECTED_LAYER)
             looper->setOverdubbing(checked);
     });
 }
