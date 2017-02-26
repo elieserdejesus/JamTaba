@@ -228,7 +228,7 @@ void LocalTrackGroupView::addSubChannel()
 int LocalTrackGroupView::getSubchannelInternalIndex(uint subchannelTrackID) const
 {
     for (int i = 0; i < trackViews.count(); ++i) {
-        if (trackViews.at(i)->getTrackID() == subchannelTrackID)
+        if (static_cast<uint>(trackViews.at(i)->getTrackID()) == subchannelTrackID)
             return i;
     }
 

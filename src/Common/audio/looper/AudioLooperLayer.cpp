@@ -1,5 +1,6 @@
 #include "AudioLooperLayer.h"
 #include "../core/SamplesBuffer.h"
+#include <cstring>
 
 using namespace Audio;
 
@@ -65,7 +66,7 @@ void LooperLayer::overdub(const SamplesBuffer &samples, uint samplesToMix, uint 
         if (position - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
             const int peakIndex = (position/lastSamplesPerPeak) - 1;
             float lastPeak = computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak);
-            if (peakIndex >= 0 && peakIndex < peaksCache.size())
+            if (peakIndex >= 0 && static_cast<uint>(peakIndex) < peaksCache.size())
                 peaksCache[peakIndex] = lastPeak;
             else
                 peaksCache.push_back(lastPeak);
