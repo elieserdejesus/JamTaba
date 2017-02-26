@@ -9,7 +9,6 @@ LooperLayer::LooperLayer()
       lastSamplesPerPeak(0),
       lastCacheComputationSample(0),
       locked(false)
-
 {
     //
 }

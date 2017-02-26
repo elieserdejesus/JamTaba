@@ -14,6 +14,25 @@ LooperState::LooperState(Looper *looper)
 
 }
 
+void LooperState::process(SamplesBuffer &samples, uint samplesToProcess)
+{
+    //this code is shared by Playing and Waiting states
+
+    switch (looper->mode) {
+    case Looper::SEQUENCE:
+    case Looper::RANDOM_LAYERS: // layer index is randomized in handleNewCycle()
+    case Looper::SELECTED_LAYER:
+        looper->mixCurrentLayerTo(samples, samplesToProcess);
+        break;
+    case Looper::ALL_LAYERS:
+        looper->mixAllLayers(samples, samplesToProcess); // mix all layers, no excluded layers
+        break;
+    default:
+        qCritical() << looper->mode << " not implemented yet!";
+    }
+}
+
+
 // ------------------------------------------------
 
 
@@ -52,22 +71,6 @@ void PlayingState::handleNewCycle(uint samplesInCycle)
         looper->incrementCurrentLayer();
 
     // ALL_LAYERS and SELECTED_LAYER_ONLY play states are not touching in currentLayerIndex
-}
-
-void PlayingState::process(SamplesBuffer &samples, uint samplesToProcess)
-{
-    switch (looper->mode) {
-    case Looper::SEQUENCE:
-    case Looper::RANDOM_LAYERS: // layer index is randomized in handleNewCycle()
-    case Looper::SELECTED_LAYER:
-        looper->mixCurrentLayerTo(samples, samplesToProcess);
-        break;
-    case Looper::ALL_LAYERS:
-        looper->mixAllLayers(samples, samplesToProcess); // mix all layers, no excluded layers
-        break;
-    default:
-        qCritical() << looper->mode << " not implemented yet!";
-    }
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
@@ -131,10 +134,3 @@ void WaitingState::handleNewCycle(uint samplesInCycle)
 
     looper->startRecording();
 }
-
-void WaitingState::process(SamplesBuffer &samples, uint samplesToProcess)
-{
-    Q_UNUSED(samples)
-    Q_UNUSED(samplesToProcess)
-}
-

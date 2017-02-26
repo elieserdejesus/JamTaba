@@ -22,6 +22,7 @@ class Looper : public QObject
 {
     Q_OBJECT
 
+    friend class LooperState;
     friend class PlayingState;
     friend class RecordingState;
     friend class WaitingState;
