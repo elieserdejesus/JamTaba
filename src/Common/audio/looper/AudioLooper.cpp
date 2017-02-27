@@ -330,7 +330,7 @@ QString Looper::getModeString(Mode mode)
         case Mode::SEQUENCE:        return tr("Sequence");
         case Mode::ALL_LAYERS:      return tr("All Layers");
         case Mode::RANDOM_LAYERS:   return tr("Random Layer");
-        case SELECTED_LAYER:       return tr("Selected Layer");
+        case SELECTED_LAYER:        return tr("Selected Layer");
     }
 
     return "Error";

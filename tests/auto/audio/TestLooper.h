@@ -23,6 +23,9 @@ private slots:
     void hearingAnotherLayersInAllLayersMode();
     void hearingAnotherLayersAndOverdubInSelectedLayerMode();
 
+    void hearingRecordTracksWhileWaiting();
+    void hearingRecordTracksWhileWaiting_data();
+
 private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
     void checkExpectedValues(QString comaSeparatedExpectedValues, const Audio::SamplesBuffer &buffer);

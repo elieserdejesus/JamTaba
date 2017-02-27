@@ -9,6 +9,49 @@
 
 using namespace Audio;
 
+void TestLooper::hearingRecordTracksWhileWaiting()
+{
+    QFETCH(Looper::Mode, looperMode);
+    QFETCH(QString, expectedSamples);
+
+    const quint8 layers = 2;
+    bool overdubbing = true;
+
+    Looper looper;
+    looper.setLayers(layers);
+    looper.setOverdubbing(overdubbing);
+    looper.setHearingOtherLayersWhileRecording(true);
+
+    //create content in all layers
+    looper.setMode(Looper::SEQUENCE);
+    looper.toggleRecording();
+    for (int l = 0; l < layers; ++l) {
+        looper.startNewCycle(2);
+        QString value(QString::number(1)); // (1, 1) in all layers
+        looper.process(createBuffer(value + ", " + value));
+    }
+    looper.stop(); // finish recording
+
+    looper.setMode(looperMode); // switch to test looper mode
+    looper.selectLayer(0);// recording in first layer
+
+    looper.toggleRecording(); // waiting state
+
+    SamplesBuffer out = createBuffer("0, 0");
+    looper.process(out);
+    checkExpectedValues(expectedSamples, out);
+}
+
+void TestLooper::hearingRecordTracksWhileWaiting_data()
+{
+    QTest::addColumn<Looper::Mode>("looperMode");
+    QTest::addColumn<QString>("expectedSamples");
+    QTest::newRow("Hearing pre record material while Waiting (SELECTED mode)") << Looper::SELECTED_LAYER << QString("1, 1");
+    QTest::newRow("Hearing pre record material while Waiting (ALL_LAYERS mode)") << Looper::ALL_LAYERS << QString("2, 2");
+    QTest::newRow("Hearing pre record material while Waiting (SEQUENCE mode)") << Looper::SEQUENCE << QString("1, 1");
+    QTest::newRow("Hearing pre record material while Waiting (RANDOM mode)") << Looper::RANDOM_LAYERS << QString("1, 1");
+}
+
 void TestLooper::hearingAnotherLayersAndOverdubInSelectedLayerMode()
 {
     const quint8 layers = 2;
