@@ -25,7 +25,7 @@ void TestLooper::hearingAnotherLayersAndOverdubInSelectedLayerMode()
     looper.toggleRecording();
     for (int l = 0; l < layers; ++l) {
         looper.startNewCycle(2);
-        QString value(QString::number(l + 1)); // first layer will be (1, 1), 2nd layer will be (2, 2)
+        QString value(QString::number(0)); // zero all layers
         looper.process(createBuffer(value + ", " + value));
     }
     looper.stop(); // finish recording
@@ -37,7 +37,12 @@ void TestLooper::hearingAnotherLayersAndOverdubInSelectedLayerMode()
 
     SamplesBuffer out = createBuffer("3, 3");
     looper.process(out);
-    checkExpectedValues("5, 5", out); // summing with 2nd layer (2, 2)
+    checkExpectedValues("3, 3", out); // summing with 2nd layer (0, 0)
+
+    looper.startNewCycle(2);
+    looper.process(out);
+    checkExpectedValues("6, 6", out);
+
 }
 
 void TestLooper::hearingAnotherLayersInAllLayersMode()

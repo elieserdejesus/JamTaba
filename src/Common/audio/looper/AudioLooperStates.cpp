@@ -112,7 +112,11 @@ void RecordingState::process(SamplesBuffer &samples, uint samplesToProcess)
 
     const bool willMixAllLayers = looper->isHearingLayersWhileRecording();
     if (willMixAllLayers) {
-        const quint8 excludedLayer = looper->currentLayerIndex;
+        quint8 excludedLayer = looper->currentLayerIndex;
+
+        if (looper->isOverdubbing())
+            excludedLayer = -1;
+
         looper->mixAllLayers(samples, samplesToProcess, excludedLayer); // user can hear other layers while recording
     }
     else if (looper->isOverdubbing()) { // overdubbing only

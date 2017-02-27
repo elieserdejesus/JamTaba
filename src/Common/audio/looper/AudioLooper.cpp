@@ -317,8 +317,10 @@ void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToM
 void Looper::mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer)
 {
     for (uint layerIndex = 0; layerIndex < maxLayers; ++layerIndex) {
-        if (layerIndex != exceptLayer)
-            mixLayer(layerIndex, samples, samplesToMix, false);
+        if (layerIndex != exceptLayer) {
+            const bool mixReplacing = layerIndex == currentLayerIndex;
+            mixLayer(layerIndex, samples, samplesToMix, mixReplacing);
+        }
     }
 }
 
