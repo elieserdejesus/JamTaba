@@ -224,9 +224,23 @@ void Looper::clearAllLayers()
     stop();
 }
 
+bool Looper::canSelectLayers() const
+{
+    if (maxLayers <= 1)
+        return false;
+
+    if (isRecording()) // can't select layer while recording
+        return false;
+
+    if (isPlaying() && mode != SELECTED_LAYER)
+        return false; // can't select layer if is playing in SEQUENCE or ALL_LAYERS mode
+
+    return true;
+}
+
 void Looper::selectLayer(quint8 layerIndex)
 {
-    if (isRecording()) // can't select layer while recording
+    if (!canSelectLayers())
         return;
 
     setCurrentLayer(layerIndex);

@@ -99,10 +99,9 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 void LooperWindow::updateDrawings()
 {
     if (!looper->isWaiting()) {
-        bool drawLayersNumbers = looper->getLayers() > 1 && looper->getMode() != Looper::ALL_LAYERS;
         for (LooperWavePanel *wavePanel : wavePanels.values()) {
             if (wavePanel->isVisible())
-                wavePanel->updateDrawings(drawLayersNumbers);
+                wavePanel->updateDrawings();
         }
     }
     else {

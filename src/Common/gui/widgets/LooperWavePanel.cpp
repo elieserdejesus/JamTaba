@@ -10,8 +10,7 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
       samplesPerPixel(0),
       samplesPerInterval(0),
       looper(looper),
-      layerID(layerIndex),
-      drawingLayerNumber(false)
+      layerID(layerIndex)
 {
    setDrawingMode(WavePeakPanel::SOUND_WAVE);
    this->useAlphaInPreviousSamples = false; // all samples are painted without alpha
@@ -45,12 +44,10 @@ qreal LooperWavePanel::getMiniLockIconHeight(bool lockOpened)
     return lockOpened ? 16 : 20;
 }
 
-void LooperWavePanel::updateDrawings(bool drawLayerNumber)
+void LooperWavePanel::updateDrawings()
 {
     if (!looper)
         return;
-
-    this->drawingLayerNumber = drawLayerNumber;
 
     peaksArray = looper->getLayerPeaks(layerID, samplesPerPixel);
 
@@ -177,7 +174,7 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
     const bool layerIsValid = looper->layerIsValid(layerID);
     const bool canUseMiniLockIcon = !miniLockIcon.isEmpty() && !looper->isRecording() && layerIsValid;
     const bool canDrawBigLockIcon = looper->layerIsLocked(layerID);
-    const bool canDrawLayerNumber = drawingLayerNumber && (looper->isPlaying() || looper->isStopped());
+    const bool canDrawLayerNumber = looper->canSelectLayers();
     const bool canUseDiscardIcon = looper->canClearLayer(layerID);
 
     if (canUseMiniLockIcon)

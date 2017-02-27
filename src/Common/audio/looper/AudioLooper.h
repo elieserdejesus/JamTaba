@@ -34,6 +34,7 @@ public:
     void startNewCycle(uint samplesInCycle);
 
     void selectLayer(quint8 layerIndex);
+    bool canSelectLayers() const;
 
     void clearAllLayers();
     void clearCurrentLayer();
