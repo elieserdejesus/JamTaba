@@ -356,3 +356,7 @@ bool Looper::isStopped() const
     return state->isStopped();
 }
 
+bool Looper::currentModeHasRecordingProperties() const
+{
+    return mode == ALL_LAYERS || mode == SELECTED_LAYER;
+}

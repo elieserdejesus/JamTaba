@@ -1,10 +1,11 @@
 #include "BaseTrackView.h"
 #include "MainController.h"
+#include "Utils.h"
+#include "PeakMeter.h"
+
 #include <QStyleOption>
 #include <QPainter>
 #include <QDebug>
-#include "Utils.h"
-#include "PeakMeter.h"
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -469,20 +470,6 @@ QPoint BaseTrackView::getDbValuePosition(const QString &dbValueText,
     int offset = levelSlider->y() + fontMetrics.height();
     int textY = (1 - sliderPosition) * levelSlider->height() + offset;
     return QPoint(textX, textY);
-}
-
-void BaseTrackView::setLayoutWidgetsVisibility(QLayout *layout, bool visible)
-{
-    for (int i = 0; i < layout->count(); ++i) {
-        QLayoutItem *item = layout->itemAt(i);
-        if (item->layout()) {
-            setLayoutWidgetsVisibility(item->layout(), visible);
-        } else {
-            QWidget *widget = item->widget();
-            if (widget)
-                widget->setVisible(visible);
-        }
-    }
 }
 
 void BaseTrackView::changeEvent(QEvent *e)

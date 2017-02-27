@@ -47,6 +47,8 @@ public:
 
     bool layerIsValid(quint8 layerIndex) const;
 
+    bool currentModeHasRecordingProperties() const;
+
     void stop();
     void play();
 

@@ -1,6 +1,8 @@
 #include "LocalTrackView.h"
 #include "MainController.h"
 #include "audio/core/LocalInputNode.h"
+#include "GuiUtils.h"
+
 #include <QLayout>
 #include <QPushButton>
 #include <QLabel>
@@ -211,8 +213,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
     if (this->peakMetersOnly != peakMetersOnly) {
         this->peakMetersOnly = peakMetersOnly;
 
-        BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
-        BaseTrackView::setLayoutWidgetsVisibility(primaryChildsLayout, !this->peakMetersOnly);
+        Gui::setLayoutItemsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
+        Gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
 
         if(peakMetersOnly){//add the peak meters directly in main layout, so these meters are horizontally centered
             mainLayout->addWidget(peakMeterLeft, 0, 0);

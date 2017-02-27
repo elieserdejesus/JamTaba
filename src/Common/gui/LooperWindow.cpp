@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QSpinBox>
 #include <QKeyEvent>
+#include "gui/GuiUtils.h"
 
 using namespace Controller;
 using namespace Audio;
@@ -203,15 +204,20 @@ void LooperWindow::updateControls()
         ui->maxLayersSpinBox->setEnabled(looper->isStopped());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
 
-        bool canEnableHearLayerCheckBox = looper->getMaxLayers() > 1 && (looper->getMode() == Looper::ALL_LAYERS || looper->getMode() == Looper::SELECTED_LAYER);
-        ui->checkBoxHearLayersWhileRecording->setEnabled(canEnableHearLayerCheckBox);
-        ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingLayersWhileRecording());
+        const bool canShowRecordingProperties = looper->currentModeHasRecordingProperties();
+        Gui::setLayoutItemsVisibility(ui->recordingPropertiesLayout, canShowRecordingProperties);
+        if (canShowRecordingProperties) {
+            bool canEnableHearLayerCheckBox = looper->getMaxLayers() > 1;
+            ui->checkBoxHearLayersWhileRecording->setEnabled(canEnableHearLayerCheckBox);
+            ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingLayersWhileRecording());
 
-        bool canEnableOverdubCheckBox = looper->getMode() == Looper::SELECTED_LAYER && !looper->isRecording();
-        ui->checkBoxOverdub->setEnabled(canEnableOverdubCheckBox);
-        ui->checkBoxOverdub->setChecked(looper->isOverdubbing());
+            bool canShowOverdubCheckBox = looper->getMode() == Looper::SELECTED_LAYER;
+            ui->checkBoxOverdub->setVisible(canShowOverdubCheckBox);
+            ui->checkBoxOverdub->setEnabled(!looper->isRecording());
+            ui->checkBoxOverdub->setChecked(looper->isOverdubbing());
 
-        ui->labelRecording->setEnabled(ui->checkBoxOverdub->isEnabled() || ui->checkBoxHearLayersWhileRecording->isEnabled());
+            ui->labelRecording->setEnabled(ui->checkBoxOverdub->isEnabled() || ui->checkBoxHearLayersWhileRecording->isEnabled());
+        }
     }
 
     update();

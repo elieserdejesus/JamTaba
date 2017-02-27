@@ -65,8 +65,6 @@ public:
 
     bool isActivated() const;
 
-    static void setLayoutWidgetsVisibility(QLayout *layout, bool visible);
-
     static const int NARROW_WIDTH;
     static const int WIDE_WIDTH;
 protected:
