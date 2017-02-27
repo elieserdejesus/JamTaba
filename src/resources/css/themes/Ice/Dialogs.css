@@ -22,6 +22,11 @@ LooperWindow
         stop: 1.0 rgb(126, 178, 255));
 }
 
+LooperWindow
+{
+    background-color: rgb(96, 148, 225); /* using a darker blue tone to improve wave sound contrast */
+}
+
 PrivateServerDialog #label, #label_2, #label_3
 {
     color: rgb(160, 160, 160);
