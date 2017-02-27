@@ -107,7 +107,7 @@ bool Looper::canLockLayer(quint8 layer) const
     if (layer >= maxLayers)
         return false;
 
-    return (isPlaying() || isStopped());// && layerIsValid(layer);
+    return (isPlaying() || isStopped());
 }
 
 void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
@@ -148,14 +148,16 @@ void Looper::startRecording()
     int firstRecordingLayer = getFirstUnlockedLayerIndex(currentLayerIndex);
     if (firstRecordingLayer >= 0) {
         setCurrentLayer(firstRecordingLayer);
-        layers[currentLayerIndex]->zero();
+
+        if (!isOverdubbing()) // avoid discard layer content if is overdubbing
+            layers[currentLayerIndex]->zero();
+
         setState(new RecordingState(this));
     }
 }
 
 void Looper::toggleRecording()
 {
-
     if (isRecording() || isWaiting()) {
         if (mode != SELECTED_LAYER)
             stop();

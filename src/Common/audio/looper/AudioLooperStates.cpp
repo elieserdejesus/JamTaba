@@ -31,9 +31,7 @@ void LooperState::process(SamplesBuffer &samples, uint samplesToProcess)
     }
 }
 
-
 // ------------------------------------------------
-
 
 StoppedState::StoppedState()
     : LooperState(nullptr)
