@@ -18,7 +18,9 @@ Looper::Looper()
       state(new StoppedState()),
       mode(Mode::SEQUENCE),
       overdubbing(true),
-      hearingOtherLayers(true)
+      hearingOtherLayers(true),
+      randomizing(false),
+      playingLockedLayersOnly(false)
 
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
@@ -33,14 +35,46 @@ Looper::~Looper()
     }
 }
 
-void Looper::incrementCurrentLayer()
+uint Looper::getLockedLayers() const
 {
-    setCurrentLayer((currentLayerIndex + 1) % maxLayers);
+    uint lockedLayers = 0;
+    for (int l = 0; l < maxLayers; ++l) {
+        if (layers[l]->isLocked())
+            lockedLayers++;
+    }
+    return lockedLayers;
 }
 
-void Looper::randomizeCurrentLayer()
+void Looper::incrementLockedLayer()
 {
-    setCurrentLayer(qrand() % maxLayers);
+    quint8 nextLayer = currentLayerIndex;
+    if (getLockedLayers() > 0) {
+        do {
+            if (isRandomizing())
+                nextLayer = qrand() % maxLayers;
+            else
+                nextLayer = (nextLayer + 1) % maxLayers;
+        }
+        while(!layerIsLocked(nextLayer));
+    }
+
+    setCurrentLayer(nextLayer);
+}
+
+void Looper::incrementCurrentLayer()
+{
+    if (isPlayingLockedLayersOnly()) {
+        incrementLockedLayer();
+        return;
+    }
+
+    quint8 nextLayer = currentLayerIndex;
+    if (isRandomizing() && maxLayers > 1)
+        nextLayer = qrand() % maxLayers;
+    else
+        nextLayer = (nextLayer + 1) % maxLayers;
+
+    setCurrentLayer(nextLayer);
 }
 
 void Looper::appendInCurrentLayer(const SamplesBuffer &samples, uint samplesToAppend)
@@ -329,7 +363,6 @@ QString Looper::getModeString(Mode mode)
     switch (mode) {
         case Mode::SEQUENCE:        return tr("Sequence");
         case Mode::ALL_LAYERS:      return tr("All Layers");
-        case Mode::RANDOM_LAYERS:   return tr("Random Layer");
         case SELECTED_LAYER:        return tr("Selected Layer");
     }
 
@@ -359,4 +392,9 @@ bool Looper::isStopped() const
 bool Looper::currentModeHasRecordingProperties() const
 {
     return mode == ALL_LAYERS || mode == SELECTED_LAYER;
+}
+
+bool Looper::currentModeHasPlayingProperties() const
+{
+    return mode == SEQUENCE;
 }

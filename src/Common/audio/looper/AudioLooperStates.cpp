@@ -20,7 +20,6 @@ void LooperState::process(SamplesBuffer &samples, uint samplesToProcess)
 
     switch (looper->mode) {
     case Looper::SEQUENCE:
-    case Looper::RANDOM_LAYERS: // layer index is randomized in handleNewCycle()
     case Looper::SELECTED_LAYER:
         looper->mixCurrentLayerTo(samples, samplesToProcess);
         break;
@@ -64,11 +63,9 @@ PlayingState::PlayingState(Looper *looper)
 void PlayingState::handleNewCycle(uint samplesInCycle)
 {
     Q_UNUSED(samplesInCycle)
-
-    if (looper->mode == Looper::Mode::RANDOM_LAYERS)
-        looper->randomizeCurrentLayer();
-    else if (looper->mode == Looper::Mode::SEQUENCE)
+    if (looper->mode == Looper::Mode::SEQUENCE) {
         looper->incrementCurrentLayer();
+    }
 
     // ALL_LAYERS and SELECTED_LAYER_ONLY play states are not touching in currentLayerIndex
 }

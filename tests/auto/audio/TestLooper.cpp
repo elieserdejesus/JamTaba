@@ -9,6 +9,46 @@
 
 using namespace Audio;
 
+void TestLooper::playingLockedLayersSequence()
+{
+    QFETCH(quint8, layers);
+    QFETCH(QSet<quint8>, lockedLayers);
+    QFETCH(QList<quint8>, expectedCurrentLayers);
+
+    Looper looper;
+    looper.setLayers(layers);
+    looper.selectLayer(layers - 1); // simulate looper in last layer, and in next interval the layer will be the first
+    looper.setMode(Looper::SEQUENCE);
+    looper.setPlayingLockedLayersOnly(!lockedLayers.isEmpty());
+
+    // lock layers
+    for (int l = 0; l < looper.getLayers(); ++l) {
+        if (lockedLayers.contains(l))
+            looper.setLayerLockedState(l, true);
+    }
+
+    looper.play();
+
+    for (int l = 0; l < expectedCurrentLayers.size(); ++l) {
+        looper.startNewCycle(2); // start new cycle and increment layer index
+        Q_ASSERT(looper.getCurrentLayerIndex() == expectedCurrentLayers.at(l));
+    }
+}
+
+void TestLooper::playingLockedLayersSequence_data()
+{
+    QTest::addColumn<quint8>("layers");
+    QTest::addColumn<QSet<quint8>>("lockedLayers");
+    QTest::addColumn<QList<quint8>>("expectedCurrentLayers");
+
+    QTest::newRow("4 layers, no locked layers") << quint8(4) << (QSet<quint8>()) << (QList<quint8>() << 0 << 1 << 2 << 3);
+    QTest::newRow("4 layers, 1st layer locked, playing locked only") << quint8(4) << (QSet<quint8>() << 0) << (QList<quint8>() << 0 << 0 << 0 << 0);
+    QTest::newRow("1 layers, 1st layer locked, playing locked only") << quint8(1) << (QSet<quint8>() << 0) << (QList<quint8>() << 0);
+    QTest::newRow("2 layers, All layers locked, playing locked only") << quint8(2) << (QSet<quint8>() << 0 << 1) << (QList<quint8>() << 0 << 1);
+    QTest::newRow("2 layers, 1st layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 0) << (QList<quint8>() << 0 << 0);
+    QTest::newRow("2 layers, 2nd layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 1) << (QList<quint8>() << 1 << 1);
+}
+
 void TestLooper::hearingRecordTracksWhileWaiting()
 {
     QFETCH(Looper::Mode, looperMode);
@@ -49,7 +89,6 @@ void TestLooper::hearingRecordTracksWhileWaiting_data()
     QTest::newRow("Hearing pre record material while Waiting (SELECTED mode)") << Looper::SELECTED_LAYER << QString("1, 1");
     QTest::newRow("Hearing pre record material while Waiting (ALL_LAYERS mode)") << Looper::ALL_LAYERS << QString("2, 2");
     QTest::newRow("Hearing pre record material while Waiting (SEQUENCE mode)") << Looper::SEQUENCE << QString("1, 1");
-    QTest::newRow("Hearing pre record material while Waiting (RANDOM mode)") << Looper::RANDOM_LAYERS << QString("1, 1");
 }
 
 void TestLooper::hearingAnotherLayersAndOverdubInSelectedLayerMode()

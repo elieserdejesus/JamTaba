@@ -99,7 +99,7 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 void LooperWindow::updateDrawings()
 {
     if (!looper->isWaiting()) {
-        bool drawLayersNumbers = looper->getMaxLayers() > 1 && looper->getMode() != Looper::ALL_LAYERS;
+        bool drawLayersNumbers = looper->getLayers() > 1 && looper->getMode() != Looper::ALL_LAYERS;
         for (LooperWavePanel *wavePanel : wavePanels.values()) {
             if (wavePanel->isVisible())
                 wavePanel->updateDrawings(drawLayersNumbers);
@@ -134,22 +134,21 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         detachCurrentLooper();
 
         // create wave panels (layers view)
-        quint8 currentMaxLayers = looper->getMaxLayers();
+        quint8 currentLayers = looper->getLayers();
         for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
             LooperWavePanel *wavePanel = new LooperWavePanel(looper, layerIndex);
             wavePanels.insert(layerIndex, wavePanel);
             ui->layersWidget->layout()->addWidget(wavePanel);
-            wavePanel->setVisible(layerIndex < currentMaxLayers);
+            wavePanel->setVisible(layerIndex < currentLayers);
         }
 
         // initial values
-        ui->maxLayersSpinBox->setValue(looper->getMaxLayers());
+        ui->maxLayersSpinBox->setValue(looper->getLayers());
 
         ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingLayersWhileRecording());
-        //ui->checkBoxHearLayersWhileRecording->setVisible(looper->getMode() == Looper::ALL_LAYERS);
-
-        //ui->checkBoxOverdub->setVisible(looper->getMode() == Looper::SELECTED_LAYER);
         ui->checkBoxOverdub->setChecked(looper->isOverdubbing());
+        ui->checkBoxRandom->setChecked(looper->isRandomizing());
+        ui->checkBoxLockedLayers->setChecked(looper->isPlayingLockedLayersOnly());
 
         QString selectedPlayMode = looper->getModeString(looper->getMode());
         for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
@@ -207,7 +206,7 @@ void LooperWindow::updateControls()
         const bool canShowRecordingProperties = looper->currentModeHasRecordingProperties();
         Gui::setLayoutItemsVisibility(ui->recordingPropertiesLayout, canShowRecordingProperties);
         if (canShowRecordingProperties) {
-            bool canEnableHearLayerCheckBox = looper->getMaxLayers() > 1;
+            bool canEnableHearLayerCheckBox = looper->getLayers() > 1;
             ui->checkBoxHearLayersWhileRecording->setEnabled(canEnableHearLayerCheckBox);
             ui->checkBoxHearLayersWhileRecording->setChecked(looper->isHearingLayersWhileRecording());
 
@@ -215,8 +214,15 @@ void LooperWindow::updateControls()
             ui->checkBoxOverdub->setVisible(canShowOverdubCheckBox);
             ui->checkBoxOverdub->setEnabled(!looper->isRecording());
             ui->checkBoxOverdub->setChecked(looper->isOverdubbing());
+        }
 
-            ui->labelRecording->setEnabled(ui->checkBoxOverdub->isEnabled() || ui->checkBoxHearLayersWhileRecording->isEnabled());
+        const bool canShowPlayingProperties = looper->currentModeHasPlayingProperties();
+        Gui::setLayoutItemsVisibility(ui->playingPropertiesLayout, canShowPlayingProperties);
+        if (canShowPlayingProperties) {
+            ui->checkBoxRandom->setChecked(looper->isRandomizing());
+
+            ui->checkBoxLockedLayers->setChecked(looper->hasLockedLayers() && looper->isPlayingLockedLayersOnly());
+            ui->checkBoxLockedLayers->setEnabled(looper->hasLockedLayers());
         }
     }
 
@@ -278,7 +284,6 @@ void LooperWindow::initializeControls()
     playModes.push_back(Looper::SEQUENCE);
     playModes.push_back(Looper::ALL_LAYERS);
     playModes.push_back(Looper::SELECTED_LAYER);
-    playModes.push_back(Looper::RANDOM_LAYERS);
 
     for (uint i = 0; i < playModes.size(); ++i) {
         Looper::Mode playMode = playModes[i];
@@ -323,5 +328,15 @@ void LooperWindow::initializeControls()
     connect(ui->checkBoxOverdub, &QCheckBox::toggled, [=](bool checked){
         if (looper)
             looper->setOverdubbing(checked);
+    });
+
+    connect(ui->checkBoxLockedLayers, &QCheckBox::toggled, [=](bool checked){
+        if (looper)
+            looper->setPlayingLockedLayersOnly(checked);
+    });
+
+    connect(ui->checkBoxRandom, &QCheckBox::toggled, [=](bool checked){
+        if (looper)
+            looper->setRandomizing(checked);
     });
 }

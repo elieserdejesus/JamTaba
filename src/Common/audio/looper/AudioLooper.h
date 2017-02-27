@@ -48,6 +48,7 @@ public:
     bool layerIsValid(quint8 layerIndex) const;
 
     bool currentModeHasRecordingProperties() const;
+    bool currentModeHasPlayingProperties() const;
 
     void stop();
     void play();
@@ -56,8 +57,7 @@ public:
     {
         SEQUENCE, // one layer in each interval
         ALL_LAYERS, // mix and play all layers
-        SELECTED_LAYER, // ONE selected layer
-        RANDOM_LAYERS
+        SELECTED_LAYER
     };
 
     static QString getModeString(Mode mode);
@@ -77,11 +77,19 @@ public:
     bool isHearingLayersWhileRecording() const;
     void setHearingOtherLayersWhileRecording(bool hearingOtherLayers);
 
+    bool isRandomizing() const;
+    void setRandomizing(bool randomizingLayers);
+
+    bool isPlayingLockedLayersOnly() const;
+    void setPlayingLockedLayersOnly(bool playingLocked);
+
     bool isOverdubbing() const;
     void setOverdubbing(bool overdubbing);
 
+    bool hasLockedLayers() const;
+
     void setLayers(quint8 maxLayers);
-    quint8 getMaxLayers() const;
+    quint8 getLayers() const;
 
     bool canRecord() const;
 
@@ -114,6 +122,10 @@ private:
     bool overdubbing;
     bool hearingOtherLayers;
 
+    // playing attributes
+    bool randomizing;
+    bool playingLockedLayersOnly;
+
     void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix, bool replacing);
     void mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer = -1);
 
@@ -129,11 +141,38 @@ private:
     void startRecording();
 
     void incrementCurrentLayer();
-    void randomizeCurrentLayer();
+    void incrementLockedLayer();
+
+    uint getLockedLayers() const;
 
     bool currentLayerIsLocked() const;
 
- };
+};
+
+inline bool Looper::hasLockedLayers() const
+{
+    return getLockedLayers() > 0;
+}
+
+inline void Looper::setRandomizing(bool randomizingLayers)
+{
+    this->randomizing = randomizingLayers;
+}
+
+inline void Looper::setPlayingLockedLayersOnly(bool playingLocked)
+{
+    this->playingLockedLayersOnly = playingLocked;
+}
+
+inline bool Looper::isRandomizing() const
+{
+    return mode == Looper::SEQUENCE && randomizing;
+}
+
+inline bool Looper::isPlayingLockedLayersOnly() const
+{
+    return mode == Looper::SEQUENCE && playingLockedLayersOnly && hasLockedLayers();
+}
 
 inline void Looper::setOverdubbing(bool overdubbing)
 {
@@ -155,7 +194,7 @@ inline Looper::Mode Looper::getMode() const
     return mode;
 }
 
-inline quint8 Looper::getMaxLayers() const
+inline quint8 Looper::getLayers() const
 {
     return maxLayers;
 }

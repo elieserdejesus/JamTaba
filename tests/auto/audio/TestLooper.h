@@ -26,6 +26,9 @@ private slots:
     void hearingRecordTracksWhileWaiting();
     void hearingRecordTracksWhileWaiting_data();
 
+    void playingLockedLayersSequence();
+    void playingLockedLayersSequence_data();
+
 private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
     void checkExpectedValues(QString comaSeparatedExpectedValues, const Audio::SamplesBuffer &buffer);

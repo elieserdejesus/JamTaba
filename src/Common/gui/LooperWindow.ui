@@ -126,14 +126,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBoxPlayMode">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
+       <widget class="QComboBox" name="comboBoxPlayMode"/>
       </item>
       <item>
        <spacer name="horizontalSpacer_2">
@@ -145,7 +138,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>24</width>
+          <width>6</width>
           <height>20</height>
          </size>
         </property>
@@ -153,14 +146,7 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="recordingPropertiesLayout">
-        <item>
-         <widget class="QLabel" name="labelRecording">
-          <property name="text">
-           <string>Recording:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
+        <item alignment="Qt::AlignVCenter">
          <widget class="QCheckBox" name="checkBoxHearLayersWhileRecording">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -169,11 +155,11 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Hear other layers</string>
+           <string>Hear other layers when recording</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item alignment="Qt::AlignVCenter">
          <widget class="QCheckBox" name="checkBoxOverdub">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -183,6 +169,36 @@
           </property>
           <property name="text">
            <string>Overdub</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="playingPropertiesLayout">
+        <item>
+         <widget class="QCheckBox" name="checkBoxRandom">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Play Random</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignVCenter">
+         <widget class="QCheckBox" name="checkBoxLockedLayers">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Play locked layers</string>
           </property>
          </widget>
         </item>
@@ -222,12 +238,6 @@
       </item>
       <item alignment="Qt::AlignRight">
        <widget class="QSpinBox" name="maxLayersSpinBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="minimum">
          <number>1</number>
         </property>
