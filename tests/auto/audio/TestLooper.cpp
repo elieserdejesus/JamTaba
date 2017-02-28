@@ -185,7 +185,7 @@ void TestLooper::hearingAnotherLayersInSelectedLayerMode()
 
     SamplesBuffer out = createBuffer("3, 3");
     looper.process(out);
-    checkExpectedValues("5, 5", out); // summing with 2nd layer (2, 2)
+    checkExpectedValues("3, 3", out); // only current layer will be heared
 }
 
 void TestLooper::overdubbing()

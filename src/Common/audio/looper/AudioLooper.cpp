@@ -366,10 +366,10 @@ void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToM
 
 void Looper::mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer)
 {
-    for (uint layerIndex = 0; layerIndex < maxLayers; ++layerIndex) {
-        if (layerIndex != exceptLayer) {
-            const bool mixReplacing = exceptLayer == currentLayerIndex;
-            mixLayer(layerIndex, samples, samplesToMix, mixReplacing);
+    for (uint layer = 0; layer < maxLayers; ++layer) {
+        if (layer != exceptLayer) {
+            const bool mixReplacing = false;//exceptLayer == layer;// currentLayerIndex;
+            mixLayer(layer, samples, samplesToMix, mixReplacing);
         }
     }
 }
@@ -419,7 +419,7 @@ QMap<Looper::RecordingOption, bool> Looper::getDefaultSupportedRecordingOptions(
     QMap<Looper::RecordingOption, bool> options;
     options[Looper::Overdub] = false;
 
-    if (mode == Looper::SELECTED_LAYER) {
+    if (mode != Looper::SELECTED_LAYER) {
         options[Looper::HearAllLayers] = false;
     }
 
