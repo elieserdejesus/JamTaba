@@ -36,8 +36,8 @@ LooperWindow::LooperWindow(QWidget *parent) :
     initializeControls();
 
     // this alignments are not available in QtCreator UI designer
-    ui->widget->layout()->setAlignment(ui->modeControlsLayout, Qt::AlignBottom);
-    ui->widget->layout()->setAlignment(ui->layerControlsLayout, Qt::AlignBottom);
+    ui->widgetBottom->layout()->setAlignment(ui->modeControlsLayout, Qt::AlignBottom);
+    ui->widgetBottom->layout()->setAlignment(ui->layerControlsLayout, Qt::AlignBottom);
 }
 
 void LooperWindow::keyPressEvent(QKeyEvent *ev)
