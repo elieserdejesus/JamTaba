@@ -19,7 +19,7 @@ void TestLooper::playingLockedLayersSequence()
     looper.setLayers(layers);
     looper.selectLayer(layers - 1); // simulate looper in last layer, and in next interval the layer will be the first
     looper.setMode(Looper::SEQUENCE);
-    looper.setPlayingLockedLayersOnly(!lockedLayers.isEmpty());
+    looper.setPlayingOption(Looper::PlayLockedLayers, !lockedLayers.isEmpty());
 
     // lock layers
     for (int l = 0; l < looper.getLayers(); ++l) {
@@ -59,8 +59,8 @@ void TestLooper::hearingRecordTracksWhileWaiting()
 
     Looper looper;
     looper.setLayers(layers);
-    looper.setOverdubbing(overdubbing);
-    looper.setHearingOtherLayersWhileRecording(true);
+    looper.setRecordingOption(Looper::Overdub, overdubbing);
+    looper.setRecordingOption(Looper::HearAllLayers, true);
 
     //create content in all layers
     looper.setMode(Looper::SEQUENCE);
@@ -99,8 +99,8 @@ void TestLooper::hearingAnotherLayersAndOverdubInSelectedLayerMode()
 
     Looper looper;
     looper.setLayers(layers);
-    looper.setOverdubbing(overdubbing);
-    looper.setHearingOtherLayersWhileRecording(true);
+    looper.setRecordingOption(Looper::Overdub, overdubbing);
+    looper.setRecordingOption(Looper::HearAllLayers, true);
 
     //create content in all layers
     looper.setMode(Looper::SEQUENCE);
@@ -135,8 +135,6 @@ void TestLooper::hearingAnotherLayersInAllLayersMode()
 
     Looper looper;
     looper.setLayers(layers);
-    looper.setOverdubbing(overdubbing);
-    looper.setHearingOtherLayersWhileRecording(true);
 
     //create content in all layers
     looper.setMode(Looper::SEQUENCE);
@@ -149,6 +147,8 @@ void TestLooper::hearingAnotherLayersInAllLayersMode()
     looper.stop(); // finish recording
 
     looper.setMode(looperMode); // switch to test looper mode
+    looper.setRecordingOption(Looper::Overdub, overdubbing);
+    looper.setRecordingOption(Looper::HearAllLayers, true);
     looper.selectLayer(0);// recording in first layer
     looper.toggleRecording(); // waiting
     looper.startNewCycle(2); // recording
@@ -162,12 +162,9 @@ void TestLooper::hearingAnotherLayersInSelectedLayerMode()
 {
     const quint8 layers = 2;
     Looper::Mode looperMode = Looper::SELECTED_LAYER;
-    bool overdubbing = false;
 
     Looper looper;
     looper.setLayers(layers);
-    looper.setOverdubbing(overdubbing);
-    looper.setHearingOtherLayersWhileRecording(true);
 
     //create content in all layers
     looper.setMode(Looper::SEQUENCE);
@@ -180,6 +177,8 @@ void TestLooper::hearingAnotherLayersInSelectedLayerMode()
     looper.stop(); // finish recording
 
     looper.setMode(looperMode); // switch to test looper mode
+    looper.setRecordingOption(Looper::Overdub, false);
+    looper.setRecordingOption(Looper::HearAllLayers, true);
     looper.selectLayer(0);// recording in first layer
     looper.toggleRecording(); // waiting
     looper.startNewCycle(2);
@@ -194,8 +193,8 @@ void TestLooper::overdubbing()
     Looper looper;
     looper.setLayers(1);
     looper.setMode(Looper::SELECTED_LAYER);
-    looper.setOverdubbing(true);
-    looper.setHearingOtherLayersWhileRecording(false);
+    looper.setRecordingOption(Looper::Overdub, true);
+    looper.setRecordingOption(Looper::HearAllLayers, false);
 
     looper.toggleRecording(); // waiting state
     looper.startNewCycle(2);

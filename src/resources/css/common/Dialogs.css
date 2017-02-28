@@ -2,6 +2,24 @@
     This file contain common stylesheet to Dialogs.
 */
 
+LooperWindow QGroupBox
+{
+    border: 1px solid rgb(0, 0, 0, 20);
+    padding-top: 9px;
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+LooperWindow QGroupBox::title
+{
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    margin-left: 3px;
+    margin-right: 3px;
+    left: 6px;
+}
+
 PreferencesDialog #buttonAddVstScanFolder
 {
     background-image: url(:/images/more.png);

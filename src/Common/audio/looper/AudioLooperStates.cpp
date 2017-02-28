@@ -89,7 +89,8 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
             looper->layers[nextLayer]->zero(); // zero current layer if keep recording
     }
     else { // SELECTED_LAYER_ONLY when recording
-        if (!looper->isOverdubbing())  // if not overdubbing we need auto stop recording
+        bool isOverdubbing = looper->getRecordingOption(Looper::Overdub);
+        if (!isOverdubbing)  // if not overdubbing we need auto stop recording
             looper->play();
     }
 }
@@ -99,22 +100,23 @@ void RecordingState::process(SamplesBuffer &samples, uint samplesToProcess)
     if (looper->currentLayerIsLocked()) // avoid recording in locked layers
         return;
 
-    if (looper->mode != Looper::SELECTED_LAYER || !looper->isOverdubbing())
+    bool isOverdubbing = looper->getRecordingOption(Looper::Overdub);
+    if (looper->mode != Looper::SELECTED_LAYER || !isOverdubbing)
         looper->appendInCurrentLayer(samples, samplesToProcess);
     else
         looper->overdubInCurrentLayer(samples, samplesToProcess);
 
 
-    const bool willMixAllLayers = looper->isHearingLayersWhileRecording();
+    const bool willMixAllLayers = looper->getRecordingOption(Looper::HearAllLayers);
     if (willMixAllLayers) {
         quint8 excludedLayer = looper->currentLayerIndex;
 
-        if (looper->isOverdubbing())
+        if (isOverdubbing)
             excludedLayer = -1;
 
         looper->mixAllLayers(samples, samplesToProcess, excludedLayer); // user can hear other layers while recording
     }
-    else if (looper->isOverdubbing()) { // overdubbing only
+    else if (isOverdubbing) { // overdubbing only
         looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess, true); // mix replacing
     }
 }

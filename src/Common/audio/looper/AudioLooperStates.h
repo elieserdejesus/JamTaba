@@ -2,10 +2,12 @@
 #define _AUDIO_LOOPER_STATE_
 
 #include <QtGlobal>
+#include <QMap>
+
+#include "AudioLooper.h"
 
 namespace Audio {
 
-class Looper;
 class SamplesBuffer;
 
 class LooperState

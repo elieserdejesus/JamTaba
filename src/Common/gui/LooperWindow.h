@@ -48,6 +48,16 @@ private:
 
     void initializeControls();
 
+    void createRecordingOptionsCheckBoxes();
+    void createPlayingOptionsCheckBoxes();
+    void clearLayout(QLayout *layout);
+
+    static QString getOptionName(Audio::Looper::RecordingOption option);
+    static QString getOptionName(Audio::Looper::PlayingOption option);
+
+    static QString getOptionToolTip(Audio::Looper::RecordingOption option);
+    static QString getOptionToolTip(Audio::Looper::PlayingOption option);
+
     int currentBeat;
 };
 

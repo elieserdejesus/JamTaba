@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QSharedPointer>
+#include <QMap>
 
 namespace Audio {
 
@@ -48,9 +49,6 @@ public:
 
     bool layerIsValid(quint8 layerIndex) const;
 
-    bool currentModeHasRecordingProperties() const;
-    bool currentModeHasPlayingProperties() const;
-
     void stop();
     void play();
 
@@ -75,18 +73,6 @@ public:
     bool isRecording() const;
     bool isStopped() const;
 
-    bool isHearingLayersWhileRecording() const;
-    void setHearingOtherLayersWhileRecording(bool hearingOtherLayers);
-
-    bool isRandomizing() const;
-    void setRandomizing(bool randomizingLayers);
-
-    bool isPlayingLockedLayersOnly() const;
-    void setPlayingLockedLayersOnly(bool playingLocked);
-
-    bool isOverdubbing() const;
-    void setOverdubbing(bool overdubbing);
-
     bool hasLockedLayers() const;
 
     void setLayers(quint8 maxLayers);
@@ -99,12 +85,33 @@ public:
     void toggleRecording();
     void togglePlay();
 
+    enum RecordingOption
+    {
+        Overdub,
+        HearAllLayers
+    };
+
+    enum PlayingOption
+    {
+        RandomizeLayers,
+        PlayLockedLayers
+    };
+
+    QList<RecordingOption> getRecordingOptions() const;
+    void setRecordingOption(RecordingOption option, bool enabled);
+    bool getRecordingOption(RecordingOption option) const;
+
+    QList<PlayingOption> getPlayingOptions() const;
+    void setPlayingOption(PlayingOption option, bool enabled);
+    bool getPlayingOption(PlayingOption option) const;
+
 signals:
     void stateChanged();
     void modeChanged();
     void maxLayersChanged(quint8 newMaxLayers);
     void currentLayerChanged(quint8 currentLayer);
     void layerLockedStateChanged(quint8 currentLayer, bool locked);
+
 private:
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples
@@ -119,13 +126,13 @@ private:
 
     Mode mode;
 
-    // recording attributes
-    bool overdubbing;
-    bool hearingOtherLayers;
+    struct Options
+    {
+        QMap<RecordingOption, bool> recordingOptions;
+        QMap<PlayingOption, bool> playingOptions;
+    };
 
-    // playing attributes
-    bool randomizing;
-    bool playingLockedLayersOnly;
+    QMap<Mode, Options> modeOptions;
 
     void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix, bool replacing);
     void mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer = -1);
@@ -148,46 +155,50 @@ private:
 
     bool currentLayerIsLocked() const;
 
+    static QMap<Looper::PlayingOption, bool> getDefaultPlayingOptions(Looper::Mode mode);
+    static QMap<Looper::RecordingOption, bool> getDefaultRecordingOptions(Looper::Mode mode);
+
 };
+
+inline void Looper::setRecordingOption(Looper::RecordingOption option, bool value)
+{
+    modeOptions[mode].recordingOptions[option] = value;
+}
+
+inline void Looper::setPlayingOption(Looper::PlayingOption option, bool value)
+{
+    modeOptions[mode].playingOptions[option] = value;
+}
+
+inline bool Looper::getPlayingOption(Looper::PlayingOption option) const
+{
+    if (modeOptions[mode].playingOptions.contains(option))
+        return modeOptions[mode].playingOptions[option];
+
+    return false;
+}
+
+inline bool Looper::getRecordingOption(Looper::RecordingOption option) const
+{
+    if (modeOptions[mode].recordingOptions.contains(option))
+        return modeOptions[mode].recordingOptions[option];
+
+    return false;
+}
+
+inline QList<Looper::RecordingOption> Looper::getRecordingOptions() const
+{
+    return modeOptions[mode].recordingOptions.keys();
+}
+
+inline QList<Looper::PlayingOption> Looper::getPlayingOptions() const
+{
+    return modeOptions[mode].playingOptions.keys();
+}
 
 inline bool Looper::hasLockedLayers() const
 {
     return getLockedLayers() > 0;
-}
-
-inline void Looper::setRandomizing(bool randomizingLayers)
-{
-    this->randomizing = randomizingLayers;
-}
-
-inline void Looper::setPlayingLockedLayersOnly(bool playingLocked)
-{
-    this->playingLockedLayersOnly = playingLocked;
-}
-
-inline bool Looper::isRandomizing() const
-{
-    return mode == Looper::SEQUENCE && randomizing;
-}
-
-inline bool Looper::isPlayingLockedLayersOnly() const
-{
-    return mode == Looper::SEQUENCE && playingLockedLayersOnly && hasLockedLayers();
-}
-
-inline void Looper::setOverdubbing(bool overdubbing)
-{
-    this->overdubbing = overdubbing;
-}
-
-inline bool Looper::isOverdubbing() const
-{
-    return overdubbing && mode == Looper::SELECTED_LAYER;
-}
-
-inline bool Looper::isHearingLayersWhileRecording() const
-{
-    return hearingOtherLayers && maxLayers > 1 && (mode == Looper::ALL_LAYERS || mode == Looper::SELECTED_LAYER);
 }
 
 inline Looper::Mode Looper::getMode() const

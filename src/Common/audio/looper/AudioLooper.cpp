@@ -16,15 +16,16 @@ Looper::Looper()
       intervalPosition(0),
       maxLayers(4),
       state(new StoppedState()),
-      mode(Mode::SEQUENCE),
-      overdubbing(true),
-      hearingOtherLayers(true),
-      randomizing(false),
-      playingLockedLayersOnly(false)
-
+      mode(Mode::SEQUENCE)
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
         layers[l] = new LooperLayer();
+    }
+
+    Looper::Mode modes[] = { Looper::SEQUENCE, Looper::ALL_LAYERS, Looper::SELECTED_LAYER };
+    for (Looper::Mode mode : modes) {
+        modeOptions[mode].recordingOptions = getDefaultRecordingOptions(mode);
+        modeOptions[mode].playingOptions = getDefaultPlayingOptions(mode);
     }
 }
 
@@ -48,9 +49,10 @@ uint Looper::getLockedLayers() const
 void Looper::incrementLockedLayer()
 {
     quint8 nextLayer = currentLayerIndex;
+    bool isRandomizing = getPlayingOption(Looper::RandomizeLayers);
     if (getLockedLayers() > 0) {
         do {
-            if (isRandomizing())
+            if (isRandomizing)
                 nextLayer = qrand() % maxLayers;
             else
                 nextLayer = (nextLayer + 1) % maxLayers;
@@ -63,13 +65,16 @@ void Looper::incrementLockedLayer()
 
 void Looper::incrementCurrentLayer()
 {
-    if (isPlayingLockedLayersOnly()) {
+    bool isPlayingLockedLayersOnly = getPlayingOption(Looper::PlayLockedLayers);
+    bool isRandomizing = getPlayingOption(Looper::RandomizeLayers);
+
+    if (isPlayingLockedLayersOnly) {
         incrementLockedLayer();
         return;
     }
 
     quint8 nextLayer = currentLayerIndex;
-    if (isRandomizing() && maxLayers > 1)
+    if (isRandomizing && maxLayers > 1)
         nextLayer = qrand() % maxLayers;
     else
         nextLayer = (nextLayer + 1) % maxLayers;
@@ -118,15 +123,6 @@ void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
     }
 }
 
-void Looper::setHearingOtherLayersWhileRecording(bool hearingOtherLayers)
-{
-    if (maxLayers > 1) {
-        this->hearingOtherLayers = hearingOtherLayers;
-    }
-    else
-        this->hearingOtherLayers = false;
-}
-
 bool Looper::layerIsLocked(quint8 layerIndex) const
 {
     if (layerIndex < maxLayers)
@@ -149,7 +145,8 @@ void Looper::startRecording()
     if (firstRecordingLayer >= 0) {
         setCurrentLayer(firstRecordingLayer);
 
-        if (!isOverdubbing()) // avoid discard layer content if is overdubbing
+        bool isOverdubbing = getRecordingOption(Looper::Overdub);
+        if (!isOverdubbing) // avoid discard layer content if is overdubbing
             layers[currentLayerIndex]->zero();
 
         setState(new RecordingState(this));
@@ -307,9 +304,9 @@ void Looper::startNewCycle(uint samplesInCycle)
 
     intervalPosition = 0;
 
-    const bool overdubbing = isOverdubbing();
+    bool isOverdubbing = getRecordingOption(Looper::Overdub);
     for (int l = 0; l < maxLayers; ++l)
-        layers[l]->prepareForNewCycle(samplesInCycle, overdubbing);
+        layers[l]->prepareForNewCycle(samplesInCycle, isOverdubbing);
 
     state->handleNewCycle(samplesInCycle);
 }
@@ -405,12 +402,26 @@ bool Looper::isStopped() const
     return state->isStopped();
 }
 
-bool Looper::currentModeHasRecordingProperties() const
+QMap<Looper::RecordingOption, bool> Looper::getDefaultRecordingOptions(Looper::Mode mode)
 {
-    return mode == ALL_LAYERS || mode == SELECTED_LAYER;
+    QMap<Looper::RecordingOption, bool> options;
+    options[Looper::Overdub] = false;
+
+    if (mode == Looper::SELECTED_LAYER) {
+        options[Looper::HearAllLayers] = false;
+    }
+
+    return options;
 }
 
-bool Looper::currentModeHasPlayingProperties() const
+QMap<Looper::PlayingOption, bool> Looper::getDefaultPlayingOptions(Looper::Mode mode)
 {
-    return mode == SEQUENCE;
+    QMap<Looper::PlayingOption, bool> options;
+
+    if (mode == Looper::SEQUENCE) {
+        options[Looper::PlayLockedLayers] = false;
+        options[Looper::RandomizeLayers] = false;
+    }
+
+    return options;
 }
