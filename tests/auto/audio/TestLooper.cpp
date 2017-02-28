@@ -19,7 +19,7 @@ void TestLooper::playingLockedLayersSequence()
     looper.setLayers(layers);
     looper.selectLayer(layers - 1); // simulate looper in last layer, and in next interval the layer will be the first
     looper.setMode(Looper::SEQUENCE);
-    looper.setPlayingOption(Looper::PlayLockedLayers, !lockedLayers.isEmpty());
+    looper.setOption(Looper::PlayLockedLayers, !lockedLayers.isEmpty());
 
     // lock layers
     for (int l = 0; l < looper.getLayers(); ++l) {
@@ -59,8 +59,6 @@ void TestLooper::hearingRecordTracksWhileWaiting()
 
     Looper looper;
     looper.setLayers(layers);
-    looper.setRecordingOption(Looper::Overdub, overdubbing);
-    looper.setRecordingOption(Looper::HearAllLayers, true);
 
     //create content in all layers
     looper.setMode(Looper::SEQUENCE);
@@ -73,6 +71,8 @@ void TestLooper::hearingRecordTracksWhileWaiting()
     looper.stop(); // finish recording
 
     looper.setMode(looperMode); // switch to test looper mode
+    looper.setOption(Looper::Overdub, overdubbing);
+    looper.setOption(Looper::HearAllLayers, true);
     looper.selectLayer(0);// recording in first layer
 
     looper.toggleRecording(); // waiting state
@@ -99,8 +99,8 @@ void TestLooper::hearingAnotherLayersAndOverdubInSelectedLayerMode()
 
     Looper looper;
     looper.setLayers(layers);
-    looper.setRecordingOption(Looper::Overdub, overdubbing);
-    looper.setRecordingOption(Looper::HearAllLayers, true);
+    looper.setOption(Looper::Overdub, overdubbing);
+    looper.setOption(Looper::HearAllLayers, true);
 
     //create content in all layers
     looper.setMode(Looper::SEQUENCE);
@@ -147,8 +147,8 @@ void TestLooper::hearingAnotherLayersInAllLayersMode()
     looper.stop(); // finish recording
 
     looper.setMode(looperMode); // switch to test looper mode
-    looper.setRecordingOption(Looper::Overdub, overdubbing);
-    looper.setRecordingOption(Looper::HearAllLayers, true);
+    looper.setOption(Looper::Overdub, overdubbing);
+    looper.setOption(Looper::HearAllLayers, true);
     looper.selectLayer(0);// recording in first layer
     looper.toggleRecording(); // waiting
     looper.startNewCycle(2); // recording
@@ -177,8 +177,8 @@ void TestLooper::hearingAnotherLayersInSelectedLayerMode()
     looper.stop(); // finish recording
 
     looper.setMode(looperMode); // switch to test looper mode
-    looper.setRecordingOption(Looper::Overdub, false);
-    looper.setRecordingOption(Looper::HearAllLayers, true);
+    looper.setOption(Looper::Overdub, false);
+    looper.setOption(Looper::HearAllLayers, true);
     looper.selectLayer(0);// recording in first layer
     looper.toggleRecording(); // waiting
     looper.startNewCycle(2);
@@ -190,24 +190,65 @@ void TestLooper::hearingAnotherLayersInSelectedLayerMode()
 
 void TestLooper::overdubbing()
 {
+    QFETCH(Looper::Mode, looperMode);
+    QFETCH(quint8, layers);
+    QFETCH(quint8, recordingLayer);
+    QFETCH(QList<Looper::RecordingOption>, recordingOptions);
+
     Looper looper;
-    looper.setLayers(1);
-    looper.setMode(Looper::SELECTED_LAYER);
-    looper.setRecordingOption(Looper::Overdub, true);
-    looper.setRecordingOption(Looper::HearAllLayers, false);
+    looper.setLayers(layers);
+    looper.setMode(looperMode);
+    for (Looper::RecordingOption option : recordingOptions)
+        looper.setOption(option, true);
+
+    looper.setOption(Looper::Overdub, true);
+    looper.setOption(Looper::HearAllLayers, false);
+    looper.selectLayer(recordingLayer);
 
     looper.toggleRecording(); // waiting state
     looper.startNewCycle(2);
+    Q_ASSERT(looper.getCurrentLayerIndex() == recordingLayer);
+
     looper.process(createBuffer("1, 2"));
 
     looper.startNewCycle(2);
+    Q_ASSERT(looper.getCurrentLayerIndex() == recordingLayer);
+
     SamplesBuffer out = createBuffer("1, 1");
     looper.process(out);
     checkExpectedValues("2, 3", out);
 
     looper.startNewCycle(2);
+    Q_ASSERT(looper.getCurrentLayerIndex() == recordingLayer);
+
     looper.process(out); // out is 2, 3, and will be [2, 3] + [2, 3]
     checkExpectedValues("4, 6", out);
+}
+
+void TestLooper::overdubbing_data()
+{
+    QTest::addColumn<Looper::Mode>("looperMode");
+    QTest::addColumn<quint8>("layers");
+    QTest::addColumn<quint8>("recordingLayer");
+    QTest::addColumn<QList<Looper::RecordingOption>>("recordingOptions");
+
+    QTest::newRow("overdubbing in SEQUENCE mode, 4 layers, recording layer = 0")
+            << Looper::SEQUENCE << quint8(4) << quint8(0) << (QList<Looper::RecordingOption>() << Looper::Overdub);
+
+    QTest::newRow("overdubbing in ALL_LAYERS mode, 4 layers, recording layer = 1")
+            << Looper::ALL_LAYERS << quint8(4) << quint8(1) << (QList<Looper::RecordingOption>() << Looper::Overdub);
+
+    QTest::newRow("overdubbing in SELECTED_LAYERS mode, 4 layers, recording layer = 2")
+            << Looper::SELECTED_LAYER << quint8(4) << quint8(2) << (QList<Looper::RecordingOption>() << Looper::Overdub);
+
+    QTest::newRow("overdubbing in SEQUENCE mode, 4 layers, recording layer = 0, hearing all layers")
+            << Looper::SEQUENCE << quint8(4) << quint8(0) << (QList<Looper::RecordingOption>() << Looper::Overdub << Looper::HearAllLayers);
+
+    QTest::newRow("overdubbing in ALL_LAYERS mode, 4 layers, recording layer = 1, hearing all layers")
+            << Looper::ALL_LAYERS << quint8(4) << quint8(1) << (QList<Looper::RecordingOption>() << Looper::Overdub  << Looper::HearAllLayers);
+
+    QTest::newRow("overdubbing in SELECTED_LAYERS mode, 4 layers, recording layer = 2, hearing all layers")
+            << Looper::SELECTED_LAYER << quint8(4) << quint8(2) << (QList<Looper::RecordingOption>() << Looper::Overdub  << Looper::HearAllLayers);
 }
 
 void TestLooper::resizeLayersAndCopySamples()

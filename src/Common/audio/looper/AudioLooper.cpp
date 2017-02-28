@@ -24,15 +24,18 @@ Looper::Looper()
 
     Looper::Mode modes[] = { Looper::SEQUENCE, Looper::ALL_LAYERS, Looper::SELECTED_LAYER };
     for (Looper::Mode mode : modes) {
-        modeOptions[mode].recordingOptions = getDefaultRecordingOptions(mode);
-        modeOptions[mode].playingOptions = getDefaultPlayingOptions(mode);
+        modeOptions[mode].recordingOptions = getDefaultSupportedRecordingOptions(mode);
+        modeOptions[mode].playingOptions = getDefaultSupportedPlayingOptions(mode);
     }
 }
 
 Looper::~Looper()
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
-        delete layers[l];
+        if (layers[l])
+            delete layers[l];
+
+        layers[l] = nullptr;
     }
 }
 
@@ -49,7 +52,7 @@ uint Looper::getLockedLayers() const
 void Looper::incrementLockedLayer()
 {
     quint8 nextLayer = currentLayerIndex;
-    bool isRandomizing = getPlayingOption(Looper::RandomizeLayers);
+    bool isRandomizing = getOption(Looper::RandomizeLayers);
     if (getLockedLayers() > 0) {
         do {
             if (isRandomizing)
@@ -65,8 +68,8 @@ void Looper::incrementLockedLayer()
 
 void Looper::incrementCurrentLayer()
 {
-    bool isPlayingLockedLayersOnly = getPlayingOption(Looper::PlayLockedLayers);
-    bool isRandomizing = getPlayingOption(Looper::RandomizeLayers);
+    bool isPlayingLockedLayersOnly = getOption(Looper::PlayLockedLayers);
+    bool isRandomizing = getOption(Looper::RandomizeLayers);
 
     if (isPlayingLockedLayersOnly) {
         incrementLockedLayer();
@@ -145,7 +148,7 @@ void Looper::startRecording()
     if (firstRecordingLayer >= 0) {
         setCurrentLayer(firstRecordingLayer);
 
-        bool isOverdubbing = getRecordingOption(Looper::Overdub);
+        bool isOverdubbing = getOption(Looper::Overdub);
         if (!isOverdubbing) // avoid discard layer content if is overdubbing
             layers[currentLayerIndex]->zero();
 
@@ -304,7 +307,7 @@ void Looper::startNewCycle(uint samplesInCycle)
 
     intervalPosition = 0;
 
-    bool isOverdubbing = getRecordingOption(Looper::Overdub);
+    bool isOverdubbing = getOption(Looper::Overdub);
     for (int l = 0; l < maxLayers; ++l)
         layers[l]->prepareForNewCycle(samplesInCycle, isOverdubbing);
 
@@ -365,8 +368,17 @@ void Looper::mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptL
 {
     for (uint layerIndex = 0; layerIndex < maxLayers; ++layerIndex) {
         if (layerIndex != exceptLayer) {
-            const bool mixReplacing = layerIndex == currentLayerIndex;
+            const bool mixReplacing = exceptLayer == currentLayerIndex;
             mixLayer(layerIndex, samples, samplesToMix, mixReplacing);
+        }
+    }
+}
+
+void Looper::mixLockedLayers(SamplesBuffer &samples, uint samplesToMix)
+{
+    for (uint layer = 0; layer < maxLayers; ++layer) {
+        if (layerIsLocked(layer)) {
+            mixLayer(layer, samples, samplesToMix, false);
         }
     }
 }
@@ -402,7 +414,7 @@ bool Looper::isStopped() const
     return state->isStopped();
 }
 
-QMap<Looper::RecordingOption, bool> Looper::getDefaultRecordingOptions(Looper::Mode mode)
+QMap<Looper::RecordingOption, bool> Looper::getDefaultSupportedRecordingOptions(Looper::Mode mode)
 {
     QMap<Looper::RecordingOption, bool> options;
     options[Looper::Overdub] = false;
@@ -414,13 +426,19 @@ QMap<Looper::RecordingOption, bool> Looper::getDefaultRecordingOptions(Looper::M
     return options;
 }
 
-QMap<Looper::PlayingOption, bool> Looper::getDefaultPlayingOptions(Looper::Mode mode)
+QMap<Looper::PlayingOption, bool> Looper::getDefaultSupportedPlayingOptions(Looper::Mode mode)
 {
     QMap<Looper::PlayingOption, bool> options;
 
     if (mode == Looper::SEQUENCE) {
         options[Looper::PlayLockedLayers] = false;
         options[Looper::RandomizeLayers] = false;
+        options[Looper::PlayNonEmptyLayers] = true;
+    }
+
+    if (mode == Looper::ALL_LAYERS) {
+        options[Looper::PlayLockedLayers] = false;
+        options[Looper::PlayNonEmptyLayers] = true;
     }
 
     return options;

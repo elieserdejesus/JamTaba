@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "audio/core/SamplesBuffer.h"
+#include "audio/looper/AudioLooper.h"
 
 class TestLooper: public QObject
 {
@@ -19,6 +20,8 @@ private slots:
     void resizeLayersAndCopySamples_data();
 
     void overdubbing();
+    void overdubbing_data();
+
     void hearingAnotherLayersInSelectedLayerMode();
     void hearingAnotherLayersInAllLayersMode();
     void hearingAnotherLayersAndOverdubInSelectedLayerMode();
@@ -33,5 +36,7 @@ private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
     void checkExpectedValues(QString comaSeparatedExpectedValues, const Audio::SamplesBuffer &buffer);
 };
+
+Q_DECLARE_METATYPE(Audio::Looper::RecordingOption)
 
 #endif // TESTLOOPER_H

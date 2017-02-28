@@ -38,6 +38,8 @@ LooperWindow::LooperWindow(QWidget *parent) :
     // this alignments are not available in QtCreator UI designer
     ui->widgetBottom->layout()->setAlignment(ui->modeControlsLayout, Qt::AlignBottom);
     ui->widgetBottom->layout()->setAlignment(ui->layerControlsLayout, Qt::AlignBottom);
+
+
 }
 
 void LooperWindow::keyPressEvent(QKeyEvent *ev)
@@ -203,20 +205,25 @@ void LooperWindow::updateControls()
         ui->maxLayersSpinBox->setEnabled(looper->isStopped());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
 
-        QList<Looper::RecordingOption> recordingOptions = looper->getRecordingOptions();
-        const bool canShowRecordingProperties = !recordingOptions.isEmpty();
-        Gui::setLayoutItemsVisibility(ui->recordingPropertiesLayout, canShowRecordingProperties);
-        ui->groupBoxRecording->setVisible(canShowRecordingProperties);
-        if (canShowRecordingProperties) {
-            createRecordingOptionsCheckBoxes();
+        // update playing and recording options
+        updateOptions<Looper::PlayingOption>(ui->groupBoxPlaying->layout());
+        updateOptions<Looper::RecordingOption>(ui->groupBoxRecording->layout());
+
+        // update more specific checkboxes
+        QCheckBox *lockedCheckBox = playingCheckBoxes[Looper::PlayLockedLayers];
+        if (lockedCheckBox) {
+            lockedCheckBox->setEnabled(lockedCheckBox->isEnabled() && looper->hasLockedLayers());
+            lockedCheckBox->setChecked(lockedCheckBox->isEnabled() && lockedCheckBox->isChecked());
         }
 
-        QList<Looper::PlayingOption> playingOptions = looper->getPlayingOptions();
-        const bool canShowPlayingProperties = !playingOptions.isEmpty();
-        Gui::setLayoutItemsVisibility(ui->playingPropertiesLayout, canShowPlayingProperties);
-        ui->groupBoxPlaying->setVisible(canShowPlayingProperties);
-        if (canShowPlayingProperties) {
-            createPlayingOptionsCheckBoxes();
+        QCheckBox *randomLayersCheckBox = playingCheckBoxes[Looper::RandomizeLayers];
+        if (randomLayersCheckBox) {
+            bool canEnableRandom = looper->getLayers() > 1;
+            if (looper->getOption(Looper::PlayLockedLayers)) // is playing locked only
+                canEnableRandom = canEnableRandom && looper->hasLockedLayers();
+
+            randomLayersCheckBox->setEnabled(randomLayersCheckBox->isEnabled() && canEnableRandom);
+            randomLayersCheckBox->setChecked(randomLayersCheckBox->isEnabled() && randomLayersCheckBox->isChecked());
         }
     }
 
@@ -284,6 +291,9 @@ void LooperWindow::initializeControls()
         ui->comboBoxPlayMode->addItem(Looper::getModeString(playMode), qVariantFromValue(playMode));
     }
 
+    createPlayingOptionsCheckBoxes();
+    createRecordingOptionsCheckBoxes();
+
     // max layer spinbox
     ui->maxLayersSpinBox->setMinimum(1);
     ui->maxLayersSpinBox->setMaximum(Looper::MAX_LOOP_LAYERS);
@@ -329,7 +339,8 @@ QString LooperWindow::getOptionName(Looper::PlayingOption option)
 {
     switch (option) {
     case Looper::RandomizeLayers:       return tr("Random");
-    case Looper::PlayLockedLayers:  return tr("Locked");
+    case Looper::PlayLockedLayers:      return tr("Locked");
+    case Looper::PlayNonEmptyLayers:    return tr("Non empty");
     }
 
     return "Error!";
@@ -357,40 +368,31 @@ QString LooperWindow::getOptionToolTip(Audio::Looper::PlayingOption option)
 
 void LooperWindow::createRecordingOptionsCheckBoxes()
 {
-    clearLayout(ui->recordingPropertiesLayout);
-
-    QList<Looper::RecordingOption> recordingOptions = looper->getRecordingOptions();
-    for (const Looper::RecordingOption &option : recordingOptions) {
-        QCheckBox *newCheckBox = new QCheckBox(getOptionName(option));
-        newCheckBox->setToolTip(getOptionToolTip(option));
-        newCheckBox->setChecked(looper->getRecordingOption(option));
-
-        ui->recordingPropertiesLayout->addWidget(newCheckBox);
-
-        connect(newCheckBox, &QCheckBox::toggled, [=](bool checked){
-            if (looper)
-                looper->setRecordingOption(option, checked);
-        });
-    }
+    createOptionsCheckBoxes(ui->recordingPropertiesLayout, getAllRecordingOptions(), recordingCheckBoxes);
 }
 
 void LooperWindow::createPlayingOptionsCheckBoxes()
 {
-    clearLayout(ui->playingPropertiesLayout);
+    createOptionsCheckBoxes(ui->playingPropertiesLayout, getAllPlayingOptions(), playingCheckBoxes);
+}
 
-    QList<Looper::PlayingOption> playingOptions = looper->getPlayingOptions();
-    for (const Looper::PlayingOption &option : playingOptions) {
-        QCheckBox *newCheckBox = new QCheckBox(getOptionName(option));
-        newCheckBox->setToolTip(getOptionToolTip(option));
-        newCheckBox->setChecked(looper->getPlayingOption(option));
+QList<Audio::Looper::RecordingOption> LooperWindow::getAllRecordingOptions()
+{
+    QList<Audio::Looper::RecordingOption> options;
+    options << Looper::Overdub;
+    options << Looper::HearAllLayers;
 
-        ui->playingPropertiesLayout->addWidget(newCheckBox);
+    return options;
+}
 
-        connect(newCheckBox, &QCheckBox::toggled, [=](bool checked){
-            if (looper)
-                looper->setPlayingOption(option, checked);
-        });
-    }
+QList<Audio::Looper::PlayingOption> LooperWindow::getAllPlayingOptions()
+{
+    QList<Audio::Looper::PlayingOption> options;
+    options << Looper::RandomizeLayers;
+    options << Looper::PlayLockedLayers;
+    // options << Looper::PlayNonEmptyLayers; // no implemented yet
+
+    return options;
 }
 
 void LooperWindow::clearLayout(QLayout *layout)
@@ -398,8 +400,9 @@ void LooperWindow::clearLayout(QLayout *layout)
     if (layout) {
         QLayoutItem *item;
         while ((item = layout->takeAt(0)) != nullptr) {
-            if (item->widget())
+            if (item->widget()) {
                 item->widget()->deleteLater();
+            }
             delete item;
         }
     }

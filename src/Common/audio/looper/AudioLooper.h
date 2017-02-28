@@ -94,16 +94,17 @@ public:
     enum PlayingOption
     {
         RandomizeLayers,
-        PlayLockedLayers
+        PlayLockedLayers,
+        PlayNonEmptyLayers
     };
 
-    QList<RecordingOption> getRecordingOptions() const;
-    void setRecordingOption(RecordingOption option, bool enabled);
-    bool getRecordingOption(RecordingOption option) const;
+    void setOption(RecordingOption option, bool enabled);
+    bool getOption(RecordingOption option) const;
 
-    QList<PlayingOption> getPlayingOptions() const;
-    void setPlayingOption(PlayingOption option, bool enabled);
-    bool getPlayingOption(PlayingOption option) const;
+    void setOption(PlayingOption option, bool enabled);
+    bool getOption(PlayingOption option) const;
+    bool optionIsSupportedInCurrentMode(PlayingOption option) const;
+    bool optionIsSupportedInCurrentMode(RecordingOption option) const;
 
 signals:
     void stateChanged();
@@ -136,6 +137,7 @@ private:
 
     void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix, bool replacing);
     void mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer = -1);
+    void mixLockedLayers(SamplesBuffer &samples, uint samplesToMix);
 
     void setState(LooperState *state);
 
@@ -155,22 +157,40 @@ private:
 
     bool currentLayerIsLocked() const;
 
-    static QMap<Looper::PlayingOption, bool> getDefaultPlayingOptions(Looper::Mode mode);
-    static QMap<Looper::RecordingOption, bool> getDefaultRecordingOptions(Looper::Mode mode);
+    static QMap<Looper::PlayingOption, bool> getDefaultSupportedPlayingOptions(Looper::Mode mode);
+    static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
 };
 
-inline void Looper::setRecordingOption(Looper::RecordingOption option, bool value)
+inline bool Looper::optionIsSupportedInCurrentMode(PlayingOption option) const
 {
+    return modeOptions[mode].playingOptions.keys().contains(option);
+}
+
+inline bool Looper::optionIsSupportedInCurrentMode(RecordingOption option) const
+{
+    return modeOptions[mode].recordingOptions.keys().contains(option);
+}
+
+inline void Looper::setOption(Looper::RecordingOption option, bool value)
+{
+    if (!optionIsSupportedInCurrentMode(option)) {
+        return;
+    }
+
     modeOptions[mode].recordingOptions[option] = value;
 }
 
-inline void Looper::setPlayingOption(Looper::PlayingOption option, bool value)
+inline void Looper::setOption(Looper::PlayingOption option, bool value)
 {
+    if (!optionIsSupportedInCurrentMode(option)) {
+        return;
+    }
+
     modeOptions[mode].playingOptions[option] = value;
 }
 
-inline bool Looper::getPlayingOption(Looper::PlayingOption option) const
+inline bool Looper::getOption(Looper::PlayingOption option) const
 {
     if (modeOptions[mode].playingOptions.contains(option))
         return modeOptions[mode].playingOptions[option];
@@ -178,22 +198,12 @@ inline bool Looper::getPlayingOption(Looper::PlayingOption option) const
     return false;
 }
 
-inline bool Looper::getRecordingOption(Looper::RecordingOption option) const
+inline bool Looper::getOption(Looper::RecordingOption option) const
 {
     if (modeOptions[mode].recordingOptions.contains(option))
         return modeOptions[mode].recordingOptions[option];
 
     return false;
-}
-
-inline QList<Looper::RecordingOption> Looper::getRecordingOptions() const
-{
-    return modeOptions[mode].recordingOptions.keys();
-}
-
-inline QList<Looper::PlayingOption> Looper::getPlayingOptions() const
-{
-    return modeOptions[mode].playingOptions.keys();
 }
 
 inline bool Looper::hasLockedLayers() const
