@@ -15,6 +15,7 @@ class LooperState
 
 public:
     LooperState(Looper *looper);
+    virtual ~LooperState() {}
     virtual void process(SamplesBuffer &samples, uint samplesToProcess);
     virtual void handleNewCycle(uint samplesInCycle) = 0;
     virtual inline bool isWaiting() const { return false; }
