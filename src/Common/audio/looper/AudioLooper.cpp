@@ -10,59 +10,6 @@
 
 using namespace Audio;
 
-// ++++++ Looper actions ++++++++++++++++++++++++++++++++++++++++++++++++++++=
-
-class Looper::LooperAction
-{
-public:
-    virtual void execute(Looper *looper) = 0;
-    virtual ~LooperAction(){}
-};
-
-class Looper::SetRecordOptionAction : public Looper::LooperAction
-{
-public:
-    SetRecordOptionAction(Looper::Mode mode, Looper::RecordingOption option, bool value)
-        : value(value),
-          option(option),
-          mode(mode)
-    {
-        //
-    }
-
-    inline void execute(Looper *looper) override
-    {
-        looper->setRecordingOption(mode, option, value);
-    }
-private:
-    const bool value;
-    const Looper::RecordingOption option;
-    const Looper::Mode mode;
-};
-
-class Looper::SetPlayingOptionAction : public Looper::LooperAction
-{
-public:
-    SetPlayingOptionAction(Looper::Mode mode, Looper::PlayingOption option, bool value)
-        : value(value),
-          option(option),
-          mode(mode)
-    {
-        //
-    }
-
-    inline void execute(Looper *looper) override
-    {
-        looper->setPlayingOption(mode, option, value);
-    }
-private:
-    const bool value;
-    const Looper::PlayingOption option;
-    const Looper::Mode mode;
-};
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-
 Looper::Looper()
     : currentLayerIndex(0),
       intervalLenght(0),
@@ -342,21 +289,8 @@ int Looper::getNextUnlockedLayerIndex() const
     return getFirstUnlockedLayerIndex((currentLayerIndex + 1) % maxLayers);
 }
 
-void Looper::consumePendingActions()
-{
-    actionsMutex.lock();
-    for (LooperAction *action : pendingActions) {
-        action->execute(this);
-        delete action;
-    }
-    pendingActions.clear();
-    actionsMutex.unlock();
-}
-
 void Looper::process(SamplesBuffer &samples)
 {
-    consumePendingActions();
-
     uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
 
     state->process(samples, samplesToProcess);
@@ -504,24 +438,4 @@ QMap<Looper::PlayingOption, bool> Looper::getDefaultSupportedPlayingOptions(Loop
     }
 
     return options;
-}
-
-void Looper::setOption(Looper::RecordingOption option, bool value)
-{
-    if (!optionIsSupportedInCurrentMode(option)) {
-        return;
-    }
-
-    QMutexLocker locker(&actionsMutex);
-    pendingActions.append(new Looper::SetRecordOptionAction(mode, option, value));
-}
-
-void Looper::setOption(Looper::PlayingOption option, bool value)
-{
-    if (!optionIsSupportedInCurrentMode(option)) {
-        return;
-    }
-
-    QMutexLocker locker(&actionsMutex);
-    pendingActions.append(new Looper::SetPlayingOptionAction(mode, option, value));
 }

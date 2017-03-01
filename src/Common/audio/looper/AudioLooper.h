@@ -18,7 +18,6 @@ class RecordingState;
 class WaitingState;
 class LooperLayer;
 
-class SetRecordOptionAction;
 // +++++++++++++++++++++++++++++=
 
 class Looper : public QObject
@@ -29,8 +28,6 @@ class Looper : public QObject
     friend class PlayingState;
     friend class RecordingState;
     friend class WaitingState;
-
-    friend class SetRecordOptionAction;
 
 public:
     Looper();
@@ -164,28 +161,7 @@ private:
     static QMap<Looper::PlayingOption, bool> getDefaultSupportedPlayingOptions(Looper::Mode mode);
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
-    void setRecordingOption(Looper::Mode mode, Looper::RecordingOption option, bool value);
-    void setPlayingOption(Looper::Mode mode, Looper::PlayingOption option, bool value);
-
-    class LooperAction;
-    class SetRecordOptionAction;
-    class SetPlayingOptionAction;
-
-    QList<LooperAction *> pendingActions;
-    QMutex actionsMutex;
-    void consumePendingActions();
-
 };
-
-inline void Looper::setRecordingOption(Looper::Mode mode, Looper::RecordingOption option, bool value)
-{
-    modeOptions[mode].recordingOptions[option] = value;
-}
-
-inline void Looper::setPlayingOption(Looper::Mode mode, Looper::PlayingOption option, bool value)
-{
-    modeOptions[mode].playingOptions[option] = value;
-}
 
 inline bool Looper::optionIsSupportedInCurrentMode(PlayingOption option) const
 {
@@ -195,6 +171,24 @@ inline bool Looper::optionIsSupportedInCurrentMode(PlayingOption option) const
 inline bool Looper::optionIsSupportedInCurrentMode(RecordingOption option) const
 {
     return modeOptions[mode].recordingOptions.keys().contains(option);
+}
+
+inline void Looper::setOption(Looper::RecordingOption option, bool value)
+{
+    if (!optionIsSupportedInCurrentMode(option)) {
+        return;
+    }
+
+    modeOptions[mode].recordingOptions[option] = value;
+}
+
+inline void Looper::setOption(Looper::PlayingOption option, bool value)
+{
+    if (!optionIsSupportedInCurrentMode(option)) {
+        return;
+    }
+
+    modeOptions[mode].playingOptions[option] = value;
 }
 
 inline bool Looper::getOption(Looper::PlayingOption option) const
