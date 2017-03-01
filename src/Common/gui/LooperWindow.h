@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QCheckBox>
 #include <QMap>
+#include <QLayout>
 
 #include "audio/looper/AudioLooper.h"
 #include "LooperWavePanel.h"

@@ -14,6 +14,7 @@
 
 #include <QBuffer>
 #include <QByteArray>
+#include <QDateTime>
 
 using namespace Persistence;
 using namespace Midi;

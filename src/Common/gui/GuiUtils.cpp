@@ -1,4 +1,5 @@
 #include "GuiUtils.h"
+#include <QWidget>
 
 QString Gui::capitalize(const QString &string)
 {

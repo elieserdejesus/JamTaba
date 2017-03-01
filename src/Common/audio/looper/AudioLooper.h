@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QSharedPointer>
 #include <QMap>
+#include <QMutex>
 
 namespace Audio {
 
