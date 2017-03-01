@@ -135,8 +135,8 @@ private:
 
     QMap<Mode, Options> modeOptions;
 
-    void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix, bool replacing);
-    void mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer = -1);
+    void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix);
+    void mixAllLayers(SamplesBuffer &samples, uint samplesToMix);
     void mixLockedLayers(SamplesBuffer &samples, uint samplesToMix);
 
     void setState(LooperState *state);

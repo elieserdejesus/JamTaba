@@ -115,18 +115,15 @@ void RecordingState::process(SamplesBuffer &samples, uint samplesToProcess)
     else
         looper->overdubInCurrentLayer(samples, samplesToProcess);
 
+    if(isOverdubbing)
+        samples.zero();
 
     const bool willMixAllLayers = looper->getOption(Looper::HearAllLayers);
     if (willMixAllLayers) {
-        quint8 excludedLayer = looper->currentLayerIndex;
-
-        if (isOverdubbing)
-            excludedLayer = -1;
-
-        looper->mixAllLayers(samples, samplesToProcess, excludedLayer); // user can hear other layers while recording
+        looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
     }
     else if (isOverdubbing) { // overdubbing only
-        looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess, true); // mix replacing
+        looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);
     }
 }
 

@@ -22,12 +22,8 @@ private slots:
     void overdubbing();
     void overdubbing_data();
 
-    void hearingAnotherLayersInSelectedLayerMode();
-    void hearingAnotherLayersInAllLayersMode();
-    void hearingAnotherLayersAndOverdubInSelectedLayerMode();
-
-    void hearingRecordTracksWhileWaiting();
-    void hearingRecordTracksWhileWaiting_data();
+    void hearingRecordedLayersWhileWaiting();
+    void hearingRecordedLayersWhileWaiting_data();
 
     void playingLockedLayersSequence();
     void playingLockedLayersSequence_data();

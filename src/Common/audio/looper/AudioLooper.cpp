@@ -97,7 +97,7 @@ void Looper::overdubInCurrentLayer(const SamplesBuffer &samples, uint samplesToM
 
 void Looper::mixCurrentLayerTo(SamplesBuffer &samples, uint samplesToMix)
 {
-    mixLayer(currentLayerIndex, samples, samplesToMix, false);
+    mixLayer(currentLayerIndex, samples, samplesToMix);
 }
 
 bool Looper::currentLayerIsLocked() const
@@ -352,7 +352,7 @@ void Looper::setMode(Mode mode)
     }
 }
 
-void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix, bool replacing)
+void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix)
 {
     if (layerIndex >= maxLayers)
         return;
@@ -360,25 +360,21 @@ void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToM
     LooperLayer *loopLayer = layers[layerIndex];
     samplesToMix = qMin(samplesToMix, loopLayer->getAvailableSamples());
     if (samplesToMix) {
-        loopLayer->mixTo(samples, samplesToMix, intervalPosition, replacing); // mix buffered samples
+        loopLayer->mixTo(samples, samplesToMix, intervalPosition); // mix buffered samples
     }
 }
 
-void Looper::mixAllLayers(SamplesBuffer &samples, uint samplesToMix, int exceptLayer)
+void Looper::mixAllLayers(SamplesBuffer &samples, uint samplesToMix)
 {
-    for (uint layer = 0; layer < maxLayers; ++layer) {
-        if (layer != exceptLayer) {
-            const bool mixReplacing = false;//exceptLayer == layer;// currentLayerIndex;
-            mixLayer(layer, samples, samplesToMix, mixReplacing);
-        }
-    }
+    for (uint layer = 0; layer < maxLayers; ++layer)
+        mixLayer(layer, samples, samplesToMix);
 }
 
 void Looper::mixLockedLayers(SamplesBuffer &samples, uint samplesToMix)
 {
     for (uint layer = 0; layer < maxLayers; ++layer) {
         if (layerIsLocked(layer)) {
-            mixLayer(layer, samples, samplesToMix, false);
+            mixLayer(layer, samples, samplesToMix);
         }
     }
 }
