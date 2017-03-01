@@ -10,7 +10,7 @@ class TestLooper: public QObject
     Q_OBJECT
 
 private slots:
-    void basicTest();
+
     void multiBufferTest();
 
     void firstUnlockedLayer();
@@ -19,14 +19,14 @@ private slots:
     void resizeLayersAndCopySamples();
     void resizeLayersAndCopySamples_data();
 
-    void overdubbing();
-    void overdubbing_data();
+    void recording();
+    void recording_data();
 
-    void hearingRecordedLayersWhileWaiting();
-    void hearingRecordedLayersWhileWaiting_data();
+    void waiting();
+    void waiting_data();
 
-    void playingLockedLayersSequence();
-    void playingLockedLayersSequence_data();
+    void playing();
+    void playing_data();
 
 private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);

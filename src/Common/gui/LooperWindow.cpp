@@ -216,6 +216,7 @@ void LooperWindow::updateControls()
             lockedCheckBox->setChecked(lockedCheckBox->isEnabled() && lockedCheckBox->isChecked());
         }
 
+        // update locked layers check box
         QCheckBox *randomLayersCheckBox = playingCheckBoxes[Looper::RandomizeLayers];
         if (randomLayersCheckBox) {
             bool canEnableRandom = looper->getLayers() > 1;
@@ -224,6 +225,15 @@ void LooperWindow::updateControls()
 
             randomLayersCheckBox->setEnabled(randomLayersCheckBox->isEnabled() && canEnableRandom);
             randomLayersCheckBox->setChecked(randomLayersCheckBox->isEnabled() && randomLayersCheckBox->isChecked());
+        }
+
+        // update 'hear all' checkbox (in ALL layers mode this checkbox will be checked AND disabled)
+        if (looper->getMode() == Looper::ALL_LAYERS) {
+            QCheckBox *hearAllCheckBox = recordingCheckBoxes[Looper::HearAllLayers];
+            if (hearAllCheckBox) {
+                hearAllCheckBox->setChecked(true);
+                hearAllCheckBox->setEnabled(false);
+            }
         }
     }
 

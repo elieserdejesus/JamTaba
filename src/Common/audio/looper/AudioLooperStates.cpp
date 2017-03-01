@@ -115,16 +115,13 @@ void RecordingState::process(SamplesBuffer &samples, uint samplesToProcess)
     else
         looper->overdubInCurrentLayer(samples, samplesToProcess);
 
-    if(isOverdubbing)
-        samples.zero();
+    samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
 
-    const bool willMixAllLayers = looper->getOption(Looper::HearAllLayers);
-    if (willMixAllLayers) {
+    const bool hearingAllLayers = looper->getMode() == Looper::ALL_LAYERS || looper->getOption(Looper::HearAllLayers);
+    if (hearingAllLayers)
         looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
-    }
-    else if (isOverdubbing) { // overdubbing only
+    else
         looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);
-    }
 }
 
 // -----------------------------------------------------------------------------

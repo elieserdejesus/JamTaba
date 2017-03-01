@@ -9,7 +9,7 @@
 
 using namespace Audio;
 
-void TestLooper::playingLockedLayersSequence()
+void TestLooper::playing()
 {
     QFETCH(quint8, layers);
     QFETCH(QSet<quint8>, lockedLayers);
@@ -35,7 +35,7 @@ void TestLooper::playingLockedLayersSequence()
     }
 }
 
-void TestLooper::playingLockedLayersSequence_data()
+void TestLooper::playing_data()
 {
     QTest::addColumn<quint8>("layers");
     QTest::addColumn<QSet<quint8>>("lockedLayers");
@@ -49,7 +49,7 @@ void TestLooper::playingLockedLayersSequence_data()
     QTest::newRow("2 layers, 2nd layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 1) << (QList<quint8>() << 1 << 1);
 }
 
-void TestLooper::hearingRecordedLayersWhileWaiting()
+void TestLooper::waiting()
 {
     QFETCH(Looper::Mode, looperMode);
     QFETCH(QString, expectedSamples);
@@ -82,7 +82,7 @@ void TestLooper::hearingRecordedLayersWhileWaiting()
     checkExpectedValues(expectedSamples, out);
 }
 
-void TestLooper::hearingRecordedLayersWhileWaiting_data()
+void TestLooper::waiting_data()
 {
     QTest::addColumn<Looper::Mode>("looperMode");
     QTest::addColumn<QString>("expectedSamples");
@@ -91,12 +91,13 @@ void TestLooper::hearingRecordedLayersWhileWaiting_data()
     QTest::newRow("Hearing pre record material while Waiting (SEQUENCE mode)") << Looper::SEQUENCE << QString("1, 1");
 }
 
-void TestLooper::overdubbing()
+void TestLooper::recording()
 {
     QFETCH(Looper::Mode, looperMode);
     QFETCH(quint8, layers);
-    QFETCH(quint8, recordingLayer);
+    QFETCH(QList<quint8>, recordingLayers);
     QFETCH(bool, hearAllLayers);
+    QFETCH(bool, overdubbing);
     QFETCH(QString, defaultLayersContent);
     QFETCH(QString, inputSamples);
     QFETCH(QString, expectedFirstOutput);
@@ -115,92 +116,104 @@ void TestLooper::overdubbing()
     looper.stop(); // finish recording default layers content
 
     looper.setMode(looperMode);
-    looper.setOption(Looper::Overdub, true); // overdub always ON
+    looper.setOption(Looper::Overdub, overdubbing);
     looper.setOption(Looper::HearAllLayers, hearAllLayers);
 
-    looper.selectLayer(recordingLayer);
+    looper.selectLayer(recordingLayers.first());
 
     looper.toggleRecording(); // waiting state
 
-    looper.startNewCycle(2);
-    Q_ASSERT(looper.getCurrentLayerIndex() == recordingLayer);
-    SamplesBuffer firstBuffer = createBuffer(inputSamples);
-    looper.process(firstBuffer);
-    checkExpectedValues(expectedFirstOutput, firstBuffer);
+    QString expectedOutputs[] = {expectedFirstOutput, expectedSecondOutput};
 
-    looper.startNewCycle(2);
-    Q_ASSERT(looper.getCurrentLayerIndex() == recordingLayer);
-    SamplesBuffer secondBuffer = createBuffer(inputSamples);
-    looper.process(secondBuffer);
-    checkExpectedValues(expectedSecondOutput, secondBuffer);
+    for (int i = 0; i < 2; ++i) {
+        looper.startNewCycle(2);
+        Q_ASSERT(looper.getCurrentLayerIndex() == recordingLayers.at(i));
+        SamplesBuffer buffer = createBuffer(inputSamples);
+        looper.process(buffer);
+        checkExpectedValues(expectedOutputs[i], buffer);
+    }
 }
 
-void TestLooper::overdubbing_data()
+void TestLooper::recording_data()
 {
     QTest::addColumn<Looper::Mode>("looperMode");
     QTest::addColumn<quint8>("layers");
-    QTest::addColumn<quint8>("recordingLayer");
+    QTest::addColumn<QList<quint8>>("recordingLayers");
     QTest::addColumn<bool>("hearAllLayers");
+    QTest::addColumn<bool>("overdubbing");
     QTest::addColumn<QString>("defaultLayersContent");
     QTest::addColumn<QString>("inputSamples");
     QTest::addColumn<QString>("expectedFirstOutput");
     QTest::addColumn<QString>("expectedSecondOutput");
 
-    QTest::newRow("overdubbing in SEQUENCE mode, 4 layers, recording layer = 0, NOT hearing all layers")
+    Looper::Mode modes[] = {Looper::SEQUENCE, Looper::SELECTED_LAYER};
+    for (int layer = 0; layer < 4; ++layer) {
+        for (Looper::Mode mode : modes) {
+            QString title(Looper::getModeString(mode) + " mode, 4 layers, rec layer( " + QString::number(layer) + "), Overdubbing");
+            QTest::newRow(title.toUtf8().data())
+                    << mode // looperMode
+                    << quint8(4)        // layers
+                    << (QList<quint8>() << layer << layer)        // recordingLayer
+                    << false            // hearAllLayers
+                    << true             // overdubbing
+                    << QString("1, 1")  // defaultLayersContent
+                    << QString("1, 1")  // inputSamples
+                    << QString("2, 2")  // expectedFirstOutput
+                    << QString("3, 3"); // expectedSecondOutput
+        }
+    }
+
+    QTest::newRow("SEQUENCE mode, 4 layers, rec layer = 0, overdubbing, hearing all")
             << Looper::SEQUENCE // looperMode
             << quint8(4)        // layers
-            << quint8(0)        // recordingLayer
-            << false             // hearAllLayers
-            << QString("1, 1")  // defaultLayersContent
-            << QString("1, 1")  // inputSamples
-            << QString("2, 2")  // expectedFirstOutput
-            << QString("3, 3"); // expectedSecondOutput
-
-    QTest::newRow("Overdubbing in ALL_LAYERS mode, 4 layers, recording layer = 1")
-            << Looper::ALL_LAYERS // looperMode
-            << quint8(4)        // layers
-            << quint8(1)        // recordingLayer
-            << false             // hearAllLayers
-            << QString("1, 1")  // defaultLayersContent
-            << QString("1, 1")  // inputSamples
-            << QString("2, 2")  // expectedFirstOutput
-            << QString("3, 3"); // expectedSecondOutput
-
-    QTest::newRow("overdubbing in SELECTED_LAYERS mode, 4 layers, recording layer = 2")
-            << Looper::SELECTED_LAYER // looperMode
-            << quint8(4)        // layers
-            << quint8(2)        // recordingLayer
-            << false             // hearAllLayers
-            << QString("1, 1")  // defaultLayersContent
-            << QString("1, 1")  // inputSamples
-            << QString("2, 2")  // expectedFirstOutput
-            << QString("3, 3"); // expectedSecondOutput
-
-    QTest::newRow("overdubbing in SEQUENCE mode, 4 layers, recording layer = 0, hearing all layers")
-            << Looper::SEQUENCE // looperMode
-            << quint8(4)        // layers
-            << quint8(0)        // recordingLayer
+            << (QList<quint8>() << 0 << 0)        // recordingLayer
             << true             // hearAllLayers
+            << true             // overdubbing
             << QString("1, 1")  // defaultLayersContent
             << QString("1, 1")  // inputSamples
             << QString("5, 5")  // expectedFirstOutput
             << QString("6, 6"); // expectedSecondOutput
 
-    QTest::newRow("overdubbing in ALL_LAYERS mode, 4 layers, recording layer = 1, hearing all layers")
+    QTest::newRow("SEQUENCE mode, 4 layers, rec layer = 0")
+            << Looper::SEQUENCE // looperMode
+            << quint8(4)        // layers
+            << (QList<quint8>() << 0 << 1)        // recordingLayer
+            << false            // hearAllLayers
+            << false            // overdubbing
+            << QString("0, 0")  // defaultLayersContent
+            << QString("1, 1")  // inputSamples
+            << QString("1, 1")  // expectedFirstOutput
+            << QString("1, 1"); // expectedSecondOutput
+
+
+    QTest::newRow("ALL_LAYERS mode, 4 layers, rec layer = 1, overdubbing, hearing all")
             << Looper::ALL_LAYERS // looperMode
             << quint8(4)        // layers
-            << quint8(1)        // recordingLayer
-            << true             // hearAllLayers
+            << (QList<quint8>() << 1 << 1)        // recordingLayers
+            << true             // hearAllLayers (always ON in ALL_LAYERS mode)
+            << true             // overdubbing
             << QString("1, 1")  // defaultLayersContent
             << QString("1, 1")  // inputSamples
             << QString("5, 5")  // expectedFirstOutput
             << QString("6, 6"); // expectedSecondOutput
 
-    QTest::newRow("overdubbing in SELECTED_LAYERS mode, 4 layers, recording layer = 2, hearing all layers")
+    QTest::newRow("ALL_LAYERS mode, 4 layers, rec layer = 0, hearing all (always ON in this mode)")
+            << Looper::ALL_LAYERS       // looperMode
+            << quint8(4)                // layers
+            << (QList<quint8>() << 0 << 1)   // recordingLayers
+            << true                     // hearAllLayers (always ON in ALL_LAYERS mode)
+            << false                    // overdubbing
+            << QString("1, 1")          // defaultLayersContent
+            << QString("1, 1")          // inputSamples
+            << QString("4, 4")          // expectedFirstOutput
+            << QString("4, 4");         // expectedSecondOutput
+
+    QTest::newRow("SELECTED_LAYERS mode, 4 layers, rec layer = 2, overdubbing, hear all")
             << Looper::SELECTED_LAYER // looperMode
             << quint8(4)        // layers
-            << quint8(2)        // recordingLayer
+            << (QList<quint8>() << 2 << 2)        // recordingLayers
             << true             // hearAllLayers (will have no effect in SELECTED mode)
+            << true             // overdubbing
             << QString("1, 1")  // defaultLayersContent
             << QString("1, 1")  // inputSamples
             << QString("2, 2")  // expectedFirstOutput
@@ -326,40 +339,6 @@ void TestLooper::multiBufferTest()
 
 }
 
-void TestLooper::basicTest()
-{
-    SamplesBuffer samples = createBuffer("1,1,1");
-
-    Audio::Looper looper;
-    looper.setLayers(1);
-    looper.toggleRecording();
-
-    const uint cycleLenghtInSamples = 3;
-
-    looper.startNewCycle(cycleLenghtInSamples);
-    looper.process(samples);
-
-    // in first cycle we have all ZERO in looper buffered layer, the expected result is the same as initial samples
-    checkExpectedValues("1,1,1", samples);
-
-    samples.add(createBuffer("1, 1, 1")); // samples is 2,2,2 now
-
-    looper.startNewCycle(cycleLenghtInSamples);
-    looper.process(samples); // now samples will be summed/mixed with previous samples
-
-    checkExpectedValues("3, 3, 3", samples);
-
-    looper.startNewCycle(cycleLenghtInSamples);
-    looper.process(samples); // now samples will be summed/mixed with previous samples
-
-    checkExpectedValues("4,4,4", samples);
-
-    looper.startNewCycle(cycleLenghtInSamples);
-    looper.process(samples); // now samples will be summed/mixed with previous samples
-
-    checkExpectedValues("5,5,5", samples);
-
-}
 
 SamplesBuffer TestLooper::createBuffer(QString comaSeparatedValues)
 {
