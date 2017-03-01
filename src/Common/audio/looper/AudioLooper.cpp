@@ -152,7 +152,7 @@ void Looper::startRecording()
         if (!isOverdubbing) // avoid discard layer content if is overdubbing
             layers[currentLayerIndex]->zero();
 
-        setState(new RecordingState(this));
+        setState(new RecordingState(this, firstRecordingLayer));
     }
 }
 

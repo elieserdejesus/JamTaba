@@ -22,6 +22,12 @@ private slots:
     void recording();
     void recording_data();
 
+    void autoPlayAfterRecording();
+    void autoPlayAfterRecording_data();
+
+    void invalidRecordingStart();
+    void invalidRecordingStart_data();
+
     void waiting();
     void waiting_data();
 

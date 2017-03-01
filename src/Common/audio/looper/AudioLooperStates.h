@@ -52,10 +52,13 @@ public:
 class RecordingState : public LooperState
 {
 public:
-    RecordingState(Looper *looper);
+    RecordingState(Looper *looper, quint8 recordingLayer);
     void handleNewCycle(uint samplesInCycle) override;
     void process(SamplesBuffer &samples, uint samplesToProcess) override;
     inline bool isRecording() const override { return true ;}
+
+private:
+    const quint8 firstRecordingLayer; // used to watch when looper back to first rect layer and auto stop recording
 };
 
 // -------------------------------------------------------

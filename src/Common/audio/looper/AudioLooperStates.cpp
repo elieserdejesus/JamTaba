@@ -76,8 +76,9 @@ void PlayingState::handleNewCycle(uint samplesInCycle)
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
-RecordingState::RecordingState(Looper *looper)
-    : LooperState(looper)
+RecordingState::RecordingState(Looper *looper, quint8 recordingLayer)
+    : LooperState(looper),
+      firstRecordingLayer(recordingLayer)
 {
 
 }
@@ -92,7 +93,7 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
         if (!isOverdubbing) {
             int nextLayer = looper->getNextUnlockedLayerIndex();
             looper->setCurrentLayer(nextLayer);
-            if (nextLayer == 0 || looper->layerIsLocked(nextLayer))  // stop recording (and start playing) when backing to first layer
+            if ((nextLayer == firstRecordingLayer || nextLayer == 0) || looper->layerIsLocked(nextLayer))  // stop recording (and start playing) when backing to first rec layer
                 looper->play();
             else
                 looper->layers[nextLayer]->zero(); // zero current layer if keep recording

@@ -9,6 +9,142 @@
 
 using namespace Audio;
 
+void TestLooper::autoPlayAfterRecording()
+{
+    QFETCH(quint8, layers);
+    QFETCH(quint8, recLayer);
+    QFETCH(Looper::Mode, looperMode);
+    QFETCH(QList<quint8>, lockedLayers);
+    QFETCH(QList<quint8>, expectedRecLayers);
+
+    Looper looper;
+    looper.setLayers(layers);
+    looper.selectLayer(recLayer);
+    looper.setMode(looperMode);
+    looper.setOption(Looper::Overdub, false);
+
+    for (quint8 lockedLayer : lockedLayers)
+        looper.setLayerLockedState(lockedLayer, true);
+
+    looper.toggleRecording(); // waiting state
+
+    for (quint8 i = 0; i < expectedRecLayers.size(); ++i) {
+        looper.startNewCycle(2);
+        QCOMPARE(looper.getCurrentLayerIndex(), expectedRecLayers.at(i));
+    }
+    looper.startNewCycle(2); // start a new cycle to stop recording
+
+    QVERIFY(looper.isPlaying());
+}
+
+void TestLooper::autoPlayAfterRecording_data()
+{
+    QTest::addColumn<Looper::Mode>("looperMode");
+    QTest::addColumn<quint8>("layers");
+    QTest::addColumn<quint8>("recLayer");
+    QTest::addColumn<QList<quint8>>("lockedLayers");
+    QTest::addColumn<QList<quint8>>("expectedRecLayers");
+
+    QTest::newRow("SEQUENCE, 4 layers, no locked layers, rec layer=0")
+            << Looper::SEQUENCE       // looper mode
+            << quint8(4)              // layers
+            << quint8(0)       // rec layer
+            << (QList<quint8>())      // locked layers
+            << (QList<quint8>() << 0 << 1 << 2 << 3);     // expected rec layers
+
+    QTest::newRow("SEQUENCE, 4 layers, no locked layers, rec layer=2")
+            << Looper::SEQUENCE       // looper mode
+            << quint8(4)              // layers
+            << quint8(2)       // rec layer
+            << (QList<quint8>())      // locked layers
+            << (QList<quint8>() << 2 << 3);     // expected rec layers
+
+    QTest::newRow("SEQUENCE, 4 layers, no locked layers, rec layer=3")
+            << Looper::SEQUENCE       // looper mode
+            << quint8(4)              // layers
+            << quint8(3)       // rec layer
+            << (QList<quint8>())      // locked layers
+            << (QList<quint8>() << 3);     // expected rec layers
+
+
+    QTest::newRow("SEQUENCE, 4 layers, first layer locked, rec layer=0")
+            << Looper::SEQUENCE                 // looper mode
+            << quint8(4)                        // layers
+            << quint8(0)                        // rec layer
+            << (QList<quint8>() << 0)           // locked layers
+            << (QList<quint8>() << 1 << 2 << 3);// expected recording layers
+
+    QTest::newRow("SEQUENCE, 4 layers, 2nd layer locked, rec layer=0")
+            << Looper::SEQUENCE                 // looper mode
+            << quint8(4)                        // layers
+            << quint8(0)                        // rec layer
+            << (QList<quint8>() << 1)           // locked layers
+            << (QList<quint8>() << 0 << 2 << 3);// expected recording layers
+
+    QTest::newRow("SEQUENCE, 4 layers, 3rd layer locked, rec layer=0")
+            << Looper::SEQUENCE                 // looper mode
+            << quint8(4)                        // layers
+            << quint8(0)                        // rec layer
+            << (QList<quint8>() << 2)           // locked layers
+            << (QList<quint8>() << 0 << 1 << 3);// expected recording layers
+
+    QTest::newRow("SEQUENCE, 4 layers, First 2 layers locked, rec layer=0")
+            << Looper::SEQUENCE                 // looper mode
+            << quint8(4)                        // layers
+            << quint8(0)                        // rec layer
+            << (QList<quint8>() << 0 << 1)      // locked layers
+            << (QList<quint8>() << 2 << 3);// expected recording layers
+
+    QTest::newRow("SEQUENCE, 4 layers, Last 2 layers locked, rec layer=0")
+            << Looper::SEQUENCE                 // looper mode
+            << quint8(4)                        // layers
+            << quint8(0)                        // rec layer
+            << (QList<quint8>() << 2 << 3)      // locked layers
+            << (QList<quint8>() << 0 << 1);// expected recording layers
+
+    QTest::newRow("SEQUENCE, 4 layers, Last 2 layers locked, rec layer=3")
+            << Looper::SEQUENCE                 // looper mode
+            << quint8(4)                        // layers
+            << quint8(3)                        // rec layer
+            << (QList<quint8>() << 2 << 3)      // locked layers
+            << (QList<quint8>() << 0 << 1);// expected recording layers
+
+}
+
+void TestLooper::invalidRecordingStart()
+{
+    QFETCH(quint8, layers);
+    QFETCH(quint8, recLayer);
+    QFETCH(Looper::Mode, looperMode);
+    QFETCH(QList<quint8>, lockedLayers);
+
+    Looper looper;
+    looper.setLayers(layers);
+    looper.selectLayer(recLayer);
+    looper.setMode(looperMode);
+
+    for (quint8 lockedLayer : lockedLayers)
+        looper.setLayerLockedState(lockedLayer, true);
+
+    looper.toggleRecording(); // try rec in invalid state
+
+    QVERIFY(looper.isStopped());
+}
+
+void TestLooper::invalidRecordingStart_data()
+{
+    QTest::addColumn<Looper::Mode>("looperMode");
+    QTest::addColumn<quint8>("layers");
+    QTest::addColumn<quint8>("recLayer");
+    QTest::addColumn<QList<quint8>>("lockedLayers");
+
+    QTest::newRow("SEQUENCE, 4 layers, rec layer=0, all layers locked")
+            << Looper::SEQUENCE                         // looper mode
+            << quint8(4)                                // layers
+            << quint8(0)                                // rec layer
+            << (QList<quint8>() << 0 << 1 << 2 << 3);    // locked layers
+}
+
 void TestLooper::playing()
 {
     QFETCH(quint8, layers);
