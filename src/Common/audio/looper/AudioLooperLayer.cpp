@@ -77,13 +77,16 @@ void LooperLayer::overdub(const SamplesBuffer &samples, uint samplesToMix, uint 
 
 void LooperLayer::append(const SamplesBuffer &samples, uint samplesToAppend)
 {
+    samplesToAppend = qMin(static_cast<uint>(leftChannel.capacity() - availableSamples), samplesToAppend);
     const uint sizeInBytes = samplesToAppend * sizeof(float);
 
-    std::memcpy(&(leftChannel[0]) + availableSamples, samples.getSamplesArray(0), sizeInBytes);
     const int secondChannelIndex = samples.isMono() ? 0 : 1;
+    std::memcpy(&(leftChannel[0]) + availableSamples, samples.getSamplesArray(0), sizeInBytes);
     std::memcpy(&(rightChannel[0]) + availableSamples, samples.getSamplesArray(secondChannelIndex), sizeInBytes);
 
     availableSamples += samplesToAppend;
+
+    Q_ASSERT(availableSamples <= leftChannel.size());
 
     // build peaks cache
     if (lastSamplesPerPeak) {

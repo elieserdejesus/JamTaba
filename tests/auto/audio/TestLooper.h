@@ -19,6 +19,8 @@ private slots:
     void resizeLayersAndCopySamples();
     void resizeLayersAndCopySamples_data();
 
+    void alternatingOverdubbingWhileRecording();
+
     void recording();
     void recording_data();
 

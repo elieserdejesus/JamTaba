@@ -9,6 +9,24 @@
 
 using namespace Audio;
 
+void TestLooper::alternatingOverdubbingWhileRecording()
+{
+    Looper looper;
+    looper.setLayers(2);
+    looper.selectLayer(0);
+    looper.setMode(Looper::SEQUENCE);
+
+    looper.toggleRecording(); // waiting state
+
+    for (quint8 i = 0; i < looper.getLayers(); ++i) {
+        looper.startNewCycle(4);
+        looper.setOption(Looper::Overdub, true);
+        looper.process(createBuffer("1, 1, 1, 1, 1"));
+        looper.setOption(Looper::Overdub, false);
+        looper.process(createBuffer("1, 1, 1"));
+    }
+}
+
 void TestLooper::autoPlayAfterRecording()
 {
     QFETCH(quint8, layers);
