@@ -47,6 +47,8 @@ private:
 
     void deleteWavePanels();
 
+    QLayout *createLayerControls(Audio::Looper *looper, quint8 layerIndex);
+
     void addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex);
 
     void initializeControls();

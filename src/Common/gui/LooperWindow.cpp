@@ -3,7 +3,7 @@
 #include "NinjamController.h"
 #include "gui/GuiUtils.h"
 
-#include <QVBoxLayout>
+#include <QGridLayout>
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QKeyEvent>
@@ -22,7 +22,7 @@ LooperWindow::LooperWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
-    QVBoxLayout *layout = new QVBoxLayout();
+    QGridLayout *layout = new QGridLayout();
     layout->setSpacing(12);
     layout->setContentsMargins(0, 0, 0, 0);
     ui->layersWidget->setLayout(layout);
@@ -141,12 +141,16 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
 
         // create wave panels (layers view)
         quint8 currentLayers = looper->getLayers();
+        QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
         for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
             LooperWavePanel *wavePanel = new LooperWavePanel(looper, layerIndex);
             wavePanels.insert(layerIndex, wavePanel);
-            ui->layersWidget->layout()->addWidget(wavePanel);
+            gridLayout->addWidget(wavePanel, layerIndex, 0);
+            wavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
+            gridLayout->addLayout(createLayerControls(looper, layerIndex), layerIndex, 1);
             wavePanel->setVisible(layerIndex < currentLayers);
         }
+        gridLayout->setColumnStretch(0, 1);
 
         // initial values
         ui->maxLayersSpinBox->setValue(looper->getLayers());
@@ -178,11 +182,76 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
     updateControls();
 }
 
+QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
+{
+    QLayout *levelFaderLayout = new QHBoxLayout();
+    levelFaderLayout->setSpacing(2);
+    levelFaderLayout->setContentsMargins(0, 0, 0, 0);
+
+    QSlider *levelSlider = new QSlider();
+    levelSlider->setObjectName(QStringLiteral("levelSlider"));
+    levelSlider->setOrientation(Qt::Horizontal);
+    levelSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+    levelSlider->setMaximum(120);
+    levelSlider->setValue(100);
+    levelSlider->setTickPosition(QSlider::NoTicks);
+    levelSlider->setMaximumWidth(80);
+
+    QLabel *highLevelIcon = new QLabel();
+    QLabel *lowLevelIcon = new QLabel();
+    highLevelIcon->setPixmap(QPixmap(":/images/level high.png"));
+    lowLevelIcon->setPixmap(QPixmap(":/images/level low.png"));
+    highLevelIcon->setAlignment(Qt::AlignCenter);
+    lowLevelIcon->setAlignment(Qt::AlignCenter);
+
+    levelFaderLayout->addWidget(lowLevelIcon);
+    levelFaderLayout->addWidget(levelSlider);
+    levelFaderLayout->addWidget(highLevelIcon);
+
+    QLayout *panFaderLayout = new QHBoxLayout();
+    panFaderLayout->setSpacing(0);
+    panFaderLayout->setContentsMargins(0, 0, 0, 0);
+
+    QLabel *labelPanL = new QLabel(QStringLiteral("L"));
+    labelPanL->setObjectName(QStringLiteral("labelPanL"));
+
+    QLabel *labelPanR = new QLabel(QStringLiteral("R"));
+    labelPanR->setObjectName(QStringLiteral("labelPanR"));
+
+    QSlider *panSlider = new QSlider();
+    panSlider->setObjectName(QStringLiteral("panSlider"));
+    panSlider->setMinimum(-4);
+    panSlider->setMaximum(4);
+    panSlider->setOrientation(Qt::Horizontal);
+    panSlider->setMaximumWidth(50);
+
+    panFaderLayout->addWidget(labelPanL);
+    panFaderLayout->addWidget(panSlider);
+    panFaderLayout->addWidget(labelPanR);
+
+    QHBoxLayout *mainLayout = new QHBoxLayout();
+    mainLayout->setSpacing(6);
+
+    mainLayout->addLayout(levelFaderLayout);
+    mainLayout->addLayout(panFaderLayout);
+
+    return mainLayout;
+}
+
 void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
 {
+    QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
     for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
         LooperWavePanel *wavePanel = wavePanels[layerIndex];
-        wavePanel->setVisible(layerIndex < newMaxLayers);
+        bool layerIsVisible = layerIndex < newMaxLayers;
+        wavePanel->setVisible(layerIsVisible);
+        QBoxLayout *layerControlsLayout = qobject_cast<QBoxLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
+        QBoxLayout *faderLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(0)->layout());
+        layerControlsLayout->setDirection(newMaxLayers > 2 ? QBoxLayout::LeftToRight: QBoxLayout::BottomToTop);
+        faderLayout->setDirection(newMaxLayers > 2 ? QBoxLayout::LeftToRight : QBoxLayout::BottomToTop);
+        QSlider *faderSlider = qobject_cast<QSlider *>(faderLayout->itemAt(1)->widget());
+        faderSlider->setOrientation(newMaxLayers > 2 ? Qt::Horizontal : Qt::Vertical);
+        Gui::setLayoutItemsVisibility(layerControlsLayout, layerIsVisible);
     }
 }
 

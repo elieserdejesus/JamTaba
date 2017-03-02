@@ -89,7 +89,10 @@ void LooperWavePanel::updateMiniLockIconPainterPath()
 uint LooperWavePanel::calculateSamplesPerPixel() const
 {
     uint pixelWidth = getPeaksWidth() + getPeaksPad();
-    return samplesPerInterval/(width()/pixelWidth);
+    if (width() && pixelWidth)
+        return samplesPerInterval/(width()/pixelWidth);
+
+    return 0;
 }
 
 void LooperWavePanel::setBeatsPerInteval(uint bpi, uint samplesPerInterval)
