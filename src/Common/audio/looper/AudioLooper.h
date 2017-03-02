@@ -38,7 +38,6 @@ public:
     void selectLayer(quint8 layerIndex);
     bool canSelectLayers() const;
 
-    void clearAllLayers();
     void clearCurrentLayer();
     void clearLayer(quint8 layer);
     bool canClearLayer(quint8 layer) const;

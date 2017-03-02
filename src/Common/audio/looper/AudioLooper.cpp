@@ -213,17 +213,6 @@ void Looper::clearCurrentLayer()
     clearLayer(currentLayerIndex);
 }
 
-void Looper::clearAllLayers()
-{
-    for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
-        if (layers[l]) {
-            layers[l]->zero();
-        }
-    }
-
-    stop();
-}
-
 bool Looper::canSelectLayers() const
 {
     if (maxLayers <= 1)

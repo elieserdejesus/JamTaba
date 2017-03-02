@@ -93,7 +93,7 @@ void MainController::setSampleRate(int newSampleRate)
         ninjamController->setSampleRate(newSampleRate);
 
         for (Audio::LocalInputNode *inputTrack: inputTracks.values()) {
-            inputTrack->getLooper()->clearAllLayers(); // looper samples are discarded when sample rate is changed
+            inputTrack->getLooper()->stop(); // looper is stopped when sample rate is changed because the recorded material will sound funny :)
         }
     }
 
@@ -224,7 +224,7 @@ void MainController::updateBpm(int newBpm)
 
     if (isPlayingInNinjamRoom()) {
         for (Audio::LocalInputNode *inputTrack: inputTracks.values()) {
-            inputTrack->getLooper()->clearAllLayers(); // looper samples are discarded when BPM is changed
+            inputTrack->getLooper()->stop(); // looper is stopped when BPM is changed because the recorded material will be out of sync
         }
     }
 }
