@@ -8,7 +8,8 @@ LooperLayer::LooperLayer()
     : availableSamples(0),
       lastSamplesPerPeak(0),
       lastCacheComputationSample(0),
-      locked(false)
+      locked(false),
+      lastCycleLenght(0)
 {
     //
 }
@@ -31,11 +32,13 @@ void LooperLayer::zero()
 
 void LooperLayer::prepareForNewCycle(uint samplesInNewCycle, bool isOverdubbing)
 {
-    if (samplesInNewCycle > leftChannel.capacity())
+    if (samplesInNewCycle > lastCycleLenght)
         resize(samplesInNewCycle);
 
     if (isOverdubbing)
         lastCacheComputationSample = 0; // reset max peak cache position to compute overdub peaks correctly
+
+    lastCycleLenght = samplesInNewCycle;
 }
 
 void LooperLayer::overdub(const SamplesBuffer &samples, uint samplesToMix, uint startPosition)
@@ -157,17 +160,17 @@ void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint interv
     }
 }
 
-void LooperLayer::resize(quint32 samples)
+void LooperLayer::resize(quint32 samplesPerCycle)
 {
-    if (samples > leftChannel.capacity())
-        leftChannel.resize(samples);
+    if (samplesPerCycle > leftChannel.capacity())
+        leftChannel.resize(samplesPerCycle);
 
-    if (samples > rightChannel.capacity())
-        rightChannel.resize(samples);
+    if (samplesPerCycle > rightChannel.capacity())
+        rightChannel.resize(samplesPerCycle);
 
-    if (availableSamples && samples > availableSamples) { // need copy samples?
+    if (availableSamples && samplesPerCycle > availableSamples) { // need copy samples?
         uint initialAvailableSamples = availableSamples;
-        uint totalSamplesToCopy = samples - initialAvailableSamples;
+        uint totalSamplesToCopy = samplesPerCycle - initialAvailableSamples;
         while (totalSamplesToCopy > 0){
             const uint samplesToCopy = qMin(totalSamplesToCopy, initialAvailableSamples);
             const uint bytesToCopy = samplesToCopy * sizeof(float);
@@ -177,7 +180,7 @@ void LooperLayer::resize(quint32 samples)
             totalSamplesToCopy -= samplesToCopy;
         }
 
-        Q_ASSERT(availableSamples == samples);
+        Q_ASSERT(availableSamples == samplesPerCycle);
 
         peaksCache.clear(); // invalidate peaks cache
     }

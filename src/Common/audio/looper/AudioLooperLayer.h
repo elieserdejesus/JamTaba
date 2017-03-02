@@ -42,9 +42,10 @@ private:
     uint lastSamplesPerPeak;
     uint availableSamples;
     uint lastCacheComputationSample;
+    uint lastCycleLenght;
     bool locked;
 
-    void resize(quint32 samples);
+    void resize(quint32 samplesPerCycle);
 
 };
 
