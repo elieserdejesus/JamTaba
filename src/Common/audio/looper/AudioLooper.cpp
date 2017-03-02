@@ -159,10 +159,7 @@ void Looper::startRecording()
 void Looper::toggleRecording()
 {
     if (isRecording() || isWaiting()) {
-        if (mode != SELECTED_LAYER)
-            stop();
-        else
-            play(); // in selected layer mode the looper will auto play when user finish recording
+        play(); // auto play when recording is finished (rec button is pressed)
     }
     else {
         int firstRecordingLayer = getFirstUnlockedLayerIndex(currentLayerIndex);
