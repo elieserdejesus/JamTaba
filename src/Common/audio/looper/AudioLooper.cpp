@@ -39,6 +39,19 @@ Looper::~Looper()
     }
 }
 
+void Looper::setLayerGain(quint8 layerIndex, float gain)
+{
+    if (layerIndex < maxLayers)
+        layers[layerIndex]->setGain(gain);
+
+}
+
+void Looper::setLayerPan(quint8 layerIndex, float pan)
+{
+    if (layerIndex < maxLayers)
+        layers[layerIndex]->setPan(pan);
+}
+
 uint Looper::getLockedLayers() const
 {
     uint lockedLayers = 0;

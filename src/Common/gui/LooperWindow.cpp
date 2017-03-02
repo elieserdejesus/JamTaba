@@ -2,6 +2,7 @@
 #include "ui_LooperWindow.h"
 #include "NinjamController.h"
 #include "gui/GuiUtils.h"
+#include "Utils.h"
 
 #include <QGridLayout>
 #include <QSpinBox>
@@ -192,10 +193,16 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     levelSlider->setObjectName(QStringLiteral("levelSlider"));
     levelSlider->setOrientation(Qt::Horizontal);
     levelSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
-    levelSlider->setMaximum(120);
-    levelSlider->setValue(100);
+    levelSlider->setMaximum(12);
+    levelSlider->setValue(10);
     levelSlider->setTickPosition(QSlider::NoTicks);
     levelSlider->setMaximumWidth(80);
+    levelSlider->installEventFilter(this);
+
+    connect(levelSlider, &QSlider::valueChanged, [looper, layerIndex](int value){
+        float gain = Utils::linearGainToPower(value/10.0);
+        looper->setLayerGain(layerIndex, gain);
+    });
 
     QLabel *highLevelIcon = new QLabel();
     QLabel *lowLevelIcon = new QLabel();
@@ -224,6 +231,12 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     panSlider->setMaximum(4);
     panSlider->setOrientation(Qt::Horizontal);
     panSlider->setMaximumWidth(50);
+    panSlider->installEventFilter(this);
+    connect(panSlider, &QSlider::valueChanged, [looper, layerIndex, panSlider](int value){
+        float panValue = value/(float)panSlider->maximum();
+        looper->setLayerPan(layerIndex, panValue);
+
+    });
 
     panFaderLayout->addWidget(labelPanL);
     panFaderLayout->addWidget(panSlider);
@@ -236,6 +249,25 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     mainLayout->addLayout(panFaderLayout);
 
     return mainLayout;
+}
+
+// event filter used to handle double clicks
+bool LooperWindow::eventFilter(QObject *source, QEvent *ev)
+{
+    if (ev->type() == QEvent::MouseButtonDblClick) {
+        QSlider *slider = qobject_cast<QSlider *>(source);
+        if (slider) {
+            if (slider->objectName() == "levelSlider")
+                 slider->setValue(10); // set level fader to unit gain
+            else
+                 if (slider->objectName() == "panSlider")
+                    slider->setValue(0);// set pan slider to center
+        }
+
+        return true;
+    }
+
+    return QDialog::eventFilter(source, ev);
 }
 
 void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)

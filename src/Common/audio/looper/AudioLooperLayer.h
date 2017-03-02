@@ -15,6 +15,9 @@ public:
     LooperLayer();
     virtual ~LooperLayer();
 
+    void setGain(float gain);
+    void setPan(float pan);
+
     void zero();
 
     void overdub(const SamplesBuffer &samples, uint samplesToMix, uint startPosition);
@@ -44,6 +47,12 @@ private:
     uint lastCacheComputationSample;
     uint lastCycleLenght;
     bool locked;
+
+    float gain;
+
+    float pan;
+    float leftGain;
+    float rightGain;
 
     void resize(quint32 samplesPerCycle);
 

@@ -32,6 +32,7 @@ public:
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void keyPressEvent(QKeyEvent *ev) override;
+    bool eventFilter(QObject *source, QEvent *ev);
 
 private slots:
     void updateBeatsPerInterval();

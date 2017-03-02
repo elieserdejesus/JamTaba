@@ -49,6 +49,9 @@ public:
 
     bool layerIsValid(quint8 layerIndex) const;
 
+    void setLayerGain(quint8 layerIndex, float gain);
+    void setLayerPan(quint8 layerIndex, float pan);
+
     void stop();
     void play();
 

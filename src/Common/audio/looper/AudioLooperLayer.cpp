@@ -9,7 +9,11 @@ LooperLayer::LooperLayer()
       lastSamplesPerPeak(0),
       lastCacheComputationSample(0),
       locked(false),
-      lastCycleLenght(0)
+      lastCycleLenght(0),
+      gain(1.0),
+      pan(0),
+      leftGain(1),
+      rightGain(1)
 {
     //
 }
@@ -28,6 +32,30 @@ void LooperLayer::zero()
     lastSamplesPerPeak = 0;
     lastCacheComputationSample = 0;
     peaksCache.clear();
+}
+
+void LooperLayer::setPan(float pan)
+{
+    if (pan < -1)
+        pan = -1;
+
+    if (pan > 1)
+        pan = 1;
+
+    this->pan = pan;
+
+    // update pain gain values
+    const static double ROOT_2_OVER_2 = 1.414213562373095 *0.5;
+    const static double PI_OVER_2 = 3.141592653589793238463 * 0.5;
+
+    double angle = pan * PI_OVER_2 * 0.5;
+    leftGain = (float)(ROOT_2_OVER_2 * (cos(angle) - sin(angle)));
+    rightGain = (float)(ROOT_2_OVER_2 * (cos(angle) + sin(angle)));
+}
+
+void LooperLayer::setGain(float gain)
+{
+    this->gain = gain;
 }
 
 void LooperLayer::prepareForNewCycle(uint samplesInNewCycle, bool isOverdubbing)
@@ -143,20 +171,16 @@ void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint interv
         const uint secondChannelIndex = (outBuffer.isMono()) ? 0 : 1;
         float *bufferChannels[] = {outBuffer.getSamplesArray(0), outBuffer.getSamplesArray(secondChannelIndex)};
         uint channels = outBuffer.getChannels();
-        //if (!replacing) {
-            for (uint c = 0; c < channels; ++c) {
-                for (uint s = 0; s < samplesToMix; ++s) {
-                    const uint offset = s + intervalPosition;
-                    bufferChannels[c][s] += internalChannels[c][offset];
-                }
+
+        const float finalLeftGain = gain * leftGain;
+        const float finalRightGain = gain * rightGain;
+        float gains[] = {finalLeftGain, finalRightGain};
+        for (uint c = 0; c < channels; ++c) {
+            for (uint s = 0; s < samplesToMix; ++s) {
+                const uint offset = s + intervalPosition;
+                bufferChannels[c][s] += internalChannels[c][offset] * gains[c];
             }
-        //}
-//        else { // replacing
-//            uint bytes = samplesToMix * sizeof(float);
-//            for (uint c = 0; c < channels; ++c) {
-//                std::memcpy(bufferChannels[c], internalChannels[c] + intervalPosition, bytes);
-//            }
-//        }
+        }
     }
 }
 
