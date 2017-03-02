@@ -218,7 +218,7 @@ bool Looper::canSelectLayers() const
     if (maxLayers <= 1)
         return false;
 
-    if (isRecording()) // can't select layer while recording
+    if (isRecording() && !getOption(Looper::Overdub)) // can't select layer while recording if not overdubbing
         return false;
 
     if (isPlaying() && mode != SELECTED_LAYER)
