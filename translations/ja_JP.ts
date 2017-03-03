@@ -217,15 +217,15 @@
     </message>
     <message>
         <source>Delete preset</source>
-        <translation type="unfinished">プリセット削除</translation>
+        <translation>プリセット削除</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation type="unfinished">プリセットを削除しています...</translation>
+        <translation>プリセットを削除しています...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation type="unfinished">プリセット&apos;%1&apos;を削除しますか</translation>
+        <translation>プリセット&apos;%1&apos;を削除しますか</translation>
     </message>
 </context>
 <context>
@@ -425,23 +425,23 @@
     </message>
     <message>
         <source>Sound Wave</source>
-        <translation type="unfinished">音波</translation>
+        <translation>音波</translation>
     </message>
     <message>
         <source>Buildings</source>
-        <translation type="unfinished">建物</translation>
+        <translation>建物</translation>
     </message>
     <message>
         <source>Gradient</source>
-        <translation type="unfinished">勾配</translation>
+        <translation>勾配</translation>
     </message>
     <message>
         <source>Pixelated Sound Wave</source>
-        <translation type="unfinished">ピクセル化された音波</translation>
+        <translation>ピクセル化された音波</translation>
     </message>
     <message>
         <source>Pixelated Buildings</source>
-        <translation type="unfinished">ピクセル化された建物</translation>
+        <translation>ピクセル化された建物</translation>
     </message>
 </context>
 <context>
@@ -559,22 +559,22 @@
     </message>
     <message>
         <source>Ice</source>
-        <translation type="unfinished">氷</translation>
+        <translation>氷</translation>
     </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
     <message>
         <source>Window Size</source>
-        <translation type="unfinished">ウィンドウサイズ</translation>
+        <translation>ウィンドウサイズ</translation>
     </message>
     <message>
         <source>Increase</source>
-        <translation type="unfinished">増加</translation>
+        <translation>増加</translation>
     </message>
     <message>
         <source>Decrease</source>
-        <translation type="unfinished">減少</translation>
+        <translation>減少</translation>
     </message>
 </context>
 <context>
@@ -608,15 +608,15 @@
     </message>
     <message>
         <source>Lower note:</source>
-        <translation type="unfinished">低いノート:</translation>
+        <translation>低いノート:</translation>
     </message>
     <message>
         <source>learn</source>
-        <translation type="unfinished">学ぶ</translation>
+        <translation>学ぶ</translation>
     </message>
     <message>
         <source>Higher note:</source>
-        <translation type="unfinished">高いノート:</translation>
+        <translation>高いノート:</translation>
     </message>
     <message>
         <source>Transpose:</source>
@@ -628,7 +628,7 @@
     </message>
     <message>
         <source>Route MIDI input to first subchannel</source>
-        <translation type="unfinished">MIDI入力を最初のサブチャンネルにルーティングする</translation>
+        <translation>MIDI入力を最初のサブチャンネルにルーティングする</translation>
     </message>
 </context>
 <context>
@@ -804,32 +804,32 @@
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished">%1と同期する</translation>
+        <translation>%1と同期する</translation>
     </message>
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished">ホスト同期</translation>
+        <translation>ホスト同期</translation>
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished">BPMが変更されました！%1を停止してBPMを%2に変更してください!</translation>
+        <translation>BPMが変更されました！%1を停止してBPMを%2に変更してください!</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation type="unfinished">同期中...</translation>
+        <translation>同期中...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation type="unfinished">Jamtabaと同期するには%1で再生/開始を押してください!</translation>
+        <translation>Jamtabaと同期するには%1で再生/開始を押してください!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation type="unfinished">私たちは同期しようとしている ...</translation>
+        <translation>同期を試みています ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation type="unfinished">%1のBPMを%2に変更して、もう一度同期を試みてください!</translation>
+        <translation>%1のBPMを%2に変更して、もう一度同期を試みてください!</translation>
     </message>
 </context>
 <context>
@@ -847,23 +847,23 @@
     <name>NinjamTrackView</name>
     <message>
         <source>Low cut</source>
-        <translation type="unfinished">ローカット</translation>
+        <translation>ローカット</translation>
     </message>
     <message>
         <source>Receive</source>
-        <translation type="unfinished">受け取る</translation>
+        <translation>受け取る</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished">オフ</translation>
+        <translation>オフ</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished">中</translation>
+        <translation>中</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation type="unfinished">抜本的</translation>
+        <translation>抜本的</translation>
     </message>
 </context>
 <context>
@@ -1083,23 +1083,23 @@
     <name>PreferencesDialogStandalone</name>
     <message>
         <source>Adding VST path ...</source>
-        <translation type="unfinished">追加するVSTの場所...</translation>
+        <translation>追加するVSTの場所...</translation>
     </message>
     <message>
         <source>scanning %1</source>
-        <translation type="unfinished">%1を走査中</translation>
+        <translation>%1を走査中</translation>
     </message>
     <message>
         <source>Add Vst(s) to Black list ...</source>
-        <translation type="unfinished">VSTをブラックリストへ追加...</translation>
+        <translation>VSTをブラックリストへ追加...</translation>
     </message>
     <message>
         <source>Remove Vst(s) from Black List ...</source>
-        <translation type="unfinished">VSTをブラックリストから解除...</translation>
+        <translation>VSTをブラックリストから解除...</translation>
     </message>
     <message>
         <source>No midi input device detected!</source>
-        <translation type="unfinished">MIDIデバイスが検出されませんでした!</translation>
+        <translation>MIDIデバイスが検出されませんでした!</translation>
     </message>
 </context>
 <context>
@@ -1147,7 +1147,7 @@
     </message>
     <message>
         <source>User name:</source>
-        <translation type="unfinished">ユーザー名:</translation>
+        <translation>ユーザー名:</translation>
     </message>
 </context>
 <context>
