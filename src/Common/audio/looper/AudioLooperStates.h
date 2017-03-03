@@ -16,7 +16,10 @@ class LooperState
 public:
     LooperState(Looper *looper);
     virtual ~LooperState() {}
-    virtual void process(SamplesBuffer &samples, uint samplesToProcess);
+
+    virtual void mixTo(SamplesBuffer &samples, uint samplesToProcess);
+    virtual void addBuffer(const SamplesBuffer &samples, uint samplesToProcess);
+
     virtual void handleNewCycle(uint samplesInCycle) = 0;
     virtual inline bool isWaiting() const { return false; }
     virtual inline bool isStopped() const { return false; }
@@ -34,7 +37,7 @@ class StoppedState : public LooperState
 public:
     StoppedState();
     void handleNewCycle(uint samplesInCycle) override;
-    void process(SamplesBuffer &samples, uint samplesToProcess) override;
+    void mixTo(SamplesBuffer &samples, uint samplesToProcess) override;
     inline bool isStopped() const override { return true ;}
 };
 
@@ -55,7 +58,8 @@ class RecordingState : public LooperState
 public:
     RecordingState(Looper *looper, quint8 recordingLayer);
     void handleNewCycle(uint samplesInCycle) override;
-    void process(SamplesBuffer &samples, uint samplesToProcess) override;
+    void mixTo(SamplesBuffer &samples, uint samplesToProcess) override;
+    void addBuffer(const SamplesBuffer &samples, uint samplesToProcess) override;
     inline bool isRecording() const override { return true ;}
 
 private:

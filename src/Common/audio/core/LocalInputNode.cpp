@@ -235,6 +235,8 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
     }
 
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer); // only the filtered midi messages are sended to rendering code
+
+    looper->mixToBuffer(out); // mixing looper buffered samples in post fader phase, so looper and local input controls (pan and level) are independent
 }
 
 void LocalInputNode::setRoutingMidiInput(bool routeMidiInput)
@@ -305,7 +307,7 @@ qint8 LocalInputNode::getTranspose() const
 
 void LocalInputNode::preFaderProcess(SamplesBuffer &out) // this function is called by the base class AudioNode when processing audio. It's the TemplateMethod design pattern idea.
 {
-    looper->process(out); // rec current samples and mix previous interval samples in the same buffer
+    looper->addBuffer(out); // rec incoming samples before apply local track gain, pan and boost
 
     if (stereoInverted)
         out.invertStereo();

@@ -288,11 +288,16 @@ int Looper::getNextUnlockedLayerIndex() const
     return getFirstUnlockedLayerIndex((currentLayerIndex + 1) % maxLayers);
 }
 
-void Looper::process(SamplesBuffer &samples)
+void Looper::addBuffer(const SamplesBuffer &samples)
 {
     uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
+    state->addBuffer(samples, samplesToProcess);
+}
 
-    state->process(samples, samplesToProcess);
+void Looper::mixToBuffer(SamplesBuffer &samples)
+{
+    uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
+    state->mixTo(samples, samplesToProcess);
 
     // always update intervalPosition to keep the execution in sync when 'play' is pressed
     if (intervalLenght)

@@ -32,7 +32,9 @@ class Looper : public QObject
 public:
     Looper();
     ~Looper();
-    void process(SamplesBuffer &samples);
+    void addBuffer(const SamplesBuffer &samples); // recording
+    void mixToBuffer(SamplesBuffer &samples); // playing/mixing
+
     void startNewCycle(uint samplesInCycle);
 
     void selectLayer(quint8 layerIndex);

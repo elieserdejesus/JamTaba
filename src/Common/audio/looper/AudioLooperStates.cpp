@@ -14,7 +14,13 @@ LooperState::LooperState(Looper *looper)
 
 }
 
-void LooperState::process(SamplesBuffer &samples, uint samplesToProcess)
+void LooperState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
+{
+    Q_UNUSED (samples)
+    Q_UNUSED(samplesToProcess)
+}
+
+void LooperState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 {
     //this code is shared by Playing and Waiting states
 
@@ -50,7 +56,7 @@ void StoppedState::handleNewCycle(uint samplesInCycle)
     Q_UNUSED(samplesInCycle)
 }
 
-void StoppedState::process(SamplesBuffer &samples, uint samplesToProcess)
+void StoppedState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 {
     Q_UNUSED(samples)
     Q_UNUSED(samplesToProcess)
@@ -105,7 +111,19 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
     }
 }
 
-void RecordingState::process(SamplesBuffer &samples, uint samplesToProcess)
+void RecordingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
+{
+    samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
+
+
+    const bool hearingAllLayers = looper->getMode() == Looper::ALL_LAYERS || looper->getOption(Looper::HearAllLayers);
+    if (hearingAllLayers)
+        looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
+    else
+        looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);
+}
+
+void RecordingState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
 {
     if (looper->currentLayerIsLocked()) // avoid recording in locked layers
         return;
@@ -115,14 +133,6 @@ void RecordingState::process(SamplesBuffer &samples, uint samplesToProcess)
         looper->appendInCurrentLayer(samples, samplesToProcess);
     else
         looper->overdubInCurrentLayer(samples, samplesToProcess);
-
-    samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
-
-    const bool hearingAllLayers = looper->getMode() == Looper::ALL_LAYERS || looper->getOption(Looper::HearAllLayers);
-    if (hearingAllLayers)
-        looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
-    else
-        looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);
 }
 
 // -----------------------------------------------------------------------------
