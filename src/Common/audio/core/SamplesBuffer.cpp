@@ -155,8 +155,10 @@ void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain,
 
 void SamplesBuffer::zero()
 {
-    for (unsigned int c = 0; c < channels; ++c)
-        std::fill(samples[c].begin(), samples[c].end(), static_cast<float>(0));
+    const uint bytesToProcess = frameLenght * sizeof(float);
+    for (unsigned int c = 0; c < channels; ++c) {
+        memset(&(samples[c][0]), 0, bytesToProcess);
+    }
 }
 
 AudioPeak SamplesBuffer::computePeak()
