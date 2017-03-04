@@ -23,6 +23,16 @@ LooperLayer::~LooperLayer()
 
 }
 
+void LooperLayer::reset()
+{
+    zero(); // erase layer content
+
+    setPan(0.0);
+    setGain(1.0);
+
+    setLocked(false);
+}
+
 void LooperLayer::zero()
 {
     std::fill(leftChannel.begin(), leftChannel.end(), static_cast<float>(0));

@@ -39,8 +39,6 @@ LooperWindow::LooperWindow(QWidget *parent) :
     // this alignments are not available in QtCreator UI designer
     ui->widgetBottom->layout()->setAlignment(ui->modeControlsLayout, Qt::AlignBottom);
     ui->widgetBottom->layout()->setAlignment(ui->layerControlsLayout, Qt::AlignBottom);
-
-
 }
 
 void LooperWindow::keyPressEvent(QKeyEvent *ev)
@@ -270,6 +268,23 @@ bool LooperWindow::eventFilter(QObject *source, QEvent *ev)
     return QDialog::eventFilter(source, ev);
 }
 
+void LooperWindow::resetAllLayersControls()
+{
+    QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
+    for (quint8 layerIndex = 0; layerIndex < looper->getLayers(); ++layerIndex) {
+        QBoxLayout *layerControlsLayout = qobject_cast<QBoxLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
+
+        QBoxLayout *faderLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(0)->layout());
+        QBoxLayout *panLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(1)->layout());
+
+        QSlider *faderSlider = qobject_cast<QSlider *>(faderLayout->itemAt(1)->widget());
+        QSlider *panSlider = qobject_cast<QSlider *>(panLayout->itemAt(1)->widget());
+
+        panSlider->setValue(0); // center
+        faderSlider->setValue(10); // 100%, unit gain
+    }
+}
+
 void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
 {
     QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
@@ -433,6 +448,13 @@ void LooperWindow::initializeControls()
     {
         if (looper)
             looper->setLayers(newMaxLayers);
+    });
+
+    connect(ui->resetButton, &QPushButton::clicked, [=](){
+        if (looper) {
+            looper->reset();
+            resetAllLayersControls();
+        }
     });
 }
 

@@ -20,6 +20,8 @@ public:
 
     void zero();
 
+    void reset();
+
     void overdub(const SamplesBuffer &samples, uint samplesToMix, uint startPosition);
     void append(const SamplesBuffer &samples, uint samplesToAppend);
 

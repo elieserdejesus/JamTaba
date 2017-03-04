@@ -16,17 +16,23 @@ Looper::Looper()
       intervalPosition(0),
       maxLayers(4),
       state(new StoppedState()),
-      mode(Mode::SEQUENCE)
+      mode(Mode::SEQUENCE),
+      resetRequested(false)
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
         layers[l] = new LooperLayer();
     }
 
-    Looper::Mode modes[] = { Looper::SEQUENCE, Looper::ALL_LAYERS, Looper::SELECTED_LAYER };
+    Looper::Mode modes[] = {Looper::SEQUENCE, Looper::ALL_LAYERS, Looper::SELECTED_LAYER};
     for (Looper::Mode mode : modes) {
         modeOptions[mode].recordingOptions = getDefaultSupportedRecordingOptions(mode);
         modeOptions[mode].playingOptions = getDefaultSupportedPlayingOptions(mode);
     }
+}
+
+void Looper::reset()
+{
+    resetRequested = true;
 }
 
 Looper::~Looper()
@@ -302,6 +308,14 @@ void Looper::mixToBuffer(SamplesBuffer &samples)
     // always update intervalPosition to keep the execution in sync when 'play' is pressed
     if (intervalLenght)
         intervalPosition = (intervalPosition + samplesToProcess) % intervalLenght;
+
+    // need reset all layers?
+    if (resetRequested && !isRecording()) {
+        for (uint l = 0; l < maxLayers; ++l) {
+            layers[l]->reset();
+        }
+        resetRequested = false;
+    }
 }
 
 void Looper::startNewCycle(uint samplesInCycle)

@@ -35,6 +35,8 @@ public:
     void addBuffer(const SamplesBuffer &samples); // recording
     void mixToBuffer(SamplesBuffer &samples); // playing/mixing
 
+    void reset(); // clear all
+
     void startNewCycle(uint samplesInCycle);
 
     void selectLayer(quint8 layerIndex);
@@ -125,6 +127,8 @@ private:
     LooperLayer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex;
     quint8 maxLayers;
+
+    bool resetRequested;
 
     void setCurrentLayer(quint8 newLayer);
 

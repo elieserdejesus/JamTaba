@@ -110,6 +110,8 @@ private:
         }
     }
 
+    void resetAllLayersControls();
+
     int currentBeat;
 };
 
