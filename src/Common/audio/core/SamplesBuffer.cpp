@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <cmath>
 #include <algorithm>
+#include <cstring>
 
 using namespace Audio;
 // +++++++++++++++++=
@@ -93,9 +94,10 @@ float *SamplesBuffer::getSamplesArray(unsigned int channel) const
 
 void SamplesBuffer::applyGain(float gainFactor, float boostFactor)
 {
+    const float scaleFactor = gainFactor * boostFactor;
     for (unsigned int c = 0; c < channels; ++c) {
         for (unsigned int i = 0; i < frameLenght; ++i)
-            samples[c][i] *= (gainFactor * boostFactor);
+            samples[c][i] *= scaleFactor;
     }
 }
 
@@ -154,8 +156,10 @@ void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain,
 
 void SamplesBuffer::zero()
 {
-    for (unsigned int c = 0; c < channels; ++c)
-        std::fill(samples[c].begin(), samples[c].end(), static_cast<float>(0));
+    const uint bytesToProcess = frameLenght * sizeof(float);
+    for (unsigned int c = 0; c < channels; ++c) {
+        memset(&(samples[c][0]), 0, bytesToProcess);
+    }
 }
 
 AudioPeak SamplesBuffer::computePeak()
@@ -227,23 +231,12 @@ void SamplesBuffer::add(unsigned int channel, float *samples, int samplesToAdd)
 
 void SamplesBuffer::add(int channel, int sampleIndex, float sampleValue)
 {
-    //if (channelIsValid(channel) && sampleIndexIsValid(sampleIndex))
-        samples[channel][sampleIndex] += sampleValue;
-    //else
-    //    qCritical() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+    samples[channel][sampleIndex] += sampleValue;
 }
 
 void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue)
 {
-    if (channelIsValid(channel) && sampleIndexIsValid(sampleIndex))
-        samples[channel][sampleIndex] = sampleValue;
-    else
-        qCritical() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
-}
-
-unsigned int SamplesBuffer::getFrameLenght() const
-{
-    return this->frameLenght;
+    samples[channel][sampleIndex] = sampleValue;
 }
 
 void SamplesBuffer::setToMono()
@@ -271,8 +264,6 @@ void SamplesBuffer::set(const SamplesBuffer &buffer)
 
 float SamplesBuffer::get(int channel, int sampleIndex) const
 {
-    if (!channelIsValid(channel) || !sampleIndexIsValid(sampleIndex))
-        return 0;
     return samples[channel][sampleIndex ];
 }
 
@@ -315,28 +306,28 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, unsigned int bufferOffset,
     if ((uint)(internalOffset + framesToProcess) > this->getFrameLenght())
         framesToProcess = (internalOffset + framesToProcess) - this->getFrameLenght();
 
+    const uint bytesToProcess = framesToProcess * sizeof(float);
+    if (!bytesToProcess)
+        return;
+
     if (channels == buffer.channels) {// channels number are equal
         for (unsigned int c = 0; c < channels; ++c) {
-            for (unsigned int s = 0; s < framesToProcess; ++s)
-                samples[c][s + internalOffset] = buffer.samples[c][s + bufferOffset];
+            std::memcpy(&(samples[c][internalOffset]), &(buffer.samples[c][bufferOffset]), bytesToProcess);
         }
     } else {// different number of channels
         if (!isMono()) {// copy every &buffer samples to LR in this buffer
             if (!buffer.isMono()) {
                 int channelsToCopy = qMin(channels, buffer.channels);
                 for (int c = 0; c < channelsToCopy; ++c) {
-                    for (unsigned int s = 0; s < framesToProcess; ++s)
-                        samples[c][s + internalOffset] = buffer.samples[c][s + bufferOffset];
+                    std::memcpy(&(samples[c][internalOffset]), &(buffer.samples[c][bufferOffset]), bytesToProcess);
                 }
             } else {
-                for (unsigned int s = 0; s < framesToProcess; ++s) {
-                    samples[0][s + internalOffset] = buffer.samples[0][s + bufferOffset];
-                    samples[1][s + internalOffset] = buffer.samples[0][s + bufferOffset];
-                }
+                std::memcpy(&(samples[0][internalOffset]), &(buffer.samples[0][bufferOffset]), bytesToProcess);
+                std::memcpy(&(samples[1][internalOffset]), &(buffer.samples[0][bufferOffset]), bytesToProcess);
             }
         } else {// this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
             for (unsigned int s = 0; s < framesToProcess; ++s) {
-                int index = s + bufferOffset;
+                const int index = s + bufferOffset;
                 float v = (buffer.samples[0][index] + buffer.samples[1][index])/2.0f;
                 samples[0][s + internalOffset] = v;
             }

@@ -1,13 +1,16 @@
 #include "PortAudioDriver.h"
 #include <QDebug>
-#include <stdexcept>
-#include <algorithm>
+#include <QtGlobal>
+
 #include "portaudio.h"
 #include "audio/core/SamplesBuffer.h"
 #include "persistence/Settings.h"
 #include "MainController.h"
 #include "log/Logging.h"
-#include <QtGlobal>
+
+#include <stdexcept>
+#include <algorithm>
+#include <cstring>
 
 /*
  * This file contain the platform independent PortAudio code. The platform specific
@@ -117,22 +120,23 @@ PortAudioDriver::~PortAudioDriver()
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
+// this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
 void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer)
 {
     if(!inputBuffer || !outputBuffer){
         return;
     }
-    //prepare buffers and expose then to application process
+
+    const uint bytesToProcess = framesPerBuffer * sizeof(float);
+
+    // prepare buffers and expose then to application process
     inputBuffer->setFrameLenght(framesPerBuffer);
     outputBuffer->setFrameLenght(framesPerBuffer);
     if(!globalInputRange.isEmpty()){
-        float* inputs = (float*)in;
+        float **inputs = (float**)in;
         int inputChannels = globalInputRange.getChannels();
-        for(unsigned int i=0; i < framesPerBuffer; i++){
-            for (int c = 0; c < inputChannels; c++){
-                inputBuffer->set(c, i, *inputs++);
-            }
+        for (int c = 0; c < inputChannels; c++) {
+            std::memcpy(inputBuffer->getSamplesArray(c), inputs[c], bytesToProcess);
         }
     }
     else{
@@ -147,13 +151,11 @@ void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsi
         mainController->process(*inputBuffer, *outputBuffer, sampleRate);
     }
 
-    //convert application output buffers to portaudio format
-    float* outputs = (float*)out;
+    // convert application output buffers to portaudio format
+    float **outputs = static_cast<float**>(out);
     int outputChannels = globalOutputRange.getChannels();
-    for(unsigned int i=0; i < framesPerBuffer; i++){
-        for (int c = 0; c < outputChannels; c++){
-            *outputs++ = outputBuffer->get(c, i);
-        }
+    for (int c = 0; c < outputChannels; c++){
+        std::memcpy(outputs[c], outputBuffer->getSamplesArray(c), bytesToProcess);
     }
 }
 
@@ -195,7 +197,7 @@ bool PortAudioDriver::start()
 
     unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
     qCDebug(jtAudio) << "Starting portaudio using" << framesPerBuffer << " as buffer size.";
-    PaSampleFormat sampleFormat = paFloat32;// | paNonInterleaved;
+    PaSampleFormat sampleFormat = paFloat32 | paNonInterleaved;
 
     PaStreamParameters inputParams;
     inputParams.channelCount = globalInputRange.getChannels();// maxInputChannels;//*/ inputChannels;
@@ -262,8 +264,12 @@ bool PortAudioDriver::start()
     error = Pa_OpenStream(&paStream,
                           (!globalInputRange.isEmpty()) ? (&inputParams) : NULL,
                           &outputParams,
-                          sampleRate, framesPerBuffer,
-                          paNoFlag, portaudioCallBack, (void*)this);//I'm passing this to portaudio, so I can run methods inside the callback function
+                          sampleRate,
+                          framesPerBuffer,
+                          paNoFlag,
+                          portaudioCallBack,
+                          (void*)this); // I'm passing 'this' to portaudio, so I can run methods inside the callback function
+
     if (error != paNoError){
         releaseHostSpecificParameters(inputParams, outputParams);
         return false;
@@ -289,7 +295,7 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const
     PaStreamParameters outputParams;
     outputParams.channelCount = 1;
     outputParams.device = deviceIndex;
-    outputParams.sampleFormat = paFloat32;
+    outputParams.sampleFormat = paFloat32 | paNonInterleaved;;
     outputParams.suggestedLatency = Pa_GetDeviceInfo(deviceIndex)->defaultLowOutputLatency;
     outputParams.hostApiSpecificStreamInfo = NULL;
     QList<int> validSRs;
