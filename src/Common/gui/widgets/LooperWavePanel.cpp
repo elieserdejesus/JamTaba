@@ -170,9 +170,11 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
         else if (looper->isRecording() && isCurrentLayer)
             drawRecordingRedRect(painter, redColor, pixelsPerBeat); // draw a transparent red rect from left to current interval beat
 
-        if (isCurrentLayer)
-            drawBorder(painter, redColor);
     }
+
+    const bool isFocusedLayer = looper->getFocusedLayerIndex() == layerID;
+    if (isFocusedLayer)
+        drawBorder(painter, peaksColor);
 
     const bool layerIsValid = looper->layerIsValid(layerID);
     const bool canUseMiniLockIcon = !miniLockIcon.isEmpty() && !looper->isRecording() && layerIsValid;

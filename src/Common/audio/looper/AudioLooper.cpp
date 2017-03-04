@@ -12,6 +12,7 @@ using namespace Audio;
 
 Looper::Looper()
     : currentLayerIndex(0),
+      focusedLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0),
       maxLayers(4),
@@ -141,6 +142,10 @@ void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
 {
     if (canLockLayer(layerIndex)) {
         layers[layerIndex]->setLocked(locked);
+
+        if (focusedLayerIndex == layerIndex)
+            focusedLayerIndex = -1; // locked layer can't be focused
+
         emit layerLockedStateChanged(layerIndex, locked);
     }
 }
@@ -163,9 +168,11 @@ bool Looper::layerIsValid(quint8 layerIndex) const
 
 void Looper::startRecording()
 {
-    int firstRecordingLayer = getFirstUnlockedLayerIndex(currentLayerIndex);
+    quint8 startFrom = (focusedLayerIndex >= 0) ? focusedLayerIndex : 0;
+    int firstRecordingLayer = getFirstUnlockedLayerIndex(startFrom);
     if (firstRecordingLayer >= 0) {
         setCurrentLayer(firstRecordingLayer);
+        focusedLayerIndex = firstRecordingLayer;
 
         bool isOverdubbing = getOption(Looper::Overdub);
         if (!isOverdubbing) // avoid discard layer content if is overdubbing
@@ -181,7 +188,8 @@ void Looper::toggleRecording()
         play(); // auto play when recording is finished (rec button is pressed)
     }
     else {
-        int firstRecordingLayer = getFirstUnlockedLayerIndex(currentLayerIndex);
+        quint8 startFrom = (focusedLayerIndex >= 0) ? focusedLayerIndex : 0;
+        int firstRecordingLayer = getFirstUnlockedLayerIndex(startFrom);
         if (firstRecordingLayer >= 0) {
             setState(new WaitingState(this));
             setCurrentLayer(firstRecordingLayer);
@@ -237,8 +245,9 @@ bool Looper::canSelectLayers() const
     if (isRecording() || isWaiting()) // can't select layer while recording or waiting
         return false;
 
-    if (isPlaying() && mode != SELECTED_LAYER)
-        return false; // can't select layer if is playing in SEQUENCE or ALL_LAYERS mode
+    if (getLockedLayers() >= maxLayers) { // all layers locked, can't select any layer
+        return false;
+    }
 
     return true;
 }
@@ -248,13 +257,20 @@ void Looper::selectLayer(quint8 layerIndex)
     if (!canSelectLayers())
         return;
 
-    setCurrentLayer(layerIndex);
+    if (!layerIsLocked(layerIndex))
+        focusedLayerIndex = layerIndex;
+
+    if (mode == Looper::SELECTED_LAYER)
+        setCurrentLayer(layerIndex);
 }
 
 void Looper::setCurrentLayer(quint8 newLayer)
 {
     if (newLayer < maxLayers) {
         currentLayerIndex = newLayer;
+        if (isRecording())
+            focusedLayerIndex = newLayer;
+
         emit currentLayerChanged(newLayer);
     }
 }
@@ -269,6 +285,9 @@ void Looper::setLayers(quint8 maxLayers)
     }
 
     this->maxLayers = maxLayers;
+
+    if (maxLayers < (focusedLayerIndex + 1)) // focused layer is not used now?
+        focusedLayerIndex = -1;
 
     emit maxLayersChanged(maxLayers);
 }

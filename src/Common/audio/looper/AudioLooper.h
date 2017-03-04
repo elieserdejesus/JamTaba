@@ -74,6 +74,7 @@ public:
     const std::vector<float> getLayerPeaks(quint8 layerIndex, uint samplesPerPeak) const;
 
     quint8 getCurrentLayerIndex() const;
+    quint8 getFocusedLayerIndex() const;
 
     bool isWaiting() const;
     bool isPlaying() const;
@@ -125,7 +126,8 @@ private:
     uint intervalPosition; // in samples
 
     LooperLayer *layers[MAX_LOOP_LAYERS];
-    quint8 currentLayerIndex;
+    quint8 currentLayerIndex; // current played layer
+    int focusedLayerIndex; // layer clicked by user, used to choose recordint layer. Sometimes focused layer will be equal to currentLayerIndex.
     quint8 maxLayers;
 
     bool resetRequested;
@@ -233,6 +235,11 @@ inline quint8 Looper::getLayers() const
 inline quint8 Looper::getCurrentLayerIndex() const
 {
     return currentLayerIndex;
+}
+
+inline quint8 Looper::getFocusedLayerIndex() const
+{
+    return focusedLayerIndex;
 }
 
 } // namespace
