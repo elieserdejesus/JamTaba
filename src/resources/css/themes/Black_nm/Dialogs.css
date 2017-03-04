@@ -39,18 +39,18 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome
 
 PreferencesDialog QComboBox                         /* the colors inside the combo box*/
 {
-    background-color: rgb(80, 80, 80);
+    background-color: rgb(130, 130, 130);
     selection-background-color: rgb(50, 50, 50);
-    selection-color: rgb(10, 10, 10);
+    selection-color: rgb(140, 140, 140);
 }
 
 PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
 {
     border: 1px solid black;
-    color: rgb(160, 160, 160);
-    background-color: rgb(70, 70, 70);
+    color: rgb(20, 20, 20);
+    background-color: rgb(130, 130, 130);
     selection-background-color: rgb(50, 50, 50);
-    selection-color: rgb(10, 10, 10);
+    selection-color: rgb(140, 140, 140);
 }
 
 PreferencesDialog QComboBox:disabled,

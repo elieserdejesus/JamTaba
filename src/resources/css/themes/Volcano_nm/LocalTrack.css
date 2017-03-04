@@ -130,3 +130,12 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
     background-color: rgb(255, 40, 40);
     border-color: rgba(0, 0, 0, 90);
 }
+
+LocalTrackView #buttonLooper:disabled
+{
+    border: none;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #FDE5A9,
+        stop: 1.0 #FFB301);
+}
+

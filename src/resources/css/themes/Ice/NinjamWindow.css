@@ -276,3 +276,98 @@ IntervalProgressDisplay
     qproperty-linesColor: rgba(0, 0, 0, 50);
 }
 
+LooperWindow #buttonPlay:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(90, 255, 62, 220),
+        stop:1 rgba(0, 175, 0, 200));
+}
+
+LooperWindow #buttonRec:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+        stop:0 rgb(255, 90, 62),
+        stop:1 rgb(175, 0, 0));
+}
+
+LooperWindow #buttonRec[waiting=true]:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+        stop:0 rgba(255, 255, 0, 220),
+        stop:1 rgba(204, 204, 0, 200));
+}
+
+LooperWindow #buttonPlay:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgb(90, 255, 62),
+        stop:1 rgb(0, 175, 0));
+}
+
+LooperWindow #buttonRec:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+        stop:0 rgba(255, 90, 62, 220),
+        stop:1 rgba(175, 0, 0, 200));
+}
+
+LooperWindow #buttonRec[waiting=true]:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+        stop:0 rgb(255,255,0),
+        stop:1 rgb(204,204,0));
+}
+
+LooperWindow QComboBox                         /* the colors inside the combo box*/
+{
+    background-color: rgb(180, 207, 250);
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
+{
+    border: none;
+    color: black;
+    background-color: rgb(180, 207, 250);
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+LooperWindow #maxLayersSpinBox
+{
+    border: 1px solid rgba(0, 0, 0, 90);
+    border-radius:6px;
+    color: black;
+    background-color: rgb(180, 207, 250);
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+LooperWindow QCheckBox:disabled,
+LooperWindow QLabel:disabled,
+LooperWindow QComboBox:disabled
+{
+    color: rgba(0, 0, 0, 90);
+}
+
+LooperWindow QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
+LooperWindow QLabel,
+LooperWindow QGroupBox
+{
+    color: rgba(0, 0, 0, 200);;
+}
+
+LooperWindow QGroupBox
+{
+    border: 1px solid rgba(0, 0, 0, 30);
+}
+
+LooperWindow QCheckBox
+{
+    color: white;
+}

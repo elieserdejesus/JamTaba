@@ -117,3 +117,13 @@ LocalTrackView #midiPeakMeter
 {
     border-radius: 1px;
 }
+
+LocalTrackView #buttonLooper:disabled
+{
+    border: none;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 white,
+        stop:0.2 rgba(255, 255, 255, 180),
+        stop:0.85 rgba(255, 255, 255, 180),
+        stop:1 rgba(255,255, 255, 40));
+}

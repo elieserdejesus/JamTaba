@@ -189,19 +189,16 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
 /* -----------------------------------------*/
 
 
-BaseTrackView #panSlider::handle
+#panSlider::handle,
+#levelSlider::handle
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
     border: 1px outset rgb(30, 30, 30);
 
 }
 
-BaseTrackView #panSlider::handle:hover
-{
-    background-color: rgb(180, 180, 180);
-}
-
-BaseTrackView #levelSlider::handle:hover
+#panSlider::handle:hover,
+#levelSlider::handle:hover
 {
     background-color: rgb(180, 180, 180);
 }
