@@ -3,6 +3,7 @@
 #include "NinjamController.h"
 #include "gui/GuiUtils.h"
 #include "Utils.h"
+#include "MainController.h"
 
 #include <QGridLayout>
 #include <QSpinBox>
@@ -12,11 +13,11 @@
 using namespace Controller;
 using namespace Audio;
 
-LooperWindow::LooperWindow(QWidget *parent) :
+LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainController) :
     QDialog(parent),
     ui(new Ui::LooperWindow),
+    mainController(mainController),
     looper(nullptr),
-    controller(nullptr),
     currentBeat(-1)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint); // remove help/question marker
@@ -62,7 +63,8 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 {
     QDialog::paintEvent(ev);
 
-    if (!looper)
+    auto ninjamController = mainController->getNinjamController();
+    if (!looper || !ninjamController)
         return;
 
     if (looper->isWaiting()) {
@@ -71,7 +73,7 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 
         static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
         painter.setPen(pen);
-        uint bpi = controller->getCurrentBpi();
+        uint bpi = ninjamController->getCurrentBpi();
         LooperWavePanel *wavePanel = wavePanels[looper->getCurrentLayerIndex()];
         if (!wavePanel)
             return;
@@ -90,7 +92,7 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
             const qreal x = rectTopLeft.x() + currentBeat * pixelsPerBeat;
             painter.fillRect(QRectF(x, rectTopLeft.y(), pixelsPerBeat, rectSize.height()), redColor);
 
-            const uint waitBeats = controller->getCurrentBpi() - currentBeat;
+            const uint waitBeats = ninjamController->getCurrentBpi() - currentBeat;
             QString text = tr("wait (%1)").arg(QString::number(waitBeats));
             painter.drawText(QRectF(rectTopLeft, rectSize), text, QTextOption(Qt::AlignCenter));
         }
@@ -119,13 +121,16 @@ void LooperWindow::detachCurrentLooper()
 {
     if (this->looper) {
         this->looper = nullptr;
-        this->controller = nullptr;
+        this->mainController = nullptr;
     }
 }
 
-void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController *controller)
+void LooperWindow::setLooper(Audio::Looper *looper)
 {
     Q_ASSERT(looper);
+    Q_ASSERT(mainController);
+
+    auto controller = mainController->getNinjamController();
     Q_ASSERT(controller);
 
     if (looper != this->looper) { // check if user is not just reopening the looper editor
@@ -147,16 +152,17 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
             gridLayout->addWidget(wavePanel, layerIndex, 0);
             wavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
             gridLayout->addLayout(createLayerControls(looper, layerIndex), layerIndex, 1);
-            wavePanel->setVisible(layerIndex < currentLayers);
+            //wavePanel->setVisible(layerIndex < currentLayers);
         }
         gridLayout->setColumnStretch(0, 1);
+        updateLayersVisibility(currentLayers);
 
         // initial values
         ui->maxLayersSpinBox->setValue(looper->getLayers());
 
-        QString selectedPlayMode = looper->getModeString(looper->getMode());
+        QString selectedMode = looper->getModeString(looper->getMode());
         for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
-            if (ui->comboBoxPlayMode->itemText(i) == selectedPlayMode) {
+            if (ui->comboBoxPlayMode->itemText(i) == selectedMode) {
                 ui->comboBoxPlayMode->setCurrentIndex(i);
                 break;
             }
@@ -167,18 +173,33 @@ void LooperWindow::setLooper(Audio::Looper *looper, Controller::NinjamController
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
         connect(looper, &Looper::stateChanged, this, &LooperWindow::updateControls);
         connect(looper, &Looper::layerLockedStateChanged, this, &LooperWindow::updateControls);
-        connect(looper, &Looper::maxLayersChanged, this, &LooperWindow::updateLayersVisibility);
-        connect(looper, &Looper::maxLayersChanged, this, &LooperWindow::updateControls);
-        connect(looper, &Looper::modeChanged, this, &LooperWindow::updateControls);
+        connect(looper, &Looper::maxLayersChanged, this, &LooperWindow::handleNewMaxLayers);
+        connect(looper, &Looper::modeChanged, this, &LooperWindow::handleModeChanged);
         connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
 
         this->looper = looper;
-        this->controller = controller;
-
     }
 
     updateBeatsPerInterval();
     updateControls();
+}
+
+void LooperWindow::handleModeChanged()
+{
+    updateControls();
+
+    Q_ASSERT(mainController);
+    Q_ASSERT(looper);
+    mainController->storeLooperPreferredMode(static_cast<quint8>(looper->getMode()));
+}
+
+void LooperWindow::handleNewMaxLayers(quint8 newMaxLayers)
+{
+    updateControls();
+    updateLayersVisibility(newMaxLayers);
+
+    Q_ASSERT(mainController);
+    mainController->storeLooperPreferredLayerCount(newMaxLayers);
 }
 
 QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
@@ -304,7 +325,7 @@ void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
 
 void LooperWindow::updateControls()
 {
-    if (looper && controller) {
+    if (looper) {
         ui->buttonRec->setChecked(looper->isRecording() || looper->isWaiting());
         ui->buttonRec->setProperty("waiting", looper->isWaiting());
         ui->buttonRec->style()->unpolish(ui->buttonRec);
@@ -370,10 +391,13 @@ LooperWindow::~LooperWindow()
 
     deleteWavePanels();
 
-    if (controller) {
-        disconnect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
-        disconnect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
-        disconnect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
+    if (mainController) {
+        auto ninjamController = mainController->getNinjamController();
+        if (ninjamController) {
+            disconnect(ninjamController, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
+            disconnect(ninjamController, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
+            disconnect(ninjamController, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
+        }
     }
 }
 
@@ -391,11 +415,13 @@ void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
 
 void LooperWindow::updateBeatsPerInterval()
 {
-    if (!controller)
+    if (!mainController || !mainController->getNinjamController())
         return;
 
-    uint samplesPerInterval = controller->getSamplesPerInterval();
-    uint beatsPerInterval = controller->getCurrentBpi();
+    auto ninjamController = mainController->getNinjamController();
+
+    uint samplesPerInterval = ninjamController->getSamplesPerInterval();
+    uint beatsPerInterval = ninjamController->getCurrentBpi();
 
     for (LooperWavePanel *wavePanel : wavePanels.values()) {
         wavePanel->setBeatsPerInteval(beatsPerInterval, samplesPerInterval);

@@ -519,16 +519,17 @@ void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const
 
 void MainWindow::openLooperWindow(uint trackID)
 {
-     Audio::LocalInputNode *inputTrack = mainController->getInputTrack(trackID);
-     Controller::NinjamController *ninjamController = mainController->getNinjamController();
-     if (inputTrack && ninjamController) {
+    Q_ASSERT(mainController);
+
+     auto inputTrack = mainController->getInputTrack(trackID);
+     if (inputTrack) {
         LooperWindow *looperWindow = looperWindows[trackID];
         if (!looperWindow) {
-            looperWindow = new LooperWindow(this);
+            looperWindow = new LooperWindow(this, mainController);
             looperWindows.insert(trackID, looperWindow);
         }
 
-        looperWindow->setLooper(inputTrack->getLooper(), ninjamController);
+        looperWindow->setLooper(inputTrack->getLooper());
 
         LocalTrackGroupView *channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
         Q_ASSERT(channel);

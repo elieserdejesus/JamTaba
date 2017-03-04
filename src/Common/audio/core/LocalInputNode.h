@@ -19,7 +19,7 @@ class LocalInputNode : public AudioNode
     Q_OBJECT
 
 public:
-    LocalInputNode(Controller::MainController *mainController, int parentChannelIndex, bool isMono = true);
+    LocalInputNode(Controller::MainController *controller, int parentChannelIndex, bool isMono = true);
     ~LocalInputNode();
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
     virtual int getSampleRate() const;
@@ -165,6 +165,8 @@ private:
     void processIncommingMidi(std::vector<Midi::MidiMessage> &inBuffer, std::vector<Midi::MidiMessage> &outBuffer);
 
     Audio::Looper* looper;
+
+    static Audio::Looper *createLooper(Controller::MainController *controller);
 
 };
 

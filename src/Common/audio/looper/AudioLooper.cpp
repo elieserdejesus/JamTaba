@@ -20,6 +20,24 @@ Looper::Looper()
       mode(Mode::SEQUENCE),
       resetRequested(false)
 {
+    initialize();
+}
+
+Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
+    : currentLayerIndex(0),
+      focusedLayerIndex(0),
+      intervalLenght(0),
+      intervalPosition(0),
+      maxLayers(maxLayers),
+      state(new StoppedState()),
+      mode(initialMode),
+      resetRequested(false)
+{
+    initialize();
+}
+
+void Looper::initialize()
+{
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
         layers[l] = new LooperLayer();
     }
@@ -30,6 +48,7 @@ Looper::Looper()
         modeOptions[mode].playingOptions = getDefaultSupportedPlayingOptions(mode);
     }
 }
+
 
 void Looper::reset()
 {

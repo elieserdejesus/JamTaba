@@ -79,6 +79,28 @@ QJsonObject SettingsObject::getValueFromJson(const QJsonObject &json, const QStr
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+LooperSettings::LooperSettings()
+    : SettingsObject("Looper"),
+      preferredLayersCount(4),
+      preferredMode(0)
+{
+
+}
+
+void LooperSettings::read(const QJsonObject &in)
+{
+    preferredLayersCount = getValueFromJson(in, "preferresLayersCount", (quint8)4); // 4 layers as default value
+    preferredMode = getValueFromJson(in, "preferredMode", (quint8)0); // use the first mode as default value
+}
+
+void LooperSettings::write(QJsonObject &out) const
+{
+    out["preferresLayersCount"] = preferredLayersCount;
+    out["preferredMode"] = preferredMode;
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 PrivateServerSettings::PrivateServerSettings() :
     SettingsObject("PrivateServer")
 {
@@ -814,6 +836,16 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
     return false;
 }
 
+void Settings::setLooperPreferredLayersCount(quint8 layersCount)
+{
+    looperSettings.preferredLayersCount = layersCount <= 4 ? layersCount : 4;
+}
+
+void Settings::setLooperPreferredMode(quint8 looperMode)
+{
+    looperSettings.preferredMode = looperMode;
+}
+
 bool Settings::writeFile(const QList<SettingsObject *> &sections)// io ops ...
 {
     QDir configFileDir = Configurator::getInstance()->getBaseDir();
@@ -911,6 +943,7 @@ void Settings::load()
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
     sections.append(&meteringSettings);
+    sections.append(&looperSettings);
 
     readFile(sections);
 }
@@ -940,6 +973,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
     sections.append(&meteringSettings);
+    sections.append(&looperSettings);
 
     writeFile(sections);
 }

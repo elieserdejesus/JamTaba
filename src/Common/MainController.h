@@ -286,6 +286,12 @@ public:
 
     void setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel);
 
+    // looper settings
+    void storeLooperPreferredLayerCount(quint8 layersCount);
+    void storeLooperPreferredMode(quint8 looperMode);
+    quint8 getLooperPreferedLayersCount() const;
+    quint8 getLooperPreferedMode() const;
+
 signals:
     void ipResolved(const QString &ip);
     void themeChanged();
@@ -398,6 +404,27 @@ protected slots:
     void uploadEncodedVideoFrame(const QByteArray &encodedData, int intervalPosition);
 
 };
+
+inline void MainController::storeLooperPreferredLayerCount(quint8 layersCount)
+{
+    settings.setLooperPreferredLayersCount(layersCount);
 }
+
+inline void MainController::storeLooperPreferredMode(quint8 looperMode)
+{
+    settings.setLooperPreferredMode(looperMode);
+}
+
+inline quint8 MainController::getLooperPreferedLayersCount() const
+{
+    return settings.getLooperPreferredLayersCount();
+}
+
+inline quint8 MainController::getLooperPreferedMode() const
+{
+    return settings.getLooperPreferredMode();
+}
+
+} // namespace
 
 #endif

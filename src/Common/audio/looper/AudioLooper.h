@@ -30,7 +30,16 @@ class Looper : public QObject
     friend class WaitingState;
 
 public:
+
+    enum Mode
+    {
+        SEQUENCE, // one layer in each interval
+        ALL_LAYERS, // mix and play all layers
+        SELECTED_LAYER
+    };
+
     Looper();
+    Looper(Looper::Mode initialMode, quint8 maxLayers);
     ~Looper();
     void addBuffer(const SamplesBuffer &samples); // recording
     void mixToBuffer(SamplesBuffer &samples); // playing/mixing
@@ -58,13 +67,6 @@ public:
 
     void stop();
     void play();
-
-    enum Mode
-    {
-        SEQUENCE, // one layer in each interval
-        ALL_LAYERS, // mix and play all layers
-        SELECTED_LAYER
-    };
 
     static QString getModeString(Mode mode);
 
@@ -167,6 +169,8 @@ private:
     uint getLockedLayers() const;
 
     bool currentLayerIsLocked() const;
+
+    void initialize();
 
     static QMap<Looper::PlayingOption, bool> getDefaultSupportedPlayingOptions(Looper::Mode mode);
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);

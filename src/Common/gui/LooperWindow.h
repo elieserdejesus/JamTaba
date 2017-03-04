@@ -11,6 +11,7 @@
 
 namespace Controller {
 class NinjamController;
+class MainController;
 }
 
 namespace Ui {
@@ -22,10 +23,10 @@ class LooperWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit LooperWindow(QWidget *parent);
+    explicit LooperWindow(QWidget *parent, Controller::MainController *mainController);
     ~LooperWindow();
 
-    void setLooper(Audio::Looper *looper, Controller::NinjamController *controller);
+    void setLooper(Audio::Looper *looper);
     void detachCurrentLooper();
     void updateDrawings();
 
@@ -37,16 +38,20 @@ protected:
 private slots:
     void updateBeatsPerInterval();
     void updateCurrentBeat(uint currentIntervalBeat);
+    void handleNewMaxLayers(quint8 newMaxLayers);
+    void handleModeChanged();
     void updateControls();
-    void updateLayersVisibility(quint8 newMaxLayers);
 
 private:
     Ui::LooperWindow *ui;
     Audio::Looper *looper;
     QMap<quint8, LooperWavePanel*> wavePanels;
-    Controller::NinjamController *controller;
+    Controller::MainController *mainController;
 
     void deleteWavePanels();
+
+
+    void updateLayersVisibility(quint8 newMaxLayers);
 
     QLayout *createLayerControls(Audio::Looper *looper, quint8 layerIndex);
 

@@ -156,6 +156,18 @@ public:
         jamRecorderActivated[key] = value;
     }
 };
+
+class LooperSettings : public SettingsObject
+{
+public:
+    LooperSettings();
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+
+    quint8 preferredLayersCount; // how many layers looper will be created?
+    quint8 preferredMode;// store the last used looper mode
+};
+
 // +++++++++++++++++++++++++++++++++
 class Plugin
 {
@@ -300,6 +312,7 @@ private:
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
     MeteringSettings meteringSettings;
+    LooperSettings looperSettings;
 
     QString lastUserName;// the last nick name choosed by user
     QString translation;// the translation language (en, fr, jp, pt, etc.) being used in chat
@@ -316,174 +329,65 @@ public:
     Settings();
     ~Settings();
 
-    inline void storeWaveDrawingMode(quint8 mode)
-    {
-        meteringSettings.waveDrawingMode = mode;
-    }
+    void storeWaveDrawingMode(quint8 mode);
+    quint8 getLastWaveDrawingMode() const;
 
-    inline quint8 getLastWaveDrawingMode() const
-    {
-        return meteringSettings.waveDrawingMode;
-    }
-
-    inline float getEncodingQuality() const
-    {
-        return audioSettings.encodingQuality;
-    }
-
-    inline void setEncodingQuality(float quality)
-    {
-        audioSettings.encodingQuality = quality;
-    }
+    float getEncodingQuality() const;
+    void setEncodingQuality(float quality);
 
     void setBuiltInMetronome(const QString &metronomeAlias);
-    inline QString getBuiltInMetronome() const { return metronomeSettings.builtInMetronomeAlias; }
-
+    QString getBuiltInMetronome() const;
     void setCustomMetronome(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile);
-
-    inline bool isUsingCustomMetronomeSounds() const
-    {
-        return metronomeSettings.usingCustomSounds;
-    }
-
-    inline QString getMetronomeFirstBeatFile() const
-    {
-        return metronomeSettings.customPrimaryBeatAudioFile;
-    }
+    bool isUsingCustomMetronomeSounds() const;
+    QString getMetronomeFirstBeatFile() const;
+    QString getMetronomeSecondaryBeatFile() const;
 
     void setTheme(const QString theme);
+    QString getTheme() const;
 
-    inline QString getTheme() const { return theme; }
+    void storeTracksSize(bool narrowedTracks);
 
-    inline QString getMetronomeSecondaryBeatFile() const
-    {
-        return metronomeSettings.customSecondaryBeatAudioFile;
-    }
+    bool isUsingNarrowedTracks() const;
 
-    inline void storeTracksSize(bool narrowedTracks)
-    {
-        usingNarrowedTracks = narrowedTracks;
-    }
-
-    inline bool isUsingNarrowedTracks() const
-    {
-        return usingNarrowedTracks;
-    }
-
-    inline LocalInputTrackSettings getInputsSettings() const
-    {
-        return inputsSettings;
-    }
-
+    LocalInputTrackSettings getInputsSettings() const;
     void save(const LocalInputTrackSettings &inputsSettings);
     void load();
 
-    inline float getLastMasterGain() const
-    {
-        return masterFaderGain;
-    }
+    float getLastMasterGain() const;
+    void storeMasterGain(float newMasterFaderGain);
 
-    inline void storeMasterGain(float newMasterFaderGain)
-    {
-        masterFaderGain = newMasterFaderGain;
-    }
-
-    inline Qt::Orientation getLastTracksLayoutOrientation() const
-    {
-        return tracksLayoutOrientation;
-    }
-
-    inline void storeTracksLayoutOrientation(Qt::Orientation newOrientation)
-    {
-        tracksLayoutOrientation = newOrientation;
-    }
+    Qt::Orientation getLastTracksLayoutOrientation() const;
+    void storeTracksLayoutOrientation(Qt::Orientation newOrientation);
 
     bool writePresetToFile(const Preset &preset);
     void deletePreset(const QString &name);
     QStringList getPresetList();
     Preset readPresetFromFile(const QString &presetFileName, bool allowMultiSubchannels = true);
 
-    inline int getLastSampleRate() const
-    {
-        return audioSettings.sampleRate;
-    }
+    int getLastSampleRate() const;
+    int getLastBufferSize() const;
 
-    inline int getLastBufferSize() const
-    {
-        return audioSettings.bufferSize;
-    }
-
-    inline QList<QString> getLastPrivateServers() const
-    {
-        return privateServerSettings.getLastServers();
-    }
-
-    inline quint32 getLastPrivateServerPort() const
-    {
-        return privateServerSettings.getLastPort();
-    }
-
-    inline QString getLastPrivateServerPassword() const
-    {
-        return privateServerSettings.getLastPassword();
-    }
-
+    QList<QString> getLastPrivateServers() const;
+    quint32 getLastPrivateServerPort() const;
+    QString getLastPrivateServerPassword() const;
     void addPrivateServer(const QString &server, int serverPort, const QString &password);
 
     // recording settings
-    inline RecordingSettings getRecordingSettings() const
-    {
-        return recordingSettings;
-    }
-
-    inline bool isSaveMultiTrackActivated() const
-    {
-        return recordingSettings.saveMultiTracksActivated;
-    }
-
-    inline void setSaveMultiTrack(bool saveMultiTracks)
-    {
-        recordingSettings.saveMultiTracksActivated = saveMultiTracks;
-    }
-
-    inline bool isJamRecorderActivated(QString key) const
-    {
-        return recordingSettings.isJamRecorderActivated(key);
-    }
-
-    inline void setJamRecorderActivated(QString key, bool value)
-    {
-        recordingSettings.setJamRecorderActivated(key, value);
-    }
-
-    inline QString getRecordingPath() const
-    {
-        return recordingSettings.recordingPath;
-    }
-
-    inline void setRecordingPath(const QString &newPath)
-    {
-        recordingSettings.recordingPath = newPath;
-    }
+    RecordingSettings getRecordingSettings() const;
+    bool isSaveMultiTrackActivated() const;
+    void setSaveMultiTrack(bool saveMultiTracks);
+    bool isJamRecorderActivated(QString key) const;
+    void setJamRecorderActivated(QString key, bool value);
+    QString getRecordingPath() const;
+    void setRecordingPath(const QString &newPath);
 
     // user name
-    inline QString getUserName() const
-    {
-        return lastUserName;
-    }
-
+    QString getUserName() const;
     void storeUserName(const QString &newUserName);
     void storeLastChannelName(int channelIndex, const QString &channelName);
 
-    void setIntervalProgressShape(int shape)
-    {
-        this->ninjamIntervalProgressShape = shape;
-    }
-
-    inline int getIntervalProgressShape() const
-    {
-        return this->ninjamIntervalProgressShape;
-    }
+    void setIntervalProgressShape(int shape);
+    int getIntervalProgressShape() const;
 
     // VST
     void addVstPlugin(const QString &pluginPath);
@@ -508,86 +412,32 @@ public:
 
     // ++++++++++++++ Metronome ++++++++++
     void setMetronomeSettings(float gain, float pan, bool muted);
-
-    inline float getMetronomeGain() const
-    {
-        return metronomeSettings.gain;
-    }
-
-    inline float getMetronomePan() const
-    {
-        return metronomeSettings.pan;
-    }
-
-    inline bool getMetronomeMuteStatus() const
-    {
-        return metronomeSettings.muted;
-    }
+    float getMetronomeGain() const;
+    float getMetronomePan() const;
+    bool getMetronomeMuteStatus() const;
 
     // +++++++++   Window  +++++++++++++++++++++++
-    inline QPointF getLastWindowLocation() const
-    {
-        return windowSettings.location;
-    }
-
-    inline QSize getLastWindowSize() const
-    {
-        return windowSettings.size;
-    }
-
+    QPointF getLastWindowLocation() const;
+    QSize getLastWindowSize() const;
     void setWindowSettings(bool windowIsMaximized, const QPointF &location, const QSize &size);
 
-    inline bool windowWasMaximized() const
-    {
-        return windowSettings.maximized;
-    }
-
-    inline bool windowsWasFullScreenViewMode() const
-    {
-        return windowSettings.fullScreenMode;
-    }
-
+    bool windowWasMaximized() const;
+    bool windowsWasFullScreenViewMode() const;
     void setFullScreenView(bool v);
     // ++++++++++++++++++++++++++++++++++++++++
     void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice);
-
     void setSampleRate(int newSampleRate);
     void setBufferSize(int bufferSize);
 
-    inline int getFirstGlobalAudioInput() const
-    {
-        return audioSettings.firstIn;
-    }
+    int getFirstGlobalAudioInput() const;
+    int getLastGlobalAudioInput() const;
+    int getFirstGlobalAudioOutput() const;
+    int getLastGlobalAudioOutput() const;
+    int getLastAudioDevice() const;
 
-    inline int getLastGlobalAudioInput() const
-    {
-        return audioSettings.lastIn;
-    }
+    void setMidiSettings(const QList<bool> &inputDevicesStatus);
 
-    inline int getFirstGlobalAudioOutput() const
-    {
-        return audioSettings.firstOut;
-    }
-
-    inline int getLastGlobalAudioOutput() const
-    {
-        return audioSettings.lastOut;
-    }
-
-    inline int getLastAudioDevice() const
-    {
-        return audioSettings.audioDevice;
-    }
-
-    inline void setMidiSettings(const QList<bool> &inputDevicesStatus)
-    {
-        midiSettings.inputDevicesStatus = inputDevicesStatus;
-    }
-
-    inline QList<bool> getMidiInputDevicesStatus() const
-    {
-        return midiSettings.inputDevicesStatus;
-    }
+    QList<bool> getMidiInputDevicesStatus() const;
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -597,14 +447,290 @@ public:
 
     QString getLastChannelName(int channelIndex) const;
 
-    //Metering
-    inline quint8 getMeterOption() const { return meteringSettings.meterOption; }
-    inline bool isShowingMaxPeaks() const { return meteringSettings.showingMaxPeakMarkers; }
-    inline quint8 getMeterRefreshRate() const { return meteringSettings.refreshRate; }
-    inline void storeMeterOption(quint8 meterOption) { meteringSettings.meterOption = meterOption; }
-    inline void storeMeterShowingMaxPeaks(bool showingMaxPeaks) { meteringSettings.showingMaxPeakMarkers = showingMaxPeaks; }
-    inline void storeMeterRefreshRate(quint8 newRate) { meteringSettings.refreshRate = newRate; }
+    // Metering
+    quint8 getMeterOption() const;
+    bool isShowingMaxPeaks() const;
+    quint8 getMeterRefreshRate() const;
+    void storeMeterOption(quint8 meterOption);
+    void storeMeterShowingMaxPeaks(bool showingMaxPeaks);
+    void storeMeterRefreshRate(quint8 newRate);
+
+    // Looper
+    quint8 getLooperPreferredMode() const;
+    quint8 getLooperPreferredLayersCount() const;
+    void setLooperPreferredLayersCount(quint8 layersCount);
+    void setLooperPreferredMode(quint8 looperMode);
 };
+
+inline quint8 Settings::getLooperPreferredLayersCount() const
+{
+    return looperSettings.preferredLayersCount;
 }
+
+inline quint8 Settings::getLooperPreferredMode() const
+{
+    return looperSettings.preferredMode;
+}
+
+inline quint8 Settings::getMeterOption() const
+{
+    return meteringSettings.meterOption;
+}
+
+inline bool Settings::isShowingMaxPeaks() const
+{
+    return meteringSettings.showingMaxPeakMarkers;
+}
+
+inline quint8 Settings::getMeterRefreshRate() const
+{
+    return meteringSettings.refreshRate;
+}
+
+inline void Settings::storeMeterOption(quint8 meterOption)
+{
+    meteringSettings.meterOption = meterOption;
+}
+
+inline void Settings::storeMeterShowingMaxPeaks(bool showingMaxPeaks)
+{
+    meteringSettings.showingMaxPeakMarkers = showingMaxPeaks;
+}
+
+inline void Settings::storeMeterRefreshRate(quint8 newRate)
+{
+    meteringSettings.refreshRate = newRate;
+}
+
+inline int Settings::getFirstGlobalAudioInput() const
+{
+    return audioSettings.firstIn;
+}
+
+inline int Settings::getLastGlobalAudioInput() const
+{
+    return audioSettings.lastIn;
+}
+
+inline int Settings::getFirstGlobalAudioOutput() const
+{
+    return audioSettings.firstOut;
+}
+
+inline int Settings::getLastGlobalAudioOutput() const
+{
+    return audioSettings.lastOut;
+}
+
+inline int Settings::getLastAudioDevice() const
+{
+    return audioSettings.audioDevice;
+}
+
+inline void Settings::setMidiSettings(const QList<bool> &inputDevicesStatus)
+{
+    midiSettings.inputDevicesStatus = inputDevicesStatus;
+}
+
+inline QList<bool> Settings::getMidiInputDevicesStatus() const
+{
+    return midiSettings.inputDevicesStatus;
+}
+
+inline bool Settings::windowWasMaximized() const
+{
+    return windowSettings.maximized;
+}
+
+inline bool Settings::windowsWasFullScreenViewMode() const
+{
+    return windowSettings.fullScreenMode;
+}
+
+
+inline float Settings::getMetronomeGain() const
+{
+    return metronomeSettings.gain;
+}
+
+inline float Settings::getMetronomePan() const
+{
+    return metronomeSettings.pan;
+}
+
+inline bool Settings::getMetronomeMuteStatus() const
+{
+    return metronomeSettings.muted;
+}
+
+// +++++++++   Window  +++++++++++++++++++++++
+inline QPointF Settings::getLastWindowLocation() const
+{
+    return windowSettings.location;
+}
+
+inline QSize Settings::getLastWindowSize() const
+{
+    return windowSettings.size;
+}
+
+inline void Settings::setIntervalProgressShape(int shape)
+{
+    ninjamIntervalProgressShape = shape;
+}
+
+inline int Settings::getIntervalProgressShape() const
+{
+    return ninjamIntervalProgressShape;
+}
+
+inline RecordingSettings Settings::getRecordingSettings() const
+{
+    return recordingSettings;
+}
+
+inline bool Settings::isSaveMultiTrackActivated() const
+{
+    return recordingSettings.saveMultiTracksActivated;
+}
+
+inline void Settings::setSaveMultiTrack(bool saveMultiTracks)
+{
+    recordingSettings.saveMultiTracksActivated = saveMultiTracks;
+}
+
+inline bool Settings::isJamRecorderActivated(QString key) const
+{
+    return recordingSettings.isJamRecorderActivated(key);
+}
+
+inline void Settings::setJamRecorderActivated(QString key, bool value)
+{
+    recordingSettings.setJamRecorderActivated(key, value);
+}
+
+inline QString Settings::getRecordingPath() const
+{
+    return recordingSettings.recordingPath;
+}
+
+inline void Settings::setRecordingPath(const QString &newPath)
+{
+    recordingSettings.recordingPath = newPath;
+}
+
+// user name
+inline QString Settings::getUserName() const
+{
+    return lastUserName;
+}
+
+inline float Settings::getLastMasterGain() const
+{
+    return masterFaderGain;
+}
+
+inline int Settings::getLastSampleRate() const
+{
+    return audioSettings.sampleRate;
+}
+
+inline int Settings::getLastBufferSize() const
+{
+    return audioSettings.bufferSize;
+}
+
+inline QList<QString> Settings::getLastPrivateServers() const
+{
+    return privateServerSettings.getLastServers();
+}
+
+inline quint32 Settings::getLastPrivateServerPort() const
+{
+    return privateServerSettings.getLastPort();
+}
+
+inline QString Settings::getLastPrivateServerPassword() const
+{
+    return privateServerSettings.getLastPassword();
+}
+
+inline void Settings::storeMasterGain(float newMasterFaderGain)
+{
+    masterFaderGain = newMasterFaderGain;
+}
+
+inline Qt::Orientation Settings::getLastTracksLayoutOrientation() const
+{
+    return tracksLayoutOrientation;
+}
+
+inline void Settings::storeTracksLayoutOrientation(Qt::Orientation newOrientation)
+{
+    tracksLayoutOrientation = newOrientation;
+}
+
+inline QString Settings::getTheme() const
+{
+    return theme;
+}
+
+inline QString Settings::getBuiltInMetronome() const
+{
+    return metronomeSettings.builtInMetronomeAlias;
+}
+
+inline QString Settings::getMetronomeSecondaryBeatFile() const
+{
+    return metronomeSettings.customSecondaryBeatAudioFile;
+}
+
+inline void Settings::storeTracksSize(bool narrowedTracks)
+{
+    usingNarrowedTracks = narrowedTracks;
+}
+
+inline bool Settings::isUsingNarrowedTracks() const
+{
+    return usingNarrowedTracks;
+}
+
+inline LocalInputTrackSettings Settings::getInputsSettings() const
+{
+    return inputsSettings;
+}
+
+inline bool Settings::isUsingCustomMetronomeSounds() const
+{
+    return metronomeSettings.usingCustomSounds;
+}
+
+inline QString Settings::getMetronomeFirstBeatFile() const
+{
+    return metronomeSettings.customPrimaryBeatAudioFile;
+}
+
+
+inline void Settings::storeWaveDrawingMode(quint8 mode)
+{
+    meteringSettings.waveDrawingMode = mode;
+}
+
+inline quint8 Settings::getLastWaveDrawingMode() const
+{
+    return meteringSettings.waveDrawingMode;
+}
+
+inline float Settings::getEncodingQuality() const
+{
+    return audioSettings.encodingQuality;
+}
+
+inline void Settings::setEncodingQuality(float quality)
+{
+    audioSettings.encodingQuality = quality;
+}
+
+} // namespace
 
 #endif

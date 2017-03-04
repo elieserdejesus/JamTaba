@@ -77,13 +77,13 @@ bool LocalInputNode::MidiInput::accept(const Midi::MidiMessage &message) const
 
 // ---------------------------------------------------------------------
 
-LocalInputNode::LocalInputNode(Controller::MainController *mainController, int parentChannelIndex, bool isMono) :
+LocalInputNode::LocalInputNode(Controller::MainController *controller, int parentChannelIndex, bool isMono) :
     channelGroupIndex(parentChannelIndex),
-    mainController(mainController),
+    mainController(controller),
     stereoInverted(false),
     receivingRoutedMidiInput(false),
     routingMidiInput(false),
-    looper(new Audio::Looper())
+    looper(LocalInputNode::createLooper(controller))
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -92,6 +92,20 @@ LocalInputNode::LocalInputNode(Controller::MainController *mainController, int p
 LocalInputNode::~LocalInputNode()
 {
     delete looper;
+}
+
+Looper *LocalInputNode::createLooper(Controller::MainController *controller)
+{
+    quint8 preferrredMode = controller->getLooperPreferedMode();
+    quint8 preferredLayersCount = controller->getLooperPreferedLayersCount();
+
+    if (preferrredMode > Looper::SELECTED_LAYER)
+        preferrredMode = Looper::SELECTED_LAYER;
+
+    if (preferredLayersCount > Looper::MAX_LOOP_LAYERS)
+        preferredLayersCount = Looper::MAX_LOOP_LAYERS;
+
+    return new Audio::Looper(static_cast<Looper::Mode>(preferrredMode), preferredLayersCount);
 }
 
 void LocalInputNode::stopLooper()
