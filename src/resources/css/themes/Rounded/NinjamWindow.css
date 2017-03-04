@@ -254,3 +254,44 @@ NinjamPanel QComboBox               /* bpi, bpm, accents and shape comboboxes */
         stop:0.6 rgb(172, 172, 172),
         stop:1 rgb(172, 172, 172));
 }
+
+LooperWindow #buttonPlay:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
+}
+
+LooperWindow #buttonRec:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
+}
+
+LooperWindow #buttonRec[waiting=true]:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255,255,0), stop:1 rgb(204,204,0));
+}
+
+LooperWindow #buttonPlay:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
+}
+
+LooperWindow #buttonRec:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+}
+
+LooperWindow #buttonRec[waiting=true]:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255,255,0), stop:1 rgb(224, 224, 0));
+}
+
+LooperWindow QLabel,
+LooperWindow QGroupBox
+{
+    color: rgba(0, 0, 0, 140);;
+}
+
+LooperWindow QGroupBox
+{
+    border: 1px solid rgba(0, 0, 0, 30);
+}

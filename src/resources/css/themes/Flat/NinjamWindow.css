@@ -167,3 +167,14 @@ IntervalProgressWindow                      /* The floating window showing the m
 {
     background-color: rgb(206, 206, 206);
 }
+
+LooperWindow QLabel,
+LooperWindow QGroupBox
+{
+    color: rgba(0, 0, 0, 140);;
+}
+
+LooperWindow QGroupBox
+{
+    border: 1px solid rgba(0, 0, 0, 30);
+}

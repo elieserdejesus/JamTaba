@@ -143,3 +143,9 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
         stop:1 rgba(175, 0, 0, 200));
     border-color: rgba(0, 0, 0, 90);
 }
+
+LocalTrackView #buttonLooper:disabled
+{
+    border: none;
+    background-color: rgb(180, 207, 250);
+}
