@@ -94,6 +94,7 @@ public:
 protected:
 
     inline virtual void preFaderProcess(Audio::SamplesBuffer &out){ Q_UNUSED(out) } // called after process all input and plugins, and just before compute gain, pan and boost.
+    inline virtual void postFaderProcess(Audio::SamplesBuffer &out){ Q_UNUSED(out) } // called after compute gain, pan and boost.
 
     int getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght);
 

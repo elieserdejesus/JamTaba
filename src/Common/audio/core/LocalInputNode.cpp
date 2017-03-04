@@ -235,8 +235,6 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
     }
 
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer); // only the filtered midi messages are sended to rendering code
-
-    looper->mixToBuffer(out); // mixing looper buffered samples in post fader phase, so looper and local input controls (pan and level) are independent
 }
 
 void LocalInputNode::setRoutingMidiInput(bool routeMidiInput)
@@ -311,6 +309,11 @@ void LocalInputNode::preFaderProcess(SamplesBuffer &out) // this function is cal
 
     if (stereoInverted)
         out.invertStereo();
+}
+
+void LocalInputNode::postFaderProcess(SamplesBuffer &out)
+{
+    looper->mixToBuffer(out);
 }
 
 void LocalInputNode::setStereoInversion(bool inverted)

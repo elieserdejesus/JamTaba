@@ -108,6 +108,7 @@ signals:
 
 protected:
     void preFaderProcess(Audio::SamplesBuffer &out) override;
+    void postFaderProcess(Audio::SamplesBuffer &out) override;
 
 private:
     //int globalFirstInputIndex; // store the first input index selected globally by users in preferences menu

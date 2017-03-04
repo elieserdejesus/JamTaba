@@ -65,6 +65,8 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
 
     lastPeak.update(internalOutputBuffer.computePeak());
 
+    postFaderProcess(internalOutputBuffer);
+
     out.add(internalOutputBuffer);
 }
 
