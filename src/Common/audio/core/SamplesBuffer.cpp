@@ -93,9 +93,10 @@ float *SamplesBuffer::getSamplesArray(unsigned int channel) const
 
 void SamplesBuffer::applyGain(float gainFactor, float boostFactor)
 {
+    const float scaleFactor = gainFactor * boostFactor;
     for (unsigned int c = 0; c < channels; ++c) {
         for (unsigned int i = 0; i < frameLenght; ++i)
-            samples[c][i] *= (gainFactor * boostFactor);
+            samples[c][i] *= scaleFactor;
     }
 }
 
