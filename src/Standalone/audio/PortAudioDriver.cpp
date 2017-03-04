@@ -133,12 +133,10 @@ void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsi
     inputBuffer->setFrameLenght(framesPerBuffer);
     outputBuffer->setFrameLenght(framesPerBuffer);
     if(!globalInputRange.isEmpty()){
-        //const float **inputs = static_cast<const float**>(in);
+        float **inputs = (float**)in;
         int inputChannels = globalInputRange.getChannels();
-        for (int c = 0; c < inputChannels; c++){
-            std::memcpy(inputBuffer->getSamplesArray(c),
-                        static_cast<const float *>(in) + (c * framesPerBuffer),
-                        bytesToProcess);
+        for (int c = 0; c < inputChannels; c++) {
+            std::memcpy(inputBuffer->getSamplesArray(c), inputs[c], bytesToProcess);
         }
     }
     else{
@@ -153,17 +151,12 @@ void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsi
         mainController->process(*inputBuffer, *outputBuffer, sampleRate);
     }
 
-    //convert application output buffers to portaudio format
-    //float* outputs = (float*)out;
+    // convert application output buffers to portaudio format
+    float **outputs = static_cast<float**>(out);
     int outputChannels = globalOutputRange.getChannels();
-    //for(unsigned int i=0; i < framesPerBuffer; i++){
-        for (int c = 0; c < outputChannels; c++){
-            //*outputs++ = outputBuffer->get(c, i);
-            std::memcpy(static_cast<float *>(out) + (c * framesPerBuffer),
-                        outputBuffer->getSamplesArray(c),
-                        bytesToProcess);
-        }
-    //}
+    for (int c = 0; c < outputChannels; c++){
+        std::memcpy(outputs[c], outputBuffer->getSamplesArray(c), bytesToProcess);
+    }
 }
 
 //friend function, receive the pointer to PortAudioDriver instance in userData param
@@ -204,7 +197,7 @@ bool PortAudioDriver::start()
 
     unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
     qCDebug(jtAudio) << "Starting portaudio using" << framesPerBuffer << " as buffer size.";
-    PaSampleFormat sampleFormat = paFloat32;// | paNonInterleaved;
+    PaSampleFormat sampleFormat = paFloat32 | paNonInterleaved;
 
     PaStreamParameters inputParams;
     inputParams.channelCount = globalInputRange.getChannels();// maxInputChannels;//*/ inputChannels;
@@ -271,8 +264,12 @@ bool PortAudioDriver::start()
     error = Pa_OpenStream(&paStream,
                           (!globalInputRange.isEmpty()) ? (&inputParams) : NULL,
                           &outputParams,
-                          sampleRate, framesPerBuffer,
-                          paNoFlag, portaudioCallBack, (void*)this);//I'm passing this to portaudio, so I can run methods inside the callback function
+                          sampleRate,
+                          framesPerBuffer,
+                          paNoFlag,
+                          portaudioCallBack,
+                          (void*)this); // I'm passing 'this' to portaudio, so I can run methods inside the callback function
+
     if (error != paNoError){
         releaseHostSpecificParameters(inputParams, outputParams);
         return false;
@@ -298,7 +295,7 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const
     PaStreamParameters outputParams;
     outputParams.channelCount = 1;
     outputParams.device = deviceIndex;
-    outputParams.sampleFormat = paFloat32;
+    outputParams.sampleFormat = paFloat32 | paNonInterleaved;;
     outputParams.suggestedLatency = Pa_GetDeviceInfo(deviceIndex)->defaultLowOutputLatency;
     outputParams.hostApiSpecificStreamInfo = NULL;
     QList<int> validSRs;
