@@ -21,9 +21,9 @@ void TestLooper::alternatingOverdubbingWhileRecording()
     for (quint8 i = 0; i < looper.getLayers(); ++i) {
         looper.startNewCycle(4);
         looper.setOption(Looper::Overdub, true);
-        looper.process(createBuffer("1, 1, 1, 1, 1"));
+        looper.addBuffer(createBuffer("1, 1, 1, 1, 1"));
         looper.setOption(Looper::Overdub, false);
-        looper.process(createBuffer("1, 1, 1"));
+        looper.addBuffer(createBuffer("1, 1, 1"));
     }
 }
 
@@ -220,7 +220,7 @@ void TestLooper::waiting()
     for (int l = 0; l < layers; ++l) {
         looper.startNewCycle(2);
         QString value(QString::number(1)); // (1, 1) in all layers
-        looper.process(createBuffer(value + ", " + value));
+        looper.addBuffer(createBuffer(value + ", " + value));
     }
     looper.stop(); // finish recording
 
@@ -232,7 +232,7 @@ void TestLooper::waiting()
     looper.toggleRecording(); // waiting state
 
     SamplesBuffer out = createBuffer("0, 0");
-    looper.process(out);
+    looper.mixToBuffer(out);
     checkExpectedValues(expectedSamples, out);
 }
 
@@ -265,7 +265,7 @@ void TestLooper::recording()
     looper.toggleRecording();
     for (int l = 0; l < layers; ++l) {
         looper.startNewCycle(2);
-        looper.process(createBuffer(defaultLayersContent));
+        looper.addBuffer(createBuffer(defaultLayersContent));
     }
     looper.stop(); // finish recording default layers content
 
@@ -283,7 +283,8 @@ void TestLooper::recording()
         looper.startNewCycle(2);
         Q_ASSERT(looper.getCurrentLayerIndex() == recordingLayers.at(i));
         SamplesBuffer buffer = createBuffer(inputSamples);
-        looper.process(buffer);
+        looper.addBuffer(buffer);
+        looper.mixToBuffer(buffer);
         checkExpectedValues(expectedOutputs[i], buffer);
     }
 }
@@ -386,13 +387,13 @@ void TestLooper::resizeLayersAndCopySamples()
     // simulate recording
     looper.toggleRecording();
     looper.startNewCycle(initialBuffer.count());
-    looper.process(createBuffer(initialBuffer.join(',')));
+    looper.addBuffer(createBuffer(initialBuffer.join(',')));
 
     uint newSamplesPerCycle = finalBuffer.count();
     looper.startNewCycle(newSamplesPerCycle); // force recording stop, resize and copy samples
 
     SamplesBuffer out(1, newSamplesPerCycle);
-    looper.process(out);
+    looper.mixToBuffer(out);
     checkExpectedValues(finalBuffer.join(','), out);
 }
 
@@ -470,29 +471,26 @@ void TestLooper::multiBufferTest()
     const uint cycleLenghtInSamples = 6;
 
     looper.startNewCycle(cycleLenghtInSamples);
-    looper.process(createBuffer("1,2,3"));
-    looper.process(createBuffer("4,5,6"));
+    looper.addBuffer(createBuffer("1,2,3"));
+    looper.addBuffer(createBuffer("4,5,6"));
 
     SamplesBuffer out(1, 3);
     looper.startNewCycle(cycleLenghtInSamples);
-    looper.process(out);
+    looper.mixToBuffer(out);
     checkExpectedValues("1,2,3", out);
     out.zero();
-    looper.process(out);
+    looper.mixToBuffer(out);
     checkExpectedValues("4,5,6", out);
 
     out.zero();
 
     looper.startNewCycle(cycleLenghtInSamples);
-    looper.process(out);
+    looper.mixToBuffer(out);
     checkExpectedValues("1, 2, 3", out);
     out.zero();
-    looper.process(out);
+    looper.mixToBuffer(out);
     checkExpectedValues("4, 5, 6", out);
-
-
 }
-
 
 SamplesBuffer TestLooper::createBuffer(QString comaSeparatedValues)
 {
