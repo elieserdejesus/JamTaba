@@ -12,6 +12,7 @@ using namespace Audio;
 
 Looper::Looper()
     : currentLayerIndex(0),
+      focusedLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0),
       maxLayers(4),
@@ -157,9 +158,10 @@ bool Looper::layerIsValid(quint8 layerIndex) const
 
 void Looper::startRecording()
 {
-    int firstRecordingLayer = getFirstUnlockedLayerIndex(currentLayerIndex);
+    int firstRecordingLayer = getFirstUnlockedLayerIndex(focusedLayerIndex);
     if (firstRecordingLayer >= 0) {
         setCurrentLayer(firstRecordingLayer);
+        focusedLayerIndex = firstRecordingLayer;
 
         bool isOverdubbing = getOption(Looper::Overdub);
         if (!isOverdubbing) // avoid discard layer content if is overdubbing
@@ -175,7 +177,7 @@ void Looper::toggleRecording()
         play(); // auto play when recording is finished (rec button is pressed)
     }
     else {
-        int firstRecordingLayer = getFirstUnlockedLayerIndex(currentLayerIndex);
+        int firstRecordingLayer = getFirstUnlockedLayerIndex(focusedLayerIndex);
         if (firstRecordingLayer >= 0) {
             setState(new WaitingState(this));
             setCurrentLayer(firstRecordingLayer);
@@ -231,9 +233,6 @@ bool Looper::canSelectLayers() const
     if (isRecording() || isWaiting()) // can't select layer while recording or waiting
         return false;
 
-    if (isPlaying() && mode != SELECTED_LAYER)
-        return false; // can't select layer if is playing in SEQUENCE or ALL_LAYERS mode
-
     return true;
 }
 
@@ -242,13 +241,19 @@ void Looper::selectLayer(quint8 layerIndex)
     if (!canSelectLayers())
         return;
 
-    setCurrentLayer(layerIndex);
+    focusedLayerIndex = layerIndex;
+
+    if (mode == Looper::SELECTED_LAYER)
+        setCurrentLayer(layerIndex);
 }
 
 void Looper::setCurrentLayer(quint8 newLayer)
 {
     if (newLayer < maxLayers) {
         currentLayerIndex = newLayer;
+        if (isRecording())
+            focusedLayerIndex = newLayer;
+
         emit currentLayerChanged(newLayer);
     }
 }
