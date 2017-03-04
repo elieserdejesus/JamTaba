@@ -307,6 +307,9 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, unsigned int bufferOffset,
         framesToProcess = (internalOffset + framesToProcess) - this->getFrameLenght();
 
     const uint bytesToProcess = framesToProcess * sizeof(float);
+    if (!bytesToProcess)
+        return;
+
     if (channels == buffer.channels) {// channels number are equal
         for (unsigned int c = 0; c < channels; ++c) {
             std::memcpy(&(samples[c][internalOffset]), &(buffer.samples[c][bufferOffset]), bytesToProcess);
