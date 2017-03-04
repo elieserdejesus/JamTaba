@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <cmath>
 #include <algorithm>
+#include <cstring>
 
 using namespace Audio;
 // +++++++++++++++++=
@@ -305,28 +306,25 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, unsigned int bufferOffset,
     if ((uint)(internalOffset + framesToProcess) > this->getFrameLenght())
         framesToProcess = (internalOffset + framesToProcess) - this->getFrameLenght();
 
+    const uint bytesToProcess = framesToProcess * sizeof(float);
     if (channels == buffer.channels) {// channels number are equal
         for (unsigned int c = 0; c < channels; ++c) {
-            for (unsigned int s = 0; s < framesToProcess; ++s)
-                samples[c][s + internalOffset] = buffer.samples[c][s + bufferOffset];
+            std::memcpy(&(samples[c][internalOffset]), &(buffer.samples[c][bufferOffset]), bytesToProcess);
         }
     } else {// different number of channels
         if (!isMono()) {// copy every &buffer samples to LR in this buffer
             if (!buffer.isMono()) {
                 int channelsToCopy = qMin(channels, buffer.channels);
                 for (int c = 0; c < channelsToCopy; ++c) {
-                    for (unsigned int s = 0; s < framesToProcess; ++s)
-                        samples[c][s + internalOffset] = buffer.samples[c][s + bufferOffset];
+                    std::memcpy(&(samples[c][internalOffset]), &(buffer.samples[c][bufferOffset]), bytesToProcess);
                 }
             } else {
-                for (unsigned int s = 0; s < framesToProcess; ++s) {
-                    samples[0][s + internalOffset] = buffer.samples[0][s + bufferOffset];
-                    samples[1][s + internalOffset] = buffer.samples[0][s + bufferOffset];
-                }
+                std::memcpy(&(samples[0][internalOffset]), &(buffer.samples[0][bufferOffset]), bytesToProcess);
+                std::memcpy(&(samples[1][internalOffset]), &(buffer.samples[0][bufferOffset]), bytesToProcess);
             }
         } else {// this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
             for (unsigned int s = 0; s < framesToProcess; ++s) {
-                int index = s + bufferOffset;
+                const int index = s + bufferOffset;
                 float v = (buffer.samples[0][index] + buffer.samples[1][index])/2.0f;
                 samples[0][s + internalOffset] = v;
             }
