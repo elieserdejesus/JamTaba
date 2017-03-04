@@ -125,7 +125,7 @@ private:
 
     LooperLayer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex; // current played layer
-    quint8 focusedLayerIndex; // layer clicked by user, used to choose recordint layer. Sometimes focused layer will be equal to currentLayerIndex.
+    int focusedLayerIndex; // layer clicked by user, used to choose recordint layer. Sometimes focused layer will be equal to currentLayerIndex.
     quint8 maxLayers;
 
     void setCurrentLayer(quint8 newLayer);
