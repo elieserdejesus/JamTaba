@@ -21,16 +21,6 @@ private:
 
     std::vector< std::vector<float> > samples;
 
-    inline bool channelIsValid(unsigned int channel) const
-    {
-        return channel < channels;
-    }
-
-    inline bool sampleIndexIsValid(unsigned int sampleIndex) const
-    {
-        return sampleIndex < frameLenght;
-    }
-
     SamplesBuffer &operator=(const SamplesBuffer &other);
 public:
     explicit SamplesBuffer(unsigned int channels);

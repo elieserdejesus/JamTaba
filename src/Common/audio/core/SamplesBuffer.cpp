@@ -227,18 +227,12 @@ void SamplesBuffer::add(unsigned int channel, float *samples, int samplesToAdd)
 
 void SamplesBuffer::add(int channel, int sampleIndex, float sampleValue)
 {
-    //if (channelIsValid(channel) && sampleIndexIsValid(sampleIndex))
-        samples[channel][sampleIndex] += sampleValue;
-    //else
-    //    qCritical() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+    samples[channel][sampleIndex] += sampleValue;
 }
 
 void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue)
 {
-    if (channelIsValid(channel) && sampleIndexIsValid(sampleIndex))
-        samples[channel][sampleIndex] = sampleValue;
-    else
-        qCritical() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+    samples[channel][sampleIndex] = sampleValue;
 }
 
 unsigned int SamplesBuffer::getFrameLenght() const
@@ -271,8 +265,6 @@ void SamplesBuffer::set(const SamplesBuffer &buffer)
 
 float SamplesBuffer::get(int channel, int sampleIndex) const
 {
-    if (!channelIsValid(channel) || !sampleIndexIsValid(sampleIndex))
-        return 0;
     return samples[channel][sampleIndex ];
 }
 
