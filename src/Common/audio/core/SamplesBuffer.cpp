@@ -238,11 +238,6 @@ void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue)
     samples[channel][sampleIndex] = sampleValue;
 }
 
-unsigned int SamplesBuffer::getFrameLenght() const
-{
-    return this->frameLenght;
-}
-
 void SamplesBuffer::setToMono()
 {
     if (this->channels != 1)
