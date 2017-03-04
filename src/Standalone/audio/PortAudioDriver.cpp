@@ -1,13 +1,16 @@
 #include "PortAudioDriver.h"
 #include <QDebug>
-#include <stdexcept>
-#include <algorithm>
+#include <QtGlobal>
+
 #include "portaudio.h"
 #include "audio/core/SamplesBuffer.h"
 #include "persistence/Settings.h"
 #include "MainController.h"
 #include "log/Logging.h"
-#include <QtGlobal>
+
+#include <stdexcept>
+#include <algorithm>
+#include <cstring>
 
 /*
  * This file contain the platform independent PortAudio code. The platform specific
@@ -117,22 +120,25 @@ PortAudioDriver::~PortAudioDriver()
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
+// this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
 void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer)
 {
     if(!inputBuffer || !outputBuffer){
         return;
     }
-    //prepare buffers and expose then to application process
+
+    const uint bytesToProcess = framesPerBuffer * sizeof(float);
+
+    // prepare buffers and expose then to application process
     inputBuffer->setFrameLenght(framesPerBuffer);
     outputBuffer->setFrameLenght(framesPerBuffer);
     if(!globalInputRange.isEmpty()){
-        float* inputs = (float*)in;
+        //const float **inputs = static_cast<const float**>(in);
         int inputChannels = globalInputRange.getChannels();
-        for(unsigned int i=0; i < framesPerBuffer; i++){
-            for (int c = 0; c < inputChannels; c++){
-                inputBuffer->set(c, i, *inputs++);
-            }
+        for (int c = 0; c < inputChannels; c++){
+            std::memcpy(inputBuffer->getSamplesArray(c),
+                        static_cast<const float *>(in) + (c * framesPerBuffer),
+                        bytesToProcess);
         }
     }
     else{
@@ -148,13 +154,16 @@ void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsi
     }
 
     //convert application output buffers to portaudio format
-    float* outputs = (float*)out;
+    //float* outputs = (float*)out;
     int outputChannels = globalOutputRange.getChannels();
-    for(unsigned int i=0; i < framesPerBuffer; i++){
+    //for(unsigned int i=0; i < framesPerBuffer; i++){
         for (int c = 0; c < outputChannels; c++){
-            *outputs++ = outputBuffer->get(c, i);
+            //*outputs++ = outputBuffer->get(c, i);
+            std::memcpy(static_cast<float *>(out) + (c * framesPerBuffer),
+                        outputBuffer->getSamplesArray(c),
+                        bytesToProcess);
         }
-    }
+    //}
 }
 
 //friend function, receive the pointer to PortAudioDriver instance in userData param
