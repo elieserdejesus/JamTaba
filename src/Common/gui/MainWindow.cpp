@@ -14,6 +14,8 @@
 #include "ChordsPanel.h"
 #include "MapWidget.h"
 
+#include "LooperWindow.h"
+
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QRect>
@@ -509,11 +511,45 @@ void MainWindow::removeAllInputLocalTracks()
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // this function is overrided in MainWindowStandalone to load input selections and plugins
-void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView,
-                                           const Subchannel &subChannel)
+void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const Subchannel &subChannel)
 {
     BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted, subChannel.stereoInverted);
+}
+
+void MainWindow::openLooperWindow(uint trackID)
+{
+     Audio::LocalInputNode *inputTrack = mainController->getInputTrack(trackID);
+     Controller::NinjamController *ninjamController = mainController->getNinjamController();
+     if (inputTrack && ninjamController) {
+        LooperWindow *looperWindow = looperWindows[trackID];
+        if (!looperWindow) {
+            looperWindow = new LooperWindow(this);
+            looperWindows.insert(trackID, looperWindow);
+        }
+
+        looperWindow->setLooper(inputTrack->getLooper(), ninjamController);
+
+        LocalTrackGroupView *channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
+        Q_ASSERT(channel);
+
+        int subchannelInternalIndex = channel->getSubchannelInternalIndex(trackID);
+        QString channelName = channel->getGroupName();
+        if (channelName.isEmpty())
+            channelName = tr("Channel %1").arg(QString::number(channel->getChannelIndex() + 1));
+        else
+            channelName = tr("Channel '%1'").arg(channelName);
+
+        QString subchannelName("Subchannel " + QString::number(subchannelInternalIndex + 1));
+        QString windowTitle("Looper - " + channelName + " (" + subchannelName + ")");
+        looperWindow->setWindowTitle(windowTitle);
+
+        looperWindow->raise();
+        looperWindow->show();
+     }
+     else {
+         qCritical() << "inputTrack or ninjamControler are null";
+     }
 }
 
 void MainWindow::initializeLocalInputChannels()
@@ -815,19 +851,23 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     ui.leftPanel->adjustSize();
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
 
-    QObject::connect(mainController->getNinjamController(), SIGNAL(
-                         preparedToTransmit()), this, SLOT(startTransmission()));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(
-                         preparingTransmission()), this, SLOT(prepareTransmission()));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpiChanged(
-                                                                       int)), this,
-                     SLOT(updateBpi(int)));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpmChanged(
-                                                                       int)), this,
-                     SLOT(updateBpm(int)));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(intervalBeatChanged(
-                                                                       int)), this,
-                     SLOT(updateCurrentIntervalBeat(int)));
+    connect(mainController->getNinjamController(), SIGNAL(preparedToTransmit()), this, SLOT(startTransmission()));
+    connect(mainController->getNinjamController(), SIGNAL(preparingTransmission()), this, SLOT(prepareTransmission()));
+    connect(mainController->getNinjamController(), SIGNAL(currentBpiChanged(int)), this, SLOT(updateBpi(int)));
+    connect(mainController->getNinjamController(), SIGNAL(currentBpmChanged(int)), this, SLOT(updateBpm(int)));
+    connect(mainController->getNinjamController(), SIGNAL(intervalBeatChanged(int)), this, SLOT(updateCurrentIntervalBeat(int)));
+
+    enableLooperButtonInLocalTracks(true); // looper buttons are enabled when entering in a server
+}
+
+void MainWindow::enableLooperButtonInLocalTracks(bool enable)
+{
+    for ( LocalTrackGroupView *trackGroupView : localGroupChannels) {
+        QList<LocalTrackView *> tracks = trackGroupView->getTracks<LocalTrackView *>();
+        for (LocalTrackView *track : tracks) {
+            track->enableLopperButton(enable);
+        }
+    }
 }
 
 void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
@@ -921,6 +961,24 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     }
 
     updatePublicRoomsListLayout();
+
+    enableLooperButtonInLocalTracks(false); // disable looper buttons when exiting from server
+
+    // deactivate looper
+    for (LooperWindow *looperWindow : looperWindows.values()) {
+        if (looperWindow) {
+            looperWindow->close();
+            looperWindow->detachCurrentLooper();
+            looperWindow->deleteLater();
+        }
+    }
+    looperWindows.clear();
+
+    for (LocalTrackGroupView *trackGroup : localGroupChannels) {
+        for (LocalTrackView *trackView : trackGroup->getTracks<LocalTrackView*>()) {
+            trackView->getInputNode()->stopLooper();
+        }
+    }
 }
 
 void MainWindow::setChatVisibility(bool chatVisible)
@@ -963,10 +1021,11 @@ void MainWindow::timerEvent(QTimerEvent *)
         lastPerformanceMonitorUpdate = now;
     }
 
+    // prevent screen saver if user is playing
     if (mainController->isPlayingInNinjamRoom())
-        screensaverBlocker.update(); // prevent screen saver if user is playing
+        screensaverBlocker.update();
 
-    // update room stream plot
+    // update public server stream plot
     if (mainController->isPlayingRoomStream()) {
         long long roomID = mainController->getCurrentStreamingRoomID();
         JamRoomViewPanel *roomView = roomViewPanels[roomID];
@@ -980,6 +1039,13 @@ void MainWindow::timerEvent(QTimerEvent *)
                 int percentage = mainController->getRoomStreamer()->getBufferingPercentage();
                 roomView->setBufferingPercentage(percentage);
             }
+        }
+    }
+
+    // update looper window sound waves
+    for (LooperWindow *looperWindow : looperWindows.values()) {
+        if (looperWindow && looperWindow->isVisible()) {
+            looperWindow->updateDrawings();
         }
     }
 

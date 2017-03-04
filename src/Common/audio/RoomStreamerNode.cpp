@@ -223,7 +223,7 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
         buffering = true;
     if (buffering)
         return;
-    int samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
+    uint samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
     while (bufferedSamples.getFrameLenght() < samplesToRender) {// need decoding?
         decode(256);
         if (bytesToDecode.isEmpty()) {// no more bytes to decode

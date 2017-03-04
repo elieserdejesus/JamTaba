@@ -3,6 +3,8 @@
 #include "midi/MidiMessage.h"
 #include "MainController.h"
 
+#include <QDateTime>
+
 using namespace Audio;
 
 LocalInputNode::MidiInput::MidiInput()
@@ -80,7 +82,8 @@ LocalInputNode::LocalInputNode(Controller::MainController *mainController, int p
     mainController(mainController),
     stereoInverted(false),
     receivingRoutedMidiInput(false),
-    routingMidiInput(false)
+    routingMidiInput(false),
+    looper(new Audio::Looper())
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -88,7 +91,17 @@ LocalInputNode::LocalInputNode(Controller::MainController *mainController, int p
 
 LocalInputNode::~LocalInputNode()
 {
-    //
+    delete looper;
+}
+
+void LocalInputNode::stopLooper()
+{
+    looper->stop();
+}
+
+void LocalInputNode::startNewLoopCycle(uint intervalLenght)
+{
+    looper->startNewCycle(intervalLenght);
 }
 
 bool LocalInputNode::isMono() const
@@ -222,6 +235,8 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
     }
 
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer); // only the filtered midi messages are sended to rendering code
+
+    looper->mixToBuffer(out); // mixing looper buffered samples in post fader phase, so looper and local input controls (pan and level) are independent
 }
 
 void LocalInputNode::setRoutingMidiInput(bool routeMidiInput)
@@ -292,6 +307,8 @@ qint8 LocalInputNode::getTranspose() const
 
 void LocalInputNode::preFaderProcess(SamplesBuffer &out) // this function is called by the base class AudioNode when processing audio. It's the TemplateMethod design pattern idea.
 {
+    looper->addBuffer(out); // rec incoming samples before apply local track gain, pan and boost
+
     if (stereoInverted)
         out.invertStereo();
 }

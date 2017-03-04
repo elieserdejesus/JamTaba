@@ -3,36 +3,21 @@ NinjamTrackView[horizontal="true"] #panSlider
     max-width: 50px;
 }
 
-NinjamTrackView[horizontal="true"] #buttonBoostMinus12,
-NinjamTrackView[horizontal="true"] #buttonBoostPlus12,
-NinjamTrackView[horizontal="true"] #buttonBoostZero
+NinjamTrackView[horizontal="true"] #buttonBoost
 {
     padding: 1px;
     border: 1px solid rgba(0, 0, 0, 30);
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12
-{
-
-   border-left: 1px solid rgba(0, 0, 0, 10);
-   margin: 0px;
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12
-{
-
-    border-right: 1px solid rgba(0, 0, 0, 10);
-    margin: 0px;
-}
-
-NinjamTrackView[horizontal="true"] #buttonBoostZero
-{
     min-width: 12px;
 }
 
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:hover:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:hover:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoost
+{
+   border-left: 1px solid rgba(0, 0, 0, 10);
+   border-right: 1px solid rgba(0, 0, 0, 10);
+   margin: 0px;
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoost:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#receiveButton:hover:checked,
 NinjamTrackView QPushButton#lowCutButton:hover:checked,

@@ -65,7 +65,7 @@ class NinjamTrackNode::IntervalDecoder
 public:
     IntervalDecoder(const QByteArray &vorbisData);
     void decode(quint32 maxSamplesToDecode);
-    quint32 getDecodedSamples(Audio::SamplesBuffer &outBuffer, int samplesToDecode);
+    quint32 getDecodedSamples(Audio::SamplesBuffer &outBuffer, uint samplesToDecode);
     inline int getSampleRate() { return vorbisDecoder.getSampleRate(); }
     void stopDecoding();
 private:
@@ -98,7 +98,7 @@ void NinjamTrackNode::IntervalDecoder::stopDecoding()
     mutex.unlock();
 }
 
-quint32 NinjamTrackNode::IntervalDecoder::getDecodedSamples(Audio::SamplesBuffer &outBuffer, int samplesToDecode)
+quint32 NinjamTrackNode::IntervalDecoder::getDecodedSamples(Audio::SamplesBuffer &outBuffer, uint samplesToDecode)
 {
     mutex.lock();
     while (decodedBuffer.getFrameLenght() < samplesToDecode) { //need decode more samples to fill outBuffer?

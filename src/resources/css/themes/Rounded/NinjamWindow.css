@@ -79,40 +79,25 @@ NinjamTrackView QPushButton#receiveButton:hover:!checked
 /* buttons in ninjam track when using horizontal layout
 -------------------------------------------------------------*/
 
-NinjamTrackView[horizontal="true"] #buttonBoostMinus12,
-NinjamTrackView[horizontal="true"] #buttonBoostPlus12,
-NinjamTrackView[horizontal="true"] #buttonBoostZero
+NinjamTrackView[horizontal="true"] #buttonBoost
 {
     padding: 1px;
     border: 1px solid rgba(0, 0, 0, 30);
 }
 
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoost
 {
    border-radius: 0px;
    border-bottom-right-radius: 3px;
    border-top-right-radius: 3px;
    border-left: 1px solid rgba(0, 0, 0, 10);
+   border-bottom-left-radius: 3px;
+   border-right: 1px solid rgba(0, 0, 0, 10);
    margin: 0px;
+   min-width: 12px;
 }
 
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12
-{
-    border-radius: 0px;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    border-right: 1px solid rgba(0, 0, 0, 10);
-    margin: 0px;
-}
-
-NinjamTrackView[horizontal="true"] #buttonBoostZero
-{
-    min-width: 12px;
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoost:checked
 {
     margin-top: -1px;
     background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,

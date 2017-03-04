@@ -2,6 +2,7 @@
 #define _LOCAL_INPUT_NODE_H_
 
 #include "AudioNode.h"
+#include "../looper/AudioLooper.h"
 
 namespace Midi {
     class MidiMessage;
@@ -96,6 +97,11 @@ public:
     bool isRoutingMidiInput() const;
     void setRoutingMidiInput(bool routeMidiInput);
 
+    void startNewLoopCycle(uint intervalLenght);
+    void stopLooper();
+
+    Audio::Looper *getLooper() const;
+
 signals:
     void midiNoteLearned(quint8 midiNote) const;
     void stereoInversionChanged(bool stereoInverted);
@@ -157,7 +163,14 @@ private:
 
     void processIncommingMidi(std::vector<Midi::MidiMessage> &inBuffer, std::vector<Midi::MidiMessage> &outBuffer);
 
+    Audio::Looper* looper;
+
 };
+
+inline Audio::Looper *LocalInputNode::getLooper() const
+{
+    return looper;
+}
 
 inline bool LocalInputNode::isRoutingMidiInput() const
 {

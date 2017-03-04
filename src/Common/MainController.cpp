@@ -14,6 +14,7 @@
 
 #include <QBuffer>
 #include <QByteArray>
+#include <QDateTime>
 
 using namespace Persistence;
 using namespace Midi;
@@ -81,11 +82,21 @@ void MainController::setSampleRate(int newSampleRate)
     }
 
     audioMixer.setSampleRate(newSampleRate);
-    if (settings.isSaveMultiTrackActivated())
-        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+
+    if (settings.isSaveMultiTrackActivated()) {
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders) {
             jamRecorder->setSampleRate(newSampleRate);
-    if (isPlayingInNinjamRoom())
+        }
+    }
+
+    if (isPlayingInNinjamRoom()) {
         ninjamController->setSampleRate(newSampleRate);
+
+        for (Audio::LocalInputNode *inputTrack: inputTracks.values()) {
+            inputTrack->getLooper()->stop(); // looper is stopped when sample rate is changed because the recorded material will sound funny :)
+        }
+    }
+
     settings.setSampleRate(newSampleRate);
 }
 
@@ -196,16 +207,26 @@ void MainController::uploadEncodedVideoFrame(const QByteArray &encodedData, int 
 
 void MainController::updateBpi(int newBpi)
 {
-    if (settings.isSaveMultiTrackActivated())
-        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+    if (settings.isSaveMultiTrackActivated()) {
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders) {
             jamRecorder->setBpi(newBpi);
+        }
+    }
 }
 
 void MainController::updateBpm(int newBpm)
 {
-    if (settings.isSaveMultiTrackActivated())
-        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+    if (settings.isSaveMultiTrackActivated()) {
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders) {
             jamRecorder->setBpm(newBpm);
+        }
+    }
+
+    if (isPlayingInNinjamRoom()) {
+        for (Audio::LocalInputNode *inputTrack: inputTracks.values()) {
+            inputTrack->getLooper()->stop(); // looper is stopped when BPM is changed because the recorded material will be out of sync
+        }
+    }
 }
 
 void MainController::enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex,
@@ -475,6 +496,13 @@ void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffe
     } else {
         if (ninjamController)
             ninjamController->process(in, out, sampleRate);
+    }
+}
+
+void MainController::syncWithNinjamIntervalStart(uint intervalLenght)
+{
+    for (Audio::LocalInputNode *inputTrack : inputTracks.values()) {
+        inputTrack->startNewLoopCycle(intervalLenght);
     }
 }
 

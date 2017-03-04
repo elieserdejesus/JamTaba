@@ -9,7 +9,8 @@ QMessageBox,
 QInputDialog,
 MidiToolsDialog,
 UserNameDialog,
-PrivateServerDialog
+PrivateServerDialog,
+LooperWindow
 {
     border-color: rgb(20, 20, 20);
     color: rgb(40, 40, 40);

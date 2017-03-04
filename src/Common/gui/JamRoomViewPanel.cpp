@@ -34,7 +34,11 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
     mapWidgetLayout->setContentsMargins(1, 1, 1, 1);
     mapWidgetLayout->setSpacing(3);
 
-    waveDrawingButtonsLayout = createWaveDrawingButtons();
+    waveDrawingButtonsLayout = new QVBoxLayout();
+    waveDrawingButtonsLayout->setContentsMargins(0, 0, 0, 0);
+    waveDrawingButtonsLayout->setSpacing(0);
+    createWaveDrawingButtonsLayout(waveDrawingButtonsLayout);
+
     mapWidgetLayout->addLayout(waveDrawingButtonsLayout);
     mapWidgetLayout->setAlignment(waveDrawingButtonsLayout, Qt::AlignBottom);
 
@@ -54,12 +58,8 @@ void JamRoomViewPanel::setWaveDrawingButtonsVisibility(bool showButtons)
     map->setBlurMode(showButtons);
 }
 
-QLayout * JamRoomViewPanel::createWaveDrawingButtons()
+void JamRoomViewPanel::createWaveDrawingButtonsLayout(QLayout *layout)
 {
-    QLayout *layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
-
     const static QString icons[4] =
     {
         "wave_normal",
@@ -67,6 +67,7 @@ QLayout * JamRoomViewPanel::createWaveDrawingButtons()
         "wave_buildings",
         "wave_buildings_pixelated"
     };
+
     const static WavePeakPanel::WaveDrawingMode drawingModes[4] =
     {
         WavePeakPanel::SOUND_WAVE,
@@ -93,8 +94,6 @@ QLayout * JamRoomViewPanel::createWaveDrawingButtons()
             mainController->storeWaveDrawingMode(drawingMode);
         });
     }
-
-    return layout;
 }
 
 void JamRoomViewPanel::setWaveDrawingMode(WavePeakPanel::WaveDrawingMode mode)

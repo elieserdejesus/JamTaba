@@ -12,13 +12,19 @@ QMessageBox,
 QInputDialog,
 MidiToolsDialog,
 UserNameDialog,
-PrivateServerDialog
+PrivateServerDialog,
+LooperWindow
 {
     border-color: rgb(20, 20, 20);
     color: white;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 rgb(128, 180, 255),
         stop: 1.0 rgb(126, 178, 255));
+}
+
+LooperWindow
+{
+    background-color: rgb(96, 148, 225); /* using a darker blue tone to improve wave sound contrast */
 }
 
 PrivateServerDialog #label, #label_2, #label_3

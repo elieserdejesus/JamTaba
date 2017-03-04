@@ -309,3 +309,28 @@ IntervalProgressDisplay
     qproperty-disabledBeatsColor: rgba(0, 0, 0, 15);
     qproperty-linesColor: rgba(0, 0, 0, 40);
 }
+
+LooperWindow
+{
+    font-size: 18pt; /* size of 'wait' text in LooperWindow */
+}
+
+LooperWindow #layersWidget
+{
+    background-color: rgba(0, 0, 0, 10);
+}
+
+LooperWindow #buttonPlay:checked
+{
+    background-color: rgb(0, 195, 0);
+}
+
+LooperWindow #buttonRec:checked
+{
+    background-color: rgb(255, 0, 0);
+}
+
+LooperWindow #buttonRec[waiting=true]:checked
+{
+    background-color: rgb(255, 255, 0);
+}

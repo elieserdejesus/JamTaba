@@ -13,9 +13,7 @@
     border: 1px outset rgba(0, 0, 140, 120);
 }
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero,
+#buttonBoost,
 #soloButton,
 #muteButton,
 QPushButton#buttonStereoInversion
@@ -25,9 +23,7 @@ QPushButton#buttonStereoInversion
 }
 
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero
+#buttonBoost
 {
    padding: 1px;
    padding-top: 3px;
@@ -39,18 +35,14 @@ QPushButton#buttonStereoInversion:checked
     background-color: rgb(129, 181, 255);
 }
 
-#buttonBoostMinus12:checked,
-#buttonBoostPlus12:checked,
-#buttonBoostZero:checked
+#buttonBoost:checked
 {
     background-color: rgb(129, 181, 255);
     color: rgba(0, 0, 0, 160);
     border: 1px inset rgba(0, 0, 140, 120);
 }
 
-#buttonBoostMinus12:hover,
-#buttonBoostPlus12:hover,
-#buttonBoostZero:hover,
+#buttonBoost:hover,
 #soloButton:hover,
 #muteButton:hover
 {
@@ -63,9 +55,7 @@ QPushButton#buttonStereoInversion:hover
     background-color: rgb(204, 225, 255);
 }
 
-#buttonBoostMinus12:hover:checked,
-#buttonBoostPlus12:hover:checked,
-#buttonBoostZero:hover:checked
+#buttonBoost:hover:checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 rgb(179,211,255);,
@@ -80,9 +70,7 @@ QPushButton#buttonStereoInversion:hover:checked
 }
 
 /* button colors when the track is NOT xmiting */
-BaseTrackView[unlighted="true"] #buttonBoostMinus12,
-BaseTrackView[unlighted="true"] #buttonBoostZero,
-BaseTrackView[unlighted="true"] #buttonBoostPlus12,
+BaseTrackView[unlighted="true"] #buttonBoost,
 BaseTrackView[unlighted="true"] #soloButton,
 BaseTrackView[unlighted="true"] #muteButton,
 BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
@@ -103,7 +91,7 @@ BaseTrackView[unlighted="true"] #muteButton:hover
     color: rgb(80, 80, 80);
 }
 
-#buttonBoostZero:checked
+#buttonBoost:checked
 {
     border-bottom: none;
     border-top: none;
@@ -148,9 +136,7 @@ BaseTrackView[unlighted="true"] #muteButton:hover
 }
 
 BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked,
-BaseTrackView[unlighted="true"] #buttonBoostZero:hover:checked,
-BaseTrackView[unlighted="true"] #buttonBoostMinus12:hover:checked,
-BaseTrackView[unlighted="true"] #buttonBoostPlus12:hover:checked
+BaseTrackView[unlighted="true"] #buttonBoost:hover:checked
 {
     background-color: rgb(157, 199, 255);
 }

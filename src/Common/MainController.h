@@ -328,6 +328,8 @@ protected:
     // audio process is here too (see MainController::process)
     virtual void doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 
+    virtual void syncWithNinjamIntervalStart(uint intervalLenght);
+
     VideoEncoder *videoEncoder;
 
 private:

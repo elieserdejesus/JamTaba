@@ -68,7 +68,7 @@ private:
 
     QLayout *waveDrawingButtonsLayout;
     QMap<WavePeakPanel::WaveDrawingMode, QPushButton*> waveDrawingButtons;
-    QLayout *createWaveDrawingButtons();
+    void createWaveDrawingButtonsLayout(QLayout *layout);
     void setWaveDrawingButtonsVisibility(bool showButtons);
 
      void initialize(const Login::RoomInfo &roomInfo);

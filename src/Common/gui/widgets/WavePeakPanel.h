@@ -13,10 +13,14 @@ class WavePeakPanel : public QWidget
 
 public:
     explicit WavePeakPanel(QWidget *parent = 0);
+    virtual ~WavePeakPanel();
 
     enum WaveDrawingMode
     {
-        SOUND_WAVE, BUILDINGS, PIXELED_SOUND_WAVE, PIXELED_BUILDINGS
+        SOUND_WAVE,
+        BUILDINGS,
+        PIXELED_SOUND_WAVE,
+        PIXELED_BUILDINGS
     };
 
     void addPeak(float peak);
@@ -32,28 +36,32 @@ protected:
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
 
-private:
+    virtual int getPeaksPad() const;
+    virtual int getPeaksWidth() const;
+
+    bool useAlphaInPreviousSamples;
+
+    std::vector<float> peaksArray;
+
     QColor peaksColor;
+
+private:
     QColor loadingColor; //color for the loading circle
 
     bool showingBuffering;
     int bufferingPercentage;
-
-    std::vector<float> peaksArray;
 
     uint maxPeaks;// change when widget resize
 
     int computeMaxPeaks();
     void recreatePeaksArray();
 
-    void paintBuildings(QPainter &painter, bool pixeled);
-    void paintSoundWave(QPainter &painter);
+    void paintBuildings(QPainter &painter, bool pixeled, bool useAlpha);
+    void paintSoundWave(QPainter &painter, bool useAlpha);
     void paintPixeledSoundWave(QPainter &painter);
 
     WaveDrawingMode drawingMode;
 
-    int getPeaksPad() const;
-    int getPeaksWidth() const;
 };
 
 #endif

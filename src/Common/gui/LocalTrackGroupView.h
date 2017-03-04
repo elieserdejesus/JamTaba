@@ -44,6 +44,8 @@ public:
 
     void resetTracks();
 
+    int getSubchannelInternalIndex(uint subchannelTrackID) const;
+
 protected:
 
     LocalTrackView *createTrackView(long trackID) override;

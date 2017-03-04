@@ -13,7 +13,7 @@ public:
     {
         return "ReaperProjectGenerator";
     }
-    inline QString getWriterName() const override // Localised
+    inline QString getWriterName() const override // Localized
     {
         return QCoreApplication::translate("Recorder::ReaperProjectGenerator", "Generate Reaper Project file (RPP)");
     }

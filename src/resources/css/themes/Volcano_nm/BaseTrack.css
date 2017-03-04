@@ -13,9 +13,7 @@
     color: rgb(50,50,50);
 }
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero,
+#buttonBoost,
 #soloButton,
 #muteButton,
 QPushButton#buttonStereoInversion
@@ -26,9 +24,7 @@ QPushButton#buttonStereoInversion
 }
 
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero
+#buttonBoost
 {
    padding: 1px;
    padding-top: 3px;
@@ -41,18 +37,14 @@ QPushButton#buttonStereoInversion:checked
     background-color: #B35925;
 }
 
-#buttonBoostMinus12:checked,
-#buttonBoostPlus12:checked,
-#buttonBoostZero:checked
+#buttonBoost:checked
 {
     background-color: #B35925;
     color: rgba(0, 0, 0, 160);
     border-radius: 2px;
 }
 
-#buttonBoostMinus12:hover,
-#buttonBoostPlus12:hover,
-#buttonBoostZero:hover,
+#buttonBoost:hover,
 #soloButton:hover,
 #muteButton:hover
 {
@@ -68,9 +60,7 @@ QPushButton#buttonStereoInversion:hover
     border-radius: 2px;
 }
 
-#buttonBoostMinus12:hover:checked,
-#buttonBoostPlus12:hover:checked,
-#buttonBoostZero:hover:checked
+#buttonBoost:hover:checked
 {
     background-color: #e56318;
     border-radius: 2px;
@@ -84,9 +74,7 @@ QPushButton#buttonStereoInversion:hover:checked
 }
 
 /* button colors when the track is NOT xmiting */
-BaseTrackView[unlighted="true"] #buttonBoostMinus12,
-BaseTrackView[unlighted="true"] #buttonBoostZero,
-BaseTrackView[unlighted="true"] #buttonBoostPlus12,
+BaseTrackView[unlighted="true"] #buttonBoost,
 BaseTrackView[unlighted="true"] #soloButton,
 BaseTrackView[unlighted="true"] #muteButton,
 BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
@@ -95,7 +83,7 @@ BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
     border: none;
 }
 
-#buttonBoostZero:checked
+#buttonBoost:checked
 {
     border-bottom: none;
     border-top: none;
@@ -135,7 +123,7 @@ BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
 }
 
 BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked,
-BaseTrackView[unlighted="true"] #buttonBoostZero:hover:checked
+BaseTrackView[unlighted="true"] #buttonBoost:hover:checked
 {
     background-color: #e56318;
 }

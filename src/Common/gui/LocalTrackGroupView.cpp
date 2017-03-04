@@ -225,12 +225,27 @@ void LocalTrackGroupView::addSubChannel()
 
 // +++++++++++++++++++++++++++++++++++++++++++
 
+int LocalTrackGroupView::getSubchannelInternalIndex(uint subchannelTrackID) const
+{
+    for (int i = 0; i < trackViews.count(); ++i) {
+        if (static_cast<uint>(trackViews.at(i)->getTrackID()) == subchannelTrackID)
+            return i;
+    }
+
+    return -1;
+}
+
 LocalTrackView *LocalTrackGroupView::addTrackView(long trackID)
 {
     if (trackViews.size() >= MAX_SUB_CHANNELS)
         return nullptr;
 
     LocalTrackView *newTrack = dynamic_cast<LocalTrackView *>(TrackGroupView::addTrackView(trackID));
+
+    bool enableLooperButton = mainFrame->getMainController()->isPlayingInNinjamRoom();
+    newTrack->enableLopperButton(enableLooperButton);
+    connect(newTrack, &LocalTrackView::openLooperEditor, mainFrame, &MainWindow::openLooperWindow);
+
     if (newTrack)
         emit trackAdded();
 

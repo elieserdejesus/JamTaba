@@ -90,7 +90,7 @@ public:
 
     float get(int channel, int sampleIndex) const;
 
-    int getFrameLenght() const;// { return frameLenght; }
+    unsigned int getFrameLenght() const;// { return frameLenght; }
     void setFrameLenght(unsigned int newFrameLenght);
     inline int getChannels() const
     {
