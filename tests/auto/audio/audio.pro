@@ -1,6 +1,7 @@
 QT += testlib
 QT -= gui
 CONFIG += testcase
+CONFIG += c++11
 TEMPLATE = app
 TARGET = audio
 
