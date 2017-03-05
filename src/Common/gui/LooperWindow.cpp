@@ -106,6 +106,9 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 
 void LooperWindow::updateDrawings()
 {
+    if (!looper)
+        return;
+
     if (!looper->isWaiting()) {
         for (LooperWavePanel *wavePanel : wavePanels.values()) {
             if (wavePanel->isVisible())
@@ -339,7 +342,7 @@ void LooperWindow::updateControls()
         ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
         ui->labelPlayMode->setEnabled(ui->comboBoxPlayMode->isEnabled());
 
-        ui->maxLayersSpinBox->setEnabled(looper->isStopped());
+        ui->maxLayersSpinBox->setEnabled(looper->isStopped() || looper->isPlaying());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
 
         // update playing and recording options

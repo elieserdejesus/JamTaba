@@ -133,6 +133,8 @@ private:
     quint8 maxLayers;
 
     bool resetRequested;
+    quint8 newMaxLayersRequested;
+    void processChangeRequests();
 
     void setCurrentLayer(quint8 newLayer);
 

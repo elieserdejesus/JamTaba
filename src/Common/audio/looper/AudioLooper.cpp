@@ -18,7 +18,8 @@ Looper::Looper()
       maxLayers(4),
       state(new StoppedState()),
       mode(Mode::SEQUENCE),
-      resetRequested(false)
+      resetRequested(false),
+      newMaxLayersRequested(0)
 {
     initialize();
 }
@@ -31,7 +32,8 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       maxLayers(maxLayers),
       state(new StoppedState()),
       mode(initialMode),
-      resetRequested(false)
+      resetRequested(false),
+      newMaxLayersRequested(0)
 {
     initialize();
 }
@@ -303,12 +305,7 @@ void Looper::setLayers(quint8 maxLayers)
         maxLayers = MAX_LOOP_LAYERS;
     }
 
-    this->maxLayers = maxLayers;
-
-    if (maxLayers < (focusedLayerIndex + 1)) // focused layer is not used now?
-        focusedLayerIndex = -1;
-
-    emit maxLayersChanged(maxLayers);
+    newMaxLayersRequested = maxLayers; // schedule the max layer change to next process
 }
 
 int Looper::getFirstUnlockedLayerIndex(quint8 startingFrom) const
@@ -347,12 +344,37 @@ void Looper::mixToBuffer(SamplesBuffer &samples)
     if (intervalLenght)
         intervalPosition = (intervalPosition + samplesToProcess) % intervalLenght;
 
-    // need reset all layers?
+    processChangeRequests();
+}
+
+void Looper::processChangeRequests()
+{
+    // reset requested in last process cycle?
     if (resetRequested && !isRecording()) {
         for (uint l = 0; l < maxLayers; ++l) {
             layers[l]->reset();
         }
         resetRequested = false;
+    }
+
+    // max layers change requested?
+    if (newMaxLayersRequested) {
+        this->maxLayers = newMaxLayersRequested;
+        newMaxLayersRequested = 0;
+
+        if (focusedLayerIndex >= maxLayers) // focused layer is not valid in new maxLayers?
+            focusedLayerIndex = -1;
+
+        if (currentLayerIndex >= maxLayers) { // currentLayer is not valid in new maxLayers?
+            if (mode == Looper::Mode::SEQUENCE) {
+                incrementCurrentLayer();
+            }
+            else {
+                setCurrentLayer(0);
+            }
+        }
+
+        emit maxLayersChanged(maxLayers);
     }
 }
 
