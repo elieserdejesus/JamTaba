@@ -121,8 +121,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../../resources/jamtaba.qrc">
-          <normaloff>:/images/gear-hover.png</normaloff>:/images/gear-hover.png</iconset>
+         <iconset>
+          <normaloff>../../resources/delete_layer.png</normaloff>../../resources/delete_layer.png</iconset>
         </property>
        </widget>
       </item>
@@ -284,7 +284,6 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>
