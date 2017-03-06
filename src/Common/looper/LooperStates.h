@@ -4,7 +4,7 @@
 #include <QtGlobal>
 #include <QMap>
 
-#include "AudioLooper.h"
+#include "Looper.h"
 
 namespace Audio {
 

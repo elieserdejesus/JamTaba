@@ -1,5 +1,5 @@
-#include "AudioLooperLayer.h"
-#include "../core/SamplesBuffer.h"
+#include "LooperLayer.h"
+#include "audio/core/SamplesBuffer.h"
 #include <cstring>
 
 using namespace Audio;

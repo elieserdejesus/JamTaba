@@ -1,6 +1,6 @@
-#include "AudioLooper.h"
-#include "AudioLooperStates.h"
-#include "AudioLooperLayer.h"
+#include "Looper.h"
+#include "LooperStates.h"
+#include "LooperLayer.h"
 
 #include <QDebug>
 
