@@ -355,15 +355,14 @@ void LocalInputNode::setTranspose(qint8 transpose)
 bool LocalInputNode::canProcessMidiMessage(const Midi::MidiMessage &message) const
 {
     if (midiInput.isLearning()) {
-        quint8 midiNote = (quint8)message.getData1();
-        emit midiNoteLearned(midiNote);
-
+        if (message.isNote() || message.isControl()) {
+            quint8 midiNote = (quint8)message.getData1();
+            emit midiNoteLearned(midiNote);
+        }
         return false; //when learning all messages are bypassed
     }
 
-
     return midiInput.accept(message);
-
 }
 
 std::vector<Midi::MidiMessage> LocalInputNode::pullMidiMessagesGeneratedByPlugins() const
