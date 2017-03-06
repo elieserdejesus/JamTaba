@@ -121,8 +121,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>../../resources/delete_layer.png</normaloff>../../resources/delete_layer.png</iconset>
+         <iconset resource="../../resources/jamtaba.qrc">
+          <normaloff>:/images/delete_layer.png</normaloff>:/images/delete_layer.png</iconset>
         </property>
        </widget>
       </item>
