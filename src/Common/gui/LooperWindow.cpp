@@ -179,6 +179,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         connect(looper, &Looper::maxLayersChanged, this, &LooperWindow::handleNewMaxLayers);
         connect(looper, &Looper::modeChanged, this, &LooperWindow::handleModeChanged);
         connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
+        connect(looper, &Looper::destroyed, this, &LooperWindow::close);
 
         this->looper = looper;
     }
