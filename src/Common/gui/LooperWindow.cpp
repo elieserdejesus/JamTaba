@@ -184,6 +184,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
     }
 
     updateBeatsPerInterval();
+    handleNewMaxLayers(looper->getLayers());
     updateControls();
 }
 
@@ -200,6 +201,13 @@ void LooperWindow::handleNewMaxLayers(quint8 newMaxLayers)
 {
     updateControls();
     updateLayersVisibility(newMaxLayers);
+
+    const static int minHeight = 250; // one layer
+    const static int maxHeight = 600; // 8 layers
+    const static int range = maxHeight - minHeight;
+    int newHeight = static_cast<float>(newMaxLayers)/Looper::MAX_LOOP_LAYERS * range + minHeight;
+    setMinimumHeight(newHeight);
+    setMaximumHeight(newHeight);
 
     Q_ASSERT(mainController);
     mainController->storeLooperPreferredLayerCount(newMaxLayers);

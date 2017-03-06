@@ -838,7 +838,7 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
 
 void Settings::setLooperPreferredLayersCount(quint8 layersCount)
 {
-    looperSettings.preferredLayersCount = layersCount <= 4 ? layersCount : 4;
+    looperSettings.preferredLayersCount = layersCount <= 8 ? layersCount : 8;
 }
 
 void Settings::setLooperPreferredMode(quint8 looperMode)

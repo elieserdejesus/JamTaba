@@ -90,7 +90,7 @@ public:
 
     bool canRecord() const;
 
-    static const quint8 MAX_LOOP_LAYERS = 4;
+    static const quint8 MAX_LOOP_LAYERS = 8;
 
     void toggleRecording();
     void togglePlay();
