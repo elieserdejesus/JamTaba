@@ -494,6 +494,12 @@ void LooperWindow::initializeControls()
             resetAllLayersControls();
         }
     });
+
+    connect(ui->saveButton, &QPushButton::clicked, [=](){
+        if (looper) {
+
+        }
+    });
 }
 
 QString LooperWindow::getOptionName(Looper::RecordingOption option)

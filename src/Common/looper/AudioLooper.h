@@ -1,7 +1,7 @@
 #ifndef _AUDIO_LOOPER_
 #define _AUDIO_LOOPER_
 
-#include "../core/SamplesBuffer.h"
+#include "audio/core/SamplesBuffer.h"
 
 #include <QtGlobal>
 #include <QObject>
