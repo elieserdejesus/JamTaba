@@ -517,3 +517,15 @@ QMap<Looper::PlayingOption, bool> Looper::getDefaultSupportedPlayingOptions(Loop
 
     return options;
 }
+
+QList<SamplesBuffer> Looper::getLayersSamples() const
+{
+    QList<SamplesBuffer> layersList;
+    for (uint layer = 0; layer < maxLayers; ++layer) {
+        if (layerIsValid(layer)) { // not empty?
+            layersList.append(layers[layer]->getAllSamples());
+        }
+    }
+
+    return layersList;
+}

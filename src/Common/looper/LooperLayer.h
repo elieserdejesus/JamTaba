@@ -31,6 +31,8 @@ public:
 
     std::vector<float> getSamplesPeaks(uint samplesPerPeak);
 
+    SamplesBuffer getAllSamples() const;
+
     void mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition);
 
     void setLocked(bool locked);

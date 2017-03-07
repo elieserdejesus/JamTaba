@@ -64,7 +64,7 @@ protected:
     Ui::PreferencesDialog *ui;
 
     // recording
-    void populateRecordingTab();
+    void populateMultiTrackRecordingTab();
     void selectRecordingTab();
 
     //metronome

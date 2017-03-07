@@ -21,11 +21,11 @@ private:
 
     std::vector< std::vector<float> > samples;
 
-    SamplesBuffer &operator=(const SamplesBuffer &other);
 public:
     explicit SamplesBuffer(unsigned int channels);
     explicit SamplesBuffer(unsigned int channels, unsigned int frameLenght);
     SamplesBuffer(const SamplesBuffer &other);
+    SamplesBuffer &operator=(const SamplesBuffer &other);
     ~SamplesBuffer();
 
     void setRmsWindowSize(int samples);

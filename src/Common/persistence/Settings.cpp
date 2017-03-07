@@ -82,7 +82,8 @@ QJsonObject SettingsObject::getValueFromJson(const QJsonObject &json, const QStr
 LooperSettings::LooperSettings()
     : SettingsObject("Looper"),
       preferredLayersCount(4),
-      preferredMode(0)
+      preferredMode(0),
+      savePath("")
 {
 
 }
@@ -91,12 +92,43 @@ void LooperSettings::read(const QJsonObject &in)
 {
     preferredLayersCount = getValueFromJson(in, "preferresLayersCount", (quint8)4); // 4 layers as default value
     preferredMode = getValueFromJson(in, "preferredMode", (quint8)0); // use the first mode as default value
+    savePath = getValueFromJson(in, "savePath", QString());
+
+    bool useDefaultSavePath = false;
+    if (!savePath.isEmpty()) {
+        QDir saveDir(QDir::fromNativeSeparators(savePath));
+        if (!saveDir.exists()) {
+            qDebug() << "Creating looper save dir " << saveDir;
+            saveDir.mkpath(".");
+        }
+
+        if (savePath.isEmpty() || !saveDir.exists()) {
+            qWarning() << "Dir " << saveDir << " not exists, using the application directory to save looper data!";
+            useDefaultSavePath = true;
+        }
+    }
+    else {
+        useDefaultSavePath = true;
+    }
+
+    if (useDefaultSavePath) {
+        QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
+        QDir pathDir(QDir::homePath());
+        QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
+        savePath = QDir(documentsDir).absoluteFilePath("JamTaba/Looper");
+        QDir saveDir(savePath);
+        if (!saveDir.exists()) {
+            saveDir.mkpath(".");
+            qDebug() << "Creating looper data folder " << saveDir;
+        }
+    }
 }
 
 void LooperSettings::write(QJsonObject &out) const
 {
     out["preferresLayersCount"] = preferredLayersCount;
     out["preferredMode"] = preferredMode;
+    out["savePath"] = savePath;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -215,7 +247,7 @@ void MidiSettings::read(const QJsonObject &in)
 }
 
 // ++++++++++++++++++++++++++++++
-RecordingSettings::RecordingSettings() :
+MultiTrackRecordingSettings::MultiTrackRecordingSettings() :
     SettingsObject("recording"),
     saveMultiTracksActivated(false),
     jamRecorderActivated(QMap<QString, bool>()),
@@ -224,7 +256,7 @@ RecordingSettings::RecordingSettings() :
 	// TODO: populate jamRecorderActivated with {jamRecorderId, false} pairs for each known jamRecorder
 }
 
-void RecordingSettings::write(QJsonObject &out) const
+void MultiTrackRecordingSettings::write(QJsonObject &out) const
 {
     out["recordingPath"] = QDir::toNativeSeparators(recordingPath);
     out["recordActivated"] = saveMultiTracksActivated;
@@ -237,7 +269,7 @@ void RecordingSettings::write(QJsonObject &out) const
     out["jamRecorders"] = jamRecorders;
 }
 
-void RecordingSettings::read(const QJsonObject &in)
+void MultiTrackRecordingSettings::read(const QJsonObject &in)
 {
     bool useDefaultRecordingPath = false;
     if (in.contains("recordingPath")) {

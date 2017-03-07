@@ -6,7 +6,7 @@
 #include <QMap>
 #include <QLayout>
 
-#include "looper/AudioLooper.h"
+#include "looper/Looper.h"
 #include "LooperWavePanel.h"
 
 namespace Controller {

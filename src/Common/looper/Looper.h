@@ -68,6 +68,8 @@ public:
     void stop();
     void play();
 
+    QList<SamplesBuffer> getLayersSamples() const;
+
     static QString getModeString(Mode mode);
 
     void setMode(Mode mode);
@@ -115,6 +117,8 @@ public:
     bool getOption(PlayingOption option) const;
     bool optionIsSupportedInCurrentMode(PlayingOption option) const;
     bool optionIsSupportedInCurrentMode(RecordingOption option) const;
+
+    uint getIntervalLenght() const;
 
 signals:
     void stateChanged();
@@ -178,6 +182,11 @@ private:
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
 };
+
+inline uint Looper::getIntervalLenght() const
+{
+    return intervalLenght;
+}
 
 inline bool Looper::optionIsSupportedInCurrentMode(PlayingOption option) const
 {

@@ -1,8 +1,8 @@
 #include "MetronomeUtils.h"
 
 #include "audio/core/SamplesBuffer.h"
-#include "audio/file/FileReaderFactory.h"
-#include "audio/file/FileReader.h"
+#include "file/FileReaderFactory.h"
+#include "file/FileReader.h"
 #include "audio/Resampler.h"
 #include <QString>
 #include <QFileInfo>

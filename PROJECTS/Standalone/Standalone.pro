@@ -2,7 +2,7 @@
     error( "Couldn't find the common.pri file!" )
 }
 
-QT += core gui network widgets
+QT += core gui network widgets concurrent
 
 TARGET = Jamtaba2
 TEMPLATE = app

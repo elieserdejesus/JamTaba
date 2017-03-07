@@ -37,14 +37,25 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
         samples.push_back(std::vector<float>(frameLenght));
 }
 
-SamplesBuffer::SamplesBuffer(const SamplesBuffer &other) :
-    channels(other.channels),
-    frameLenght(other.frameLenght),
-    samples(other.samples),
-    rmsRunningSum(other.rmsRunningSum),
-    rmsWindowSize(other.rmsWindowSize)
+SamplesBuffer::SamplesBuffer(const SamplesBuffer &other)
+    : channels(other.channels),
+      frameLenght(other.frameLenght),
+      samples(other.samples),
+      rmsRunningSum(other.rmsRunningSum),
+      rmsWindowSize(other.rmsWindowSize)
 {
     // qWarning() << "Samples Buffer copy constructor!";
+}
+
+SamplesBuffer &SamplesBuffer::operator=(const SamplesBuffer &other)
+{
+    this->channels = other.channels;
+    this->frameLenght = other.frameLenght;
+    this->samples = other.samples;
+    this->rmsRunningSum = other.rmsRunningSum;
+    this->rmsWindowSize = other.rmsWindowSize;
+
+    return *this;
 }
 
 SamplesBuffer::~SamplesBuffer()

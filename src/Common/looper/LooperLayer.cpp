@@ -219,3 +219,13 @@ void LooperLayer::resize(quint32 samplesPerCycle)
         peaksCache.clear(); // invalidate peaks cache
     }
 }
+
+SamplesBuffer LooperLayer::getAllSamples() const
+{
+    SamplesBuffer buffer(2, availableSamples);
+    uint bytesToCopy = availableSamples * sizeof(float);
+    std::memcpy(buffer.getSamplesArray(0), &(leftChannel[0]), bytesToCopy);
+    std::memcpy(buffer.getSamplesArray(1), &(rightChannel[0]), bytesToCopy);
+
+    return buffer;
+}

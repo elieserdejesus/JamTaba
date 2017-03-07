@@ -208,18 +208,18 @@ public:
     void storeWindowSettings(bool maximized, const QPointF &location, const QSize &size);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, const QList<bool> &midiInputStatus);
 
-    void storeRecordingMultiTracksStatus(bool savingMultiTracks);
-    inline bool isRecordingMultiTracksActivated() const
+    void storeMultiTrackRecordingStatus(bool savingMultiTracks);
+    inline bool isMultiTrackRecordingActivated() const
     {
         return settings.isSaveMultiTrackActivated();
     }
+    void storeMultiTrackRecordingPath(const QString &newPath);
+
     void storeJamRecorderStatus(QString writerId, bool status);
 
     inline bool isJamRecorderActivated(QString writerId) {
         return settings.isJamRecorderActivated(writerId);
     }
-
-    void storeRecordingPath(const QString &newPath);
 
     void storePrivateServerSettings(const QString &server, int serverPort, const QString &password);
 

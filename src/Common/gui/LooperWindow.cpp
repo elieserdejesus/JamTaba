@@ -4,6 +4,8 @@
 #include "gui/GuiUtils.h"
 #include "Utils.h"
 #include "MainController.h"
+#include "looper/LooperSaver.h"
+#include "persistence/Settings.h"
 
 #include <QGridLayout>
 #include <QSpinBox>
@@ -497,7 +499,13 @@ void LooperWindow::initializeControls()
 
     connect(ui->saveButton, &QPushButton::clicked, [=](){
         if (looper) {
-
+            Persistence::Settings settings = mainController->getSettings();
+            QString savePath = settings.getLooperSavePath();
+            LoopSaver loopSaver(savePath, looper);
+            bool encodeInOggVorbis = false;
+            uint loopLength = looper->getIntervalLenght();
+            uint sampleRate = mainController->getSampleRate();
+            loopSaver.save(encodeInOggVorbis, loopLength, sampleRate);
         }
     });
 }

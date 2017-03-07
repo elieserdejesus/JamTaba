@@ -20,12 +20,12 @@ void PreferencesDialogPlugin::initialize(PreferencesTab initialTab, const Persis
 void PreferencesDialogPlugin::selectTab(int index)
 {
     if (index == 0) //only the recording and metronome tabs are available in VST plugin
-        populateRecordingTab();
+        populateMultiTrackRecordingTab();
     else
         populateMetronomeTab();
 }
 
 void PreferencesDialogPlugin::populateAllTabs(){
-    populateRecordingTab();
+    populateMultiTrackRecordingTab();
     populateMetronomeTab();
 }

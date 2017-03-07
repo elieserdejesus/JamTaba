@@ -1262,7 +1262,7 @@ void MainWindow::setCustomMetronome(const QString &primaryBeatFile,
 
 void MainWindow::setMultiTrackRecordingStatus(bool recording)
 {
-    mainController->storeRecordingMultiTracksStatus(recording);
+    mainController->storeMultiTrackRecordingStatus(recording);
 }
 
 void MainWindow::setJamRecorderStatus(QString writerId, bool status)
@@ -1272,7 +1272,7 @@ void MainWindow::setJamRecorderStatus(QString writerId, bool status)
 
 void MainWindow::setRecordingPath(const QString &newRecordingPath)
 {
-    mainController->storeRecordingPath(newRecordingPath);
+    mainController->storeMultiTrackRecordingPath(newRecordingPath);
 }
 
 // ++++++++++++++++++++++

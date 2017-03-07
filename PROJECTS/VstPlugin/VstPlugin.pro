@@ -7,7 +7,7 @@
     error( "Couldn't find the qtwinmigrate common.pri file!" )
 }
 
-QT       += core gui network widgets
+QT       += core gui network widgets concurrent
 
 TARGET = "JamtabaVST2"  #using this name (with a '2' suffix) to match the previons JTBA versions and avoid duplicated plugin in used machines
 TEMPLATE = lib

@@ -166,7 +166,7 @@ bool PreferencesDialog::usingCustomEncodingQuality()
 void PreferencesDialog::populateAllTabs()
 {
     populateEncoderQualityComboBox();
-    populateRecordingTab();
+    populateMultiTrackRecordingTab();
     populateMetronomeTab();
 }
 
@@ -198,10 +198,10 @@ void PreferencesDialog::populateMetronomeTab()
     }
 }
 
-void PreferencesDialog::populateRecordingTab()
+void PreferencesDialog::populateMultiTrackRecordingTab()
 {
     Q_ASSERT(settings);
-    Persistence::RecordingSettings recordingSettings = settings->getRecordingSettings();
+    Persistence::MultiTrackRecordingSettings recordingSettings = settings->getMultiTrackRecordingSettings();
     ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
     foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
         myCheckBox->setChecked(recordingSettings.isJamRecorderActivated(jamRecorderCheckBoxes[myCheckBox]));
