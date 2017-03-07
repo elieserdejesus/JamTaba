@@ -12,12 +12,12 @@ class LoopSaver
 {
 public:
     LoopSaver(const QString &savePath, Looper *looper);
-    void save(bool encodeInOggVorbis, uint loopLenght, uint sampleRate);
+    void save(const QString &loopFileName, uint bpm, uint bpi, bool encodeInOggVorbis, uint sampleRate);
 private:
     QString savePath;
     Looper *looper;
 
-    void saveSamplesToDisk(const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, uint sampleRate);
+    void saveSamplesToDisk(const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, uint sampleRate);
 };
 
 } // namespace

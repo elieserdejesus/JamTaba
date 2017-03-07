@@ -11,6 +11,7 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QKeyEvent>
+#include <QInputDialog>
 
 using namespace Controller;
 using namespace Audio;
@@ -498,14 +499,28 @@ void LooperWindow::initializeControls()
     });
 
     connect(ui->saveButton, &QPushButton::clicked, [=](){
-        if (looper) {
-            Persistence::Settings settings = mainController->getSettings();
+        if(!looper || !mainController->isPlayingInNinjamRoom())
+            return;
+
+        bool ok;
+        QString loopFileName = QInputDialog::getText(this,
+                                             tr("Saving looper layers ..."),
+                                             tr("Loop file name:"),
+                                             QLineEdit::Normal,
+                                             QString(),
+                                             &ok);
+
+        if (ok && !loopFileName.isEmpty()) {
+            auto settings = mainController->getSettings();
+            auto ninjamController = mainController->getNinjamController();
             QString savePath = settings.getLooperSavePath();
-            LoopSaver loopSaver(savePath, looper);
             bool encodeInOggVorbis = false;
-            uint loopLength = looper->getIntervalLenght();
             uint sampleRate = mainController->getSampleRate();
-            loopSaver.save(encodeInOggVorbis, loopLength, sampleRate);
+            uint bpm = ninjamController->getCurrentBpm();
+            uint bpi = ninjamController->getCurrentBpi();
+
+            LoopSaver loopSaver(savePath, looper);
+            loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, sampleRate);
         }
     });
 }
