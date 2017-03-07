@@ -18,6 +18,9 @@ private:
     Looper *looper;
 
     void saveSamplesToDisk(const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, uint sampleRate);
+
+    void saveJsonFile(const QString &loopFileName);
+
 };
 
 } // namespace
