@@ -118,6 +118,7 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
         stop:0 rgb(255,255,0),
         stop:1 rgb(204,204,0));
+    color: rgb(40, 40, 40);
 }
 
 #xmitButton:!checked
