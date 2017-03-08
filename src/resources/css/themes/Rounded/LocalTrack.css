@@ -119,7 +119,8 @@ LocalTrackView #midiPeakMeter
     border-radius: 1px;
 }
 
-LocalTrackView #buttonLooper:disabled
+LocalTrackView[unlighted="false"] #buttonLooper:disabled,
+LocalTrackView[unlighted="true"] #buttonLooper:enabled
 {
     border: none;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -127,4 +128,10 @@ LocalTrackView #buttonLooper:disabled
         stop:0.2 rgba(255, 255, 255, 180),
         stop:0.85 rgba(255, 255, 255, 180),
         stop:1 rgba(255,255, 255, 40));
+}
+
+LocalTrackView[unlighted="true"] #buttonLooper:disabled
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
 }
