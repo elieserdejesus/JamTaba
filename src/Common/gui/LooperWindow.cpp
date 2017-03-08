@@ -357,6 +357,9 @@ void LooperWindow::updateControls()
         ui->maxLayersSpinBox->setEnabled(looper->isStopped() || looper->isPlaying());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
 
+        ui->saveButton->setEnabled(looper->canSave());
+        ui->loadButton->setEnabled(looper->isStopped());
+
         // update playing and recording options
         updateOptions<Looper::PlayingOption>(ui->groupBoxPlaying->layout());
         updateOptions<Looper::RecordingOption>(ui->groupBoxRecording->layout());

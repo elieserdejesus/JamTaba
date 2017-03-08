@@ -87,6 +87,8 @@ public:
 
     bool hasLockedLayers() const;
 
+    bool canSave() const;
+
     void setLayers(quint8 maxLayers);
     quint8 getLayers() const;
 

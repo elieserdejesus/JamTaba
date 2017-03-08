@@ -529,3 +529,13 @@ QList<SamplesBuffer> Looper::getLayersSamples() const
 
     return layersList;
 }
+
+bool Looper::canSave() const
+{
+    for (int l = 0; l < maxLayers; ++l) {
+        if (layers[l]->isValid())
+            return true;
+    }
+
+    return false;
+}
