@@ -73,7 +73,7 @@ QPushButton#buttonStereoInversion:hover:checked
 BaseTrackView[unlighted="true"] #buttonBoost,
 BaseTrackView[unlighted="true"] #soloButton,
 BaseTrackView[unlighted="true"] #muteButton,
-BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversionz
 {
     background-color: rgba(0, 0, 0, 30);
     border: none;

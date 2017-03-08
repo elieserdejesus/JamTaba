@@ -200,3 +200,9 @@ LocalTrackView #buttonLooper:disabled
     border: none;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
 }
+
+LocalTrackView[unlighted="true"] #buttonLooper
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}

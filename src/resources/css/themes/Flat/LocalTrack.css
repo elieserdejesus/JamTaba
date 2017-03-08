@@ -132,3 +132,9 @@ LocalTrackView #buttonLooper:disabled
     border: none;
     background-color: rgb(250, 250, 250);
 }
+
+LocalTrackView[unlighted="true"] #buttonLooper
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
