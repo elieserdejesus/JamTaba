@@ -135,3 +135,9 @@ LocalTrackView[unlighted="true"] #buttonLooper:disabled
     background-color: rgba(0, 0, 0, 30);
     border: none;
 }
+
+LocalTrackView[unlighted="true"] #buttonBoost:!checked
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
