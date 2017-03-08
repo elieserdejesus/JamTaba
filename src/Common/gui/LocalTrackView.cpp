@@ -320,4 +320,7 @@ void LocalTrackView::refreshStyleSheet()
 
     style()->unpolish(buttonStereoInversion); // this is necessary to change the stereo inversion button colors when the transmit button is clicled
     style()->polish(buttonStereoInversion);
+
+    style()->unpolish(buttonLooper);
+    style()->polish(buttonLooper);
 }
