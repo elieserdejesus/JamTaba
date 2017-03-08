@@ -107,9 +107,30 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="saveButton">
+       <widget class="QPushButton" name="loadButton">
+        <property name="toolTip">
+         <string>Load looper layers</string>
+        </property>
         <property name="text">
-         <string>save</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../resources/jamtaba.qrc">
+          <normaloff>:/images/load.png</normaloff>:/images/load.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="saveButton">
+        <property name="toolTip">
+         <string>Save looper layers</string>
+        </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../resources/jamtaba.qrc">
+          <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
         </property>
        </widget>
       </item>
