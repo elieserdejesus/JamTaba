@@ -41,6 +41,7 @@ private slots:
     void handleNewMaxLayers(quint8 newMaxLayers);
     void handleModeChanged();
     void updateControls();
+    void showLoadMenu();
 
 private:
     Ui::LooperWindow *ui;

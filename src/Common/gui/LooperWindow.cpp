@@ -12,6 +12,7 @@
 #include <QCheckBox>
 #include <QKeyEvent>
 #include <QInputDialog>
+#include <QMenu>
 
 using namespace Controller;
 using namespace Audio;
@@ -43,6 +44,11 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
     // this alignments are not available in QtCreator UI designer
     ui->widgetBottom->layout()->setAlignment(ui->modeControlsLayout, Qt::AlignBottom);
     ui->widgetBottom->layout()->setAlignment(ui->layerControlsLayout, Qt::AlignBottom);
+
+
+    QMenu *loadMenu = new QMenu();
+    ui->loadButton->setMenu(loadMenu);
+    connect(loadMenu, &QMenu::aboutToShow, this, &LooperWindow::showLoadMenu);
 }
 
 void LooperWindow::keyPressEvent(QKeyEvent *ev)
@@ -613,4 +619,46 @@ void LooperWindow::clearLayout(QLayout *layout)
             delete item;
         }
     }
+}
+
+struct LooperMetadata
+{
+    quint8 layers;
+    quint16 bpm;
+    quint32 bpi;
+    QString name;
+
+    QString toString() const
+    {
+        return name + " (" + QString::number(bpm) + " BPM, " + QString::number(bpi) + " BPI, " + QString::number(layers) + " layers";
+    }
+};
+
+void LooperWindow::showLoadMenu()
+{
+    QMenu *menu = ui->loadButton->menu();
+    menu->clear();
+
+    LooperMetadata looperMetadata;
+    looperMetadata.bpi = 16;
+    looperMetadata.bpm = 120;
+    looperMetadata.layers = 1;
+    looperMetadata.name = "Loop teste";
+
+    QList<LooperMetadata> loopsMetadata;
+    loopsMetadata << looperMetadata;
+
+    quint16 currentBpm = mainController->getNinjamController()->getCurrentBpm();
+    QMenu *bpmMatchedMenu = new QMenu(tr("%1 BPM loops").arg(currentBpm));
+    menu->addMenu(bpmMatchedMenu);
+    for (const LooperMetadata &metaData : loopsMetadata) {
+        QString loopString = metaData.toString();
+        QAction *action = bpmMatchedMenu->addAction(loopString);
+        action->setData(looperMetadata.name);// using name as data
+    }
+
+    menu->addSeparator();
+    menu->addAction(tr("Browse ..."));
+
+    menu->show();
 }
