@@ -122,6 +122,8 @@ public:
 
     uint getIntervalLenght() const;
 
+    void setChanged(bool changed);
+
 signals:
     void stateChanged();
     void modeChanged();
@@ -132,6 +134,8 @@ signals:
 private:
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples
+
+    bool changed; // used to decide if we can save or not layers content
 
     LooperLayer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex; // current played layer

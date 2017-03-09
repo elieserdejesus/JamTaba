@@ -15,6 +15,7 @@ Looper::Looper()
       focusedLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0),
+      changed(false),
       maxLayers(4),
       state(new StoppedState()),
       mode(Mode::SEQUENCE),
@@ -29,6 +30,7 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       focusedLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0),
+      changed(false),
       maxLayers(maxLayers),
       state(new StoppedState()),
       mode(initialMode),
@@ -55,6 +57,7 @@ void Looper::initialize()
 void Looper::reset()
 {
     resetRequested = true;
+    changed = false;
 }
 
 Looper::~Looper()
@@ -129,11 +132,13 @@ void Looper::incrementCurrentLayer()
 void Looper::appendInCurrentLayer(const SamplesBuffer &samples, uint samplesToAppend)
 {
      layers[currentLayerIndex]->append(samples, samplesToAppend);
+     changed = true;
 }
 
 void Looper::overdubInCurrentLayer(const SamplesBuffer &samples, uint samplesToMix)
 {
     layers[currentLayerIndex]->overdub(samples, samplesToMix, intervalPosition);
+    changed = true;
 }
 
 void Looper::mixCurrentLayerTo(SamplesBuffer &samples, uint samplesToMix)
@@ -530,8 +535,16 @@ QList<SamplesBuffer> Looper::getLayersSamples() const
     return layersList;
 }
 
+void Looper::setChanged(bool changed)
+{
+    this->changed = changed;
+}
+
 bool Looper::canSave() const
 {
+    if (!changed || isWaiting() || isRecording())
+        return false;
+
     for (int l = 0; l < maxLayers; ++l) {
         if (layers[l]->isValid())
             return true;

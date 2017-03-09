@@ -524,6 +524,7 @@ void LooperWindow::initializeControls()
 
             LoopSaver loopSaver(savePath, looper);
             loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, sampleRate);
+            looper->setChanged(false);
         }
     });
 }
