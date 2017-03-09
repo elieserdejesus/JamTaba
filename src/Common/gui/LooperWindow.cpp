@@ -360,6 +360,8 @@ void LooperWindow::updateControls()
         ui->saveButton->setEnabled(looper->canSave());
         ui->loadButton->setEnabled(looper->isStopped());
 
+        ui->resetButton->setEnabled(looper->isStopped() || looper->isPlaying());
+
         // update playing and recording options
         updateOptions<Looper::PlayingOption>(ui->groupBoxPlaying->layout());
         updateOptions<Looper::RecordingOption>(ui->groupBoxRecording->layout());
@@ -525,6 +527,7 @@ void LooperWindow::initializeControls()
             LoopSaver loopSaver(savePath, looper);
             loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, sampleRate);
             looper->setChanged(false);
+            updateControls();
         }
     });
 }
