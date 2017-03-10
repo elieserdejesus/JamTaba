@@ -44,6 +44,8 @@ public:
     void addBuffer(const SamplesBuffer &samples); // recording
     void mixToBuffer(SamplesBuffer &samples); // playing/mixing
 
+    void setLayerSamples(quint8 layer, const SamplesBuffer &samples);
+
     void reset(); // clear all
 
     void startNewCycle(uint samplesInCycle);

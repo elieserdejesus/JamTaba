@@ -34,7 +34,7 @@ class SampleExtractor16Bits : public SampleExtractor
         SampleExtractor16Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
-            qDebug() << "Creating a SampleExtrator for 16 bits audio";
+
         }
 
         float nextSample() override
@@ -51,7 +51,7 @@ class SampleExtractor24Bits : public SampleExtractor
         SampleExtractor24Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
-            qDebug() << "Creating a SampleExtrator for 24 bits audio";
+
         }
 
         float nextSample() override
@@ -70,7 +70,7 @@ class SampleExtractor8Bits : public SampleExtractor
         SampleExtractor8Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
-            qDebug() << "Creating a SampleExtrator for 8 bits audio";
+
         }
 
         float nextSample() override
@@ -118,9 +118,6 @@ void WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuff
     if (!wavFile.open(QFile::ReadOnly)) {
         qWarning() << "Failed to open WAV file ..." << filePath;
         return; // Done, out buffer is not changed
-    }
-    else{
-        qDebug() << "Opening " << filePath;
     }
 
     // Read in the whole thing

@@ -18,6 +18,8 @@ public:
     void setGain(float gain);
     void setPan(float pan);
 
+    void setSamples(const SamplesBuffer &samples);
+
     void zero();
 
     void reset();

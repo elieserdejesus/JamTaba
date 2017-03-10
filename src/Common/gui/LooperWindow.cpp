@@ -4,7 +4,7 @@
 #include "gui/GuiUtils.h"
 #include "Utils.h"
 #include "MainController.h"
-#include "looper/LooperSaver.h"
+#include "looper/LooperPersistence.h"
 #include "persistence/Settings.h"
 
 #include <QGridLayout>
@@ -621,40 +621,27 @@ void LooperWindow::clearLayout(QLayout *layout)
     }
 }
 
-struct LooperMetadata
-{
-    quint8 layers;
-    quint16 bpm;
-    quint32 bpi;
-    QString name;
-
-    QString toString() const
-    {
-        return name + " (" + QString::number(bpm) + " BPM, " + QString::number(bpi) + " BPI, " + QString::number(layers) + " layers";
-    }
-};
-
 void LooperWindow::showLoadMenu()
 {
     QMenu *menu = ui->loadButton->menu();
     menu->clear();
 
-    LooperMetadata looperMetadata;
-    looperMetadata.bpi = 16;
-    looperMetadata.bpm = 120;
-    looperMetadata.layers = 1;
-    looperMetadata.name = "Loop teste";
+    QString loopsDir = mainController->getSettings().getLooperSavePath();
+    QList<LoopInfo> loopsMetadata = LoopLoader::loadAllLoopsInfo(loopsDir);
 
-    QList<LooperMetadata> loopsMetadata;
-    loopsMetadata << looperMetadata;
+    auto ninjamController = mainController->getNinjamController();
+    quint16 currentBpm = ninjamController->getCurrentBpm();
 
-    quint16 currentBpm = mainController->getNinjamController()->getCurrentBpm();
     QMenu *bpmMatchedMenu = new QMenu(tr("%1 BPM loops").arg(currentBpm));
     menu->addMenu(bpmMatchedMenu);
-    for (const LooperMetadata &metaData : loopsMetadata) {
-        QString loopString = metaData.toString();
+    for (LoopInfo loopMetadata : loopsMetadata) {
+        QString loopString = loopMetadata.toString();
         QAction *action = bpmMatchedMenu->addAction(loopString);
-        action->setData(looperMetadata.name);// using name as data
+        connect(action, &QAction::triggered, [=](){
+            LoopLoader loader(loopsDir);
+            loader.load(loopMetadata, looper);
+            update();
+        });
     }
 
     menu->addSeparator();

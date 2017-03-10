@@ -552,3 +552,9 @@ bool Looper::canSave() const
 
     return false;
 }
+
+void Looper::setLayerSamples(quint8 layer, const SamplesBuffer &samples)
+{
+    if (layer < maxLayers)
+        layers[layer]->setSamples(samples);
+}

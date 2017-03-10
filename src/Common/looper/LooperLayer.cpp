@@ -44,6 +44,33 @@ void LooperLayer::zero()
     peaksCache.clear();
 }
 
+void LooperLayer::setSamples(const SamplesBuffer &samples)
+{
+    int samplesToCopy = qMin(samples.getFrameLenght(), lastCycleLenght);
+    int bytesToCopy =  samplesToCopy * sizeof(float);
+
+    std::memcpy(&(leftChannel[0]), samples.getSamplesArray(0), bytesToCopy);
+    if (samples.isMono())
+        std::memcpy(&(rightChannel[0]), samples.getSamplesArray(0), bytesToCopy);
+    else
+        std::memcpy(&(rightChannel[0]), samples.getSamplesArray(1), bytesToCopy);
+
+    availableSamples = samplesToCopy;
+
+
+    //rebuild peaks cache
+    lastCacheComputationSample = 0;
+    peaksCache.clear();
+
+    if (lastSamplesPerPeak) {
+        while (availableSamples - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
+            peaksCache.push_back(computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak));
+            lastCacheComputationSample += lastSamplesPerPeak;
+        }
+    }
+
+}
+
 void LooperLayer::setPan(float pan)
 {
     if (pan < -1)
