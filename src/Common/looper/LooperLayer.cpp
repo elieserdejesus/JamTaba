@@ -47,7 +47,13 @@ void LooperLayer::zero()
 void LooperLayer::setSamples(const SamplesBuffer &samples)
 {
     int samplesToCopy = qMin(samples.getFrameLenght(), lastCycleLenght);
+    if (!samplesToCopy)
+        return;
+
     int bytesToCopy =  samplesToCopy * sizeof(float);
+
+    Q_ASSERT(leftChannel.capacity() >= samplesToCopy);
+    Q_ASSERT(rightChannel.capacity() >= samplesToCopy);
 
     std::memcpy(&(leftChannel[0]), samples.getSamplesArray(0), bytesToCopy);
     if (samples.isMono())
