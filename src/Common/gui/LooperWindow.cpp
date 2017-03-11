@@ -191,11 +191,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
         connect(looper, &Looper::destroyed, this, &LooperWindow::close);
 
-        connect(looper, &Looper::layerCleared, [=](quint8 layer){
-            Q_UNUSED(layer);
-            int valuesToDisable = looper->getLastValidLayer();
-            setMaxLayerComboBoxValuesAvailability(valuesToDisable);
-        });
+        connect(looper, &Looper::layerCleared, this, &LooperWindow::updateControls);
 
         this->looper = looper;
     }
