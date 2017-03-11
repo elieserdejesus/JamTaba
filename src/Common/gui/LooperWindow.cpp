@@ -170,7 +170,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         updateLayersVisibility(currentLayers);
 
         // initial values
-        ui->maxLayersSpinBox->setValue(looper->getLayers());
+        ui->maxLayersComboBox->setCurrentText(QString::number(looper->getLayers()));
 
         QString selectedMode = looper->getModeString(looper->getMode());
         for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
@@ -360,12 +360,12 @@ void LooperWindow::updateControls()
         ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
         ui->labelPlayMode->setEnabled(ui->comboBoxPlayMode->isEnabled());
 
-        ui->maxLayersSpinBox->setEnabled(looper->isStopped() || looper->isPlaying());
-        ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
-        int currentMaxLayersValue = ui->maxLayersSpinBox->value();
+        ui->maxLayersComboBox->setEnabled(looper->isStopped() || looper->isPlaying());
+        ui->labelMaxLayers->setEnabled(ui->maxLayersComboBox->isEnabled());
+        int currentMaxLayersValue = (ui->maxLayersComboBox->currentIndex() + 1);
         if (currentMaxLayersValue != looper->getLayers()) {
-            QSignalBlocker signalBlocker(ui->maxLayersSpinBox);
-            ui->maxLayersSpinBox->setValue(looper->getLayers());
+            QSignalBlocker signalBlocker(ui->maxLayersComboBox);
+            ui->maxLayersComboBox->setCurrentIndex(looper->getLayers() - 1);
         }
 
         ui->saveButton->setEnabled(looper->canSave());
@@ -477,9 +477,11 @@ void LooperWindow::initializeControls()
     createPlayingOptionsCheckBoxes();
     createRecordingOptionsCheckBoxes();
 
-    // max layer spinbox
-    ui->maxLayersSpinBox->setMinimum(1);
-    ui->maxLayersSpinBox->setMaximum(Looper::MAX_LOOP_LAYERS);
+    // max layer combobox
+    ui->maxLayersComboBox->clear();
+    for (quint8 l = 1; l <= Looper::MAX_LOOP_LAYERS; ++l) {
+        ui->maxLayersComboBox->addItem(QString::number(l), QVariant::fromValue(l));
+    }
 
     // wire signals/slots
     connect(ui->buttonRec, &QPushButton::clicked, [=]
@@ -501,10 +503,12 @@ void LooperWindow::initializeControls()
         }
     });
 
-    connect(ui->maxLayersSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int newMaxLayers)
+    connect(ui->maxLayersComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
     {
-        if (looper)
-            looper->setLayers(newMaxLayers);
+        if (looper) {
+            uint layers = index + 1;
+            looper->setLayers(layers);
+        }
     });
 
     connect(ui->resetButton, &QPushButton::clicked, [=](){
