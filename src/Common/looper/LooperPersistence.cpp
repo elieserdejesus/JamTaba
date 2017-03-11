@@ -49,6 +49,8 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
     } else {
         qCritical() << jsonFile.errorString();
     }
+
+    looper->setChanged(false);
 }
 
 void LoopSaver::saveSamplesToDisk(const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, uint sampleRate)

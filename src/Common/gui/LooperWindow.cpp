@@ -362,6 +362,11 @@ void LooperWindow::updateControls()
 
         ui->maxLayersSpinBox->setEnabled(looper->isStopped() || looper->isPlaying());
         ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
+        int currentMaxLayersValue = ui->maxLayersSpinBox->value();
+        if (currentMaxLayersValue != looper->getLayers()) {
+            QSignalBlocker signalBlocker(ui->maxLayersSpinBox);
+            ui->maxLayersSpinBox->setValue(looper->getLayers());
+        }
 
         ui->saveButton->setEnabled(looper->canSave());
         ui->loadButton->setEnabled(looper->isStopped());
@@ -532,7 +537,6 @@ void LooperWindow::initializeControls()
 
             LoopSaver loopSaver(savePath, looper);
             loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, sampleRate);
-            looper->setChanged(false);
             updateControls();
         }
     });
