@@ -13,6 +13,7 @@
 #include <QKeyEvent>
 #include <QInputDialog>
 #include <QMenu>
+#include <QStandardItemModel>
 
 using namespace Controller;
 using namespace Audio;
@@ -190,6 +191,12 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
         connect(looper, &Looper::destroyed, this, &LooperWindow::close);
 
+        connect(looper, &Looper::layerCleared, [=](quint8 layer){
+            Q_UNUSED(layer);
+            int valuesToDisable = looper->getLastValidLayer();
+            setMaxLayerComboBoxValuesAvailability(valuesToDisable);
+        });
+
         this->looper = looper;
     }
 
@@ -360,13 +367,7 @@ void LooperWindow::updateControls()
         ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
         ui->labelPlayMode->setEnabled(ui->comboBoxPlayMode->isEnabled());
 
-        ui->maxLayersComboBox->setEnabled(looper->isStopped() || looper->isPlaying());
-        ui->labelMaxLayers->setEnabled(ui->maxLayersComboBox->isEnabled());
-        int currentMaxLayersValue = (ui->maxLayersComboBox->currentIndex() + 1);
-        if (currentMaxLayersValue != looper->getLayers()) {
-            QSignalBlocker signalBlocker(ui->maxLayersComboBox);
-            ui->maxLayersComboBox->setCurrentIndex(looper->getLayers() - 1);
-        }
+        updateMaxLayersControls();
 
         ui->saveButton->setEnabled(looper->canSave());
         ui->loadButton->setEnabled(looper->isStopped());
@@ -406,6 +407,39 @@ void LooperWindow::updateControls()
     }
 
     update();
+}
+
+void LooperWindow::setMaxLayerComboBoxValuesAvailability(int valuesToDisable)
+{
+    // disable the values before last valid (non empty) layers
+    const QStandardItemModel* model = qobject_cast<const QStandardItemModel*>(ui->maxLayersComboBox->model());
+    const QColor disabledColor = ui->maxLayersComboBox->palette().color(QPalette::Disabled, QPalette::Text);
+    for (int l = 0; l < Looper::MAX_LOOP_LAYERS; ++l) {
+        QStandardItem* item = model->item(l);
+        bool disable = l < valuesToDisable;
+        item->setFlags(disable ? item->flags() & ~(Qt::ItemIsSelectable|Qt::ItemIsEnabled) : Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        // visually disable by greying out - works only if combobox has been painted already and palette returns the wanted color
+        item->setData(disable ? disabledColor : QVariant(), // clear item data in order to use default color
+                                Qt::TextColorRole);
+    }
+}
+
+void LooperWindow::updateMaxLayersControls()
+{
+    ui->maxLayersComboBox->setEnabled(looper->isStopped() || looper->isPlaying());
+    ui->labelMaxLayers->setEnabled(ui->maxLayersComboBox->isEnabled());
+    int currentMaxLayersValue = (ui->maxLayersComboBox->currentIndex() + 1);
+    if (currentMaxLayersValue != looper->getLayers()) {
+        QSignalBlocker signalBlocker(ui->maxLayersComboBox);
+        ui->maxLayersComboBox->setCurrentIndex(looper->getLayers() - 1);
+    }
+
+    int lastValidLayerIndex = looper->getLastValidLayer();
+    uint layersToDisable = 0;
+    if (lastValidLayerIndex >= 0)
+        layersToDisable = lastValidLayerIndex;
+
+    setMaxLayerComboBoxValuesAvailability(layersToDisable);
 }
 
 void LooperWindow::deleteWavePanels()
@@ -498,9 +532,8 @@ void LooperWindow::initializeControls()
 
     connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
     {
-        if (index >= 0 && looper) {
+        if (index >= 0 && looper)
             looper->setMode(ui->comboBoxPlayMode->currentData().value<Looper::Mode>());
-        }
     });
 
     connect(ui->maxLayersComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)

@@ -75,7 +75,6 @@ public:
 private:
     QString loadPath;
 
-    static void loadLayerContent(Looper *looper, const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded);
     static SamplesBuffer loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded);
 };
 

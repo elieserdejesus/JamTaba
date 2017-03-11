@@ -80,15 +80,9 @@ void LoopLoader::load(LoopInfo loopInfo, Looper *looper)
 
     bool audioIsEncoded = loopInfo.audioIsEncoded;
     for (quint8 layer = 0; layer < loopInfo.layers; ++layer) {
-        // loading each layer content in a sepparated thread
-        QtConcurrent::run(&LoopLoader::loadLayerContent, looper, loadPath, loopInfo.name, layer, audioIsEncoded);
+        SamplesBuffer samples = loadLoopLayerSamples(loadPath, loopInfo.name, layer, audioIsEncoded);
+        looper->setLayerSamples(layer, samples);
     }
-}
-
-void LoopLoader::loadLayerContent(Looper *looper, const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded)
-{
-    SamplesBuffer samples = loadLoopLayerSamples(loadPath, loopName, layerIndex, audioIsEncoded);
-    looper->setLayerSamples(layerIndex, samples);
 }
 
 SamplesBuffer LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded)

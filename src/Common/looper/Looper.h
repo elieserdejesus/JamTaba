@@ -63,6 +63,7 @@ public:
     bool layerIsLocked(quint8 layerIndex) const;
 
     bool layerIsValid(quint8 layerIndex) const;
+    int getLastValidLayer() const;
 
     void setLayerGain(quint8 layerIndex, float gain);
     void setLayerPan(quint8 layerIndex, float pan);
@@ -131,6 +132,7 @@ signals:
     void modeChanged();
     void maxLayersChanged(quint8 newMaxLayers);
     void currentLayerChanged(quint8 currentLayer);
+    void layerCleared(quint8 layer);
     void layerLockedStateChanged(quint8 currentLayer, bool locked);
 
 private:

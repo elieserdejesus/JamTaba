@@ -118,6 +118,9 @@ private:
 
     void resetAllLayersControls();
 
+    void updateMaxLayersControls();
+    void setMaxLayerComboBoxValuesAvailability(int valuesToDisable);
+
     int currentBeat;
 };
 

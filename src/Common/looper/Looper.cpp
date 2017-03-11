@@ -40,6 +40,16 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
     initialize();
 }
 
+int Looper::getLastValidLayer() const
+{
+    for (int l = maxLayers - 1; l >= 0; --l) {
+        if (layerIsValid(l))
+            return l;
+    }
+
+    return -1; // no valid layers, all layers are empty
+}
+
 void Looper::initialize()
 {
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
@@ -254,8 +264,10 @@ bool Looper::canClearLayer(quint8 layer) const
 
 void Looper::clearLayer(quint8 layer)
 {
-    if (canClearLayer(layer))
+    if (canClearLayer(layer)) {
         layers[layer]->zero();
+        emit layerCleared(layer);
+    }
 }
 
 void Looper::clearCurrentLayer()
@@ -555,6 +567,7 @@ bool Looper::canSave() const
 
 void Looper::setLayerSamples(quint8 layer, const SamplesBuffer &samples)
 {
-    if (layer < maxLayers)
+    if (layer < maxLayers) {
         layers[layer]->setSamples(samples);
+    }
 }
