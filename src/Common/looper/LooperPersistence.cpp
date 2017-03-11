@@ -16,6 +16,16 @@ LoopSaver::LoopSaver(const QString &savePath, Looper *looper)
 
 }
 
+QList<quint8> LoopSaver::getLockedLayers(Looper *looper)
+{
+    QList<quint8> lockedLayers;
+    for (int l = 0; l < looper->getLayers(); ++l) {
+        if (looper->layerIsLocked(l))
+            lockedLayers << l;
+    }
+    return lockedLayers;
+}
+
 void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encodeInOggVorbis, uint sampleRate)
 {
     QDir loopDir(QDir(savePath).absoluteFilePath(loopFileName));
@@ -43,6 +53,14 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
         root["loopLenght"] = static_cast<int>(looper->getIntervalLenght());
         root["sampleRate"] = static_cast<int>(sampleRate);
         root["audioFormat"] = encodeInOggVorbis ? "ogg" : "wave";
+
+        // save locked layers array
+        QJsonArray lockedLayersJsonArray;
+        QList<quint8> lockedLayers = getLockedLayers(looper);
+        for (quint8 layerIndex : lockedLayers)
+            lockedLayersJsonArray.append(layerIndex);
+
+        root["lockedLayers"] = lockedLayersJsonArray;
 
         QJsonDocument doc(root);
         jsonFile.write(doc.toJson());
@@ -82,7 +100,10 @@ void LoopLoader::load(LoopInfo loopInfo, Looper *looper)
     for (quint8 layer = 0; layer < loopInfo.layers; ++layer) {
         SamplesBuffer samples = loadLoopLayerSamples(loadPath, loopInfo.name, layer, audioIsEncoded);
         looper->setLayerSamples(layer, samples);
+        if (loopInfo.lockedLayers.contains(layer))
+            looper->setLayerLockedState(layer, true);
     }
+
 }
 
 SamplesBuffer LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded)
@@ -149,5 +170,14 @@ LoopInfo LoopLoader::loadLoopInfo(const QString &loopFilePath)
     bool audioIsEncoded = root.contains("audioFormat") && root["audioFormat"].toString() == "ogg";
     QString loopName = QFileInfo(file).baseName();
 
-    return LoopInfo(layers, bpm, bpi, loopName, audioIsEncoded);
+    LoopInfo loopInfo(layers, bpm, bpi, loopName, audioIsEncoded);
+
+    if(root.contains("lockedLayers")) {
+        QJsonArray lockedLayers = root["lockedLayers"].toArray();
+        for (int l = 0; l < lockedLayers.count(); ++l) {
+            loopInfo.lockedLayers.insert(lockedLayers.at(l).toInt());
+        }
+    }
+
+    return loopInfo;
 }

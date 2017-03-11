@@ -17,6 +17,7 @@ private:
     QString savePath;
     Looper *looper;
 
+    static QList<quint8> getLockedLayers(Looper *looper);
     void saveSamplesToDisk(const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, uint sampleRate);
 
     void saveJsonFile(const QString &loopFileName);
@@ -31,13 +32,15 @@ struct LoopInfo
     quint16 bpi;
     QString name;
     bool audioIsEncoded;
+    QSet<quint8> lockedLayers;
 
     LoopInfo(quint8 layers, quint32 bpm, quint16 bpi, const QString &name, bool audioIsEncoded)
         : layers(layers),
           bpm(bpm),
           bpi(bpi),
           name(name),
-          audioIsEncoded(audioIsEncoded)
+          audioIsEncoded(audioIsEncoded),
+          lockedLayers(QSet<quint8>())
     {
         //
     }
@@ -47,7 +50,8 @@ struct LoopInfo
           bpm(0),
           bpi(0),
           name(QString()),
-          audioIsEncoded(false)
+          audioIsEncoded(false),
+          lockedLayers(QSet<quint8>())
     {
 
     }

@@ -182,6 +182,8 @@ void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
         if (focusedLayerIndex == layerIndex)
             focusedLayerIndex = -1; // locked layer can't be focused
 
+        changed = true;
+
         emit layerLockedStateChanged(layerIndex, locked);
     }
 }
