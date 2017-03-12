@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QDataStream>
 #include <QThread>
+#include <climits>
 
 using namespace Audio;
 
@@ -46,7 +47,15 @@ void WaveFileWriter::write(const QString &filePath, const SamplesBuffer &buffer,
     uint channels = buffer.getChannels();
     for (uint s = 0; s < samples; ++s) {
         for (uint c = 0; c < channels; ++c) {
-            out << quint16(buffer.get(c, s) * 32767);
+            int sample = buffer.get(c, s) * SHRT_MAX;
+
+            // hard clip
+            if (sample > SHRT_MAX)
+                sample = SHRT_MAX;
+            else if (sample < SHRT_MIN)
+                sample = SHRT_MIN;
+
+            out << quint16(sample);
         }
     }
 
