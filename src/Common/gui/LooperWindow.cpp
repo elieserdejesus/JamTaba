@@ -14,6 +14,7 @@
 #include <QInputDialog>
 #include <QMenu>
 #include <QStandardItemModel>
+#include <QFileDialog>
 
 using namespace Controller;
 using namespace Audio;
@@ -682,7 +683,23 @@ void LooperWindow::showLoadMenu()
     }
 
     menu->addSeparator();
-    menu->addAction(tr("Browse ..."));
+    QAction *browseAction = menu->addAction(tr("Browse ..."));
+    connect(browseAction, &QAction::triggered, [=](){
+        QString fileDialogTitle = tr("Open loop file");
+        QString filter = tr("JamTaba Loop Files (*.json)");
+        QString loopFilePath = QFileDialog::getOpenFileName(this, fileDialogTitle, loopsDir, filter);
+        if (!loopFilePath.isEmpty()) {
+            LoopInfo loopInfo = LoopLoader::loadLoopInfo(loopFilePath);
+            if (loopInfo.isValid()) {
+                LoopLoader loader(loopsDir);
+                loader.load(loopInfo, looper);
+                update();
+            }
+            else {
+                qCritical() << "Can't load loop in " << loopFilePath;
+            }
+        }
+    });
 
     menu->show();
 }
