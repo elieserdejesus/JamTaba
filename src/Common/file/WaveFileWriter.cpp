@@ -1,6 +1,8 @@
 #include "WaveFileWriter.h"
 
 #include <QFile>
+#include <QDebug>
+#include <QDataStream>
 
 using namespace Audio;
 

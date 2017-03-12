@@ -2,6 +2,7 @@
 #define _LOOPER_PERSISTENCE_H_
 
 #include <QString>
+#include <QSet>
 
 namespace Audio {
 
