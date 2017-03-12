@@ -1212,6 +1212,8 @@ void MainWindow::openPreferencesDialog(QAction *action)
             initialTab = PreferencesDialog::TAB_VST;
         else if (action == ui.actionMetronome)
             initialTab = PreferencesDialog::TAB_METRONOME;
+        else if (action == ui.actionLooper)
+            initialTab = PreferencesDialog::TAB_LOOPER;
 
         stopCurrentRoomStream();
 

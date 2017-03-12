@@ -91,6 +91,20 @@ void PreferencesDialog::setupSignals()
     connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openSecondaryBeatAudioFileBrowser()));
 
     connect(ui->comboBoxEncoderQuality, SIGNAL(activated(int)), this, SLOT(emitEncodingQualityChanged()));
+
+    connect(ui->checkBoxLooperOggEncoding, &QCheckBox::toggled, this, &PreferencesDialog::looperAudioEncodingFlagChanged);
+    connect(ui->lineEditLoopsFolder, &QLineEdit::textChanged, this,  &PreferencesDialog::looperFolderChanged);
+    connect(ui->loopsFolderBrowseButton, &QPushButton::clicked, [=](){
+        QString currentLoopsFolder = ui->lineEditLoopsFolder->text();
+        QFileDialog folderDialog(this, tr("Choosing loops folder ..."), currentLoopsFolder);
+        folderDialog.setAcceptMode(QFileDialog::AcceptOpen);
+        folderDialog.setFileMode(QFileDialog::DirectoryOnly);
+        if (folderDialog.exec()) {
+            QDir dir = folderDialog.directory();
+            QString newLoopsFolder = dir.absolutePath();
+            ui->lineEditLoopsFolder->setText(newLoopsFolder);
+        }
+    });
 }
 
 void PreferencesDialog::toggleRecording(bool recording)
