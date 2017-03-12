@@ -135,8 +135,8 @@ void LooperLayer::overdub(const SamplesBuffer &samples, uint samplesToMix, uint 
 
     // build peaks cache when overdubbing
     if (lastSamplesPerPeak) {
-        uint position = startPosition + samplesToMix;
-        if (position - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
+        const uint position = startPosition + samplesToMix;
+        while (position - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
             const int peakIndex = (position/lastSamplesPerPeak) - 1;
             float lastPeak = computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak);
             if (peakIndex >= 0 && static_cast<uint>(peakIndex) < peaksCache.size())
@@ -164,7 +164,7 @@ void LooperLayer::append(const SamplesBuffer &samples, uint samplesToAppend)
 
     // build peaks cache
     if (lastSamplesPerPeak) {
-        if (availableSamples - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
+        while (availableSamples - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
             peaksCache.push_back(computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak));
             lastCacheComputationSample += lastSamplesPerPeak;
         }

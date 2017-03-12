@@ -41,6 +41,7 @@ void MainWindowStandalone::setupShortcuts()
     ui.actionVstPreferences->setShortcut(QKeySequence(Qt::Key_F7));
     ui.actionRecording->setShortcut(QKeySequence(Qt::Key_F8));
     ui.actionMetronome->setShortcut(QKeySequence(Qt::Key_F9));
+    ui.actionLooper->setShortcut(QKeySequence(Qt::Key_F10));
     ui.actionUsersManual->setShortcut(QKeySequence(Qt::Key_F1));
     ui.actionPrivate_Server->setShortcut(QKeySequence(Qt::Key_F2));
     ui.actionShowRmsOnly->setShortcut(QKeySequence(Qt::Key_F3));
