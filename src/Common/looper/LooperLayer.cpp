@@ -46,11 +46,11 @@ void LooperLayer::zero()
 
 void LooperLayer::setSamples(const SamplesBuffer &samples)
 {
-    int samplesToCopy = qMin(samples.getFrameLenght(), lastCycleLenght);
+    uint samplesToCopy = qMin(samples.getFrameLenght(), lastCycleLenght);
     if (!samplesToCopy)
         return;
 
-    int bytesToCopy =  samplesToCopy * sizeof(float);
+    uint bytesToCopy =  samplesToCopy * sizeof(float);
 
     Q_ASSERT(leftChannel.capacity() >= samplesToCopy);
     Q_ASSERT(rightChannel.capacity() >= samplesToCopy);

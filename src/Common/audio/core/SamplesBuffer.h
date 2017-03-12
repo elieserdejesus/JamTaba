@@ -4,6 +4,8 @@
 #include "AudioPeak.h"
 #include <vector>
 
+#include <QtGlobal>
+
 namespace Audio {
 class SamplesBuffer
 {
@@ -67,18 +69,18 @@ public:
         add(buffer, 0);
     }
 
-    void add(int channel, int sampleIndex, float sampleValue);
+    void add(uint channel, uint sampleIndex, float sampleValue);
     void add(const SamplesBuffer &buffer, int internalWriteOffset);// the offset is used in internal buffer, not in parameter buffer
-    void add(unsigned int channel, float *samples, int samplesToAdd);
+    void add(uint channel, float *samples, uint samplesToAdd);
 
     // copy samplesToCopy' samples starting from bufferOffset to internal buffer starting in 'internalOffset'
     void set(const SamplesBuffer &buffer, unsigned int bufferOffset, unsigned int samplesToCopy,
              unsigned int internalOffset);
     void set(const SamplesBuffer &buffer);
     void set(const SamplesBuffer &buffer, int bufferChannelOffset, int channelsToCopy);
-    void set(int channel, int sampleIndex, float sampleValue);
+    void set(uint channel, uint sampleIndex, float sampleValue);
 
-    float get(int channel, int sampleIndex) const;
+    float get(uint channel, uint sampleIndex) const;
 
     unsigned int getFrameLenght() const;
     void setFrameLenght(unsigned int newFrameLenght);

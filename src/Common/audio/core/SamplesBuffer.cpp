@@ -81,8 +81,6 @@ void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard)
     int toCopy = frameLenght - toDiscard;
     uint newFrameLenght = frameLenght - toDiscard;
     for (uint c = 0; c < channels; ++c) {
-        //std::rotate(samples[c].begin(), samples[c].begin() + toDiscard, samples[c].end());
-         //samples[c].erase(samples[c].begin(), samples[c].begin() + toDiscard);
         std::copy_n(samples[c].begin() + toDiscard, toCopy, samples[c].begin());
     }
     setFrameLenght(newFrameLenght);
@@ -98,8 +96,8 @@ void SamplesBuffer::append(const SamplesBuffer &other)
 
 float *SamplesBuffer::getSamplesArray(unsigned int channel) const
 {
-    if (channel > samples.size())
-        channel = 0;
+    Q_ASSERT(channel < samples.size());
+
     return const_cast<float *>(&(samples[channel][0]));
 }
 
@@ -169,6 +167,7 @@ void SamplesBuffer::zero()
 {
     const uint bytesToProcess = frameLenght * sizeof(float);
     for (unsigned int c = 0; c < channels; ++c) {
+        Q_ASSERT(samples[c].size() >= frameLenght);
         memset(&(samples[c][0]), 0, bytesToProcess);
     }
 }
@@ -219,34 +218,44 @@ void SamplesBuffer::add(const SamplesBuffer &buffer, int internalWriteOffset)
     uint framesToProcess = std::min((uint)frameLenght, buffer.getFrameLenght());
     if (buffer.channels >= channels) {
         for (unsigned int c = 0; c < channels; ++c) {
-            for (unsigned int s = 0; s < framesToProcess; ++s)
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                Q_ASSERT(s + internalWriteOffset < samples[c].size());
                 samples[c][s + internalWriteOffset] += buffer.samples[c][s];
+            }
         }
     } else {// samples is stereo and buffer is mono
         for (unsigned int s = 0; s < framesToProcess; ++s) {
+            Q_ASSERT(s + internalWriteOffset < samples[0].size());
+            Q_ASSERT(s + internalWriteOffset < samples[1].size());
             samples[0][s + internalWriteOffset] += buffer.samples[0][s];
             samples[1][s + internalWriteOffset] += buffer.samples[0][s];
         }
     }
 }
 
-void SamplesBuffer::add(unsigned int channel, float *samples, int samplesToAdd)
+void SamplesBuffer::add(uint channel, float *samples, uint samplesToAdd)
 {
-    if (channel < channels) {
-        void *dest = &(this->samples[channel][0]);
-        memcpy(dest, samples, std::min((int)frameLenght, samplesToAdd) * sizeof(float));
-    } else {
-        qCritical() << "wrong channel " << channel;
-    }
+    Q_ASSERT(channel < channels && channels == this->samples.size());
+    Q_ASSERT(samplesToAdd <= frameLenght && samplesToAdd <= this->samples[channel].size());
+
+    void *dest = &(this->samples[channel][0]);
+    const uint bytesToCopy = std::min(static_cast<uint>(frameLenght), samplesToAdd) * sizeof(float);
+    memcpy(dest, samples, bytesToCopy);
 }
 
-void SamplesBuffer::add(int channel, int sampleIndex, float sampleValue)
+void SamplesBuffer::add(uint channel, uint sampleIndex, float sampleValue)
 {
+    Q_ASSERT(channel < channels && channels == samples.size());
+    Q_ASSERT(sampleIndex < samples[channel].size());
+
     samples[channel][sampleIndex] += sampleValue;
 }
 
-void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue)
+void SamplesBuffer::set(uint channel, uint sampleIndex, float sampleValue)
 {
+    Q_ASSERT(channel < channels && channels == samples.size());
+    Q_ASSERT(sampleIndex < samples[channel].size());
+
     samples[channel][sampleIndex] = sampleValue;
 }
 
@@ -273,9 +282,12 @@ void SamplesBuffer::set(const SamplesBuffer &buffer)
     set(buffer, 0, std::min(buffer.frameLenght, frameLenght), 0);
 }
 
-float SamplesBuffer::get(int channel, int sampleIndex) const
+float SamplesBuffer::get(uint channel, uint sampleIndex) const
 {
-    return samples[channel][sampleIndex ];
+    Q_ASSERT(channel < channels);
+    Q_ASSERT(sampleIndex < samples[channel].capacity());
+
+    return samples[channel][sampleIndex];
 }
 
 void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght)
@@ -294,13 +306,15 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, int bufferChannelOffset, in
 {
     if (buffer.channels <= 0 || channels <= 0)
         return;
+
     int framesToCopy = std::min(buffer.getFrameLenght(), frameLenght);
-    int channelsToProcess = std::min(channelsToCopy, std::min(buffer.getChannels(), (int)channels));
-    if (channelsToProcess + bufferChannelOffset <= buffer.getChannels()) {// avoid invalid channel index
-        int bytesToCopy = framesToCopy * sizeof(float);
-        for (int c = 0; c < channelsToProcess; ++c)
-            memcpy((void *)getSamplesArray(c), buffer.getSamplesArray(
-                       c + bufferChannelOffset), bytesToCopy);
+    int channelsToProcess = std::min(channelsToCopy, std::min(buffer.getChannels(), static_cast<int>(channels)));
+
+    Q_ASSERT(channelsToProcess + bufferChannelOffset <= buffer.getChannels());
+
+    int bytesToCopy = framesToCopy * sizeof(float);
+    for (int c = 0; c < channelsToProcess; ++c) {
+        memcpy((void *)getSamplesArray(c), buffer.getSamplesArray(c + bufferChannelOffset), bytesToCopy);
     }
 }
 
@@ -330,6 +344,10 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, unsigned int bufferOffset,
             if (!buffer.isMono()) {
                 int channelsToCopy = qMin(channels, buffer.channels);
                 for (int c = 0; c < channelsToCopy; ++c) {
+                    Q_ASSERT(internalOffset < samples[c].size());
+                    Q_ASSERT(bufferOffset < buffer.samples[c].size());
+                    Q_ASSERT(bufferOffset + framesToProcess < buffer.samples[c].size());
+                    Q_ASSERT(internalOffset + framesToProcess < samples[c].size());
                     std::memcpy(&(samples[c][internalOffset]), &(buffer.samples[c][bufferOffset]), bytesToProcess);
                 }
             } else {

@@ -30,18 +30,19 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
 {
     QDir loopDir(QDir(savePath).absoluteFilePath(loopFileName));
     if (!loopDir.exists()) {
-        loopDir.mkpath(".");
+        if(!loopDir.mkpath(".")){
+            qCritical() << "Error creating loop dir" << loopDir;
+        }
     }
 
     QList<SamplesBuffer> layersSamples = looper->getLayersSamples();
     for (int layer = 0; layer < layersSamples.size(); ++layer) {
-        QtConcurrent::run(this,
-                          &LoopSaver::saveSamplesToDisk,
-                          loopFileName,
-                          layersSamples.at(layer),
-                          layer,
-                          encodeInOggVorbis,
-                          sampleRate);
+        LoopSaver::saveSamplesToDisk(savePath,
+                                     loopFileName,
+                                     layersSamples.at(layer),
+                                     layer,
+                                     encodeInOggVorbis,
+                                     sampleRate);
     }
 
     QFile jsonFile(QDir(savePath).absoluteFilePath(loopFileName) + ".json");
@@ -71,8 +72,12 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
     looper->setChanged(false);
 }
 
-void LoopSaver::saveSamplesToDisk(const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, uint sampleRate)
+void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, uint sampleRate)
 {
+    Q_ASSERT(!loopFileName.isEmpty() && !loopFileName.isNull());
+    Q_ASSERT(layerIndex < Looper::MAX_LOOP_LAYERS);
+    Q_ASSERT(!savePath.isEmpty());
+
     if(!encodeInOggVorbis) {
         WaveFileWriter waveFileWriter;
         QString filePath = QDir(savePath).absoluteFilePath(loopFileName +"/layer_" + QString::number(layerIndex) + ".wav");

@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QDataStream>
+#include <QThread>
 
 using namespace Audio;
 
@@ -14,9 +15,9 @@ void WaveFileWriter::write(const QString &filePath, const SamplesBuffer &buffer,
         return;
     }
 
-    uint samples = buffer.getFrameLenght();
-    uint dataChunkSize = buffer.getChannels() * buffer.getFrameLenght() * 2;// 2 bytes per sample
-    uint fileSize = dataChunkSize + 44;// WAVE HEADER is 44 bytes
+    const uint samples = buffer.getFrameLenght();
+    const uint dataChunkSize = buffer.getChannels() * buffer.getFrameLenght() * 2;// 2 bytes per sample
+    const uint fileSize = dataChunkSize + 44;// WAVE HEADER is 44 bytes
 
     QDataStream out(&wavFile);
     out.setByteOrder(QDataStream::LittleEndian);
@@ -42,8 +43,9 @@ void WaveFileWriter::write(const QString &filePath, const SamplesBuffer &buffer,
     out << quint32(dataChunkSize); // Placeholder for the data chunk size (filled by close())
 
     //write interleaved samples
+    uint channels = buffer.getChannels();
     for (uint s = 0; s < samples; ++s) {
-        for (int c = 0; c < buffer.getChannels(); ++c) {
+        for (uint c = 0; c < channels; ++c) {
             out << quint16(buffer.get(c, s) * 32767);
         }
     }
