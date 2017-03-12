@@ -53,7 +53,6 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
         root["bpi"] = static_cast<int>(bpi);
         root["layers"] = layersSamples.count();
         root["loopLenght"] = static_cast<int>(looper->getIntervalLenght());
-        root["sampleRate"] = static_cast<int>(sampleRate);
         root["audioFormat"] = encodeInOggVorbis ? "ogg" : "wave";
 
         // save locked layers array
@@ -104,7 +103,7 @@ void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate)
 
     bool audioIsEncoded = loopInfo.audioIsEncoded;
     for (quint8 layer = 0; layer < loopInfo.layers; ++layer) {
-        SamplesBuffer samples = loadLoopLayerSamples(loadPath, loopInfo.name, layer, audioIsEncoded);
+        SamplesBuffer samples = loadLoopLayerSamples(loadPath, loopInfo.name, layer, audioIsEncoded, currentSampleRate);
         looper->setLayerSamples(layer, samples);
         if (loopInfo.lockedLayers.contains(layer))
             looper->setLayerLockedState(layer, true);
@@ -112,7 +111,7 @@ void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate)
 
 }
 
-SamplesBuffer LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded)
+SamplesBuffer LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate)
 {
     QDir audioDir(QDir(loadPath).absoluteFilePath(loopName));
     if (!audioDir.exists()){
@@ -133,7 +132,12 @@ SamplesBuffer LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QS
     quint32 audioFileSampleRate;
     fileReader->read(audioFilePath, samplesBuffer, audioFileSampleRate);
 
-    //TODO resampling if audio file sample rate is different from current audio engine sample rate
+    bool needResample = currentSampleRate != audioFileSampleRate;
+    if (needResample) {
+        SamplesBufferResampler resampler;
+        uint desiredLenght = currentSampleRate/(float)audioFileSampleRate * samplesBuffer.getFrameLenght();
+        return resampler.resample(samplesBuffer, desiredLenght);
+    }
 
     return samplesBuffer;
 }

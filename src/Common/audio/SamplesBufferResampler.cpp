@@ -16,8 +16,8 @@ const Audio::SamplesBuffer &SamplesBufferResampler::resample(const Audio::Sample
 {
     outBuffer.zero();
     outBuffer.setFrameLenght(desiredOutLenght * 2);// enough space
-    int channels = std::min(in.getChannels(), outBuffer.getChannels());
-    for (int c = 0; c < channels; ++c) {
+    uint channels = std::min(in.getChannels(), outBuffer.getChannels());
+    for (uint c = 0; c < channels; ++c) {
         float *input = in.getSamplesArray(c);
         float *output = outBuffer.getSamplesArray(c);
         resamplers[c].process(input, in.getFrameLenght(), output, desiredOutLenght);
