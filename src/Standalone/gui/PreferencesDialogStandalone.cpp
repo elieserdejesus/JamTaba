@@ -427,7 +427,7 @@ void PreferencesDialogStandalone::selectTab(int index)
         populateVstTab();
         break;
     case 3:
-        populateRecordingTab();
+        populateMultiTrackRecordingTab();
         break;
     }
 }

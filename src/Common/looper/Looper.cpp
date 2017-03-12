@@ -1,6 +1,6 @@
-#include "AudioLooper.h"
-#include "AudioLooperStates.h"
-#include "AudioLooperLayer.h"
+#include "Looper.h"
+#include "LooperStates.h"
+#include "LooperLayer.h"
 
 #include <QDebug>
 
@@ -15,6 +15,7 @@ Looper::Looper()
       focusedLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0),
+      changed(false),
       maxLayers(4),
       state(new StoppedState()),
       mode(Mode::SEQUENCE),
@@ -29,6 +30,7 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       focusedLayerIndex(0),
       intervalLenght(0),
       intervalPosition(0),
+      changed(false),
       maxLayers(maxLayers),
       state(new StoppedState()),
       mode(initialMode),
@@ -36,6 +38,31 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       newMaxLayersRequested(0)
 {
     initialize();
+}
+
+bool Looper::isFull() const
+{
+    for (uint l = 0; l < maxLayers; ++l) {
+        if (!layerIsValid(l))
+            return false;
+    }
+
+    return true;
+}
+
+bool Looper::isEmpty() const
+{
+    return getLastValidLayer() < 0;
+}
+
+int Looper::getLastValidLayer() const
+{
+    for (int l = maxLayers - 1; l >= 0; --l) {
+        if (layerIsValid(l))
+            return l;
+    }
+
+    return -1; // no valid layers, all layers are empty
 }
 
 void Looper::initialize()
@@ -55,6 +82,7 @@ void Looper::initialize()
 void Looper::reset()
 {
     resetRequested = true;
+    changed = false;
 }
 
 Looper::~Looper()
@@ -129,11 +157,13 @@ void Looper::incrementCurrentLayer()
 void Looper::appendInCurrentLayer(const SamplesBuffer &samples, uint samplesToAppend)
 {
      layers[currentLayerIndex]->append(samples, samplesToAppend);
+     changed = true;
 }
 
 void Looper::overdubInCurrentLayer(const SamplesBuffer &samples, uint samplesToMix)
 {
     layers[currentLayerIndex]->overdub(samples, samplesToMix, intervalPosition);
+    changed = true;
 }
 
 void Looper::mixCurrentLayerTo(SamplesBuffer &samples, uint samplesToMix)
@@ -166,6 +196,8 @@ void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
 
         if (focusedLayerIndex == layerIndex)
             focusedLayerIndex = -1; // locked layer can't be focused
+
+        changed = true;
 
         emit layerLockedStateChanged(layerIndex, locked);
     }
@@ -249,8 +281,11 @@ bool Looper::canClearLayer(quint8 layer) const
 
 void Looper::clearLayer(quint8 layer)
 {
-    if (canClearLayer(layer))
+    if (canClearLayer(layer)) {
         layers[layer]->zero();
+        changed = true;
+        emit layerCleared(layer);
+    }
 }
 
 void Looper::clearCurrentLayer()
@@ -516,4 +551,41 @@ QMap<Looper::PlayingOption, bool> Looper::getDefaultSupportedPlayingOptions(Loop
     }
 
     return options;
+}
+
+QList<SamplesBuffer> Looper::getLayersSamples() const
+{
+    QList<SamplesBuffer> layersList;
+    for (uint layer = 0; layer < maxLayers; ++layer) {
+        if (layerIsValid(layer)) { // not empty?
+            layersList.append(layers[layer]->getAllSamples());
+        }
+    }
+
+    return layersList;
+}
+
+void Looper::setChanged(bool changed)
+{
+    this->changed = changed;
+}
+
+bool Looper::canSave() const
+{
+    if (!changed || isWaiting() || isRecording())
+        return false;
+
+    for (int l = 0; l < maxLayers; ++l) {
+        if (layers[l]->isValid())
+            return true;
+    }
+
+    return false;
+}
+
+void Looper::setLayerSamples(quint8 layer, const SamplesBuffer &samples)
+{
+    if (layer < maxLayers) {
+        layers[layer]->setSamples(samples);
+    }
 }

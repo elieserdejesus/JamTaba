@@ -1,5 +1,5 @@
 #include "LooperWavePanel.h"
-#include "audio/looper/AudioLooper.h"
+#include "looper/Looper.h"
 
 #include <QKeyEvent>
 

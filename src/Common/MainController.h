@@ -208,18 +208,18 @@ public:
     void storeWindowSettings(bool maximized, const QPointF &location, const QSize &size);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, const QList<bool> &midiInputStatus);
 
-    void storeRecordingMultiTracksStatus(bool savingMultiTracks);
-    inline bool isRecordingMultiTracksActivated() const
+    void storeMultiTrackRecordingStatus(bool savingMultiTracks);
+    inline bool isMultiTrackRecordingActivated() const
     {
         return settings.isSaveMultiTrackActivated();
     }
+    void storeMultiTrackRecordingPath(const QString &newPath);
+
     void storeJamRecorderStatus(QString writerId, bool status);
 
     inline bool isJamRecorderActivated(QString writerId) {
         return settings.isJamRecorderActivated(writerId);
     }
-
-    void storeRecordingPath(const QString &newPath);
 
     void storePrivateServerSettings(const QString &server, int serverPort, const QString &password);
 
@@ -289,8 +289,11 @@ public:
     // looper settings
     void storeLooperPreferredLayerCount(quint8 layersCount);
     void storeLooperPreferredMode(quint8 looperMode);
+    void storeLooperAudioEncodingFlag(bool encodeAudioWhenSaving);
+    void storeLooperFolder(const QString &newLooperFolder);
     quint8 getLooperPreferedLayersCount() const;
     quint8 getLooperPreferedMode() const;
+    bool getLooperAudioEncodingFlag() const;
 
 signals:
     void ipResolved(const QString &ip);
@@ -415,6 +418,16 @@ inline void MainController::storeLooperPreferredMode(quint8 looperMode)
     settings.setLooperPreferredMode(looperMode);
 }
 
+inline void MainController::storeLooperAudioEncodingFlag(bool encodeAudioWhenSaving)
+{
+    settings.setLooperAudioEncodingFlag(encodeAudioWhenSaving);
+}
+
+inline void MainController::storeLooperFolder(const QString &newLooperFolder)
+{
+    settings.setLooperFolder(newLooperFolder);
+}
+
 inline quint8 MainController::getLooperPreferedLayersCount() const
 {
     return settings.getLooperPreferredLayersCount();
@@ -423,6 +436,11 @@ inline quint8 MainController::getLooperPreferedLayersCount() const
 inline quint8 MainController::getLooperPreferedMode() const
 {
     return settings.getLooperPreferredMode();
+}
+
+inline bool MainController::getLooperAudioEncodingFlag() const
+{
+    return settings.getLooperAudioEncodingFlag();
 }
 
 } // namespace

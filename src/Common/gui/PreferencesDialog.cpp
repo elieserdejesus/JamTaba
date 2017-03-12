@@ -91,6 +91,20 @@ void PreferencesDialog::setupSignals()
     connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openSecondaryBeatAudioFileBrowser()));
 
     connect(ui->comboBoxEncoderQuality, SIGNAL(activated(int)), this, SLOT(emitEncodingQualityChanged()));
+
+    connect(ui->checkBoxLooperOggEncoding, &QCheckBox::toggled, this, &PreferencesDialog::looperAudioEncodingFlagChanged);
+    connect(ui->lineEditLoopsFolder, &QLineEdit::textChanged, this,  &PreferencesDialog::looperFolderChanged);
+    connect(ui->loopsFolderBrowseButton, &QPushButton::clicked, [=](){
+        QString currentLoopsFolder = ui->lineEditLoopsFolder->text();
+        QFileDialog folderDialog(this, tr("Choosing loops folder ..."), currentLoopsFolder);
+        folderDialog.setAcceptMode(QFileDialog::AcceptOpen);
+        folderDialog.setFileMode(QFileDialog::DirectoryOnly);
+        if (folderDialog.exec()) {
+            QDir dir = folderDialog.directory();
+            QString newLoopsFolder = dir.absolutePath();
+            ui->lineEditLoopsFolder->setText(newLoopsFolder);
+        }
+    });
 }
 
 void PreferencesDialog::toggleRecording(bool recording)
@@ -166,8 +180,18 @@ bool PreferencesDialog::usingCustomEncodingQuality()
 void PreferencesDialog::populateAllTabs()
 {
     populateEncoderQualityComboBox();
-    populateRecordingTab();
+    populateMultiTrackRecordingTab();
     populateMetronomeTab();
+    populateLooperTab();
+}
+
+void PreferencesDialog::populateLooperTab()
+{
+    QSignalBlocker lineEditSignalBlocker(ui->lineEditLoopsFolder);
+    QSignalBlocker checkBoxSignalBlocker(ui->checkBoxLooperOggEncoding);
+
+    ui->lineEditLoopsFolder->setText(settings->getLooperFolder());
+    ui->checkBoxLooperOggEncoding->setChecked(settings->getLooperAudioEncodingFlag());
 }
 
 void PreferencesDialog::selectRecordingTab()
@@ -198,10 +222,10 @@ void PreferencesDialog::populateMetronomeTab()
     }
 }
 
-void PreferencesDialog::populateRecordingTab()
+void PreferencesDialog::populateMultiTrackRecordingTab()
 {
     Q_ASSERT(settings);
-    Persistence::RecordingSettings recordingSettings = settings->getRecordingSettings();
+    Persistence::MultiTrackRecordingSettings recordingSettings = settings->getMultiTrackRecordingSettings();
     ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
     foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
         myCheckBox->setChecked(recordingSettings.isJamRecorderActivated(jamRecorderCheckBoxes[myCheckBox]));

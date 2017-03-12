@@ -4,11 +4,16 @@
 #include "gui/GuiUtils.h"
 #include "Utils.h"
 #include "MainController.h"
+#include "persistence/Settings.h"
 
 #include <QGridLayout>
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QKeyEvent>
+#include <QInputDialog>
+#include <QMenu>
+#include <QStandardItemModel>
+#include <QFileDialog>
 
 using namespace Controller;
 using namespace Audio;
@@ -40,6 +45,11 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
     // this alignments are not available in QtCreator UI designer
     ui->widgetBottom->layout()->setAlignment(ui->modeControlsLayout, Qt::AlignBottom);
     ui->widgetBottom->layout()->setAlignment(ui->layerControlsLayout, Qt::AlignBottom);
+
+
+    QMenu *loadMenu = new QMenu();
+    ui->loadButton->setMenu(loadMenu);
+    connect(loadMenu, &QMenu::aboutToShow, this, &LooperWindow::showLoadMenu);
 }
 
 void LooperWindow::keyPressEvent(QKeyEvent *ev)
@@ -161,7 +171,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         updateLayersVisibility(currentLayers);
 
         // initial values
-        ui->maxLayersSpinBox->setValue(looper->getLayers());
+        ui->maxLayersComboBox->setCurrentText(QString::number(looper->getLayers()));
 
         QString selectedMode = looper->getModeString(looper->getMode());
         for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
@@ -180,6 +190,8 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         connect(looper, &Looper::modeChanged, this, &LooperWindow::handleModeChanged);
         connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
         connect(looper, &Looper::destroyed, this, &LooperWindow::close);
+
+        connect(looper, &Looper::layerCleared, this, &LooperWindow::updateControls);
 
         this->looper = looper;
     }
@@ -351,8 +363,12 @@ void LooperWindow::updateControls()
         ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
         ui->labelPlayMode->setEnabled(ui->comboBoxPlayMode->isEnabled());
 
-        ui->maxLayersSpinBox->setEnabled(looper->isStopped() || looper->isPlaying());
-        ui->labelMaxLayers->setEnabled(ui->maxLayersSpinBox->isEnabled());
+        updateMaxLayersControls();
+
+        ui->saveButton->setEnabled(looper->canSave());
+        ui->loadButton->setEnabled(looper->isStopped());
+
+        ui->resetButton->setEnabled(looper->isStopped() || looper->isPlaying());
 
         // update playing and recording options
         updateOptions<Looper::PlayingOption>(ui->groupBoxPlaying->layout());
@@ -387,6 +403,39 @@ void LooperWindow::updateControls()
     }
 
     update();
+}
+
+void LooperWindow::setMaxLayerComboBoxValuesAvailability(int valuesToDisable)
+{
+    // disable the values before last valid (non empty) layers
+    const QStandardItemModel* model = qobject_cast<const QStandardItemModel*>(ui->maxLayersComboBox->model());
+    const QColor disabledColor = ui->maxLayersComboBox->palette().color(QPalette::Disabled, QPalette::Text);
+    for (int l = 0; l < Looper::MAX_LOOP_LAYERS; ++l) {
+        QStandardItem* item = model->item(l);
+        bool disable = l < valuesToDisable;
+        item->setFlags(disable ? item->flags() & ~(Qt::ItemIsSelectable|Qt::ItemIsEnabled) : Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        // visually disable by greying out - works only if combobox has been painted already and palette returns the wanted color
+        item->setData(disable ? disabledColor : QVariant(), // clear item data in order to use default color
+                                Qt::TextColorRole);
+    }
+}
+
+void LooperWindow::updateMaxLayersControls()
+{
+    ui->maxLayersComboBox->setEnabled(looper->isStopped() || looper->isPlaying());
+    ui->labelMaxLayers->setEnabled(ui->maxLayersComboBox->isEnabled());
+    int currentMaxLayersValue = (ui->maxLayersComboBox->currentIndex() + 1);
+    if (currentMaxLayersValue != looper->getLayers()) {
+        QSignalBlocker signalBlocker(ui->maxLayersComboBox);
+        ui->maxLayersComboBox->setCurrentIndex(looper->getLayers() - 1);
+    }
+
+    int lastValidLayerIndex = looper->getLastValidLayer();
+    uint layersToDisable = 0;
+    if (lastValidLayerIndex >= 0)
+        layersToDisable = lastValidLayerIndex;
+
+    setMaxLayerComboBoxValuesAvailability(layersToDisable);
 }
 
 void LooperWindow::deleteWavePanels()
@@ -458,9 +507,11 @@ void LooperWindow::initializeControls()
     createPlayingOptionsCheckBoxes();
     createRecordingOptionsCheckBoxes();
 
-    // max layer spinbox
-    ui->maxLayersSpinBox->setMinimum(1);
-    ui->maxLayersSpinBox->setMaximum(Looper::MAX_LOOP_LAYERS);
+    // max layer combobox
+    ui->maxLayersComboBox->clear();
+    for (quint8 l = 1; l <= Looper::MAX_LOOP_LAYERS; ++l) {
+        ui->maxLayersComboBox->addItem(QString::number(l), QVariant::fromValue(l));
+    }
 
     // wire signals/slots
     connect(ui->buttonRec, &QPushButton::clicked, [=]
@@ -477,21 +528,50 @@ void LooperWindow::initializeControls()
 
     connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
     {
-        if (index >= 0 && looper) {
+        if (index >= 0 && looper)
             looper->setMode(ui->comboBoxPlayMode->currentData().value<Looper::Mode>());
-        }
     });
 
-    connect(ui->maxLayersSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int newMaxLayers)
+    connect(ui->maxLayersComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
     {
-        if (looper)
-            looper->setLayers(newMaxLayers);
+        if (looper) {
+            uint layers = index + 1;
+            looper->setLayers(layers);
+        }
     });
 
     connect(ui->resetButton, &QPushButton::clicked, [=](){
         if (looper) {
             looper->reset();
             resetAllLayersControls();
+        }
+    });
+
+    connect(ui->saveButton, &QPushButton::clicked, [=](){
+        if(!looper || !mainController->isPlayingInNinjamRoom())
+            return;
+
+        bool ok;
+        QString loopFileName = QInputDialog::getText(this,
+                                             tr("Saving looper layers ..."),
+                                             tr("Loop file name:"),
+                                             QLineEdit::Normal,
+                                             QString(),
+                                             &ok);
+
+        if (ok && !loopFileName.isEmpty()) {
+            auto settings = mainController->getSettings();
+            auto ninjamController = mainController->getNinjamController();
+            QString savePath = settings.getLooperSavePath();
+            bool encodeInOggVorbis = mainController->getLooperAudioEncodingFlag();
+            float vorbisQuality = settings.getEncodingQuality();
+            uint sampleRate = mainController->getSampleRate();
+            uint bpm = ninjamController->getCurrentBpm();
+            uint bpi = ninjamController->getCurrentBpi();
+
+            LoopSaver loopSaver(savePath, looper);
+            loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, vorbisQuality, sampleRate);
+            updateControls();
         }
     });
 }
@@ -576,5 +656,92 @@ void LooperWindow::clearLayout(QLayout *layout)
             }
             delete item;
         }
+    }
+}
+
+void LooperWindow::showLoadMenu()
+{
+    QMenu *menu = ui->loadButton->menu();
+    menu->clear();
+
+    QString loopsDir = mainController->getSettings().getLooperSavePath();
+    QList<LoopInfo> loopsMetadata = LoopLoader::loadAllLoopsInfo(loopsDir);
+
+    auto ninjamController = mainController->getNinjamController();
+    quint16 currentBpm = ninjamController->getCurrentBpm();
+
+    QMenu *bpmMatchedMenu = new QMenu(tr("%1 BPM loops").arg(currentBpm));
+    menu->addMenu(bpmMatchedMenu);
+    for (LoopInfo loopInfo : loopsMetadata) {
+        QString loopString = loopInfo.toString();
+        QAction *action = bpmMatchedMenu->addAction(loopString);
+        connect(action, &QAction::triggered, [=](){
+            loadLoopInfo(loopsDir, loopInfo);
+        });
+    }
+
+    // load audio files
+    menu->addSeparator();
+    QAction *loadAudioFilesAction = menu->addAction(tr("Load audio files ..."));
+    connect(loadAudioFilesAction, &QAction::triggered, [=](){
+        QFileDialog audioFilesDialog(this, tr("Opening audio files ..."), loopsDir, tr("Audio files (*.wav *.ogg)"));
+        audioFilesDialog.setAcceptMode(QFileDialog::AcceptOpen);
+        audioFilesDialog.setFileMode(QFileDialog::ExistingFiles);
+        if (audioFilesDialog.exec()) {
+            QStringList selectedFiles = audioFilesDialog.selectedFiles();
+            for (const QString &selectedFile : selectedFiles) {
+                loadAudioFile(selectedFile);
+            }
+        }
+    });
+
+
+    // browse
+    menu->addSeparator();
+    QAction *browseAction = menu->addAction(tr("Browse JamTaba loops..."));
+    connect(browseAction, &QAction::triggered, [=](){
+        QString fileDialogTitle = tr("Open loop file");
+        QString filter = tr("JamTaba Loop Files (*.json)");
+        QString loopFilePath = QFileDialog::getOpenFileName(this, fileDialogTitle, loopsDir, filter);
+        if (!loopFilePath.isEmpty()) {
+            loadLoopInfo(loopsDir, LoopLoader::loadLoopInfo(loopFilePath));
+        }
+    });
+
+    menu->show();
+}
+
+void LooperWindow::loadAudioFile(const QString &audioFilePath)
+{
+    bool canLoad = looper->getLastValidLayer() < (Looper::MAX_LOOP_LAYERS - 1);
+    if (canLoad) {
+        uint sampleRate = mainController->getSampleRate();
+        SamplesBuffer samples = LoopLoader::loadAudioFile(audioFilePath, sampleRate);
+
+        quint8 layerIndex = looper->getLastValidLayer() + 1;
+        if (looper->isEmpty())
+            layerIndex = 0;
+        else if (looper->isFull()) {
+            layerIndex = looper->getLayers(); // last layer
+            looper->setLayers(layerIndex + 1); // expand layer count before add loaded samples
+        }
+
+        looper->setLayerSamples(layerIndex, samples);
+    }
+    else {
+        qCritical() << "Can't load the audio file " << audioFilePath << " because all looper layers are filled!";
+    }
+}
+
+void LooperWindow::loadLoopInfo(const QString &loopsDir, const LoopInfo &loopInfo)
+{
+    if (loopInfo.isValid()) {
+        LoopLoader loader(loopsDir);
+        uint currentSampleRate = mainController->getSampleRate();
+        loader.load(loopInfo, looper, currentSampleRate);
+        update();
+    }
+    else {
+        qCritical() << "Can't load loop " << loopInfo.name << " in " << loopsDir;
     }
 }

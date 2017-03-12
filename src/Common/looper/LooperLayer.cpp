@@ -1,5 +1,5 @@
-#include "AudioLooperLayer.h"
-#include "../core/SamplesBuffer.h"
+#include "LooperLayer.h"
+#include "audio/core/SamplesBuffer.h"
 #include <cstring>
 
 using namespace Audio;
@@ -42,6 +42,39 @@ void LooperLayer::zero()
     lastSamplesPerPeak = 0;
     lastCacheComputationSample = 0;
     peaksCache.clear();
+}
+
+void LooperLayer::setSamples(const SamplesBuffer &samples)
+{
+    uint samplesToCopy = qMin(samples.getFrameLenght(), lastCycleLenght);
+    if (!samplesToCopy)
+        return;
+
+    uint bytesToCopy =  samplesToCopy * sizeof(float);
+
+    Q_ASSERT(leftChannel.capacity() >= samplesToCopy);
+    Q_ASSERT(rightChannel.capacity() >= samplesToCopy);
+
+    std::memcpy(&(leftChannel[0]), samples.getSamplesArray(0), bytesToCopy);
+    if (samples.isMono())
+        std::memcpy(&(rightChannel[0]), samples.getSamplesArray(0), bytesToCopy);
+    else
+        std::memcpy(&(rightChannel[0]), samples.getSamplesArray(1), bytesToCopy);
+
+    availableSamples = samplesToCopy;
+
+
+    //rebuild peaks cache
+    lastCacheComputationSample = 0;
+    peaksCache.clear();
+
+    if (lastSamplesPerPeak) {
+        while (availableSamples - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
+            peaksCache.push_back(computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak));
+            lastCacheComputationSample += lastSamplesPerPeak;
+        }
+    }
+
 }
 
 void LooperLayer::setPan(float pan)
@@ -102,8 +135,8 @@ void LooperLayer::overdub(const SamplesBuffer &samples, uint samplesToMix, uint 
 
     // build peaks cache when overdubbing
     if (lastSamplesPerPeak) {
-        uint position = startPosition + samplesToMix;
-        if (position - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
+        const uint position = startPosition + samplesToMix;
+        while (position - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
             const int peakIndex = (position/lastSamplesPerPeak) - 1;
             float lastPeak = computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak);
             if (peakIndex >= 0 && static_cast<uint>(peakIndex) < peaksCache.size())
@@ -131,7 +164,7 @@ void LooperLayer::append(const SamplesBuffer &samples, uint samplesToAppend)
 
     // build peaks cache
     if (lastSamplesPerPeak) {
-        if (availableSamples - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
+        while (availableSamples - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
             peaksCache.push_back(computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak));
             lastCacheComputationSample += lastSamplesPerPeak;
         }
@@ -218,4 +251,14 @@ void LooperLayer::resize(quint32 samplesPerCycle)
 
         peaksCache.clear(); // invalidate peaks cache
     }
+}
+
+SamplesBuffer LooperLayer::getAllSamples() const
+{
+    SamplesBuffer buffer(2, availableSamples);
+    uint bytesToCopy = availableSamples * sizeof(float);
+    std::memcpy(buffer.getSamplesArray(0), &(leftChannel[0]), bytesToCopy);
+    std::memcpy(buffer.getSamplesArray(1), &(rightChannel[0]), bytesToCopy);
+
+    return buffer;
 }

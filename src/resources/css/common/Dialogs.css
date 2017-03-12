@@ -2,6 +2,16 @@
     This file contain common stylesheet to Dialogs.
 */
 
+LooperWindow #loadButton
+{
+    max-width: 20px;
+}
+
+LooperWindow #loadButton::menu-indicator
+{
+    image: none;
+}
+
 LooperWindow QGroupBox
 {
     border: 1px solid rgb(0, 0, 0, 20);

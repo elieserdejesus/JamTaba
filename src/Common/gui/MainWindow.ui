@@ -449,6 +449,7 @@
     <addaction name="actionVstPreferences"/>
     <addaction name="actionRecording"/>
     <addaction name="actionMetronome"/>
+    <addaction name="actionLooper"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -674,6 +675,11 @@
   <action name="actionPixelatedBuildings">
    <property name="text">
     <string>Pixelated Buildings</string>
+   </property>
+  </action>
+  <action name="actionLooper">
+   <property name="text">
+    <string>Looper ...</string>
    </property>
   </action>
  </widget>

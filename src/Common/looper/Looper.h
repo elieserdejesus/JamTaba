@@ -1,7 +1,7 @@
 #ifndef _AUDIO_LOOPER_
 #define _AUDIO_LOOPER_
 
-#include "../core/SamplesBuffer.h"
+#include "audio/core/SamplesBuffer.h"
 
 #include <QtGlobal>
 #include <QObject>
@@ -44,6 +44,8 @@ public:
     void addBuffer(const SamplesBuffer &samples); // recording
     void mixToBuffer(SamplesBuffer &samples); // playing/mixing
 
+    void setLayerSamples(quint8 layer, const SamplesBuffer &samples);
+
     void reset(); // clear all
 
     void startNewCycle(uint samplesInCycle);
@@ -61,12 +63,17 @@ public:
     bool layerIsLocked(quint8 layerIndex) const;
 
     bool layerIsValid(quint8 layerIndex) const;
+    int getLastValidLayer() const;
+    bool isEmpty() const; // all layers are empty
+    bool isFull() const; // no empty layers
 
     void setLayerGain(quint8 layerIndex, float gain);
     void setLayerPan(quint8 layerIndex, float pan);
 
     void stop();
     void play();
+
+    QList<SamplesBuffer> getLayersSamples() const;
 
     static QString getModeString(Mode mode);
 
@@ -84,6 +91,8 @@ public:
     bool isStopped() const;
 
     bool hasLockedLayers() const;
+
+    bool canSave() const;
 
     void setLayers(quint8 maxLayers);
     quint8 getLayers() const;
@@ -116,16 +125,23 @@ public:
     bool optionIsSupportedInCurrentMode(PlayingOption option) const;
     bool optionIsSupportedInCurrentMode(RecordingOption option) const;
 
+    uint getIntervalLenght() const;
+
+    void setChanged(bool changed);
+
 signals:
     void stateChanged();
     void modeChanged();
     void maxLayersChanged(quint8 newMaxLayers);
     void currentLayerChanged(quint8 currentLayer);
+    void layerCleared(quint8 layer);
     void layerLockedStateChanged(quint8 currentLayer, bool locked);
 
 private:
     uint intervalLenght; // in samples
     uint intervalPosition; // in samples
+
+    bool changed; // used to decide if we can save or not layers content
 
     LooperLayer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex; // current played layer
@@ -178,6 +194,11 @@ private:
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
 };
+
+inline uint Looper::getIntervalLenght() const
+{
+    return intervalLenght;
+}
 
 inline bool Looper::optionIsSupportedInCurrentMode(PlayingOption option) const
 {

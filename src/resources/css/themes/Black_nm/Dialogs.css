@@ -29,7 +29,7 @@ UserNameDialog #label
     color: rgb(160, 160, 160);
 }
 
-PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome
+PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #tabLooper
 {
     border: 1px solid rgb(40, 40, 40);
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,

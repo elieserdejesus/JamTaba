@@ -18,6 +18,8 @@ public:
     void setGain(float gain);
     void setPan(float pan);
 
+    void setSamples(const SamplesBuffer &samples);
+
     void zero();
 
     void reset();
@@ -30,6 +32,8 @@ public:
     float computeMaxPeak(uint from, uint samplesPerPeak) const;
 
     std::vector<float> getSamplesPeaks(uint samplesPerPeak);
+
+    SamplesBuffer getAllSamples() const;
 
     void mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition);
 

@@ -6,8 +6,9 @@
 #include <QMap>
 #include <QLayout>
 
-#include "audio/looper/AudioLooper.h"
+#include "looper/Looper.h"
 #include "LooperWavePanel.h"
+#include "looper/LooperPersistence.h"
 
 namespace Controller {
 class NinjamController;
@@ -41,6 +42,7 @@ private slots:
     void handleNewMaxLayers(quint8 newMaxLayers);
     void handleModeChanged();
     void updateControls();
+    void showLoadMenu();
 
 private:
     Ui::LooperWindow *ui;
@@ -116,6 +118,12 @@ private:
     }
 
     void resetAllLayersControls();
+
+    void updateMaxLayersControls();
+    void setMaxLayerComboBoxValuesAvailability(int valuesToDisable);
+
+    void loadLoopInfo(const QString &loopsDir, const Audio::LoopInfo &info);
+    void loadAudioFile(const QString &audioFilePath);
 
     int currentBeat;
 };

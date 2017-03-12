@@ -34,7 +34,7 @@ class SampleExtractor16Bits : public SampleExtractor
         SampleExtractor16Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
-            qDebug() << "Creating a SampleExtrator for 16 bits audio";
+
         }
 
         float nextSample() override
@@ -45,13 +45,33 @@ class SampleExtractor16Bits : public SampleExtractor
         }
 };
 
+class SampleExtractor32Bits : public SampleExtractor
+{
+    public:
+        SampleExtractor32Bits(QDataStream *stream)
+            :SampleExtractor(stream)
+        {
+
+        }
+
+        float nextSample() override
+        {
+            char buffer[4];
+            stream->readRawData(buffer, 4);
+
+            float sample = 0;
+            memcpy(&sample, &buffer, sizeof(sample));
+            return sample;
+        }
+};
+
 class SampleExtractor24Bits : public SampleExtractor
 {
     public:
         SampleExtractor24Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
-            qDebug() << "Creating a SampleExtrator for 24 bits audio";
+
         }
 
         float nextSample() override
@@ -70,7 +90,7 @@ class SampleExtractor8Bits : public SampleExtractor
         SampleExtractor8Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
-            qDebug() << "Creating a SampleExtrator for 8 bits audio";
+
         }
 
         float nextSample() override
@@ -103,8 +123,8 @@ public:
         switch (bitsPerSample/8) {
             case 1: return std::unique_ptr<SampleExtractor8Bits>(new SampleExtractor8Bits(stream));
             case 2: return std::unique_ptr<SampleExtractor16Bits>(new SampleExtractor16Bits(stream));
-            //case 3: return std::make_unique<SampleExtractor24Bits>(stream);
-            //case 4: return std::make_unique<SampleExtractor32Bits>(stream);
+            case 3: return std::unique_ptr<SampleExtractor24Bits>(new SampleExtractor24Bits(stream));
+            case 4: return std::unique_ptr<SampleExtractor32Bits>(new SampleExtractor32Bits(stream));
         }
         qCritical() << "Can't create a SampleExtractor to handle " << bitsPerSample << " bits per sample!";
         return std::unique_ptr<NullSampleExtractor>(new NullSampleExtractor());
@@ -118,9 +138,6 @@ void WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuff
     if (!wavFile.open(QFile::ReadOnly)) {
         qWarning() << "Failed to open WAV file ..." << filePath;
         return; // Done, out buffer is not changed
-    }
-    else{
-        qDebug() << "Opening " << filePath;
     }
 
     // Read in the whole thing

@@ -107,6 +107,34 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="loadButton">
+        <property name="toolTip">
+         <string>Load looper layers</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../resources/jamtaba.qrc">
+          <normaloff>:/images/load.png</normaloff>:/images/load.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="saveButton">
+        <property name="toolTip">
+         <string>Save looper layers</string>
+        </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../resources/jamtaba.qrc">
+          <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="resetButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
@@ -270,11 +298,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="maxLayersSpinBox">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-         </widget>
+         <widget class="QComboBox" name="maxLayersComboBox"/>
         </item>
        </layout>
       </item>
@@ -284,6 +308,7 @@
   </layout>
  </widget>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

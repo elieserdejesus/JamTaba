@@ -9,8 +9,8 @@
 #include "audio/core/SamplesBuffer.h"
 #include "audio/core/AudioDriver.h"
 #include "audio/core/SamplesBuffer.h"
-#include "audio/file/FileReaderFactory.h"
-#include "audio/file/FileReader.h"
+#include "file/FileReaderFactory.h"
+#include "file/FileReader.h"
 #include "audio/NinjamTrackNode.h"
 #include "audio/MetronomeTrackNode.h"
 #include "audio/Resampler.h"
@@ -708,7 +708,7 @@ void NinjamController::on_ninjamServerBpmChanged(quint16 newBpm){
 
 void NinjamController::on_ninjamAudiointervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedData)
 {
-    if (mainController->isRecordingMultiTracksActivated()) {
+    if (mainController->isMultiTrackRecordingActivated()) {
         Geo::Location geoLocation = mainController->getGeoLocation(user.getIp());
         QString userName = user.getName() + " from " + geoLocation.getCountryName();
         mainController->saveEncodedAudio(userName, channelIndex, encodedData);

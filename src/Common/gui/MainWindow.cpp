@@ -1212,6 +1212,8 @@ void MainWindow::openPreferencesDialog(QAction *action)
             initialTab = PreferencesDialog::TAB_VST;
         else if (action == ui.actionMetronome)
             initialTab = PreferencesDialog::TAB_METRONOME;
+        else if (action == ui.actionLooper)
+            initialTab = PreferencesDialog::TAB_LOOPER;
 
         stopCurrentRoomStream();
 
@@ -1231,22 +1233,21 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 {
     Q_ASSERT(dialog);
 
-    connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this,
-            SLOT(setMultiTrackRecordingStatus(bool)));
+    connect(dialog, &PreferencesDialog::multiTrackRecordingStatusChanged, this, &MainWindow::setMultiTrackRecordingStatus);
 
-    connect(dialog, SIGNAL(jamRecorderStatusChanged(QString, bool)), this,
-            SLOT(setJamRecorderStatus(QString, bool)));
+    connect(dialog, &PreferencesDialog::jamRecorderStatusChanged, this, &MainWindow::setJamRecorderStatus);
 
-    connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this,
-            SLOT(setRecordingPath(const QString &)));
+    connect(dialog, &PreferencesDialog::recordingPathSelected, this, &MainWindow::setRecordingPath);
 
-    connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this,
-            SLOT(setBuiltInMetronome(QString)));
+    connect(dialog, &PreferencesDialog::builtInMetronomeSelected, this, &MainWindow::setBuiltInMetronome);
 
-    connect(dialog, SIGNAL(customMetronomeSelected(QString, QString)), this,
-            SLOT(setCustomMetronome(QString, QString)));
+    connect(dialog, &PreferencesDialog::customMetronomeSelected, this, &MainWindow::setCustomMetronome);
 
     connect(dialog, &PreferencesDialog::encodingQualityChanged, mainController, &MainController::setEncodingQuality);
+
+    connect(dialog, &PreferencesDialog::looperAudioEncodingFlagChanged, mainController, &MainController::storeLooperAudioEncodingFlag);
+
+    connect(dialog, &PreferencesDialog::looperFolderChanged, mainController, &MainController::storeLooperFolder);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
@@ -1262,7 +1263,7 @@ void MainWindow::setCustomMetronome(const QString &primaryBeatFile,
 
 void MainWindow::setMultiTrackRecordingStatus(bool recording)
 {
-    mainController->storeRecordingMultiTracksStatus(recording);
+    mainController->storeMultiTrackRecordingStatus(recording);
 }
 
 void MainWindow::setJamRecorderStatus(QString writerId, bool status)
@@ -1272,7 +1273,7 @@ void MainWindow::setJamRecorderStatus(QString writerId, bool status)
 
 void MainWindow::setRecordingPath(const QString &newRecordingPath)
 {
-    mainController->storeRecordingPath(newRecordingPath);
+    mainController->storeMultiTrackRecordingPath(newRecordingPath);
 }
 
 // ++++++++++++++++++++++

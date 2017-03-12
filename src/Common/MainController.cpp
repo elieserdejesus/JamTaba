@@ -378,7 +378,7 @@ bool MainController::addTrack(long trackID, Audio::AudioNode *trackNode)
 }
 
 // +++++++++++++++  SETTINGS +++++++++++
-void MainController::storeRecordingMultiTracksStatus(bool savingMultiTracks)
+void MainController::storeMultiTrackRecordingStatus(bool savingMultiTracks)
 {
     if (settings.isSaveMultiTrackActivated() && !savingMultiTracks)// user is disabling recording multi tracks?
         foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
@@ -403,9 +403,9 @@ void MainController::storeJamRecorderStatus(QString writerId, bool status)
     settings.setJamRecorderActivated(writerId, status);
 }
 
-void MainController::storeRecordingPath(const QString &newPath)
+void MainController::storeMultiTrackRecordingPath(const QString &newPath)
 {
-    settings.setRecordingPath(newPath);
+    settings.setMultiTrackRecordingPath(newPath);
     if (settings.isSaveMultiTrackActivated())
         foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
             jamRecorder->setRecordPath(newPath);
