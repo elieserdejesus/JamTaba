@@ -93,7 +93,7 @@ void LooperSettings::read(const QJsonObject &in)
 {
     preferredLayersCount = getValueFromJson(in, "preferresLayersCount", (quint8)4); // 4 layers as default value
     preferredMode = getValueFromJson(in, "preferredMode", (quint8)0); // use the first mode as default value
-    loopsFolder = getValueFromJson(in, "savePath", QString());
+    loopsFolder = getValueFromJson(in, "loopsFolder", QString());
     encodingAudioWhenSaving = getValueFromJson(in, "encodeAudio", false);
 
     bool useDefaultSavePath = false;
@@ -130,7 +130,7 @@ void LooperSettings::write(QJsonObject &out) const
 {
     out["preferresLayersCount"] = preferredLayersCount;
     out["preferredMode"] = preferredMode;
-    out["savePath"] = loopsFolder;
+    out["loopsFolder"] = loopsFolder;
     out["encodeAudio"] = encodingAudioWhenSaving;
 }
 

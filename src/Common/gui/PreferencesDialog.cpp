@@ -182,6 +182,16 @@ void PreferencesDialog::populateAllTabs()
     populateEncoderQualityComboBox();
     populateMultiTrackRecordingTab();
     populateMetronomeTab();
+    populateLooperTab();
+}
+
+void PreferencesDialog::populateLooperTab()
+{
+    QSignalBlocker lineEditSignalBlocker(ui->lineEditLoopsFolder);
+    QSignalBlocker checkBoxSignalBlocker(ui->checkBoxLooperOggEncoding);
+
+    ui->lineEditLoopsFolder->setText(settings->getLooperFolder());
+    ui->checkBoxLooperOggEncoding->setChecked(settings->getLooperAudioEncodingFlag());
 }
 
 void PreferencesDialog::selectRecordingTab()

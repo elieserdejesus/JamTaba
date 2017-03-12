@@ -1246,6 +1246,8 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
     connect(dialog, &PreferencesDialog::encodingQualityChanged, mainController, &MainController::setEncodingQuality);
 
     connect(dialog, &PreferencesDialog::looperAudioEncodingFlagChanged, mainController, &MainController::storeLooperAudioEncodingFlag);
+
+    connect(dialog, &PreferencesDialog::looperFolderChanged, mainController, &MainController::storeLooperFolder);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)

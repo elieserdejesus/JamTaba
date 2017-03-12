@@ -78,6 +78,9 @@ protected:
     //metronome
     void populateMetronomeTab();
 
+    // looper
+    void populateLooperTab();
+
     virtual void setupSignals();
     virtual void populateAllTabs();
 

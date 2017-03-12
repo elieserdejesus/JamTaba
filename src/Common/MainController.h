@@ -290,6 +290,7 @@ public:
     void storeLooperPreferredLayerCount(quint8 layersCount);
     void storeLooperPreferredMode(quint8 looperMode);
     void storeLooperAudioEncodingFlag(bool encodeAudioWhenSaving);
+    void storeLooperFolder(const QString &newLooperFolder);
     quint8 getLooperPreferedLayersCount() const;
     quint8 getLooperPreferedMode() const;
     bool getLooperAudioEncodingFlag() const;
@@ -420,6 +421,11 @@ inline void MainController::storeLooperPreferredMode(quint8 looperMode)
 inline void MainController::storeLooperAudioEncodingFlag(bool encodeAudioWhenSaving)
 {
     settings.setLooperAudioEncodingFlag(encodeAudioWhenSaving);
+}
+
+inline void MainController::storeLooperFolder(const QString &newLooperFolder)
+{
+    settings.setLooperFolder(newLooperFolder);
 }
 
 inline quint8 MainController::getLooperPreferedLayersCount() const

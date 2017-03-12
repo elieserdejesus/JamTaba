@@ -462,10 +462,23 @@ public:
     quint8 getLooperPreferredLayersCount() const;
     QString getLooperSavePath() const;
     bool getLooperAudioEncodingFlag() const;
+    QString getLooperFolder() const;
+
     void setLooperPreferredLayersCount(quint8 layersCount);
     void setLooperPreferredMode(quint8 looperMode);
     void setLooperAudioEncodingFlag(bool encodeAudioWhenSaving);
+    void setLooperFolder(const QString &folder);
 };
+
+inline QString Settings::getLooperFolder() const
+{
+    return looperSettings.loopsFolder;
+}
+
+inline void Settings::setLooperFolder(const QString &folder)
+{
+    looperSettings.loopsFolder = folder;
+}
 
 inline bool Settings::getLooperAudioEncodingFlag() const
 {

@@ -504,7 +504,7 @@
      </widget>
      <widget class="QWidget" name="tabRecording">
       <attribute name="title">
-       <string>Recording</string>
+       <string>Multi Track Recording</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <property name="verticalSpacing">
@@ -692,7 +692,7 @@
        <item>
         <widget class="QCheckBox" name="checkBoxLooperOggEncoding">
          <property name="text">
-          <string>Save loop layers audio as ogg files (use less disk space)</string>
+          <string>Save loop layers as ogg files (use less disk space)</string>
          </property>
         </widget>
        </item>
