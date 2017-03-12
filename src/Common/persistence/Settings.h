@@ -164,9 +164,10 @@ public:
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
 
-    quint8 preferredLayersCount; // how many layers looper will be created?
+    quint8 preferredLayersCount; // how many layers in each looper?
     quint8 preferredMode;// store the last used looper mode
-    QString savePath; // where looper audio files will be saved
+    QString loopsFolder; // where looper audio files will be saved
+    bool encodingAudioWhenSaving;
 };
 
 // +++++++++++++++++++++++++++++++++
@@ -460,13 +461,20 @@ public:
     quint8 getLooperPreferredMode() const;
     quint8 getLooperPreferredLayersCount() const;
     QString getLooperSavePath() const;
+    bool getLooperAudioEncodingFlag() const;
     void setLooperPreferredLayersCount(quint8 layersCount);
     void setLooperPreferredMode(quint8 looperMode);
+    void setLooperAudioEncodingFlag(bool encodeAudioWhenSaving);
 };
+
+inline bool Settings::getLooperAudioEncodingFlag() const
+{
+    return looperSettings.encodingAudioWhenSaving;
+}
 
 inline QString Settings::getLooperSavePath() const
 {
-    return looperSettings.savePath;
+    return looperSettings.loopsFolder;
 }
 
 inline quint8 Settings::getLooperPreferredLayersCount() const

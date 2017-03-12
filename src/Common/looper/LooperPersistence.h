@@ -13,13 +13,13 @@ class LoopSaver
 {
 public:
     LoopSaver(const QString &savePath, Looper *looper);
-    void save(const QString &loopFileName, uint bpm, uint bpi, bool encodeInOggVorbis, uint sampleRate);
+    void save(const QString &loopFileName, uint bpm, uint bpi, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate);
 private:
     QString savePath;
     Looper *looper;
 
     static QList<quint8> getLockedLayers(Looper *looper);
-    static void saveSamplesToDisk(const QString &savePath, const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, uint sampleRate);
+    static void saveSamplesToDisk(const QString &savePath, const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate);
 
     void saveJsonFile(const QString &loopFileName);
 

@@ -1233,22 +1233,19 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 {
     Q_ASSERT(dialog);
 
-    connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this,
-            SLOT(setMultiTrackRecordingStatus(bool)));
+    connect(dialog, &PreferencesDialog::multiTrackRecordingStatusChanged, this, &MainWindow::setMultiTrackRecordingStatus);
 
-    connect(dialog, SIGNAL(jamRecorderStatusChanged(QString, bool)), this,
-            SLOT(setJamRecorderStatus(QString, bool)));
+    connect(dialog, &PreferencesDialog::jamRecorderStatusChanged, this, &MainWindow::setJamRecorderStatus);
 
-    connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this,
-            SLOT(setRecordingPath(const QString &)));
+    connect(dialog, &PreferencesDialog::recordingPathSelected, this, &MainWindow::setRecordingPath);
 
-    connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this,
-            SLOT(setBuiltInMetronome(QString)));
+    connect(dialog, &PreferencesDialog::builtInMetronomeSelected, this, &MainWindow::setBuiltInMetronome);
 
-    connect(dialog, SIGNAL(customMetronomeSelected(QString, QString)), this,
-            SLOT(setCustomMetronome(QString, QString)));
+    connect(dialog, &PreferencesDialog::customMetronomeSelected, this, &MainWindow::setCustomMetronome);
 
     connect(dialog, &PreferencesDialog::encodingQualityChanged, mainController, &MainController::setEncodingQuality);
+
+    connect(dialog, &PreferencesDialog::looperAudioEncodingFlagChanged, mainController, &MainController::storeLooperAudioEncodingFlag);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)

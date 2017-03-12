@@ -563,13 +563,14 @@ void LooperWindow::initializeControls()
             auto settings = mainController->getSettings();
             auto ninjamController = mainController->getNinjamController();
             QString savePath = settings.getLooperSavePath();
-            bool encodeInOggVorbis = false;
+            bool encodeInOggVorbis = mainController->getLooperAudioEncodingFlag();
+            float vorbisQuality = settings.getEncodingQuality();
             uint sampleRate = mainController->getSampleRate();
             uint bpm = ninjamController->getCurrentBpm();
             uint bpi = ninjamController->getCurrentBpi();
 
             LoopSaver loopSaver(savePath, looper);
-            loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, sampleRate);
+            loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, vorbisQuality, sampleRate);
             updateControls();
         }
     });

@@ -83,7 +83,8 @@ LooperSettings::LooperSettings()
     : SettingsObject("Looper"),
       preferredLayersCount(4),
       preferredMode(0),
-      savePath("")
+      loopsFolder(""),
+      encodingAudioWhenSaving(false)
 {
 
 }
@@ -92,17 +93,18 @@ void LooperSettings::read(const QJsonObject &in)
 {
     preferredLayersCount = getValueFromJson(in, "preferresLayersCount", (quint8)4); // 4 layers as default value
     preferredMode = getValueFromJson(in, "preferredMode", (quint8)0); // use the first mode as default value
-    savePath = getValueFromJson(in, "savePath", QString());
+    loopsFolder = getValueFromJson(in, "savePath", QString());
+    encodingAudioWhenSaving = getValueFromJson(in, "encodeAudio", false);
 
     bool useDefaultSavePath = false;
-    if (!savePath.isEmpty()) {
-        QDir saveDir(QDir::fromNativeSeparators(savePath));
+    if (!loopsFolder.isEmpty()) {
+        QDir saveDir(QDir::fromNativeSeparators(loopsFolder));
         if (!saveDir.exists()) {
             qDebug() << "Creating looper save dir " << saveDir;
             saveDir.mkpath(".");
         }
 
-        if (savePath.isEmpty() || !saveDir.exists()) {
+        if (loopsFolder.isEmpty() || !saveDir.exists()) {
             qWarning() << "Dir " << saveDir << " not exists, using the application directory to save looper data!";
             useDefaultSavePath = true;
         }
@@ -115,8 +117,8 @@ void LooperSettings::read(const QJsonObject &in)
         QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
         QDir pathDir(QDir::homePath());
         QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
-        savePath = QDir(documentsDir).absoluteFilePath("JamTaba/Looper");
-        QDir saveDir(savePath);
+        loopsFolder = QDir(documentsDir).absoluteFilePath("JamTaba/Looper");
+        QDir saveDir(loopsFolder);
         if (!saveDir.exists()) {
             saveDir.mkpath(".");
             qDebug() << "Creating looper data folder " << saveDir;
@@ -128,7 +130,8 @@ void LooperSettings::write(QJsonObject &out) const
 {
     out["preferresLayersCount"] = preferredLayersCount;
     out["preferredMode"] = preferredMode;
-    out["savePath"] = savePath;
+    out["savePath"] = loopsFolder;
+    out["encodeAudio"] = encodingAudioWhenSaving;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -871,6 +874,11 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
 void Settings::setLooperPreferredLayersCount(quint8 layersCount)
 {
     looperSettings.preferredLayersCount = layersCount <= 8 ? layersCount : 8;
+}
+
+void Settings::setLooperAudioEncodingFlag(bool encodeAudioWhenSaving)
+{
+    looperSettings.encodingAudioWhenSaving = encodeAudioWhenSaving;
 }
 
 void Settings::setLooperPreferredMode(quint8 looperMode)

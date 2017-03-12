@@ -289,8 +289,10 @@ public:
     // looper settings
     void storeLooperPreferredLayerCount(quint8 layersCount);
     void storeLooperPreferredMode(quint8 looperMode);
+    void storeLooperAudioEncodingFlag(bool encodeAudioWhenSaving);
     quint8 getLooperPreferedLayersCount() const;
     quint8 getLooperPreferedMode() const;
+    bool getLooperAudioEncodingFlag() const;
 
 signals:
     void ipResolved(const QString &ip);
@@ -415,6 +417,11 @@ inline void MainController::storeLooperPreferredMode(quint8 looperMode)
     settings.setLooperPreferredMode(looperMode);
 }
 
+inline void MainController::storeLooperAudioEncodingFlag(bool encodeAudioWhenSaving)
+{
+    settings.setLooperAudioEncodingFlag(encodeAudioWhenSaving);
+}
+
 inline quint8 MainController::getLooperPreferedLayersCount() const
 {
     return settings.getLooperPreferredLayersCount();
@@ -423,6 +430,11 @@ inline quint8 MainController::getLooperPreferedLayersCount() const
 inline quint8 MainController::getLooperPreferedMode() const
 {
     return settings.getLooperPreferredMode();
+}
+
+inline bool MainController::getLooperAudioEncodingFlag() const
+{
+    return settings.getLooperAudioEncodingFlag();
 }
 
 } // namespace

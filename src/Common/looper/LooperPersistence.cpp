@@ -1,6 +1,7 @@
 #include "LooperPersistence.h"
 #include "Looper.h"
 #include "file/WaveFileWriter.h"
+#include "audio/vorbis/VorbisEncoder.h"
 #include "file/FileReaderFactory.h"
 #include "audio/SamplesBufferResampler.h"
 
@@ -27,7 +28,7 @@ QList<quint8> LoopSaver::getLockedLayers(Looper *looper)
     return lockedLayers;
 }
 
-void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encodeInOggVorbis, uint sampleRate)
+void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate)
 {
     QDir loopDir(QDir(savePath).absoluteFilePath(loopFileName));
     if (!loopDir.exists()) {
@@ -43,6 +44,7 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
                                      layersSamples.at(layer),
                                      layer,
                                      encodeInOggVorbis,
+                                     vorbisQuality,
                                      sampleRate);
     }
 
@@ -72,7 +74,7 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
     looper->setChanged(false);
 }
 
-void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, uint sampleRate)
+void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate)
 {
     Q_ASSERT(!loopFileName.isEmpty() && !loopFileName.isNull());
     Q_ASSERT(layerIndex < Looper::MAX_LOOP_LAYERS);
@@ -82,6 +84,19 @@ void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFi
         WaveFileWriter waveFileWriter;
         QString filePath = QDir(savePath).absoluteFilePath(loopFileName +"/layer_" + QString::number(layerIndex) + ".wav");
         waveFileWriter.write(filePath, buffer, sampleRate);
+    }
+    else {
+        VorbisEncoder encoder(2, sampleRate, vorbisQuality);
+        QByteArray encodedData = encoder.encode(buffer);
+        encodedData.append(encoder.finishIntervalEncoding());
+        QString filePath = QDir(savePath).absoluteFilePath(loopFileName +"/layer_" + QString::number(layerIndex) + ".ogg");
+        QFile oggFile(filePath);
+        if (oggFile.open(QFile::WriteOnly)) {
+            oggFile.write(encodedData);
+        }
+        else {
+            qCritical() << "Can't write in the file " << filePath;
+        }
     }
 }
 
