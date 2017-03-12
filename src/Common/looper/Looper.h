@@ -64,6 +64,8 @@ public:
 
     bool layerIsValid(quint8 layerIndex) const;
     int getLastValidLayer() const;
+    bool isEmpty() const; // all layers are empty
+    bool isFull() const; // no empty layers
 
     void setLayerGain(quint8 layerIndex, float gain);
     void setLayerPan(quint8 layerIndex, float pan);

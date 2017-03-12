@@ -126,6 +126,29 @@ void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate)
 
 }
 
+SamplesBuffer LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate)
+{
+    QFile audioFile(filePath);
+    if (!audioFile.open(QFile::ReadOnly)) {
+        qCritical() << "Error loading loop layer samples, can't open " << filePath << audioFile.errorString();
+        return SamplesBuffer::ZERO_BUFFER;
+    }
+
+    auto fileReader = FileReaderFactory::createFileReader(filePath);
+    SamplesBuffer samplesBuffer(2); // stereo
+    quint32 audioFileSampleRate;
+    fileReader->read(filePath, samplesBuffer, audioFileSampleRate);
+
+    bool needResample = currentSampleRate != audioFileSampleRate;
+    if (needResample) {
+        SamplesBufferResampler resampler;
+        uint desiredLenght = currentSampleRate/(float)audioFileSampleRate * samplesBuffer.getFrameLenght();
+        return resampler.resample(samplesBuffer, desiredLenght);
+    }
+
+    return samplesBuffer;
+}
+
 SamplesBuffer LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate)
 {
     QDir audioDir(QDir(loadPath).absoluteFilePath(loopName));
@@ -136,25 +159,8 @@ SamplesBuffer LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QS
 
     QString audioFileName("layer_" + QString::number(layerIndex) + (audioIsEncoded ? ".ogg" : ".wav"));
     QString audioFilePath(audioDir.absoluteFilePath(audioFileName));
-    QFile audioFile(audioFilePath);
-    if (!audioFile.open(QFile::ReadOnly)) {
-        qCritical() << "Error loading loop layer samples, can't open " << audioFilePath << audioFile.errorString();
-        return SamplesBuffer::ZERO_BUFFER;
-    }
 
-    auto fileReader = FileReaderFactory::createFileReader(audioFilePath);
-    SamplesBuffer samplesBuffer(2); // stereo
-    quint32 audioFileSampleRate;
-    fileReader->read(audioFilePath, samplesBuffer, audioFileSampleRate);
-
-    bool needResample = currentSampleRate != audioFileSampleRate;
-    if (needResample) {
-        SamplesBufferResampler resampler;
-        uint desiredLenght = currentSampleRate/(float)audioFileSampleRate * samplesBuffer.getFrameLenght();
-        return resampler.resample(samplesBuffer, desiredLenght);
-    }
-
-    return samplesBuffer;
+    return LoopLoader::loadAudioFile(audioFilePath, currentSampleRate);
 }
 
 QList<LoopInfo> LoopLoader::loadAllLoopsInfo(const QString &loadPath)

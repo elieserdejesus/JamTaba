@@ -680,8 +680,25 @@ void LooperWindow::showLoadMenu()
         });
     }
 
+    // load audio files
     menu->addSeparator();
-    QAction *browseAction = menu->addAction(tr("Browse ..."));
+    QAction *loadAudioFilesAction = menu->addAction(tr("Load audio files ..."));
+    connect(loadAudioFilesAction, &QAction::triggered, [=](){
+        QFileDialog audioFilesDialog(this, tr("Opening audio files ..."), loopsDir, tr("Audio files (*.wav *.ogg)"));
+        audioFilesDialog.setAcceptMode(QFileDialog::AcceptOpen);
+        audioFilesDialog.setFileMode(QFileDialog::ExistingFiles);
+        if (audioFilesDialog.exec()) {
+            QStringList selectedFiles = audioFilesDialog.selectedFiles();
+            for (const QString &selectedFile : selectedFiles) {
+                loadAudioFile(selectedFile);
+            }
+        }
+    });
+
+
+    // browse
+    menu->addSeparator();
+    QAction *browseAction = menu->addAction(tr("Browse JamTaba loops..."));
     connect(browseAction, &QAction::triggered, [=](){
         QString fileDialogTitle = tr("Open loop file");
         QString filter = tr("JamTaba Loop Files (*.json)");
@@ -692,6 +709,28 @@ void LooperWindow::showLoadMenu()
     });
 
     menu->show();
+}
+
+void LooperWindow::loadAudioFile(const QString &audioFilePath)
+{
+    bool canLoad = looper->getLastValidLayer() < (Looper::MAX_LOOP_LAYERS - 1);
+    if (canLoad) {
+        uint sampleRate = mainController->getSampleRate();
+        SamplesBuffer samples = LoopLoader::loadAudioFile(audioFilePath, sampleRate);
+
+        quint8 layerIndex = looper->getLastValidLayer() + 1;
+        if (looper->isEmpty())
+            layerIndex = 0;
+        else if (looper->isFull()) {
+            layerIndex = looper->getLayers(); // last layer
+            looper->setLayers(layerIndex + 1); // expand layer count before add loaded samples
+        }
+
+        looper->setLayerSamples(layerIndex, samples);
+    }
+    else {
+        qCritical() << "Can't load the audio file " << audioFilePath << " because all looper layers are filled!";
+    }
 }
 
 void LooperWindow::loadLoopInfo(const QString &loopsDir, const LoopInfo &loopInfo)

@@ -76,6 +76,7 @@ public:
 
     static LoopInfo loadLoopInfo(const QString &loopFilePath);
     static QList<LoopInfo> loadAllLoopsInfo(const QString &loadPath);
+    static SamplesBuffer loadAudioFile(const QString &filePath, uint currentSampleRate);
 
 private:
     QString loadPath;

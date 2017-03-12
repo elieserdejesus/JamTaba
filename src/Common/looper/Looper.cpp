@@ -40,6 +40,21 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
     initialize();
 }
 
+bool Looper::isFull() const
+{
+    for (uint l = 0; l < maxLayers; ++l) {
+        if (!layerIsValid(l))
+            return false;
+    }
+
+    return true;
+}
+
+bool Looper::isEmpty() const
+{
+    return getLastValidLayer() < 0;
+}
+
 int Looper::getLastValidLayer() const
 {
     for (int l = maxLayers - 1; l >= 0; --l) {
