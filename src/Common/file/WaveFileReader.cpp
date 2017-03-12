@@ -45,6 +45,26 @@ class SampleExtractor16Bits : public SampleExtractor
         }
 };
 
+class SampleExtractor32Bits : public SampleExtractor
+{
+    public:
+        SampleExtractor32Bits(QDataStream *stream)
+            :SampleExtractor(stream)
+        {
+
+        }
+
+        float nextSample() override
+        {
+            char buffer[4];
+            stream->readRawData(buffer, 4);
+
+            float sample = 0;
+            memcpy(&sample, &buffer, sizeof(sample));
+            return sample;
+        }
+};
+
 class SampleExtractor24Bits : public SampleExtractor
 {
     public:
@@ -103,8 +123,8 @@ public:
         switch (bitsPerSample/8) {
             case 1: return std::unique_ptr<SampleExtractor8Bits>(new SampleExtractor8Bits(stream));
             case 2: return std::unique_ptr<SampleExtractor16Bits>(new SampleExtractor16Bits(stream));
-            //case 3: return std::make_unique<SampleExtractor24Bits>(stream);
-            //case 4: return std::make_unique<SampleExtractor32Bits>(stream);
+            case 3: return std::unique_ptr<SampleExtractor24Bits>(new SampleExtractor24Bits(stream));
+            case 4: return std::unique_ptr<SampleExtractor32Bits>(new SampleExtractor32Bits(stream));
         }
         qCritical() << "Can't create a SampleExtractor to handle " << bitsPerSample << " bits per sample!";
         return std::unique_ptr<NullSampleExtractor>(new NullSampleExtractor());
