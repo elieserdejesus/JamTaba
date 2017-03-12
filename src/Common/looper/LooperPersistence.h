@@ -72,7 +72,7 @@ class LoopLoader
 {
 public:
     LoopLoader(const QString &loadPath);
-    void load(LoopInfo loopInfo, Looper *looper);
+    void load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate);
 
     static LoopInfo loadLoopInfo(const QString &loopFilePath);
     static QList<LoopInfo> loadAllLoopsInfo(const QString &loadPath);

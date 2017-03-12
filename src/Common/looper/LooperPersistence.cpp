@@ -2,10 +2,11 @@
 #include "Looper.h"
 #include "file/WaveFileWriter.h"
 #include "file/FileReaderFactory.h"
+#include "audio/SamplesBufferResampler.h"
 
 #include <QtConcurrent/QtConcurrent>
 #include <QJsonDocument>
-#include "QFileInfo"
+#include <QFileInfo>
 
 using namespace Audio;
 
@@ -94,7 +95,7 @@ LoopLoader::LoopLoader(const QString &loadPath)
 
 }
 
-void LoopLoader::load(LoopInfo loopInfo, Looper *looper)
+void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate)
 {
     Q_ASSERT(looper);
     looper->stop();
