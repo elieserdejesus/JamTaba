@@ -416,18 +416,24 @@ void PreferencesDialogStandalone::populateVstTab()
 
 void PreferencesDialogStandalone::selectTab(int index)
 {
-    switch (index) {
-    case 0:
+    switch (static_cast<PreferencesTab>(index)) {
+    case PreferencesTab::TabAudio:
         populateAudioTab();
         break;
-    case 1:
+    case PreferencesTab::TabMidi:
         populateMidiTab();
         break;
-    case 2:
+    case PreferencesTab::TabVST:
         populateVstTab();
         break;
-    case 3:
+    case PreferencesTab::TabMultiTrackRecording:
         populateMultiTrackRecordingTab();
+        break;
+    case PreferencesTab::TabLooper:
+        populateLooperTab();
+        break;
+    case PreferencesTab::TabMetronome:
+        populateMetronomeTab();
         break;
     }
 }

@@ -20,12 +20,12 @@ public:
     virtual ~PreferencesDialog();
 
     enum PreferencesTab {
-        TAB_AUDIO,
-        TAB_MIDI,
-        TAB_VST,
-        TAB_RECORDING,
-        TAB_METRONOME,
-        TAB_LOOPER
+        TabAudio,
+        TabMidi,
+        TabVST,
+        TabMultiTrackRecording,
+        TabMetronome,
+        TabLooper
 
     };
 

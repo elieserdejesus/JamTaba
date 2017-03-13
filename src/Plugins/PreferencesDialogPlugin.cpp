@@ -13,19 +13,29 @@ PreferencesDialogPlugin::PreferencesDialogPlugin(QWidget *parent) :
 void PreferencesDialogPlugin::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
 {
     PreferencesDialog::initialize(initialTab, settings, jamRecorders);
-    int tabIndex = initialTab == PreferencesTab::TAB_RECORDING ? 0 : 1;
+    int tabIndex = static_cast<int>(initialTab) - 3; // the 3 first tabs are removed in plugins
     ui->prefsTab->setCurrentIndex(tabIndex);
 }
 
 void PreferencesDialogPlugin::selectTab(int index)
 {
-    if (index == 0) //only the recording and metronome tabs are available in VST plugin
+    switch (static_cast<PreferencesTab>(index)) {
+    case PreferencesTab::TabMultiTrackRecording:
         populateMultiTrackRecordingTab();
-    else
+        break;
+    case PreferencesTab::TabLooper:
+        populateLooperTab();
+        break;
+    case PreferencesTab::TabMetronome:
         populateMetronomeTab();
+        break;
+    }
 }
 
-void PreferencesDialogPlugin::populateAllTabs(){
+void PreferencesDialogPlugin::populateAllTabs()
+{
+    // populating only the available tabs
     populateMultiTrackRecordingTab();
     populateMetronomeTab();
+    populateLooperTab();
 }

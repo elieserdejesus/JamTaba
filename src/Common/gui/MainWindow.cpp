@@ -1205,17 +1205,17 @@ void MainWindow::openPreferencesDialog(QAction *action)
     if (action == ui.actionQuit) { // TODO put the Quit action in a better place. A 'Quit' entry in the 'Preferences' menu is not good. A Quit action is not related with Preferences.
         close();
     } else {
-        PreferencesDialog::PreferencesTab initialTab = PreferencesDialog::TAB_RECORDING;
+        PreferencesDialog::PreferencesTab initialTab = PreferencesDialog::TabMultiTrackRecording;
         if (action == ui.actionAudioPreferences)
-            initialTab = PreferencesDialog::TAB_AUDIO;
+            initialTab = PreferencesDialog::TabAudio;
         else if (action == ui.actionMidiPreferences)
-            initialTab = PreferencesDialog::TAB_MIDI;
+            initialTab = PreferencesDialog::TabMidi;
         else if (action == ui.actionVstPreferences)
-            initialTab = PreferencesDialog::TAB_VST;
+            initialTab = PreferencesDialog::TabVST;
         else if (action == ui.actionMetronome)
-            initialTab = PreferencesDialog::TAB_METRONOME;
+            initialTab = PreferencesDialog::TabMetronome;
         else if (action == ui.actionLooper)
-            initialTab = PreferencesDialog::TAB_LOOPER;
+            initialTab = PreferencesDialog::TabLooper;
 
         stopCurrentRoomStream();
 
