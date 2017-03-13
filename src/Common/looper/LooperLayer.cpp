@@ -1,8 +1,10 @@
 #include "LooperLayer.h"
 #include "audio/core/SamplesBuffer.h"
 #include <cstring>
+#include <cmath>
 
 using namespace Audio;
+using namespace std;
 
 LooperLayer::LooperLayer()
     : availableSamples(0),
@@ -262,3 +264,4 @@ SamplesBuffer LooperLayer::getAllSamples() const
 
     return buffer;
 }
+
