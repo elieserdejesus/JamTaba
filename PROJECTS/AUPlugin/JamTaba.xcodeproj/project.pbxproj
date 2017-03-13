@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A0DBC4F1E0AF46900BEF1FF /* codec.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB161E0AF46800BEF1FF /* codec.h */; };
 		2A0DBC531E0AF46900BEF1FF /* AudioDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB191E0AF46800BEF1FF /* AudioDriver.h */; };
 		2A0DBC571E0AF46900BEF1FF /* AudioMixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB1B1E0AF46800BEF1FF /* AudioMixer.h */; };
 		2A0DBC5B1E0AF46900BEF1FF /* AudioNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB1D1E0AF46800BEF1FF /* AudioNode.h */; };
@@ -19,10 +18,6 @@
 		2A0DBC791E0AF46900BEF1FF /* PluginDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB2D1E0AF46800BEF1FF /* PluginDescriptor.h */; };
 		2A0DBC7D1E0AF46900BEF1FF /* Plugins.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB2F1E0AF46800BEF1FF /* Plugins.h */; };
 		2A0DBC811E0AF46900BEF1FF /* SamplesBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB311E0AF46800BEF1FF /* SamplesBuffer.h */; };
-		2A0DBC831E0AF46900BEF1FF /* FileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB331E0AF46800BEF1FF /* FileReader.h */; };
-		2A0DBC871E0AF46900BEF1FF /* FileReaderFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB351E0AF46800BEF1FF /* FileReaderFactory.h */; };
-		2A0DBC8B1E0AF46900BEF1FF /* OggFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB371E0AF46800BEF1FF /* OggFileReader.h */; };
-		2A0DBC8F1E0AF46900BEF1FF /* WaveFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB391E0AF46900BEF1FF /* WaveFileReader.h */; };
 		2A0DBCA31E0AF46900BEF1FF /* MetronomeTrackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB471E0AF46900BEF1FF /* MetronomeTrackNode.h */; };
 		2A0DBCA71E0AF46900BEF1FF /* NinjamTrackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB491E0AF46900BEF1FF /* NinjamTrackNode.h */; };
 		2A0DBCAB1E0AF46900BEF1FF /* Resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB4B1E0AF46900BEF1FF /* Resampler.h */; };
@@ -177,7 +172,6 @@
 		2A120A831E0BF32700E0E596 /* MultiStateButton.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBFB1E0AF46900BEF1FF /* MultiStateButton.h */; };
 		2A120A851E0C05D900E0E596 /* jamtaba.qrc in Resources */ = {isa = PBXBuildFile; fileRef = 2A120A841E0C05D900E0E596 /* jamtaba.qrc */; };
 		2A120A861E0C05EA00E0E596 /* jamtaba.qrc in Sources */ = {isa = PBXBuildFile; fileRef = 2A120A841E0C05D900E0E596 /* jamtaba.qrc */; };
-		2A1C7A2F1E0B5E9A00C7984D /* codec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB151E0AF46800BEF1FF /* codec.cpp */; };
 		2A1C7A301E0B5F2C00C7984D /* AudioMixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1A1E0AF46800BEF1FF /* AudioMixer.cpp */; };
 		2A1C7A311E0B5F2C00C7984D /* AudioNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1C1E0AF46800BEF1FF /* AudioNode.cpp */; };
 		2A1C7A321E0B5F2C00C7984D /* AudioNodeProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1E1E0AF46800BEF1FF /* AudioNodeProcessor.cpp */; };
@@ -186,9 +180,6 @@
 		2A1C7A351E0B5F2C00C7984D /* LocalInputGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB281E0AF46800BEF1FF /* LocalInputGroup.cpp */; };
 		2A1C7A361E0B5F2C00C7984D /* LocalInputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2A1E0AF46800BEF1FF /* LocalInputNode.cpp */; };
 		2A1C7A371E0B5F2C00C7984D /* SamplesBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB301E0AF46800BEF1FF /* SamplesBuffer.cpp */; };
-		2A1C7A381E0B5F2C00C7984D /* FileReaderFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB341E0AF46800BEF1FF /* FileReaderFactory.cpp */; };
-		2A1C7A391E0B5F2C00C7984D /* OggFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB361E0AF46800BEF1FF /* OggFileReader.cpp */; };
-		2A1C7A3A1E0B5F2C00C7984D /* WaveFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB381E0AF46800BEF1FF /* WaveFileReader.cpp */; };
 		2A1C7A3B1E0B5F2C00C7984D /* MetronomeTrackNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB461E0AF46900BEF1FF /* MetronomeTrackNode.cpp */; };
 		2A1C7A3C1E0B5F2C00C7984D /* NinjamTrackNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB481E0AF46900BEF1FF /* NinjamTrackNode.cpp */; };
 		2A1C7A3D1E0B5F2C00C7984D /* Resampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB4A1E0AF46900BEF1FF /* Resampler.cpp */; };
@@ -353,6 +344,38 @@
 		2AEFF5641E18368F00843898 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */; };
 		2AEFF5671E1836EA00843898 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700F1E08116200A4B6C2 /* IOKit.framework */; };
 		2AEFF5681E1836F800843898 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700D1E08113100A4B6C2 /* Carbon.framework */; };
+		2AF5A9311E76192F00D1150A /* FileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9281E76192F00D1150A /* FileReader.h */; };
+		2AF5A9321E76192F00D1150A /* FileReaderFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9291E76192F00D1150A /* FileReaderFactory.cpp */; };
+		2AF5A9331E76192F00D1150A /* FileReaderFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A92A1E76192F00D1150A /* FileReaderFactory.h */; };
+		2AF5A9341E76192F00D1150A /* OggFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A92B1E76192F00D1150A /* OggFileReader.cpp */; };
+		2AF5A9351E76192F00D1150A /* OggFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A92C1E76192F00D1150A /* OggFileReader.h */; };
+		2AF5A9361E76192F00D1150A /* WaveFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A92D1E76192F00D1150A /* WaveFileReader.cpp */; };
+		2AF5A9371E76192F00D1150A /* WaveFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A92E1E76192F00D1150A /* WaveFileReader.h */; };
+		2AF5A9381E76192F00D1150A /* WaveFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A92F1E76192F00D1150A /* WaveFileWriter.cpp */; };
+		2AF5A9391E76192F00D1150A /* WaveFileWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9301E76192F00D1150A /* WaveFileWriter.h */; };
+		2AF5A93B1E761A0700D1150A /* LooperWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A93A1E761A0700D1150A /* LooperWindow.h */; };
+		2AF5A93D1E761A1A00D1150A /* LooperWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A93C1E761A1A00D1150A /* LooperWindow.cpp */; };
+		2AF5A93E1E761A3000D1150A /* LooperWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A93A1E761A0700D1150A /* LooperWindow.h */; };
+		2AF5A9401E761ADF00D1150A /* LooperWindow.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2AF5A93F1E761ADF00D1150A /* LooperWindow.ui */; };
+		2AF5A9411E761B9300D1150A /* LooperWindow.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A93F1E761ADF00D1150A /* LooperWindow.ui */; };
+		2AF5A94B1E761BC500D1150A /* Looper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9431E761BC500D1150A /* Looper.cpp */; };
+		2AF5A94C1E761BC500D1150A /* Looper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9441E761BC500D1150A /* Looper.h */; };
+		2AF5A94D1E761BC500D1150A /* LooperLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9451E761BC500D1150A /* LooperLayer.cpp */; };
+		2AF5A94E1E761BC500D1150A /* LooperLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9461E761BC500D1150A /* LooperLayer.h */; };
+		2AF5A94F1E761BC500D1150A /* LooperPersistence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9471E761BC500D1150A /* LooperPersistence.cpp */; };
+		2AF5A9501E761BC500D1150A /* LooperPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9481E761BC500D1150A /* LooperPersistence.h */; };
+		2AF5A9511E761BC500D1150A /* LooperStates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9491E761BC500D1150A /* LooperStates.cpp */; };
+		2AF5A9521E761BC500D1150A /* LooperStates.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A94A1E761BC500D1150A /* LooperStates.h */; };
+		2AF5A9531E761BD900D1150A /* Looper.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9441E761BC500D1150A /* Looper.h */; };
+		2AF5A9561E761C3A00D1150A /* LooperWavePanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9541E761C3A00D1150A /* LooperWavePanel.h */; };
+		2AF5A9571E761C3A00D1150A /* LooperWavePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9551E761C3A00D1150A /* LooperWavePanel.cpp */; };
+		2AF5A9581E761C4A00D1150A /* LooperWavePanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9541E761C3A00D1150A /* LooperWavePanel.h */; };
+		2AF5A95C1E761D4D00D1150A /* Camera.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A95A1E761D4D00D1150A /* Camera.h */; };
+		2AF5A95D1E761D4D00D1150A /* VideoCodec.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A95B1E761D4D00D1150A /* VideoCodec.h */; };
+		2AF5A95E1E761D5800D1150A /* VideoCodec.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A95B1E761D4D00D1150A /* VideoCodec.h */; };
+		2AF5A9601E761D9900D1150A /* Encoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A95F1E761D9900D1150A /* Encoder.h */; };
+		2AF5A9621E761DAD00D1150A /* Mp3Decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */; };
+		2AF5A9641E761DBC00D1150A /* Mp3Decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */; };
 		62B3B89F1891936500E507B7 /* JamTaba.r in Rez */ = {isa = PBXBuildFile; fileRef = 62B3B89E1891936500E507B7 /* JamTaba.r */; };
 		8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
 		8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
@@ -431,8 +454,6 @@
 
 /* Begin PBXFileReference section */
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2A0DBB151E0AF46800BEF1FF /* codec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = codec.cpp; sourceTree = "<group>"; };
-		2A0DBB161E0AF46800BEF1FF /* codec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = codec.h; sourceTree = "<group>"; };
 		2A0DBB181E0AF46800BEF1FF /* AudioDriver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioDriver.cpp; sourceTree = "<group>"; };
 		2A0DBB191E0AF46800BEF1FF /* AudioDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioDriver.h; sourceTree = "<group>"; };
 		2A0DBB1A1E0AF46800BEF1FF /* AudioMixer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioMixer.cpp; sourceTree = "<group>"; };
@@ -458,13 +479,6 @@
 		2A0DBB2F1E0AF46800BEF1FF /* Plugins.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plugins.h; sourceTree = "<group>"; };
 		2A0DBB301E0AF46800BEF1FF /* SamplesBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SamplesBuffer.cpp; sourceTree = "<group>"; };
 		2A0DBB311E0AF46800BEF1FF /* SamplesBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SamplesBuffer.h; sourceTree = "<group>"; };
-		2A0DBB331E0AF46800BEF1FF /* FileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReader.h; sourceTree = "<group>"; };
-		2A0DBB341E0AF46800BEF1FF /* FileReaderFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileReaderFactory.cpp; sourceTree = "<group>"; };
-		2A0DBB351E0AF46800BEF1FF /* FileReaderFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReaderFactory.h; sourceTree = "<group>"; };
-		2A0DBB361E0AF46800BEF1FF /* OggFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OggFileReader.cpp; sourceTree = "<group>"; };
-		2A0DBB371E0AF46800BEF1FF /* OggFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OggFileReader.h; sourceTree = "<group>"; };
-		2A0DBB381E0AF46800BEF1FF /* WaveFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveFileReader.cpp; sourceTree = "<group>"; };
-		2A0DBB391E0AF46900BEF1FF /* WaveFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveFileReader.h; sourceTree = "<group>"; };
 		2A0DBB461E0AF46900BEF1FF /* MetronomeTrackNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetronomeTrackNode.cpp; sourceTree = "<group>"; };
 		2A0DBB471E0AF46900BEF1FF /* MetronomeTrackNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetronomeTrackNode.h; sourceTree = "<group>"; };
 		2A0DBB481E0AF46900BEF1FF /* NinjamTrackNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NinjamTrackNode.cpp; sourceTree = "<group>"; };
@@ -695,6 +709,33 @@
 		2AEFF55E1E18362500843898 /* libcocoaprintersupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcocoaprintersupport.a; path = "../../../Qt-5.6/plugins/printsupport/libcocoaprintersupport.a"; sourceTree = "<group>"; };
 		2AEFF5601E18363800843898 /* libqtfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtfreetype.a; path = "../../../Qt-5.6/lib/libqtfreetype.a"; sourceTree = "<group>"; };
 		2AEFF5621E18364D00843898 /* libQt5PrintSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PrintSupport.a; path = "../../../Qt-5.6/lib/libQt5PrintSupport.a"; sourceTree = "<group>"; };
+		2AF5A9281E76192F00D1150A /* FileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReader.h; sourceTree = "<group>"; };
+		2AF5A9291E76192F00D1150A /* FileReaderFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileReaderFactory.cpp; sourceTree = "<group>"; };
+		2AF5A92A1E76192F00D1150A /* FileReaderFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReaderFactory.h; sourceTree = "<group>"; };
+		2AF5A92B1E76192F00D1150A /* OggFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OggFileReader.cpp; sourceTree = "<group>"; };
+		2AF5A92C1E76192F00D1150A /* OggFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OggFileReader.h; sourceTree = "<group>"; };
+		2AF5A92D1E76192F00D1150A /* WaveFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveFileReader.cpp; sourceTree = "<group>"; };
+		2AF5A92E1E76192F00D1150A /* WaveFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveFileReader.h; sourceTree = "<group>"; };
+		2AF5A92F1E76192F00D1150A /* WaveFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveFileWriter.cpp; sourceTree = "<group>"; };
+		2AF5A9301E76192F00D1150A /* WaveFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveFileWriter.h; sourceTree = "<group>"; };
+		2AF5A93A1E761A0700D1150A /* LooperWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LooperWindow.h; sourceTree = "<group>"; };
+		2AF5A93C1E761A1A00D1150A /* LooperWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LooperWindow.cpp; sourceTree = "<group>"; };
+		2AF5A93F1E761ADF00D1150A /* LooperWindow.ui */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = LooperWindow.ui; sourceTree = "<group>"; };
+		2AF5A9431E761BC500D1150A /* Looper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Looper.cpp; sourceTree = "<group>"; };
+		2AF5A9441E761BC500D1150A /* Looper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Looper.h; sourceTree = "<group>"; };
+		2AF5A9451E761BC500D1150A /* LooperLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LooperLayer.cpp; sourceTree = "<group>"; };
+		2AF5A9461E761BC500D1150A /* LooperLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LooperLayer.h; sourceTree = "<group>"; };
+		2AF5A9471E761BC500D1150A /* LooperPersistence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LooperPersistence.cpp; sourceTree = "<group>"; };
+		2AF5A9481E761BC500D1150A /* LooperPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LooperPersistence.h; sourceTree = "<group>"; };
+		2AF5A9491E761BC500D1150A /* LooperStates.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LooperStates.cpp; sourceTree = "<group>"; };
+		2AF5A94A1E761BC500D1150A /* LooperStates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LooperStates.h; sourceTree = "<group>"; };
+		2AF5A9541E761C3A00D1150A /* LooperWavePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LooperWavePanel.h; sourceTree = "<group>"; };
+		2AF5A9551E761C3A00D1150A /* LooperWavePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LooperWavePanel.cpp; sourceTree = "<group>"; };
+		2AF5A95A1E761D4D00D1150A /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		2AF5A95B1E761D4D00D1150A /* VideoCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCodec.h; sourceTree = "<group>"; };
+		2AF5A95F1E761D9900D1150A /* Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Encoder.h; sourceTree = "<group>"; };
+		2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mp3Decoder.h; sourceTree = "<group>"; };
+		2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mp3Decoder.cpp; sourceTree = "<group>"; };
 		32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTaba_Prefix.pch; path = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch; sourceTree = "<group>"; };
 		6211E2B11891AA2900751AA3 /* ComponentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentBase.cpp; path = ../../AU_SDK/AUPublic/AUBase/ComponentBase.cpp; sourceTree = SOURCE_ROOT; };
 		6211E2B21891AA2900751AA3 /* ComponentBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentBase.h; path = ../../AU_SDK/AUPublic/AUBase/ComponentBase.h; sourceTree = SOURCE_ROOT; };
@@ -900,6 +941,9 @@
 		2A0DBB131E0AF46800BEF1FF /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				2AF5A9591E761D4D00D1150A /* video */,
+				2AF5A9421E761BC500D1150A /* looper */,
+				2AF5A9271E76192F00D1150A /* file */,
 				2A67BD991E410F3200A8FFF1 /* performance */,
 				2A0DBB141E0AF46800BEF1FF /* audio */,
 				2A0DBB571E0AF46900BEF1FF /* Configurator.cpp */,
@@ -930,10 +974,10 @@
 		2A0DBB141E0AF46800BEF1FF /* audio */ = {
 			isa = PBXGroup;
 			children = (
-				2A0DBB151E0AF46800BEF1FF /* codec.cpp */,
-				2A0DBB161E0AF46800BEF1FF /* codec.h */,
+				2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */,
+				2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */,
+				2AF5A95F1E761D9900D1150A /* Encoder.h */,
 				2A0DBB171E0AF46800BEF1FF /* core */,
-				2A0DBB321E0AF46800BEF1FF /* file */,
 				2A0DBB461E0AF46900BEF1FF /* MetronomeTrackNode.cpp */,
 				2A0DBB471E0AF46900BEF1FF /* MetronomeTrackNode.h */,
 				2A0DBB481E0AF46900BEF1FF /* NinjamTrackNode.cpp */,
@@ -991,20 +1035,6 @@
 			path = GeneratedFiles;
 			sourceTree = "<group>";
 		};
-		2A0DBB321E0AF46800BEF1FF /* file */ = {
-			isa = PBXGroup;
-			children = (
-				2A0DBB331E0AF46800BEF1FF /* FileReader.h */,
-				2A0DBB341E0AF46800BEF1FF /* FileReaderFactory.cpp */,
-				2A0DBB351E0AF46800BEF1FF /* FileReaderFactory.h */,
-				2A0DBB361E0AF46800BEF1FF /* OggFileReader.cpp */,
-				2A0DBB371E0AF46800BEF1FF /* OggFileReader.h */,
-				2A0DBB381E0AF46800BEF1FF /* WaveFileReader.cpp */,
-				2A0DBB391E0AF46900BEF1FF /* WaveFileReader.h */,
-			);
-			path = file;
-			sourceTree = "<group>";
-		};
 		2A0DBB521E0AF46900BEF1FF /* vorbis */ = {
 			isa = PBXGroup;
 			children = (
@@ -1040,6 +1070,7 @@
 		2A0DBB661E0AF46900BEF1FF /* gui */ = {
 			isa = PBXGroup;
 			children = (
+				2AF5A93F1E761ADF00D1150A /* LooperWindow.ui */,
 				2A67BDA21E410FE400A8FFF1 /* screensaver */,
 				2A0DBB671E0AF46900BEF1FF /* BaseTrackView.cpp */,
 				2A0DBB681E0AF46900BEF1FF /* BaseTrackView.h */,
@@ -1061,10 +1092,12 @@
 				2A0DBBC01E0AF46900BEF1FF /* LocalTrackGroupView.cpp */,
 				2A0DBBC11E0AF46900BEF1FF /* LocalTrackGroupView.h */,
 				2A0DBBC21E0AF46900BEF1FF /* LocalTrackView.cpp */,
+				2AF5A93A1E761A0700D1150A /* LooperWindow.h */,
 				2A0DBBC31E0AF46900BEF1FF /* LocalTrackView.h */,
 				2A0DBBC41E0AF46900BEF1FF /* mainframe.qrc */,
 				2A0DBBC51E0AF46900BEF1FF /* MainWindow.cpp */,
 				2A0DBBC61E0AF46900BEF1FF /* MainWindow.h */,
+				2AF5A93C1E761A1A00D1150A /* LooperWindow.cpp */,
 				2A0DBBC71E0AF46900BEF1FF /* MainWindow.ui */,
 				2A0DBBC81E0AF46900BEF1FF /* NinjamPanel.cpp */,
 				2A0DBBC91E0AF46900BEF1FF /* NinjamPanel.h */,
@@ -1174,6 +1207,8 @@
 				2A0DBBF51E0AF46900BEF1FF /* MapMarker.h */,
 				2A0DBBF61E0AF46900BEF1FF /* MapWidget.cpp */,
 				2A0DBBF71E0AF46900BEF1FF /* MapWidget.h */,
+				2AF5A9541E761C3A00D1150A /* LooperWavePanel.h */,
+				2AF5A9551E761C3A00D1150A /* LooperWavePanel.cpp */,
 				2A0DBBF81E0AF46900BEF1FF /* MarqueeLabel.cpp */,
 				2A0DBBF91E0AF46900BEF1FF /* MarqueeLabel.h */,
 				2A0DBBFA1E0AF46900BEF1FF /* MultiStateButton.cpp */,
@@ -1339,6 +1374,46 @@
 			name = Core;
 			sourceTree = "<group>";
 		};
+		2AF5A9271E76192F00D1150A /* file */ = {
+			isa = PBXGroup;
+			children = (
+				2AF5A9281E76192F00D1150A /* FileReader.h */,
+				2AF5A9291E76192F00D1150A /* FileReaderFactory.cpp */,
+				2AF5A92A1E76192F00D1150A /* FileReaderFactory.h */,
+				2AF5A92B1E76192F00D1150A /* OggFileReader.cpp */,
+				2AF5A92C1E76192F00D1150A /* OggFileReader.h */,
+				2AF5A92D1E76192F00D1150A /* WaveFileReader.cpp */,
+				2AF5A92E1E76192F00D1150A /* WaveFileReader.h */,
+				2AF5A92F1E76192F00D1150A /* WaveFileWriter.cpp */,
+				2AF5A9301E76192F00D1150A /* WaveFileWriter.h */,
+			);
+			path = file;
+			sourceTree = "<group>";
+		};
+		2AF5A9421E761BC500D1150A /* looper */ = {
+			isa = PBXGroup;
+			children = (
+				2AF5A9431E761BC500D1150A /* Looper.cpp */,
+				2AF5A9441E761BC500D1150A /* Looper.h */,
+				2AF5A9451E761BC500D1150A /* LooperLayer.cpp */,
+				2AF5A9461E761BC500D1150A /* LooperLayer.h */,
+				2AF5A9471E761BC500D1150A /* LooperPersistence.cpp */,
+				2AF5A9481E761BC500D1150A /* LooperPersistence.h */,
+				2AF5A9491E761BC500D1150A /* LooperStates.cpp */,
+				2AF5A94A1E761BC500D1150A /* LooperStates.h */,
+			);
+			path = looper;
+			sourceTree = "<group>";
+		};
+		2AF5A9591E761D4D00D1150A /* video */ = {
+			isa = PBXGroup;
+			children = (
+				2AF5A95A1E761D4D00D1150A /* Camera.h */,
+				2AF5A95B1E761D4D00D1150A /* VideoCodec.h */,
+			);
+			path = video;
+			sourceTree = "<group>";
+		};
 		62FEDF6A1891AEA9004C557F /* AUPublic */ = {
 			isa = PBXGroup;
 			children = (
@@ -1473,12 +1548,15 @@
 			files = (
 				2A67BDA01E410F3200A8FFF1 /* PerformanceMonitor.h in Headers */,
 				2A0DBE671E0AF46E00BEF1FF /* ReaperProjectGenerator.h in Headers */,
+				2AF5A9601E761D9900D1150A /* Encoder.h in Headers */,
 				2A0DBDC71E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */,
 				2A0DBD951E0AF46B00BEF1FF /* NinjamRoomWindow.h in Headers */,
 				2A0DBE6B1E0AF46E00BEF1FF /* UploadIntervalData.h in Headers */,
 				2A0DBCDB1E0AF46900BEF1FF /* BaseTrackView.h in Headers */,
 				2A0DBCAB1E0AF46900BEF1FF /* Resampler.h in Headers */,
 				2A0DBE291E0AF46D00BEF1FF /* ClientMessages.h in Headers */,
+				2AF5A9331E76192F00D1150A /* FileReaderFactory.h in Headers */,
+				2AF5A95C1E761D4D00D1150A /* Camera.h in Headers */,
 				2A0DBE371E0AF46D00BEF1FF /* ServerMessagesHandler.h in Headers */,
 				2A0DBCDF1E0AF46900BEF1FF /* BpiUtils.h in Headers */,
 				2A0DBC631E0AF46900BEF1FF /* AudioPeak.h in Headers */,
@@ -1491,18 +1569,19 @@
 				2A0DBC7D1E0AF46900BEF1FF /* Plugins.h in Headers */,
 				2A0DBE551E0AF46E00BEF1FF /* Settings.h in Headers */,
 				2A0DBD031E0AF46A00BEF1FF /* NinjamVotingMessageParser.h in Headers */,
+				2AF5A94C1E761BC500D1150A /* Looper.h in Headers */,
 				2A0DBC5B1E0AF46900BEF1FF /* AudioNode.h in Headers */,
 				2A0DBD831E0AF46B00BEF1FF /* LocalTrackView.h in Headers */,
 				2A0DBE0D1E0AF46C00BEF1FF /* MetronomeUtils.h in Headers */,
 				2A0DBCF51E0AF46A00BEF1FF /* ChatTextEditor.h in Headers */,
 				2A0DBD1F1E0AF46A00BEF1FF /* ChordsProgressionParser.h in Headers */,
 				2AC0D3EC1E0AB913005A940A /* MainWindowPlugin.h in Headers */,
+				2AF5A9521E761BC500D1150A /* LooperStates.h in Headers */,
 				2A0DBD8F1E0AF46B00BEF1FF /* NinjamPanel.h in Headers */,
 				2A0DBDF51E0AF46C00BEF1FF /* UserNameLineEdit.h in Headers */,
 				2A0DBC791E0AF46900BEF1FF /* PluginDescriptor.h in Headers */,
 				2A0DBCD31E0AF46900BEF1FF /* IpToLocationResolver.h in Headers */,
 				2A0DBE331E0AF46D00BEF1FF /* ServerMessages.h in Headers */,
-				2A0DBC8B1E0AF46900BEF1FF /* OggFileReader.h in Headers */,
 				2A3669151E0DBFA9006CD583 /* JamTabaAUPlugin.h in Headers */,
 				2AC0D3F41E0AB913005A940A /* NinjamRoomWindowPlugin.h in Headers */,
 				2A0DBC671E0AF46900BEF1FF /* Filters.h in Headers */,
@@ -1512,30 +1591,35 @@
 				2A0DBE151E0AF46D00BEF1FF /* MidiMessage.h in Headers */,
 				2A0DBD9B1E0AF46B00BEF1FF /* NinjamTrackGroupView.h in Headers */,
 				2A0DBD131E0AF46A00BEF1FF /* ChordProgression.h in Headers */,
+				2AF5A9351E76192F00D1150A /* OggFileReader.h in Headers */,
 				2A0DBD071E0AF46A00BEF1FF /* ChatChordsProgressionParser.h in Headers */,
+				2AF5A94E1E761BC500D1150A /* LooperLayer.h in Headers */,
 				2A0DBDE11E0AF46C00BEF1FF /* MapMarker.h in Headers */,
-				2A0DBC4F1E0AF46900BEF1FF /* codec.h in Headers */,
+				2AF5A9311E76192F00D1150A /* FileReader.h in Headers */,
 				2A0DBCE31E0AF46900BEF1FF /* BusyDialog.h in Headers */,
 				2A0DBD5D1E0AF46A00BEF1FF /* GuiUtils.h in Headers */,
-				2A0DBC871E0AF46900BEF1FF /* FileReaderFactory.h in Headers */,
 				2A0DBD791E0AF46B00BEF1FF /* JamRoomViewPanel.h in Headers */,
 				2A0DBCEF1E0AF46A00BEF1FF /* ChatPanel.h in Headers */,
 				2A0DBD611E0AF46A00BEF1FF /* Highligther.h in Headers */,
 				2A0DBD9F1E0AF46B00BEF1FF /* NinjamTrackView.h in Headers */,
+				2AF5A95D1E761D4D00D1150A /* VideoCodec.h in Headers */,
 				2A0DBCBB1E0AF46900BEF1FF /* VorbisDecoder.h in Headers */,
 				2A0DBC5F1E0AF46900BEF1FF /* AudioNodeProcessor.h in Headers */,
 				2A0DBE5B1E0AF46E00BEF1FF /* PreCompiledHeaders.h in Headers */,
 				2A0DBE471E0AF46E00BEF1FF /* NinjamController.h in Headers */,
 				2A0DBC811E0AF46900BEF1FF /* SamplesBuffer.h in Headers */,
 				2A0DBCB71E0AF46900BEF1FF /* SamplesBufferResampler.h in Headers */,
+				2AF5A93B1E761A0700D1150A /* LooperWindow.h in Headers */,
 				2A0DBD891E0AF46B00BEF1FF /* MainWindow.h in Headers */,
 				2A0DBE511E0AF46E00BEF1FF /* CacheHeader.h in Headers */,
+				2AF5A9621E761DAD00D1150A /* Mp3Decoder.h in Headers */,
 				2A0DBDB31E0AF46B00BEF1FF /* PrivateServerDialog.h in Headers */,
 				2A0DBCB31E0AF46900BEF1FF /* SamplesBufferRecorder.h in Headers */,
 				2A0DBE1D1E0AF46D00BEF1FF /* RtMidiDriver.h in Headers */,
 				2A0DBDE51E0AF46C00BEF1FF /* MapWidget.h in Headers */,
 				2A0DBCAF1E0AF46900BEF1FF /* RoomStreamerNode.h in Headers */,
 				2A0DBC711E0AF46900BEF1FF /* LocalInputGroup.h in Headers */,
+				2AF5A9391E76192F00D1150A /* WaveFileWriter.h in Headers */,
 				2A0DBCC31E0AF46900BEF1FF /* Configurator.h in Headers */,
 				2A0DBD7F1E0AF46B00BEF1FF /* LocalTrackGroupView.h in Headers */,
 				2A0DBE051E0AF46C00BEF1FF /* natmap.h in Headers */,
@@ -1546,6 +1630,7 @@
 				2A0DBE091E0AF46C00BEF1FF /* MainController.h in Headers */,
 				2A0DBDC11E0AF46B00BEF1FF /* UserNameDialog.h in Headers */,
 				2A0DBC571E0AF46900BEF1FF /* AudioMixer.h in Headers */,
+				2AF5A9371E76192F00D1150A /* WaveFileReader.h in Headers */,
 				2A0DBDCB1E0AF46C00BEF1FF /* CustomTabWidget.h in Headers */,
 				2A0DBD0F1E0AF46A00BEF1FF /* ChordLabel.h in Headers */,
 				2A0DBE3F1E0AF46D00BEF1FF /* User.h in Headers */,
@@ -1554,6 +1639,7 @@
 				2A0DBE591E0AF46E00BEF1FF /* UsersDataCache.h in Headers */,
 				2AC0D3F01E0AB913005A940A /* NinjamControllerPlugin.h in Headers */,
 				8BA4AE54073EB72300A2709A /* JamTaba_ViewFactory.h in Headers */,
+				2AF5A9561E761C3A00D1150A /* LooperWavePanel.h in Headers */,
 				2A0DBE2F1E0AF46D00BEF1FF /* Server.h in Headers */,
 				2A0DBDED1E0AF46C00BEF1FF /* MultiStateButton.h in Headers */,
 				2A0DBCE91E0AF46900BEF1FF /* ChatMessagePanel.h in Headers */,
@@ -1561,7 +1647,6 @@
 				2A0DBE6D1E0AF46E00BEF1FF /* Utils.h in Headers */,
 				2A0DBDDD1E0AF46C00BEF1FF /* IntervalChunksDisplay.h in Headers */,
 				2A0DBE031E0AF46C00BEF1FF /* LoginService.h in Headers */,
-				2A0DBC831E0AF46900BEF1FF /* FileReader.h in Headers */,
 				2A0DBCA71E0AF46900BEF1FF /* NinjamTrackNode.h in Headers */,
 				8BA4AE55073EB72300A2709A /* JamTaba_UIView.h in Headers */,
 				2AC0D3E41E0AB913005A940A /* JamTabaPlugin.h in Headers */,
@@ -1573,8 +1658,8 @@
 				2A0DBDF91E0AF46C00BEF1FF /* WavePeakPanel.h in Headers */,
 				2A0DBDFD1E0AF46C00BEF1FF /* Logging.h in Headers */,
 				2A67BDA91E410FE400A8FFF1 /* ScreensaverBlocker.h in Headers */,
-				2A0DBC8F1E0AF46900BEF1FF /* WaveFileReader.h in Headers */,
 				2A0DBCA31E0AF46900BEF1FF /* MetronomeTrackNode.h in Headers */,
+				2AF5A9501E761BC500D1150A /* LooperPersistence.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1671,6 +1756,7 @@
 				2A0DBDAF1E0AF46B00BEF1FF /* PreferencesDialog.ui in Resources */,
 				2A0DBDA91E0AF46B00BEF1FF /* PluginScanDialog.ui in Resources */,
 				2A0DBCF11E0AF46A00BEF1FF /* ChatPanel.ui in Resources */,
+				2AF5A9401E761ADF00D1150A /* LooperWindow.ui in Resources */,
 				2A0DBD971E0AF46B00BEF1FF /* NinjamRoomWindow.ui in Resources */,
 				2A0DBCE51E0AF46900BEF1FF /* BusyDialog.ui in Resources */,
 				2A0DBD8B1E0AF46B00BEF1FF /* MainWindow.ui in Resources */,
@@ -1705,17 +1791,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A120A861E0C05EA00E0E596 /* jamtaba.qrc in Sources */,
+				2AF5A9531E761BD900D1150A /* Looper.h in Sources */,
 				2A0DBE961E0AF79300BEF1FF /* PrivateServerDialog.ui in Sources */,
 				2A0DBE981E0AF7D700BEF1FF /* ChatMessagePanel.ui in Sources */,
 				2A0DBE971E0AF7CB00BEF1FF /* BusyDialog.ui in Sources */,
 				2A0DBE991E0AF7D900BEF1FF /* ChatPanel.ui in Sources */,
 				2A0DBE9A1E0AF7E000BEF1FF /* ChordsPanel.ui in Sources */,
+				2AF5A9411E761B9300D1150A /* LooperWindow.ui in Sources */,
 				2A0DBE9B1E0AF7E300BEF1FF /* JamRoomViewPanel.ui in Sources */,
 				2A0DBE9C1E0AF7E700BEF1FF /* MainWindow.ui in Sources */,
 				2A0DBE9D1E0AF7EB00BEF1FF /* NinjamPanel.ui in Sources */,
 				2A0DBE9E1E0AF7EE00BEF1FF /* NinjamRoomWindow.ui in Sources */,
 				2A0DBEA01E0AF80600BEF1FF /* PreferencesDialog.ui in Sources */,
 				2A0DBEA11E0AF82700BEF1FF /* UserNameDialog.ui in Sources */,
+				2AF5A95E1E761D5800D1150A /* VideoCodec.h in Sources */,
+				2AF5A9581E761C4A00D1150A /* LooperWavePanel.h in Sources */,
 				2A67BDAB1E41112600A8FFF1 /* MainWindowPlugin.h in Sources */,
 				2A120A571E0BEF2100E0E596 /* BaseTrackView.h in Sources */,
 				2A120A831E0BF32700E0E596 /* MultiStateButton.h in Sources */,
@@ -1723,9 +1813,11 @@
 				2A120A821E0BF2F800E0E596 /* UserNameLineEdit.h in Sources */,
 				2A120A741E0BF0BF00E0E596 /* TrackGroupView.h in Sources */,
 				2A120A6E1E0BF01800E0E596 /* Configurator.cpp in Sources */,
+				2AF5A93E1E761A3000D1150A /* LooperWindow.h in Sources */,
 				2A120A5F1E0BEF4F00E0E596 /* IntervalProgressDisplay.h in Sources */,
 				2A120A691E0BEF8000E0E596 /* PreferencesDialog.h in Sources */,
 				2A120A6D1E0BEFA500E0E596 /* NinjamController.h in Sources */,
+				2AF5A9341E76192F00D1150A /* OggFileReader.cpp in Sources */,
 				2A3669141E0DBFA9006CD583 /* JamTabaAUPlugin.mm in Sources */,
 				2A120A6C1E0BEF9100E0E596 /* MainController.h in Sources */,
 				2A120A611E0BEF5400E0E596 /* JamRoomViewPanel.h in Sources */,
@@ -1747,8 +1839,10 @@
 				2A120A651E0BEF5E00E0E596 /* NinjamPanel.h in Sources */,
 				2A120A661E0BEF6000E0E596 /* NinjamRoomWindow.h in Sources */,
 				2A120A621E0BEF5700E0E596 /* LocalTrackGroupView.h in Sources */,
+				2AF5A9571E761C3A00D1150A /* LooperWavePanel.cpp in Sources */,
 				2A120A601E0BEF5000E0E596 /* IntervalProgressWindow.h in Sources */,
 				2A120A631E0BEF5800E0E596 /* LocalTrackView.h in Sources */,
+				2AF5A94B1E761BC500D1150A /* Looper.cpp in Sources */,
 				2A120A5C1E0BEF3900E0E596 /* ChordLabel.h in Sources */,
 				2A120A5A1E0BEF2C00E0E596 /* ChatPanel.h in Sources */,
 				2A120A5D1E0BEF3E00E0E596 /* ChordsPanel.h in Sources */,
@@ -1760,6 +1854,7 @@
 				2A120A551E0BEF1900E0E596 /* IpToLocationResolver.h in Sources */,
 				2A120A561E0BEF1C00E0E596 /* WebIpToLocationResolver.h in Sources */,
 				2A120A811E0BF2C300E0E596 /* RoomStreamerNode.h in Sources */,
+				2AF5A94F1E761BC500D1150A /* LooperPersistence.cpp in Sources */,
 				2A1C7AAE1E0B5FBE00C7984D /* JamTaba_UIView.mm in Sources */,
 				2A1C7AAD1E0B5FBC00C7984D /* JamTaba_ViewFactory.mm in Sources */,
 				2A1C7A301E0B5F2C00C7984D /* AudioMixer.cpp in Sources */,
@@ -1770,11 +1865,9 @@
 				2A1C7A351E0B5F2C00C7984D /* LocalInputGroup.cpp in Sources */,
 				2A1C7A361E0B5F2C00C7984D /* LocalInputNode.cpp in Sources */,
 				2A1C7A371E0B5F2C00C7984D /* SamplesBuffer.cpp in Sources */,
-				2A1C7A381E0B5F2C00C7984D /* FileReaderFactory.cpp in Sources */,
-				2A1C7A391E0B5F2C00C7984D /* OggFileReader.cpp in Sources */,
 				2A120A7D1E0BF25F00E0E596 /* MidiDriver.cpp in Sources */,
 				2A120A7E1E0BF26100E0E596 /* MidiMessage.cpp in Sources */,
-				2A1C7A3A1E0B5F2C00C7984D /* WaveFileReader.cpp in Sources */,
+				2AF5A9641E761DBC00D1150A /* Mp3Decoder.cpp in Sources */,
 				2A1C7A3B1E0B5F2C00C7984D /* MetronomeTrackNode.cpp in Sources */,
 				2A1C7A3C1E0B5F2C00C7984D /* NinjamTrackNode.cpp in Sources */,
 				2A1C7A3D1E0B5F2C00C7984D /* Resampler.cpp in Sources */,
@@ -1786,6 +1879,7 @@
 				2A1C7A431E0B5F2C00C7984D /* IpToLocationResolver.cpp in Sources */,
 				2A1C7A441E0B5F2C00C7984D /* WebIpToLocationResolver.cpp in Sources */,
 				2A1C7A451E0B5F2C00C7984D /* BaseTrackView.cpp in Sources */,
+				2AF5A9381E76192F00D1150A /* WaveFileWriter.cpp in Sources */,
 				2A1C7A461E0B5F2C00C7984D /* BpiUtils.cpp in Sources */,
 				2A1C7A471E0B5F2C00C7984D /* BusyDialog.cpp in Sources */,
 				2A1C7A481E0B5F2C00C7984D /* ChatMessagePanel.cpp in Sources */,
@@ -1803,6 +1897,7 @@
 				2A1C7A541E0B5F2C00C7984D /* CircularPaintStrategy.cpp in Sources */,
 				2A1C7A551E0B5F2C00C7984D /* EllipticalPaintStrategy.cpp in Sources */,
 				2A1C7A561E0B5F2C00C7984D /* IntervalProgressDisplay.cpp in Sources */,
+				2AF5A94D1E761BC500D1150A /* LooperLayer.cpp in Sources */,
 				2A1C7A571E0B5F2C00C7984D /* IntervalProgressWindow.cpp in Sources */,
 				2A73C8161E44F85C00DF124A /* TopLevelTextEditorModifier.cpp in Sources */,
 				2A1C7A581E0B5F2C00C7984D /* LinearPaintStrategy.cpp in Sources */,
@@ -1836,8 +1931,11 @@
 				2A1C7A721E0B5F2C00C7984D /* logging.cpp in Sources */,
 				2A1C7A731E0B5F2C00C7984D /* LoginService.cpp in Sources */,
 				2A1C7A741E0B5F2C00C7984D /* MainController.cpp in Sources */,
+				2AF5A9321E76192F00D1150A /* FileReaderFactory.cpp in Sources */,
+				2AF5A9361E76192F00D1150A /* WaveFileReader.cpp in Sources */,
 				2A1C7A751E0B5F2C00C7984D /* MetronomeUtils.cpp in Sources */,
 				2A1C7A761E0B5F2C00C7984D /* ClientMessages.cpp in Sources */,
+				2AF5A9511E761BC500D1150A /* LooperStates.cpp in Sources */,
 				2A1C7A771E0B5F2C00C7984D /* Server.cpp in Sources */,
 				2A1C7A781E0B5F2C00C7984D /* ServerMessages.cpp in Sources */,
 				2A1C7A791E0B5F2C00C7984D /* ServerMessagesHandler.cpp in Sources */,
@@ -1881,7 +1979,7 @@
 				2A1C7A9F1E0B5F2C00C7984D /* CAStreamBasicDescription.cpp in Sources */,
 				2A1C7AA01E0B5F2C00C7984D /* CAVectorUnit.cpp in Sources */,
 				2A1C7AA11E0B5F2C00C7984D /* CAXException.cpp in Sources */,
-				2A1C7A2F1E0B5E9A00C7984D /* codec.cpp in Sources */,
+				2AF5A93D1E761A1A00D1150A /* LooperWindow.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -547,6 +547,8 @@ void MainWindow::openLooperWindow(uint trackID)
 
         looperWindow->raise();
         looperWindow->show();
+        looperWindow->activateWindow();
+
      }
      else {
          qCritical() << "inputTrack or ninjamControler are null";

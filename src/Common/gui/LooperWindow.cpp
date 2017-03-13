@@ -27,6 +27,10 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint); // remove help/question marker
 
+#ifdef Q_OS_MAC
+    setWindowFlags(windowFlags() | Qt::Popup);
+#endif
+
     ui->setupUi(this);
 
     QGridLayout *layout = new QGridLayout();

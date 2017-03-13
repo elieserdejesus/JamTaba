@@ -11,6 +11,7 @@ class Looper;
 
 class LooperWavePanel : public WavePeakPanel
 {
+    Q_OBJECT
 
 public:
     LooperWavePanel(Audio::Looper *looper, quint8 layerIndex);
