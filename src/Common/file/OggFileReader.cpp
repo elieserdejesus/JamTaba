@@ -12,29 +12,29 @@ void OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffe
     QFile oggFile(filePath);
     if (!oggFile.open(QFile::ReadOnly)) {
         qWarning() << "Failed to open OGG file ..." << filePath;
-        return; // Done, out buffer is not changed
+        return;
     }
-    else{
-        VorbisDecoder decoder;
-        decoder.setInputData(oggFile.readAll());
-        decoder.initialize(); //read the ogg headers from file
-        sampleRate = decoder.getSampleRate();
-        if (decoder.isMono())
-            outBuffer.setToMono();
-        else
-            outBuffer.setToStereo();
 
-        //decode and append decoded data in 'outBuffer'
-        int decodedFrames = 0;
-        const int MAX_SAMPLES_PER_DECODE = 1024;
-        do
-        {
-            const Audio::SamplesBuffer &decodedBuffer = decoder.decode(MAX_SAMPLES_PER_DECODE);
-            decodedFrames = decodedBuffer.getFrameLenght();
-            if (!decodedBuffer.isEmpty()) {
-                outBuffer.append(decodedBuffer);
-            }
+    VorbisDecoder decoder;
+    decoder.setInputData(oggFile.readAll());
+    decoder.initialize(); //read the ogg headers from file
+    sampleRate = decoder.getSampleRate();
+    if (decoder.isMono())
+        outBuffer.setToMono();
+    else
+        outBuffer.setToStereo();
+
+    //decode and append decoded data in 'outBuffer'
+    int decodedFrames = 0;
+    const int MAX_SAMPLES_PER_DECODE = 1024;
+    do
+    {
+        const Audio::SamplesBuffer &decodedBuffer = decoder.decode(MAX_SAMPLES_PER_DECODE);
+        decodedFrames = decodedBuffer.getFrameLenght();
+        if (!decodedBuffer.isEmpty()) {
+            outBuffer.append(decodedBuffer);
         }
-        while(decodedFrames > 0);
     }
+    while(decodedFrames > 0);
+
 }

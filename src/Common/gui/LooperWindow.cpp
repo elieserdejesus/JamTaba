@@ -688,7 +688,7 @@ void LooperWindow::showLoadMenu()
     menu->addSeparator();
     QAction *loadAudioFilesAction = menu->addAction(tr("Import audio files ..."));
     connect(loadAudioFilesAction, &QAction::triggered, [=](){
-        QFileDialog audioFilesDialog(this, tr("Importing audio files ..."), loopsDir, tr("Audio files (*.wav *.ogg)"));
+        QFileDialog audioFilesDialog(this, tr("Importing audio files ..."), loopsDir, tr("Audio files (*.wav *.ogg *.mp3)"));
         audioFilesDialog.setAcceptMode(QFileDialog::AcceptOpen);
         audioFilesDialog.setFileMode(QFileDialog::ExistingFiles);
         if (audioFilesDialog.exec()) {

@@ -136,10 +136,10 @@ SamplesBuffer LoopLoader::loadAudioFile(const QString &filePath, uint currentSam
 
     auto fileReader = FileReaderFactory::createFileReader(filePath);
     SamplesBuffer samplesBuffer(2); // stereo
-    quint32 audioFileSampleRate;
+    quint32 audioFileSampleRate = 0;
     fileReader->read(filePath, samplesBuffer, audioFileSampleRate);
 
-    bool needResample = currentSampleRate != audioFileSampleRate;
+    bool needResample = audioFileSampleRate > 0 && currentSampleRate != audioFileSampleRate;
     if (needResample) {
         SamplesBufferResampler resampler;
         uint desiredLenght = currentSampleRate/(float)audioFileSampleRate * samplesBuffer.getFrameLenght();
