@@ -124,7 +124,7 @@ private:
     void updateMaxLayersControls();
     void setMaxLayerComboBoxValuesAvailability(int valuesToDisable);
 
-    void loadLoopInfo(const QString &loopsDir, const Audio::LoopInfo &info);
+    void loadLoopInfo(const QString &loopDir, const Audio::LoopInfo &info);
 
     int currentBeat;
 };

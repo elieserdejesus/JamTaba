@@ -253,7 +253,7 @@ void SamplesBuffer::add(uint channel, uint sampleIndex, float sampleValue)
 
 void SamplesBuffer::set(uint channel, uint sampleIndex, float sampleValue)
 {
-    Q_ASSERT(channel < channels && channels == samples.size());
+    Q_ASSERT(channel < channels && channels <= samples.size());
     Q_ASSERT(sampleIndex < samples[channel].size());
 
     samples[channel][sampleIndex] = sampleValue;

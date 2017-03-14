@@ -705,7 +705,8 @@ void LooperWindow::showLoadMenu()
         QString filter = tr("JamTaba Loop Files (*.json)");
         QString loopFilePath = QFileDialog::getOpenFileName(this, fileDialogTitle, loopsDir, filter);
         if (!loopFilePath.isEmpty()) {
-            loadLoopInfo(loopsDir, LoopLoader::loadLoopInfo(loopFilePath));
+            QString loopDir = QFileInfo(loopFilePath).dir().absolutePath();
+            loadLoopInfo(loopDir, LoopLoader::loadLoopInfo(loopFilePath));
         }
     });
 
@@ -754,15 +755,15 @@ void LooperWindow::loadAudioFilesIntoLayer(const QStringList &audioFilePaths, qu
     }
 }
 
-void LooperWindow::loadLoopInfo(const QString &loopsDir, const LoopInfo &loopInfo)
+void LooperWindow::loadLoopInfo(const QString &loopDir, const LoopInfo &loopInfo)
 {
     if (loopInfo.isValid()) {
-        LoopLoader loader(loopsDir);
+        LoopLoader loader(loopDir);
         uint currentSampleRate = mainController->getSampleRate();
         loader.load(loopInfo, looper, currentSampleRate);
         update();
     }
     else {
-        qCritical() << "Can't load loop " << loopInfo.name << " in " << loopsDir;
+        qCritical() << "Can't load loop " << loopInfo.name << " in " << loopDir;
     }
 }
