@@ -421,7 +421,7 @@ void Looper::startNewCycle(uint samplesInCycle)
     intervalPosition = 0;
 
     bool isOverdubbing = getOption(Looper::Overdub);
-    for (int l = 0; l < maxLayers; ++l)
+    for (quint8 l = 0; l < Looper::MAX_LOOP_LAYERS; ++l)
         layers[l]->prepareForNewCycle(samplesInCycle, isOverdubbing);
 
     state->handleNewCycle(samplesInCycle);

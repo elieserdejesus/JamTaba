@@ -49,8 +49,9 @@ void LooperLayer::zero()
 void LooperLayer::setSamples(const SamplesBuffer &samples)
 {
     uint samplesToCopy = qMin(samples.getFrameLenght(), lastCycleLenght);
-    if (!samplesToCopy)
+    if (!samplesToCopy) {
         return;
+    }
 
     uint bytesToCopy =  samplesToCopy * sizeof(float);
 

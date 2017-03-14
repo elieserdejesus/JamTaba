@@ -43,7 +43,8 @@ private slots:
     void handleModeChanged();
     void updateControls();
     void showLoadMenu();
-    void loadAudioFilesIntoLayers(const QStringList &audioFilePaths, quint8 firstLayerIndex);
+    void loadAudioFilesIntoLayer(const QStringList &audioFilePaths, quint8 firstLayerIndex);
+    void loadAudioFiles(const QStringList &audioFilePaths);
 
 private:
     Ui::LooperWindow *ui;
@@ -124,7 +125,6 @@ private:
     void setMaxLayerComboBoxValuesAvailability(int valuesToDisable);
 
     void loadLoopInfo(const QString &loopsDir, const Audio::LoopInfo &info);
-    void loadAudioFile(const QString &audioFilePath);
 
     int currentBeat;
 };
