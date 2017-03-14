@@ -169,7 +169,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
             gridLayout->addWidget(wavePanel, layerIndex, 0);
             wavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
             gridLayout->addLayout(createLayerControls(looper, layerIndex), layerIndex, 1);
-            //wavePanel->setVisible(layerIndex < currentLayers);
+            connect(wavePanel, &LooperWavePanel::audioFilesDropped, this, &LooperWindow::loadAudioFilesIntoLayers);
         }
         gridLayout->setColumnStretch(0, 1);
         updateLayersVisibility(currentLayers);
@@ -715,13 +715,24 @@ void LooperWindow::showLoadMenu()
     menu->show();
 }
 
+void LooperWindow::loadAudioFilesIntoLayers(const QStringList &audioFilePaths, quint8 firstLayerIndex)
+{
+    const uint currentSampleRate = mainController->getSampleRate();
+    quint8 layerIndex = firstLayerIndex;
+    for (const QString &audioFilePath : audioFilePaths) {
+        if (looper->getLayers() <= layerIndex)
+            looper->setLayers(layerIndex + 1); // expand looper layers
+
+        const SamplesBuffer samples = LoopLoader::loadAudioFile(audioFilePath, currentSampleRate);
+        looper->setLayerSamples(layerIndex, samples);
+        layerIndex++;
+    }
+}
+
 void LooperWindow::loadAudioFile(const QString &audioFilePath)
 {
     bool canLoad = looper->getLastValidLayer() < (Looper::MAX_LOOP_LAYERS - 1);
     if (canLoad) {
-        uint sampleRate = mainController->getSampleRate();
-        SamplesBuffer samples = LoopLoader::loadAudioFile(audioFilePath, sampleRate);
-
         quint8 layerIndex = looper->getLastValidLayer() + 1;
         if (looper->isEmpty())
             layerIndex = 0;
@@ -729,8 +740,7 @@ void LooperWindow::loadAudioFile(const QString &audioFilePath)
             layerIndex = looper->getLayers(); // last layer
             looper->setLayers(layerIndex + 1); // expand layer count before add loaded samples
         }
-
-        looper->setLayerSamples(layerIndex, samples);
+        loadAudioFilesIntoLayers(QStringList(audioFilePath), layerIndex);
     }
     else {
         qCritical() << "Can't load the audio file " << audioFilePath << " because all looper layers are filled!";

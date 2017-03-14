@@ -43,6 +43,7 @@ private slots:
     void handleModeChanged();
     void updateControls();
     void showLoadMenu();
+    void loadAudioFilesIntoLayers(const QStringList &audioFilePaths, quint8 firstLayerIndex);
 
 private:
     Ui::LooperWindow *ui;

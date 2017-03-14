@@ -4,6 +4,7 @@
 #include "WavePeakPanel.h"
 #include <QPainter>
 #include <QPainterPath>
+#include <QDropEvent>
 
 namespace Audio {
 class Looper;
@@ -20,11 +21,16 @@ public:
     void setCurrentBeat(quint8 currentIntervalBeat);
     void updateDrawings();
 
+signals:
+    void audioFilesDropped(const QStringList &audioFilePaths, quint8 droplayer);
+
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
+    void dropEvent(QDropEvent *ev) override;
+    void dragEnterEvent(QDragEnterEvent *ev) override;
 
 private slots:
     void updateMiniLockIconPainterPath();
@@ -63,6 +69,8 @@ private:
     void drawMiniLockIcon(QPainter &painter, const QColor &transparentColor);
     void drawBigLockIcon(QPainter &painter, const QColor &transparentColor);
     void drawDiscardIcon(QPainter &painter, const QColor &color);
+
+    static bool isAudioFile(const QUrl &url);
 
     const quint8 layerID;
 };

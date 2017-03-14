@@ -2,6 +2,7 @@
 #include "looper/Looper.h"
 
 #include <QKeyEvent>
+#include <QMimeData>
 
 LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
     : beatsPerInterval(16),
@@ -32,11 +33,51 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
    connect(looper, &Audio::Looper::layerLockedStateChanged, this, &LooperWavePanel::updateMiniLockIconPainterPath);
 
    setMouseTracking(true);
+
+   setAcceptDrops(true);
 }
 
 LooperWavePanel::~LooperWavePanel()
 {
 
+}
+
+bool LooperWavePanel::isAudioFile(const QUrl &url)
+{
+    if (!url.isLocalFile())
+        return false;
+
+    QString fileName = url.fileName();
+    return fileName.endsWith(".wav") || fileName.endsWith(".ogg") || fileName.endsWith(".mp3");
+}
+
+void LooperWavePanel::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasUrls()) {
+        for(auto url : event->mimeData()->urls()) {
+            if (LooperWavePanel::isAudioFile(url)) {
+                event->acceptProposedAction();
+                break;
+            }
+        }
+    }
+}
+
+void LooperWavePanel::dropEvent(QDropEvent *ev)
+{
+    if (ev->mimeData()->hasUrls()) {
+        QStringList audioFilePaths;
+        for (const QUrl &url : ev->mimeData()->urls()) {
+            if (LooperWavePanel::isAudioFile(url)) {
+                audioFilePaths.append(url.toLocalFile());
+            }
+        }
+
+        if (!audioFilePaths.isEmpty()) {
+            emit audioFilesDropped(audioFilePaths, layerID);
+            ev->accept();
+        }
+    }
 }
 
 qreal LooperWavePanel::getMiniLockIconHeight(bool lockOpened)
