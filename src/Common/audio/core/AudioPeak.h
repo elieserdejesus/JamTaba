@@ -16,6 +16,9 @@ public:
 
     void update(const AudioPeak &other);
     void zero();
+
+    AudioPeak operator-(const AudioPeak &otherPeak);
+
 private:
     float peaks[2]; //max peaks
     float rms[2]; //rms values

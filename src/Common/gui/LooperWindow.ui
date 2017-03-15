@@ -158,14 +158,54 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="layersWidget" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-       <horstretch>0</horstretch>
-       <verstretch>1</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="contentLayout">
+     <item>
+      <widget class="QWidget" name="layersWidget" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+         <horstretch>1</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="metersLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <item>
+        <widget class="AudioMeter" name="peakMeterLeft" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>3</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="AudioMeter" name="peakMeterRight" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>3</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QWidget" name="widgetBottom" native="true">
@@ -307,6 +347,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AudioMeter</class>
+   <extends>QWidget</extends>
+   <header>PeakMeter.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>

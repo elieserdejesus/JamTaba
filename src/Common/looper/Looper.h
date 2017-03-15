@@ -44,6 +44,8 @@ public:
     void addBuffer(const SamplesBuffer &samples); // recording
     void mixToBuffer(SamplesBuffer &samples); // playing/mixing
 
+    AudioPeak getLastPeak() const;
+
     void setLayerSamples(quint8 layer, const SamplesBuffer &samples);
 
     void reset(); // clear all
@@ -153,6 +155,8 @@ private:
     void processChangeRequests();
 
     void setCurrentLayer(quint8 newLayer);
+
+    AudioPeak lastPeak;
 
     QSharedPointer<LooperState> state;
 

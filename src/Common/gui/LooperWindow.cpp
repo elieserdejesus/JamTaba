@@ -54,6 +54,9 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
     QMenu *loadMenu = new QMenu();
     ui->loadButton->setMenu(loadMenu);
     connect(loadMenu, &QMenu::aboutToShow, this, &LooperWindow::showLoadMenu);
+
+    ui->peakMeterLeft->setOrientation(Qt::Vertical);
+    ui->peakMeterRight->setOrientation(Qt::Vertical);
 }
 
 void LooperWindow::keyPressEvent(QKeyEvent *ev)
@@ -132,6 +135,11 @@ void LooperWindow::updateDrawings()
     else {
         update(); // paint vertical lines, current beat and wait count
     }
+
+    // update peak meters
+    AudioPeak lastPeak = looper->getLastPeak();
+    ui->peakMeterLeft->setPeak(lastPeak.getLeftPeak(), lastPeak.getLeftRMS());
+    ui->peakMeterRight->setPeak(lastPeak.getRightPeak(), lastPeak.getRightRMS());
 }
 
 void LooperWindow::detachCurrentLooper()

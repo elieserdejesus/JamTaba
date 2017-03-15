@@ -40,6 +40,11 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
     initialize();
 }
 
+AudioPeak Looper::getLastPeak() const
+{
+    return lastPeak;
+}
+
 bool Looper::isFull() const
 {
     for (uint l = 0; l < maxLayers; ++l) {
@@ -83,6 +88,8 @@ void Looper::reset()
 {
     resetRequested = true;
     changed = false;
+
+    lastPeak.zero();
 }
 
 Looper::~Looper()
@@ -373,13 +380,17 @@ void Looper::addBuffer(const SamplesBuffer &samples)
 void Looper::mixToBuffer(SamplesBuffer &samples)
 {
     uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
+    AudioPeak peakBeforeMix = samples.computePeak();
     state->mixTo(samples, samplesToProcess);
+    AudioPeak peakAfterMix = samples.computePeak();
 
     // always update intervalPosition to keep the execution in sync when 'play' is pressed
     if (intervalLenght)
         intervalPosition = (intervalPosition + samplesToProcess) % intervalLenght;
 
     processChangeRequests();
+
+    lastPeak = peakAfterMix - peakBeforeMix; // minus operator is overloaded in AudioPeak class
 }
 
 void Looper::processChangeRequests()
