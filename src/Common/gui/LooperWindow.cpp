@@ -340,6 +340,8 @@ void LooperWindow::resetAllLayersControls()
         panSlider->setValue(0); // center
         faderSlider->setValue(10); // 100%, unit gain
     }
+
+    setMaxLayerComboBoxValuesAvailability(0);
 }
 
 void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
