@@ -30,7 +30,7 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
    const qreal discardIconHeight = miniLockIconHeight * 0.6;
    discardIcon = createDiscardIcon(discardIconTopMargin, rightMargin, discardIconHeight);
 
-   connect(looper, &Audio::Looper::layerLockedStateChanged, this, &LooperWavePanel::updateMiniLockIconPainterPath);
+   connect(looper, &Audio::Looper::layerChanged, this, &LooperWavePanel::updateMiniLockIconPainterPath);
 
    setMouseTracking(true);
 

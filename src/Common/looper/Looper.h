@@ -75,6 +75,9 @@ public:
     void stop();
     void play();
 
+    float getLayerGain(quint8 layer) const;
+    float getLayerPan(quint8 layer) const;
+
     QList<SamplesBuffer> getLayersSamples() const;
 
     static QString getModeString(Mode mode);
@@ -136,8 +139,8 @@ signals:
     void modeChanged();
     void maxLayersChanged(quint8 newMaxLayers);
     void currentLayerChanged(quint8 currentLayer);
-    void layerCleared(quint8 layer);
-    void layerLockedStateChanged(quint8 currentLayer, bool locked);
+    void layerChanged(quint8 layer); // layer pan, gain, locked on content changed
+    //void layerLockedStateChanged(quint8 currentLayer, bool locked);
 
 private:
     uint intervalLenght; // in samples
