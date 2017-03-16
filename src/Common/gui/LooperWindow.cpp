@@ -243,6 +243,8 @@ void LooperWindow::handleNewMaxLayers(quint8 newMaxLayers)
 
 QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
 {
+    const int mainLayoutSpacing = 12;
+
     QLayout *levelFaderLayout = new QHBoxLayout();
     levelFaderLayout->setSpacing(2);
     levelFaderLayout->setContentsMargins(0, 0, 0, 0);
@@ -273,7 +275,7 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     levelFaderLayout->addWidget(levelSlider);
     levelFaderLayout->addWidget(highLevelIcon);
 
-    QLayout *panFaderLayout = new QHBoxLayout();
+    QHBoxLayout *panFaderLayout = new QHBoxLayout();
     panFaderLayout->setSpacing(0);
     panFaderLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -297,12 +299,18 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
 
     });
 
+    QPushButton *muteButton = new QPushButton(QStringLiteral("M"));
+    muteButton->setObjectName("muteButton");
+    muteButton->setCheckable(true);
+
     panFaderLayout->addWidget(labelPanL);
     panFaderLayout->addWidget(panSlider);
     panFaderLayout->addWidget(labelPanR);
+    panFaderLayout->addSpacing(mainLayoutSpacing);
+    panFaderLayout->addWidget(muteButton);
 
     QHBoxLayout *mainLayout = new QHBoxLayout();
-    mainLayout->setSpacing(6);
+    mainLayout->setSpacing(mainLayoutSpacing);
 
     mainLayout->addLayout(levelFaderLayout);
     mainLayout->addLayout(panFaderLayout);
