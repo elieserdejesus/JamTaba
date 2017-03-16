@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QSet>
+#include <QList>
 
 namespace Audio {
 
@@ -25,48 +26,64 @@ private:
 
 };
 
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
-struct LoopInfo
+struct LoopLayerInfo
 {
-    quint8 layers;
+    float pan;
+    float gain;
+    bool locked;
+};
+
+class LoopInfo
+{
+public:
+    LoopInfo(quint32 bpm, quint16 bpi, const QString &name, bool usingEncodedAudio, quint8 mode);
+    LoopInfo();
+
+    void addLayer(bool isLocked, float gain, float pan);
+    bool isValid() const;
+    QString toString(bool showBpm = false) const;
+    quint8 getLayersCount() const;
+    bool audioIsEncoded() const;
+    QString getName() const;
+    QList<LoopLayerInfo> getLayersInfo() const;
+    quint8 getLooperMode() const;
+private:
     quint32 bpm;
     quint16 bpi;
     QString name;
-    bool audioIsEncoded;
-    QSet<quint8> lockedLayers;
-
-    LoopInfo(quint8 layers, quint32 bpm, quint16 bpi, const QString &name, bool audioIsEncoded)
-        : layers(layers),
-          bpm(bpm),
-          bpi(bpi),
-          name(name),
-          audioIsEncoded(audioIsEncoded),
-          lockedLayers(QSet<quint8>())
-    {
-        //
-    }
-
-    LoopInfo()
-        : layers(0),
-          bpm(0),
-          bpi(0),
-          name(QString()),
-          audioIsEncoded(false),
-          lockedLayers(QSet<quint8>())
-    {
-
-    }
-
-    bool isValid() const
-    {
-        return !name.isEmpty() && bpm > 0 && bpi > 0 && layers > 0;
-    }
-
-    QString toString() const
-    {
-        return name + " (" + QString::number(bpm) + " BPM, " + QString::number(bpi) + " BPI, " + QString::number(layers) + " layers)";
-    }
+    bool usingEncodedAudio;
+    QList<LoopLayerInfo> layers;
+    quint8 looperMode;
 };
+
+inline quint8 LoopInfo::getLooperMode() const
+{
+    return looperMode;
+}
+
+inline quint8 LoopInfo::getLayersCount() const
+{
+    return layers.size();
+}
+
+inline bool LoopInfo::audioIsEncoded() const
+{
+    return usingEncodedAudio;
+}
+
+inline QString LoopInfo::getName() const
+{
+    return name;
+}
+
+inline QList<LoopLayerInfo> LoopInfo::getLayersInfo() const
+{
+    return layers;
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
 class LoopLoader
 {

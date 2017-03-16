@@ -40,6 +40,23 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
     initialize();
 }
 
+float Looper::getLayerGain(quint8 layer) const
+{
+    if (layer < maxLayers)
+        return layers[layer]->getGain();
+
+    return 1.0;
+}
+
+float Looper::getLayerPan(quint8 layer) const
+{
+    if (layer < maxLayers)
+        return layers[layer]->getPan();
+
+    return 0.0;
+}
+
+
 AudioPeak Looper::getLastPeak() const
 {
     return lastPeak;
@@ -104,15 +121,20 @@ Looper::~Looper()
 
 void Looper::setLayerGain(quint8 layerIndex, float gain)
 {
-    if (layerIndex < maxLayers)
+    if (layerIndex < maxLayers) {
         layers[layerIndex]->setGain(gain);
-
+        setChanged(true);
+        emit layerChanged(layerIndex);
+    }
 }
 
 void Looper::setLayerPan(quint8 layerIndex, float pan)
 {
-    if (layerIndex < maxLayers)
+    if (layerIndex < maxLayers) {
         layers[layerIndex]->setPan(pan);
+        setChanged(true);
+        emit layerChanged(layerIndex);
+    }
 }
 
 uint Looper::getLockedLayers() const
@@ -206,7 +228,7 @@ void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
 
         changed = true;
 
-        emit layerLockedStateChanged(layerIndex, locked);
+        emit layerChanged(layerIndex);
     }
 }
 
@@ -290,8 +312,7 @@ void Looper::clearLayer(quint8 layer)
 {
     if (canClearLayer(layer)) {
         layers[layer]->zero();
-        changed = true;
-        emit layerCleared(layer);
+        setChanged(true);
     }
 }
 

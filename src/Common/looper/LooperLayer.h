@@ -18,6 +18,9 @@ public:
     void setGain(float gain);
     void setPan(float pan);
 
+    float getPan() const;
+    float getGain() const;
+
     void setSamples(const SamplesBuffer &samples);
 
     void zero();
@@ -63,6 +66,16 @@ private:
     void resize(quint32 samplesPerCycle);
 
 };
+
+inline float LooperLayer::getPan() const
+{
+    return pan;
+}
+
+inline float LooperLayer::getGain() const
+{
+    return gain;
+}
 
 inline uint LooperLayer::getAvailableSamples() const
 {

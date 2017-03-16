@@ -126,6 +126,9 @@ private:
 
     void loadLoopInfo(const QString &loopDir, const Audio::LoopInfo &info);
 
+    void updateLayersControls();
+    void updateModeComboBox();
+
     int currentBeat;
 };
 

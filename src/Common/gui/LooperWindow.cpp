@@ -168,6 +168,8 @@ void LooperWindow::setLooper(Audio::Looper *looper)
 
         detachCurrentLooper();
 
+        this->looper = looper;
+
         // create wave panels (layers view)
         quint8 currentLayers = looper->getLayers();
         QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
@@ -185,32 +187,33 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         // initial values
         ui->maxLayersComboBox->setCurrentText(QString::number(looper->getLayers()));
 
-        QString selectedMode = looper->getModeString(looper->getMode());
-        for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
-            if (ui->comboBoxPlayMode->itemText(i) == selectedMode) {
-                ui->comboBoxPlayMode->setCurrentIndex(i);
-                break;
-            }
-        }
+        updateModeComboBox();
 
         connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
         connect(looper, &Looper::stateChanged, this, &LooperWindow::updateControls);
-        connect(looper, &Looper::layerLockedStateChanged, this, &LooperWindow::updateControls);
+        connect(looper, &Looper::layerChanged, this, &LooperWindow::updateControls);
         connect(looper, &Looper::maxLayersChanged, this, &LooperWindow::handleNewMaxLayers);
         connect(looper, &Looper::modeChanged, this, &LooperWindow::handleModeChanged);
         connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
         connect(looper, &Looper::destroyed, this, &LooperWindow::close);
-
-        connect(looper, &Looper::layerCleared, this, &LooperWindow::updateControls);
-
-        this->looper = looper;
     }
 
     updateBeatsPerInterval();
     handleNewMaxLayers(looper->getLayers());
     updateControls();
+}
+
+void LooperWindow::updateModeComboBox()
+{
+    QString selectedMode = looper->getModeString(looper->getMode());
+    for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
+        if (ui->comboBoxPlayMode->itemText(i) == selectedMode) {
+            ui->comboBoxPlayMode->setCurrentIndex(i);
+            break;
+        }
+    }
 }
 
 void LooperWindow::handleModeChanged()
@@ -249,7 +252,7 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     levelSlider->setOrientation(Qt::Horizontal);
     levelSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
     levelSlider->setMaximum(12);
-    levelSlider->setValue(10);
+    levelSlider->setValue(Utils::poweredGainToLinear(looper->getLayerGain(layerIndex)) * 10);
     levelSlider->setTickPosition(QSlider::NoTicks);
     levelSlider->setMaximumWidth(80);
     levelSlider->installEventFilter(this);
@@ -286,6 +289,7 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     panSlider->setMaximum(4);
     panSlider->setOrientation(Qt::Horizontal);
     panSlider->setMaximumWidth(50);
+    panSlider->setValue(looper->getLayerPan(layerIndex) * panSlider->maximum());
     panSlider->installEventFilter(this);
     connect(panSlider, &QSlider::valueChanged, [looper, layerIndex, panSlider](int value){
         float panValue = value/(float)panSlider->maximum();
@@ -765,15 +769,41 @@ void LooperWindow::loadAudioFilesIntoLayer(const QStringList &audioFilePaths, qu
     }
 }
 
+void LooperWindow::updateLayersControls()
+{
+    QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
+    for (quint8 layerIndex = 0; layerIndex < looper->getLayers(); ++layerIndex) {
+        QBoxLayout *layerControlsLayout = qobject_cast<QBoxLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
+        QBoxLayout *faderLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(0)->layout());
+        QBoxLayout *panLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(1)->layout());
+
+        QSlider *gainSlider = qobject_cast<QSlider *>(faderLayout->itemAt(1)->widget());
+        QSlider *panSlider = qobject_cast<QSlider *>(panLayout->itemAt(1)->widget());
+
+        QSignalBlocker gainBlocker(gainSlider);
+        QSignalBlocker panBlocker(panSlider);
+
+        float gain = Utils::poweredGainToLinear(looper->getLayerGain(layerIndex));
+        float pan = looper->getLayerPan(layerIndex);
+        gainSlider->setValue(gain * 10);
+        panSlider->setValue(pan * panSlider->maximum());
+    }
+}
+
 void LooperWindow::loadLoopInfo(const QString &loopDir, const LoopInfo &loopInfo)
 {
     if (loopInfo.isValid()) {
         LoopLoader loader(loopDir);
         uint currentSampleRate = mainController->getSampleRate();
         loader.load(loopInfo, looper, currentSampleRate);
+
+        updateLayersControls(); // update layers pan and gain after loading a loop
+
+        updateModeComboBox();
+
         update();
     }
     else {
-        qCritical() << "Can't load loop " << loopInfo.name << " in " << loopDir;
+        qCritical() << "Can't load loop " << loopInfo.getName() << " in " << loopDir;
     }
 }
