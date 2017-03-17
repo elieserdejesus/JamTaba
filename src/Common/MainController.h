@@ -294,6 +294,7 @@ public:
     quint8 getLooperPreferedLayersCount() const;
     quint8 getLooperPreferedMode() const;
     bool getLooperAudioEncodingFlag() const;
+    quint8 getLooperBitDepth() const;
 
 signals:
     void ipResolved(const QString &ip);
@@ -302,6 +303,7 @@ signals:
 public slots:
     virtual void setSampleRate(int newSampleRate);
     void setEncodingQuality(float newEncodingQuality);
+    void storeLooperBitDepth(quint8 bitDepth);
 
 protected:
 
@@ -407,6 +409,16 @@ protected slots:
     void uploadEncodedVideoFrame(const QByteArray &encodedData, int intervalPosition);
 
 };
+
+inline void MainController::storeLooperBitDepth(quint8 bitDepth)
+{
+    settings.setLooperBitDepth(bitDepth);
+}
+
+inline quint8 MainController::getLooperBitDepth() const
+{
+    return settings.getLooperBitDepth();
+}
 
 inline void MainController::storeLooperPreferredLayerCount(quint8 layersCount)
 {

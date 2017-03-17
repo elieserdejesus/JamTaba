@@ -39,6 +39,7 @@ signals:
     void recordingPathSelected(const QString &newRecordingPath);
     void encodingQualityChanged(float newEncodingQuality);
     void looperAudioEncodingFlagChanged(bool savingEncodedAudio);
+    void looperWaveFilesBitDepthChanged(quint8 bitDepth);
     void looperFolderChanged(const QString &newLoopsFolder);
 
 public slots:

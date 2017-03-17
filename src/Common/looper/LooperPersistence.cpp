@@ -79,7 +79,7 @@ QList<quint8> LoopSaver::getLockedLayers(Looper *looper)
     return lockedLayers;
 }
 
-void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate)
+void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate, quint8 bitDepth)
 {
     QDir loopDir(QDir(savePath).absoluteFilePath(loopFileName));
     if (!loopDir.exists()) {
@@ -96,7 +96,8 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
                                      layer,
                                      encodeInOggVorbis,
                                      vorbisQuality,
-                                     sampleRate);
+                                     sampleRate,
+                                     bitDepth);
     }
 
     QFile jsonFile(QDir(savePath).absoluteFilePath(loopFileName) + ".json");
@@ -127,7 +128,7 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
     looper->setChanged(false);
 }
 
-void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate)
+void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate, quint8 bitDepth)
 {
     Q_ASSERT(!loopFileName.isEmpty() && !loopFileName.isNull());
     Q_ASSERT(layerIndex < Looper::MAX_LOOP_LAYERS);
@@ -136,7 +137,7 @@ void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFi
     if(!encodeInOggVorbis) {
         WaveFileWriter waveFileWriter;
         QString filePath = QDir(savePath).absoluteFilePath(loopFileName +"/layer_" + QString::number(layerIndex) + ".wav");
-        waveFileWriter.write(filePath, buffer, sampleRate);
+        waveFileWriter.write(filePath, buffer, sampleRate, bitDepth);
     }
     else {
         VorbisEncoder encoder(2, sampleRate, vorbisQuality);

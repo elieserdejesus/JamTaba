@@ -586,9 +586,10 @@ void LooperWindow::initializeControls()
             uint sampleRate = mainController->getSampleRate();
             uint bpm = ninjamController->getCurrentBpm();
             uint bpi = ninjamController->getCurrentBpi();
+            quint8 bitDepth = mainController->getLooperBitDepth();
 
             LoopSaver loopSaver(savePath, looper);
-            loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, vorbisQuality, sampleRate);
+            loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, vorbisQuality, sampleRate, bitDepth);
             updateControls();
         }
     });

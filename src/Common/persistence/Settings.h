@@ -168,6 +168,7 @@ public:
     quint8 preferredMode;// store the last used looper mode
     QString loopsFolder; // where looper audio files will be saved
     bool encodingAudioWhenSaving;
+    quint8 waveFilesBitDepth;
 };
 
 // +++++++++++++++++++++++++++++++++
@@ -463,12 +464,24 @@ public:
     QString getLooperSavePath() const;
     bool getLooperAudioEncodingFlag() const;
     QString getLooperFolder() const;
+    quint8 getLooperBitDepth() const;
 
     void setLooperPreferredLayersCount(quint8 layersCount);
     void setLooperPreferredMode(quint8 looperMode);
     void setLooperAudioEncodingFlag(bool encodeAudioWhenSaving);
     void setLooperFolder(const QString &folder);
+    void setLooperBitDepth(quint8 bitDepth);
 };
+
+inline void Settings::setLooperBitDepth(quint8 bitDepth)
+{
+    looperSettings.waveFilesBitDepth = bitDepth;
+}
+
+inline quint8 Settings::getLooperBitDepth() const
+{
+    return looperSettings.waveFilesBitDepth;
+}
 
 inline QString Settings::getLooperFolder() const
 {

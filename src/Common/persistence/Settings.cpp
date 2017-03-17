@@ -84,7 +84,8 @@ LooperSettings::LooperSettings()
       preferredLayersCount(4),
       preferredMode(0),
       loopsFolder(""),
-      encodingAudioWhenSaving(false)
+      encodingAudioWhenSaving(false),
+      waveFilesBitDepth(16) // 16 bits
 {
 
 }
@@ -95,6 +96,11 @@ void LooperSettings::read(const QJsonObject &in)
     preferredMode = getValueFromJson(in, "preferredMode", (quint8)0); // use the first mode as default value
     loopsFolder = getValueFromJson(in, "loopsFolder", QString());
     encodingAudioWhenSaving = getValueFromJson(in, "encodeAudio", false);
+    waveFilesBitDepth = getValueFromJson(in, "bitDepth", quint8(16)); // 16 bit as default value
+    if (!(waveFilesBitDepth == 16 || waveFilesBitDepth == 32)) {
+        qWarning() << "Invalid bit depth " << waveFilesBitDepth << ", using 16 bits as default value";
+        waveFilesBitDepth = 16;
+    }
 
     bool useDefaultSavePath = false;
     if (!loopsFolder.isEmpty()) {
@@ -132,6 +138,9 @@ void LooperSettings::write(QJsonObject &out) const
     out["preferredMode"] = preferredMode;
     out["loopsFolder"] = loopsFolder;
     out["encodeAudio"] = encodingAudioWhenSaving;
+
+    if (!encodingAudioWhenSaving)
+        out["bitDepth"] = waveFilesBitDepth;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++

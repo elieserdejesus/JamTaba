@@ -19,6 +19,20 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     ui->comboLastOutput->setEnabled(false);
 
     connect(ui->recordPathLineEdit, &QLineEdit::textEdited, this, &PreferencesDialog::recordingPathSelected);
+
+    // populate bit rate combo box
+    quint8 bitRates[] = {16, 32};
+    ui->comboBoxBitRate->clear();
+    for (quint8 bitRate : bitRates) {
+        ui->comboBoxBitRate->addItem(QString::number(bitRate) + " bits", QVariant::fromValue(bitRate));
+    }
+    connect(ui->comboBoxBitRate, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](){
+        quint8 bitRate = ui->comboBoxBitRate->currentData().toInt();
+        emit looperWaveFilesBitDepthChanged(bitRate);
+    });
+
+    connect(ui->radioButtonWaveFile, &QRadioButton::toggled, ui->comboBoxBitRate, &QComboBox::setEnabled);
+    connect(ui->radioButtonWaveFile, &QRadioButton::toggled, ui->labelBitRate, &QComboBox::setEnabled);
 }
 
 void PreferencesDialog::toggleBuiltInMetronomeSounds(bool usingBuiltInMetronome)
@@ -92,7 +106,7 @@ void PreferencesDialog::setupSignals()
 
     connect(ui->comboBoxEncoderQuality, SIGNAL(activated(int)), this, SLOT(emitEncodingQualityChanged()));
 
-    connect(ui->checkBoxLooperOggEncoding, &QCheckBox::toggled, this, &PreferencesDialog::looperAudioEncodingFlagChanged);
+    connect(ui->radioButtonLooperOggEncoding, &QCheckBox::toggled, this, &PreferencesDialog::looperAudioEncodingFlagChanged);
     connect(ui->lineEditLoopsFolder, &QLineEdit::textChanged, this,  &PreferencesDialog::looperFolderChanged);
     connect(ui->loopsFolderBrowseButton, &QPushButton::clicked, [=](){
         QString currentLoopsFolder = ui->lineEditLoopsFolder->text();
@@ -188,10 +202,21 @@ void PreferencesDialog::populateAllTabs()
 void PreferencesDialog::populateLooperTab()
 {
     QSignalBlocker lineEditSignalBlocker(ui->lineEditLoopsFolder);
-    QSignalBlocker checkBoxSignalBlocker(ui->checkBoxLooperOggEncoding);
+    QSignalBlocker radioButtonSignalBlocker(ui->radioButtonLooperOggEncoding);
+    QSignalBlocker bitDepthCheckBoxBlocker(ui->comboBoxBitRate);
 
     ui->lineEditLoopsFolder->setText(settings->getLooperFolder());
-    ui->checkBoxLooperOggEncoding->setChecked(settings->getLooperAudioEncodingFlag());
+    ui->radioButtonLooperOggEncoding->setChecked(settings->getLooperAudioEncodingFlag());
+    ui->radioButtonWaveFile->setChecked(!ui->radioButtonLooperOggEncoding->isChecked());
+
+    ui->comboBoxBitRate->setEnabled(!settings->getLooperAudioEncodingFlag());
+    ui->labelBitRate->setEnabled(ui->comboBoxBitRate->isEnabled());
+
+    quint8 bitDepth = settings->getLooperBitDepth();
+    quint8 comboBoxIndex = 0; // 16 bits
+    if (bitDepth == 32)
+        comboBoxIndex = 1;
+    ui->comboBoxBitRate->setCurrentIndex(comboBoxIndex);
 }
 
 void PreferencesDialog::selectRecordingTab()
