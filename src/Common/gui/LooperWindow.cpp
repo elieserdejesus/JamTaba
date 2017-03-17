@@ -35,7 +35,7 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
 
     QGridLayout *layout = new QGridLayout();
     layout->setSpacing(12);
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(6, 6, 6, 6);
     ui->layersWidget->setLayout(layout);
 
     // set as non resizable
