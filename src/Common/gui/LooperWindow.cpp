@@ -230,7 +230,7 @@ void LooperWindow::handleNewMaxLayers(quint8 newMaxLayers)
     updateControls();
     updateLayersVisibility(newMaxLayers);
 
-    const static int minHeight = 250; // one layer
+    const static int minHeight = 150; // one layer
     const static int maxHeight = 600; // 8 layers
     const static int range = maxHeight - minHeight;
     int newHeight = static_cast<float>(newMaxLayers)/Looper::MAX_LOOP_LAYERS * range + minHeight;
@@ -364,11 +364,6 @@ void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
         bool layerIsVisible = layerIndex < newMaxLayers;
         wavePanel->setVisible(layerIsVisible);
         QBoxLayout *layerControlsLayout = qobject_cast<QBoxLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
-        QBoxLayout *faderLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(0)->layout());
-        layerControlsLayout->setDirection(newMaxLayers > 2 ? QBoxLayout::LeftToRight: QBoxLayout::BottomToTop);
-        faderLayout->setDirection(newMaxLayers > 2 ? QBoxLayout::LeftToRight : QBoxLayout::BottomToTop);
-        QSlider *faderSlider = qobject_cast<QSlider *>(faderLayout->itemAt(1)->widget());
-        faderSlider->setOrientation(newMaxLayers > 2 ? Qt::Horizontal : Qt::Vertical);
         Gui::setLayoutItemsVisibility(layerControlsLayout, layerIsVisible);
     }
 }
