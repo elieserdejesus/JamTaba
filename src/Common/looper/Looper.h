@@ -2,6 +2,7 @@
 #define _AUDIO_LOOPER_
 
 #include "audio/core/SamplesBuffer.h"
+#include "LooperLayer.h"
 
 #include <QtGlobal>
 #include <QObject>
@@ -16,7 +17,6 @@ class LooperState;
 class PlayingState;
 class RecordingState;
 class WaitingState;
-class LooperLayer;
 
 // +++++++++++++++++++++++++++++=
 
@@ -104,6 +104,8 @@ public:
 
     bool canRecord() const;
 
+    void nextMuteState(quint8 layer);
+
     static const quint8 MAX_LOOP_LAYERS = 8;
 
     void toggleRecording();
@@ -140,7 +142,7 @@ signals:
     void maxLayersChanged(quint8 newMaxLayers);
     void currentLayerChanged(quint8 currentLayer);
     void layerChanged(quint8 layer); // layer pan, gain, locked on content changed
-    //void layerLockedStateChanged(quint8 currentLayer, bool locked);
+    void layerMuteStateChanged(quint8 layer, quint8 state);
 
 private:
     uint intervalLenght; // in samples
@@ -278,6 +280,9 @@ inline quint8 Looper::getFocusedLayerIndex() const
 
 } // namespace
 
+
+// declaring structs to use in signal/slots
 Q_DECLARE_METATYPE(Audio::Looper::Mode)
+Q_DECLARE_METATYPE(Audio::LooperLayer::MuteState)
 
 #endif

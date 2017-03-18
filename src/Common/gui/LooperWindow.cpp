@@ -91,7 +91,7 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
         static const QPen pen(QColor(0, 0, 0, 60), 1.0, Qt::DotLine);
         painter.setPen(pen);
         uint bpi = ninjamController->getCurrentBpi();
-        LooperWavePanel *wavePanel = wavePanels[looper->getCurrentLayerIndex()];
+        LooperWavePanel *wavePanel = layerViews[looper->getCurrentLayerIndex()].wavePanel;
         if (!wavePanel)
             return;
 
@@ -127,7 +127,8 @@ void LooperWindow::updateDrawings()
         return;
 
     if (!looper->isWaiting()) {
-        for (LooperWavePanel *wavePanel : wavePanels.values()) {
+        for (const LayerView &layerView : layerViews.values()) {
+            LooperWavePanel *wavePanel = layerView.wavePanel;
             if (wavePanel->isVisible())
                 wavePanel->updateDrawings();
         }
@@ -170,16 +171,21 @@ void LooperWindow::setLooper(Audio::Looper *looper)
 
         this->looper = looper;
 
-        // create wave panels (layers view)
+        // create wave panels and layer controls (layers view)
         quint8 currentLayers = looper->getLayers();
         QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
         for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
-            LooperWavePanel *wavePanel = new LooperWavePanel(looper, layerIndex);
-            wavePanels.insert(layerIndex, wavePanel);
-            gridLayout->addWidget(wavePanel, layerIndex, 0);
-            wavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
-            gridLayout->addLayout(createLayerControls(looper, layerIndex), layerIndex, 1);
-            connect(wavePanel, &LooperWavePanel::audioFilesDropped, this, &LooperWindow::loadAudioFilesIntoLayer);
+            auto layerWavePanel = new LooperWavePanel(looper, layerIndex);
+            auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex);
+
+            layerWavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
+
+            gridLayout->addWidget(layerWavePanel, layerIndex, 0);
+            gridLayout->addLayout(layerControlsLayout, layerIndex, 1);
+
+            connect(layerWavePanel, &LooperWavePanel::audioFilesDropped, this, &LooperWindow::loadAudioFilesIntoLayer);
+
+            layerViews.insert(layerIndex, LayerView(layerWavePanel, layerControlsLayout));
         }
         gridLayout->setColumnStretch(0, 1);
         updateLayersVisibility(currentLayers);
@@ -198,11 +204,27 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         connect(looper, &Looper::modeChanged, this, &LooperWindow::handleModeChanged);
         connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
         connect(looper, &Looper::destroyed, this, &LooperWindow::close);
+
+        connect(looper, &Looper::layerMuteStateChanged, this, &LooperWindow::handleLayerMuteStateChanged);
     }
 
     updateBeatsPerInterval();
     handleNewMaxLayers(looper->getLayers());
     updateControls();
+}
+
+void LooperWindow::handleLayerMuteStateChanged(quint8 layer, quint8 state)
+{
+    auto muteButton = layerViews[layer].controlsLayout->muteButton;
+    bool waiting = state == LooperLayer::WaitingToMute || state == LooperLayer::WaitingToUnmute;
+
+    muteButton->setProperty("waiting", waiting ? true : false);
+    bool muted = state == LooperLayer::Muted;
+    muteButton->setCheckable(muted);
+    muteButton->setChecked(muted);
+
+    style()->unpolish(muteButton);
+    style()->polish(muteButton);
 }
 
 void LooperWindow::updateModeComboBox()
@@ -241,25 +263,27 @@ void LooperWindow::handleNewMaxLayers(quint8 newMaxLayers)
     mainController->storeLooperPreferredLayerCount(newMaxLayers);
 }
 
-QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
+LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 layerIndex)
+    : QHBoxLayout()
 {
     const int mainLayoutSpacing = 12;
+    setSpacing(mainLayoutSpacing);
 
     QLayout *levelFaderLayout = new QHBoxLayout();
     levelFaderLayout->setSpacing(2);
     levelFaderLayout->setContentsMargins(0, 0, 0, 0);
 
-    QSlider *levelSlider = new QSlider();
-    levelSlider->setObjectName(QStringLiteral("levelSlider"));
-    levelSlider->setOrientation(Qt::Horizontal);
-    levelSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
-    levelSlider->setMaximum(12);
-    levelSlider->setValue(Utils::poweredGainToLinear(looper->getLayerGain(layerIndex)) * 10);
-    levelSlider->setTickPosition(QSlider::NoTicks);
-    levelSlider->setMaximumWidth(80);
-    levelSlider->installEventFilter(this);
+    gainSlider = new QSlider();
+    gainSlider->setObjectName(QStringLiteral("levelSlider"));
+    gainSlider->setOrientation(Qt::Horizontal);
+    gainSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+    gainSlider->setMaximum(12);
+    gainSlider->setValue(Utils::poweredGainToLinear(looper->getLayerGain(layerIndex)) * 10);
+    gainSlider->setTickPosition(QSlider::NoTicks);
+    gainSlider->setMaximumWidth(80);
+    gainSlider->installEventFilter(this);
 
-    connect(levelSlider, &QSlider::valueChanged, [looper, layerIndex](int value){
+    connect(gainSlider, &QSlider::valueChanged, [looper, layerIndex](int value){
         float gain = Utils::linearGainToPower(value/10.0);
         looper->setLayerGain(layerIndex, gain);
     });
@@ -272,7 +296,7 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     lowLevelIcon->setAlignment(Qt::AlignCenter);
 
     levelFaderLayout->addWidget(lowLevelIcon);
-    levelFaderLayout->addWidget(levelSlider);
+    levelFaderLayout->addWidget(gainSlider);
     levelFaderLayout->addWidget(highLevelIcon);
 
     QHBoxLayout *panFaderLayout = new QHBoxLayout();
@@ -285,7 +309,7 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     QLabel *labelPanR = new QLabel(QStringLiteral("R"));
     labelPanR->setObjectName(QStringLiteral("labelPanR"));
 
-    QSlider *panSlider = new QSlider();
+    panSlider = new QSlider();
     panSlider->setObjectName(QStringLiteral("panSlider"));
     panSlider->setMinimum(-4);
     panSlider->setMaximum(4);
@@ -293,15 +317,18 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     panSlider->setMaximumWidth(50);
     panSlider->setValue(looper->getLayerPan(layerIndex) * panSlider->maximum());
     panSlider->installEventFilter(this);
-    connect(panSlider, &QSlider::valueChanged, [looper, layerIndex, panSlider](int value){
+    connect(panSlider, &QSlider::valueChanged, [looper, layerIndex, this](int value){
         float panValue = value/(float)panSlider->maximum();
         looper->setLayerPan(layerIndex, panValue);
 
     });
 
-    QPushButton *muteButton = new QPushButton(QStringLiteral("M"));
+    muteButton = new QPushButton(QStringLiteral("M"));
     muteButton->setObjectName("muteButton");
-    muteButton->setCheckable(true);
+    //muteButton->setCheckable(true);
+    connect(muteButton, &QPushButton::clicked, [looper, layerIndex](){
+        looper->nextMuteState(layerIndex);
+    });
 
     panFaderLayout->addWidget(labelPanL);
     panFaderLayout->addWidget(panSlider);
@@ -309,13 +336,8 @@ QLayout *LooperWindow::createLayerControls(Looper *looper, quint8 layerIndex)
     panFaderLayout->addSpacing(mainLayoutSpacing);
     panFaderLayout->addWidget(muteButton);
 
-    QHBoxLayout *mainLayout = new QHBoxLayout();
-    mainLayout->setSpacing(mainLayoutSpacing);
-
-    mainLayout->addLayout(levelFaderLayout);
-    mainLayout->addLayout(panFaderLayout);
-
-    return mainLayout;
+    addLayout(levelFaderLayout);
+    addLayout(panFaderLayout);
 }
 
 // event filter used to handle double clicks
@@ -341,13 +363,10 @@ void LooperWindow::resetAllLayersControls()
 {
     QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
     for (quint8 layerIndex = 0; layerIndex < looper->getLayers(); ++layerIndex) {
-        QBoxLayout *layerControlsLayout = qobject_cast<QBoxLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
+        LayerControlsLayout *layerControlsLayout = static_cast<LayerControlsLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
 
-        QBoxLayout *faderLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(0)->layout());
-        QBoxLayout *panLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(1)->layout());
-
-        QSlider *faderSlider = qobject_cast<QSlider *>(faderLayout->itemAt(1)->widget());
-        QSlider *panSlider = qobject_cast<QSlider *>(panLayout->itemAt(1)->widget());
+        QSlider *faderSlider = layerControlsLayout->gainSlider;
+        QSlider *panSlider = layerControlsLayout->panSlider;
 
         panSlider->setValue(0); // center
         faderSlider->setValue(10); // 100%, unit gain
@@ -358,13 +377,11 @@ void LooperWindow::resetAllLayersControls()
 
 void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
 {
-    QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
     for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
-        LooperWavePanel *wavePanel = wavePanels[layerIndex];
+        LooperWavePanel *wavePanel = layerViews[layerIndex].wavePanel;
         bool layerIsVisible = layerIndex < newMaxLayers;
         wavePanel->setVisible(layerIsVisible);
-        QBoxLayout *layerControlsLayout = qobject_cast<QBoxLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
-        Gui::setLayoutItemsVisibility(layerControlsLayout, layerIsVisible);
+        Gui::setLayoutItemsVisibility(layerViews[layerIndex].controlsLayout, layerIsVisible);
     }
 }
 
@@ -461,10 +478,12 @@ void LooperWindow::updateMaxLayersControls()
 
 void LooperWindow::deleteWavePanels()
 {
-    for (quint8 key : wavePanels.keys())
-        wavePanels[key]->deleteLater();
+    for (quint8 key : layerViews.keys()) {
+        layerViews[key].wavePanel->deleteLater();
+        layerViews[key].controlsLayout->deleteLater();
+    }
 
-    wavePanels.clear();
+    layerViews.clear();
 }
 
 LooperWindow::~LooperWindow()
@@ -488,7 +507,8 @@ void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
     if (!looper)
         return;
 
-    for (LooperWavePanel *wavePanel : wavePanels.values()) {
+    for (const LayerView &layerView : layerViews.values()) {
+        auto wavePanel = layerView.wavePanel;
         wavePanel->setCurrentBeat(currentIntervalBeat);
     }
 
@@ -505,7 +525,8 @@ void LooperWindow::updateBeatsPerInterval()
     uint samplesPerInterval = ninjamController->getSamplesPerInterval();
     uint beatsPerInterval = ninjamController->getCurrentBpi();
 
-    for (LooperWavePanel *wavePanel : wavePanels.values()) {
+    for (const LayerView &layerView : layerViews.values()) {
+        auto wavePanel = layerView.wavePanel;
         wavePanel->setBeatsPerInteval(beatsPerInterval, samplesPerInterval);
     }
 }
@@ -740,7 +761,7 @@ void LooperWindow::loadAudioFiles(const QStringList &audioFilePaths)
         return;
     }
 
-    // loading more than onde file
+    // loading more than one file
     bool canLoad = looper->getLastValidLayer() < (Looper::MAX_LOOP_LAYERS - 1);
     if (canLoad) {
         quint8 firstLayerIndex = looper->getLastValidLayer() + 1;
@@ -776,12 +797,10 @@ void LooperWindow::updateLayersControls()
 {
     QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
     for (quint8 layerIndex = 0; layerIndex < looper->getLayers(); ++layerIndex) {
-        QBoxLayout *layerControlsLayout = qobject_cast<QBoxLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
-        QBoxLayout *faderLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(0)->layout());
-        QBoxLayout *panLayout = qobject_cast<QBoxLayout *>(layerControlsLayout->itemAt(1)->layout());
+        LayerControlsLayout *layerControlsLayout = static_cast<LayerControlsLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
 
-        QSlider *gainSlider = qobject_cast<QSlider *>(faderLayout->itemAt(1)->widget());
-        QSlider *panSlider = qobject_cast<QSlider *>(panLayout->itemAt(1)->widget());
+        QSlider *gainSlider = layerControlsLayout->gainSlider;
+        QSlider *panSlider = layerControlsLayout->panSlider;
 
         QSignalBlocker gainBlocker(gainSlider);
         QSignalBlocker panBlocker(panSlider);
