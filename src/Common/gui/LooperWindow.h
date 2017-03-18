@@ -7,11 +7,13 @@
 #include <QLayout>
 #include <QSlider>
 #include <QPushButton>
+#include <QTimer>
 
 #include "looper/Looper.h"
 #include "LooperWavePanel.h"
 #include "looper/LooperPersistence.h"
 #include "looper/LooperLayer.h"
+#include "widgets/BlinkableButton.h"
 
 using namespace Audio;
 
@@ -62,7 +64,7 @@ private:
 
         QSlider *panSlider;
         QSlider *gainSlider;
-        QPushButton *muteButton;
+        BlinkableButton *muteButton;
     };
 
     struct LayerView

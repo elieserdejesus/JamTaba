@@ -218,13 +218,18 @@ void LooperWindow::handleLayerMuteStateChanged(quint8 layer, quint8 state)
     auto muteButton = layerViews[layer].controlsLayout->muteButton;
     bool waiting = state == LooperLayer::WaitingToMute || state == LooperLayer::WaitingToUnmute;
 
-    muteButton->setProperty("waiting", waiting ? true : false);
+    //muteButton->setProperty("waiting", waiting ? true : false);
     bool muted = state == LooperLayer::Muted;
     muteButton->setCheckable(muted);
     muteButton->setChecked(muted);
 
-    style()->unpolish(muteButton);
-    style()->polish(muteButton);
+    //style()->unpolish(muteButton);
+    //style()->polish(muteButton);
+
+    if (waiting)
+        muteButton->startBlink();
+    else
+        muteButton->stopBlink();
 }
 
 void LooperWindow::updateModeComboBox()
@@ -323,9 +328,9 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
 
     });
 
-    muteButton = new QPushButton(QStringLiteral("M"));
+    static const quint32 blinkTime = 250;
+    muteButton = new BlinkableButton(QStringLiteral("M"), blinkTime);
     muteButton->setObjectName("muteButton");
-    //muteButton->setCheckable(true);
     connect(muteButton, &QPushButton::clicked, [looper, layerIndex](){
         looper->nextMuteState(layerIndex);
     });
