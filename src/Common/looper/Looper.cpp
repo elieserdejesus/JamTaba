@@ -42,7 +42,8 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
 
 void Looper::nextMuteState(quint8 layer) // called when 'mute button' is clicked
 {
-    if (layer < maxLayers) {
+    bool canMute = layer < maxLayers && mode == Looper::ALL_LAYERS;
+    if (canMute) {
         const LooperLayer::MuteState currentState = layers[layer]->getMuteState();
         LooperLayer::MuteState newMuteState = currentState;
 
@@ -482,9 +483,12 @@ void Looper::startNewCycle(uint samplesInCycle)
     for (quint8 l = 0; l < Looper::MAX_LOOP_LAYERS; ++l) {
         layers[l]->prepareForNewCycle(samplesInCycle, isOverdubbing);
 
-        LooperLayer::MuteState currentMuteState = layers[l]->getMuteState();
-        if (currentMuteState == LooperLayer::WaitingToMute || currentMuteState == LooperLayer::WaitingToUnmute)
-            nextMuteState(l);
+        bool canMute = l < maxLayers && mode == Looper::ALL_LAYERS;
+        if (canMute) {
+            LooperLayer::MuteState currentMuteState = layers[l]->getMuteState();
+            if (currentMuteState == LooperLayer::WaitingToMute || currentMuteState == LooperLayer::WaitingToUnmute)
+                nextMuteState(l);
+        }
     }
 
     state->handleNewCycle(samplesInCycle);
