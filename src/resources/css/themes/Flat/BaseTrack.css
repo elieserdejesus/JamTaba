@@ -73,6 +73,12 @@ BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion:hover:checked
     background-color: rgb(200, 200, 200);
 }
 
+BaseTrackView[unlighted="true"] #soloButton:checked,
+BaseTrackView[unlighted="true"] #buttonBoost:checked
+{
+    color: white;
+}
+
 #soloButton:checked
 {
     background-color: rgb(90, 255, 62);

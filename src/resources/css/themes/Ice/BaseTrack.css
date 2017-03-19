@@ -85,6 +85,13 @@ BaseTrackView[unlighted="true"] #muteButton
     color: rgb(50, 50, 50);
 }
 
+BaseTrackView[unlighted="true"] #muteButton:checked,
+BaseTrackView[unlighted="true"] #soloButton:checked,
+BaseTrackView[unlighted="true"] #buttonBoost:checked
+{
+    color: rgb(220, 220, 220);
+}
+
 BaseTrackView[unlighted="true"] #soloButton:hover,
 BaseTrackView[unlighted="true"] #muteButton:hover
 {
