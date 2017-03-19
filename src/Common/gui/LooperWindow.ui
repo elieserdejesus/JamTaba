@@ -159,6 +159,9 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="contentLayout">
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QWidget" name="layersWidget" native="true">
        <property name="sizePolicy">
@@ -174,9 +177,6 @@
        <property name="spacing">
         <number>2</number>
        </property>
-       <property name="sizeConstraint">
-        <enum>QLayout::SetDefaultConstraint</enum>
-       </property>
        <item>
         <widget class="AudioMeter" name="peakMeterLeft" native="true">
          <property name="sizePolicy">
@@ -185,23 +185,10 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>3</width>
-           <height>0</height>
-          </size>
-         </property>
         </widget>
        </item>
        <item>
-        <widget class="AudioMeter" name="peakMeterRight" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>3</width>
-           <height>0</height>
-          </size>
-         </property>
-        </widget>
+        <widget class="AudioMeter" name="peakMeterRight" native="true"/>
        </item>
       </layout>
      </item>

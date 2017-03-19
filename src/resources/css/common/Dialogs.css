@@ -30,6 +30,14 @@ LooperWindow QGroupBox::title
     left: 6px;
 }
 
+LooperWindow #muteButton[blinking="true"]
+{
+    background-color: red;
+    border-color: rgb(180, 0, 0);
+    border-style: solid;
+    color: white;
+}
+
 PreferencesDialog #buttonAddVstScanFolder
 {
     background-image: url(:/images/more.png);

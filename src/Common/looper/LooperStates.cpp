@@ -25,11 +25,11 @@ void LooperState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
     //this code is shared by Playing and Waiting states
 
     switch (looper->mode) {
-    case Looper::SEQUENCE:
-    case Looper::SELECTED_LAYER:
+    case Looper::Sequence:
+    case Looper::SelectedLayer:
         looper->mixCurrentLayerTo(samples, samplesToProcess);
         break;
-    case Looper::ALL_LAYERS:
+    case Looper::AllLayers:
     {
         bool isPlayingLockedLayersOnly = looper->getOption(Looper::PlayLockedLayers);
         if (!isPlayingLockedLayersOnly)
@@ -73,7 +73,7 @@ PlayingState::PlayingState(Looper *looper)
 void PlayingState::handleNewCycle(uint samplesInCycle)
 {
     Q_UNUSED(samplesInCycle)
-    if (looper->mode == Looper::Mode::SEQUENCE) {
+    if (looper->mode == Looper::Mode::Sequence) {
         looper->incrementCurrentLayer();
     }
 
@@ -95,7 +95,7 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
 
     bool isOverdubbing = looper->getOption(Looper::Overdub);
 
-    if (looper->mode != Looper::SELECTED_LAYER) {
+    if (looper->mode != Looper::SelectedLayer) {
         if (!isOverdubbing) {
             int nextLayer = looper->getNextUnlockedLayerIndex();
             looper->setCurrentLayer(nextLayer);
@@ -116,7 +116,7 @@ void RecordingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
     samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
 
 
-    const bool hearingAllLayers = looper->getMode() == Looper::ALL_LAYERS || looper->getOption(Looper::HearAllLayers);
+    const bool hearingAllLayers = looper->getMode() == Looper::AllLayers || looper->getOption(Looper::HearAllLayers);
     if (hearingAllLayers)
         looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
     else

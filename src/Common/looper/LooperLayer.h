@@ -44,6 +44,18 @@ public:
     bool isLocked() const;
     bool isValid() const;
 
+    enum MuteState
+    {
+        Unmuted,
+        Muted,
+        WaitingToMute, // waiting to mute in next interval
+        WaitingToUnmute // waiting to UNmute in next interval
+    };
+
+    bool isMuted() const;
+    void setMuteState(MuteState newState);
+    MuteState getMuteState() const;
+
     uint getAvailableSamples() const;
 
 private:
@@ -63,9 +75,26 @@ private:
     float leftGain;
     float rightGain;
 
+    MuteState muteState;
+
     void resize(quint32 samplesPerCycle);
 
 };
+
+inline LooperLayer::MuteState LooperLayer::getMuteState() const
+{
+    return muteState;
+}
+
+inline void LooperLayer::setMuteState(MuteState newState)
+{
+    muteState = newState;
+}
+
+inline bool LooperLayer::isMuted() const
+{
+    return muteState == MuteState::Muted;
+}
 
 inline float LooperLayer::getPan() const
 {
@@ -98,5 +127,6 @@ inline void LooperLayer::setLocked(bool locked)
 }
 
 } // namespace
+
 
 #endif

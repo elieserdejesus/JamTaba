@@ -15,7 +15,8 @@ LooperLayer::LooperLayer()
       gain(1.0),
       pan(0),
       leftGain(1),
-      rightGain(1)
+      rightGain(1),
+      muteState(MuteState::Unmuted)
 {
     //
 }
@@ -214,7 +215,8 @@ std::vector<float> LooperLayer::getSamplesPeaks(uint samplesPerPeak)
 
 void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition)
 {
-    if (samplesToMix > 0) {
+    bool canMix = samplesToMix > 0 && (muteState == LooperLayer::Unmuted || muteState == LooperLayer::WaitingToMute);
+    if (canMix) {
         float *internalChannels[] = {&(leftChannel[0]), &(rightChannel[0])};
         const uint secondChannelIndex = (outBuffer.isMono()) ? 0 : 1;
         float *bufferChannels[] = {outBuffer.getSamplesArray(0), outBuffer.getSamplesArray(secondChannelIndex)};

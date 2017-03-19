@@ -5,10 +5,17 @@
 #include <QCheckBox>
 #include <QMap>
 #include <QLayout>
+#include <QSlider>
+#include <QPushButton>
+#include <QTimer>
 
 #include "looper/Looper.h"
 #include "LooperWavePanel.h"
 #include "looper/LooperPersistence.h"
+#include "looper/LooperLayer.h"
+#include "widgets/BlinkableButton.h"
+
+using namespace Audio;
 
 namespace Controller {
 class NinjamController;
@@ -27,7 +34,7 @@ public:
     explicit LooperWindow(QWidget *parent, Controller::MainController *mainController);
     ~LooperWindow();
 
-    void setLooper(Audio::Looper *looper);
+    void setLooper(Looper *looper);
     void detachCurrentLooper();
     void updateDrawings();
 
@@ -45,19 +52,52 @@ private slots:
     void showLoadMenu();
     void loadAudioFilesIntoLayer(const QStringList &audioFilePaths, quint8 firstLayerIndex);
     void loadAudioFiles(const QStringList &audioFilePaths);
+    void handleLayerMuteStateChanged(quint8 layer, quint8 state);
 
 private:
     Ui::LooperWindow *ui;
-    Audio::Looper *looper;
-    QMap<quint8, LooperWavePanel*> wavePanels;
+    Looper *looper;
+
+    class LayerControlsLayout : public QHBoxLayout
+    {
+    public:
+        LayerControlsLayout(Looper *looper, quint8 layerIndex);
+        void setMuteButtonVisibility(bool show);
+        void enableMuteButton(bool enabled);
+
+        QSlider *panSlider;
+        QSlider *gainSlider;
+        BlinkableButton *muteButton;
+    };
+
+    struct LayerView
+    {
+        LayerView(LooperWavePanel *wavePanel, LayerControlsLayout *controlsLayout)
+            : wavePanel(wavePanel),
+              controlsLayout(controlsLayout)
+        {
+            //
+        }
+
+        LayerView()
+            : wavePanel(nullptr),
+              controlsLayout(nullptr)
+        {
+
+        }
+
+        LooperWavePanel *wavePanel;
+        LayerControlsLayout *controlsLayout;
+    };
+
+    QMap<quint8, LayerView> layerViews;
+
     Controller::MainController *mainController;
 
     void deleteWavePanels();
 
 
     void updateLayersVisibility(quint8 newMaxLayers);
-
-    QLayout *createLayerControls(Audio::Looper *looper, quint8 layerIndex);
 
     void addSamplesPeak(float peak, uint samplesCount, quint8 layerIndex);
 
@@ -66,8 +106,8 @@ private:
     void createRecordingOptionsCheckBoxes();
     void createPlayingOptionsCheckBoxes();
 
-    QMap<Audio::Looper::RecordingOption, QCheckBox *> recordingCheckBoxes;
-    QMap<Audio::Looper::PlayingOption, QCheckBox *> playingCheckBoxes;
+    QMap<Looper::RecordingOption, QCheckBox *> recordingCheckBoxes;
+    QMap<Looper::PlayingOption, QCheckBox *> playingCheckBoxes;
 
     template<class OptionType>
     void createOptionsCheckBoxes(QLayout *layoutToAddCheckboxes, const QList<OptionType> &options, QMap<OptionType, QCheckBox *> &mapToAddCheckBoxes)
@@ -84,8 +124,9 @@ private:
             layoutToAddCheckboxes->addWidget(newCheckBox);
 
             connect(newCheckBox, &QCheckBox::toggled, [=](bool checked){
-                if (looper)
+                if (looper) {
                     looper->setOption(option, checked);
+                }
             });
         }
     }
@@ -93,14 +134,14 @@ private:
 
     void clearLayout(QLayout *layout);
 
-    static QString getOptionName(Audio::Looper::RecordingOption option);
-    static QString getOptionName(Audio::Looper::PlayingOption option);
+    static QString getOptionName(Looper::RecordingOption option);
+    static QString getOptionName(Looper::PlayingOption option);
 
-    static QString getOptionToolTip(Audio::Looper::RecordingOption option);
-    static QString getOptionToolTip(Audio::Looper::PlayingOption option);
+    static QString getOptionToolTip(Looper::RecordingOption option);
+    static QString getOptionToolTip(Looper::PlayingOption option);
 
-    static QList<Audio::Looper::RecordingOption> getAllRecordingOptions();
-    static QList<Audio::Looper::PlayingOption> getAllPlayingOptions();
+    static QList<Looper::RecordingOption> getAllRecordingOptions();
+    static QList<Looper::PlayingOption> getAllPlayingOptions();
 
     template<class OptionType>
     void updateOptions(QLayout *layout)
@@ -128,6 +169,8 @@ private:
 
     void updateLayersControls();
     void updateModeComboBox();
+
+    void updateMuteButtons();
 
     int currentBeat;
 };
