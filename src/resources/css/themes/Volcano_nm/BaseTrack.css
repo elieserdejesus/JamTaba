@@ -83,6 +83,13 @@ BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
     border: none;
 }
 
+BaseTrackView[unlighted="true"] #muteButton:checked,
+BaseTrackView[unlighted="true"] #soloButton:checked,
+BaseTrackView[unlighted="true"] #buttonBoost:checked
+{
+    color: rgb(220, 220, 220);
+}
+
 #buttonBoost:checked
 {
     border-bottom: none;
