@@ -102,8 +102,8 @@ Looper *LocalInputNode::createLooper(Controller::MainController *controller)
     if (preferrredMode > Looper::SelectedLayer)
         preferrredMode = Looper::SelectedLayer;
 
-    if (preferredLayersCount > Looper::MAX_LOOP_LAYERS)
-        preferredLayersCount = Looper::MAX_LOOP_LAYERS;
+    if (preferredLayersCount > MAX_LOOP_LAYERS)
+        preferredLayersCount = MAX_LOOP_LAYERS;
 
     return new Audio::Looper(static_cast<Looper::Mode>(preferrredMode), preferredLayersCount);
 }

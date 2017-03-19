@@ -480,7 +480,7 @@ void Looper::startNewCycle(uint samplesInCycle)
     intervalPosition = 0;
 
     bool isOverdubbing = getOption(Looper::Overdub);
-    for (quint8 l = 0; l < Looper::MAX_LOOP_LAYERS; ++l) {
+    for (quint8 l = 0; l < MAX_LOOP_LAYERS; ++l) {
         layers[l]->prepareForNewCycle(samplesInCycle, isOverdubbing);
 
         bool canMute = l < maxLayers && mode == Looper::AllLayers;

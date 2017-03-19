@@ -2,6 +2,7 @@
 #include "audio/Mp3Decoder.h"
 
 #include <QFile>
+#include <QDebug>
 
 using namespace Audio;
 
@@ -18,12 +19,12 @@ void Mp3FileReader::read(const QString &filePath, SamplesBuffer &outBuffer, quin
     QByteArray encodedData = audioFile.readAll();
 
     const quint64 totalBytesToProcess = encodedData.size();
-    int bytesProcessed = 0;
+    uint bytesProcessed = 0;
     const static int MAX_BYTES_PER_DECODING = 2048;         // chunks maxsize is 2048 bytes
 
     SamplesBuffer bufferedSamples(2);
 
-    while (bytesProcessed < totalBytesToProcess) {// split in chunks to avoid a very large decoded buffer
+    while (bytesProcessed < totalBytesToProcess) { // split in chunks to avoid a very large decoded buffer
         int bytesToProcess = std::min((int)(totalBytesToProcess - bytesProcessed), MAX_BYTES_PER_DECODING);
         const Audio::SamplesBuffer *decodedBuffer = decoder.decode(encodedData.data() + bytesProcessed, bytesToProcess);
         // +++++++++++++++++  PROCESS DECODED SAMPLES ++++++++++++++++

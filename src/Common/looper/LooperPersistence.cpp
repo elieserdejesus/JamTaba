@@ -131,7 +131,7 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
 void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFileName, const SamplesBuffer &buffer, quint8 layerIndex, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate, quint8 bitDepth)
 {
     Q_ASSERT(!loopFileName.isEmpty() && !loopFileName.isNull());
-    Q_ASSERT(layerIndex < Looper::MAX_LOOP_LAYERS);
+    Q_ASSERT(layerIndex < MAX_LOOP_LAYERS);
     Q_ASSERT(!savePath.isEmpty());
 
     if(!encodeInOggVorbis) {
