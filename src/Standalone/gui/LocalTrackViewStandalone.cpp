@@ -255,7 +255,11 @@ void LocalTrackViewStandalone::setAudioRelatedControlsStatus(bool enableControls
 {
 
     QWidget *controls[] = {
-        buttonBoost, soloButton, muteButton, buttonStereoInversion,
+        buttonBoost,
+        soloButton,
+        muteButton,
+        buttonStereoInversion,
+        buttonLooper,
         dynamic_cast<QWidget *>(panSlider),
         dynamic_cast<QWidget *>(levelSlider)
     };
