@@ -456,13 +456,11 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
 {
     LocalTrackGroupView *localChannel = createLocalTrackGroupView(channelGroupIndex);
 
-    QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(updateChannelsNames()));
+    connect(localChannel, &LocalTrackGroupView::nameChanged, this, &MainWindow::updateChannelsNames);
 
-    QObject::connect(localChannel, SIGNAL(trackAdded()), this,
-                     SLOT(updateLocalInputChannelsGeometry()));
+    connect(localChannel, &LocalTrackGroupView::trackAdded, this, &MainWindow::updateLocalInputChannelsGeometry);
 
-    QObject::connect(localChannel, SIGNAL(trackRemoved()), this,
-                     SLOT(updateLocalInputChannelsGeometry()));
+    connect(localChannel, &LocalTrackGroupView::trackRemoved, this, &MainWindow::updateLocalInputChannelsGeometry);
 
     if (!localGroupChannels.isEmpty())// the second channel?
         localChannel->setPreparingStatus(localGroupChannels.at(0)->isPreparingToTransmit());
@@ -1652,7 +1650,7 @@ void MainWindow::setupSignals()
 
     connect(ui.menuLanguage, SIGNAL(triggered(QAction *)), this, SLOT(setLanguage(QAction *)));
 
-    connect(ui.userNameLineEdit, SIGNAL(editingFinished()), this, SLOT(updateUserName()));
+    connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);
 
     connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::updateNightModeInWorldMaps);
 

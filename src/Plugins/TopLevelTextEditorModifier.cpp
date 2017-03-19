@@ -33,6 +33,7 @@ TopLevelTextEditorModifier::~TopLevelTextEditorModifier()
 void TopLevelTextEditorModifier::transferTextToHackedLineEdit()
 {
     hackedLineEdit->setText(topLevelLineEdit->text());
+    hackedLineEdit->editingFinished();
 }
 
 void TopLevelTextEditorModifier::doInstall(QLineEdit *lineEdit)

@@ -20,10 +20,11 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     xmitButton = createXmitButton();
     layout()->addWidget(xmitButton);
 
-    QObject::connect(toolButton, SIGNAL(clicked()), this, SLOT(showMenu()));
-    QObject::connect(groupNameField, SIGNAL(editingFinished()), this, SIGNAL(
-                         nameChanged()));
-    QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(toggleTransmitingStatus(bool)));
+    connect(toolButton, &QPushButton::clicked, this, &LocalTrackGroupView::showMenu);
+
+    connect(groupNameField, &QLineEdit::editingFinished, this, &LocalTrackGroupView::nameChanged);
+
+    connect(xmitButton, &QPushButton::toggled, this, &LocalTrackGroupView::toggleTransmitingStatus);
 
     groupNameField->setAlignment(Qt::AlignHCenter);
 
