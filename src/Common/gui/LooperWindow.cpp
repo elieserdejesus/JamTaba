@@ -281,6 +281,7 @@ void LooperWindow::LayerControlsLayout::setMuteButtonVisibility(bool show)
     }
     else{
         removeWidget(muteButton);
+        muteButton->setChecked(false);
         muteButton->hide();
     }
 }

@@ -528,6 +528,10 @@ void Looper::setMode(Mode mode)
 {
     if (this->mode != mode) {
         this->mode = mode;
+
+        for (quint8 l = 0; l < maxLayers; ++l)  // reset mute state in all layers when mode is changed
+            layers[l]->setMuteState(LooperLayer::Unmuted);
+
         emit modeChanged();
     }
 }
