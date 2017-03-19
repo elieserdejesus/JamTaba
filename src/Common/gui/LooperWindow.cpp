@@ -204,8 +204,9 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         connect(looper, &Looper::modeChanged, this, &LooperWindow::handleModeChanged);
         connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
         connect(looper, &Looper::destroyed, this, &LooperWindow::close);
-
         connect(looper, &Looper::layerMuteStateChanged, this, &LooperWindow::handleLayerMuteStateChanged);
+
+        connect(playingCheckBoxes[Looper::PlayLockedLayers], &QCheckBox::toggled, this, &LooperWindow::updateControls);
     }
 
     updateBeatsPerInterval();
@@ -267,16 +268,21 @@ void LooperWindow::handleNewMaxLayers(quint8 newMaxLayers)
     mainController->storeLooperPreferredLayerCount(newMaxLayers);
 }
 
-void LooperWindow::LayerControlsLayout::hideMuteButton()
+void LooperWindow::LayerControlsLayout::enableMuteButton(bool enabled)
 {
-    muteButton->hide();
-    removeWidget(muteButton);
+    muteButton->setEnabled(enabled);
 }
 
-void LooperWindow::LayerControlsLayout::showMuteButton()
+void LooperWindow::LayerControlsLayout::setMuteButtonVisibility(bool show)
 {
-    addWidget(muteButton);
-    muteButton->show();
+    if (show) {
+        addWidget(muteButton);
+        muteButton->show();
+    }
+    else{
+        removeWidget(muteButton);
+        muteButton->hide();
+    }
 }
 
 LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 layerIndex)
@@ -453,18 +459,25 @@ void LooperWindow::updateControls()
             }
         }
 
-        // disable/hide mute button if looper mode is not AllLayers
-        const bool canShowMuteButton = looper->getMode() == Looper::AllLayers;
-        for (uint l = 0; l < looper->getLayers(); ++l) {
-            auto layerView = layerViews[l];
-            if (canShowMuteButton)
-                layerView.controlsLayout->showMuteButton();
-            else
-                layerView.controlsLayout->hideMuteButton();
-        }
+        updateMuteButtons();
     }
 
     update();
+}
+
+void LooperWindow::updateMuteButtons()
+{
+    const bool canShowMuteButtons = looper->getMode() == Looper::AllLayers;
+    for (uint l = 0; l < looper->getLayers(); ++l) {
+        auto layerView = layerViews[l];
+
+        // disable/hide mute button if looper mode is not AllLayers
+        layerView.controlsLayout->setMuteButtonVisibility(canShowMuteButtons);
+
+        // disable mute buttons for non-locked layers
+        bool canDisableMuteButton = looper->getOption(Looper::PlayLockedLayers) && !looper->layerIsLocked(l);
+        layerView.controlsLayout->enableMuteButton(!canDisableMuteButton);
+    }
 }
 
 void LooperWindow::setMaxLayerComboBoxValuesAvailability(int valuesToDisable)

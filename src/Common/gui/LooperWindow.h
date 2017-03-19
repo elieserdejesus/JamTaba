@@ -62,8 +62,8 @@ private:
     {
     public:
         LayerControlsLayout(Looper *looper, quint8 layerIndex);
-        void hideMuteButton();
-        void showMuteButton();
+        void setMuteButtonVisibility(bool show);
+        void enableMuteButton(bool enabled);
 
         QSlider *panSlider;
         QSlider *gainSlider;
@@ -124,8 +124,9 @@ private:
             layoutToAddCheckboxes->addWidget(newCheckBox);
 
             connect(newCheckBox, &QCheckBox::toggled, [=](bool checked){
-                if (looper)
+                if (looper) {
                     looper->setOption(option, checked);
+                }
             });
         }
     }
@@ -168,6 +169,8 @@ private:
 
     void updateLayersControls();
     void updateModeComboBox();
+
+    void updateMuteButtons();
 
     int currentBeat;
 };
