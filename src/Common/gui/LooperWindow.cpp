@@ -215,7 +215,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
 
 void LooperWindow::handleLayerMuteStateChanged(quint8 layer, quint8 state)
 {
-    if (looper->getMode() != Looper::ALL_LAYERS)
+    if (looper->getMode() != Looper::AllLayers)
         return;
 
     auto muteButton = layerViews[layer].controlsLayout->muteButton;
@@ -265,6 +265,18 @@ void LooperWindow::handleNewMaxLayers(quint8 newMaxLayers)
 
     Q_ASSERT(mainController);
     mainController->storeLooperPreferredLayerCount(newMaxLayers);
+}
+
+void LooperWindow::LayerControlsLayout::hideMuteButton()
+{
+    muteButton->hide();
+    removeWidget(muteButton);
+}
+
+void LooperWindow::LayerControlsLayout::showMuteButton()
+{
+    addWidget(muteButton);
+    muteButton->show();
 }
 
 LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 layerIndex)
@@ -330,15 +342,13 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     static const quint32 blinkTime = 250;
     muteButton = new BlinkableButton(QStringLiteral("M"), blinkTime);
     muteButton->setObjectName("muteButton");
-    connect(muteButton, &QPushButton::clicked, [looper, layerIndex](){
+    connect(muteButton, &BlinkableButton::clicked, [looper, layerIndex](){
         looper->nextMuteState(layerIndex);
     });
 
     panFaderLayout->addWidget(labelPanL);
     panFaderLayout->addWidget(panSlider);
     panFaderLayout->addWidget(labelPanR);
-    panFaderLayout->addSpacing(mainLayoutSpacing);
-    panFaderLayout->addWidget(muteButton);
 
     addLayout(levelFaderLayout);
     addLayout(panFaderLayout);
@@ -416,14 +426,14 @@ void LooperWindow::updateControls()
         updateOptions<Looper::PlayingOption>(ui->groupBoxPlaying->layout());
         updateOptions<Looper::RecordingOption>(ui->groupBoxRecording->layout());
 
-        // update more specific checkboxes
+        // update locked layers check box
         QCheckBox *lockedCheckBox = playingCheckBoxes[Looper::PlayLockedLayers];
         if (lockedCheckBox) {
             lockedCheckBox->setEnabled(lockedCheckBox->isEnabled() && looper->hasLockedLayers());
             lockedCheckBox->setChecked(lockedCheckBox->isEnabled() && lockedCheckBox->isChecked());
         }
 
-        // update locked layers check box
+        // update random layer check box
         QCheckBox *randomLayersCheckBox = playingCheckBoxes[Looper::RandomizeLayers];
         if (randomLayersCheckBox) {
             bool canEnableRandom = looper->getLayers() > 1;
@@ -435,12 +445,22 @@ void LooperWindow::updateControls()
         }
 
         // update 'hear all' checkbox (in ALL layers mode this checkbox will be checked AND disabled)
-        if (looper->getMode() == Looper::ALL_LAYERS) {
+        if (looper->getMode() == Looper::AllLayers) {
             QCheckBox *hearAllCheckBox = recordingCheckBoxes[Looper::HearAllLayers];
             if (hearAllCheckBox) {
                 hearAllCheckBox->setChecked(true);
                 hearAllCheckBox->setEnabled(false);
             }
+        }
+
+        // disable/hide mute button if looper mode is not AllLayers
+        const bool canShowMuteButton = looper->getMode() == Looper::AllLayers;
+        for (uint l = 0; l < looper->getLayers(); ++l) {
+            auto layerView = layerViews[l];
+            if (canShowMuteButton)
+                layerView.controlsLayout->showMuteButton();
+            else
+                layerView.controlsLayout->hideMuteButton();
         }
     }
 
@@ -541,9 +561,9 @@ void LooperWindow::initializeControls()
     ui->comboBoxPlayMode->clear();
 
     std::vector<Looper::Mode> playModes;
-    playModes.push_back(Looper::SEQUENCE);
-    playModes.push_back(Looper::ALL_LAYERS);
-    playModes.push_back(Looper::SELECTED_LAYER);
+    playModes.push_back(Looper::Sequence);
+    playModes.push_back(Looper::AllLayers);
+    playModes.push_back(Looper::SelectedLayer);
 
     for (uint i = 0; i < playModes.size(); ++i) {
         Looper::Mode playMode = playModes[i];

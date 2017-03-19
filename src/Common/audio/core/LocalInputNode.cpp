@@ -99,8 +99,8 @@ Looper *LocalInputNode::createLooper(Controller::MainController *controller)
     quint8 preferrredMode = controller->getLooperPreferedMode();
     quint8 preferredLayersCount = controller->getLooperPreferedLayersCount();
 
-    if (preferrredMode > Looper::SELECTED_LAYER)
-        preferrredMode = Looper::SELECTED_LAYER;
+    if (preferrredMode > Looper::SelectedLayer)
+        preferrredMode = Looper::SelectedLayer;
 
     if (preferredLayersCount > Looper::MAX_LOOP_LAYERS)
         preferredLayersCount = Looper::MAX_LOOP_LAYERS;

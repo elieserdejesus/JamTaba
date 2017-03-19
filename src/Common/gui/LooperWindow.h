@@ -58,9 +58,12 @@ private:
     Ui::LooperWindow *ui;
     Looper *looper;
 
-    struct LayerControlsLayout : public QHBoxLayout
+    class LayerControlsLayout : public QHBoxLayout
     {
+    public:
         LayerControlsLayout(Looper *looper, quint8 layerIndex);
+        void hideMuteButton();
+        void showMuteButton();
 
         QSlider *panSlider;
         QSlider *gainSlider;

@@ -18,7 +18,7 @@ Looper::Looper()
       changed(false),
       maxLayers(4),
       state(new StoppedState()),
-      mode(Mode::SEQUENCE),
+      mode(Mode::Sequence),
       resetRequested(false),
       newMaxLayersRequested(0)
 {
@@ -42,7 +42,7 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
 
 void Looper::nextMuteState(quint8 layer) // called when 'mute button' is clicked
 {
-    bool canMute = layer < maxLayers && mode == Looper::ALL_LAYERS;
+    bool canMute = layer < maxLayers && mode == Looper::AllLayers;
     if (canMute) {
         const LooperLayer::MuteState currentState = layers[layer]->getMuteState();
         LooperLayer::MuteState newMuteState = currentState;
@@ -120,7 +120,7 @@ void Looper::initialize()
         layers[l] = new LooperLayer();
     }
 
-    Looper::Mode modes[] = {Looper::SEQUENCE, Looper::ALL_LAYERS, Looper::SELECTED_LAYER};
+    Looper::Mode modes[] = {Looper::Sequence, Looper::AllLayers, Looper::SelectedLayer};
     for (Looper::Mode mode : modes) {
         modeOptions[mode].recordingOptions = getDefaultSupportedRecordingOptions(mode);
         modeOptions[mode].playingOptions = getDefaultSupportedPlayingOptions(mode);
@@ -371,7 +371,7 @@ void Looper::selectLayer(quint8 layerIndex)
     if (!layerIsLocked(layerIndex))
         focusedLayerIndex = layerIndex;
 
-    if (mode == Looper::SELECTED_LAYER)
+    if (mode == Looper::SelectedLayer)
         setCurrentLayer(layerIndex);
 }
 
@@ -460,7 +460,7 @@ void Looper::processChangeRequests()
             focusedLayerIndex = -1;
 
         if (currentLayerIndex >= maxLayers) { // currentLayer is not valid in new maxLayers?
-            if (mode == Looper::Mode::SEQUENCE) {
+            if (mode == Looper::Mode::Sequence) {
                 incrementCurrentLayer();
             }
             else {
@@ -483,7 +483,7 @@ void Looper::startNewCycle(uint samplesInCycle)
     for (quint8 l = 0; l < Looper::MAX_LOOP_LAYERS; ++l) {
         layers[l]->prepareForNewCycle(samplesInCycle, isOverdubbing);
 
-        bool canMute = l < maxLayers && mode == Looper::ALL_LAYERS;
+        bool canMute = l < maxLayers && mode == Looper::AllLayers;
         if (canMute) {
             LooperLayer::MuteState currentMuteState = layers[l]->getMuteState();
             if (currentMuteState == LooperLayer::WaitingToMute || currentMuteState == LooperLayer::WaitingToUnmute)
@@ -508,7 +508,7 @@ void Looper::setState(LooperState *newState)
  */
 bool Looper::canRecord() const
 {
-    if (mode != Looper::SELECTED_LAYER)
+    if (mode != Looper::SelectedLayer)
         return getFirstUnlockedLayerIndex() >= 0;
 
     return !layers[currentLayerIndex]->isLocked(); // in SELECTED_LAYER_ONLY mode we can't allow recording in selected layer if this layer is locked
@@ -562,9 +562,9 @@ void Looper::mixLockedLayers(SamplesBuffer &samples, uint samplesToMix)
 QString Looper::getModeString(Mode mode)
 {
     switch (mode) {
-        case Mode::SEQUENCE:        return tr("Sequence");
-        case Mode::ALL_LAYERS:      return tr("All Layers");
-        case SELECTED_LAYER:        return tr("Selected Layer");
+        case Mode::Sequence:        return tr("Sequence");
+        case Mode::AllLayers:      return tr("All Layers");
+        case SelectedLayer:        return tr("Selected Layer");
     }
 
     return "Error";
@@ -595,7 +595,7 @@ QMap<Looper::RecordingOption, bool> Looper::getDefaultSupportedRecordingOptions(
     QMap<Looper::RecordingOption, bool> options;
     options[Looper::Overdub] = false;
 
-    if (mode == Looper::SEQUENCE) {
+    if (mode == Looper::Sequence) {
         options[Looper::HearAllLayers] = false;
     }
 
@@ -606,13 +606,13 @@ QMap<Looper::PlayingOption, bool> Looper::getDefaultSupportedPlayingOptions(Loop
 {
     QMap<Looper::PlayingOption, bool> options;
 
-    if (mode == Looper::SEQUENCE) {
+    if (mode == Looper::Sequence) {
         options[Looper::PlayLockedLayers] = false;
         options[Looper::RandomizeLayers] = false;
         options[Looper::PlayNonEmptyLayers] = true;
     }
 
-    if (mode == Looper::ALL_LAYERS) {
+    if (mode == Looper::AllLayers) {
         options[Looper::PlayLockedLayers] = false;
         options[Looper::PlayNonEmptyLayers] = true;
     }

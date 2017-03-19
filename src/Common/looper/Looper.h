@@ -33,9 +33,9 @@ public:
 
     enum Mode
     {
-        SEQUENCE, // one layer in each interval
-        ALL_LAYERS, // mix and play all layers
-        SELECTED_LAYER
+        Sequence, // one layer in each interval
+        AllLayers, // mix and play all layers
+        SelectedLayer
     };
 
     Looper();

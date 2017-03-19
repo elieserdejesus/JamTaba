@@ -149,7 +149,7 @@ bool LooperWavePanel::canUseHighlightPainting() const
     const bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
 
     if (looper->isPlaying() || looper->isRecording()) {
-        return drawingCurrentLayer || looper->getMode() == Audio::Looper::ALL_LAYERS;
+        return drawingCurrentLayer || looper->getMode() == Audio::Looper::AllLayers;
     }
     else if (looper->isStopped()) {
         return drawingCurrentLayer;
