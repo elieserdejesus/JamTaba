@@ -22,6 +22,10 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
 {
     fxPanel = createFxPanel();
 
+    QMargins contentMargins = mainLayout->contentsMargins();
+    contentMargins.setTop(8); // add a top margin to draw midi routing arrow
+    mainLayout->setContentsMargins(contentMargins);
+
     mainLayout->addWidget(fxPanel, mainLayout->rowCount(), 0, 1, 2);
 
     // create input panel in the bottom
@@ -77,18 +81,16 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSiz
     QPainter painter(this);
     painter.setPen(QPen(midiRoutingArrowColor));
 
-    const int leftMargin = 2;
+    const int leftMargin = 1;
 
-    // draw a horizontal line in top of peak meters
     int metersCenter = peakMeterLeft->x() + (peakMeterRight->x() + peakMeterRight->width() - peakMeterLeft->x())/2;
     int x1 = metersCenter - 2;
     int y = midiPeakMeter->y() - 2;
     int x2 = metersCenter + 2;
-    painter.drawLine(x1, y, x2, y);
 
     // draw the vertical line
     int x = x1 + (x2 - x1)/2.0;
-    painter.drawLine(x, y-1, x, topMargin);
+    painter.drawLine(x, y+1, x, topMargin);
 
     // draw the horizontal line pointing to left subchannel
     y = topMargin;
@@ -99,8 +101,8 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSiz
         QString text("MIDI");
         static const QFont smallFont(font().family(), 5);
         setFont(smallFont);
-        int textX = leftMargin + arrowSize + 2;
-        painter.drawText(textX, y + fontMetrics().height(), text);
+        int textX = leftMargin + arrowSize + 1;
+        painter.drawText(textX, fontMetrics().height() + 1, text);
     }
 
     // draw arrow in left side
@@ -122,16 +124,14 @@ void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin, 
 
     const int rightMargin = 2;
 
-    // draw a horizontal line in top of peak meters
     int metersCenter = peakMeterLeft->x() + (peakMeterRight->x() + peakMeterRight->width() - peakMeterLeft->x())/2;
     int x1 = metersCenter - 2;
     int y = peakMeterLeft->y() - 2;
     int x2 = metersCenter + 2;
-    painter.drawLine(x1, y, x2, y);
 
     // draw the vertical line
     int x = x1 + (x2 - x1)/2.0;
-    painter.drawLine(x, y-1, x, topMargin);
+    painter.drawLine(x, y+1, x, topMargin);
 
     // draw the horizontal line pointing to right subchannel
     y = topMargin;
@@ -147,7 +147,7 @@ void LocalTrackViewStandalone::paintEvent(QPaintEvent *ev)
 {
     LocalTrackView::paintEvent(ev);
 
-    const int topMargin = isShowingPeakMetersOnly() ? 5 : 4;
+    const int topMargin = isShowingPeakMetersOnly() ? 4 : 2;
     static const int arrowSize = 4;
 
     if (inputNode->isRoutingMidiInput()) {
