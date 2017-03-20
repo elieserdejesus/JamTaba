@@ -34,6 +34,8 @@ void LooperLayer::reset()
     setGain(1.0);
 
     setLocked(false);
+
+    setMuteState(LooperLayer::Unmuted);
 }
 
 void LooperLayer::zero()

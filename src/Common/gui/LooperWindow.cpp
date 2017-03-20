@@ -382,15 +382,15 @@ bool LooperWindow::eventFilter(QObject *source, QEvent *ev)
 
 void LooperWindow::resetAllLayersControls()
 {
-    QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
     for (quint8 layerIndex = 0; layerIndex < looper->getLayers(); ++layerIndex) {
-        LayerControlsLayout *layerControlsLayout = static_cast<LayerControlsLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
-
-        QSlider *faderSlider = layerControlsLayout->gainSlider;
-        QSlider *panSlider = layerControlsLayout->panSlider;
+        auto view = layerViews[layerIndex];
+        QSlider *faderSlider = view.controlsLayout->gainSlider;
+        QSlider *panSlider = view.controlsLayout->panSlider;
+        QPushButton *muteButton = view.controlsLayout->muteButton;
 
         panSlider->setValue(0); // center
         faderSlider->setValue(10); // 100%, unit gain
+        muteButton->setChecked(false); // unmuted
     }
 
     setMaxLayerComboBoxValuesAvailability(0);
