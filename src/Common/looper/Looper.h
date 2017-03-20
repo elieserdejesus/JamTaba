@@ -48,8 +48,6 @@ public:
 
     void setLayerSamples(quint8 layer, const SamplesBuffer &samples);
 
-    void reset(); // clear all
-
     void startNewCycle(uint samplesInCycle);
 
     void selectLayer(quint8 layerIndex);
@@ -135,6 +133,9 @@ public:
     uint getIntervalLenght() const;
 
     void setChanged(bool changed);
+
+public slots:
+    void reset(); // clear all
 
 signals:
     void stateChanged();

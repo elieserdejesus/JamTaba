@@ -59,6 +59,16 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
     ui->peakMeterRight->setOrientation(Qt::Vertical);
 }
 
+QMenu *LooperWindow::createResetMenu()
+{
+    QMenu *resetMenu = new QMenu();
+    resetMenu->addAction(tr("Reset layers content"), looper, SLOT(reset()));
+    resetMenu->addAction(tr("Reset layers controls"), this, SLOT(resetLayersControls()));
+    resetMenu->addAction(tr("Reset layers content and controls"), this, SLOT(resetAll()));
+
+    return resetMenu;
+}
+
 void LooperWindow::keyPressEvent(QKeyEvent *ev)
 {
     if (!looper)
@@ -170,6 +180,9 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         detachCurrentLooper();
 
         this->looper = looper;
+
+        QMenu *resetMenu = createResetMenu();
+        ui->resetButton->setMenu(resetMenu);
 
         // create wave panels and layer controls (layers view)
         quint8 currentLayers = looper->getLayers();
@@ -380,7 +393,13 @@ bool LooperWindow::eventFilter(QObject *source, QEvent *ev)
     return QDialog::eventFilter(source, ev);
 }
 
-void LooperWindow::resetAllLayersControls()
+void LooperWindow::resetAll()
+{
+    looper->reset();
+    resetLayersControls();
+}
+
+void LooperWindow::resetLayersControls()
 {
     for (quint8 layerIndex = 0; layerIndex < looper->getLayers(); ++layerIndex) {
         auto view = layerViews[layerIndex];
@@ -617,13 +636,6 @@ void LooperWindow::initializeControls()
         if (looper) {
             uint layers = index + 1;
             looper->setLayers(layers);
-        }
-    });
-
-    connect(ui->resetButton, &QPushButton::clicked, [=](){
-        if (looper) {
-            looper->reset();
-            resetAllLayersControls();
         }
     });
 

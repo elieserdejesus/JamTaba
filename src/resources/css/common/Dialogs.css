@@ -2,12 +2,14 @@
     This file contain common stylesheet to Dialogs.
 */
 
-LooperWindow #loadButton
+LooperWindow #loadButton,
+LooperWindow #resetButton
 {
     max-width: 20px;
 }
 
-LooperWindow #loadButton::menu-indicator
+LooperWindow #loadButton::menu-indicator,
+LooperWindow #resetButton::menu-indicator
 {
     image: none;
 }
