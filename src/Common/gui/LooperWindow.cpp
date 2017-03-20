@@ -757,15 +757,16 @@ void LooperWindow::showLoadMenu()
     QMenu *menu = ui->loadButton->menu();
     menu->clear();
 
-    QString loopsDir = mainController->getSettings().getLooperSavePath();
-    QList<LoopInfo> loopsMetadata = LoopLoader::loadAllLoopsInfo(loopsDir);
-
     auto ninjamController = mainController->getNinjamController();
     quint16 currentBpm = ninjamController->getCurrentBpm();
 
-    QMenu *bpmMatchedMenu = new QMenu(tr("%1 BPM loops").arg(currentBpm));
+    QString loopsDir = mainController->getSettings().getLooperSavePath();
+    QList<LoopInfo> loopsInfos = LoopLoader::loadLoopsInfo(loopsDir, currentBpm);
+
+    QString matchedMenuText = (!loopsInfos.isEmpty()) ? (tr("%1 BPM loops").arg(currentBpm)) : (tr("No loops for %1 BPM").arg(currentBpm));
+    QMenu *bpmMatchedMenu = new QMenu(matchedMenuText);
     menu->addMenu(bpmMatchedMenu);
-    for (LoopInfo loopInfo : loopsMetadata) {
+    for (LoopInfo loopInfo : loopsInfos) {
         QString loopString = loopInfo.toString();
         QAction *action = bpmMatchedMenu->addAction(loopString);
         connect(action, &QAction::triggered, [=](){

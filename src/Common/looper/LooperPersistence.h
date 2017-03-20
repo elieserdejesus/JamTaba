@@ -42,13 +42,24 @@ public:
     LoopInfo();
 
     void addLayer(bool isLocked, float gain, float pan);
+
     bool isValid() const;
+
     QString toString(bool showBpm = false) const;
+
     quint8 getLayersCount() const;
+
     bool audioIsEncoded() const;
+
     QString getName() const;
+
     QList<LoopLayerInfo> getLayersInfo() const;
+
     quint8 getLooperMode() const;
+
+    quint16 getBpi() const;
+    quint32 getBpm() const;
+
 private:
     quint32 bpm;
     quint16 bpi;
@@ -57,6 +68,16 @@ private:
     QList<LoopLayerInfo> layers;
     quint8 looperMode;
 };
+
+inline quint16 LoopInfo::getBpi() const
+{
+    return bpi;
+}
+
+inline quint32 LoopInfo::getBpm() const
+{
+    return bpm;
+}
 
 inline quint8 LoopInfo::getLooperMode() const
 {
@@ -92,7 +113,7 @@ public:
     void load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate);
 
     static LoopInfo loadLoopInfo(const QString &loopFilePath);
-    static QList<LoopInfo> loadAllLoopsInfo(const QString &loadPath);
+    static QList<LoopInfo> loadLoopsInfo(const QString &loadPath, quint32 bpmToMatch);
     static SamplesBuffer loadAudioFile(const QString &filePath, uint currentSampleRate);
 
 private:

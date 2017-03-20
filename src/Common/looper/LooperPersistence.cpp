@@ -219,7 +219,7 @@ SamplesBuffer LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QS
     return LoopLoader::loadAudioFile(audioFilePath, currentSampleRate);
 }
 
-QList<LoopInfo> LoopLoader::loadAllLoopsInfo(const QString &loadPath)
+QList<LoopInfo> LoopLoader::loadLoopsInfo(const QString &loadPath, quint32 bpmToMatch)
 {
     QList<LoopInfo> allInfos;
 
@@ -229,7 +229,7 @@ QList<LoopInfo> LoopLoader::loadAllLoopsInfo(const QString &loadPath)
     for(const QFileInfo &fileInfo : fileInfoList) {
         QString loopFilePath = fileInfo.absoluteFilePath();
         LoopInfo loopInfo = LoopLoader::loadLoopInfo(loopFilePath);
-        if (loopInfo.isValid())
+        if (loopInfo.isValid() && loopInfo.getBpm() == bpmToMatch)
             allInfos.append(loopInfo);
     }
     return allInfos;
