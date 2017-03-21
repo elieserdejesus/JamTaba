@@ -259,7 +259,6 @@ void LocalTrackViewStandalone::setAudioRelatedControlsStatus(bool enableControls
         soloButton,
         muteButton,
         buttonStereoInversion,
-        buttonLooper,
         dynamic_cast<QWidget *>(panSlider),
         dynamic_cast<QWidget *>(levelSlider)
     };
@@ -278,7 +277,7 @@ void LocalTrackViewStandalone::setMidiRouting(bool routingMidiToFirstSubchannel)
 
     bool enableAudioControls = !inputNode->isRoutingMidiInput();
     setAudioRelatedControlsStatus(enableAudioControls);
-
+    enableLopperButton(enableAudioControls && mainController->isPlayingInNinjamRoom());
     update();
 }
 
