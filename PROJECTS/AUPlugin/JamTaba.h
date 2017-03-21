@@ -2,6 +2,7 @@
 #define JamTaba_JamTaba_h
 
 #include "AUBase.h"
+#include "AUEffectBase.h"
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include "JamTabaVersion.h"
 #include <math.h>
@@ -38,7 +39,7 @@ public:
 
 
 
-class JamTaba : public AUBase
+class JamTaba : public AUEffectBase
 {
     
 public:

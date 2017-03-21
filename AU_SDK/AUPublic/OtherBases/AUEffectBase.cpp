@@ -60,7 +60,7 @@
 //
 AUEffectBase::AUEffectBase(	AudioComponentInstance	audioUnit,
 							bool					inProcessesInPlace ) :
-	AUBase(audioUnit, 1, 1),		// 1 in bus, 1 out bus
+	AUBase(audioUnit, 2, 1),		// 2 in bus, 1 out bus
 	mBypassEffect(false),
 	mParamSRDep (false),
 	mProcessesInPlace(inProcessesInPlace),
@@ -69,6 +69,7 @@ AUEffectBase::AUEffectBase(	AudioComponentInstance	audioUnit,
 	, mOnlyOneKernel(false)
 #endif
 {
+    
 }
 
 //_____________________________________________________________________________
@@ -352,6 +353,7 @@ OSStatus 	AUEffectBase::Render(	AudioUnitRenderActionFlags &ioActionFlags,
 											const AudioTimeStamp &		inTimeStamp,
 											UInt32						nFrames)
 {
+    printf("\nAUEffectBase::Render\n");
 	if (!HasInput(0))
 		return kAudioUnitErr_NoConnection;
 
