@@ -353,7 +353,6 @@ OSStatus 	AUEffectBase::Render(	AudioUnitRenderActionFlags &ioActionFlags,
 											const AudioTimeStamp &		inTimeStamp,
 											UInt32						nFrames)
 {
-    printf("\nAUEffectBase::Render\n");
 	if (!HasInput(0))
 		return kAudioUnitErr_NoConnection;
 
