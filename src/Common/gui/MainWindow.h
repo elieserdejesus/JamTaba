@@ -216,7 +216,7 @@ private slots:
 
     //preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
-    void setJamRecorderStatus(QString writerId, bool status);
+    void setJamRecorderStatus(const QString &writerId, bool status);
     void setRecordingPath(const QString &newRecordingPath);
     void setBuiltInMetronome(const QString &metronomeAlias);
     void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);

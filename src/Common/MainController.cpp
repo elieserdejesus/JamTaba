@@ -394,7 +394,7 @@ QMap<QString, QString> MainController::getJamRecoders() const
     return jamRecoderMap;
 }
 
-void MainController::storeJamRecorderStatus(QString writerId, bool status)
+void MainController::storeJamRecorderStatus(const QString &writerId, bool status)
 {
     if (settings.isSaveMultiTrackActivated()) // recording is active and changing the jamRecorder status
         foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)

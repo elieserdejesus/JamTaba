@@ -91,9 +91,9 @@ void PreferencesDialog::setupSignals()
     connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectTab(int)));
 
     connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this, SLOT(toggleRecording(bool)));
-    foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
-        connect(myCheckBox, &QCheckBox::clicked, [=](bool newStatus) {
-            jamRecorderStatusChanged(jamRecorderCheckBoxes[myCheckBox], newStatus);
+    for (QCheckBox *myCheckBox : jamRecorderCheckBoxes.keys()) {
+        connect(myCheckBox, &QCheckBox::toggled, [=](bool newStatus) {
+            emit jamRecorderStatusChanged(jamRecorderCheckBoxes[myCheckBox], newStatus);
         });
     }
 

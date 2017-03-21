@@ -1268,7 +1268,7 @@ void MainWindow::setMultiTrackRecordingStatus(bool recording)
     mainController->storeMultiTrackRecordingStatus(recording);
 }
 
-void MainWindow::setJamRecorderStatus(QString writerId, bool status)
+void MainWindow::setJamRecorderStatus(const QString &writerId, bool status)
 {
     mainController->storeJamRecorderStatus(writerId, status);
 }

@@ -215,7 +215,7 @@ public:
     }
     void storeMultiTrackRecordingPath(const QString &newPath);
 
-    void storeJamRecorderStatus(QString writerId, bool status);
+    void storeJamRecorderStatus(const QString &writerId, bool status);
 
     inline bool isJamRecorderActivated(QString writerId) {
         return settings.isJamRecorderActivated(writerId);
