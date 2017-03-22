@@ -48,11 +48,14 @@ HEADERS += JamTabaVSTPlugin.h
 HEADERS += Editor.h
 HEADERS += MainControllerPlugin.h
 HEADERS += MainControllerVST.h
+HEADERS += MainWindowVST.h
 HEADERS += NinjamControllerPlugin.h
 HEADERS += NinjamRoomWindowPlugin.h
 HEADERS += MainWindowPlugin.h
 HEADERS += TopLevelTextEditorModifier.h
+win32:HEADERS += SonarTextEditorModifier.h
 HEADERS += PreferencesDialogPlugin.h
+HEADERS += KeyboardHook.h
 
 SOURCES += main.cpp
 SOURCES += JamTabaPlugin.cpp
@@ -64,12 +67,13 @@ SOURCES += ConfiguratorPlugin.cpp
 SOURCES += NinjamRoomWindowPlugin.cpp
 SOURCES += NinjamControllerPlugin.cpp
 SOURCES += MainWindowPlugin.cpp
+SOURCES += MainWindowVST.cpp
 SOURCES += TopLevelTextEditorModifier.cpp
+win32:SOURCES += SonarTextEditorModifier.cpp
 SOURCES += PreferencesDialogPlugin.cpp
+SOURCES += KeyboardHook.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffectx.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffect.cpp
-#SOURCES += audio/samplesbufferrecorder.cpp
-#SOURCES += audio/core/PluginDescriptor.cpp
 
 win32 {
     message("Windows VST build")

@@ -3,6 +3,7 @@
 #include "JamTabaVSTPlugin.h"
 #include "MainWindowPlugin.h"
 #include "MainControllerVST.h"
+#include "MainWindowVST.h"
 #include "log/Logging.h"
 #include <QTimer>
 
@@ -77,7 +78,7 @@ bool VstEditor::open(void *ptr)
     if (!mainWindow) {
         qCDebug(jtVstPlugin) << "Creating MainWindow...";
         MainControllerVST *controller = dynamic_cast<MainControllerVST*>(jamtaba->getController());
-        mainWindow = new MainWindowPlugin(controller);
+        mainWindow = new MainWindowVST(controller);
         controller->setMainWindow(mainWindow);
         mainWindow->initialize();
         rectangle.left = 0;

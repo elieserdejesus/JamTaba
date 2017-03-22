@@ -1,5 +1,5 @@
-#ifndef MAINWINDOWVST_H
-#define MAINWINDOWVST_H
+#ifndef MAINWINDOWPLUGIN_H
+#define MAINWINDOWPLUGIN_H
 
 #include "gui/MainWindow.h"
 #include "NinjamRoomWindowPlugin.h"
@@ -63,4 +63,4 @@ private:
 
 };
 
-#endif // MAINWINDOWVST_H
+#endif // MAINWINDOWPLUGIN_H
