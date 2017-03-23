@@ -20,7 +20,8 @@ Looper::Looper()
       state(new StoppedState()),
       mode(Mode::Sequence),
       resetRequested(false),
-      newMaxLayersRequested(0)
+      newMaxLayersRequested(0),
+      mainGain(1.0)
 {
     initialize();
 }
@@ -35,7 +36,8 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       state(new StoppedState()),
       mode(initialMode),
       resetRequested(false),
-      newMaxLayersRequested(0)
+      newMaxLayersRequested(0),
+      mainGain(1.0)
 {
     initialize();
 }
@@ -65,6 +67,11 @@ void Looper::nextMuteState(quint8 layer) // called when 'mute button' is clicked
         layers[layer]->setMuteState(newMuteState);
         emit layerMuteStateChanged(layer, static_cast<quint8>(newMuteState));
     }
+}
+
+void Looper::setMainGain(float gain)
+{
+    this->mainGain = gain;
 }
 
 float Looper::getLayerGain(quint8 layer) const
@@ -430,6 +437,8 @@ void Looper::mixToBuffer(SamplesBuffer &samples)
     uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
     AudioPeak peakBeforeMix = samples.computePeak();
     state->mixTo(samples, samplesToProcess);
+    samples.applyGain(mainGain, 1.0);
+
     AudioPeak peakAfterMix = samples.computePeak();
 
     // always update intervalPosition to keep the execution in sync when 'play' is pressed

@@ -58,6 +58,15 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
 
     ui->peakMeterLeft->setOrientation(Qt::Vertical);
     ui->peakMeterRight->setOrientation(Qt::Vertical);
+
+    ui->mainLevelSlider->installEventFilter(this);
+    connect(ui->mainLevelSlider, &QSlider::valueChanged, [=](int value){
+        if (!looper)
+            return;
+
+        float gain = Utils::linearGainToPower(value/100.0);
+        looper->setMainGain(gain);
+    });
 }
 
 QMenu *LooperWindow::createResetMenu()
@@ -192,6 +201,9 @@ void LooperWindow::setLooper(Audio::Looper *looper)
             auto layerWavePanel = new LooperWavePanel(looper, layerIndex);
             auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex);
 
+            layerControlsLayout->gainSlider->installEventFilter(this);
+            layerControlsLayout->panSlider->installEventFilter(this);
+
             layerWavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
 
             gridLayout->addWidget(layerWavePanel, layerIndex, 0);
@@ -318,7 +330,6 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     gainSlider->setValue(Utils::poweredGainToLinear(looper->getLayerGain(layerIndex)) * 10);
     gainSlider->setTickPosition(QSlider::NoTicks);
     gainSlider->setMaximumWidth(80);
-    gainSlider->installEventFilter(this);
 
     connect(gainSlider, &QSlider::valueChanged, [looper, layerIndex](int value){
         float gain = Utils::linearGainToPower(value/10.0);
@@ -353,7 +364,7 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     panSlider->setOrientation(Qt::Horizontal);
     panSlider->setMaximumWidth(50);
     panSlider->setValue(looper->getLayerPan(layerIndex) * panSlider->maximum());
-    panSlider->installEventFilter(this);
+
     connect(panSlider, &QSlider::valueChanged, [looper, layerIndex, this](int value){
         float panValue = value/(float)panSlider->maximum();
         looper->setLayerPan(layerIndex, panValue);
@@ -382,10 +393,11 @@ bool LooperWindow::eventFilter(QObject *source, QEvent *ev)
         QSlider *slider = qobject_cast<QSlider *>(source);
         if (slider) {
             if (slider->objectName() == "levelSlider")
-                 slider->setValue(10); // set level fader to unit gain
-            else
-                 if (slider->objectName() == "panSlider")
-                    slider->setValue(0);// set pan slider to center
+                slider->setValue(10); // set level fader to unit gain
+            else if (slider->objectName() == "panSlider")
+                slider->setValue(0);// set pan slider to center
+            else if (slider->objectName() == "mainLevelSlider")
+                slider->setValue(100);// set main slider to unit gain
         }
 
         return true;

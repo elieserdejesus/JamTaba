@@ -44,6 +44,8 @@ public:
     void addBuffer(const SamplesBuffer &samples); // recording
     void mixToBuffer(SamplesBuffer &samples); // playing/mixing
 
+    void setMainGain(float gain);
+
     AudioPeak getLastPeak() const;
 
     void setLayerSamples(quint8 layer, const SamplesBuffer &samples);
@@ -155,6 +157,8 @@ private:
     quint8 currentLayerIndex; // current played layer
     int focusedLayerIndex; // layer clicked by user, used to choose recordint layer. Sometimes focused layer will be equal to currentLayerIndex.
     quint8 maxLayers;
+
+    float mainGain;
 
     bool resetRequested;
     quint8 newMaxLayersRequested;
