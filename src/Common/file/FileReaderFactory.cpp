@@ -10,10 +10,13 @@ using namespace Audio;
 class NullFileReader : public FileReader
 {
 public:
-    inline void read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate) override{
+    inline bool read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate) override
+    {
         Q_UNUSED(filePath)
         Q_UNUSED(outBuffer)
         Q_UNUSED(sampleRate)
+
+        return false;
     }
 };
 

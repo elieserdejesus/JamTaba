@@ -76,11 +76,9 @@ class SampleExtractor24Bits : public SampleExtractor
 
         float nextSample() override
         {
-
             char buffer[3];
             stream->readRawData(buffer, 3);
-            qint32 sampleValue = (qint32)((buffer[0] & 0xFF) | (buffer[1] << 8) | (buffer[2] << 16));
-            return sampleValue / 8388607.0; // 8388607 = max value in 24 bits
+            return ((buffer[0] & 0xFF) | ((buffer[1] & 0xFF) << 8) | (buffer[2] << 16)) / 8388606.0F;
         }
 };
 
@@ -131,30 +129,30 @@ public:
     }
 };
 
-void WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate)
+bool WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate)
 {
     // Open the wave file
     QFile wavFile(filePath);
     if (!wavFile.open(QFile::ReadOnly)) {
-        qWarning() << "Failed to open WAV file ..." << filePath;
-        return; // Done, out buffer is not changed
+        qCritical() << "Failed to open WAV file ..." << filePath;
+        return false; // Done, out buffer is not changed
     }
 
     // Read in the whole thing
     QByteArray wavFileContent = wavFile.readAll();
 
     // Define the header components
-    quint8 fileType[4];
+    char fileType[4];
     quint32 fileSize;
-    quint8 waveName[4];
-    quint8 fmtName[3];
+    char waveName[4];
+    char fmtName[3];
     quint32 fmtLength;
     quint16 fmtType;
     quint16 channels;
     quint32 sampleRateXBitsPerSampleXChanngelsDivEight;
     quint16 bitsPerSampleXChannelsDivEightPointOne;
     quint16 bitsPerSample;
-    quint8 dataHeader[4];
+    char dataHeader[4];
     quint32 dataSize;
 
     // Create a data stream to analyze the data
@@ -163,9 +161,25 @@ void WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuff
 
     // Now pop off the appropriate data into each header field defined above
     stream.readRawData((char *)fileType, 4); // "RIFF"
+    if (QString::fromLocal8Bit(fileType, 4) != "RIFF") {
+        qCritical() << "Error loading " << filePath << ", 'RIFF' chunk not founded!";
+        return false;
+    }
+
     stream >> fileSize; // File Size
+
     stream.readRawData((char *)waveName, 4); // "WAVE"
+    if (QString::fromLocal8Bit(waveName, 4) != "WAVE") {
+        qCritical() << "Error loading " << filePath << ", 'WAVE' chunk not founded!";
+        return false;
+    }
+
     stream.readRawData((char *)fmtName, 4); // "fmt"
+    if (QString::fromLocal8Bit(fmtName, 4) != "fmt ") {
+        qCritical() << "Error loading " << filePath << ", 'fmt' chunk not founded!";
+        return false;
+    }
+
     stream >> fmtLength; // Format length
     stream >> fmtType; // Format type
     stream >> channels; // Number of channels
@@ -173,23 +187,33 @@ void WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuff
     stream >> sampleRateXBitsPerSampleXChanngelsDivEight; // (Sample Rate * BitsPerSample * Channels) / 8
     stream >> bitsPerSampleXChannelsDivEightPointOne; // (BitsPerSample * Channels) / 8.1
     stream >> bitsPerSample; // Bits per sample
-    stream.readRawData((char *)dataHeader, 4); // "data" header
-    stream >> dataSize; // Data Size
+    while (QString::fromLocal8Bit(dataHeader, 4) != "data" && !stream.atEnd()) {
+        stream.readRawData((char *)dataHeader, 4); // "data" header
+        stream >> dataSize; // Data Size
+        if (QString::fromLocal8Bit(dataHeader, 4) != "data")
+            stream.skipRawData(dataSize);
+    }
 
-    int samples = dataSize / channels / (bitsPerSample/ 8);
+    uint samples = dataSize / channels / (bitsPerSample/ 8);
 
     if (channels == 1)
         outBuffer.setToMono();
     else
         outBuffer.setToStereo();
+
+    if (outBuffer.getFrameLenght() > 0) // load only outBuffer.frameLenght samples?
+        samples = qMin(samples, outBuffer.getFrameLenght());
+
     outBuffer.setFrameLenght(samples);
 
     // Now pull out the data
     std::unique_ptr<SampleExtractor> sampleExtractor = SampleExtractorFactory::createExtractor(&stream, bitsPerSample);
-    for (int s = 0; s < samples; ++s) {
+    for (uint s = 0; s < samples; ++s) {
         for (int c = 0; c < channels; ++c) {
             float sample = sampleExtractor->nextSample();
             outBuffer.set(c, s, sample);
         }
     }
+
+    return true;
 }

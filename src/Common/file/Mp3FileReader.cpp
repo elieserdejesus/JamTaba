@@ -5,13 +5,13 @@
 
 using namespace Audio;
 
-void Mp3FileReader::read(const QString &filePath, SamplesBuffer &outBuffer, quint32 &sampleRate)
+bool Mp3FileReader::read(const QString &filePath, SamplesBuffer &outBuffer, quint32 &sampleRate)
 {
     // Open the mp3 file
     QFile audioFile(filePath);
     if (!audioFile.open(QFile::ReadOnly)) {
         qCritical() << "Failed to open mp3 file ..." << filePath;
-        return;
+        return false;
     }
 
     Audio::Mp3DecoderMiniMp3 decoder;
@@ -34,4 +34,6 @@ void Mp3FileReader::read(const QString &filePath, SamplesBuffer &outBuffer, quin
     sampleRate = decoder.getSampleRate();
     outBuffer.setFrameLenght(bufferedSamples.getFrameLenght());
     outBuffer.set(bufferedSamples);
+
+    return true;
 }

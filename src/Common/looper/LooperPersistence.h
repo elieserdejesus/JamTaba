@@ -108,18 +108,19 @@ inline QList<LoopLayerInfo> LoopInfo::getLayersInfo() const
 
 class LoopLoader
 {
+
 public:
     LoopLoader(const QString &loadPath);
-    void load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate);
+    void load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate, quint32 samplesPerInterval);
 
     static LoopInfo loadLoopInfo(const QString &loopFilePath);
     static QList<LoopInfo> loadLoopsInfo(const QString &loadPath, quint32 bpmToMatch);
-    static SamplesBuffer loadAudioFile(const QString &filePath, uint currentSampleRate);
+    static bool loadAudioFile(const QString &filePath, uint currentSampleRate, quint32 samplesPerInterval, SamplesBuffer &out);
 
 private:
     QString loadPath;
 
-    static SamplesBuffer loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate);
+    static bool loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate, quint32 samplesPerInterval, SamplesBuffer &out);
 };
 
 } // namespace

@@ -14,6 +14,7 @@
 #include <QMenu>
 #include <QStandardItemModel>
 #include <QFileDialog>
+#include <QMessageBox>
 
 using namespace Controller;
 using namespace Audio;
@@ -834,14 +835,21 @@ void LooperWindow::loadAudioFiles(const QStringList &audioFilePaths)
 void LooperWindow::loadAudioFilesIntoLayer(const QStringList &audioFilePaths, quint8 firstLayerIndex)
 {
     const uint currentSampleRate = mainController->getSampleRate();
+    const uint samplesPerInterval = mainController->getNinjamController()->getSamplesPerInterval();
     quint8 layerIndex = firstLayerIndex;
     for (const QString &audioFilePath : audioFilePaths) {
         if (looper->getLayers() <= layerIndex)
             looper->setLayers(layerIndex + 1); // expand looper layers
 
-        const SamplesBuffer samples = LoopLoader::loadAudioFile(audioFilePath, currentSampleRate);
-        looper->setLayerSamples(layerIndex, samples);
-        layerIndex++;
+        SamplesBuffer samples(2, samplesPerInterval);
+        bool loadResult = LoopLoader::loadAudioFile(audioFilePath, currentSampleRate, samplesPerInterval, samples);
+        if (loadResult) {
+            looper->setLayerSamples(layerIndex, samples);
+            layerIndex++;
+        }
+        else {
+            QMessageBox::warning(this, tr("Error loading audio file!"), tr("Can't load the file '%1'").arg(QFileInfo(audioFilePath).baseName()));
+        }
     }
 }
 
@@ -869,7 +877,8 @@ void LooperWindow::loadLoopInfo(const QString &loopDir, const LoopInfo &loopInfo
     if (loopInfo.isValid()) {
         LoopLoader loader(loopDir);
         uint currentSampleRate = mainController->getSampleRate();
-        loader.load(loopInfo, looper, currentSampleRate);
+        quint32 samplesPerInterval = mainController->getNinjamController()->getSamplesPerInterval();
+        loader.load(loopInfo, looper, currentSampleRate, samplesPerInterval);
 
         updateLayersControls(); // update layers pan and gain after loading a loop
 

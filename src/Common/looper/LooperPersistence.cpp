@@ -163,7 +163,7 @@ LoopLoader::LoopLoader(const QString &loadPath)
 
 }
 
-void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate)
+void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate, quint32 samplesPerInterval)
 {
     Q_ASSERT(looper);
     looper->stop();
@@ -173,50 +173,57 @@ void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate)
     bool audioIsEncoded = loopInfo.audioIsEncoded();
     QList<LoopLayerInfo> layersInfo = loopInfo.getLayersInfo();
     for (quint8 layer = 0; layer < layersInfo.size(); ++layer) {
-        SamplesBuffer samples = loadLoopLayerSamples(loadPath, loopInfo.getName(), layer, audioIsEncoded, currentSampleRate);
-        looper->setLayerSamples(layer, samples);
-        bool layerIsLocked = layersInfo.at(layer).locked;
-        looper->setLayerLockedState(layer, layerIsLocked);
-        looper->setLayerGain(layer, Utils::linearGainToPower(layersInfo.at(layer).gain));
-        looper->setLayerPan(layer, layersInfo.at(layer).pan);
+        SamplesBuffer samples(2);
+        bool loadResult = loadLoopLayerSamples(loadPath, loopInfo.getName(), layer, audioIsEncoded, currentSampleRate, samplesPerInterval, samples);
+        if (loadResult) {
+            looper->setLayerSamples(layer, samples);
+            bool layerIsLocked = layersInfo.at(layer).locked;
+            looper->setLayerLockedState(layer, layerIsLocked);
+            looper->setLayerGain(layer, Utils::linearGainToPower(layersInfo.at(layer).gain));
+            looper->setLayerPan(layer, layersInfo.at(layer).pan);
+        }
     }
 }
 
-SamplesBuffer LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate)
+bool LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate, quint32 samplesPerInterval, SamplesBuffer &out)
 {
     QFile audioFile(filePath);
     if (!audioFile.open(QFile::ReadOnly)) {
         qCritical() << "Error loading loop layer samples, can't open " << filePath << audioFile.errorString();
-        return SamplesBuffer::ZERO_BUFFER;
+        out.setFrameLenght(0);
+        return false;
     }
 
     auto fileReader = FileReaderFactory::createFileReader(filePath);
-    SamplesBuffer samplesBuffer(2); // stereo
     quint32 audioFileSampleRate = 0;
-    fileReader->read(filePath, samplesBuffer, audioFileSampleRate);
+    if (!fileReader->read(filePath, out, audioFileSampleRate))
+        return false;
 
     bool needResample = audioFileSampleRate > 0 && currentSampleRate != audioFileSampleRate;
     if (needResample) {
         SamplesBufferResampler resampler;
-        uint desiredLenght = currentSampleRate/(float)audioFileSampleRate * samplesBuffer.getFrameLenght();
-        return resampler.resample(samplesBuffer, desiredLenght);
+        uint desiredLenght = currentSampleRate/(float)audioFileSampleRate * out.getFrameLenght();
+        out.setFrameLenght(desiredLenght);
+        const SamplesBuffer resampledBuffer = resampler.resample(out, desiredLenght);
+        out.set(resampledBuffer);
     }
 
-    return samplesBuffer;
+    return true;
 }
 
-SamplesBuffer LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate)
+bool LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate, quint32 samplesPerInterval, SamplesBuffer &out)
 {
     QDir audioDir(QDir(loadPath).absoluteFilePath(loopName));
     if (!audioDir.exists()){
         qCritical() << "Error loading loop layer samples, " << audioDir.absolutePath() << " not exists!";
-        return SamplesBuffer::ZERO_BUFFER;
+        out.setFrameLenght(0);
+        return false;
     }
 
     QString audioFileName("layer_" + QString::number(layerIndex) + (audioIsEncoded ? ".ogg" : ".wav"));
     QString audioFilePath(audioDir.absoluteFilePath(audioFileName));
 
-    return LoopLoader::loadAudioFile(audioFilePath, currentSampleRate);
+    return LoopLoader::loadAudioFile(audioFilePath, currentSampleRate, samplesPerInterval, out);
 }
 
 QList<LoopInfo> LoopLoader::loadLoopsInfo(const QString &loadPath, quint32 bpmToMatch)

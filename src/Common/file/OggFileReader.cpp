@@ -6,13 +6,13 @@
 
 using namespace Audio;
 
-void OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate)
+bool OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate)
 {
     // Open the ogg file
     QFile oggFile(filePath);
     if (!oggFile.open(QFile::ReadOnly)) {
         qWarning() << "Failed to open OGG file ..." << filePath;
-        return;
+        return false;
     }
 
     VorbisDecoder decoder;
@@ -37,4 +37,5 @@ void OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffe
     }
     while(decodedFrames > 0);
 
+    return true;
 }
