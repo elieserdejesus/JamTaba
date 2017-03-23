@@ -3,6 +3,7 @@
 
 #include "audio/core/SamplesBuffer.h"
 #include "LooperLayer.h"
+#include "LooperPersistence.h"
 
 #include <QtGlobal>
 #include <QObject>
@@ -43,6 +44,8 @@ public:
     ~Looper();
     void addBuffer(const SamplesBuffer &samples); // recording
     void mixToBuffer(SamplesBuffer &samples); // playing/mixing
+
+    void load(const QString &loadPath, LoopInfo loopInfo, uint currentSampleRate, quint32 samplesPerInterval);
 
     void setMainGain(float gain);
 
@@ -99,6 +102,8 @@ public:
 
     bool canSave() const;
 
+    bool isChanged() const;
+
     void setLayers(quint8 maxLayers);
     quint8 getLayers() const;
 
@@ -152,6 +157,7 @@ private:
     uint intervalPosition; // in samples
 
     bool changed; // used to decide if we can save or not layers content
+    bool loading;
 
     LooperLayer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex; // current played layer
@@ -208,6 +214,11 @@ private:
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
 };
+
+inline bool Looper::isChanged() const
+{
+    return changed;
+}
 
 inline uint Looper::getIntervalLenght() const
 {

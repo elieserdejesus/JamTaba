@@ -261,6 +261,7 @@ void LooperWindow::handleLayerMuteStateChanged(quint8 layer, quint8 state)
 void LooperWindow::updateModeComboBox()
 {
     QString selectedMode = looper->getModeString(looper->getMode());
+    QSignalBlocker blocker(ui->comboBoxPlayMode);
     for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
         if (ui->comboBoxPlayMode->itemText(i) == selectedMode) {
             ui->comboBoxPlayMode->setCurrentIndex(i);
@@ -492,6 +493,11 @@ void LooperWindow::updateControls()
             }
         }
 
+        // update looper name
+        QString currentLooperName = ui->loopNameLabel->text();
+        if (looper->isChanged() && !currentLooperName.isEmpty() && !currentLooperName.endsWith("*"))
+            ui->loopNameLabel->setText(currentLooperName + "*");
+
         updateMuteButtons();
     }
 
@@ -656,12 +662,16 @@ void LooperWindow::initializeControls()
         if(!looper || !mainController->isPlayingInNinjamRoom())
             return;
 
+        QString loopFileName = ui->loopNameLabel->text();
+        if (loopFileName.endsWith("*"))
+            loopFileName = loopFileName.left(loopFileName.length() - 1); // remove '*' in text end;
+
         bool ok;
-        QString loopFileName = QInputDialog::getText(this,
+        loopFileName = QInputDialog::getText(this,
                                              tr("Saving looper layers ..."),
                                              tr("Loop file name:"),
                                              QLineEdit::Normal,
-                                             QString(),
+                                             QString(loopFileName),
                                              &ok);
 
         if (ok && !loopFileName.isEmpty()) {
@@ -854,7 +864,7 @@ void LooperWindow::loadAudioFilesIntoLayer(const QStringList &audioFilePaths, qu
             looper->setLayers(layerIndex + 1); // expand looper layers
 
         SamplesBuffer samples(2, samplesPerInterval);
-        bool loadResult = LoopLoader::loadAudioFile(audioFilePath, currentSampleRate, samplesPerInterval, samples);
+        bool loadResult = LoopLoader::loadAudioFile(audioFilePath, currentSampleRate, samples);
         if (loadResult) {
             looper->setLayerSamples(layerIndex, samples);
             layerIndex++;
@@ -867,9 +877,8 @@ void LooperWindow::loadAudioFilesIntoLayer(const QStringList &audioFilePaths, qu
 
 void LooperWindow::updateLayersControls()
 {
-    QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
     for (quint8 layerIndex = 0; layerIndex < looper->getLayers(); ++layerIndex) {
-        LayerControlsLayout *layerControlsLayout = static_cast<LayerControlsLayout *>(gridLayout->itemAtPosition(layerIndex, 1)->layout());
+        LayerControlsLayout *layerControlsLayout = layerViews[layerIndex].controlsLayout;
 
         QSlider *gainSlider = layerControlsLayout->gainSlider;
         QSlider *panSlider = layerControlsLayout->panSlider;
@@ -887,6 +896,9 @@ void LooperWindow::updateLayersControls()
 void LooperWindow::loadLoopInfo(const QString &loopDir, const LoopInfo &loopInfo)
 {
     if (loopInfo.isValid()) {
+
+        ui->loopNameLabel->setText("");
+
         LoopLoader loader(loopDir);
         uint currentSampleRate = mainController->getSampleRate();
         quint32 samplesPerInterval = mainController->getNinjamController()->getSamplesPerInterval();
@@ -895,6 +907,8 @@ void LooperWindow::loadLoopInfo(const QString &loopDir, const LoopInfo &loopInfo
         updateLayersControls(); // update layers pan and gain after loading a loop
 
         updateModeComboBox();
+
+        ui->loopNameLabel->setText(loopInfo.getName());
 
         update();
     }
