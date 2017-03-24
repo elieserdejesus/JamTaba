@@ -444,9 +444,6 @@ void LooperWindow::updateControls()
 {
     if (looper) {
         ui->buttonRec->setChecked(looper->isRecording() || looper->isWaitingToRecord());
-        ui->buttonRec->setProperty("waiting", looper->isWaitingToRecord());
-        ui->buttonRec->style()->unpolish(ui->buttonRec);
-        ui->buttonRec->style()->polish(ui->buttonRec);
         ui->buttonRec->setEnabled(looper->canRecord());
 
         ui->buttonPlay->setChecked(looper->isPlaying());
@@ -530,6 +527,10 @@ void LooperWindow::updateButtons()
     if (!looper->isWaitingToStopInNextInterval()) {
         ui->buttonPlay->stopBlink();
     }
+
+    // update rec button
+    if (!looper->isWaitingToRecord())
+        ui->buttonRec->stopBlink();
 }
 
 void LooperWindow::setMaxLayerComboBoxValuesAvailability(int valuesToDisable)
@@ -647,8 +648,16 @@ void LooperWindow::initializeControls()
     // wire signals/slots
     connect(ui->buttonRec, &QPushButton::clicked, [=]
     {
-        if (looper)
+        if (looper) {
             looper->toggleRecording();
+            if (looper->isWaitingToRecord()) {
+                 if(!ui->buttonRec->isBlinking())
+                     ui->buttonRec->startBlink();
+            }
+            else {
+                ui->buttonRec->stopBlink();
+            }
+        }
     });
 
     connect(ui->buttonPlay, &QPushButton::clicked, [=]

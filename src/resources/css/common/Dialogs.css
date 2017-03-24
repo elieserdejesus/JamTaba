@@ -47,6 +47,13 @@ LooperWindow #buttonPlay[blinking="true"]
     border-style: solid;
 }
 
+LooperWindow #buttonRec[blinking="true"]
+{
+    background-color: yellow;
+    border-color: black;
+    border-style: solid;
+}
+
 PreferencesDialog #buttonAddVstScanFolder
 {
     background-image: url(:/images/more.png);
