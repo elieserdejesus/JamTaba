@@ -115,12 +115,14 @@ public:
 
     static LoopInfo loadLoopInfo(const QString &loopFilePath);
     static QList<LoopInfo> loadLoopsInfo(const QString &loadPath, quint32 bpmToMatch);
-    static bool loadAudioFile(const QString &filePath, uint currentSampleRate, quint32 samplesPerInterval, SamplesBuffer &out);
+    static bool loadAudioFile(const QString &filePath, uint currentSampleRate, SamplesBuffer &out);
+
+    static bool loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate, SamplesBuffer &out);
 
 private:
     QString loadPath;
 
-    static bool loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate, quint32 samplesPerInterval, SamplesBuffer &out);
+
 };
 
 } // namespace

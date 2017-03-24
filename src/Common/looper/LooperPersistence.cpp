@@ -165,27 +165,10 @@ LoopLoader::LoopLoader(const QString &loadPath)
 
 void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate, quint32 samplesPerInterval)
 {
-    Q_ASSERT(looper);
-    looper->stop();
-    looper->setMode(static_cast<Looper::Mode>(loopInfo.getLooperMode()));
-    looper->setLayers(loopInfo.getLayersCount());
-
-    bool audioIsEncoded = loopInfo.audioIsEncoded();
-    QList<LoopLayerInfo> layersInfo = loopInfo.getLayersInfo();
-    for (quint8 layer = 0; layer < layersInfo.size(); ++layer) {
-        SamplesBuffer samples(2);
-        bool loadResult = loadLoopLayerSamples(loadPath, loopInfo.getName(), layer, audioIsEncoded, currentSampleRate, samplesPerInterval, samples);
-        if (loadResult) {
-            looper->setLayerSamples(layer, samples);
-            bool layerIsLocked = layersInfo.at(layer).locked;
-            looper->setLayerLockedState(layer, layerIsLocked);
-            looper->setLayerGain(layer, Utils::linearGainToPower(layersInfo.at(layer).gain));
-            looper->setLayerPan(layer, layersInfo.at(layer).pan);
-        }
-    }
+    looper->load(loadPath, loopInfo, currentSampleRate, samplesPerInterval);
 }
 
-bool LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate, quint32 samplesPerInterval, SamplesBuffer &out)
+bool LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate, SamplesBuffer &out)
 {
     QFile audioFile(filePath);
     if (!audioFile.open(QFile::ReadOnly)) {
@@ -211,7 +194,7 @@ bool LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate, 
     return true;
 }
 
-bool LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate, quint32 samplesPerInterval, SamplesBuffer &out)
+bool LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate, SamplesBuffer &out)
 {
     QDir audioDir(QDir(loadPath).absoluteFilePath(loopName));
     if (!audioDir.exists()){
@@ -223,7 +206,7 @@ bool LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &lo
     QString audioFileName("layer_" + QString::number(layerIndex) + (audioIsEncoded ? ".ogg" : ".wav"));
     QString audioFilePath(audioDir.absoluteFilePath(audioFileName));
 
-    return LoopLoader::loadAudioFile(audioFilePath, currentSampleRate, samplesPerInterval, out);
+    return LoopLoader::loadAudioFile(audioFilePath, currentSampleRate, out);
 }
 
 QList<LoopInfo> LoopLoader::loadLoopsInfo(const QString &loadPath, quint32 bpmToMatch)

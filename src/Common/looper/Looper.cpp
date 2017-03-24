@@ -1,6 +1,7 @@
 #include "Looper.h"
 #include "LooperStates.h"
 #include "LooperLayer.h"
+#include "Utils.h"
 
 #include <QDebug>
 
@@ -21,7 +22,8 @@ Looper::Looper()
       mode(Mode::Sequence),
       resetRequested(false),
       newMaxLayersRequested(0),
-      mainGain(1.0)
+      mainGain(1.0),
+      loading(false)
 {
     initialize();
 }
@@ -37,9 +39,39 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       mode(initialMode),
       resetRequested(false),
       newMaxLayersRequested(0),
-      mainGain(1.0)
+      mainGain(1.0),
+      loading(false)
 {
     initialize();
+}
+
+void Looper::load(const QString &loadPath, LoopInfo loopInfo, uint currentSampleRate, quint32 samplesPerInterval)
+{
+    if (!loopInfo.isValid())
+        return;
+
+    setChanged(false);
+    loading = true;
+
+    stop();
+    setMode(static_cast<Looper::Mode>(loopInfo.getLooperMode()));
+    setLayers(loopInfo.getLayersCount());
+
+    bool audioIsEncoded = loopInfo.audioIsEncoded();
+    QList<LoopLayerInfo> layersInfo = loopInfo.getLayersInfo();
+    for (quint8 layer = 0; layer < layersInfo.size(); ++layer) {
+        SamplesBuffer samples(2, samplesPerInterval);
+        bool loadResult = LoopLoader::loadLoopLayerSamples(loadPath, loopInfo.getName(), layer, audioIsEncoded, currentSampleRate, samples);
+        if (loadResult) {
+            setLayerSamples(layer, samples);
+            bool layerIsLocked = layersInfo.at(layer).locked;
+            setLayerLockedState(layer, layerIsLocked);
+            setLayerGain(layer, Utils::linearGainToPower(layersInfo.at(layer).gain));
+            setLayerPan(layer, layersInfo.at(layer).pan);
+        }
+    }
+
+    loading = false;
 }
 
 void Looper::nextMuteState(quint8 layer) // called when 'mute button' is clicked
@@ -138,7 +170,7 @@ void Looper::initialize()
 void Looper::reset()
 {
     resetRequested = true;
-    changed = false;
+    setChanged(false);
 
     lastPeak.zero();
 }
@@ -220,13 +252,13 @@ void Looper::incrementCurrentLayer()
 void Looper::appendInCurrentLayer(const SamplesBuffer &samples, uint samplesToAppend)
 {
      layers[currentLayerIndex]->append(samples, samplesToAppend);
-     changed = true;
+     setChanged(true);
 }
 
 void Looper::overdubInCurrentLayer(const SamplesBuffer &samples, uint samplesToMix)
 {
     layers[currentLayerIndex]->overdub(samples, samplesToMix, intervalPosition);
-    changed = true;
+    setChanged(true);
 }
 
 void Looper::mixCurrentLayerTo(SamplesBuffer &samples, uint samplesToMix)
@@ -260,7 +292,7 @@ void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
         if (focusedLayerIndex == layerIndex)
             focusedLayerIndex = -1; // locked layer can't be focused
 
-        changed = true;
+        setChanged(true);
 
         emit layerChanged(layerIndex);
     }
@@ -647,7 +679,9 @@ QList<SamplesBuffer> Looper::getLayersSamples() const
 
 void Looper::setChanged(bool changed)
 {
-    this->changed = changed;
+    if (!loading) {
+        this->changed = changed;
+    }
 }
 
 bool Looper::canSave() const
