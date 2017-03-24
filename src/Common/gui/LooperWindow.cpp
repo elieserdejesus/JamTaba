@@ -697,7 +697,7 @@ void LooperWindow::initializeControls()
 QString LooperWindow::getOptionName(Looper::RecordingOption option)
 {
     switch (option) {
-    case Looper::HearAllLayers:   return tr("Hear all");
+    case Looper::HearAllLayers:   return tr("Hear all/Locked");
     case Looper::Overdub:           return tr("Overdub");
     }
 
