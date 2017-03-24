@@ -72,7 +72,7 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
 QMenu *LooperWindow::createResetMenu()
 {
     QMenu *resetMenu = new QMenu();
-    resetMenu->addAction(tr("Reset layers content"), looper, SLOT(reset()));
+    resetMenu->addAction(tr("Reset layers content"), looper, SLOT(resetLayersContent()));
     resetMenu->addAction(tr("Reset layers controls"), this, SLOT(resetLayersControls()));
     resetMenu->addAction(tr("Reset layers content and controls"), this, SLOT(resetAll()));
 
@@ -408,7 +408,7 @@ bool LooperWindow::eventFilter(QObject *source, QEvent *ev)
 
 void LooperWindow::resetAll()
 {
-    looper->reset();
+    looper->resetLayersContent();
     resetLayersControls();
 
     ui->loopNameLabel->setText("");

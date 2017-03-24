@@ -175,7 +175,7 @@ void Looper::initialize()
 }
 
 
-void Looper::reset()
+void Looper::resetLayersContent()
 {
     resetRequested = true;
     setChanged(false);
@@ -392,6 +392,7 @@ void Looper::clearLayer(quint8 layer)
     if (canClearLayer(layer)) {
         layers[layer]->zero();
         setChanged(true);
+        emit layerChanged(layer);
     }
 }
 

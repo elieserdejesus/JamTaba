@@ -145,14 +145,14 @@ public:
     void waitToStopInNextInterval();
 
 public slots:
-    void reset(); // clear all
+    void resetLayersContent(); // clear all
 
 signals:
     void stateChanged();
     void modeChanged();
     void maxLayersChanged(quint8 newMaxLayers);
     void currentLayerChanged(quint8 currentLayer);
-    void layerChanged(quint8 layer); // layer pan, gain, locked on content changed
+    void layerChanged(quint8 layer); // layer pan, gain, locked or content changed
     void layerMuteStateChanged(quint8 layer, quint8 state);
 
 private:
