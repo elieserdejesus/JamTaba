@@ -84,7 +84,7 @@ public:
         }
 
         if (looper) {
-            if (looper->isRecording() || looper->isWaiting()) {
+            if (looper->isRecording() || looper->isWaitingToRecord()) {
                 return recordingIcon;
             }
             else if (looper->isPlaying()) {

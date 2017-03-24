@@ -30,14 +30,18 @@ BlinkableButton::~BlinkableButton()
 
 void BlinkableButton::updateAllBlinkableButtons()
 {
+    if (BlinkableButton::instances.isEmpty())
+        return;
+
     const quint64 now = QDateTime::currentMSecsSinceEpoch();
     const bool canToggle = now - BlinkableButton::lastBlinkToggle >= BlinkableButton::blinkTime;
     if (canToggle) {
         blinkPropertySetted = !blinkPropertySetted;
         BlinkableButton::lastBlinkToggle = QDateTime::currentMSecsSinceEpoch();
         for (BlinkableButton *button : BlinkableButton::instances) {
-            if (button->blinking)
+            if (button->isBlinking()) {
                 button->setBlinkProperty(BlinkableButton::blinkPropertySetted);
+            }
         }
     }
 }

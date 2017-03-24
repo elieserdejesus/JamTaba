@@ -180,7 +180,7 @@ void LooperWavePanel::mouseMoveEvent(QMouseEvent *ev)
 void LooperWavePanel::paintEvent(QPaintEvent *ev)
 {
 
-    if (!beatsPerInterval || (looper->isWaiting() && looper->getCurrentLayerIndex() == layerID)) {
+    if (!beatsPerInterval || (looper->isWaitingToRecord() && looper->getCurrentLayerIndex() == layerID)) {
         return;
     }
 

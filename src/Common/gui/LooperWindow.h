@@ -173,7 +173,7 @@ private:
     void updateLayersControls();
     void updateModeComboBox();
 
-    void updateMuteButtons();
+    void updateButtons();
 
     int currentBeat;
 };

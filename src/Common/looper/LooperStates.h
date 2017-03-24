@@ -68,10 +68,10 @@ private:
 
 // -------------------------------------------------------
 
-class WaitingState : public LooperState
+class WaitingToRecordState : public LooperState
 {
 public:
-    WaitingState(Looper *looper);
+    WaitingToRecordState(Looper *looper);
     void handleNewCycle(uint samplesInCycle) override;
     inline bool isWaiting() const override { return true ;}
 };

@@ -40,6 +40,13 @@ LooperWindow #muteButton[blinking="true"]
     color: white;
 }
 
+LooperWindow #buttonPlay[blinking="true"]
+{
+    background-color: rgb(0, 195, 0);
+    border-color: black;
+    border-style: solid;
+}
+
 PreferencesDialog #buttonAddVstScanFolder
 {
     background-image: url(:/images/more.png);

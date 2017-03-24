@@ -40,9 +40,17 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       resetRequested(false),
       newMaxLayersRequested(0),
       mainGain(1.0),
-      loading(false)
+      loading(false),
+      waitingToStop(false)
 {
     initialize();
+}
+
+void Looper::waitToStopInNextInterval()
+{
+    if (isPlaying()) {
+        waitingToStop = true;
+    }
 }
 
 void Looper::load(const QString &loadPath, LoopInfo loopInfo, uint currentSampleRate, quint32 samplesPerInterval)
@@ -332,14 +340,14 @@ void Looper::startRecording()
 
 void Looper::toggleRecording()
 {
-    if (isRecording() || isWaiting()) {
+    if (isRecording() || isWaitingToRecord()) {
         play(); // auto play when recording is finished (rec button is pressed)
     }
     else {
         quint8 startFrom = (focusedLayerIndex >= 0) ? focusedLayerIndex : 0;
         int firstRecordingLayer = getFirstUnlockedLayerIndex(startFrom);
         if (firstRecordingLayer >= 0) {
-            setState(new WaitingState(this));
+            setState(new WaitingToRecordState(this));
             setCurrentLayer(firstRecordingLayer);
         }
         else {
@@ -350,10 +358,15 @@ void Looper::toggleRecording()
 
 void Looper::togglePlay()
 {
-    if (isPlaying())
-        stop();
-    else
+    if (isPlaying()) {
+        if (isWaitingToStopInNextInterval())
+            stop();
+        else
+            waitToStopInNextInterval();
+    }
+    else {
         play();
+    }
 }
 
 void Looper::stop()
@@ -392,7 +405,7 @@ bool Looper::canSelectLayers() const
     if (maxLayers <= 1)
         return false;
 
-    if (isRecording() || isWaiting()) // can't select layer while recording or waiting
+    if (isRecording() || isWaitingToRecord()) // can't select layer while recording or waiting
         return false;
 
     if (getLockedLayers() >= maxLayers) { // all layers locked, can't select any layer
@@ -518,6 +531,11 @@ void Looper::startNewCycle(uint samplesInCycle)
     if (samplesInCycle != intervalLenght)
         intervalLenght = samplesInCycle;
 
+    if (waitingToStop) {
+        stop();
+        waitingToStop = false;
+    }
+
     intervalPosition = 0;
 
     bool isOverdubbing = getOption(Looper::Overdub);
@@ -615,7 +633,7 @@ QString Looper::getModeString(Mode mode)
     return "Error";
 }
 
-bool Looper::isWaiting() const
+bool Looper::isWaitingToRecord() const
 {
     return state->isWaiting();
 }
@@ -686,7 +704,7 @@ void Looper::setChanged(bool changed)
 
 bool Looper::canSave() const
 {
-    if (!changed || isWaiting() || isRecording())
+    if (!changed || isWaitingToRecord() || isRecording())
         return false;
 
     for (int l = 0; l < maxLayers; ++l) {
