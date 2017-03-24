@@ -411,6 +411,8 @@ void LooperWindow::resetAll()
 {
     looper->reset();
     resetLayersControls();
+
+    ui->loopNameLabel->setText("");
 }
 
 void LooperWindow::resetLayersControls()

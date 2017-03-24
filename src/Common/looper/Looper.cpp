@@ -681,7 +681,6 @@ void Looper::setChanged(bool changed)
 {
     if (!loading) {
         this->changed = changed;
-        qDebug() << "setting changed to " << changed;
     }
 }
 
