@@ -2,26 +2,52 @@
 
 #include <QVariant>
 #include <QStyle>
+#include <QDateTime>
 
-BlinkableButton::BlinkableButton(const QString &text)
-    : QPushButton(text)
+QList<BlinkableButton *> BlinkableButton::instances; // static instances list
+quint64 BlinkableButton::lastBlinkToggle = 0;
+quint32 BlinkableButton::blinkTime = 250;
+bool BlinkableButton::blinkPropertySetted = false;
+
+BlinkableButton::BlinkableButton(const QString &text, QWidget *parent)
+    : QPushButton(text, parent),
+      blinking(false)
 {
-    connect(&timer, SIGNAL(timeout()), this, SLOT(updateBlinkProperty()));
+    instances.append(this);
 }
 
-BlinkableButton::BlinkableButton(const QString &text, quint32 blinkTime)
-    : QPushButton(text)
+BlinkableButton::BlinkableButton(QWidget *parent)
+    : QPushButton(parent),
+      blinking(false)
 {
-    timer.setInterval(blinkTime);
-    connect(&timer, SIGNAL(timeout()), this, SLOT(updateBlinkProperty()));
+    instances.append(this);
+}
+
+BlinkableButton::~BlinkableButton()
+{
+    instances.removeOne(this);
+}
+
+void BlinkableButton::updateAllBlinkableButtons()
+{
+    const quint64 now = QDateTime::currentMSecsSinceEpoch();
+    const bool canToggle = now - BlinkableButton::lastBlinkToggle >= BlinkableButton::blinkTime;
+    if (canToggle) {
+        blinkPropertySetted = !blinkPropertySetted;
+        BlinkableButton::lastBlinkToggle = QDateTime::currentMSecsSinceEpoch();
+        for (BlinkableButton *button : BlinkableButton::instances) {
+            if (button->blinking)
+                button->setBlinkProperty(BlinkableButton::blinkPropertySetted);
+        }
+    }
 }
 
 void BlinkableButton::setBlinkTime(quint32 blinkTime)
 {
-    timer.setInterval(blinkTime);
+    BlinkableButton::blinkTime = blinkTime;
 }
 
-void BlinkableButton::updateBlinkProperty(bool propertySetted)
+void BlinkableButton::setBlinkProperty(bool propertySetted)
 {
     setProperty("blinking", QVariant::fromValue(propertySetted));
 
@@ -29,20 +55,14 @@ void BlinkableButton::updateBlinkProperty(bool propertySetted)
     style()->polish(this);
 }
 
-void BlinkableButton::updateBlinkProperty()
-{
-    bool propertySetted = property("blinking").toBool();
-    updateBlinkProperty(!propertySetted);
-}
-
 void BlinkableButton::startBlink()
 {
-    timer.start();
+    blinking = true;
+    setBlinkProperty(blinkPropertySetted);
 }
 
 void BlinkableButton::stopBlink()
 {
-    timer.stop();
-
-    updateBlinkProperty(false);
+    blinking = false;
+    setBlinkProperty(false);
 }

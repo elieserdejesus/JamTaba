@@ -372,8 +372,7 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
 
     });
 
-    static const quint32 blinkTime = 250;
-    muteButton = new BlinkableButton(QStringLiteral("M"), blinkTime);
+    muteButton = new BlinkableButton(QStringLiteral("M"));
     muteButton->setObjectName("muteButton");
     connect(muteButton, &BlinkableButton::clicked, [looper, layerIndex](){
         looper->nextMuteState(layerIndex);
@@ -518,6 +517,12 @@ void LooperWindow::updateMuteButtons()
         // disable mute buttons for non-locked layers
         bool canDisableMuteButton = looper->getOption(Looper::PlayLockedLayers) && !looper->layerIsLocked(l);
         layerView.controlsLayout->enableMuteButton(!canDisableMuteButton);
+
+        auto *muteButton = layerView.controlsLayout->muteButton;
+        if (muteButton->isBlinking() && !looper->isPlaying()) {
+            looper->nextMuteState(l);
+            muteButton->stopBlink();
+        }
     }
 }
 

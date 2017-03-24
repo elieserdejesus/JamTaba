@@ -9,20 +9,30 @@ class BlinkableButton : public QPushButton
     Q_OBJECT
 
 public:
-    BlinkableButton(const QString &text);
-    BlinkableButton(const QString &text, quint32 blinkTime = 500);
+    BlinkableButton(QWidget *parent = nullptr);
+    BlinkableButton(const QString &text, QWidget *parent = nullptr);
+    ~BlinkableButton();
     void startBlink();
     void stopBlink();
-    void setBlinkProperty(const QString &propertyName);
-    void setBlinkTime(quint32 blinkTime);
+    bool isBlinking() const;
 
-private slots:
-    void updateBlinkProperty();
-    void updateBlinkProperty(bool propertySetted);
+    static void setBlinkTime(quint32 blinkTime);
+    static void updateAllBlinkableButtons(); // called periodically from MainWindow timer
 
 private:
-    QTimer timer;
+    bool blinking;
 
+    void setBlinkProperty(bool propertySetted);
+
+    static QList<BlinkableButton *> instances;
+    static quint64 lastBlinkToggle;
+    static quint32 blinkTime;
+    static bool blinkPropertySetted;
 };
+
+inline bool BlinkableButton::isBlinking() const
+{
+    return blinking;
+}
 
 #endif // BUTTONBLINKER_H
