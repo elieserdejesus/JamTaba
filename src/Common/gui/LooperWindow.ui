@@ -166,7 +166,7 @@
          </sizepolicy>
         </property>
         <property name="toolTip">
-         <string>Reset all layers</string>
+         <string>Reset</string>
         </property>
         <property name="text">
          <string/>
