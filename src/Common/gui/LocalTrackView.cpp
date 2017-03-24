@@ -295,7 +295,7 @@ QPushButton *LocalTrackView::createLooperButton()
 
 void LocalTrackView::enableLopperButton(bool enabled)
 {
-    buttonLooper->setEnabled(enabled);
+    buttonLooper->setEnabled(enabled && !getInputNode()->isRoutingMidiInput());
 }
 
 QPushButton *LocalTrackView::createStereoInversionButton()
