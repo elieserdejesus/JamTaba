@@ -104,7 +104,7 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
     if (!looper || !ninjamController)
         return;
 
-    if (looper->isWaiting()) {
+    if (looper->isWaitingToRecord()) {
 
         QPainter painter(this);
 
@@ -146,7 +146,7 @@ void LooperWindow::updateDrawings()
     if (!looper)
         return;
 
-    if (!looper->isWaiting()) {
+    if (!looper->isWaitingToRecord()) {
         for (const LayerView &layerView : layerViews.values()) {
             LooperWavePanel *wavePanel = layerView.wavePanel;
             if (wavePanel->isVisible())
@@ -372,8 +372,7 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
 
     });
 
-    static const quint32 blinkTime = 250;
-    muteButton = new BlinkableButton(QStringLiteral("M"), blinkTime);
+    muteButton = new BlinkableButton(QStringLiteral("M"));
     muteButton->setObjectName("muteButton");
     connect(muteButton, &BlinkableButton::clicked, [looper, layerIndex](){
         looper->nextMuteState(layerIndex);
@@ -444,14 +443,11 @@ void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
 void LooperWindow::updateControls()
 {
     if (looper) {
-        ui->buttonRec->setChecked(looper->isRecording() || looper->isWaiting());
-        ui->buttonRec->setProperty("waiting", looper->isWaiting());
-        ui->buttonRec->style()->unpolish(ui->buttonRec);
-        ui->buttonRec->style()->polish(ui->buttonRec);
+        ui->buttonRec->setChecked(looper->isRecording() || looper->isWaitingToRecord());
         ui->buttonRec->setEnabled(looper->canRecord());
 
         ui->buttonPlay->setChecked(looper->isPlaying());
-        bool canEnablePlayButton = !looper->isWaiting() && !looper->isRecording();
+        bool canEnablePlayButton = !looper->isWaitingToRecord() && !looper->isRecording();
         ui->buttonPlay->setEnabled(canEnablePlayButton);
 
         ui->comboBoxPlayMode->setEnabled(looper->isPlaying() || looper->isStopped());
@@ -500,14 +496,15 @@ void LooperWindow::updateControls()
         if (looper->isChanged() && !currentLooperName.isEmpty() && !currentLooperName.endsWith("*"))
             ui->loopNameLabel->setText(currentLooperName + "*");
 
-        updateMuteButtons();
+        updateButtons();
     }
 
     update();
 }
 
-void LooperWindow::updateMuteButtons()
+void LooperWindow::updateButtons()
 {
+    // update mute buttons
     const bool canShowMuteButtons = looper->getMode() == Looper::AllLayers;
     for (uint l = 0; l < looper->getLayers(); ++l) {
         auto layerView = layerViews[l];
@@ -518,7 +515,22 @@ void LooperWindow::updateMuteButtons()
         // disable mute buttons for non-locked layers
         bool canDisableMuteButton = looper->getOption(Looper::PlayLockedLayers) && !looper->layerIsLocked(l);
         layerView.controlsLayout->enableMuteButton(!canDisableMuteButton);
+
+        auto *muteButton = layerView.controlsLayout->muteButton;
+        if (muteButton->isBlinking() && !looper->isPlaying()) {
+            looper->nextMuteState(l);
+            muteButton->stopBlink();
+        }
     }
+
+    // update play button
+    if (!looper->isWaitingToStopInNextInterval()) {
+        ui->buttonPlay->stopBlink();
+    }
+
+    // update rec button
+    if (!looper->isWaitingToRecord())
+        ui->buttonRec->stopBlink();
 }
 
 void LooperWindow::setMaxLayerComboBoxValuesAvailability(int valuesToDisable)
@@ -636,14 +648,31 @@ void LooperWindow::initializeControls()
     // wire signals/slots
     connect(ui->buttonRec, &QPushButton::clicked, [=]
     {
-        if (looper)
+        if (looper) {
             looper->toggleRecording();
+            if (looper->isWaitingToRecord()) {
+                 if(!ui->buttonRec->isBlinking())
+                     ui->buttonRec->startBlink();
+            }
+            else {
+                ui->buttonRec->stopBlink();
+            }
+        }
     });
 
     connect(ui->buttonPlay, &QPushButton::clicked, [=]
     {
-        if (looper)
+        if (looper) {
             looper->togglePlay();
+            if (looper->isPlaying()) {
+                if (looper->isWaitingToStopInNextInterval()) {
+                    ui->buttonPlay->startBlink();
+                }
+            }
+            else {
+                ui->buttonPlay->stopBlink();
+            }
+        }
     });
 
     connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)

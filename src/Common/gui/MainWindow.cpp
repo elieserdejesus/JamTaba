@@ -13,6 +13,7 @@
 #include "JamRoomViewPanel.h"
 #include "ChordsPanel.h"
 #include "MapWidget.h"
+#include "BlinkableButton.h"
 
 #include "LooperWindow.h"
 
@@ -1054,6 +1055,9 @@ void MainWindow::timerEvent(QTimerEvent *)
     Audio::AudioPeak masterPeak = mainController->getMasterPeak();
     ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), masterPeak.getLeftRMS());
     ui.masterMeterR->setPeak(masterPeak.getRightPeak(), masterPeak.getRightRMS());
+
+    // update all blinkable buttons
+    BlinkableButton::updateAllBlinkableButtons();
 }
 
 // ++++++++++++=

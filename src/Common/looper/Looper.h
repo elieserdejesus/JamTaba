@@ -17,7 +17,7 @@ namespace Audio {
 class LooperState;
 class PlayingState;
 class RecordingState;
-class WaitingState;
+class WaitingToRecordState;
 
 // +++++++++++++++++++++++++++++=
 
@@ -28,7 +28,7 @@ class Looper : public QObject
     friend class LooperState;
     friend class PlayingState;
     friend class RecordingState;
-    friend class WaitingState;
+    friend class WaitingToRecordState;
 
 public:
 
@@ -93,7 +93,7 @@ public:
     quint8 getCurrentLayerIndex() const;
     quint8 getFocusedLayerIndex() const;
 
-    bool isWaiting() const;
+    bool isWaitingToRecord() const;
     bool isPlaying() const;
     bool isRecording() const;
     bool isStopped() const;
@@ -141,6 +141,9 @@ public:
 
     void setChanged(bool changed);
 
+    bool isWaitingToStopInNextInterval() const;
+    void waitToStopInNextInterval();
+
 public slots:
     void reset(); // clear all
 
@@ -158,6 +161,7 @@ private:
 
     bool changed; // used to decide if we can save or not layers content
     bool loading;
+    bool waitingToStop; // waiting to stop in next interval
 
     LooperLayer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex; // current played layer
@@ -214,6 +218,11 @@ private:
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
 };
+
+inline bool Looper::isWaitingToStopInNextInterval() const
+{
+    return waitingToStop;
+}
 
 inline bool Looper::isChanged() const
 {

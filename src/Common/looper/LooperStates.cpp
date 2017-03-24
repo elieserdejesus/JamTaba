@@ -141,13 +141,13 @@ void RecordingState::addBuffer(const SamplesBuffer &samples, uint samplesToProce
 
 // -----------------------------------------------------------------------------
 
-WaitingState::WaitingState(Looper *looper)
+WaitingToRecordState::WaitingToRecordState(Looper *looper)
     : LooperState(looper)
 {
 
 }
 
-void WaitingState::handleNewCycle(uint samplesInCycle)
+void WaitingToRecordState::handleNewCycle(uint samplesInCycle)
 {
     Q_UNUSED(samplesInCycle)
 

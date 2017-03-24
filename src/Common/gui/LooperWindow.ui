@@ -51,7 +51,7 @@
        <number>0</number>
       </property>
       <item alignment="Qt::AlignBottom">
-       <widget class="QPushButton" name="buttonRec">
+       <widget class="BlinkableButton" name="buttonRec">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
           <horstretch>0</horstretch>
@@ -71,7 +71,7 @@
        </widget>
       </item>
       <item alignment="Qt::AlignBottom">
-       <widget class="QPushButton" name="buttonPlay">
+       <widget class="BlinkableButton" name="buttonPlay">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
           <horstretch>0</horstretch>
@@ -440,6 +440,11 @@
    <extends>QWidget</extends>
    <header>PeakMeter.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlinkableButton</class>
+   <extends>QPushButton</extends>
+   <header>BlinkableButton.h</header>
   </customwidget>
  </customwidgets>
  <resources>
