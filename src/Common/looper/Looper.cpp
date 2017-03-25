@@ -344,6 +344,7 @@ void Looper::togglePlay()
 void Looper::stop()
 {
     setState(new StoppedState());
+    waitingToStop = false;
 }
 
 void Looper::play()
