@@ -14,34 +14,6 @@ LooperState::LooperState(Looper *looper)
 
 }
 
-void LooperState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
-{
-    Q_UNUSED (samples)
-    Q_UNUSED(samplesToProcess)
-}
-
-void LooperState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
-{
-    //this code is shared by Playing and Waiting states
-
-    switch (looper->mode) {
-    case Looper::Sequence:
-    case Looper::SelectedLayer:
-        looper->mixCurrentLayerTo(samples, samplesToProcess);
-        break;
-    case Looper::AllLayers:
-    {
-        bool isPlayingLockedLayersOnly = looper->getOption(Looper::PlayLockedLayers);
-        if (!isPlayingLockedLayersOnly)
-            looper->mixAllLayers(samples, samplesToProcess); // mix all layers, no excluded layers
-        else
-            looper->mixLockedLayers(samples, samplesToProcess); // mix locked only
-        break;
-    }
-    default:
-        qCritical() << looper->mode << " not implemented yet!";
-    }
-}
 
 // ------------------------------------------------
 
@@ -59,6 +31,12 @@ void StoppedState::handleNewCycle(uint samplesInCycle)
 void StoppedState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 {
     Q_UNUSED(samples)
+    Q_UNUSED(samplesToProcess)
+}
+
+void StoppedState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
+{
+    Q_UNUSED (samples)
     Q_UNUSED(samplesToProcess)
 }
 
@@ -80,10 +58,37 @@ void PlayingState::handleNewCycle(uint samplesInCycle)
     // ALL_LAYERS and SELECTED_LAYER_ONLY play states are not touching in currentLayerIndex
 }
 
+void PlayingState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
+{
+    Q_UNUSED(samples);
+    Q_UNUSED(samplesToProcess);
+}
+
+void PlayingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
+{
+    switch (looper->mode) {
+    case Looper::Sequence:
+    case Looper::SelectedLayer:
+        looper->mixCurrentLayerTo(samples, samplesToProcess);
+        break;
+    case Looper::AllLayers:
+    {
+        bool isPlayingLockedLayersOnly = looper->getOption(Looper::PlayLockedLayers);
+        if (!isPlayingLockedLayersOnly)
+            looper->mixAllLayers(samples, samplesToProcess); // mix all layers, no excluded layers
+        else
+            looper->mixLockedLayers(samples, samplesToProcess); // mix locked only
+        break;
+    }
+    default:
+        qCritical() << looper->mode << " not implemented yet!";
+    }
+}
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
 RecordingState::RecordingState(Looper *looper, quint8 recordingLayer)
-    : LooperState(looper),
+    : WaitingToRecordState(looper),
       firstRecordingLayer(recordingLayer)
 {
 
@@ -111,7 +116,15 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
     }
 }
 
-void RecordingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
+// -----------------------------------------------------------------------------
+
+WaitingToRecordState::WaitingToRecordState(Looper *looper)
+    : LooperState(looper)
+{
+
+}
+
+void WaitingToRecordState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 {
     samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
 
@@ -127,7 +140,7 @@ void RecordingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
     }
 }
 
-void RecordingState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
+void WaitingToRecordState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
 {
     if (looper->currentLayerIsLocked()) // avoid recording in locked layers
         return;
@@ -137,14 +150,6 @@ void RecordingState::addBuffer(const SamplesBuffer &samples, uint samplesToProce
         looper->appendInCurrentLayer(samples, samplesToProcess);
     else
         looper->overdubInCurrentLayer(samples, samplesToProcess);
-}
-
-// -----------------------------------------------------------------------------
-
-WaitingToRecordState::WaitingToRecordState(Looper *looper)
-    : LooperState(looper)
-{
-
 }
 
 void WaitingToRecordState::handleNewCycle(uint samplesInCycle)

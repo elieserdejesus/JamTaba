@@ -28,7 +28,7 @@ public:
     void reset();
 
     void overdub(const SamplesBuffer &samples, uint samplesToMix, uint startPosition);
-    void append(const SamplesBuffer &samples, uint samplesToAppend);
+    void append(const SamplesBuffer &samples, uint samplesToAppend, uint startPosition);
 
     void prepareForNewCycle(uint samplesInNewCycle, bool isOverdubbing);
 

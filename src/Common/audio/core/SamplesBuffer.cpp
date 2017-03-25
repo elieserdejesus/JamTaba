@@ -165,6 +165,9 @@ void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain,
 
 void SamplesBuffer::zero()
 {
+    if (!frameLenght)
+        return;
+
     const uint bytesToProcess = frameLenght * sizeof(float);
     for (unsigned int c = 0; c < channels; ++c) {
         Q_ASSERT(samples[c].size() >= frameLenght);

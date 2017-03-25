@@ -23,7 +23,8 @@ Looper::Looper()
       resetRequested(false),
       newMaxLayersRequested(0),
       mainGain(1.0),
-      loading(false)
+      loading(false),
+      waitingToStop(false)
 {
     initialize();
 }
@@ -51,35 +52,6 @@ void Looper::waitToStopInNextInterval()
     if (isPlaying()) {
         waitingToStop = true;
     }
-}
-
-void Looper::load(const QString &loadPath, LoopInfo loopInfo, uint currentSampleRate, quint32 samplesPerInterval)
-{
-    if (!loopInfo.isValid())
-        return;
-
-    setChanged(false);
-    loading = true;
-
-    stop();
-    setMode(static_cast<Looper::Mode>(loopInfo.getLooperMode()));
-    setLayers(loopInfo.getLayersCount());
-
-    bool audioIsEncoded = loopInfo.audioIsEncoded();
-    QList<LoopLayerInfo> layersInfo = loopInfo.getLayersInfo();
-    for (quint8 layer = 0; layer < layersInfo.size(); ++layer) {
-        SamplesBuffer samples(2, samplesPerInterval);
-        bool loadResult = LoopLoader::loadLoopLayerSamples(loadPath, loopInfo.getName(), layer, audioIsEncoded, currentSampleRate, samples);
-        if (loadResult) {
-            setLayerSamples(layer, samples);
-            bool layerIsLocked = layersInfo.at(layer).locked;
-            setLayerLockedState(layer, layerIsLocked);
-            setLayerGain(layer, Utils::linearGainToPower(layersInfo.at(layer).gain));
-            setLayerPan(layer, layersInfo.at(layer).pan);
-        }
-    }
-
-    loading = false;
 }
 
 void Looper::nextMuteState(quint8 layer) // called when 'mute button' is clicked
@@ -259,7 +231,7 @@ void Looper::incrementCurrentLayer()
 
 void Looper::appendInCurrentLayer(const SamplesBuffer &samples, uint samplesToAppend)
 {
-     layers[currentLayerIndex]->append(samples, samplesToAppend);
+     layers[currentLayerIndex]->append(samples, samplesToAppend, intervalPosition);
      setChanged(true);
 }
 
@@ -344,7 +316,7 @@ void Looper::toggleRecording()
         play(); // auto play when recording is finished (rec button is pressed)
     }
     else {
-        quint8 startFrom = (focusedLayerIndex >= 0) ? focusedLayerIndex : 0;
+        quint8 startFrom = (focusedLayerIndex >= 0) ? focusedLayerIndex : currentLayerIndex;
         int firstRecordingLayer = getFirstUnlockedLayerIndex(startFrom);
         if (firstRecordingLayer >= 0) {
             setState(new WaitingToRecordState(this));
@@ -439,7 +411,7 @@ void Looper::setCurrentLayer(quint8 newLayer)
     }
 }
 
-void Looper::setLayers(quint8 maxLayers)
+void Looper::setLayers(quint8 maxLayers, bool processChangeRequestNow)
 {
     if (maxLayers < 1) {
         maxLayers = 1;
@@ -449,6 +421,9 @@ void Looper::setLayers(quint8 maxLayers)
     }
 
     newMaxLayersRequested = maxLayers; // schedule the max layer change to next process
+
+    if (processChangeRequestNow)
+        processChangeRequests();
 }
 
 int Looper::getFirstUnlockedLayerIndex(quint8 startingFrom) const

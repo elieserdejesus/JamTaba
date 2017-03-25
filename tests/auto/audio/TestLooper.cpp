@@ -5,27 +5,9 @@
 #include <QTest>
 #include <QtGlobal>
 
-#include "audio/looper/AudioLooper.h"
+#include "looper/Looper.h"
 
 using namespace Audio;
-
-void TestLooper::alternatingOverdubbingWhileRecording()
-{
-    Looper looper;
-    looper.setLayers(2);
-    looper.selectLayer(0);
-    looper.setMode(Looper::SEQUENCE);
-
-    looper.toggleRecording(); // waiting state
-
-    for (quint8 i = 0; i < looper.getLayers(); ++i) {
-        looper.startNewCycle(4);
-        looper.setOption(Looper::Overdub, true);
-        looper.addBuffer(createBuffer("1, 1, 1, 1, 1"));
-        looper.setOption(Looper::Overdub, false);
-        looper.addBuffer(createBuffer("1, 1, 1"));
-    }
-}
 
 void TestLooper::autoPlayAfterRecording()
 {
@@ -36,7 +18,7 @@ void TestLooper::autoPlayAfterRecording()
     QFETCH(QList<quint8>, expectedRecLayers);
 
     Looper looper;
-    looper.setLayers(layers);
+    looper.setLayers(layers, true);
     looper.selectLayer(recLayer);
     looper.setMode(looperMode);
     looper.setOption(Looper::Overdub, false);
@@ -63,65 +45,65 @@ void TestLooper::autoPlayAfterRecording_data()
     QTest::addColumn<QList<quint8>>("lockedLayers");
     QTest::addColumn<QList<quint8>>("expectedRecLayers");
 
-    QTest::newRow("SEQUENCE, 4 layers, no locked layers, rec layer=0")
-            << Looper::SEQUENCE       // looper mode
+    QTest::newRow("Sequence, 4 layers, no locked layers, rec layer=0")
+            << Looper::Sequence       // looper mode
             << quint8(4)              // layers
             << quint8(0)       // rec layer
             << (QList<quint8>())      // locked layers
             << (QList<quint8>() << 0 << 1 << 2 << 3);     // expected rec layers
 
-    QTest::newRow("SEQUENCE, 4 layers, no locked layers, rec layer=2")
-            << Looper::SEQUENCE       // looper mode
+    QTest::newRow("Sequence, 4 layers, no locked layers, rec layer=2")
+            << Looper::Sequence       // looper mode
             << quint8(4)              // layers
             << quint8(2)       // rec layer
             << (QList<quint8>())      // locked layers
             << (QList<quint8>() << 2 << 3);     // expected rec layers
 
-    QTest::newRow("SEQUENCE, 4 layers, no locked layers, rec layer=3")
-            << Looper::SEQUENCE       // looper mode
+    QTest::newRow("Sequence, 4 layers, no locked layers, rec layer=3")
+            << Looper::Sequence       // looper mode
             << quint8(4)              // layers
             << quint8(3)       // rec layer
             << (QList<quint8>())      // locked layers
             << (QList<quint8>() << 3);     // expected rec layers
 
 
-    QTest::newRow("SEQUENCE, 4 layers, first layer locked, rec layer=0")
-            << Looper::SEQUENCE                 // looper mode
+    QTest::newRow("Sequence, 4 layers, first layer locked, rec layer=0")
+            << Looper::Sequence                 // looper mode
             << quint8(4)                        // layers
             << quint8(0)                        // rec layer
             << (QList<quint8>() << 0)           // locked layers
             << (QList<quint8>() << 1 << 2 << 3);// expected recording layers
 
-    QTest::newRow("SEQUENCE, 4 layers, 2nd layer locked, rec layer=0")
-            << Looper::SEQUENCE                 // looper mode
+    QTest::newRow("Sequence, 4 layers, 2nd layer locked, rec layer=0")
+            << Looper::Sequence                 // looper mode
             << quint8(4)                        // layers
             << quint8(0)                        // rec layer
             << (QList<quint8>() << 1)           // locked layers
             << (QList<quint8>() << 0 << 2 << 3);// expected recording layers
 
-    QTest::newRow("SEQUENCE, 4 layers, 3rd layer locked, rec layer=0")
-            << Looper::SEQUENCE                 // looper mode
+    QTest::newRow("Sequence, 4 layers, 3rd layer locked, rec layer=0")
+            << Looper::Sequence                 // looper mode
             << quint8(4)                        // layers
             << quint8(0)                        // rec layer
             << (QList<quint8>() << 2)           // locked layers
             << (QList<quint8>() << 0 << 1 << 3);// expected recording layers
 
-    QTest::newRow("SEQUENCE, 4 layers, First 2 layers locked, rec layer=0")
-            << Looper::SEQUENCE                 // looper mode
+    QTest::newRow("Sequence, 4 layers, First 2 layers locked, rec layer=0")
+            << Looper::Sequence                 // looper mode
             << quint8(4)                        // layers
             << quint8(0)                        // rec layer
             << (QList<quint8>() << 0 << 1)      // locked layers
             << (QList<quint8>() << 2 << 3);// expected recording layers
 
-    QTest::newRow("SEQUENCE, 4 layers, Last 2 layers locked, rec layer=0")
-            << Looper::SEQUENCE                 // looper mode
+    QTest::newRow("Sequence, 4 layers, Last 2 layers locked, rec layer=0")
+            << Looper::Sequence                 // looper mode
             << quint8(4)                        // layers
             << quint8(0)                        // rec layer
             << (QList<quint8>() << 2 << 3)      // locked layers
             << (QList<quint8>() << 0 << 1);// expected recording layers
 
-    QTest::newRow("SEQUENCE, 4 layers, Last 2 layers locked, rec layer=3")
-            << Looper::SEQUENCE                 // looper mode
+    QTest::newRow("Sequence, 4 layers, Last 2 layers locked, rec layer=3")
+            << Looper::Sequence                 // looper mode
             << quint8(4)                        // layers
             << quint8(3)                        // rec layer
             << (QList<quint8>() << 2 << 3)      // locked layers
@@ -137,7 +119,7 @@ void TestLooper::invalidRecordingStart()
     QFETCH(QList<quint8>, lockedLayers);
 
     Looper looper;
-    looper.setLayers(layers);
+    looper.setLayers(layers, true);
     looper.selectLayer(recLayer);
     looper.setMode(looperMode);
 
@@ -156,8 +138,8 @@ void TestLooper::invalidRecordingStart_data()
     QTest::addColumn<quint8>("recLayer");
     QTest::addColumn<QList<quint8>>("lockedLayers");
 
-    QTest::newRow("SEQUENCE, 4 layers, rec layer=0, all layers locked")
-            << Looper::SEQUENCE                         // looper mode
+    QTest::newRow("Sequence, 4 layers, rec layer=0, all layers locked")
+            << Looper::Sequence                         // looper mode
             << quint8(4)                                // layers
             << quint8(0)                                // rec layer
             << (QList<quint8>() << 0 << 1 << 2 << 3);    // locked layers
@@ -170,9 +152,9 @@ void TestLooper::playing()
     QFETCH(QList<quint8>, expectedCurrentLayers);
 
     Looper looper;
-    looper.setLayers(layers);
+    looper.setLayers(layers, true);
     looper.selectLayer(layers - 1); // simulate looper in last layer, and in next interval the layer will be the first
-    looper.setMode(Looper::SEQUENCE);
+    looper.setMode(Looper::Sequence);
     looper.setOption(Looper::PlayLockedLayers, !lockedLayers.isEmpty());
 
     // lock layers
@@ -184,8 +166,8 @@ void TestLooper::playing()
     looper.play();
 
     for (int l = 0; l < expectedCurrentLayers.size(); ++l) {
-        looper.startNewCycle(2); // start new cycle and increment layer index
         Q_ASSERT(looper.getCurrentLayerIndex() == expectedCurrentLayers.at(l));
+        looper.startNewCycle(2); // start new cycle and increment layer index
     }
 }
 
@@ -200,10 +182,51 @@ void TestLooper::playing_data()
     QTest::newRow("1 layers, 1st layer locked, playing locked only") << quint8(1) << (QSet<quint8>() << 0) << (QList<quint8>() << 0);
     QTest::newRow("2 layers, All layers locked, playing locked only") << quint8(2) << (QSet<quint8>() << 0 << 1) << (QList<quint8>() << 0 << 1);
     QTest::newRow("2 layers, 1st layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 0) << (QList<quint8>() << 0 << 0);
-    QTest::newRow("2 layers, 2nd layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 1) << (QList<quint8>() << 1 << 1);
+    QTest::newRow("2 layers, 2nd layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 1) << (QList<quint8>() << 0 << 1);
 }
 
-void TestLooper::waiting()
+void TestLooper::waitingToRecordAndHearingIncommingAudioThrougLooperLayerSettings()
+{
+    QFETCH(QString, incommingSamples);
+    QFETCH(float, layerGain);
+    QFETCH(QString, expectedSamples);
+
+    Looper looper;
+    looper.setMode(Looper::SelectedLayer);
+    looper.setLayers(1, true);
+
+    looper.setLayerGain(0, layerGain);
+
+    looper.startNewCycle(incommingSamples.size());
+    looper.toggleRecording();
+    Q_ASSERT(looper.isWaitingToRecord());
+
+    looper.addBuffer(createBuffer(incommingSamples));
+
+    SamplesBuffer out(2, expectedSamples.size());
+    looper.mixToBuffer(out);
+
+    checkExpectedValues(expectedSamples, out);
+}
+
+void TestLooper::waitingToRecordAndHearingIncommingAudioThrougLooperLayerSettings_data()
+{
+    QTest::addColumn<QString>("incommingSamples");
+    QTest::addColumn<float>("layerGain");
+    QTest::addColumn<QString>("expectedSamples");
+
+    QTest::newRow("50% gain I")
+            << QString("2, 2") // incomming samples
+            << 0.5f  // layer gain
+            << QString("1, 1"); // expected samples
+
+    QTest::newRow("50% gain II")
+            << QString("4, 4") // incomming samples
+            << 0.5f  // layer gain
+            << QString("2, 2"); // expected samples
+}
+
+void TestLooper::waitingToRecordAndHearingPreRecordedMaterial()
 {
     QFETCH(Looper::Mode, looperMode);
     QFETCH(QString, expectedSamples);
@@ -212,17 +235,19 @@ void TestLooper::waiting()
     bool overdubbing = true;
 
     Looper looper;
-    looper.setLayers(layers);
+    looper.setLayers(layers, true);
 
     //create content in all layers
-    looper.setMode(Looper::SEQUENCE);
+    looper.setMode(Looper::Sequence);
     looper.toggleRecording();
     for (int l = 0; l < layers; ++l) {
         looper.startNewCycle(2);
+        Q_ASSERT(looper.isRecording());
         QString value(QString::number(1)); // (1, 1) in all layers
         looper.addBuffer(createBuffer(value + ", " + value));
     }
     looper.stop(); // finish recording
+    Q_ASSERT(looper.isStopped());
 
     looper.setMode(looperMode); // switch to test looper mode
     looper.setOption(Looper::Overdub, overdubbing);
@@ -230,19 +255,29 @@ void TestLooper::waiting()
     looper.selectLayer(0);// recording in first layer
 
     looper.toggleRecording(); // waiting state
+    Q_ASSERT(looper.isWaitingToRecord());
 
     SamplesBuffer out = createBuffer("0, 0");
     looper.mixToBuffer(out);
     checkExpectedValues(expectedSamples, out);
 }
 
-void TestLooper::waiting_data()
+void TestLooper::waitingToRecordAndHearingPreRecordedMaterial_data()
 {
     QTest::addColumn<Looper::Mode>("looperMode");
     QTest::addColumn<QString>("expectedSamples");
-    QTest::newRow("Hearing pre record material while Waiting (SELECTED mode)") << Looper::SELECTED_LAYER << QString("1, 1");
-    QTest::newRow("Hearing pre record material while Waiting (ALL_LAYERS mode)") << Looper::ALL_LAYERS << QString("2, 2");
-    QTest::newRow("Hearing pre record material while Waiting (SEQUENCE mode)") << Looper::SEQUENCE << QString("1, 1");
+
+    QTest::newRow("Hearing pre record material while Waiting (SELECTED mode)")
+            << Looper::SelectedLayer
+            << QString("1, 1");
+
+    QTest::newRow("Hearing pre record material while Waiting (ALL_LAYERS mode)")
+            << Looper::AllLayers
+            << QString("2, 2");
+
+    QTest::newRow("Hearing pre record material while Waiting (Sequence mode)")
+            << Looper::Sequence
+            << QString("2, 2"); // hear is activated by default in this test
 }
 
 void TestLooper::recording()
@@ -258,10 +293,10 @@ void TestLooper::recording()
     QFETCH(QString, expectedSecondOutput);
 
     Looper looper;
-    looper.setLayers(layers);
+    looper.setLayers(layers, true);
 
     //create content in all layers
-    looper.setMode(Looper::SEQUENCE);
+    looper.setMode(Looper::Sequence);
     looper.toggleRecording();
     for (int l = 0; l < layers; ++l) {
         looper.startNewCycle(2);
@@ -301,7 +336,7 @@ void TestLooper::recording_data()
     QTest::addColumn<QString>("expectedFirstOutput");
     QTest::addColumn<QString>("expectedSecondOutput");
 
-    Looper::Mode modes[] = {Looper::SEQUENCE, Looper::SELECTED_LAYER};
+    Looper::Mode modes[] = {Looper::Sequence, Looper::SelectedLayer};
     for (int layer = 0; layer < 4; ++layer) {
         for (Looper::Mode mode : modes) {
             QString title(Looper::getModeString(mode) + " mode, 4 layers, rec layer( " + QString::number(layer) + "), Overdubbing");
@@ -318,8 +353,8 @@ void TestLooper::recording_data()
         }
     }
 
-    QTest::newRow("SEQUENCE mode, 4 layers, rec layer = 0, overdubbing, hearing all")
-            << Looper::SEQUENCE // looperMode
+    QTest::newRow("Sequence mode, 4 layers, rec layer = 0, overdubbing, hearing all")
+            << Looper::Sequence // looperMode
             << quint8(4)        // layers
             << (QList<quint8>() << 0 << 0)        // recordingLayer
             << true             // hearAllLayers
@@ -329,8 +364,8 @@ void TestLooper::recording_data()
             << QString("5, 5")  // expectedFirstOutput
             << QString("6, 6"); // expectedSecondOutput
 
-    QTest::newRow("SEQUENCE mode, 4 layers, rec layer = 0")
-            << Looper::SEQUENCE // looperMode
+    QTest::newRow("Sequence mode, 4 layers, rec layer = 0")
+            << Looper::Sequence // looperMode
             << quint8(4)        // layers
             << (QList<quint8>() << 0 << 1)        // recordingLayer
             << false            // hearAllLayers
@@ -342,7 +377,7 @@ void TestLooper::recording_data()
 
 
     QTest::newRow("ALL_LAYERS mode, 4 layers, rec layer = 1, overdubbing, hearing all")
-            << Looper::ALL_LAYERS // looperMode
+            << Looper::AllLayers // looperMode
             << quint8(4)        // layers
             << (QList<quint8>() << 1 << 1)        // recordingLayers
             << true             // hearAllLayers (always ON in ALL_LAYERS mode)
@@ -353,7 +388,7 @@ void TestLooper::recording_data()
             << QString("6, 6"); // expectedSecondOutput
 
     QTest::newRow("ALL_LAYERS mode, 4 layers, rec layer = 0, hearing all (always ON in this mode)")
-            << Looper::ALL_LAYERS       // looperMode
+            << Looper::AllLayers       // looperMode
             << quint8(4)                // layers
             << (QList<quint8>() << 0 << 1)   // recordingLayers
             << true                     // hearAllLayers (always ON in ALL_LAYERS mode)
@@ -364,7 +399,7 @@ void TestLooper::recording_data()
             << QString("4, 4");         // expectedSecondOutput
 
     QTest::newRow("SELECTED_LAYERS mode, 4 layers, rec layer = 2, overdubbing, hear all")
-            << Looper::SELECTED_LAYER // looperMode
+            << Looper::SelectedLayer // looperMode
             << quint8(4)        // layers
             << (QList<quint8>() << 2 << 2)        // recordingLayers
             << true             // hearAllLayers (will have no effect in SELECTED mode)
@@ -382,11 +417,12 @@ void TestLooper::resizeLayersAndCopySamples()
     QFETCH(QStringList, finalBuffer);
 
     Looper looper;
-    looper.setLayers(1);
+    looper.setLayers(1, true);
 
     // simulate recording
     looper.toggleRecording();
     looper.startNewCycle(initialBuffer.count());
+    Q_ASSERT(looper.isRecording());
     looper.addBuffer(createBuffer(initialBuffer.join(',')));
 
     uint newSamplesPerCycle = finalBuffer.count();
@@ -420,7 +456,8 @@ void TestLooper::firstUnlockedLayer()
     QFETCH(bool, isWaiting);
 
     Looper looper;
-    looper.setLayers(maxLayers);
+    looper.setMode(Looper::SelectedLayer);
+    looper.setLayers(maxLayers, true);
     looper.selectLayer(currentLayer);
 
     for (quint8 layer : lockedLayers)
@@ -429,7 +466,7 @@ void TestLooper::firstUnlockedLayer()
     looper.toggleRecording(); // activate recording and check the currentLayerIndex
 
     QVERIFY(looper.getCurrentLayerIndex() == expectedRecordingLayer);
-    QVERIFY(looper.isWaiting() == isWaiting);
+    QVERIFY(looper.isWaitingToRecord() == isWaiting);
 
 }
 
@@ -465,17 +502,26 @@ void TestLooper::multiBufferTest()
 {
 
     Audio::Looper looper;
-    looper.setLayers(1);
+    looper.setLayers(1, true);
+
     looper.toggleRecording();
 
     const uint cycleLenghtInSamples = 6;
 
     looper.startNewCycle(cycleLenghtInSamples);
+    Q_ASSERT(looper.isRecording());
+
     looper.addBuffer(createBuffer("1,2,3"));
+    looper.mixToBuffer(SamplesBuffer(2, 3));
+
     looper.addBuffer(createBuffer("4,5,6"));
+    looper.mixToBuffer(SamplesBuffer(2, 3));
 
     SamplesBuffer out(1, 3);
     looper.startNewCycle(cycleLenghtInSamples);
+
+    Q_ASSERT(looper.isPlaying());
+
     looper.mixToBuffer(out);
     checkExpectedValues("1,2,3", out);
     out.zero();

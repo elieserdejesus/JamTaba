@@ -165,7 +165,31 @@ LoopLoader::LoopLoader(const QString &loadPath)
 
 void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate, quint32 samplesPerInterval)
 {
-    looper->load(loadPath, loopInfo, currentSampleRate, samplesPerInterval);
+    if (!loopInfo.isValid())
+        return;
+
+    looper->setChanged(false);
+    looper->setLoading(true);
+
+    looper->stop();
+    looper->setMode(static_cast<Looper::Mode>(loopInfo.getLooperMode()));
+    looper->setLayers(loopInfo.getLayersCount());
+
+    bool audioIsEncoded = loopInfo.audioIsEncoded();
+    QList<LoopLayerInfo> layersInfo = loopInfo.getLayersInfo();
+    for (quint8 layer = 0; layer < layersInfo.size(); ++layer) {
+        SamplesBuffer samples(2, samplesPerInterval);
+        bool loadResult = LoopLoader::loadLoopLayerSamples(loadPath, loopInfo.getName(), layer, audioIsEncoded, currentSampleRate, samples);
+        if (loadResult) {
+            looper->setLayerSamples(layer, samples);
+            bool layerIsLocked = layersInfo.at(layer).locked;
+            looper->setLayerLockedState(layer, layerIsLocked);
+            looper->setLayerGain(layer, Utils::linearGainToPower(layersInfo.at(layer).gain));
+            looper->setLayerPan(layer, layersInfo.at(layer).pan);
+        }
+    }
+
+    looper->setLoading(false);
 }
 
 bool LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate, SamplesBuffer &out)

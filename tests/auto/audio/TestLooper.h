@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "audio/core/SamplesBuffer.h"
-#include "audio/looper/AudioLooper.h"
+#include "looper/Looper.h"
 
 class TestLooper: public QObject
 {
@@ -19,8 +19,6 @@ private slots:
     void resizeLayersAndCopySamples();
     void resizeLayersAndCopySamples_data();
 
-    void alternatingOverdubbingWhileRecording();
-
     void recording();
     void recording_data();
 
@@ -30,8 +28,11 @@ private slots:
     void invalidRecordingStart();
     void invalidRecordingStart_data();
 
-    void waiting();
-    void waiting_data();
+    void waitingToRecordAndHearingPreRecordedMaterial();
+    void waitingToRecordAndHearingPreRecordedMaterial_data();
+
+    void waitingToRecordAndHearingIncommingAudioThrougLooperLayerSettings();
+    void waitingToRecordAndHearingIncommingAudioThrougLooperLayerSettings_data();
 
     void playing();
     void playing_data();

@@ -157,22 +157,52 @@ void LooperLayer::overdub(const SamplesBuffer &samples, uint samplesToMix, uint 
     }
 }
 
-void LooperLayer::append(const SamplesBuffer &samples, uint samplesToAppend)
+void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition)
 {
-    samplesToAppend = qMin(static_cast<uint>(leftChannel.capacity() - availableSamples), samplesToAppend);
-    const uint sizeInBytes = samplesToAppend * sizeof(float);
+    bool canMix = samplesToMix > 0 && (muteState == LooperLayer::Unmuted || muteState == LooperLayer::WaitingToMute);
+    if (canMix) {
+        float *internalChannels[] = {&(leftChannel[0]), &(rightChannel[0])};
+        const uint secondChannelIndex = (outBuffer.isMono()) ? 0 : 1;
+        float *bufferChannels[] = {outBuffer.getSamplesArray(0), outBuffer.getSamplesArray(secondChannelIndex)};
+        uint channels = outBuffer.getChannels();
+
+        const float finalLeftGain = gain * leftGain;
+        const float finalRightGain = gain * rightGain;
+        float gains[] = {finalLeftGain, finalRightGain};
+        for (uint c = 0; c < channels; ++c) {
+            for (uint s = 0; s < samplesToMix; ++s) {
+                const uint offset = s + intervalPosition;
+                bufferChannels[c][s] += internalChannels[c][offset] * gains[c];
+            }
+        }
+    }
+}
+
+void LooperLayer::append(const SamplesBuffer &samples, uint samplesToAppend, uint startPosition)
+{
+    int toAppend = qMin(static_cast<uint>(leftChannel.capacity() - startPosition), samplesToAppend);
+
+    if (!toAppend) {
+        qCritical() << "toAppend:" << toAppend;
+        return;
+    }
+
+    const uint sizeInBytes = toAppend * sizeof(float);
 
     const int secondChannelIndex = samples.isMono() ? 0 : 1;
-    std::memcpy(&(leftChannel[0]) + availableSamples, samples.getSamplesArray(0), sizeInBytes);
-    std::memcpy(&(rightChannel[0]) + availableSamples, samples.getSamplesArray(secondChannelIndex), sizeInBytes);
+    std::memcpy(&(leftChannel[0]) + startPosition, samples.getSamplesArray(0), sizeInBytes);
+    std::memcpy(&(rightChannel[0]) + startPosition, samples.getSamplesArray(secondChannelIndex), sizeInBytes);
 
-    availableSamples += samplesToAppend;
+    availableSamples += toAppend;
 
-    Q_ASSERT(availableSamples <= leftChannel.size());
+    //Q_ASSERT(availableSamples <= leftChannel.capacity());
 
     // build peaks cache
     if (lastSamplesPerPeak) {
-        while (availableSamples - lastCacheComputationSample >= lastSamplesPerPeak) { // enough samples to cache a new max peak?
+        if (lastCacheComputationSample < startPosition - lastSamplesPerPeak)
+            lastCacheComputationSample = startPosition;
+
+        while ((startPosition + samplesToAppend) - lastCacheComputationSample >= lastSamplesPerPeak && lastCacheComputationSample  < leftChannel.size()) { // enough samples to cache a new max peak?
             peaksCache.push_back(computeMaxPeak(lastCacheComputationSample, lastSamplesPerPeak));
             lastCacheComputationSample += lastSamplesPerPeak;
         }
@@ -213,27 +243,6 @@ std::vector<float> LooperLayer::getSamplesPeaks(uint samplesPerPeak)
     }
 
     return peaksCache;
-}
-
-void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition)
-{
-    bool canMix = samplesToMix > 0 && (muteState == LooperLayer::Unmuted || muteState == LooperLayer::WaitingToMute);
-    if (canMix) {
-        float *internalChannels[] = {&(leftChannel[0]), &(rightChannel[0])};
-        const uint secondChannelIndex = (outBuffer.isMono()) ? 0 : 1;
-        float *bufferChannels[] = {outBuffer.getSamplesArray(0), outBuffer.getSamplesArray(secondChannelIndex)};
-        uint channels = outBuffer.getChannels();
-
-        const float finalLeftGain = gain * leftGain;
-        const float finalRightGain = gain * rightGain;
-        float gains[] = {finalLeftGain, finalRightGain};
-        for (uint c = 0; c < channels; ++c) {
-            for (uint s = 0; s < samplesToMix; ++s) {
-                const uint offset = s + intervalPosition;
-                bufferChannels[c][s] += internalChannels[c][offset] * gains[c];
-            }
-        }
-    }
 }
 
 void LooperLayer::resize(quint32 samplesPerCycle)

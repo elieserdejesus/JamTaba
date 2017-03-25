@@ -45,8 +45,6 @@ public:
     void addBuffer(const SamplesBuffer &samples); // recording
     void mixToBuffer(SamplesBuffer &samples); // playing/mixing
 
-    void load(const QString &loadPath, LoopInfo loopInfo, uint currentSampleRate, quint32 samplesPerInterval);
-
     void setMainGain(float gain);
 
     AudioPeak getLastPeak() const;
@@ -104,7 +102,7 @@ public:
 
     bool isChanged() const;
 
-    void setLayers(quint8 maxLayers);
+    void setLayers(quint8 maxLayers, bool processChangeRequestNow = false);
     quint8 getLayers() const;
 
     bool canRecord() const;
@@ -140,6 +138,7 @@ public:
     uint getIntervalLenght() const;
 
     void setChanged(bool changed);
+    void setLoading(bool loading);
 
     bool isWaitingToStopInNextInterval() const;
     void waitToStopInNextInterval();
@@ -188,7 +187,7 @@ private:
         QMap<PlayingOption, bool> playingOptions;
     };
 
-    QMap<Mode, Options> modeOptions;
+    Options modeOptions[3]; // 3 modes
 
     void mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToMix);
     void mixAllLayers(SamplesBuffer &samples, uint samplesToMix);
@@ -218,6 +217,11 @@ private:
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
 };
+
+inline void Looper::setLoading(bool loading)
+{
+    this->loading = loading;
+}
 
 inline bool Looper::isWaitingToStopInNextInterval() const
 {
