@@ -538,7 +538,7 @@ void MainWindow::openLooperWindow(uint trackID)
         if (channelName.isEmpty())
             channelName = tr("Channel %1").arg(QString::number(channel->getChannelIndex() + 1));
         else
-            channelName = tr("Channel '%1'").arg(channelName);
+            channelName = tr("Channel %1").arg(channelName);
 
         QString subchannelName("Subchannel " + QString::number(subchannelInternalIndex + 1));
         QString windowTitle("Looper - " + channelName + " (" + subchannelName + ")");

@@ -293,7 +293,7 @@ void PreferencesDialog::openSecondaryBeatAudioFileBrowser()
 
 QString PreferencesDialog::openAudioFileBrowser(const QString caption)
 {
-    QString filter = "Audio Files (*.wav, *.ogg)";
+    QString filter = tr("Audio Files") + " (*.wav, *.ogg)";
     QString dir = ".";
     return QFileDialog::getOpenFileName(this, caption, dir, filter);
 }

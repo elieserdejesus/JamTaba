@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en" sourcelanguage="en">
 <context>
+    <name>Audio::Looper</name>
+    <message>
+        <source>Sequence</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>All Layers</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Selected Layer</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>BaseTrackView</name>
     <message>
         <source>L</source>
@@ -17,6 +32,10 @@
     </message>
     <message>
         <source>S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Boost</source>
         <translation></translation>
     </message>
 </context>
@@ -240,6 +259,10 @@
         <source>Invert stereo</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Looper (Available when jamming)</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackViewStandalone</name>
@@ -281,6 +304,141 @@
     </message>
     <message>
         <source>no input</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>LooperWindow</name>
+    <message>
+        <source>Dialog</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Load looper layers</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Save looper layers</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Mode</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Layers</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reset layers content</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reset layers controls</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reset layers content and controls</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>wait (%1)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Saving looper layers ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Loop file name:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hear all/Locked</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Overdub</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Random</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Non empty</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hear all layers while recording</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Overdub the current layer until REC button is pressed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Randomize layers while playing</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Play locked layers only</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1 BPM loops</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No loops for %1 BPM</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Import audio files ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Importing audio files ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Browse JamTaba loops...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Open loop file</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Error loading audio file!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Can&apos;t load the file &apos;%1&apos;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Audio files</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>JamTaba Loop Files</source>
         <translation></translation>
     </message>
 </context>
@@ -420,23 +578,27 @@
     </message>
     <message>
         <source>Sound Wave</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Buildings</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Gradient</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Pixelated Sound Wave</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Pixelated Buildings</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Looper ...</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -552,22 +714,26 @@
     </message>
     <message>
         <source>Ice</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Channel %1</source>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
     <message>
         <source>Window Size</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Increase</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Decrease</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -621,7 +787,7 @@
     </message>
     <message>
         <source>Route MIDI input to first subchannel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -795,32 +961,32 @@
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -994,10 +1160,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Recording</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>browse ...</source>
         <translation></translation>
     </message>
@@ -1069,28 +1231,60 @@
         <source>Custom quality</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Multi Track Recording</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Looper</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Save loop layers as ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ogg files (use less disk space)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Wave files</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Bit depth:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Loops folder</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Choosing loops folder ...</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
     <message>
         <source>Adding VST path ...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>scanning %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Add Vst(s) to Black list ...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Remove Vst(s) from Black List ...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>No midi input device detected!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1137,7 +1331,7 @@
     </message>
     <message>
         <source>User name:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>

@@ -833,7 +833,8 @@ void LooperWindow::showLoadMenu()
     menu->addSeparator();
     QAction *loadAudioFilesAction = menu->addAction(tr("Import audio files ..."));
     connect(loadAudioFilesAction, &QAction::triggered, [=](){
-        QFileDialog audioFilesDialog(this, tr("Importing audio files ..."), loopsDir, tr("Audio files (*.wav *.ogg *.mp3)"));
+        QString filter = tr("Audio files") + " (*.wav *.ogg *.mp3)";
+        QFileDialog audioFilesDialog(this, tr("Importing audio files ..."), loopsDir, filter);
         audioFilesDialog.setAcceptMode(QFileDialog::AcceptOpen);
         audioFilesDialog.setFileMode(QFileDialog::ExistingFiles);
         if (audioFilesDialog.exec()) {
@@ -847,7 +848,7 @@ void LooperWindow::showLoadMenu()
     QAction *browseAction = menu->addAction(tr("Browse JamTaba loops..."));
     connect(browseAction, &QAction::triggered, [=](){
         QString fileDialogTitle = tr("Open loop file");
-        QString filter = tr("JamTaba Loop Files (*.json)");
+        QString filter = tr("JamTaba Loop Files") + " (*.json)";
         QString loopFilePath = QFileDialog::getOpenFileName(this, fileDialogTitle, loopsDir, filter);
         if (!loopFilePath.isEmpty()) {
             QString loopDir = QFileInfo(loopFilePath).dir().absolutePath();
