@@ -231,6 +231,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
         connect(looper, &Looper::destroyed, this, &LooperWindow::close);
         connect(looper, &Looper::layerMuteStateChanged, this, &LooperWindow::handleLayerMuteStateChanged);
+        connect(looper, &Looper::layersContentErased, this, &LooperWindow::updateControls);
 
         connect(playingCheckBoxes[Looper::PlayLockedLayers], &QCheckBox::toggled, this, &LooperWindow::updateControls);
     }

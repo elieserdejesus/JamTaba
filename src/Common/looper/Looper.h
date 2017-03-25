@@ -153,6 +153,7 @@ signals:
     void currentLayerChanged(quint8 currentLayer);
     void layerChanged(quint8 layer); // layer pan, gain, locked or content changed
     void layerMuteStateChanged(quint8 layer, quint8 state);
+    void layersContentErased();
 
 private:
     uint intervalLenght; // in samples

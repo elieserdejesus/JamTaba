@@ -480,6 +480,8 @@ void Looper::processChangeRequests()
             layers[l]->reset();
         }
         resetRequested = false;
+        setChanged(true);
+        emit layersContentErased();
     }
 
     // max layers change requested?
