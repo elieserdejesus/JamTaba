@@ -5,15 +5,15 @@
     <name>Audio::Looper</name>
     <message>
         <source>Sequence</source>
-        <translation type="unfinished"></translation>
+        <translation>Po kolei</translation>
     </message>
     <message>
         <source>All Layers</source>
-        <translation type="unfinished"></translation>
+        <translation>Wszystkie warstwy</translation>
     </message>
     <message>
         <source>Selected Layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaznaczone warstwy</translation>
     </message>
 </context>
 <context>
@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>Boost</source>
-        <translation type="unfinished"></translation>
+        <translation>Podbij</translation>
     </message>
 </context>
 <context>
@@ -261,7 +261,7 @@
     </message>
     <message>
         <source>Looper (Available when jamming)</source>
-        <translation type="unfinished"></translation>
+        <translation>Looper (Dostępny w trakcie jamu)</translation>
     </message>
 </context>
 <context>
@@ -315,119 +315,119 @@
     </message>
     <message>
         <source>Load looper layers</source>
-        <translation type="unfinished"></translation>
+        <translation>Wgraj pętle dla loopera</translation>
     </message>
     <message>
         <source>Save looper layers</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapisz pętle Loopera</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>Zresetuj</translation>
     </message>
     <message>
         <source>Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Tryb</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>Nagrywanie</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation>Odtwarzaj</translation>
     </message>
     <message>
         <source>Layers</source>
-        <translation type="unfinished"></translation>
+        <translation>Pętle</translation>
     </message>
     <message>
         <source>Reset layers content</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuń pętle</translation>
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Zresetuj ustawienia pętli</translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Skasuj i zresetuj ustawienia pętli</translation>
     </message>
     <message>
         <source>wait (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>czekaj (%1)</translation>
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapisywanie pętli ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wpisz nazwę dla pliku pętli:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation type="unfinished"></translation>
+        <translation>Odtwarzaj zablokowane</translation>
     </message>
     <message>
         <source>Overdub</source>
-        <translation type="unfinished"></translation>
+        <translation>Overdub</translation>
     </message>
     <message>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>Losowo</translation>
     </message>
     <message>
         <source>Locked</source>
-        <translation type="unfinished"></translation>
+        <translation>Zablokowane</translation>
     </message>
     <message>
         <source>Non empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie pusty</translation>
     </message>
     <message>
         <source>Hear all layers while recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Odtwarzaj wszystkie pętle podczas nagrywania</translation>
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation type="unfinished"></translation>
+        <translation>Dogrywa do aktualnej pętli dopóki nagrywanie jest aktywne</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
-        <translation type="unfinished"></translation>
+        <translation>Odtwarza pętle w kolejności losowej</translation>
     </message>
     <message>
         <source>Play locked layers only</source>
-        <translation type="unfinished"></translation>
+        <translation>Odtwarza tylko zablokowane pętle</translation>
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 BPM pętli</translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie ma pętli dla %1 BPM</translation>
     </message>
     <message>
         <source>Import audio files ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Importuj pliki audio ...</translation>
     </message>
     <message>
         <source>Importing audio files ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Importowanie plików audio ...</translation>
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation type="unfinished"></translation>
+        <translation>Przeglądaj pętle Jamtaby ...</translation>
     </message>
     <message>
         <source>Open loop file</source>
-        <translation type="unfinished"></translation>
+        <translation>Otwórz plik pętli</translation>
     </message>
     <message>
         <source>Error loading audio file!</source>
-        <translation type="unfinished"></translation>
+        <translation>Błąd wgrywania pliku!</translation>
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
@@ -435,11 +435,11 @@
     </message>
     <message>
         <source>Audio files</source>
-        <translation type="unfinished"></translation>
+        <translation>Pliki audio</translation>
     </message>
     <message>
         <source>JamTaba Loop Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Pliki pętli Jamtaby</translation>
     </message>
 </context>
 <context>
@@ -599,7 +599,7 @@
     </message>
     <message>
         <source>Looper ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Looper ...</translation>
     </message>
 </context>
 <context>
@@ -719,7 +719,7 @@
     </message>
     <message>
         <source>Channel %1</source>
-        <translation type="unfinished">Kanał %1</translation>
+        <translation>Kanał %1</translation>
     </message>
 </context>
 <context>
@@ -1234,35 +1234,35 @@
     </message>
     <message>
         <source>Multi Track Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Nagrywanie wielościeżkowe</translation>
     </message>
     <message>
         <source>Looper</source>
-        <translation type="unfinished"></translation>
+        <translation>Looper</translation>
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapisuj pliki pętli jako ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pliki Ogg (używją mniej miejca na dysku)</translation>
     </message>
     <message>
         <source>Wave files</source>
-        <translation type="unfinished"></translation>
+        <translation>Pliki Wave</translation>
     </message>
     <message>
         <source>Bit depth:</source>
-        <translation type="unfinished"></translation>
+        <translation>Głębia bitowa:</translation>
     </message>
     <message>
         <source>Loops folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Folder dla pętli</translation>
     </message>
     <message>
         <source>Choosing loops folder ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Wybór folderu dla pętli ...</translation>
     </message>
 </context>
 <context>
