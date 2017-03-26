@@ -391,7 +391,7 @@
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation>Sobregrabar esta pista hasta que se presione el botón GRABAR</translation>
+        <translation>Sobregrabar la pista seleccionada hasta que el botón GRABAR sea presionado</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
