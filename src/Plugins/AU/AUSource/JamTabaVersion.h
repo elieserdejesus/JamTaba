@@ -4,9 +4,9 @@
 
 
 #ifdef DEBUG
-	#define kJamTabaVersion 0x00010000
+	#define kJamTabaVersion 0x00010001
 #else
-	#define kJamTabaVersion 0x00010000
+	#define kJamTabaVersion 0x00010001
 #endif
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

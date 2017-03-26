@@ -197,7 +197,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         // create wave panels and layer controls (layers view)
         quint8 currentLayers = looper->getLayers();
         QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
-        for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
+        for (quint8 layerIndex = 0; layerIndex < MAX_LOOP_LAYERS; ++layerIndex) {
             auto layerWavePanel = new LooperWavePanel(looper, layerIndex);
             auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex);
 
@@ -288,7 +288,7 @@ void LooperWindow::handleNewMaxLayers(quint8 newMaxLayers)
     const static int minHeight = 150; // one layer
     const static int maxHeight = 600; // 8 layers
     const static int range = maxHeight - minHeight;
-    int newHeight = static_cast<float>(newMaxLayers)/Looper::MAX_LOOP_LAYERS * range + minHeight;
+    int newHeight = static_cast<float>(newMaxLayers)/MAX_LOOP_LAYERS * range + minHeight;
     setMinimumHeight(newHeight);
     setMaximumHeight(newHeight);
 
@@ -433,7 +433,7 @@ void LooperWindow::resetLayersControls()
 
 void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
 {
-    for (quint8 layerIndex = 0; layerIndex < Audio::Looper::MAX_LOOP_LAYERS; ++layerIndex) {
+    for (quint8 layerIndex = 0; layerIndex < MAX_LOOP_LAYERS; ++layerIndex) {
         LooperWavePanel *wavePanel = layerViews[layerIndex].wavePanel;
         bool layerIsVisible = layerIndex < newMaxLayers;
         wavePanel->setVisible(layerIsVisible);
@@ -539,7 +539,7 @@ void LooperWindow::setMaxLayerComboBoxValuesAvailability(int valuesToDisable)
     // disable the values before last valid (non empty) layers
     const QStandardItemModel* model = qobject_cast<const QStandardItemModel*>(ui->maxLayersComboBox->model());
     const QColor disabledColor = ui->maxLayersComboBox->palette().color(QPalette::Disabled, QPalette::Text);
-    for (int l = 0; l < Looper::MAX_LOOP_LAYERS; ++l) {
+    for (int l = 0; l < MAX_LOOP_LAYERS; ++l) {
         QStandardItem* item = model->item(l);
         bool disable = l < valuesToDisable;
         item->setFlags(disable ? item->flags() & ~(Qt::ItemIsSelectable|Qt::ItemIsEnabled) : Qt::ItemIsSelectable|Qt::ItemIsEnabled);
@@ -642,7 +642,7 @@ void LooperWindow::initializeControls()
 
     // max layer combobox
     ui->maxLayersComboBox->clear();
-    for (quint8 l = 1; l <= Looper::MAX_LOOP_LAYERS; ++l) {
+    for (quint8 l = 1; l <= MAX_LOOP_LAYERS; ++l) {
         ui->maxLayersComboBox->addItem(QString::number(l), QVariant::fromValue(l));
     }
 
@@ -870,14 +870,14 @@ void LooperWindow::loadAudioFiles(const QStringList &audioFilePaths)
     }
 
     // loading more than one file
-    bool canLoad = looper->getLastValidLayer() < (Looper::MAX_LOOP_LAYERS - 1);
+    bool canLoad = looper->getLastValidLayer() < (MAX_LOOP_LAYERS - 1);
     if (canLoad) {
         quint8 firstLayerIndex = looper->getLastValidLayer() + 1;
         if (looper->isEmpty())
             firstLayerIndex = 0;
         else if (firstLayerIndex >= looper->getLayers()) {
             firstLayerIndex = looper->getLayers(); // last layer
-            const quint8 newLayersCount = qMin(Looper::MAX_LOOP_LAYERS, static_cast<quint8>(audioFilePaths.size()));
+            const quint8 newLayersCount = qMin(static_cast<quint8>(MAX_LOOP_LAYERS), static_cast<quint8>(audioFilePaths.size()));
             looper->setLayers(newLayersCount); // expand layer count before add loaded samples
         }
         loadAudioFilesIntoLayer(audioFilePaths, firstLayerIndex);

@@ -8,8 +8,8 @@ AUDIOCOMPONENT_ENTRY(AUBaseProcessFactory, JamTaba)
 
 
 JamTaba::JamTaba(AudioUnit component)
-	: AUBase(component, 2, 1),
-    listener(nullptr)
+	: AUEffectBase(component, true),//2, 1),
+      listener(nullptr)
 {
     
 }
@@ -127,6 +127,7 @@ OSStatus JamTaba::Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioT
         updateHostState();
         listener->process(inputs, outputs, inputsCount, outputsCount, framesToProcess, hostState);
     }
+    
     
     return noErr;
 }

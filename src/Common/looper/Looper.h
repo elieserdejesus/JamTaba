@@ -12,6 +12,8 @@
 #include <QMap>
 #include <QMutex>
 
+#define MAX_LOOP_LAYERS 8
+
 namespace Audio {
 
 class LooperState;
@@ -108,8 +110,6 @@ public:
     bool canRecord() const;
 
     void nextMuteState(quint8 layer);
-
-    static const quint8 MAX_LOOP_LAYERS = 8;
 
     void toggleRecording();
     void togglePlay();
