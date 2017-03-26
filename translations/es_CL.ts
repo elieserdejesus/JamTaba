@@ -335,7 +335,7 @@
     </message>
     <message>
         <source>Play</source>
-        <translation>Ejecutar</translation>
+        <translation>Escuchar</translation>
     </message>
     <message>
         <source>Layers</source>
