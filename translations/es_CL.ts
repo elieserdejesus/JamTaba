@@ -311,7 +311,7 @@
     <name>LooperWindow</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished">Ventana</translation>
+        <translation>Diálogo</translation>
     </message>
     <message>
         <source>Load looper layers</source>
@@ -335,7 +335,7 @@
     </message>
     <message>
         <source>Play</source>
-        <translation type="unfinished">Escuchar</translation>
+        <translation>Ejecutar</translation>
     </message>
     <message>
         <source>Layers</source>
@@ -363,7 +363,7 @@
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation type="unfinished">Nombre de archivo del bucle:</translation>
+        <translation>Nombre del archivo:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
@@ -419,7 +419,7 @@
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation type="unfinished">Buscar bucles de Jamtaba...</translation>
+        <translation>Buscar bucles de Jamtaba...</translation>
     </message>
     <message>
         <source>Open loop file</source>
@@ -1253,7 +1253,7 @@
     </message>
     <message>
         <source>Bit depth:</source>
-        <translation type="unfinished">Resolución de Bits:</translation>
+        <translation>Bits:</translation>
     </message>
     <message>
         <source>Loops folder</source>
