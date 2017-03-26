@@ -5,15 +5,15 @@
     <name>Audio::Looper</name>
     <message>
         <source>Sequence</source>
-        <translation type="unfinished"></translation>
+        <translation type="Sequenz"></translation>
     </message>
     <message>
         <source>All Layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="alle Layer"></translation>
     </message>
     <message>
         <source>Selected Layer</source>
-        <translation type="unfinished"></translation>
+        <translation type="ausgewählte Layer"></translation>
     </message>
 </context>
 <context>
@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>Boost</source>
-        <translation type="unfinished"></translation>
+        <translation type="Boost"></translation>
     </message>
 </context>
 <context>
@@ -261,7 +261,7 @@
     </message>
     <message>
         <source>Looper (Available when jamming)</source>
-        <translation type="unfinished"></translation>
+        <translation type="Looper"></translation>
     </message>
 </context>
 <context>
@@ -311,135 +311,135 @@
     <name>LooperWindow</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="Dialog"></translation>
     </message>
     <message>
         <source>Load looper layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="lade Looper Layer"></translation>
     </message>
     <message>
         <source>Save looper layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="sichere Looper Layer"></translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation type="zurück setzen"></translation>
     </message>
     <message>
         <source>Mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="Einstellungen"></translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation type="Aufnahme"></translation>
     </message>
     <message>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation type="Abspielen"></translation>
     </message>
     <message>
         <source>Layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="Layers"></translation>
     </message>
     <message>
         <source>Reset layers content</source>
-        <translation type="unfinished"></translation>
+        <translation type="setze Layerinhalt zurück"></translation>
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation type="unfinished"></translation>
+        <translation type="setze Layercontrols zurück"></translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation type="unfinished"></translation>
+        <translation type="setze Layerinhalt-controls zurück"></translation>
     </message>
     <message>
         <source>wait (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation type="warte"></translation>
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="sichere Looper Layer"></translation>
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation type="unfinished"></translation>
+        <translation type="Loop Dateiname"></translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation type="unfinished"></translation>
+        <translation type="höhre alles/gesicherte"></translation>
     </message>
     <message>
         <source>Overdub</source>
-        <translation type="unfinished"></translation>
+        <translation type="Overdub"></translation>
     </message>
     <message>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation type="Zufall"></translation>
     </message>
     <message>
         <source>Locked</source>
-        <translation type="unfinished"></translation>
+        <translation type="gesichert"></translation>
     </message>
     <message>
         <source>Non empty</source>
-        <translation type="unfinished"></translation>
+        <translation type="nicht leer"></translation>
     </message>
     <message>
         <source>Hear all layers while recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="höre alle Layers bei Aufnahme"></translation>
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation type="unfinished"></translation>
+        <translation type="Overdub das aktuelle Layer bis REC gedrückt wird"></translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
-        <translation type="unfinished"></translation>
+        <translation type="Zufalls Layer während des abspielens"></translation>
     </message>
     <message>
         <source>Play locked layers only</source>
-        <translation type="unfinished"></translation>
+        <translation type="Spiele nur gesicherte Layers"></translation>
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation type="unfinished"></translation>
+        <translation type="%1 BPM Loops"></translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
-        <translation type="unfinished"></translation>
+        <translation type="kein Loop für %1 BPM"></translation>
     </message>
     <message>
         <source>Import audio files ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="importiere Audiodatei ..."></translation>
     </message>
     <message>
         <source>Importing audio files ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="importiere Audiodatei ..."></translation>
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation type="unfinished"></translation>
+        <translation type="suche JamTaba Loops..."></translation>
     </message>
     <message>
         <source>Open loop file</source>
-        <translation type="unfinished"></translation>
+        <translation type="öffne Loop Datei"></translation>
     </message>
     <message>
         <source>Error loading audio file!</source>
-        <translation type="unfinished"></translation>
+        <translation type="Fehler beim Laden der Audiodatei"></translation>
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation type="Can&apos;t lade die Datei &apos;%1&apos;"></translation>
     </message>
     <message>
         <source>Audio files</source>
-        <translation type="unfinished"></translation>
+        <translation type="Audiodateien"></translation>
     </message>
     <message>
         <source>JamTaba Loop Files</source>
-        <translation type="unfinished"></translation>
+        <translation type="Loopdateien"></translation>
     </message>
 </context>
 <context>
@@ -1234,35 +1234,35 @@
     </message>
     <message>
         <source>Multi Track Recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="Multi Track Aufnahme"></translation>
     </message>
     <message>
         <source>Looper</source>
-        <translation type="unfinished"></translation>
+        <translation type="Looper"></translation>
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="sichere Looplayers als ..."></translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
-        <translation type="unfinished"></translation>
+        <translation type="Ogg Dateien (wenig speicherplatz)"></translation>
     </message>
     <message>
         <source>Wave files</source>
-        <translation type="unfinished"></translation>
+        <translation type="Wave Dateien"></translation>
     </message>
     <message>
         <source>Bit depth:</source>
-        <translation type="unfinished"></translation>
+        <translation type="Bit Auflösung"></translation>
     </message>
     <message>
         <source>Loops folder</source>
-        <translation type="unfinished"></translation>
+        <translation type="Loops Ordner"></translation>
     </message>
     <message>
         <source>Choosing loops folder ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="wähle Loop Ordner ..."></translation>
     </message>
 </context>
 <context>
