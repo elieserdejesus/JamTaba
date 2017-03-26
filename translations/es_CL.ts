@@ -355,7 +355,7 @@
     </message>
     <message>
         <source>wait (%1)</source>
-        <translation>Esperando (%1)</translation>
+        <translation>Espere (%1)</translation>
     </message>
     <message>
         <source>Saving looper layers ...</source>
@@ -423,7 +423,7 @@
     </message>
     <message>
         <source>Open loop file</source>
-        <translation>Abrir archivo de loop</translation>
+        <translation>Abrir archivo de bucle</translation>
     </message>
     <message>
         <source>Error loading audio file!</source>
@@ -439,7 +439,7 @@
     </message>
     <message>
         <source>JamTaba Loop Files</source>
-        <translation>Archivos de Loop de Jamtaba</translation>
+        <translation>Archivos de Bucle de Jamtaba</translation>
     </message>
 </context>
 <context>
@@ -1241,7 +1241,7 @@
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation>Grabar pistas del looper como ...</translation>
+        <translation>Grabar pistas del bucle como ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
