@@ -802,7 +802,7 @@
 		621713DD1891A149005D69C7 /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAXException.h; path = ../../AU_SDK/PublicUtility/CAXException.h; sourceTree = SOURCE_ROOT; };
 		62B3B89C18918C4F00E507B7 /* PkgInfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PkgInfo; sourceTree = "<group>"; };
 		62B3B89E1891936500E507B7 /* JamTaba.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = JamTaba.r; path = ../../src/Plugins/AU/AUSource/JamTaba.r; sourceTree = "<group>"; };
-		8BA05A660720730100365D66 /* JamTaba.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = JamTaba.cpp; path = ../../src/Plugins/AU/AUSource/JamTaba.cpp; sourceTree = "<group>"; };
+		8BA05A660720730100365D66 /* JamTaba.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JamTaba.cpp; path = ../../src/Plugins/AU/AUSource/JamTaba.cpp; sourceTree = "<group>"; };
 		8BA05A670720730100365D66 /* JamTaba.exp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.exports; name = JamTaba.exp; path = ../../src/Plugins/AU/AUSource/JamTaba.exp; sourceTree = "<group>"; };
 		8BA05A690720730100365D66 /* JamTabaVersion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTabaVersion.h; path = ../../src/Plugins/AU/AUSource/JamTabaVersion.h; sourceTree = "<group>"; };
 		8BA05AF9072074E100365D66 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
@@ -2223,7 +2223,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2244,7 +2244,7 @@
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
-				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2261,7 +2261,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
@@ -2280,7 +2280,7 @@
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
-				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2297,7 +2297,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
@@ -2316,7 +2316,7 @@
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
-				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",

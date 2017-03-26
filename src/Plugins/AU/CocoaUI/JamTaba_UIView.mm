@@ -1,16 +1,9 @@
-
 #import "JamTaba_UIView.h"
 
 @implementation JamTaba_UIView
 
 -(id)init
 {
-//    [NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask handler:^(NSEvent *incomingEvent) {
-//        NSEvent *result = incomingEvent;
-//        NSLog(@"evento %f:", result.keyCode);
-//        return result;
-//    }];
-    
     return [super init];
 }
 
@@ -20,10 +13,9 @@
     [super dealloc];
 }
 
-- (void)setAU:(AudioUnit)inAU {
-	
-	mAU = inAU;
 
+- (void)setAudioUnit:(AudioUnit)unit {
+    audioUnit = unit;
 }
 
 - (BOOL) acceptsFirstResponder {

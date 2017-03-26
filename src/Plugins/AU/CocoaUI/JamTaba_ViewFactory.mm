@@ -29,9 +29,18 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     QApplication::setAttribute(Qt::AA_MacPluginApplication);
     QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar); // not working in qt 5.6.2
     
-    Configurator *configurator = Configurator::getInstance();
-    if (!configurator->setUp())
-        qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
+    JamTabaAUPlugin *auPlugin = nullptr;
+    UInt32 size = sizeof(JamTabaAUInterface *);
+    OSStatus error = AudioUnitGetProperty(inAU, kJamTabaGetInstance, kAudioUnitScope_Global, 0, &auPlugin, &size);
+    if (error) {
+        printf("\nERROR getting instance: %d\n", error);
+    }
+    
+    if (!auPlugin) {
+        Configurator *configurator = Configurator::getInstance();
+        if (!configurator->setUp())
+            qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
+    }
     
     if (!QApplication::instance())
     {
@@ -40,8 +49,19 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     }
 
     uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];
-    
-    JamTabaAUPlugin *auPlugin = JamTabaAUPlugin::getInstance(inAU);
+   
+    if (!auPlugin) {
+        auPlugin = new JamTabaAUPlugin(inAU);
+        auPlugin->initialize();
+        
+        UInt32 size = sizeof(void *);
+        error = AudioUnitSetProperty(inAU, kJamTabaSetInstance, kAudioUnitScope_Global, 0, auPlugin, size);
+        
+        if (error) {
+            printf("\nERROR setting instance: %d\n", error);
+        }
+        
+    }
     
     if (!auPlugin->mainWindow) {
         MainControllerPlugin *mainController = auPlugin->getController();
@@ -79,16 +99,15 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     [uiFreshlyLoadedView setFrame: frame];
     
     auPlugin->nativeView->show();
-    auPlugin->mainWindow->update(); // necessary to solve a bug in Logic when the custom view is hidded (using generic view) and showed
-    
-    [uiFreshlyLoadedView setAU:inAU];
+    QTimer::singleShot(500, auPlugin->mainWindow, SLOT(update()));// necessary to solve a bug in Logic when the custom view is hidded (using generic view) and showed
+    //auPlugin->mainWindow->update();
+    //[uiFreshlyLoadedView setNeedsDisplay:YES];
+    [uiFreshlyLoadedView setAudioUnit:inAU];
     
     NSView *returnView = uiFreshlyLoadedView;
     
  
-    UInt32 size = sizeof(void *);
-    JamTabaAudioUnitListener *listener = auPlugin->listener;
-    AudioUnitSetProperty(inAU, kJamTabaSetListener, kAudioUnitScope_Global, 0, listener, size);
+
     
     
     uiFreshlyLoadedView = nil;	// zero out pointer.  This is a view factory.  Once a view's been created

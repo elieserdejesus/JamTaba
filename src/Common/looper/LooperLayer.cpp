@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <cmath>
+#include <QDebug>
 
 #include <QDebug>
 

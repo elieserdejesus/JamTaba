@@ -1,16 +1,34 @@
 #include "JamTaba.h"
 
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //	Standard DSP AudioUnit implementation
 
 AUDIOCOMPONENT_ENTRY(AUBaseProcessFactory, JamTaba)
 
+JamTabaAUInterface *JamTaba::jamTabaInstance = nullptr;
+bool JamTaba::recentlyCreated = false;
+
 
 JamTaba::JamTaba(AudioUnit component)
-	: AUEffectBase(component, true),//2, 1),
-      listener(nullptr)
+	: AUEffectBase(component, true)//2, 1),
 {
+    JamTaba::recentlyCreated = true;
+}
+
+JamTaba::~JamTaba()
+{
+    // wait 2 seconds to see if the AU will be created. When buffer size is changed in Logic (for example) the AU is deleted and recreated.
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if (!JamTaba::recentlyCreated && JamTaba::jamTabaInstance) {
+            delete jamTabaInstance;
+            jamTabaInstance = nullptr;
+        }
+    
+    });
+
+    JamTaba::recentlyCreated = false;
     
 }
 
@@ -20,22 +38,12 @@ OSStatus JamTaba::SetProperty(AudioUnitPropertyID inID,
                                 const void *			inData,
                                                 UInt32 inDataSize)
 {
-    if (inScope == kAudioUnitScope_Global && inID == kJamTabaSetListener) {
-        this->listener = (JamTabaAudioUnitListener*)inData;
+    if (inScope == kAudioUnitScope_Global && inID == kJamTabaSetInstance) {
+        JamTaba::jamTabaInstance = (JamTabaAUInterface *)inData;
         return noErr;
     }
     
-    return AUBase::SetProperty (inID, inScope, inElement, inData, inDataSize);
-}
-
-void JamTaba::Cleanup()
-{
-    AUBase::Cleanup();
-    
-    if (listener) {
-        listener->cleanUp();
-        listener = nullptr;
-    }
+    return AUEffectBase::SetProperty (inID, inScope, inElement, inData, inDataSize);
 }
 
 void JamTaba::updateHostState()
@@ -123,9 +131,9 @@ OSStatus JamTaba::Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioT
     outputs[0] = outputBus->GetFloat32ChannelData(0);
     outputs[1] = outputBus->GetFloat32ChannelData(1);
     
-    if (listener) {
+    if (JamTaba::jamTabaInstance) {
         updateHostState();
-        listener->process(inputs, outputs, inputsCount, outputsCount, framesToProcess, hostState);
+        JamTaba::jamTabaInstance->processAudio(inputs, outputs, inputsCount, outputsCount, framesToProcess, hostState);
     }
     
     
@@ -148,11 +156,21 @@ OSStatus JamTaba::GetPropertyInfo (AudioUnitPropertyID	inID, AudioUnitScope inSc
                 outWritable = false;
                 outDataSize = sizeof(AUHostState);
                 return noErr;
-               
+            
+            case kJamTabaSetInstance:
+                 outWritable = true;
+                 outDataSize = sizeof(JamTabaAUInterface *);
+                return noErr;
+                
+            case kJamTabaGetInstance:
+                outWritable = true;
+                outDataSize = sizeof(JamTabaAUInterface *);
+                return noErr;
+              
         }
 	}
 	
-	return AUBase::GetPropertyInfo (inID, inScope, inElement, outDataSize, outWritable);
+	return AUEffectBase::GetPropertyInfo (inID, inScope, inElement, outDataSize, outWritable);
 }
 
 
@@ -194,12 +212,18 @@ OSStatus JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, 
                 *((AUHostState *)outData) = hostState;
                 return noErr;
             }
+                
+            case kJamTabaGetInstance:
+            {
+                *(JamTabaAUInterface**) outData = JamTaba::jamTabaInstance;
+                return noErr;
+            }
 
   		}
 	}
-	
+  	
 	// if we've gotten this far, handles the standard properties
-	return AUBase::GetProperty (inID, inScope, inElement, outData);
+	return AUEffectBase::GetProperty (inID, inScope, inElement, outData);
 }
 
 bool JamTaba::StreamFormatWritable(AudioUnitScope scope, AudioUnitElement element)

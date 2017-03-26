@@ -2,6 +2,7 @@
 #import <AudioUnit/AudioUnit.h>
 #import <AudioToolbox/AudioToolbox.h>
 
+#include "JamTabaAUPlugin.h"
 
 /************************************************************************************************************/
 /* NOTE: It is important to rename ALL ui classes when using the XCode Audio Unit with Cocoa View template	*/
@@ -15,11 +16,12 @@
 @interface JamTaba_UIView : NSView
 {	
     // Other Members
-    AudioUnit 				mAU;
+    AudioUnit audioUnit;
 
 }
 
 
-- (void)setAU:(AudioUnit)inAU;
+- (void)setAudioUnit:(AudioUnit)unit;
+
 
 @end

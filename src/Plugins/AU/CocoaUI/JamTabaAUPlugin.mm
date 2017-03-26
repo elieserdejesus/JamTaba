@@ -1,26 +1,6 @@
 #include "JamTabaAUPlugin.h"
-#include <QMacNativeWidget>
 
-
-JamTabaAUPlugin* JamTabaAUPlugin::instance = nullptr;
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-Listener::Listener(JamTabaAUPlugin *auPlugin)
-    : auPlugin(auPlugin)
-{
-    //
-}
-    
-void Listener::process(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState)
-{
-   auPlugin->process(inputs, outputs, inputsCount, outputsCount, framesToProcess, hostState);
-}
-    
-void Listener::cleanUp()
-{
-    JamTabaAUPlugin::releaseInstance();
-}
+#include "JamTaba.h"
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -49,7 +29,6 @@ public:
 
 JamTabaAUPlugin::JamTabaAUPlugin(AudioUnit audioUnit)
     :JamTabaPlugin(4, 2),
-    listener(new Listener(this)),
     audioUnit(audioUnit),
     initializing(true)
 {
@@ -59,25 +38,7 @@ JamTabaAUPlugin::JamTabaAUPlugin(AudioUnit audioUnit)
 
 JamTabaAUPlugin::~JamTabaAUPlugin()
 {
-    finalize();
-}
-
-JamTabaAUPlugin* JamTabaAUPlugin::getInstance(AudioUnit unit)
-{
-    if (!JamTabaAUPlugin::instance) {
-        JamTabaAUPlugin::instance = new JamTabaAUPlugin(unit);
-        JamTabaAUPlugin::instance->initialize();
-    }
-    
-    return JamTabaAUPlugin::instance;
-}
-
-void JamTabaAUPlugin::releaseInstance()
-{
-    if (JamTabaAUPlugin::instance) {
-        delete JamTabaAUPlugin::instance;
-        JamTabaAUPlugin::instance = nullptr;
-    }
+    finalize(); // not called at moment
 }
 
 void JamTabaAUPlugin::initialize()
@@ -86,7 +47,7 @@ void JamTabaAUPlugin::initialize()
  
     mainWindow = nullptr;
     
-    nativeView = nullptr;// createNativeView();
+    nativeView = nullptr;
     
     initializing = false;
 }
@@ -104,6 +65,7 @@ void JamTabaAUPlugin::finalize()
     
         nativeView = nullptr;
         mainWindow = nullptr;
+
     }
 }
 
@@ -133,7 +95,7 @@ void JamTabaAUPlugin::resizeWindow(int newWidth, int newHeight)
     }
 }
 
-void JamTabaAUPlugin::process(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState)
+void JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState)
 {
     this->hostState = hostState;
     

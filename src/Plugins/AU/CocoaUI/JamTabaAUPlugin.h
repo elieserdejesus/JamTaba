@@ -9,17 +9,12 @@
 #include "MainWindowPlugin.h"
 #include <QMacNativeWidget>
 
-
-class Listener;
-
-
-class JamTabaAUPlugin : public JamTabaPlugin
+class JamTabaAUPlugin : public JamTabaAUInterface, public JamTabaPlugin
 {
 
-private:
-    JamTabaAUPlugin(AudioUnit audioUnit);
-    
 public:
+    JamTabaAUPlugin(AudioUnit audioUnit);
+  
     ~JamTabaAUPlugin();
     
     void initialize() override;
@@ -38,40 +33,23 @@ public:
     
     MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
     
-    void process(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState);
+    // JamTabaAUInterface
+    void processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState) override;
     
     void resizeWindow(int newWidth, int newHeight);
     
-    JamTabaAudioUnitListener *listener;
     MainWindowPlugin *mainWindow;
     QMacNativeWidget *nativeView;
     
-    static JamTabaAUPlugin *getInstance(AudioUnit unit);
-    static void releaseInstance();
-    
-
 private:
     static QString CFStringToQString(CFStringRef str);
-    
-    static JamTabaAUPlugin *instance;
+
     AudioUnit audioUnit;
     AUHostState hostState;
     
     bool initializing;
-
-};
-
-class Listener : public JamTabaAudioUnitListener
-{
-public:
-    Listener(JamTabaAUPlugin *auPlugin);
     
-    void process(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState) override;
-    
-    void cleanUp() override;
 
-private:
-    JamTabaAUPlugin *auPlugin;
 };
 
 #endif

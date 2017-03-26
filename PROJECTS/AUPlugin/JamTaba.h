@@ -5,11 +5,13 @@
 #include "AUEffectBase.h"
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include "JamTabaVersion.h"
-#include <math.h>
+
+#include <cmath>
 
 enum
 {
-    kJamTabaSetListener         = 65537,
+    kJamTabaSetInstance = 65537,
+    kJamTabaGetInstance,
     kJamTabaGetHostState
 };
 
@@ -27,16 +29,14 @@ struct AUHostState
 };
 
 
-/** This interface is the communication pointbetween this Audio Unit and the cocoa View (see JamTabaAUPlugin.mm) */
+/** This interface is the communication point between this Audio Unit and the cocoa View (see JamTabaAUPlugin.mm) */
 
-class JamTabaAudioUnitListener
+class JamTabaAUInterface
 {
 public:
-    virtual void process(Float32 **inputs, Float32 ** outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState) = 0;
-    
-    virtual void cleanUp() = 0;
+    virtual ~JamTabaAUInterface(){}
+    virtual void processAudio(Float32 **inputs, Float32 ** outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState) = 0;
 };
-
 
 
 class JamTaba : public AUEffectBase
@@ -45,13 +45,12 @@ class JamTaba : public AUEffectBase
 public:
     
 	JamTaba(AudioUnit component);
+    ~JamTaba();
     
 	inline OSStatus Version() override {
         return kJamTabaVersion;
     }
     
-    void Cleanup() override;
-	
     OSStatus GetPropertyInfo(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, UInt32 &outDataSize, Boolean	&outWritable) override;
     
 	OSStatus GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, void	*outData) override;
@@ -62,9 +61,12 @@ public:
     
     OSStatus Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioTimeStamp &inTimeStamp, UInt32 nFrames) override;
     
+    
 private:
     
-    JamTabaAudioUnitListener *listener;
+    static  JamTabaAUInterface* jamTabaInstance; // this is the real JamTaba instance created in JamTabaAUPlugin.mm
+    static bool recentlyCreated;
+    
     AUHostState hostState;
     
     void updateHostState();

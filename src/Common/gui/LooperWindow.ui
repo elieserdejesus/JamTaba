@@ -325,7 +325,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBoxPlayMode"/>
+         <widget class="QComboBox" name="comboBoxPlayMode">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -425,7 +432,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="maxLayersComboBox"/>
+         <widget class="QComboBox" name="maxLayersComboBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
