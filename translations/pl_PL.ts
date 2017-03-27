@@ -367,7 +367,7 @@
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation>Odsłuch/zabl.</translation>
+        <translation>odtwarzaj wszystke/zablokowane</translation>
     </message>
     <message>
         <source>Overdub</source>
@@ -431,7 +431,7 @@
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie mogę załadować pliku &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Audio files</source>
