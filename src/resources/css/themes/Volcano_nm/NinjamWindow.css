@@ -277,6 +277,13 @@ LooperWindow QComboBox::down-arrow:disabled
     image:url(:/images/arrow-down-lighter.png);
 }
 
+LooperWindow #buttonRec[blinking="true"]
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #FDE5A9,
+        stop: 1.0 #FFB301);
+}
+
 LooperWindow QLabel,
 LooperWindow QGroupBox
 {
