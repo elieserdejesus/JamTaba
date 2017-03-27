@@ -304,6 +304,11 @@ LooperWindow #buttonRec:hover:checked
         stop:1 rgba(175, 0, 0, 200));
 }
 
+LooperWindow #buttonRec[blinking="true"]:checked
+{
+    background-color: rgb(180, 207, 250);
+}
+
 LooperWindow QComboBox                         /* the colors inside the combo box*/
 {
     background-color: rgb(180, 207, 250);
@@ -340,11 +345,6 @@ LooperWindow QComboBox:disabled
 LooperWindow QComboBox::down-arrow:disabled
 {
     image:url(:/images/arrow-down-lighter.png);
-}
-
-LooperWindow #buttonRec[blinking="true"]:checked
-{
-    background-color: rgb(180, 207, 250);
 }
 
 LooperWindow QLabel,
