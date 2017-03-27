@@ -501,6 +501,7 @@ void Looper::processChangeRequests()
             }
         }
 
+        setChanged(true);
         emit maxLayersChanged(maxLayers);
     }
 }
@@ -570,6 +571,7 @@ void Looper::setMode(Mode mode)
         for (quint8 l = 0; l < maxLayers; ++l)  // reset mute state in all layers when mode is changed
             layers[l]->setMuteState(LooperLayer::Unmuted);
 
+        setChanged(true);
         emit modeChanged();
     }
 }
