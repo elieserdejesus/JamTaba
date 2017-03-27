@@ -367,7 +367,7 @@
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation>Odtwarzaj zablokowane</translation>
+        <translation>Odsłuch/zabl.</translation>
     </message>
     <message>
         <source>Overdub</source>
