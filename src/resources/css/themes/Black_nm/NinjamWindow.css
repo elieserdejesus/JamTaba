@@ -302,6 +302,11 @@ LooperWindow #buttonRec:hover:checked
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 20, 20), stop:1 rgb(120, 0, 0));
 }
 
+LooperWindow #buttonRec[blinking="true"]:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
+}
+
 LooperWindow QComboBox                         /* the colors inside the combo box*/
 {
     background-color: rgb(130, 130, 130);

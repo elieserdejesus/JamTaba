@@ -265,9 +265,23 @@ LooperWindow #buttonPlay:hover:checked
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
 }
 
+LooperWindow #buttonRec:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(234, 93, 103), stop:1 rgb(120, 0, 0));
+}
+
 LooperWindow #buttonRec[blinking="false"]:hover:checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+}
+
+LooperWindow #buttonRec[blinking="true"]:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 white,
+        stop:0.2 rgba(255, 255, 255, 180),
+        stop:0.85 rgba(255, 255, 255, 180),
+        stop:1 rgba(255,255, 255, 40));
 }
 
 LooperWindow QLabel,
