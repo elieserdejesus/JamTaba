@@ -270,7 +270,6 @@ LooperWindow #buttonRec[blinking="false"]:hover:checked
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
 }
 
-LooperWindow #buttonRec[blinking="true"],
 LooperWindow #buttonRec[blinking="true"]:checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,

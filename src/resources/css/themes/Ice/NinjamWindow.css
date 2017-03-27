@@ -342,7 +342,6 @@ LooperWindow QComboBox::down-arrow:disabled
     image:url(:/images/arrow-down-lighter.png);
 }
 
-LooperWindow #buttonRec[blinking="true"],
 LooperWindow #buttonRec[blinking="true"]:checked
 {
     background-color: rgb(180, 207, 250);
