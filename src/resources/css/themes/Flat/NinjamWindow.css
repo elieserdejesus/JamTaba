@@ -168,7 +168,8 @@ IntervalProgressWindow                      /* The floating window showing the m
     background-color: rgb(206, 206, 206);
 }
 
-LooperWindow #buttonRec[blinking="true"]
+LooperWindow #buttonRec[blinking="true"],
+LooperWindow #buttonRec[blinking="true"]:checked
 {
     background-color: rgb(250, 250, 250);
 }

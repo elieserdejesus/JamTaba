@@ -326,7 +326,7 @@ LooperWindow #buttonPlay:checked
 }
 
 
-LooperWindow #buttonRec[blinking="false"]:checked
+LooperWindow #buttonRec:checked
 {
     background-color: rgb(255, 0, 0);
 }
