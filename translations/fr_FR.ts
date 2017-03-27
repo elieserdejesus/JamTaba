@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.0" language="fr_FR">
 <context>
     <name>Audio::Looper</name>
     <message>
         <source>Sequence</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Séquence</translation>
     </message>
     <message>
         <source>All Layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tous les calques</translation>
     </message>
     <message>
         <source>Selected Layer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Calque sélectionné</translation>
     </message>
 </context>
 <context>
@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>Boost</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Augmenter</translation>
     </message>
 </context>
 <context>
@@ -261,7 +261,7 @@
     </message>
     <message>
         <source>Looper (Available when jamming)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Looper (Disponible lorsque vous êtes connecté)</translation>
     </message>
 </context>
 <context>
@@ -311,135 +311,135 @@
     <name>LooperWindow</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dialogue</translation>
     </message>
     <message>
         <source>Load looper layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Charger les couches de looper</translation>
     </message>
     <message>
         <source>Save looper layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enregistrer les couches de looper</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Réinitialiser</translation>
     </message>
     <message>
         <source>Mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mode</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enregistrer</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Écouter</translation>
     </message>
     <message>
         <source>Layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Couches</translation>
     </message>
     <message>
         <source>Reset layers content</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Réinitialiser le contenu des calques</translation>
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Réinitialiser les contrôles des calques</translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Réinitialiser le contenu des calques et les contrôles</translation>
     </message>
     <message>
         <source>wait (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Attendre (%1)</translation>
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sauvegarde des couches ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nom du fichier boucle:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Entendre tout / Verrouillé</translation>
     </message>
     <message>
         <source>Overdub</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Doublage</translation>
     </message>
     <message>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aléatoire</translation>
     </message>
     <message>
         <source>Locked</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verrouillé</translation>
     </message>
     <message>
         <source>Non empty</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Non vide</translation>
     </message>
     <message>
         <source>Hear all layers while recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Entendre toutes les couches pendant l&apos;enregistrement</translation>
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Doubler la couche en cours jusqu&apos;à ce que le bouton REC soit enfoncé</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Randomiser les calques pendant la lecture</translation>
     </message>
     <message>
         <source>Play locked layers only</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Écouter uniquement les calques verrouillés</translation>
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 BPM boucles</translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pas de boucles pour %1 BPM</translation>
     </message>
     <message>
         <source>Import audio files ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Importer des fichiers audio ...</translation>
     </message>
     <message>
         <source>Importing audio files ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Importation de fichiers audio ...</translation>
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Parcourez les boucles JamTaba ...</translation>
     </message>
     <message>
         <source>Open loop file</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fichier en boucle ouverte</translation>
     </message>
     <message>
         <source>Error loading audio file!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur lors du chargement du fichier audio!</translation>
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Impossible de charger le fichier &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Audio files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fichiers audio</translation>
     </message>
     <message>
         <source>JamTaba Loop Files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> Ficiers du boucles JamTaba</translation>
     </message>
 </context>
 <context>
@@ -598,7 +598,7 @@
     </message>
     <message>
         <source>Looper ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Looper ...</translation>
     </message>
 </context>
 <context>
@@ -1233,35 +1233,35 @@
     </message>
     <message>
         <source>Multi Track Recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enregistrement multi-pistes</translation>
     </message>
     <message>
         <source>Looper</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Looper</translation>
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enregistrer couches de boucle comme ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fichiers Ogg (utiliser moins d&apos;espace disque)</translation>
     </message>
     <message>
         <source>Wave files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fichiers Wave</translation>
     </message>
     <message>
         <source>Bit depth:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bits:</translation>
     </message>
     <message>
         <source>Loops folder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">dossier des Loops</translation>
     </message>
     <message>
         <source>Choosing loops folder ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Choisir le dossier des boucles ...</translation>
     </message>
 </context>
 <context>
