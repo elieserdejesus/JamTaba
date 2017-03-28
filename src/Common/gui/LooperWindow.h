@@ -42,6 +42,7 @@ protected:
     void paintEvent(QPaintEvent *ev) override;
     void keyPressEvent(QKeyEvent *ev) override;
     bool eventFilter(QObject *source, QEvent *ev);
+    void changeEvent(QEvent *ev);
 
 private slots:
     void updateBeatsPerInterval();
@@ -159,6 +160,18 @@ private:
             }
             else{
                 qCritical() << "Checkbox is null!";
+            }
+        }
+    }
+
+    template<class OptionType>
+    void translateOptions(QLayout *layout)
+    {
+        for (int i = 0; i < layout->count(); ++i) {
+            QCheckBox *checkBox = qobject_cast<QCheckBox *>(layout->itemAt(i)->widget());
+            if (checkBox) {
+                OptionType option = qvariant_cast<OptionType>(checkBox->property("option"));
+                checkBox->setText(getOptionName(option));
             }
         }
     }

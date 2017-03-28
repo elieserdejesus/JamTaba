@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -59,7 +59,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="icon">
          <iconset resource="../../resources/jamtaba.qrc">
@@ -79,7 +79,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="icon">
          <iconset resource="../../resources/jamtaba.qrc">
@@ -135,7 +135,7 @@
          <string>Load looper layers</string>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="icon">
          <iconset resource="../../resources/jamtaba.qrc">
@@ -169,7 +169,7 @@
          <string>Reset</string>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="icon">
          <iconset resource="../../resources/jamtaba.qrc">
@@ -222,7 +222,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string/>
+          <string notr="true"/>
          </property>
          <property name="pixmap">
           <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
@@ -263,7 +263,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string/>
+          <string notr="true"/>
          </property>
          <property name="pixmap">
           <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
@@ -448,6 +448,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

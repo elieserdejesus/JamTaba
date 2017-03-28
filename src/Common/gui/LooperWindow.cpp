@@ -69,6 +69,27 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
     });
 }
 
+void LooperWindow::changeEvent(QEvent *ev)
+{
+    if (ev->type() == QEvent::LanguageChange) {
+
+        // translate strings typed directly in LooperWindow.ui file
+        ui->retranslateUi(this);
+
+        // translate option checkboxes strings
+        translateOptions<Looper::PlayingOption>(ui->groupBoxPlaying->layout());
+        translateOptions<Looper::RecordingOption>(ui->groupBoxRecording->layout());
+
+        // translate mode combo box
+        for (int i = 0; i < ui->comboBoxPlayMode->count(); ++i) {
+            Looper::Mode playMode = static_cast<Looper::Mode>(ui->comboBoxPlayMode->itemData(i).toInt());
+            ui->comboBoxPlayMode->setItemText(i, Looper::getModeString(playMode));
+        }
+    }
+
+    QDialog::changeEvent(ev);
+}
+
 QMenu *LooperWindow::createResetMenu()
 {
     QMenu *resetMenu = new QMenu();
