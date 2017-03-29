@@ -249,24 +249,6 @@ inline bool Looper::optionIsSupportedInCurrentMode(RecordingOption option) const
     return modeOptions[mode].recordingOptions.keys().contains(option);
 }
 
-inline void Looper::setOption(Looper::RecordingOption option, bool value)
-{
-    if (!optionIsSupportedInCurrentMode(option)) {
-        return;
-    }
-
-    modeOptions[mode].recordingOptions[option] = value;
-}
-
-inline void Looper::setOption(Looper::PlayingOption option, bool value)
-{
-    if (!optionIsSupportedInCurrentMode(option)) {
-        return;
-    }
-
-    modeOptions[mode].playingOptions[option] = value;
-}
-
 inline bool Looper::getOption(Looper::PlayingOption option) const
 {
     if (modeOptions[mode].playingOptions.contains(option))
