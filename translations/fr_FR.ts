@@ -5,15 +5,15 @@
     <name>Audio::Looper</name>
     <message>
         <source>Sequence</source>
-        <translation type="unfinished">Séquence</translation>
+        <translation>Séquence</translation>
     </message>
     <message>
         <source>All Layers</source>
-        <translation type="unfinished">Tous les calques</translation>
+        <translation>Toutes les pistes</translation>
     </message>
     <message>
         <source>Selected Layer</source>
-        <translation type="unfinished">Calque sélectionné</translation>
+        <translation>Piste sélectionnée</translation>
     </message>
 </context>
 <context>
@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>Boost</source>
-        <translation type="unfinished">Augmenter</translation>
+        <translation>Augmenter</translation>
     </message>
 </context>
 <context>
@@ -231,15 +231,15 @@
     </message>
     <message>
         <source>Delete preset</source>
-        <translation type="unfinished">Supprimer le preset</translation>
+        <translation>Supprimer le preset</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation type="unfinished">Suppression du preset ...</translation>
+        <translation>Suppression du preset ...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation type="unfinished">Vous voulez supprimer le preset &apos;%1&apos;</translation>
+        <translation>Vous voulez supprimer le preset &apos;%1&apos;</translation>
     </message>
 </context>
 <context>
@@ -261,7 +261,7 @@
     </message>
     <message>
         <source>Looper (Available when jamming)</source>
-        <translation type="unfinished">Looper (Disponible lorsque vous êtes connecté)</translation>
+        <translation>Looper (Disponible lorsque vous êtes connecté)</translation>
     </message>
 </context>
 <context>
@@ -311,135 +311,135 @@
     <name>LooperWindow</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished">Dialogue</translation>
+        <translation>Dialogue</translation>
     </message>
     <message>
         <source>Load looper layers</source>
-        <translation type="unfinished">Charger les couches de looper</translation>
+        <translation>Charger les piste du looper</translation>
     </message>
     <message>
         <source>Save looper layers</source>
-        <translation type="unfinished">Enregistrer les couches de looper</translation>
+        <translation>Enregistrer les pistes du looper</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished">Réinitialiser</translation>
+        <translation >Réinitialiser</translation>
     </message>
     <message>
         <source>Mode</source>
-        <translation type="unfinished">Mode</translation>
+        <translation>Mode</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Enregistrer</translation>
+        <translation>Enregistrer</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation type="unfinished">Écouter</translation>
+        <translation>Écouter</translation>
     </message>
     <message>
         <source>Layers</source>
-        <translation type="unfinished">Couches</translation>
+        <translation>Pistes</translation>
     </message>
     <message>
         <source>Reset layers content</source>
-        <translation type="unfinished">Réinitialiser le contenu des calques</translation>
+        <translation>Réinitialiser le contenu des pistes</translation>
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation type="unfinished">Réinitialiser les contrôles des calques</translation>
+        <translation>Réinitialiser les contrôles des pistes</translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation type="unfinished">Réinitialiser le contenu des calques et les contrôles</translation>
+        <translation>Réinitialiser le contenu des pistes et les contrôles</translation>
     </message>
     <message>
         <source>wait (%1)</source>
-        <translation type="unfinished">Attendre (%1)</translation>
+        <translation>Attendre (%1)</translation>
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation type="unfinished">Sauvegarde des couches ...</translation>
+        <translation>Sauvegarde des pistes ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation type="unfinished">Nom du fichier boucle:</translation>
+        <translation>Nom du fichier de loop:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation type="unfinished">Entendre tout / Verrouillé</translation>
+        <translation>Entendre tout / Verrouillé</translation>
     </message>
     <message>
         <source>Overdub</source>
-        <translation type="unfinished">Doublage</translation>
+        <translation>Enregistrer par dessus</translation>
     </message>
     <message>
         <source>Random</source>
-        <translation type="unfinished">Aléatoire</translation>
+        <translation>Aléatoire</translation>
     </message>
     <message>
         <source>Locked</source>
-        <translation type="unfinished">Verrouillé</translation>
+        <translation>Verrouillé</translation>
     </message>
     <message>
         <source>Non empty</source>
-        <translation type="unfinished">Non vide</translation>
+        <translation>Non vide</translation>
     </message>
     <message>
         <source>Hear all layers while recording</source>
-        <translation type="unfinished">Entendre toutes les couches pendant l&apos;enregistrement</translation>
+        <translation>Entendre toutes les pistes pendant l&apos;enregistrement</translation>
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation type="unfinished">Doubler la couche en cours jusqu&apos;à ce que le bouton REC soit enfoncé</translation>
+        <translation>Enregistrer par dessus la piste en cours jusqu&apos;à ce que le bouton REC soit enfoncé</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
-        <translation type="unfinished">Randomiser les calques pendant la lecture</translation>
+        <translation>Randomiser les pistes pendant la lecture</translation>
     </message>
     <message>
         <source>Play locked layers only</source>
-        <translation type="unfinished">Écouter uniquement les calques verrouillés</translation>
+        <translation>Écouter uniquement les pistes verrouillés</translation>
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation type="unfinished">%1 BPM boucles</translation>
+        <translation>%1 BPM boucles</translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
-        <translation type="unfinished">Pas de boucles pour %1 BPM</translation>
+        <translation>Pas de boucles pour %1 BPM</translation>
     </message>
     <message>
         <source>Import audio files ...</source>
-        <translation type="unfinished">Importer des fichiers audio ...</translation>
+        <translation>Importer des fichiers audio ...</translation>
     </message>
     <message>
         <source>Importing audio files ...</source>
-        <translation type="unfinished">Importation de fichiers audio ...</translation>
+        <translation>Importation de fichiers audio ...</translation>
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation type="unfinished">Parcourez les boucles JamTaba ...</translation>
+        <translationt>Voir les loops JamTaba ...</translation>
     </message>
     <message>
         <source>Open loop file</source>
-        <translation type="unfinished">Fichier en boucle ouverte</translation>
+        <translation>Fichier en boucle ouverte</translation>
     </message>
     <message>
         <source>Error loading audio file!</source>
-        <translation type="unfinished">Erreur lors du chargement du fichier audio!</translation>
+        <translation>Erreur lors du chargement du fichier audio!</translation>
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
-        <translation type="unfinished">Impossible de charger le fichier &apos;%1&apos;</translation>
+        <translation>Impossible de charger le fichier &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Audio files</source>
-        <translation type="unfinished">Fichiers audio</translation>
+        <translation>Fichiers audio</translation>
     </message>
     <message>
         <source>JamTaba Loop Files</source>
-        <translation type="unfinished"> Ficiers du boucles JamTaba</translation>
+        <translation> Fichiers de loops JamTaba</translation>
     </message>
 </context>
 <context>
@@ -578,7 +578,7 @@
     </message>
     <message>
         <source>Sound Wave</source>
-        <translation type="unfinished">Onde sonore</translation>
+        <translation>Onde sonore</translation>
     </message>
     <message>
         <source>Buildings</source>
@@ -586,7 +586,7 @@
     </message>
     <message>
         <source>Gradient</source>
-        <translation type="unfinished">Gradient</translation>
+        <translation>Gradient</translation>
     </message>
     <message>
         <source>Pixelated Sound Wave</source>
@@ -598,7 +598,7 @@
     </message>
     <message>
         <source>Looper ...</source>
-        <translation type="unfinished">Looper ...</translation>
+        <translation>Looper ...</translation>
     </message>
 </context>
 <context>
@@ -961,32 +961,32 @@
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished">Synchroniser avec %1</translation>
+        <translation>Synchroniser avec %1</translation>
     </message>
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished">Synchronisation hôte</translation>
+        <translation>Synchronisation hôte</translation>
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished">Le BPM a changé! Arrêtez %1 et changer BPM à %2!</translation>
+        <translation>Le BPM a changé! Arrêtez %1 et changer BPM à %2!</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation type="unfinished">Synchronisation ...</translation>
+        <translation>Synchronisation ...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation type="unfinished">Presser play/start dans %1 pour synchroniser avec Jamtaba!</translation>
+        <translation>Presser play/start dans %1 pour synchroniser avec Jamtaba!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation type="unfinished">Essayer de synchroniser ...</translation>
+        <translation>Essayer de synchroniser ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation type="unfinished">Changez BPM du %1 en %2 et essayez la synchronisation à nouveau!</translation>
+        <translation>Changez BPM du %1 en %2 et essayez la synchronisation à nouveau!</translation>
     </message>
 </context>
 <context>
@@ -1004,23 +1004,23 @@
     <name>NinjamTrackView</name>
     <message>
         <source>Low cut</source>
-        <translation type="unfinished">Coupe bas</translation>
+        <translation>Coupe bas</translation>
     </message>
     <message>
         <source>Receive</source>
-        <translation type="unfinished">Recevoir</translation>
+        <translation>Recevoir</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished">Off</translation>
+        <translation>Off</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished">Normal</translation>
+         <translation>Normal</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation type="unfinished">Drastique</translation>
+        <translation>Drastique</translation>
     </message>
 </context>
 <context>
@@ -1261,7 +1261,7 @@
     </message>
     <message>
         <source>Choosing loops folder ...</source>
-        <translation type="unfinished">Choisir le dossier des boucles ...</translation>
+        <translation type="unfinished">Choisir le dossier des Loops ...</translation>
     </message>
 </context>
 <context>
@@ -1272,19 +1272,19 @@
     </message>
     <message>
         <source>scanning %1</source>
-        <translation type="unfinished">scan en cours %1</translation>
+        <translation">scan en cours %1</translation>
     </message>
     <message>
         <source>Add Vst(s) to Black list ...</source>
-        <translation type="unfinished">Ajouter ce VST a la liste noire...</translation>
+        <translation>Ajouter ce VST à la liste noire...</translation>
     </message>
     <message>
         <source>Remove Vst(s) from Black List ...</source>
-        <translation type="unfinished">Effacer ce(s) Vst de la liste noire...</translation>
+        <translation>Effacer ce(s) Vst de la liste noire...</translation>
     </message>
     <message>
         <source>No midi input device detected!</source>
-        <translation type="unfinished">Pas d entree midi detectee pour cette carte son!</translation>
+        <translation>Pas d entrée midi detectée pour cette carte son!</translation>
     </message>
 </context>
 <context>
