@@ -81,6 +81,8 @@ public:
     QPixmap grabCameraFrame() const;
     bool cameraIsActivated() const;
 
+    void closeAllFloatingWindows();
+
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
@@ -245,7 +247,7 @@ private:
     void hideBusyDialog();
     void centerBusyDialog();
 
-    void closeAllFloatingWindows();
+    void closeAllLooperWindows();
 
     void initializeWindowSize();
 
@@ -319,6 +321,8 @@ private:
     QString getTranslatedThemeName(const QString &themeName);
 
     void enableLooperButtonInLocalTracks(bool enable);
+
+
 
     static bool themeCanUseNightModeWorldMaps(const QString &themeName);
 

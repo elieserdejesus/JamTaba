@@ -966,7 +966,17 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     enableLooperButtonInLocalTracks(false); // disable looper buttons when exiting from server
 
-    // deactivate looper
+    closeAllLooperWindows();
+
+    for (LocalTrackGroupView *trackGroup : localGroupChannels) {
+        for (LocalTrackView *trackView : trackGroup->getTracks<LocalTrackView*>()) {
+            trackView->getInputNode()->stopLooper();
+        }
+    }
+}
+
+void MainWindow::closeAllLooperWindows()
+{
     for (LooperWindow *looperWindow : looperWindows.values()) {
         if (looperWindow) {
             looperWindow->close();
@@ -975,12 +985,6 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
         }
     }
     looperWindows.clear();
-
-    for (LocalTrackGroupView *trackGroup : localGroupChannels) {
-        for (LocalTrackView *trackView : trackGroup->getTracks<LocalTrackView*>()) {
-            trackView->getInputNode()->stopLooper();
-        }
-    }
 }
 
 void MainWindow::setChatVisibility(bool chatVisible)
@@ -1682,4 +1686,6 @@ void MainWindow::closeAllFloatingWindows()
     if (mainController->isPlayingInNinjamRoom() && ninjamWindow) {
         ninjamWindow->closeMetronomeFloatingWindow();
     }
+
+    closeAllLooperWindows();
 }

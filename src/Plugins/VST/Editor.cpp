@@ -112,6 +112,7 @@ void VstEditor::close()
     if (mainWindow) {
         jamtaba->getController()->storeWindowSettings(false, QPointF(), mainWindow->size());
         mainWindow->setParent(nullptr);
+        mainWindow->closeAllFloatingWindows();
     }
 
     if (widget) {

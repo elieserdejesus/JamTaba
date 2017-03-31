@@ -39,7 +39,8 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
 
 LooperWavePanel::~LooperWavePanel()
 {
-
+    setMouseTracking(false);
+    setAcceptDrops(false);
 }
 
 bool LooperWavePanel::isAudioFile(const QUrl &url)

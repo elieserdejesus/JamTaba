@@ -186,9 +186,10 @@ void LooperWindow::updateDrawings()
 
 void LooperWindow::detachCurrentLooper()
 {
-    if (this->looper) {
-        this->looper = nullptr;
-        this->mainController = nullptr;
+    if (looper) {
+        looper->disconnect();
+        looper = nullptr;
+        mainController = nullptr;
     }
 }
 
