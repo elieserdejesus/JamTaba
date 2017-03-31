@@ -401,7 +401,7 @@ void Looper::selectLayer(quint8 layerIndex)
     if (!layerIsLocked(layerIndex))
         focusedLayerIndex = layerIndex;
 
-    if (mode == Looper::SelectedLayer || mode == Looper::Sequence)
+    if (mode == Looper::SelectedLayer || (mode == Looper::Sequence && isStopped()))
         setCurrentLayer(layerIndex);
 }
 
