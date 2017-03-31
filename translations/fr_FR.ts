@@ -387,7 +387,7 @@
     </message>
     <message>
         <source>Hear all layers while recording</source>
-        <translation>Entendre toutes les pistes pendan l&apos;enregistrement</translation>
+        <translation>Entendre toutes les pistes pendant l&apos;enregistrement</translation>
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
