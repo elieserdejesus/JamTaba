@@ -51,6 +51,7 @@ private slots:
     void handleModeChanged();
     void updateControls();
     void showLoadMenu();
+    void showResetMenu();
     void loadAudioFilesIntoLayer(const QStringList &audioFilePaths, quint8 firstLayerIndex);
     void loadAudioFiles(const QStringList &audioFilePaths);
     void handleLayerMuteStateChanged(quint8 layer, quint8 state);
@@ -175,8 +176,6 @@ private:
             }
         }
     }
-
-    QMenu *createResetMenu();
 
     void updateMaxLayersControls();
     void setMaxLayerComboBoxValuesAvailability(int valuesToDisable);

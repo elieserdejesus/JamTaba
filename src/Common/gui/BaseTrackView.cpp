@@ -205,6 +205,8 @@ void BaseTrackView::translateUI()
 
     muteButton->setText(tr("M"));
     soloButton->setText(tr("S"));
+
+    updateBoostButtonToolTip();
 }
 
 void BaseTrackView::bindThisViewWithTrackNodeSignals()

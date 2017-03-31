@@ -90,14 +90,13 @@ void LooperWindow::changeEvent(QEvent *ev)
     QDialog::changeEvent(ev);
 }
 
-QMenu *LooperWindow::createResetMenu()
+void LooperWindow::showResetMenu()
 {
-    QMenu *resetMenu = new QMenu();
+    QMenu *resetMenu = ui->resetButton->menu();
+    resetMenu->clear();
     resetMenu->addAction(tr("Reset layers content"), looper, SLOT(resetLayersContent()));
     resetMenu->addAction(tr("Reset layers controls"), this, SLOT(resetLayersControls()));
     resetMenu->addAction(tr("Reset layers content and controls"), this, SLOT(resetAll()));
-
-    return resetMenu;
 }
 
 void LooperWindow::keyPressEvent(QKeyEvent *ev)
@@ -213,7 +212,8 @@ void LooperWindow::setLooper(Audio::Looper *looper)
 
         this->looper = looper;
 
-        QMenu *resetMenu = createResetMenu();
+        QMenu *resetMenu = new QMenu();
+        connect(resetMenu, &QMenu::aboutToShow, this, &LooperWindow::showResetMenu);
         ui->resetButton->setMenu(resetMenu);
 
         // create wave panels and layer controls (layers view)

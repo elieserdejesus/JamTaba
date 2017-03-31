@@ -151,7 +151,7 @@ void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost bo
 {
     inputNode->setGain(initialGain);
     inputNode->setPan(initialPan);
-    initializeBoostButtons(boostValue);
+    initializeBoostButton(boostValue);
     if (muted)
         inputNode->setMute(muted);
 
@@ -180,7 +180,7 @@ void LocalTrackView::solo(bool b)
     soloButton->setChecked(b);// gui only
 }
 
-void LocalTrackView::initializeBoostButtons(Boost boostValue)
+void LocalTrackView::initializeBoostButton(Boost boostValue)
 {
     switch (boostValue) {
     case Boost::MINUS:
@@ -283,7 +283,6 @@ QPushButton *LocalTrackView::createLooperButton()
 {
     QPushButton *button = new QPushButton(QIcon(":/images/loop.png"), "");
     button->setObjectName(QStringLiteral("buttonLooper"));
-    button->setToolTip(tr("Looper (Available when jamming)"));
     button->setEnabled(false); // disaled by default
 
     connect(button, &QPushButton::clicked, [=]{
@@ -302,10 +301,18 @@ QPushButton *LocalTrackView::createStereoInversionButton()
 {
     QPushButton *button = new QPushButton();
     button->setObjectName(QStringLiteral("buttonStereoInversion"));
-    button->setToolTip(tr("Invert stereo"));
     button->setCheckable(true);
     connect(button, &QPushButton::clicked, this, &LocalTrackView::setStereoInversion);
     return button;
+}
+
+void LocalTrackView::translateUI()
+{
+    BaseTrackView::translateUI();
+
+    buttonStereoInversion->setToolTip(tr("Invert stereo"));
+    buttonLooper->setToolTip(tr("Looper (Available when jamming)"));
+
 }
 
 void LocalTrackView::setStereoInversion(bool stereoInverted)

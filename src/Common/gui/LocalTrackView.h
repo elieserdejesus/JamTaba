@@ -50,7 +50,7 @@ public:
 
     void mute(bool b);
     void solo(bool b);
-    void initializeBoostButtons(Boost boostValue);
+    void initializeBoostButton(Boost boostValue);
 
 signals:
     void openLooperEditor(uint trackIndex);
@@ -66,6 +66,8 @@ protected:
     virtual void setupMetersLayout();
 
     void bindThisViewWithTrackNodeSignals() override;
+
+    void translateUI() override;
 
 private:
     QPushButton *createStereoInversionButton();

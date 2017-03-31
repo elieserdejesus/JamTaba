@@ -872,6 +872,17 @@ void MainWindow::enableLooperButtonInLocalTracks(bool enable)
     }
 }
 
+void MainWindow::updateUserNameLineEditToolTip()
+{
+    bool readOnly = ui.userNameLineEdit->isReadOnly();
+
+    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr(
+        "Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
+
+    ui.userNameLineEdit->setToolTip(toolTip);
+    ui.labelUserNameIcon->setToolTip(toolTip);
+}
+
 void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
 {
     ui.userNameLineEdit->setReadOnly(readOnly);
@@ -879,10 +890,7 @@ void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
     QString icon = readOnly ? QStringLiteral("pencil-read-only.png") : QStringLiteral("pencil.png");
     ui.labelUserNameIcon->setPixmap(QPixmap(":/images/" + icon));
 
-    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr(
-        "Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
-    ui.userNameLineEdit->setToolTip(toolTip);
-    ui.labelUserNameIcon->setToolTip(toolTip);
+    updateUserNameLineEditToolTip();
 
     if (readOnly) {
         if (ui.userNameLineEdit->hasFocus())
@@ -1086,7 +1094,10 @@ void MainWindow::changeEvent(QEvent *ev)
         mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
     }
     else if (ev->type() == QEvent::LanguageChange) {
-        ui.retranslateUi(this);
+        ui.retranslateUi(this); // translate MainWindow.ui static texts
+
+        updateUserNameLineEditToolTip(); // translate user name line edit tool tip
+
         if (ninjamWindow)
             updateChatTabTitle(); // translate the chat tab title
     }

@@ -232,6 +232,8 @@ private slots:
 
     void updateNightModeInWorldMaps();
 
+    void updateUserNameLineEditToolTip();
+
 private:
 
     BusyDialog busyDialog;
