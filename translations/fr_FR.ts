@@ -391,11 +391,11 @@
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation>Enregistrer par dessus la piste en cours jusqu&apos;à ce que le bouton REC soit enfoncé</translation>
+        <translation>Overdub de la piste en cours jusqu'à l'appui sur touche REC</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
-        <translation>Overdub de la piste en cours jusqu&apos;à l&apos;appui sur touche REC</translation>
+        <translation>Pistes au hasard pendant le jeu</translation>
     </message>
     <message>
         <source>Play locked layers only</source>
