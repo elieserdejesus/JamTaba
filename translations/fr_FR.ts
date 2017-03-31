@@ -403,11 +403,11 @@
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation>%1 BPM de la boucle</translation>
+        <translation>%1 BPM loops</translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
-        <translation>Pas de boucle pour %1 BPM</translation>
+        <translation>Pas de loops pour %1 BPM</translation>
     </message>
     <message>
         <source>Import audio files ...</source>
