@@ -350,6 +350,10 @@ void Looper::stop()
 void Looper::play()
 {
     setState(new PlayingState(this));
+
+    if (mode == Looper::Sequence && focusedLayerIndex >= 0) {
+        currentLayerIndex = focusedLayerIndex;
+    }
 }
 
 bool Looper::canClearLayer(quint8 layer) const
@@ -397,7 +401,7 @@ void Looper::selectLayer(quint8 layerIndex)
     if (!layerIsLocked(layerIndex))
         focusedLayerIndex = layerIndex;
 
-    if (mode == Looper::SelectedLayer)
+    if (mode == Looper::SelectedLayer || (mode == Looper::Sequence && isStopped()))
         setCurrentLayer(layerIndex);
 }
 
