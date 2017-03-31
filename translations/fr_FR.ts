@@ -399,7 +399,7 @@
     </message>
     <message>
         <source>Play locked layers only</source>
-        <translation>Jouer uniquemnt les pistes vérouillées</translation>
+        <translation>Jouer uniquement les pistes vérouillées</translation>
     </message>
     <message>
         <source>%1 BPM loops</source>
