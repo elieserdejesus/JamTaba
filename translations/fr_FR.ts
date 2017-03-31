@@ -323,7 +323,7 @@
     </message>
     <message>
         <source>Reset</source>
-        <translation >Réinitialiser</translation>
+        <translation>Réinitialiser</translation>
     </message>
     <message>
         <source>Mode</source>
@@ -419,7 +419,7 @@
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translationt>Voir les loops JamTaba ...</translation>
+        <translation>Voir les loops JamTaba ...</translation>
     </message>
     <message>
         <source>Open loop file</source>
@@ -1016,7 +1016,7 @@
     </message>
     <message>
         <source>Normal</source>
-         <translation>Normal</translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Drastic</source>
@@ -1241,7 +1241,7 @@
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation type="unfinished">Enregistrer couches de boucle comme ...</translation>
+        <translation type="unfinished">Enregistrer loops de boucle comme ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
@@ -1257,7 +1257,7 @@
     </message>
     <message>
         <source>Loops folder</source>
-        <translation type="unfinished">dossier des Loops</translation>
+        <translation type="unfinished">Dossier des Loops</translation>
     </message>
     <message>
         <source>Choosing loops folder ...</source>
@@ -1272,7 +1272,7 @@
     </message>
     <message>
         <source>scanning %1</source>
-        <translation">scan en cours %1</translation>
+        <translation>scan en cours %1</translation>
     </message>
     <message>
         <source>Add Vst(s) to Black list ...</source>
