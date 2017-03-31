@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>Boost</source>
-        <translation>Augmenter</translation>
+        <translation>Boost</translation>
     </message>
 </context>
 <context>
@@ -261,7 +261,7 @@
     </message>
     <message>
         <source>Looper (Available when jamming)</source>
-        <translation>Looper (Disponible lorsque vous êtes connecté)</translation>
+        <translation>Looper (Disponible pendant la jamsession)</translation>
     </message>
 </context>
 <context>
@@ -315,15 +315,15 @@
     </message>
     <message>
         <source>Load looper layers</source>
-        <translation>Charger les piste du looper</translation>
+        <translation>Charger les pistes du looper</translation>
     </message>
     <message>
         <source>Save looper layers</source>
-        <translation>Enregistrer les pistes du looper</translation>
+        <translation>Sauver les pistes du looper</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation>Réinitialiser</translation>
+        <translation>Reset</translation>
     </message>
     <message>
         <source>Mode</source>
@@ -331,11 +331,11 @@
     </message>
     <message>
         <source>Record</source>
-        <translation>Enregistrer</translation>
+        <translation>Enregistrement</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation>Écouter</translation>
+        <translation>Jouer</translation>
     </message>
     <message>
         <source>Layers</source>
@@ -343,47 +343,47 @@
     </message>
     <message>
         <source>Reset layers content</source>
-        <translation>Réinitialiser le contenu des pistes</translation>
+        <translation>Reset du contenu des pistes</translation>
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation>Réinitialiser les contrôles des pistes</translation>
+        <translation>Reset des controles de pistes</translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation>Réinitialiser le contenu des pistes et les contrôles</translation>
+        <translation>Reset des controles et du contenu des pistes</translation>
     </message>
     <message>
         <source>wait (%1)</source>
-        <translation>Attendre (%1)</translation>
+        <translation>Attendez (%1)</translation>
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation>Sauvegarde des pistes ...</translation>
+        <translation>Sauver les pistes du looper ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation>Nom du fichier de loop:</translation>
+        <translation>Nom de la loop:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation>Entendre tout / Verrouillé</translation>
+        <translation>Toutes les pistes armées/Verouillé</translation>
     </message>
     <message>
         <source>Overdub</source>
-        <translation>Enregistrer par dessus</translation>
+        <translation>Overdub</translation>
     </message>
     <message>
         <source>Random</source>
-        <translation>Aléatoire</translation>
+        <translation>Au hasard</translation>
     </message>
     <message>
         <source>Locked</source>
-        <translation>Verrouillé</translation>
+        <translation>Verouillé</translation>
     </message>
     <message>
         <source>Non empty</source>
-        <translation>Non vide</translation>
+        <translation>Pas vide</translation>
     </message>
     <message>
         <source>Hear all layers while recording</source>
@@ -391,43 +391,43 @@
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation>Enregistrer par dessus la piste en cours jusqu&apos;à ce que le bouton REC soit enfoncé</translation>
+        <translation>Overdub de la piste en cours jusqu'à l'appui sur touche REC</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
-        <translation>Randomiser les pistes pendant la lecture</translation>
+        <translation>Pistes au hasard pendant le jeu</translation>
     </message>
     <message>
         <source>Play locked layers only</source>
-        <translation>Écouter uniquement les pistes verrouillés</translation>
+        <translation>Jouer uniquement les pistes vérouillées</translation>
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation>%1 BPM boucles</translation>
+        <translation>%1 BPM loops</translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
-        <translation>Pas de boucles pour %1 BPM</translation>
+        <translation>Pas de loops pour %1 BPM</translation>
     </message>
     <message>
         <source>Import audio files ...</source>
-        <translation>Importer des fichiers audio ...</translation>
+        <translation>Importer les fichiers audio...</translation>
     </message>
     <message>
         <source>Importing audio files ...</source>
-        <translation>Importation de fichiers audio ...</translation>
+        <translation>Import des fichiers audio en cours...</translation>
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation>Voir les loops JamTaba ...</translation>
+        <translation>Montrer les loops de Jamtaba...</translation>
     </message>
     <message>
         <source>Open loop file</source>
-        <translation>Fichier en boucle ouverte</translation>
+        <translation>Ouvrir le fichier de la loop</translation>
     </message>
     <message>
         <source>Error loading audio file!</source>
-        <translation>Erreur lors du chargement du fichier audio!</translation>
+        <translation>Erreur en chargeant le fichier audio!</translation>
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
@@ -439,7 +439,7 @@
     </message>
     <message>
         <source>JamTaba Loop Files</source>
-        <translation> Fichiers de loops JamTaba</translation>
+        <translation>Fichiers des loops de Jamtaba</translation>
     </message>
 </context>
 <context>
@@ -562,7 +562,7 @@
     </message>
     <message>
         <source>Show peak meter only</source>
-        <translation>Montrer les cr^tes mètres (peack meter) seulement</translation>
+        <translation>Montrer les crêtes mètres (peack meter) seulement</translation>
     </message>
     <message>
         <source>Show RMS meter only</source>
@@ -1237,11 +1237,11 @@
     </message>
     <message>
         <source>Looper</source>
-        <translation type="unfinished">Looper</translation>
+        <translation>Looper</translation>
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation type="unfinished">Enregistrer loops de boucle comme ...</translation>
+        <translation>Sauver les pistes du looper comme ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
