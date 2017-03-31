@@ -427,7 +427,7 @@
     </message>
     <message>
         <source>Error loading audio file!</source>
-        <translation>Erreur en chargeant la fichier audio!</translation>
+        <translation>Erreur en chargeant le fichier audio!</translation>
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
