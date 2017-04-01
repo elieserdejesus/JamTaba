@@ -323,7 +323,7 @@
     </message>
     <message>
         <source>Reset</source>
-        <translation>Resetear</translation>
+        <translation>Reiniciar</translation>
     </message>
     <message>
         <source>Mode</source>
@@ -343,15 +343,15 @@
     </message>
     <message>
         <source>Reset layers content</source>
-        <translation>Resetear contenido de pistas</translation>
+        <translation>Reiniciar contenido de pistas</translation>
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation>Resetear controles de pistas</translation>
+        <translation>Reiniciar controles de pistas</translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation>Resetear contenido y controles de pistas</translation>
+        <translation>Reiniciar contenido y controles de pistas</translation>
     </message>
     <message>
         <source>wait (%1)</source>
