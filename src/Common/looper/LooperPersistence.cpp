@@ -210,8 +210,8 @@ bool LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate, 
     if (needResample) {
         SamplesBufferResampler resampler;
         uint desiredLenght = currentSampleRate/(float)audioFileSampleRate * out.getFrameLenght();
-        out.setFrameLenght(desiredLenght);
         const SamplesBuffer resampledBuffer = resampler.resample(out, desiredLenght);
+        out.setFrameLenght(desiredLenght);
         out.set(resampledBuffer);
     }
 
