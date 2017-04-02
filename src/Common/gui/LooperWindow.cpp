@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include "MainController.h"
 #include "persistence/Settings.h"
+#include "file/FileUtils.h"
 
 #include <QGridLayout>
 #include <QSpinBox>
@@ -757,6 +758,8 @@ void LooperWindow::showSaveDialogs()
     quint8 bitDepth = mainController->getLooperBitDepth();
 
     LoopSaver loopSaver(savePath, looper);
+
+    loopFileName = file::sanitizeFileName(loopFileName);
     loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, vorbisQuality, sampleRate, bitDepth);
 
     //update the looper name in LooperWindow
