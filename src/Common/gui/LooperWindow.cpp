@@ -712,38 +712,57 @@ void LooperWindow::initializeControls()
         }
     });
 
-    connect(ui->saveButton, &QPushButton::clicked, [=](){
-        if(!looper || !mainController->isPlayingInNinjamRoom())
-            return;
+    connect(ui->saveButton, &QPushButton::clicked, this, &LooperWindow::showSaveDialogs);
+}
 
-        QString loopFileName = ui->loopNameLabel->text();
-        if (loopFileName.endsWith("*"))
-            loopFileName = loopFileName.left(loopFileName.length() - 1); // remove '*' in text end;
+void LooperWindow::showSaveDialogs()
+{
+    if(!looper || !mainController->isPlayingInNinjamRoom())
+        return;
 
-        bool ok;
-        loopFileName = QInputDialog::getText(this,
-                                             tr("Saving looper layers ..."),
-                                             tr("Loop file name:"),
-                                             QLineEdit::Normal,
-                                             QString(loopFileName),
-                                             &ok);
+    QString loopFileName = ui->loopNameLabel->text();
+    if (loopFileName.endsWith("*"))
+        loopFileName = loopFileName.left(loopFileName.length() - 1); // remove '*' in text end;
 
-        if (ok && !loopFileName.isEmpty()) {
-            auto settings = mainController->getSettings();
-            auto ninjamController = mainController->getNinjamController();
-            QString savePath = settings.getLooperSavePath();
-            bool encodeInOggVorbis = mainController->getLooperAudioEncodingFlag();
-            float vorbisQuality = settings.getEncodingQuality();
-            uint sampleRate = mainController->getSampleRate();
-            uint bpm = ninjamController->getCurrentBpm();
-            uint bpi = ninjamController->getCurrentBpi();
-            quint8 bitDepth = mainController->getLooperBitDepth();
+    QString originalLoopName = loopFileName;
 
-            LoopSaver loopSaver(savePath, looper);
-            loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, vorbisQuality, sampleRate, bitDepth);
-            updateControls();
+    // show the save dialog
+    const QString title = tr("Saving looper layers ...");
+    bool dialogAccepted;
+    loopFileName = QInputDialog::getText(this, title, tr("Loop file name:"), QLineEdit::Normal, QString(loopFileName), &dialogAccepted);
+
+    if (!dialogAccepted || loopFileName.isEmpty()) {
+        qDebug() << "Save looper dialog canceled";
+        return; // user canceled or deleted the loop file name
+    }
+
+    // user is overwriting?
+    if (loopFileName == originalLoopName) {
+        QString text = tr("Loop file already exists. Do you want to overwrite?");
+        int button = QMessageBox::question(this, title, text,  QMessageBox::Yes|QMessageBox::Default, QMessageBox::No|QMessageBox::Escape);
+        if (button != QMessageBox::Yes) {
+            qDebug() << "Overwrite looper dialog canceled";
+            return; // user canceled the overwrite dialog
         }
-    });
+    }
+
+    auto settings = mainController->getSettings();
+    auto ninjamController = mainController->getNinjamController();
+    QString savePath = settings.getLooperSavePath();
+    bool encodeInOggVorbis = mainController->getLooperAudioEncodingFlag();
+    float vorbisQuality = settings.getEncodingQuality();
+    uint sampleRate = mainController->getSampleRate();
+    uint bpm = ninjamController->getCurrentBpm();
+    uint bpi = ninjamController->getCurrentBpi();
+    quint8 bitDepth = mainController->getLooperBitDepth();
+
+    LoopSaver loopSaver(savePath, looper);
+    loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, vorbisQuality, sampleRate, bitDepth);
+
+    //update the looper name in LooperWindow
+    ui->loopNameLabel->setText(loopFileName);
+
+    updateControls();
 }
 
 QString LooperWindow::getOptionName(Looper::RecordingOption option)

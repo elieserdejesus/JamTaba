@@ -59,6 +59,8 @@ private slots:
     void resetLayersControls();
     void resetAll();
 
+    void showSaveDialogs();
+
 private:
     Ui::LooperWindow *ui;
     Looper *looper;
