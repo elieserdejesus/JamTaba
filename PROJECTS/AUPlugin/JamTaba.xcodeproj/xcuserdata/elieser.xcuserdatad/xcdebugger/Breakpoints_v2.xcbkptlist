@@ -1435,36 +1435,6 @@
             endingLineNumber = "682"
             landmarkName = "class AUBase"
             landmarkType = "3">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AUBase::Start()"
-                  moduleName = "JamTaba"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/AU_SDK/AUPublic/AUBase/AUBase.h"
-                  timestampString = "512847996.663873"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "682"
-                  endingLineNumber = "682"
-                  offsetFromSymbolStart = "13">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AUBase::Start()"
-                  moduleName = "CocoaJamTabaView"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/PROJECTS/AUPlugin/../../AU_SDK/AUPublic/AUBase/AUBase.h"
-                  timestampString = "512848000.662106"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "682"
-                  endingLineNumber = "682"
-                  offsetFromSymbolStart = "13">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1481,36 +1451,6 @@
             endingLineNumber = "684"
             landmarkName = "class AUBase"
             landmarkType = "3">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AUBase::Stop()"
-                  moduleName = "JamTaba"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/AU_SDK/AUPublic/AUBase/AUBase.h"
-                  timestampString = "512847996.664817"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "684"
-                  endingLineNumber = "684"
-                  offsetFromSymbolStart = "13">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AUBase::Stop()"
-                  moduleName = "CocoaJamTabaView"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/PROJECTS/AUPlugin/../../AU_SDK/AUPublic/AUBase/AUBase.h"
-                  timestampString = "512848000.662417"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "684"
-                  endingLineNumber = "684"
-                  offsetFromSymbolStart = "13">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1573,36 +1513,6 @@
             endingLineNumber = "24"
             landmarkName = "JamTaba::~JamTaba()"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "___ZN7JamTabaD2Ev_block_invoke"
-                  moduleName = "JamTaba"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/src/Plugins/AU/AUSource/JamTaba.cpp"
-                  timestampString = "512847996.665105"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "24"
-                  endingLineNumber = "24"
-                  offsetFromSymbolStart = "16">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "___ZN7JamTabaD2Ev_block_invoke"
-                  moduleName = "CocoaJamTabaView"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/src/Plugins/AU/AUSource/JamTaba.cpp"
-                  timestampString = "512848000.662769"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "24"
-                  endingLineNumber = "24"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

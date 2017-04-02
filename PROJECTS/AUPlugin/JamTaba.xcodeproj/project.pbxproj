@@ -321,6 +321,8 @@
 		2A3AE1E41E80868500D391C5 /* Mp3FileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A3AE1E21E80868500D391C5 /* Mp3FileReader.cpp */; };
 		2A3D0AA31E06D4FE00789D68 /* JamTaba.component in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01CCD20486CAD60068D4B7 /* JamTaba.component */; };
 		2A3FC8401E15BCD5005227F4 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700D1E08113100A4B6C2 /* Carbon.framework */; };
+		2A4340361E91B06400FE3CB7 /* FileUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A4340321E91B00B00FE3CB7 /* FileUtils.h */; };
+		2A4340371E91B06B00FE3CB7 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4340331E91B00B00FE3CB7 /* FileUtils.cpp */; };
 		2A488F041E2C04C70097C505 /* PluginDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2C1E0AF46800BEF1FF /* PluginDescriptor.cpp */; };
 		2A67BD9F1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A67BD9B1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp */; };
 		2A67BDA01E410F3200A8FFF1 /* PerformanceMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A67BD9C1E410F3200A8FFF1 /* PerformanceMonitor.h */; };
@@ -687,6 +689,8 @@
 		2A3AE1DD1E80863000D391C5 /* BlinkableButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlinkableButton.cpp; sourceTree = "<group>"; };
 		2A3AE1E11E80868500D391C5 /* Mp3FileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mp3FileReader.h; sourceTree = "<group>"; };
 		2A3AE1E21E80868500D391C5 /* Mp3FileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mp3FileReader.cpp; sourceTree = "<group>"; };
+		2A4340321E91B00B00FE3CB7 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
+		2A4340331E91B00B00FE3CB7 /* FileUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileUtils.cpp; sourceTree = "<group>"; };
 		2A4CE4181E13E50E009601F6 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		2A67BD9B1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MacPerformanceMonitor.cpp; sourceTree = "<group>"; };
 		2A67BD9C1E410F3200A8FFF1 /* PerformanceMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformanceMonitor.h; sourceTree = "<group>"; };
@@ -1388,6 +1392,8 @@
 		2AF5A9271E76192F00D1150A /* file */ = {
 			isa = PBXGroup;
 			children = (
+				2A4340321E91B00B00FE3CB7 /* FileUtils.h */,
+				2A4340331E91B00B00FE3CB7 /* FileUtils.cpp */,
 				2A3AE1E11E80868500D391C5 /* Mp3FileReader.h */,
 				2A3AE1E21E80868500D391C5 /* Mp3FileReader.cpp */,
 				2AF5A9281E76192F00D1150A /* FileReader.h */,
@@ -1631,6 +1637,7 @@
 				2A0DBCB31E0AF46900BEF1FF /* SamplesBufferRecorder.h in Headers */,
 				2A0DBE1D1E0AF46D00BEF1FF /* RtMidiDriver.h in Headers */,
 				2A0DBDE51E0AF46C00BEF1FF /* MapWidget.h in Headers */,
+				2A4340361E91B06400FE3CB7 /* FileUtils.h in Headers */,
 				2A0DBCAF1E0AF46900BEF1FF /* RoomStreamerNode.h in Headers */,
 				2A0DBC711E0AF46900BEF1FF /* LocalInputGroup.h in Headers */,
 				2AF5A9391E76192F00D1150A /* WaveFileWriter.h in Headers */,
@@ -1988,6 +1995,7 @@
 				2A1C7A961E0B5F2C00C7984D /* AUEffectBase.cpp in Sources */,
 				2A1C7A971E0B5F2C00C7984D /* CAAudioChannelLayout.cpp in Sources */,
 				2A1C7A981E0B5F2C00C7984D /* CABufferList.cpp in Sources */,
+				2A4340371E91B06B00FE3CB7 /* FileUtils.cpp in Sources */,
 				2A1C7A991E0B5F2C00C7984D /* CADebugger.cpp in Sources */,
 				2A1C7A9A1E0B5F2C00C7984D /* CADebugMacros.cpp in Sources */,
 				2A1C7A9B1E0B5F2C00C7984D /* CADebugPrintf.cpp in Sources */,
