@@ -166,8 +166,8 @@ void TestLooper::playing()
     looper.play();
 
     for (int l = 0; l < expectedCurrentLayers.size(); ++l) {
-        Q_ASSERT(looper.getCurrentLayerIndex() == expectedCurrentLayers.at(l));
         looper.startNewCycle(2); // start new cycle and increment layer index
+        Q_ASSERT(looper.getCurrentLayerIndex() == expectedCurrentLayers.at(l));
     }
 }
 
@@ -182,7 +182,7 @@ void TestLooper::playing_data()
     QTest::newRow("1 layers, 1st layer locked, playing locked only") << quint8(1) << (QSet<quint8>() << 0) << (QList<quint8>() << 0);
     QTest::newRow("2 layers, All layers locked, playing locked only") << quint8(2) << (QSet<quint8>() << 0 << 1) << (QList<quint8>() << 0 << 1);
     QTest::newRow("2 layers, 1st layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 0) << (QList<quint8>() << 0 << 0);
-    QTest::newRow("2 layers, 2nd layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 1) << (QList<quint8>() << 0 << 1);
+    QTest::newRow("2 layers, 2nd layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 1) << (QList<quint8>() << 1 << 1);
 }
 
 void TestLooper::waitingToRecordAndHearingIncommingAudioThrougLooperLayerSettings()

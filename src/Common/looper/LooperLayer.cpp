@@ -1,7 +1,10 @@
 #include "LooperLayer.h"
 #include "audio/core/SamplesBuffer.h"
+
 #include <cstring>
 #include <cmath>
+
+#include <QDebug>
 
 using namespace Audio;
 using namespace std;
