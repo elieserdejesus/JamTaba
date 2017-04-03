@@ -223,7 +223,7 @@ IntervalProgressDisplay
     qproperty-accentsColor: rgb(200, 0, 0); /* dark red */
     qproperty-currentAccentColor: red;
     qproperty-secondaryBeatsColor: rgba(106, 77, 57);
-    qproperty-disabledBeatsColor: rgba(86, 67, 47);
+    qproperty-disabledBeatsColor: rgba(106, 77, 57, 30);
     qproperty-linesColor: rgba(0, 0, 0, 50);
 }
 
@@ -263,18 +263,6 @@ LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down men
         stop: 1.0 #FFB301);;
     selection-background-color: rgb(179, 89, 37);
     selection-color: rgb(254, 181, 102);
-}
-
-LooperWindow #maxLayersSpinBox
-{
-    border: 2px solid rgba(0, 0, 0, 70);
-    border-radius: 2px;
-    color: black;
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop: 0.0 #FDE5A9,
-        stop: 1.0 #FFB301);
-    selection-background-color: rgb(179, 89, 37);
-    selection-color: rgba(254, 181, 102, 150);
 }
 
 LooperWindow QCheckBox:disabled,

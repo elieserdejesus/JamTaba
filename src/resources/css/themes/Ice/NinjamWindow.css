@@ -272,7 +272,7 @@ IntervalProgressDisplay
     qproperty-accentsColor: rgb(0, 0, 240); /* dark blue */
     qproperty-currentAccentColor: blue;
     qproperty-secondaryBeatsColor: rgba(57, 77, 77);
-    qproperty-disabledBeatsColor: rgba(86, 67, 47);
+    qproperty-disabledBeatsColor: rgba(57, 77, 77, 30);
     qproperty-linesColor: rgba(0, 0, 0, 50);
 }
 
@@ -319,16 +319,6 @@ LooperWindow QComboBox                         /* the colors inside the combo bo
 LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
 {
     border: none;
-    color: black;
-    background-color: rgb(180, 207, 250);
-    selection-background-color: rgb(51, 153, 255);
-    selection-color: white;
-}
-
-LooperWindow #maxLayersSpinBox
-{
-    border: 1px solid rgba(0, 0, 0, 90);
-    border-radius:6px;
     color: black;
     background-color: rgb(180, 207, 250);
     selection-background-color: rgb(51, 153, 255);
