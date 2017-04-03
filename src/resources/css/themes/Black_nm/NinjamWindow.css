@@ -323,15 +323,6 @@ LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down men
     selection-color: rgb(140, 140, 140);
 }
 
-LooperWindow #maxLayersSpinBox
-{
-    border: 2px solid rgb(80, 80, 80);
-    color: rgb(20, 20, 20);
-    background-color: rgb(130, 130, 130);
-    selection-background-color: rgb(50, 50, 50);
-    selection-color: rgb(140, 140, 140);
-}
-
 LooperWindow QCheckBox:disabled,
 LooperWindow QLabel:disabled,
 LooperWindow QComboBox:disabled
