@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr_FR">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -310,10 +310,6 @@
 <context>
     <name>LooperWindow</name>
     <message>
-        <source>Dialog</source>
-        <translation>Dialogue</translation>
-    </message>
-    <message>
         <source>Load looper layers</source>
         <translation>Charger les pistes du looper</translation>
     </message>
@@ -391,7 +387,7 @@
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation>Overdub de la piste en cours jusqu'à l'appui sur touche REC</translation>
+        <translation>Overdub de la piste en cours jusqu&apos;à l&apos;appui sur touche REC</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
@@ -440,6 +436,18 @@
     <message>
         <source>JamTaba Loop Files</source>
         <translation>Fichiers des loops de Jamtaba</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>R</translation>
+    </message>
+    <message>
+        <source>Loop file already exists. Do you want to overwrite?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -718,18 +726,18 @@
     </message>
     <message>
         <source>Channel %1</source>
-        <translation type="unfinished">Canal %1</translation>
+        <translation>Canal %1</translation>
     </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
     <message>
         <source>Window Size</source>
-        <translation type="unfinished">Taille de la Fenêtre</translation>
+        <translation>Taille de la Fenêtre</translation>
     </message>
     <message>
         <source>Increase</source>
-        <translation type="unfinished">Augmenter</translation>
+        <translation>Augmenter</translation>
     </message>
     <message>
         <source>Decrease</source>
@@ -787,7 +795,7 @@
     </message>
     <message>
         <source>Route MIDI input to first subchannel</source>
-        <translation type="unfinished">Acheminer l&apos;entrée MIDI au premier sous-canal</translation>
+        <translation>Acheminer l&apos;entrée MIDI au premier sous-canal</translation>
     </message>
 </context>
 <context>
@@ -1233,7 +1241,7 @@
     </message>
     <message>
         <source>Multi Track Recording</source>
-        <translation type="unfinished">Enregistrement multi-pistes</translation>
+        <translation>Enregistrement multi-pistes</translation>
     </message>
     <message>
         <source>Looper</source>
@@ -1245,30 +1253,30 @@
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
-        <translation type="unfinished">Fichiers Ogg (utiliser moins d&apos;espace disque)</translation>
+        <translation>Fichiers Ogg (utiliser moins d&apos;espace disque)</translation>
     </message>
     <message>
         <source>Wave files</source>
-        <translation type="unfinished">Fichiers Wave</translation>
+        <translation>Fichiers Wave</translation>
     </message>
     <message>
         <source>Bit depth:</source>
-        <translation type="unfinished">Bits:</translation>
+        <translation>Bits:</translation>
     </message>
     <message>
         <source>Loops folder</source>
-        <translation type="unfinished">Dossier des Loops</translation>
+        <translation>Dossier des Loops</translation>
     </message>
     <message>
         <source>Choosing loops folder ...</source>
-        <translation type="unfinished">Choisir le dossier des Loops ...</translation>
+        <translation>Choisir le dossier des Loops ...</translation>
     </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
     <message>
         <source>Adding VST path ...</source>
-        <translation type="unfinished">Ajouter ce chemin de VST...</translation>
+        <translation>Ajouter ce chemin de VST...</translation>
     </message>
     <message>
         <source>scanning %1</source>
@@ -1331,7 +1339,7 @@
     </message>
     <message>
         <source>User name:</source>
-        <translation type="unfinished">Nom d&apos;utilisateur:</translation>
+        <translation>Nom d&apos;utilisateur:</translation>
     </message>
 </context>
 <context>

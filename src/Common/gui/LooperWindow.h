@@ -7,6 +7,7 @@
 #include <QLayout>
 #include <QSlider>
 #include <QPushButton>
+#include <QLabel>
 #include <QTimer>
 
 #include "looper/Looper.h"
@@ -74,6 +75,8 @@ private:
 
         QSlider *panSlider;
         QSlider *gainSlider;
+        QLabel *labelPanL;
+        QLabel *labelPanR;
         BlinkableButton *muteButton;
     };
 

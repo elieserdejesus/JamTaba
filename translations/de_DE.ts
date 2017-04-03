@@ -310,10 +310,6 @@
 <context>
     <name>LooperWindow</name>
     <message>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
-    <message>
         <source>Load looper layers</source>
         <translation>lade Looper Layer</translation>
     </message>
@@ -355,15 +351,15 @@
     </message>
     <message>
         <source>wait (%1)</source>
-        <translation>warte</translation>
+        <translation>warte (%1)</translation>
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation>sichere Looper Layer</translation>
+        <translation>sichere Looper Layer ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation>Loop Dateiname</translation>
+        <translation>Loop Dateiname:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
@@ -427,7 +423,7 @@
     </message>
     <message>
         <source>Error loading audio file!</source>
-        <translation>Fehler beim Laden der Audiodatei</translation>
+        <translation>Fehler beim Laden der Audiodatei!</translation>
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
@@ -440,6 +436,18 @@
     <message>
         <source>JamTaba Loop Files</source>
         <translation>Loopdateien</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>R</translation>
+    </message>
+    <message>
+        <source>Loop file already exists. Do you want to overwrite?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1254,7 +1262,7 @@
     </message>
     <message>
         <source>Bit depth:</source>
-        <translation>Bit Auflösung</translation>
+        <translation>Bit Auflösung:</translation>
     </message>
     <message>
         <source>Loops folder</source>
@@ -1332,7 +1340,7 @@
     </message>
     <message>
         <source>User name:</source>
-        <translation>user name</translation>
+        <translation>user name:</translation>
     </message>
 </context>
 <context>

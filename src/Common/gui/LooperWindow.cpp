@@ -86,6 +86,14 @@ void LooperWindow::changeEvent(QEvent *ev)
             Looper::Mode playMode = static_cast<Looper::Mode>(ui->comboBoxPlayMode->itemData(i).toInt());
             ui->comboBoxPlayMode->setItemText(i, Looper::getModeString(playMode));
         }
+
+        // translate layers pan labels (L & R)
+        for (uint l = 0; l < MAX_LOOP_LAYERS; ++l) {
+            if (layerViews.contains(l)) {
+                layerViews[l].controlsLayout->labelPanL->setText(tr("L"));
+                layerViews[l].controlsLayout->labelPanR->setText(tr("R"));
+            }
+        }
     }
 
     QDialog::changeEvent(ev);
@@ -376,10 +384,10 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     panFaderLayout->setSpacing(0);
     panFaderLayout->setContentsMargins(0, 0, 0, 0);
 
-    QLabel *labelPanL = new QLabel(QStringLiteral("L"));
+    labelPanL = new QLabel(tr("L"));
     labelPanL->setObjectName(QStringLiteral("labelPanL"));
 
-    QLabel *labelPanR = new QLabel(QStringLiteral("R"));
+    labelPanR = new QLabel(tr("R"));
     labelPanR->setObjectName(QStringLiteral("labelPanR"));
 
     panSlider = new QSlider();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_CL" sourcelanguage="en_US">
+<TS version="2.1" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -310,10 +310,6 @@
 <context>
     <name>LooperWindow</name>
     <message>
-        <source>Dialog</source>
-        <translation>Diálogo</translation>
-    </message>
-    <message>
         <source>Load looper layers</source>
         <translation>Cargar pistas del looper</translation>
     </message>
@@ -440,6 +436,18 @@
     <message>
         <source>JamTaba Loop Files</source>
         <translation>Archivos de Loop de Jamtaba</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>I</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>D</translation>
+    </message>
+    <message>
+        <source>Loop file already exists. Do you want to overwrite?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

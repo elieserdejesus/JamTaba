@@ -310,10 +310,6 @@
 <context>
     <name>LooperWindow</name>
     <message>
-        <source>Dialog</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Load looper layers</source>
         <translation></translation>
     </message>
@@ -439,6 +435,18 @@
     </message>
     <message>
         <source>JamTaba Loop Files</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Loop file already exists. Do you want to overwrite?</source>
         <translation></translation>
     </message>
 </context>
