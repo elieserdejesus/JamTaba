@@ -261,7 +261,7 @@
     </message>
     <message>
         <source>Looper (Available when jamming)</source>
-        <translation>Loopeador (Disponible cuando conectado)</translation>
+        <translation>Looper (Disponible cuando conectado)</translation>
     </message>
 </context>
 <context>
@@ -315,11 +315,11 @@
     </message>
     <message>
         <source>Load looper layers</source>
-        <translation>Cargar pistas del loopeador</translation>
+        <translation>Cargar pistas del looper</translation>
     </message>
     <message>
         <source>Save looper layers</source>
-        <translation>Guardar pistas del loopeador</translation>
+        <translation>Guardar pistas del looper</translation>
     </message>
     <message>
         <source>Reset</source>
@@ -331,11 +331,11 @@
     </message>
     <message>
         <source>Record</source>
-        <translation>Grabar</translation>
+        <translation>Grabación</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation>Escuchar</translation>
+        <translation>Reproducción</translation>
     </message>
     <message>
         <source>Layers</source>
@@ -367,7 +367,7 @@
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation>Escuchar todas/bloqueadas</translation>
+        <translation>Escuchar todas/Bloqueadas</translation>
     </message>
     <message>
         <source>Overdub</source>
@@ -375,7 +375,7 @@
     </message>
     <message>
         <source>Random</source>
-        <translation>Aleatorio</translation>
+        <translation>Al azar</translation>
     </message>
     <message>
         <source>Locked</source>
@@ -403,11 +403,11 @@
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation>Bucles en %1 BPM</translation>
+        <translation>Loops en %1 BPM</translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
-        <translation>No hay bucles en %1 BPM</translation>
+        <translation>No hay loops en %1 BPM</translation>
     </message>
     <message>
         <source>Import audio files ...</source>
@@ -419,11 +419,11 @@
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation>Buscar bucles de Jamtaba...</translation>
+        <translation>Buscar loops de Jamtaba...</translation>
     </message>
     <message>
         <source>Open loop file</source>
-        <translation>Abrir archivo de bucle</translation>
+        <translation>Abrir archivo de loop</translation>
     </message>
     <message>
         <source>Error loading audio file!</source>
@@ -439,7 +439,7 @@
     </message>
     <message>
         <source>JamTaba Loop Files</source>
-        <translation>Archivos de Bucle de Jamtaba</translation>
+        <translation>Archivos de Loop de Jamtaba</translation>
     </message>
 </context>
 <context>
@@ -598,7 +598,7 @@
     </message>
     <message>
         <source>Looper ...</source>
-        <translation>Loopeador ...</translation>
+        <translation>Looper ...</translation>
     </message>
 </context>
 <context>
@@ -1237,11 +1237,11 @@
     </message>
     <message>
         <source>Looper</source>
-        <translation>Loopeador</translation>
+        <translation>Looper</translation>
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation>Grabar pistas del bucle como ...</translation>
+        <translation>Grabar pistas de loop como ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
@@ -1249,7 +1249,7 @@
     </message>
     <message>
         <source>Wave files</source>
-        <translation>Archivos de Onda</translation>
+        <translation>Archivos de Onda (WAV)</translation>
     </message>
     <message>
         <source>Bit depth:</source>
