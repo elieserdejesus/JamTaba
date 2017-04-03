@@ -272,7 +272,7 @@ IntervalProgressDisplay
     qproperty-accentsColor: rgb(0, 0, 240); /* dark blue */
     qproperty-currentAccentColor: blue;
     qproperty-secondaryBeatsColor: rgba(57, 77, 77);
-    qproperty-disabledBeatsColor: rgba(86, 67, 47);
+    qproperty-disabledBeatsColor: rgba(57, 77, 77, 30);
     qproperty-linesColor: rgba(0, 0, 0, 50);
 }
 
