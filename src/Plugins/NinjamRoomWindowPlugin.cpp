@@ -15,9 +15,7 @@ NinjamRoomWindowPlugin::NinjamRoomWindowPlugin(MainWindowPlugin *mainWindow, con
 {
     QString hostName = mainController->getHostName();
     if (ninjamPanel) {
-        //: The '%1' marker will be replaced by the host name when Jamtaba is running.
-        QString text = tr("Sync with %1").arg(hostName);
-        ninjamPanel->createHostSyncButton(text);
+        ninjamPanel->createHostSyncButton(hostName);
         connect(ninjamPanel, &NinjamPanel::hostSyncStateChanged, this, &NinjamRoomWindowPlugin::setHostSyncState);
     }
 

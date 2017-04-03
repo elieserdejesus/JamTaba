@@ -796,6 +796,11 @@
 <context>
     <name>NinjamPanel</name>
     <message>
+        <source>Sync with %1</source>
+        <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
+        <translation>Sincronizar com %1</translation>
+    </message>
+    <message>
         <source>metronome</source>
         <translation>metronomo</translation>
     </message>
@@ -961,11 +966,6 @@
 </context>
 <context>
     <name>NinjamRoomWindowPlugin</name>
-    <message>
-        <source>Sync with %1</source>
-        <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation>Sincronizando com %1</translation>
-    </message>
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>

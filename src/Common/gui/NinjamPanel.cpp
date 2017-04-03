@@ -106,6 +106,12 @@ void NinjamPanel::translate()
             maxComboItemWidth = itemTextWidth;
     }
     ui->comboShape->view()->setMinimumWidth(qMax(ui->comboShape->width(), maxComboItemWidth + 20));
+
+    // translate sync button
+    if (hostSyncButton) {
+        hostSyncButton->setText(tr("Sync with %1").arg(hostName));
+    }
+
 }
 
 void NinjamPanel::changeEvent(QEvent *e)
@@ -203,16 +209,19 @@ void NinjamPanel::addMasterControls(QWidget *masterControlsPanel)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
-//TODO this function and the hostSyncButton are used only in VST plugin. Create a NinjamPanelVST inheriting from NinjamPanel
-void NinjamPanel::createHostSyncButton(const QString &buttonText)
+// TODO this function and the hostSyncButton are used only in VST plugin. Create a NinjamPanelVST inheriting from NinjamPanel
+void NinjamPanel::createHostSyncButton(const QString &hostName)
 {
+    this->hostName = hostName;
+
     if (!hostSyncButton) {// just in case
-        hostSyncButton = new QPushButton(buttonText);
+        //: The '%1' marker will be replaced by the host name when Jamtaba is running.
+        hostSyncButton = new QPushButton(tr("Sync with %1").arg(hostName));
         hostSyncButton->setCheckable(true);
         QGridLayout *layout = dynamic_cast<QGridLayout *>(ui->panelCombos->layout());
         layout->addWidget(hostSyncButton, layout->rowCount(), 0, 1, 2);
 
-        connect(hostSyncButton, SIGNAL(clicked(bool)), this, SIGNAL(hostSyncStateChanged(bool)));
+        connect(hostSyncButton, &QPushButton::clicked, this, &NinjamPanel::hostSyncStateChanged);
     }
 }
 

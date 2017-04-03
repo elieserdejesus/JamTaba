@@ -24,7 +24,7 @@ public:
     explicit NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, QWidget *parent = 0);
     ~NinjamPanel();
 
-    void createHostSyncButton(const QString &buttonText);
+    void createHostSyncButton(const QString &hostName);
     void uncheckHostSyncButton();//used to uncheck the button when the sync with host fail (different BPMs)
     bool hostSyncButtonIsChecked() const;
 
@@ -92,6 +92,8 @@ private:
     void setupSignals();
     void translate();
     void initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier);
+
+    QString hostName;
 
 private slots:
     void updateAccentsStatus(int index);
