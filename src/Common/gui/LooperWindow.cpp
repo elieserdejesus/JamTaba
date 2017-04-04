@@ -195,7 +195,7 @@ void LooperWindow::updateDrawings()
 void LooperWindow::detachCurrentLooper()
 {
     if (looper) {
-        looper->disconnect();
+        disconnectLooperSignals();
         looper = nullptr;
         mainController = nullptr;
     }
@@ -250,19 +250,15 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         // initial values
         ui->maxLayersComboBox->setCurrentText(QString::number(looper->getLayers()));
 
+        ui->loopNameLabel->setText(looper->getLoopName());
+
         updateModeComboBox();
 
         connect(controller, &NinjamController::currentBpiChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::currentBpmChanged, this, &LooperWindow::updateBeatsPerInterval);
         connect(controller, &NinjamController::intervalBeatChanged, this, &LooperWindow::updateCurrentBeat);
-        connect(looper, &Looper::stateChanged, this, &LooperWindow::updateControls);
-        connect(looper, &Looper::layerChanged, this, &LooperWindow::updateControls);
-        connect(looper, &Looper::maxLayersChanged, this, &LooperWindow::handleNewMaxLayers);
-        connect(looper, &Looper::modeChanged, this, &LooperWindow::handleModeChanged);
-        connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
-        connect(looper, &Looper::destroyed, this, &LooperWindow::close);
-        connect(looper, &Looper::layerMuteStateChanged, this, &LooperWindow::handleLayerMuteStateChanged);
-        connect(looper, &Looper::layersContentErased, this, &LooperWindow::updateControls);
+
+        connectLooperSignals();
 
         connect(playingCheckBoxes[Looper::PlayLockedLayers], &QCheckBox::toggled, this, &LooperWindow::updateControls);
     }
@@ -270,6 +266,32 @@ void LooperWindow::setLooper(Audio::Looper *looper)
     updateBeatsPerInterval();
     handleNewMaxLayers(looper->getLayers());
     updateControls();
+}
+
+void LooperWindow::connectLooperSignals()
+{
+    connect(looper, &Looper::stateChanged, this, &LooperWindow::updateControls);
+    connect(looper, &Looper::layerChanged, this, &LooperWindow::updateControls);
+    connect(looper, &Looper::maxLayersChanged, this, &LooperWindow::handleNewMaxLayers);
+    connect(looper, &Looper::modeChanged, this, &LooperWindow::handleModeChanged);
+    connect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
+    connect(looper, &Looper::destroyed, this, &LooperWindow::close);
+    connect(looper, &Looper::layerMuteStateChanged, this, &LooperWindow::handleLayerMuteStateChanged);
+    connect(looper, &Looper::layersContentErased, this, &LooperWindow::updateControls);
+    connect(looper, &Looper::currentLoopNameChanged, ui->loopNameLabel, &QLabel::setText);
+}
+
+void LooperWindow::disconnectLooperSignals()
+{
+    disconnect(looper, &Looper::stateChanged, this, &LooperWindow::updateControls);
+    disconnect(looper, &Looper::layerChanged, this, &LooperWindow::updateControls);
+    disconnect(looper, &Looper::maxLayersChanged, this, &LooperWindow::handleNewMaxLayers);
+    disconnect(looper, &Looper::modeChanged, this, &LooperWindow::handleModeChanged);
+    disconnect(looper, &Looper::currentLayerChanged, this, &LooperWindow::updateControls);
+    disconnect(looper, &Looper::destroyed, this, &LooperWindow::close);
+    disconnect(looper, &Looper::layerMuteStateChanged, this, &LooperWindow::handleLayerMuteStateChanged);
+    disconnect(looper, &Looper::layersContentErased, this, &LooperWindow::updateControls);
+    disconnect(looper, &Looper::currentLoopNameChanged, ui->loopNameLabel, &QLabel::setText);
 }
 
 void LooperWindow::handleLayerMuteStateChanged(quint8 layer, quint8 state)
@@ -443,7 +465,7 @@ void LooperWindow::resetAll()
     looper->resetLayersContent();
     resetLayersControls();
 
-    ui->loopNameLabel->setText("");
+    looper->setLoopName("");
 }
 
 void LooperWindow::resetLayersControls()
@@ -729,10 +751,7 @@ void LooperWindow::showSaveDialogs()
     if(!looper || !mainController->isPlayingInNinjamRoom())
         return;
 
-    QString loopFileName = ui->loopNameLabel->text();
-    if (loopFileName.endsWith("*"))
-        loopFileName = loopFileName.left(loopFileName.length() - 1); // remove '*' in text end;
-
+    QString loopFileName = looper->getLoopName();
     QString originalLoopName = loopFileName;
 
     // show the save dialog
@@ -770,8 +789,7 @@ void LooperWindow::showSaveDialogs()
     loopFileName = file::sanitizeFileName(loopFileName);
     loopSaver.save(loopFileName, bpm, bpi, encodeInOggVorbis, vorbisQuality, sampleRate, bitDepth);
 
-    //update the looper name in LooperWindow
-    ui->loopNameLabel->setText(loopFileName);
+    looper->setLoopName(loopFileName);
 
     updateControls();
 }

@@ -143,6 +143,9 @@ public:
     bool isWaitingToStopInNextInterval() const;
     void waitToStopInNextInterval();
 
+    void setLoopName(const QString loopName);
+    QString getLoopName() const;
+
 public slots:
     void resetLayersContent(); // clear all
 
@@ -154,6 +157,7 @@ signals:
     void layerChanged(quint8 layer); // layer pan, gain, locked or content changed
     void layerMuteStateChanged(quint8 layer, quint8 state);
     void layersContentErased();
+    void currentLoopNameChanged(const QString &loopName);
 
 private:
     uint intervalLenght; // in samples
@@ -165,7 +169,7 @@ private:
 
     LooperLayer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex; // current played layer
-    int focusedLayerIndex; // layer clicked by user, used to choose recordint layer. Sometimes focused layer will be equal to currentLayerIndex.
+    int focusedLayerIndex; // layer clicked by user, used to choose recording layer. Sometimes focused layer will be equal to currentLayerIndex.
     quint8 maxLayers;
 
     float mainGain;
@@ -179,6 +183,8 @@ private:
     AudioPeak lastPeak;
 
     QSharedPointer<LooperState> state;
+
+    QString loopName; // can be empty if no loop is loaded
 
     Mode mode;
 
@@ -218,6 +224,11 @@ private:
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
 };
+
+inline QString Looper::getLoopName() const
+{
+    return loopName;
+}
 
 inline void Looper::setLoading(bool loading)
 {

@@ -192,6 +192,9 @@ private:
 
     void updateButtons();
 
+    void connectLooperSignals();
+    void disconnectLooperSignals();
+
     int currentBeat;
 };
 

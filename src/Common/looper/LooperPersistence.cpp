@@ -190,6 +190,7 @@ void LoopLoader::load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate,
     }
 
     looper->setLoading(false);
+    looper->setLoopName(loopInfo.getName());
 }
 
 bool LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate, SamplesBuffer &out)

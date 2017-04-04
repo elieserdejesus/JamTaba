@@ -485,7 +485,7 @@ void Looper::processChangeRequests()
     }
 
     // max layers change requested?
-    if (newMaxLayersRequested) {
+    if (newMaxLayersRequested && newMaxLayersRequested != maxLayers) {
         this->maxLayers = newMaxLayersRequested;
         newMaxLayersRequested = 0;
 
@@ -644,6 +644,13 @@ QMap<Looper::RecordingOption, bool> Looper::getDefaultSupportedRecordingOptions(
     }
 
     return options;
+}
+
+void Looper::setLoopName(const QString loopName)
+{
+    this->loopName = loopName;
+
+    emit currentLoopNameChanged(loopName);
 }
 
 QMap<Looper::PlayingOption, bool> Looper::getDefaultSupportedPlayingOptions(Looper::Mode mode)
