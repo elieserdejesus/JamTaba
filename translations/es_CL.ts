@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -359,7 +359,7 @@
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation>Nombre del archivo:</translation>
+        <translation>Nombre del archivo de loop:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
@@ -447,7 +447,7 @@
     </message>
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
-        <translation type="unfinished"></translation>
+        <translation>El archivo de loop ya existe. ¿Desea sobreescribirlo?</translation>
     </message>
 </context>
 <context>
