@@ -24,8 +24,8 @@ private:
 
     bool waitingForHostSync;
 
-    void deactivateNinjamAudioNodes(); // ninjam related audio nodes will not be rendered
-    void activateNinjamAudioNodes();
+    void deactivateAudioNodes(); // ninjam related audio nodes will not be rendered
+    void activateAudioNodes();
 };
 
 

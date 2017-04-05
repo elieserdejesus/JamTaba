@@ -475,6 +475,13 @@ void MainController::removeTrack(long trackID)
     }
 }
 
+void MainController::setAllLoopersStatus(bool activated)
+{
+    for (LocalInputNode *inputTrack : inputTracks.values()) {
+        inputTrack->getLooper()->setActivated(activated);
+    }
+}
+
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate)
 {
     std::vector<Midi::MidiMessage> incommingMidi = pullMidiMessagesFromDevices();

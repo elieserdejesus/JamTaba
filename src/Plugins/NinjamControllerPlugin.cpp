@@ -19,24 +19,28 @@ void NinjamControllerPlugin::stopAndWaitForHostSync()
 
         reset(true);// discard the intervals but keep the most recent
 
-        deactivateNinjamAudioNodes(); // metronome and ninjam audio nodes will not be rendered
+        deactivateAudioNodes(); // metronome and ninjam audio nodes will not be rendered
     }
 }
 
-void NinjamControllerPlugin::deactivateNinjamAudioNodes()
+void NinjamControllerPlugin::deactivateAudioNodes()
 {
     metronomeTrackNode->deactivate();
 
     for (NinjamTrackNode *node : trackNodes)
         node->deactivate();
+
+    mainController->setAllLoopersStatus(false); // deactivate all loopers
 }
 
-void NinjamControllerPlugin::activateNinjamAudioNodes()
+void NinjamControllerPlugin::activateAudioNodes()
 {
     metronomeTrackNode->activate();
 
     for (NinjamTrackNode *node : trackNodes)
         node->activate();
+
+    mainController->setAllLoopersStatus(true); // activate all loopers
 }
 
 void NinjamControllerPlugin::disableHostSync()
@@ -53,7 +57,7 @@ void NinjamControllerPlugin::startSynchronizedWithHost(qint32 startPosition)
         else
             intervalPosition = samplesInInterval - qAbs(startPosition % samplesInInterval);
 
-        activateNinjamAudioNodes();
+        activateAudioNodes();
     }
 }
 

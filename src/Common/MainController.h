@@ -296,6 +296,8 @@ public:
     bool getLooperAudioEncodingFlag() const;
     quint8 getLooperBitDepth() const;
 
+    void setAllLoopersStatus(bool activated);
+
 signals:
     void ipResolved(const QString &ip);
     void themeChanged();

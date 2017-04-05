@@ -147,6 +147,8 @@ public:
     void setLoopName(const QString loopName);
     QString getLoopName() const;
 
+    void setActivated(bool activated);
+
 public slots:
     void resetLayersContent(); // clear all
 
@@ -167,6 +169,8 @@ private:
     bool changed; // used to decide if we can save or not layers content
     bool loading;
     bool waitingToStop; // waiting to stop in next interval
+
+    bool activated;
 
     LooperLayer *layers[MAX_LOOP_LAYERS];
     quint8 currentLayerIndex; // current played layer

@@ -2,6 +2,7 @@
 #include "audio/core/AudioNodeProcessor.h"
 #include "midi/MidiMessage.h"
 #include "MainController.h"
+#include "NinjamController.h"
 
 #include <QDateTime>
 

@@ -24,7 +24,8 @@ Looper::Looper()
       newMaxLayersRequested(0),
       mainGain(1.0),
       loading(false),
-      waitingToStop(false)
+      waitingToStop(false),
+      activated(true)
 {
     initialize();
 }
@@ -42,7 +43,8 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       newMaxLayersRequested(0),
       mainGain(1.0),
       loading(false),
-      waitingToStop(false)
+      waitingToStop(false),
+      activated(true)
 {
     initialize();
 }
@@ -448,14 +450,33 @@ int Looper::getNextUnlockedLayerIndex() const
     return getFirstUnlockedLayerIndex((currentLayerIndex + 1) % maxLayers);
 }
 
+void Looper::setActivated(bool activated)
+{
+    if (activated != this->activated) {
+        this->activated = activated;
+
+        // stop if is deactivating and is recording or waiting to record
+        if (!activated && !(isStopped() || isPlaying())) { // deactivating ?
+            stop();
+            intervalPosition = 0;
+        }
+    }
+}
+
 void Looper::addBuffer(const SamplesBuffer &samples)
 {
+    if (!activated)
+        return;
+
     uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
     state->addBuffer(samples, samplesToProcess);
 }
 
 void Looper::mixToBuffer(SamplesBuffer &samples)
 {
+    if (!activated)
+        return;
+
     uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
     AudioPeak peakBeforeMix = samples.computePeak();
     state->mixTo(samples, samplesToProcess);
