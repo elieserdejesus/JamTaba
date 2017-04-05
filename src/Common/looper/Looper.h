@@ -48,6 +48,7 @@ public:
     void mixToBuffer(SamplesBuffer &samples); // playing/mixing
 
     void setMainGain(float gain);
+    float getMainGain() const;
 
     AudioPeak getLastPeak() const;
 
@@ -224,6 +225,11 @@ private:
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
 };
+
+inline float Looper::getMainGain() const
+{
+    return mainGain;
+}
 
 inline QString Looper::getLoopName() const
 {

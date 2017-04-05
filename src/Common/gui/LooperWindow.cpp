@@ -551,6 +551,10 @@ void LooperWindow::updateControls()
             ui->loopNameLabel->setText(currentLooperName + "*");
 
         updateButtons();
+
+        // main level
+        float mainGain = looper->getMainGain();
+        ui->mainLevelSlider->setValue(Utils::poweredGainToLinear(mainGain) * 100);
     }
 
     update();
