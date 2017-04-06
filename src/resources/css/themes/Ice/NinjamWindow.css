@@ -352,3 +352,9 @@ LooperWindow QCheckBox
 {
     color: white;
 }
+
+LooperWindow #muteButton:disabled
+{
+    background-color: rgba(0, 0, 0, 20);
+    color: rgba(0, 0, 0, 60)
+}
