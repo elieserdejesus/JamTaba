@@ -624,10 +624,18 @@ void Looper::mixLockedLayers(SamplesBuffer &samples, uint samplesToMix)
     }
 }
 
+void Looper::processBufferUsingCurrentLayerSettings(SamplesBuffer &buffer)
+{
+    float currentLayerGain = layers[currentLayerIndex]->getGain();
+    float leftGain = layers[currentLayerIndex]->getLeftGain();
+    float rightGain = layers[currentLayerIndex]->getRightGain();
+    buffer.applyGain(currentLayerGain, leftGain, rightGain, 1.0);
+}
+
 QString Looper::getModeString(Mode mode)
 {
     switch (mode) {
-        case Mode::Sequence:        return tr("Sequence");
+        case Mode::Sequence:       return tr("Sequence");
         case Mode::AllLayers:      return tr("All Layers");
         case SelectedLayer:        return tr("Selected Layer");
     }

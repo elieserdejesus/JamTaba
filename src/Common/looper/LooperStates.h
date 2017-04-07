@@ -65,14 +65,18 @@ public:
     inline bool isWaiting() const override { return true ;}
     void addBuffer(const SamplesBuffer &samples, uint samplesToProcess) override;
     void mixTo(SamplesBuffer &samples, uint samplesToProcess) override;
+
+private:
+    SamplesBuffer lastInputBuffer;
 };
 
-
-class RecordingState : public WaitingToRecordState
+class RecordingState : public LooperState
 {
 public:
     RecordingState(Looper *looper, quint8 recordingLayer);
     void handleNewCycle(uint samplesInCycle) override;
+    void addBuffer(const SamplesBuffer &samples, uint samplesToProcess) override;
+    void mixTo(SamplesBuffer &samples, uint samplesToProcess) override;
     inline bool isWaiting() const override { return false ;}
     inline bool isRecording() const override { return true ;}
 

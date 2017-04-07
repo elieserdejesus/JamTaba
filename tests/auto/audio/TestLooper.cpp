@@ -9,6 +9,52 @@
 
 using namespace Audio;
 
+void TestLooper::waitingToRecordAndPreserveRecordedMaterialWhenSkipRecording()
+{
+    QFETCH(QString, preRecordedSamples);
+    QFETCH(bool, overdubbing);
+
+    const quint8 layers = 1;
+
+    Looper looper;
+    looper.setLayers(layers, true);
+    looper.setMode(Looper::SelectedLayer);
+    looper.setOption(Looper::Overdub, overdubbing);
+    looper.setOption(Looper::HearAllLayers, true);
+
+    //create pre recorded content
+    looper.startNewCycle(2);
+    looper.setLayerSamples(0, createBuffer(preRecordedSamples));
+
+    checkExpectedValues(preRecordedSamples, looper.getLayersSamples().first());
+
+    looper.selectLayer(0);
+    looper.toggleRecording(); // waiting state
+    Q_ASSERT(looper.isWaitingToRecord());
+
+    looper.addBuffer(createBuffer(("0, 0"))); // always input silence to test if pre recorded material will be erased
+
+    SamplesBuffer out(2, 2);
+    looper.mixToBuffer(out);
+
+    looper.toggleRecording(); // abort recording
+
+    looper.startNewCycle(2);
+    looper.togglePlay();
+
+    checkExpectedValues(preRecordedSamples, out);
+}
+
+void TestLooper::waitingToRecordAndPreserveRecordedMaterialWhenSkipRecording_data()
+{
+    QTest::addColumn<QString>("preRecordedSamples");
+    QTest::addColumn<bool>("overdubbing");
+
+    QTest::newRow("Test overdubbing = false") << QString("1, 1") << false;
+    //QTest::newRow("Test overdubbing = true") << QString("1, 1") << true;
+
+}
+
 void TestLooper::autoPlayAfterRecording()
 {
     QFETCH(quint8, layers);
@@ -185,7 +231,7 @@ void TestLooper::playing_data()
     QTest::newRow("2 layers, 2nd layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 1) << (QList<quint8>() << 1 << 1);
 }
 
-void TestLooper::waitingToRecordAndHearingIncommingAudioThrougLooperLayerSettings()
+void TestLooper::waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettings()
 {
     QFETCH(QString, incommingSamples);
     QFETCH(float, layerGain);
@@ -198,7 +244,7 @@ void TestLooper::waitingToRecordAndHearingIncommingAudioThrougLooperLayerSetting
     looper.setLayerGain(0, layerGain);
 
     looper.startNewCycle(incommingSamples.size());
-    looper.toggleRecording();
+    looper.toggleRecording(); // waiting to record
     Q_ASSERT(looper.isWaitingToRecord());
 
     looper.addBuffer(createBuffer(incommingSamples));
@@ -209,7 +255,7 @@ void TestLooper::waitingToRecordAndHearingIncommingAudioThrougLooperLayerSetting
     checkExpectedValues(expectedSamples, out);
 }
 
-void TestLooper::waitingToRecordAndHearingIncommingAudioThrougLooperLayerSettings_data()
+void TestLooper::waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettings_data()
 {
     QTest::addColumn<QString>("incommingSamples");
     QTest::addColumn<float>("layerGain");

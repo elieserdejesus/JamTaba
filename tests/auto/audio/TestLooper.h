@@ -31,8 +31,11 @@ private slots:
     void waitingToRecordAndHearingPreRecordedMaterial();
     void waitingToRecordAndHearingPreRecordedMaterial_data();
 
-    void waitingToRecordAndHearingIncommingAudioThrougLooperLayerSettings();
-    void waitingToRecordAndHearingIncommingAudioThrougLooperLayerSettings_data();
+    void waitingToRecordAndPreserveRecordedMaterialWhenSkipRecording();
+    void waitingToRecordAndPreserveRecordedMaterialWhenSkipRecording_data();
+
+    void waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettings();
+    void waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettings_data();
 
     void playing();
     void playing_data();

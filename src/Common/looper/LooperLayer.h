@@ -21,6 +21,9 @@ public:
     float getPan() const;
     float getGain() const;
 
+    float getLeftGain() const;
+    float getRightGain() const;
+
     void setSamples(const SamplesBuffer &samples);
 
     void zero();
@@ -80,6 +83,16 @@ private:
     void resize(quint32 samplesPerCycle);
 
 };
+
+inline float LooperLayer::getLeftGain() const
+{
+    return leftGain;
+}
+
+inline float LooperLayer::getRightGain() const
+{
+    return rightGain;
+}
 
 inline LooperLayer::MuteState LooperLayer::getMuteState() const
 {

@@ -88,7 +88,7 @@ void PlayingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
 RecordingState::RecordingState(Looper *looper, quint8 recordingLayer)
-    : WaitingToRecordState(looper),
+    : LooperState(looper),
       firstRecordingLayer(recordingLayer)
 {
 
@@ -116,15 +116,7 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
     }
 }
 
-// -----------------------------------------------------------------------------
-
-WaitingToRecordState::WaitingToRecordState(Looper *looper)
-    : LooperState(looper)
-{
-
-}
-
-void WaitingToRecordState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
+void RecordingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 {
     samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
 
@@ -140,7 +132,7 @@ void WaitingToRecordState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
     }
 }
 
-void WaitingToRecordState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
+void RecordingState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
 {
     if (looper->currentLayerIsLocked()) // avoid recording in locked layers
         return;
@@ -150,6 +142,39 @@ void WaitingToRecordState::addBuffer(const SamplesBuffer &samples, uint samplesT
         looper->appendInCurrentLayer(samples, samplesToProcess);
     else
         looper->overdubInCurrentLayer(samples, samplesToProcess);
+}
+
+// -----------------------------------------------------------------------------
+
+WaitingToRecordState::WaitingToRecordState(Looper *looper)
+    : LooperState(looper),
+      lastInputBuffer(2)
+{
+
+}
+
+void WaitingToRecordState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
+{
+    looper->processBufferUsingCurrentLayerSettings(lastInputBuffer); // apply current layer gain and pan settings
+    samples.add(lastInputBuffer); // mix the current incomming/input buffer
+
+    const bool hearingAllLayers = looper->getMode() == Looper::AllLayers || looper->getOption(Looper::HearAllLayers);
+    if (hearingAllLayers) {
+        if (looper->getOption(Looper::PlayLockedLayers))
+            looper->mixLockedLayers(samples, samplesToProcess);
+        else
+            looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
+    }
+    else {
+        looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);
+    }
+}
+
+void WaitingToRecordState::addBuffer(const SamplesBuffer &samples, uint samplesToProcess)
+{
+    // not buffering samples when waiting to record. Incomming samples are stored in a secondary buffer
+    lastInputBuffer.setFrameLenght(samplesToProcess);
+    lastInputBuffer.set(samples);
 }
 
 void WaitingToRecordState::handleNewCycle(uint samplesInCycle)
