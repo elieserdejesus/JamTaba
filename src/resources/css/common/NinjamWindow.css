@@ -331,3 +331,9 @@ LooperWindow #buttonRec:checked
     background-color: rgb(255, 0, 0);
 }
 
+LooperWindow #muteButton:disabled
+{
+    background: none;
+    color: rgba(0, 0, 0, 30);
+    border-color: rgba(0, 0, 0, 40);
+}
