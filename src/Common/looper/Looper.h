@@ -225,6 +225,8 @@ private:
 
     void initialize();
 
+    void processBufferUsingCurrentLayerSettings(SamplesBuffer &buffer);
+
     static QMap<Looper::PlayingOption, bool> getDefaultSupportedPlayingOptions(Looper::Mode mode);
     static QMap<Looper::RecordingOption, bool> getDefaultSupportedRecordingOptions(Looper::Mode mode);
 
