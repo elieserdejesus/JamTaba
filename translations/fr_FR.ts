@@ -447,7 +447,7 @@
     </message>
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
-        <translation>Le fichier Loop existe déjà. Voulez-vous écraser?</translation>
+        <translation>Le fichier Loop existe déjà. Voulez-vous remplacer?</translation>
     </message>
 </context>
 <context>
