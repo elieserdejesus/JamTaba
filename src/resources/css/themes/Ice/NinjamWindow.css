@@ -319,6 +319,12 @@ LooperWindow #buttonRec[blinking="true"]:checked
     selection-color: white;
 }
 
+#widgetBottom QComboBox:focus
+{
+    background-color: rgb(51, 153, 255);
+    color: white;
+}
+
 LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
 {
     border: none;

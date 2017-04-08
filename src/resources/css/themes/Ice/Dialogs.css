@@ -58,6 +58,14 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #t
     selection-color: white;
 }
 
+#tabAudio QComboBox:focus,
+#tabLooper QComboBox:focus,
+#tabMetronome QComboBox:focus
+{
+    background-color: rgb(51, 153, 255);
+    color: white;
+}
+
 PreferencesDialog QPushButton
 {
     border: 1px outset rgba(0, 0, 0, 90);
