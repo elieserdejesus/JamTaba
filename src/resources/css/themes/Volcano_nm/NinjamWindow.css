@@ -247,6 +247,7 @@ LooperWindow #buttonRec[blinking="true"]:checked
 #widgetBottom QComboBox                         /* the colors inside the combo box*/
 {
     border: 1px solid rgba(0, 0, 0, 128);
+    min-width: 1em;
     padding: 0px 0px 0px 0px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 #FDE5A9,
