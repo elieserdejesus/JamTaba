@@ -52,6 +52,7 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #t
 {
     border-radius: 6px;
     border: 1px solid rgba(0, 0, 0, 90);
+    padding: 0px 0px 0px 0px;
     background-color: rgb(180, 207, 250);
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
