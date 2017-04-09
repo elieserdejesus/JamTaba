@@ -244,14 +244,60 @@ LooperWindow #buttonRec[blinking="true"]:checked
         stop: 1.0 #FFB301);
 }
 
-LooperWindow QComboBox                         /* the colors inside the combo box*/
+#widgetBottom QComboBox                         /* the colors inside the combo box*/
 {
-    border-color: rgb(227, 183, 153);
+    border: 1px solid rgba(0, 0, 0, 180);
+    padding: 1px 3px 1px 3px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 #FDE5A9,
         stop: 1.0 #FFB301);
     selection-background-color: rgb(179, 89, 37);
     selection-color: rgb(254, 181, 102);
+}
+
+#widgetBottom QComboBox:focus
+{
+    background-color: rgb(179, 89, 37);
+    color: rgb(254, 181, 102);
+}
+
+#widgetBottom QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #fed87b,
+        stop: 1.0 #ffe23b);
+}
+
+#widgetBottom QComboBox:focus:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #B35925,
+        stop: 1.0 #b4673b);
+}
+
+#widgetBottom QComboBox::drop-down
+{
+    border: 0px;
+}
+
+#widgetBottom QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+#widgetBottom QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
+LooperWindow #maxLayersComboBox
+{
+    min-width: 1em;
+}
+
+LooperWindow #comboBoxPlayMode
+{
+    min-width: 7em;
 }
 
 LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
@@ -275,11 +321,6 @@ LooperWindow QComboBox:disabled
 LooperWindow QComboBox:disabled
 {
     border-color: rgb(227, 183, 153);
-}
-
-LooperWindow QComboBox::down-arrow:disabled
-{
-    image:url(:/images/arrow-down-lighter.png);
 }
 
 LooperWindow QLabel,
