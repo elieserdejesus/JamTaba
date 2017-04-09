@@ -312,9 +312,8 @@ LooperWindow #buttonRec[blinking="true"]:checked
 #widgetBottom QComboBox                         /* the colors inside the combo box*/
 {
     border-radius: 6px;
-    min-width: 1em;
     border: 1px solid rgba(0, 0, 0, 90);
-    padding: 0px 0px 0px 0px;
+    padding: 2px 5px 2px 5px;
     background-color: rgb(180, 207, 250);
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
@@ -324,6 +323,16 @@ LooperWindow #buttonRec[blinking="true"]:checked
 {
     background-color: rgb(51, 153, 255);
     color: white;
+}
+
+LooperWindow #maxLayersComboBox
+{
+    min-width: 1em;
+}
+
+LooperWindow #comboBoxPlayMode
+{
+    min-width: 7em;
 }
 
 LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
