@@ -261,6 +261,20 @@ LooperWindow #buttonRec[blinking="true"]:checked
     color: rgb(254, 181, 102);
 }
 
+#widgetBottom QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #fed87b,
+        stop: 1.0 #ffe23b);
+}
+
+#widgetBottom QComboBox:focus:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #B35925,
+        stop: 1.0 #b4673b);
+}
+
 #widgetBottom QComboBox::drop-down
 {
     border: 0px;
@@ -271,7 +285,6 @@ LooperWindow #buttonRec[blinking="true"]:checked
     image:url(:/images/arrow-down.png);
 }
 
-#widgetBottom QComboBox::down-arrow:hover,
 #widgetBottom QComboBox::down-arrow:disabled
 {
     image:url(:/images/arrow-down-lighter.png);
