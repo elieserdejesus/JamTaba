@@ -12,7 +12,6 @@ QMessageBox,
 QInputDialog,
 MidiToolsDialog,
 UserNameDialog,
-PrivateServerDialog,
 LooperWindow
 {
     border-color: rgb(20, 20, 20);
@@ -197,10 +196,18 @@ PluginScanDialog QGroupBox
     selection-color: rgb(140, 140, 140);
 }
 
+PrivateServerDialog
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(128, 180, 255),
+        stop: 1.0 rgb(126, 178, 255));
+}
+
 PrivateServerDialog #comboBoxServers
 {
-    border: 1px solid rgba(0, 0, 0, 30);
+    border: 1px solid rgba(0, 0, 0, 60);
     padding: 1px 2px 1px 2px;
+    border-radius: 6px;
     background-color: rgb(180, 207, 250);
     color: rgba(0, 0, 0, 220);
     selection-background-color: rgb(51, 153, 255);
@@ -209,7 +216,7 @@ PrivateServerDialog #comboBoxServers
 
 PrivateServerDialog #comboBoxServers:focus
 {
-    border-color: rgba(0, 0, 0, 100);
+    border-color: rgba(0, 0, 0, 90);
     color: black;
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;;
