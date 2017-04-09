@@ -313,7 +313,7 @@ LooperWindow #buttonRec[blinking="true"]:checked
 {
     border-radius: 6px;
     border: 1px solid rgba(0, 0, 0, 90);
-    padding: 2px 5px 2px 5px;
+    padding: 1px 2px 1px 2px;
     background-color: rgb(180, 207, 250);
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
