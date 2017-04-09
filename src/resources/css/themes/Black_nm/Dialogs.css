@@ -37,12 +37,62 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #t
     stop:1 rgb(40, 40, 40));
 }
 
-PreferencesDialog QComboBox                         /* the colors inside the combo box*/
+ /* the colors inside the combo box*/
+#tabAudio QComboBox,
+#tabLooper QComboBox,
+#tabMetronome QComboBox
 {
+    border: 1px solid black;
+    padding: 1px 3px 1px 3px;
     background-color: rgb(130, 130, 130);
     selection-background-color: rgb(50, 50, 50);
     selection-color: rgb(140, 140, 140);
 }
+
+#tabAudio QComboBox:focus,
+#tabLooper QComboBox:focus,
+#tabMetronome QComboBox:focus
+{
+    background-color: rgb(50, 50, 50);
+    color: rgb(140, 140, 140);
+}
+
+#tabAudio QComboBox:hover,
+#tabLooper QComboBox:hover,
+#tabMetronome QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+}
+
+#tabAudio QComboBox:focus:hover,
+#tabLooper QComboBox:focus:hover,
+#tabMetronome QComboBox:focus:hover
+{
+    color: rgb(40, 40, 40);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
+}
+
+#tabAudio QComboBox::drop-down,
+#tabLooper QComboBox::drop-down,
+#tabMetronome QComboBox::drop-down
+{
+    border: 0px;
+}
+
+#tabAudio QComboBox::down-arrow,
+#tabLooper QComboBox::down-arrow,
+#tabMetronome QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+#tabAudio QComboBox::down-arrow:disabled,
+#tabLooper QComboBox::down-arrow:disabled,
+#tabMetronome QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
 
 PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
 {
@@ -59,11 +109,6 @@ PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
 PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
 {
 color: rgba(0, 0, 0, 90);
-}
-
-PreferencesDialog QComboBox::down-arrow:disabled
-{
-    image:url(:/images/arrow-down-lighter.png);
 }
 
 PreferencesDialog #vstListWidget
@@ -120,6 +165,7 @@ PluginScanDialog QGroupBox
 PrivateServerDialog #comboBoxServers
 {
     border: 1px solid rgba(0, 0, 0, 30);
+    padding: 1px 2px 1px 2px;
     background-color: rgb(100, 100, 100);
     color: rgb(60, 60, 60);
     selection-background-color: rgb(50, 50, 50);
@@ -131,6 +177,22 @@ PrivateServerDialog #comboBoxServers:focus
     color: rgb(180, 180, 180);
     selection-background-color: rgb(50, 50, 50);
     selection-color: rgb(140, 140, 140);
+}
+
+PrivateServerDialog #comboBoxServers::drop-down
+{
+    border: 0px;
+}
+
+PrivateServerDialog #comboBoxServers::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+PrivateServerDialog #comboBoxServers::down-arrow:disabled,
+PrivateServerDialog #comboBoxServers::down-arrow:hover
+{
+    image:url(:/images/arrow-down-lighter.png);
 }
 
 PrivateServerDialog QComboBox QAbstractItemView
