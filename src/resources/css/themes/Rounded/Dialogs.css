@@ -39,9 +39,26 @@ PluginScanDialog #labelPluginText
 PrivateServerDialog #comboBoxServers
 {
     border: 1px solid rgba(0, 0, 0, 30);
+    padding: 1px 2px 1px 2px;
     border-radius: 3px;
     color: black;
     background-color: #C5C5C5;
+}
+
+PrivateServerDialog #comboBoxServers::drop-down
+{
+    border: 0px;
+}
+
+PrivateServerDialog #comboBoxServers::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+PrivateServerDialog #comboBoxServers::down-arrow:disabled,
+PrivateServerDialog #comboBoxServers::down-arrow:hover
+{
+    image:url(:/images/arrow-down-lighter.png);
 }
 
 BusyDialog
