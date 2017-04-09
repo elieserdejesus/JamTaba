@@ -52,7 +52,7 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #t
 {
     border-radius: 6px;
     border: 1px solid rgba(0, 0, 0, 90);
-    padding: 0px 0px 0px 0px;
+    padding: 1px 3px 1px 3px;
     background-color: rgb(180, 207, 250);
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
@@ -64,6 +64,30 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #t
 {
     background-color: rgb(51, 153, 255);
     color: white;
+}
+
+#tabAudio QComboBox::drop-down,
+#tabLooper QComboBox::drop-down,
+#tabMetronome QComboBox::drop-down
+{
+    border: 0px;
+}
+
+#tabAudio QComboBox::down-arrow,
+#tabLooper QComboBox::down-arrow,
+#tabMetronome QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+#tabAudio QComboBox::down-arrow:hover,
+#tabLooper QComboBox::down-arrow:hover,
+#tabMetronome QComboBox::down-arrown:hover,
+#tabAudio QComboBox::down-arrow:disabled,
+#tabLooper QComboBox::down-arrow:disabled,
+#tabMetronome QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
 }
 
 PreferencesDialog QPushButton
