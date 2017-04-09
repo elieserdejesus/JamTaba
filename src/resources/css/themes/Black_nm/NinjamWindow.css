@@ -311,15 +311,26 @@ LooperWindow #buttonRec[blinking="true"]:checked
 {
     border: 1px solid black;
     padding: 1px 3px 1px 3px;
-    background-color: rgb(130, 130, 130);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
     selection-background-color: rgb(50, 50, 50);
     selection-color: rgb(140, 140, 140);
 }
 
 #widgetBottom QComboBox:focus
 {
-    background-color: rgb(50, 50, 50);
+    background-color: rgb(60, 60, 60);
     color: rgb(140, 140, 140);
+}
+
+#widgetBottom QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+}
+
+#widgetBottom QComboBox:focus:hover
+{
+    color: rgb(40, 40, 40);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
 }
 
 #widgetBottom QComboBox::drop-down
@@ -332,7 +343,6 @@ LooperWindow #buttonRec[blinking="true"]:checked
     image:url(:/images/arrow-down.png);
 }
 
-#widgetBottom QComboBox::down-arrow:hover,
 #widgetBottom QComboBox::down-arrow:disabled
 {
     image:url(:/images/arrow-down-lighter.png);
