@@ -246,8 +246,8 @@ LooperWindow #buttonRec[blinking="true"]:checked
 
 #widgetBottom QComboBox                         /* the colors inside the combo box*/
 {
-    border: 1px solid rgba(0, 0, 0, 128);
-    padding: 1px 2px 1px 2px;
+    border: 1px solid rgba(0, 0, 0, 180);
+    padding: 1px 3px 1px 3px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 #FDE5A9,
         stop: 1.0 #FFB301);
@@ -259,6 +259,22 @@ LooperWindow #buttonRec[blinking="true"]:checked
 {
     background-color: rgb(179, 89, 37);
     color: rgb(254, 181, 102);
+}
+
+#widgetBottom QComboBox::drop-down
+{
+    border: 0px;
+}
+
+#widgetBottom QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+#widgetBottom QComboBox::down-arrow:hover,
+#widgetBottom QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
 }
 
 LooperWindow #maxLayersComboBox
@@ -292,11 +308,6 @@ LooperWindow QComboBox:disabled
 LooperWindow QComboBox:disabled
 {
     border-color: rgb(227, 183, 153);
-}
-
-LooperWindow QComboBox::down-arrow:disabled
-{
-    image:url(:/images/arrow-down-lighter.png);
 }
 
 LooperWindow QLabel,
