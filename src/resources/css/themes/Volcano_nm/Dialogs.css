@@ -43,11 +43,52 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #t
         stop: 1.0 rgb(197, 34, 1));
 }
 
-PreferencesDialog QComboBox                         /* the colors inside the combo box*/
+#tabAudio QComboBox,                         /* the colors inside the combo box*/
+#tabLooper QComboBox,
+#tabMetronome QComboBox                         /* the colors inside the combo box*/
 {
+    border: 1px solid rgba(0, 0, 0, 90);
+    padding: 1px 3px 1px 3px;
     background-color: rgb(254, 181, 102);
     selection-background-color: rgb(179, 89, 37);
     selection-color: rgb(254, 181, 102);
+}
+
+#tabAudio QComboBox:focus,
+#tabLooper QComboBox:focus,
+#tabMetronome QComboBox:focus
+{
+    background-color: rgb(179, 89, 37);
+    color: rgb(254, 181, 102);
+}
+
+#tabAudio QComboBox::drop-down,
+#tabLooper QComboBox::drop-down,
+#tabMetronome QComboBox::drop-down
+{
+    border: 0px;
+}
+
+#tabAudio QComboBox::down-arrow,
+#tabLooper QComboBox::down-arrow,
+#tabMetronome QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+#tabAudio QComboBox::down-arrow:hover,
+#tabLooper QComboBox::down-arrow:hover,
+#tabMetronome QComboBox::down-arrown:hover,
+#tabAudio QComboBox::down-arrow:disabled,
+#tabLooper QComboBox::down-arrow:disabled,
+#tabMetronome QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
+PreferencesDialog QPushButton
+{
+    border: 1px outset rgba(0, 0, 0, 90);
 }
 
 PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
@@ -65,11 +106,6 @@ PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
 PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
 {
 color: rgba(0, 0, 0, 90);
-}
-
-PreferencesDialog QComboBox::down-arrow:disabled
-{
-    image:url(:/images/arrow-down-lighter.png);
 }
 
 PreferencesDialog #vstListWidget
