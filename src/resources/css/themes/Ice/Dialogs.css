@@ -66,6 +66,20 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #t
     color: white;
 }
 
+#tabAudio QComboBox:hover,
+#tabLooper QComboBox:hover,
+#tabMetronome QComboBox:hover
+{
+    background-color: rgb(207, 224, 252);
+}
+
+#tabAudio QComboBox:focus:hover,
+#tabLooper QComboBox:focus:hover,
+#tabMetronome QComboBox:focus:hover
+{
+    background-color: rgb(143, 188, 250);
+}
+
 #tabAudio QComboBox::drop-down,
 #tabLooper QComboBox::drop-down,
 #tabMetronome QComboBox::drop-down
@@ -80,9 +94,6 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #t
     image:url(:/images/arrow-down.png);
 }
 
-#tabAudio QComboBox::down-arrow:hover,
-#tabLooper QComboBox::down-arrow:hover,
-#tabMetronome QComboBox::down-arrown:hover,
 #tabAudio QComboBox::down-arrow:disabled,
 #tabLooper QComboBox::down-arrow:disabled,
 #tabMetronome QComboBox::down-arrow:disabled

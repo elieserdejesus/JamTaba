@@ -325,6 +325,16 @@ LooperWindow #buttonRec[blinking="true"]:checked
     color: white;
 }
 
+#widgetBottom QComboBox:hover
+{
+    background-color: rgb(207, 224, 252);
+}
+
+#widgetBottom QComboBox:focus:hover
+{
+    background-color: rgb(143, 188, 250);
+}
+
 #widgetBottom QComboBox::drop-down
 {
     border: 0px;
@@ -335,7 +345,6 @@ LooperWindow #buttonRec[blinking="true"]:checked
     image:url(:/images/arrow-down.png);
 }
 
-#widgetBottom QComboBox::down-arrow:hover,
 #widgetBottom QComboBox::down-arrow:disabled
 {
     image:url(:/images/arrow-down-lighter.png);
