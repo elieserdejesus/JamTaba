@@ -480,7 +480,6 @@ void Looper::mixToBuffer(SamplesBuffer &samples)
     uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
     AudioPeak peakBeforeMix = samples.computePeak();
     state->mixTo(samples, samplesToProcess);
-    samples.applyGain(mainGain, 1.0);
 
     AudioPeak peakAfterMix = samples.computePeak();
 
@@ -605,7 +604,7 @@ void Looper::mixLayer(quint8 layerIndex, SamplesBuffer &samples, uint samplesToM
     LooperLayer *loopLayer = layers[layerIndex];
     samplesToMix = qMin(samplesToMix, loopLayer->getAvailableSamples());
     if (samplesToMix) {
-        loopLayer->mixTo(samples, samplesToMix, intervalPosition); // mix buffered samples
+        loopLayer->mixTo(samples, samplesToMix, intervalPosition, mainGain); // mix buffered samples
     }
 }
 
@@ -626,10 +625,10 @@ void Looper::mixLockedLayers(SamplesBuffer &samples, uint samplesToMix)
 
 void Looper::processBufferUsingCurrentLayerSettings(SamplesBuffer &buffer)
 {
-    float currentLayerGain = layers[currentLayerIndex]->getGain();
+    float layerGain = layers[currentLayerIndex]->getGain();
     float leftGain = layers[currentLayerIndex]->getLeftGain();
     float rightGain = layers[currentLayerIndex]->getRightGain();
-    buffer.applyGain(currentLayerGain, leftGain, rightGain, 1.0);
+    buffer.applyGain(layerGain * mainGain, leftGain, rightGain, 1.0);
 }
 
 QString Looper::getModeString(Mode mode)
