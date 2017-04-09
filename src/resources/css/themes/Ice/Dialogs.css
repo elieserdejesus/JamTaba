@@ -200,6 +200,7 @@ PluginScanDialog QGroupBox
 PrivateServerDialog #comboBoxServers
 {
     border: 1px solid rgba(0, 0, 0, 30);
+    padding: 1px 3px 1px 3px;
     background-color: rgb(180, 207, 250);
     color: rgba(0, 0, 0, 220);
     selection-background-color: rgb(51, 153, 255);
