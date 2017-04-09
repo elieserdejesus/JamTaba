@@ -214,6 +214,22 @@ PrivateServerDialog #comboBoxServers:focus
     selection-color: white;;
 }
 
+PrivateServerDialog #comboBoxServers::drop-down
+{
+    border: 0px;
+}
+
+PrivateServerDialog #comboBoxServers::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+PrivateServerDialog #comboBoxServers::down-arrow:disabled,
+PrivateServerDialog #comboBoxServers::down-arrow:hover
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
 PrivateServerDialog QComboBox QAbstractItemView
 {
     border: none;
