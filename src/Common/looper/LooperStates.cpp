@@ -155,6 +155,8 @@ WaitingToRecordState::WaitingToRecordState(Looper *looper)
 
 void WaitingToRecordState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 {
+    samples.zero();
+
     looper->processBufferUsingCurrentLayerSettings(lastInputBuffer); // apply current layer gain and pan settings
     samples.add(lastInputBuffer); // mix the current incomming/input buffer
 

@@ -41,7 +41,7 @@ public:
 
     SamplesBuffer getAllSamples() const;
 
-    void mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition);
+    void mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition, float looperMainGain);
 
     void setLocked(bool locked);
     bool isLocked() const;

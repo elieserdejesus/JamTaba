@@ -161,7 +161,7 @@ void LooperLayer::overdub(const SamplesBuffer &samples, uint samplesToMix, uint 
     }
 }
 
-void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition)
+void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint intervalPosition, float looperMainGain)
 {
     bool canMix = samplesToMix > 0 && (muteState == LooperLayer::Unmuted || muteState == LooperLayer::WaitingToMute);
     if (canMix) {
@@ -170,8 +170,9 @@ void LooperLayer::mixTo(SamplesBuffer &outBuffer, uint samplesToMix, uint interv
         float *bufferChannels[] = {outBuffer.getSamplesArray(0), outBuffer.getSamplesArray(secondChannelIndex)};
         uint channels = outBuffer.getChannels();
 
-        const float finalLeftGain = gain * leftGain;
-        const float finalRightGain = gain * rightGain;
+        const float mainGain = looperMainGain * gain;
+        const float finalLeftGain = mainGain * leftGain;
+        const float finalRightGain = mainGain * rightGain;
         float gains[] = {finalLeftGain, finalRightGain};
         for (uint c = 0; c < channels; ++c) {
             for (uint s = 0; s < samplesToMix; ++s) {
