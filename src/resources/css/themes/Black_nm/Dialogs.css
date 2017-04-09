@@ -37,12 +37,50 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #t
     stop:1 rgb(40, 40, 40));
 }
 
-PreferencesDialog QComboBox                         /* the colors inside the combo box*/
+ /* the colors inside the combo box*/
+#tabAudio QComboBox,
+#tabLooper QComboBox,
+#tabMetronome QComboBox
 {
+    border: 1px solid black;
+    padding: 1px 3px 1px 3px;
     background-color: rgb(130, 130, 130);
     selection-background-color: rgb(50, 50, 50);
     selection-color: rgb(140, 140, 140);
 }
+
+#tabAudio QComboBox:focus,
+#tabLooper QComboBox:focus,
+#tabMetronome QComboBox:focus
+{
+    background-color: rgb(50, 50, 50);
+    color: rgb(140, 140, 140);
+}
+
+#tabAudio QComboBox::drop-down,
+#tabLooper QComboBox::drop-down,
+#tabMetronome QComboBox::drop-down
+{
+    border: 0px;
+}
+
+#tabAudio QComboBox::down-arrow,
+#tabLooper QComboBox::down-arrow,
+#tabMetronome QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+#tabAudio QComboBox::down-arrow:hover,
+#tabLooper QComboBox::down-arrow:hover,
+#tabMetronome QComboBox::down-arrown:hover,
+#tabAudio QComboBox::down-arrow:disabled,
+#tabLooper QComboBox::down-arrow:disabled,
+#tabMetronome QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
 
 PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
 {
