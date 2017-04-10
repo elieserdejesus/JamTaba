@@ -333,6 +333,11 @@ LooperWindow #buttonRec[blinking="true"]:checked
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
 }
 
+#widgetBottom QComboBox:disabled
+{
+    color: rgb(80, 80, 80);
+}
+
 #widgetBottom QComboBox::drop-down
 {
     border: 0px;
@@ -361,7 +366,7 @@ LooperWindow #comboBoxPlayMode
 
 LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
 {
-    border: 1px solid black;
+    border: none;
     color: rgb(20, 20, 20);
     background-color: rgb(130, 130, 130);
     selection-background-color: rgb(50, 50, 50);
