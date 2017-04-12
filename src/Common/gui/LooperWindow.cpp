@@ -115,13 +115,15 @@ void LooperWindow::keyPressEvent(QKeyEvent *ev)
 
     int key = ev->key();
     bool pressingNumberKey = key >= Qt::Key_1 && key <= Qt::Key_9;
-    bool pressingDelete = key == Qt::Key_Delete;
     if (pressingNumberKey) {
         quint8 layerIndex = (key - Qt::Key_0) - 1; // convert key to zero based layer index
         looper->selectLayer(layerIndex);
     }
-    else if (pressingDelete) {
-        looper->clearCurrentLayer();
+    else {
+        bool pressingDelete = key == Qt::Key_Delete;
+        if (pressingDelete) {
+            looper->clearCurrentLayer();
+        }
     }
 }
 

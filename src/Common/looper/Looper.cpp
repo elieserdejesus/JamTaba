@@ -394,12 +394,13 @@ void Looper::selectLayer(quint8 layerIndex)
         return;
 
     if (isStopped() || isPlaying()) {
+        if (layerIndex < maxLayers) {
+            if (mode == Looper::SelectedLayer) {
+                setCurrentLayer(layerIndex);
+            }
 
-        if (mode == Looper::SelectedLayer) {
-            setCurrentLayer(layerIndex);
+            focusedLayerIndex = layerIndex;
         }
-
-        focusedLayerIndex = layerIndex;
     }
 }
 
