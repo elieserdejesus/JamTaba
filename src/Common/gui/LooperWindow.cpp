@@ -260,7 +260,8 @@ void LooperWindow::setLooper(Audio::Looper *looper)
 
         connectLooperSignals();
 
-        connect(playingCheckBoxes[Looper::PlayLockedLayers], &QCheckBox::toggled, this, &LooperWindow::updateControls);
+        connect(playingCheckBoxes[Looper::PlayLockedLayers], &QCheckBox::clicked, this, &LooperWindow::updateControls);
+        connect(recordingCheckBoxes[Looper::HearAllLayers], &QCheckBox::clicked, this, &LooperWindow::updateControls);
     }
 
     updateBeatsPerInterval();

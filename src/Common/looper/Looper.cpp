@@ -49,6 +49,39 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
     initialize();
 }
 
+void Looper::setOption(Looper::RecordingOption option, bool value)
+{
+    if (!optionIsSupportedInCurrentMode(option)) {
+        return;
+    }
+
+    if (modeOptions[mode].recordingOptions[option] != value) {
+
+        modeOptions[mode].recordingOptions[option] = value;
+
+        // link 'Play locked' and 'Hear all' - issue #782
+        if (mode == Looper::Sequence && option == Looper::HearAllLayers)
+            setOption(Looper::PlayLockedLayers, value);
+    }
+}
+
+void Looper::setOption(Looper::PlayingOption option, bool value)
+{
+    if (!optionIsSupportedInCurrentMode(option)) {
+        return;
+    }
+
+    if (modeOptions[mode].playingOptions[option] != value) {
+
+        modeOptions[mode].playingOptions[option] = value;
+
+        // link 'Play locked' and 'Hear all' - issue #782
+        if (mode == Looper::Sequence && option == Looper::PlayLockedLayers)
+            setOption(Looper::HearAllLayers, value);
+    }
+}
+
+
 void Looper::waitToStopInNextInterval()
 {
     if (isPlaying()) {
