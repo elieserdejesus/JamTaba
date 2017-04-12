@@ -735,8 +735,10 @@ void LooperWindow::initializeControls()
 
     connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
     {
-        if (index >= 0 && looper)
+        if (index >= 0 && looper) {
             looper->setMode(ui->comboBoxPlayMode->currentData().value<Looper::Mode>());
+            ui->comboBoxPlayMode->clearFocus();
+        }
     });
 
     connect(ui->maxLayersComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
@@ -744,6 +746,7 @@ void LooperWindow::initializeControls()
         if (looper) {
             uint layers = index + 1;
             looper->setLayers(layers);
+            ui->maxLayersComboBox->clearFocus();
         }
     });
 
