@@ -115,13 +115,15 @@ void LooperWindow::keyPressEvent(QKeyEvent *ev)
 
     int key = ev->key();
     bool pressingNumberKey = key >= Qt::Key_1 && key <= Qt::Key_9;
-    bool pressingDelete = key == Qt::Key_Delete;
     if (pressingNumberKey) {
         quint8 layerIndex = (key - Qt::Key_0) - 1; // convert key to zero based layer index
         looper->selectLayer(layerIndex);
     }
-    else if (pressingDelete) {
-        looper->clearCurrentLayer();
+    else {
+        bool pressingDelete = key == Qt::Key_Delete;
+        if (pressingDelete) {
+            looper->clearCurrentLayer();
+        }
     }
 }
 
@@ -735,8 +737,10 @@ void LooperWindow::initializeControls()
 
     connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
     {
-        if (index >= 0 && looper)
+        if (index >= 0 && looper) {
             looper->setMode(ui->comboBoxPlayMode->currentData().value<Looper::Mode>());
+            ui->comboBoxPlayMode->clearFocus();
+        }
     });
 
     connect(ui->maxLayersComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
@@ -744,6 +748,7 @@ void LooperWindow::initializeControls()
         if (looper) {
             uint layers = index + 1;
             looper->setLayers(layers);
+            ui->maxLayersComboBox->clearFocus();
         }
     });
 
