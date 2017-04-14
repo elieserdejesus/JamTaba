@@ -668,7 +668,7 @@ QMap<Looper::RecordingOption, bool> Looper::getDefaultSupportedRecordingOptions(
     QMap<Looper::RecordingOption, bool> options;
     options[Looper::Overdub] = false;
 
-    if (mode == Looper::Sequence) {
+    if (mode == Looper::Sequence || mode == Looper::SelectedLayer) {
         options[Looper::HearAllLayers] = false;
     }
 

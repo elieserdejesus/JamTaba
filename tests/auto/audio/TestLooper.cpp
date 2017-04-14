@@ -315,7 +315,7 @@ void TestLooper::waitingToRecordAndHearingPreRecordedMaterial_data()
 
     QTest::newRow("Hearing pre record material while Waiting (SELECTED mode)")
             << Looper::SelectedLayer
-            << QString("1, 1");
+            << QString("2, 2");
 
     QTest::newRow("Hearing pre record material while Waiting (ALL_LAYERS mode)")
             << Looper::AllLayers
@@ -448,12 +448,12 @@ void TestLooper::recording_data()
             << Looper::SelectedLayer // looperMode
             << quint8(4)        // layers
             << (QList<quint8>() << 2 << 2)        // recordingLayers
-            << true             // hearAllLayers (will have no effect in SELECTED mode)
+            << true             // hearAllLayers
             << true             // overdubbing
             << QString("1, 1")  // defaultLayersContent
             << QString("1, 1")  // inputSamples
-            << QString("2, 2")  // expectedFirstOutput
-            << QString("3, 3"); // expectedSecondOutput
+            << QString("5, 5")  // expectedFirstOutput
+            << QString("6, 6"); // expectedSecondOutput
 
 }
 
