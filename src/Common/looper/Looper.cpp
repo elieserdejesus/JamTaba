@@ -697,6 +697,10 @@ QMap<Looper::PlayingOption, bool> Looper::getDefaultSupportedPlayingOptions(Loop
         options[Looper::PlayNonEmptyLayers] = true;
     }
 
+    if (mode == Looper::SelectedLayer) {
+        options[Looper::PlayLockedLayers] = false;
+    }
+
     return options;
 }
 

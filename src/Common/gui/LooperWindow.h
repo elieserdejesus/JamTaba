@@ -163,6 +163,7 @@ private:
                 bool optionIsSupported = looper->optionIsSupportedInCurrentMode(option);
                 checkBox->setEnabled(optionIsSupported);
                 checkBox->setChecked(optionIsSupported && looper->getOption(option));
+                checkBox->setVisible(optionIsSupported);
             }
             else{
                 qCritical() << "Checkbox is null!";
