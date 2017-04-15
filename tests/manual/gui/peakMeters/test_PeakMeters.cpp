@@ -7,13 +7,11 @@
 #include <QTimerEvent>
 #include <QTime>
 #include <QHBoxLayout>
+#include <QPushButton>
 #include <cmath>
 #include <gui/widgets/PeakMeter.h>
 
-/**
- * This test is stressing the PeakMeter paint and plotting the fps (frames per second).
- * The idea is build a benchmark to compare fps values when optmizing the PeakMeter painting.
- */
+#include "Utils.h"
 
 class TestMainWindow : public QFrame
 {
@@ -22,22 +20,32 @@ public:
     TestMainWindow()
         :QFrame()
     {
-        refreshTimerID = startTimer(0);
-        frameCount = 0;
-        timeCounter.start();
+        refreshTimerID = startTimer(1000/30);
 
-        //create meters
-        const int METERS = 64;
-        const int METER_WIDTH = 5;
         QHBoxLayout *layout = new QHBoxLayout();
-        for (int var = 0; var < METERS; ++var) {
-            AudioMeter *meter = new AudioMeter(this);
-            meter->setMinimumWidth(METER_WIDTH);
-            layout->addWidget(meter, 1);
+        meter = new AudioMeter(this);
+        meter->setMinimumWidth(10);
+
+        layout->addWidget(meter);
+
+        QVBoxLayout *buttonsLayout = new QVBoxLayout();
+        float dbValues[] = {0.0, -6.0, -12.0, 3.0, 6.0};
+        for (float db : dbValues) {
+            QPushButton *button = new QPushButton(QString::number(db) + " dB");
+            connect(button, &QPushButton::clicked, [=](){
+                float db = button->text().replace(" dB", "").toFloat();
+                meter->setPeak(Utils::dbToLinear(db), 0);
+
+            });
+            buttonsLayout->addWidget(button);
         }
+
+        layout->addSpacing(20);
+        layout->addLayout(buttonsLayout);
+
         setLayout(layout);
 
-        setMinimumWidth(METERS * METER_WIDTH);
+        setMinimumWidth(100);
         setMinimumHeight(400);
 
     }
@@ -49,37 +57,14 @@ public:
 
 protected:
 
-    void paintEvent(QPaintEvent *ev) override
-    {
-        QFrame::paintEvent(ev);
-        frameCount++;
-
-        if(timeCounter.elapsed() >= 1000){
-            int fps = frameCount;
-            qInfo() << "FPS:" << fps;
-            timeCounter.restart();
-            frameCount = 0;
-        }
-    }
-
     void timerEvent(QTimerEvent *) override
     {
-        static float peak = 0;
-        QList<AudioMeter *> meters = findChildren<AudioMeter *>();
-        foreach (AudioMeter *meter, meters) {
-            meter->setPeak(peak, peak);
-        }
-        peak += 0.00001f;
-        //peak = 0.11f;
-        if(peak >= 1)
-            peak = 0;
-        update();
+        meter->update();
     }
 
 private:
     int refreshTimerID;
-    QTime timeCounter;
-    int frameCount;
+    AudioMeter *meter;
 };
 
 

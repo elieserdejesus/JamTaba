@@ -110,7 +110,7 @@ AudioMeter::AudioMeter(QWidget *parent)
       peakEndColor(Qt::red),
       maxPeakColor(QColor(0, 0, 0, 80))
 {
-    setAttribute(Qt::WA_NoBackground);
+    //setAttribute(Qt::WA_NoBackground);
     setAutoFillBackground(false);
 }
 
