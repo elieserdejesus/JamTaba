@@ -20,7 +20,7 @@ protected:
 
     void resizeEvent(QResizeEvent *) override;
 
-    void paintSegments(QPainter &painter, float rawPeakValue, const std::vector<QColor> &segmentsColors, int offset = 0, bool halfSize = false);
+    void paintSegments(QPainter &painter, const QRect &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors);
 
     inline bool isVertical() const { return orientation == Qt::Vertical; }
 
@@ -53,7 +53,8 @@ class AudioMeter : public BaseMeter
 public:
     AudioMeter(QWidget *parent);
 
-    void setPeak(float, float rms);
+    void setPeak(float peak, float rms);
+    void setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms);
 
     // these functions will affect all meters
     static void setPaintMaxPeakMarker(bool paintMaxPeak);
@@ -73,6 +74,9 @@ public:
     void setMaxPeakColor(const QColor &newColor);
     void setPeaksStartColor(const QColor &newColor);
     void setPeaksEndColor(const QColor &newColor);
+
+public slots:
+    void setStereo(bool stereo);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -96,17 +100,23 @@ private:
     static bool paintingPeaks;
     static bool paintingRMS;
 
-    float currentPeak;
-    float maxPeak;
-    float currentRms;
+    float currentPeak[2];
+    float maxPeak[2];
+    float currentRms[2];
 
-    qint64 lastMaxPeakTime;
+    qint64 lastMaxPeakTime[2];
 
-    void paintMaxPeakMarker(QPainter &painter, bool halfSize);
+    bool stereo; // draw 2 meters?
+
+    void paintMaxPeakMarker(QPainter &painter, float maxPeak, const QRect &rect);
 
     void updateInternalValues();
 
+    uint getParallelSegments() const;
+
     QColor interpolateColor(const QColor &start, const QColor &end, float ratio);
+
+    void drawDbMarkers(QPainter &painter);
 
 };
 

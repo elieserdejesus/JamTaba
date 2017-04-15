@@ -42,7 +42,7 @@ void BaseMeter::resizeEvent(QResizeEvent * /*ev*/)
 }
 
 
-void BaseMeter::paintSegments(QPainter &painter, float peakValue, const std::vector<QColor> &segmentsColors, int offset, bool halfSize)
+void BaseMeter::paintSegments(QPainter &painter, const QRect &rect, float peakValue, const std::vector<QColor> &segmentsColors)
 {
     const quint32 segmentsToPaint = (quint32)peakValue /SEGMENTS_SIZE;
 
@@ -51,10 +51,11 @@ void BaseMeter::paintSegments(QPainter &painter, float peakValue, const std::vec
 
     const bool isVerticalMeter = isVertical();
 
-    int x = isVerticalMeter ? offset : 0;
-    int y = isVerticalMeter ? (height() - SEGMENTS_SIZE) : offset;
-    const int w = isVerticalMeter ? (halfSize ? width()/2 : width()) : SEGMENTS_SIZE - 1;
-    const int h = isVerticalMeter ? (SEGMENTS_SIZE - 1) : (halfSize ? height()/2 : height() - 2);
+    int x = rect.left();
+    int y = isVerticalMeter ? (rect.height() - SEGMENTS_SIZE) : rect.top();
+    const int w = isVerticalMeter ? rect.width() - 1 : SEGMENTS_SIZE - 1;
+    const int h = isVerticalMeter ? (SEGMENTS_SIZE - 1) : rect.height() - 1;
+
     for (quint32 i = 0; i < segmentsToPaint; ++i) {
         painter.fillRect(x, y, w, h, segmentsColors[i]);
         if (isVerticalMeter)
@@ -101,17 +102,29 @@ float BaseMeter::limitFloatValue(float value, float minValue, float maxValue)
 AudioMeter::AudioMeter(QWidget *parent)
     :
       BaseMeter(parent),
-      currentPeak(0.0f),
-      currentRms(0.0f),
-      maxPeak(0),
-      lastMaxPeakTime(0),
       rmsColor(QColor(255, 255, 255, 200)),
       peakStartColor(Qt::darkGreen),
       peakEndColor(Qt::red),
-      maxPeakColor(QColor(0, 0, 0, 80))
+      maxPeakColor(QColor(0, 0, 0, 80)),
+      stereo(true)
 {
     //setAttribute(Qt::WA_NoBackground);
     setAutoFillBackground(false);
+
+    for (int i = 0; i < 2; ++i) {
+        currentPeak[i] = 0.0f;
+        maxPeak[i] = 0.0f;
+        currentRms[i] = 0.0f;
+        lastMaxPeakTime[i] = 0;
+    }
+}
+
+void AudioMeter::setStereo(bool stereo)
+{
+    if (this->stereo != stereo) {
+        this->stereo = stereo;
+        update();
+    }
 }
 
 void AudioMeter::setOrientation(Qt::Orientation orientation)
@@ -178,22 +191,14 @@ void AudioMeter::recreateInterpolatedColors()
     }
 }
 
-void AudioMeter::paintMaxPeakMarker(QPainter &painter, bool halfSize)
+void AudioMeter::paintMaxPeakMarker(QPainter &painter, float maxPeak, const QRect &rect)
 {
     const bool isVerticalMeter = isVertical();
     float linearPeak = Utils::poweredGainToLinear(maxPeak);
-    QRect maxPeakRect(isVerticalMeter ? 0 : (linearPeak * width()),
-                   isVerticalMeter ? (height() - linearPeak * height()) : 0,
-                   isVerticalMeter ? width() : MAX_PEAK_MARKER_SIZE,
-                   isVerticalMeter ? MAX_PEAK_MARKER_SIZE : height());
-
-    if (halfSize) {
-        if (isVerticalMeter)
-            maxPeakRect.setWidth(maxPeakRect.width()/2);
-        else
-            maxPeakRect.setHeight(maxPeakRect.height()/2);
-    }
-
+    QRect maxPeakRect(isVerticalMeter ? rect.left() : (rect.left() + linearPeak * rect.width() - MAX_PEAK_MARKER_SIZE),
+                   isVerticalMeter ? (height() - linearPeak * height()) : rect.top(),
+                   isVerticalMeter ? rect.width() - 1 : MAX_PEAK_MARKER_SIZE,
+                   isVerticalMeter ? MAX_PEAK_MARKER_SIZE : rect.height());
 
     painter.fillRect(maxPeakRect, maxPeakColor);
 }
@@ -205,21 +210,39 @@ void AudioMeter::updateInternalValues()
     // decay
     long ellapsedTimeFromLastUpdate = now - lastUpdate;
     float deltaTime = (float)ellapsedTimeFromLastUpdate/decayTime;
-    currentPeak -= deltaTime;
-    currentRms  -= deltaTime;
 
-    if (currentPeak < 0)
-        currentPeak = 0;
+    for (int i = 0; i < 2; ++i) {
+        currentPeak[i] -= deltaTime;
+        currentRms[i]  -= deltaTime;
 
-    if (currentRms < 0)
-        currentRms = 0;
+        if (currentPeak[i] < 0)
+            currentPeak[i] = 0;
+
+        if (currentRms[i] < 0)
+            currentRms[i] = 0;
+    }
 
     lastUpdate = now;
 
     // max peak
-    long ellapsedTimeFromLastMaxPeak = now - lastMaxPeakTime;
-    if (ellapsedTimeFromLastMaxPeak >= MAX_PEAK_SHOW_TIME)
-        maxPeak = 0;
+    for (uint i = 0; i < 2; ++i) {
+        long ellapsedTimeFromLastMaxPeak = now - lastMaxPeakTime[i];
+        if (ellapsedTimeFromLastMaxPeak >= MAX_PEAK_SHOW_TIME)
+            maxPeak[i] = 0;
+    }
+}
+
+uint AudioMeter::getParallelSegments() const
+{
+    uint parallelSegments = 0;
+    if (isPaintingPeaks())
+        parallelSegments++;
+    if (isPaintingRMS())
+        parallelSegments++;
+    if (stereo)
+        parallelSegments *= 2;
+
+    return parallelSegments;
 }
 
 void AudioMeter::paintEvent(QPaintEvent *)
@@ -227,27 +250,57 @@ void AudioMeter::paintEvent(QPaintEvent *)
     QPainter painter(this);
 
     if (isEnabled()) {
-
-        const bool halfSizePainting = paintingPeaks && paintingRMS;
+        const uint channels = stereo ? 2 : 1;
         const int rectSize = isVertical() ? height() : width();
+        QRect drawRect(rect());
 
-        if (currentPeak && paintingPeaks) {
-            const int offset = paintingRMS ? 0 : 1;
-            float peakValue = Utils::poweredGainToLinear(currentPeak) * rectSize;
-            paintSegments(painter, peakValue, peakColors, offset, halfSizePainting);
+        const int parallelSegments = getParallelSegments();
+
+        if (isVertical())
+            drawRect.setWidth(width()/parallelSegments);
+        else
+            drawRect.setHeight(height()/parallelSegments);
+
+        if (paintingPeaks) {
+            for (uint i = 0; i < channels; ++i) {
+                if (currentPeak[i]) {
+                    float peakValue = Utils::poweredGainToLinear(currentPeak[i]) * rectSize;
+                    paintSegments(painter, drawRect, peakValue, peakColors);
+                }
+
+                if (maxPeak[i] && paintingMaxPeakMarker) {
+                    paintMaxPeakMarker(painter, maxPeak[i], drawRect);
+                }
+
+                if (isVertical())
+                    drawRect.translate(drawRect.width(), 0);
+                else
+                    drawRect.translate(0, drawRect.height());
+            }
         }
 
-        if (currentRms && paintingRMS) {
-            const int offset = paintingPeaks ? (isVertical() ? width()/2 : height()/2) : 1;
-            float rmsValue = Utils::poweredGainToLinear(currentRms) * rectSize;
-            paintSegments(painter, rmsValue, rmsColors, offset + 1, halfSizePainting);
+        if (paintingRMS) {
+            for (uint i = 0; i < channels; ++i) {
+                if (currentRms[i]) {
+                    float rmsValue = Utils::poweredGainToLinear(currentRms[i]) * rectSize;
+                    paintSegments(painter, drawRect, rmsValue, rmsColors);
+                }
+                if (isVertical())
+                    drawRect.translate(drawRect.width(), 0);
+                else
+                    drawRect.translate(0, drawRect.height());
+            }
         }
 
-        if (maxPeak && paintingMaxPeakMarker)
-            paintMaxPeakMarker(painter, halfSizePainting);
+        drawDbMarkers(painter);
     }
 
     updateInternalValues(); // compute decay and max peak
+}
+
+void AudioMeter::drawDbMarkers(QPainter &painter)
+{
+
 }
 
 void AudioMeter::setPeak(float peak, float rms)
@@ -255,21 +308,48 @@ void AudioMeter::setPeak(float peak, float rms)
     peak = limitFloatValue(peak);
     rms = limitFloatValue(rms);
 
-    if (peak > currentPeak) {
-        currentPeak = peak;
-        if (peak > maxPeak) {
-            maxPeak = peak;
-            lastMaxPeakTime = QDateTime::currentMSecsSinceEpoch();
+    if (peak > currentPeak[0] || peak > currentPeak[1]) {
+        currentPeak[0] = currentPeak[1] = peak;
+        if (peak > maxPeak[0] || peak > maxPeak[1]) {
+            maxPeak[0] = maxPeak[1] = peak;
+            lastMaxPeakTime[0] = lastMaxPeakTime[1] = QDateTime::currentMSecsSinceEpoch();
         }
     }
 
-    if (rms > currentRms)
-        currentRms = rms;
+    if (rms > currentRms[0] || rms > currentRms[1])
+        currentRms[0] = currentRms[1] = rms;
 
     update();
 }
 
 
+void AudioMeter::setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms)
+{
+    leftPeak = limitFloatValue(leftPeak);
+    rightPeak = limitFloatValue(rightPeak);
+
+    leftRms = limitFloatValue(leftRms);
+    rightRms = limitFloatValue(rightRms);
+
+    float peaks[2] = {leftPeak, rightPeak};
+    for (int i = 0; i < 2; ++i) {
+        if (peaks[i] > currentPeak[i]) {
+            currentPeak[i] = peaks[i];
+            if (peaks[i] > maxPeak[i]) {
+                maxPeak[i] = peaks[i];
+                lastMaxPeakTime[i] = QDateTime::currentMSecsSinceEpoch();
+            }
+        }
+    }
+
+    float rms[2] = {leftRms, rightRms};
+    for (int i = 0; i < 2; ++i) {
+        if (rms[i] > currentRms[i])
+            currentRms[i] = rms[i];
+    }
+
+    update();
+}
 
 void AudioMeter::setPaintMaxPeakMarker(bool paintMaxPeak)
 {
@@ -335,7 +415,7 @@ void MidiActivityMeter::paintEvent(QPaintEvent *)
 
     if (isEnabled()) {
         float value = (isVertical() ? height() : width()) * activityValue;
-        paintSegments(painter, value, colors);
+        paintSegments(painter, rect(), value, colors);
         updateInternalValues();
     }
 }
