@@ -300,7 +300,24 @@ void AudioMeter::paintEvent(QPaintEvent *)
 
 void AudioMeter::drawDbMarkers(QPainter &painter)
 {
+    float db = 0;
+    //painter.setCompositionMode(QPainter::RasterOp_SetDestination);
+    const static QColor transparentColor(255, 255, 255, 120);
+    painter.setPen(transparentColor);
+    QFontMetrics metrics = fontMetrics();
+    qreal fontHeight = metrics.height();
+    qreal fontAscent = metrics.descent();
+    qreal center = isVertical() ? width()/2.0 : height()/2.0;
 
+    while (db > -50) {
+        QString text = QString::number(db);
+        int textWidth = metrics.width(text);
+        float linearValue = Utils::poweredGainToLinear(Utils::dbToLinear(db));
+        float y = (isVertical() ? (1 - linearValue) * height() : center) + fontHeight/2.0 - fontAscent;
+        float x = (isVertical() ? center : linearValue * width()) - textWidth/2.0;
+        painter.drawText(x, y, text);
+        db -= db > -12 ? 3 : 6;
+    }
 }
 
 void AudioMeter::setPeak(float peak, float rms)
