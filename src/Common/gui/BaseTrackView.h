@@ -4,13 +4,13 @@
 #include <QWidget>
 #include "audio/core/AudioPeak.h"
 #include "MultiStateButton.h"
+#include "Slider.h"
 
 class AudioMeter;
 class QLabel;
 class QPushButton;
 class QGroupBox;
 class QSpacerItem;
-class QSlider;
 class QVBoxLayout;
 class QHBoxLayout;
 class QBoxLayout;
@@ -56,10 +56,7 @@ public:
 
     virtual void updateGuiElements();
 
-    inline Controller::MainController *getMainController() const
-    {
-        return mainController;
-    }
+    Controller::MainController *getMainController() const;
 
     virtual void setActivatedStatus(bool deactivated);
 
@@ -102,11 +99,11 @@ protected:
     QBoxLayout *meterWidgetsLayout;// used to group meters bars and the max peaks Db label
 
     //level slider
-    QSlider *levelSlider;
+    Slider *levelSlider;
     QBoxLayout *levelSliderLayout;// used to group the level slider and the two 'speaker' icons
 
     // pan slider
-    QSlider *panSlider;
+    Slider *panSlider;
     QLabel *labelPanL;
     QLabel *labelPanR;
     QHBoxLayout *panWidgetsLayout;
@@ -152,5 +149,10 @@ private slots:
     void setSoloStatus(bool newSoloStatus);
     void setBoostStatus(float newBoostValue);
 };
+
+inline Controller::MainController* BaseTrackView::getMainController() const
+{
+    return mainController;
+}
 
 #endif // TRACKVIEW_H

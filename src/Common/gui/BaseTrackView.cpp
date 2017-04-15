@@ -88,22 +88,24 @@ void BaseTrackView::createLayoutStructure()
     labelPanR->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     labelPanR->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-    panSlider = new QSlider();
+    panSlider = new Slider();
     panSlider->setObjectName(QStringLiteral("panSlider"));
     panSlider->setMinimum(-4);
     panSlider->setMaximum(4);
     panSlider->setOrientation(Qt::Horizontal);
+    panSlider->setSliderType(Slider::PanSlider);
 
     panWidgetsLayout->addWidget(labelPanL);
     panWidgetsLayout->addWidget(panSlider);
     panWidgetsLayout->addWidget(labelPanR);
 
-    levelSlider = new QSlider();
+    levelSlider = new Slider();
     levelSlider->setObjectName(QStringLiteral("levelSlider"));
     levelSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
     levelSlider->setMaximum(120);
     levelSlider->setValue(100);
     levelSlider->setTickPosition(QSlider::NoTicks);
+    levelSlider->setSliderType(Slider::AudioSlider);
 
     levelSliderLayout = new QVBoxLayout();
     levelSliderLayout->setSpacing(2);
