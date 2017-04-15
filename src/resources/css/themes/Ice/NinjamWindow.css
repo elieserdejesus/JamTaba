@@ -322,6 +322,7 @@ LooperWindow #buttonRec[blinking="true"]:checked
 #widgetBottom QComboBox:focus
 {
     background-color: rgb(51, 153, 255);
+    border-color: rgba(0, 0, 0, 160);
     color: white;
 }
 
