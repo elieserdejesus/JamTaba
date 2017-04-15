@@ -230,7 +230,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QSlider" name="mainLevelSlider">
+        <widget class="Slider" name="mainLevelSlider">
          <property name="maximum">
           <number>120</number>
          </property>
@@ -454,6 +454,11 @@
    <extends>QWidget</extends>
    <header>PeakMeter.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Slider</class>
+   <extends>QSlider</extends>
+   <header>Slider.h</header>
   </customwidget>
   <customwidget>
    <class>BlinkableButton</class>
