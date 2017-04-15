@@ -262,7 +262,8 @@ void LooperWindow::setLooper(Audio::Looper *looper)
 
         connectLooperSignals();
 
-        connect(playingCheckBoxes[Looper::PlayLockedLayers], &QCheckBox::toggled, this, &LooperWindow::updateControls);
+        connect(playingCheckBoxes[Looper::PlayLockedLayers], &QCheckBox::clicked, this, &LooperWindow::updateControls);
+        connect(recordingCheckBoxes[Looper::HearAllLayers], &QCheckBox::clicked, this, &LooperWindow::updateControls);
     }
 
     updateBeatsPerInterval();
@@ -523,8 +524,15 @@ void LooperWindow::updateControls()
         // update locked layers check box
         QCheckBox *lockedCheckBox = playingCheckBoxes[Looper::PlayLockedLayers];
         if (lockedCheckBox) {
-            lockedCheckBox->setEnabled(lockedCheckBox->isEnabled() && looper->hasLockedLayers());
-            lockedCheckBox->setChecked(lockedCheckBox->isEnabled() && lockedCheckBox->isChecked());
+            bool canEnable = lockedCheckBox->isEnabled() && looper->hasLockedLayers();
+            if (looper->getMode() == Looper::SelectedLayer) {
+                QCheckBox *hearAllCheckBox = recordingCheckBoxes[Looper::HearAllLayers];
+                if (hearAllCheckBox) {
+                    canEnable &= hearAllCheckBox->isEnabled() && hearAllCheckBox->isChecked();
+                }
+            }
+            lockedCheckBox->setEnabled(canEnable);
+            lockedCheckBox->setChecked(canEnable && lockedCheckBox->isChecked());
         }
 
         // update random layer check box
