@@ -1,6 +1,7 @@
 #include "Slider.h"
 
 #include <QPainter>
+#include <QStyle>
 
 #include "Utils.h"
 
@@ -24,10 +25,13 @@ void Slider::paintEvent(QPaintEvent *ev)
 qreal Slider::getMarkerPosition() const
 {
     if (sliderType == Slider::AudioSlider) {
+        qreal position = 0;
         if (orientation() == Qt::Vertical)
-            return 1 - 100.0/maximum();
+            position = 1 - 100.0/maximum();
         else
-            return 100.0/maximum();
+            position = 100.0/maximum();
+
+        return position;
     }
 
     return 0.5; // pan marker is always drawed in center
@@ -46,10 +50,10 @@ void Slider::drawMarker(QPainter &painter)
     if (sliderType == Slider::AudioSlider && maximum() <= 100)
         return;
 
-    static const QColor MARKER_COLOR(0, 0, 0, 120);
+    static const QColor MARKER_COLOR(0, 0, 0, 80);
     painter.setPen(MARKER_COLOR);
 
-    const static int markerPreferredSize = 7;
+    const static int markerPreferredSize = 13;
     const qreal markerSize = (orientation() == Qt::Vertical) ? qMin(markerPreferredSize, width()) : qMin(markerPreferredSize, height());
     const qreal center = (orientation() == Qt::Vertical) ? width()/2.0 : height()/2.0;
 
@@ -68,5 +72,18 @@ void Slider::drawMarker(QPainter &painter)
         x1 = x2 = markerPosition * width();
     }
 
-    painter.drawLine(x1, y1, x2, y2);
+    QLine line(x1, y1, x2, y2);
+
+    if (sliderType == Slider::AudioSlider) {
+        QStyleOptionSlider opt;
+        initStyleOption(&opt);
+        QRect rectHandle = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, NULL);
+
+        if (orientation() == Qt::Vertical)
+            line.translate(0.0, rectHandle.height()/2.0);
+        else
+            line.translate(-rectHandle.width()/2.0, 0.0);
+    }
+
+    painter.drawLine(line);
 }

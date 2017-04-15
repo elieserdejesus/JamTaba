@@ -279,7 +279,7 @@
              </widget>
             </item>
             <item alignment="Qt::AlignVCenter">
-             <widget class="QSlider" name="masterFader">
+             <widget class="Slider" name="masterFader">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
@@ -701,6 +701,11 @@
    <class>UserNameLineEdit</class>
    <extends>QLineEdit</extends>
    <header>UserNameLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Slider</class>
+   <extends>QSlider</extends>
+   <header>Slider.h</header>
   </customwidget>
  </customwidgets>
  <resources>

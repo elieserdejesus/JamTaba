@@ -1686,6 +1686,8 @@ void MainWindow::updateUserName()
 
 void MainWindow::initializeMasterFader()
 {
+    ui.masterFader->setSliderType(Slider::AudioSlider);
+
     float lastMasterGain = mainController->getSettings().getLastMasterGain();
     int faderPosition = lastMasterGain * 100;
     ui.masterFader->setValue(faderPosition);
