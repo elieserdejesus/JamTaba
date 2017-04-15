@@ -385,6 +385,7 @@ LooperWindow QGroupBox
 LooperWindow QGroupBox
 {
     border: 1px solid rgba(0, 0, 0, 30);
+    border-radius: 6px;
 }
 
 LooperWindow QCheckBox
