@@ -49,6 +49,7 @@ class AudioMeter : public BaseMeter
     Q_PROPERTY(QColor maxPeakColor MEMBER maxPeakColor WRITE setMaxPeakColor)
     Q_PROPERTY(QColor peakStartColor MEMBER peakStartColor WRITE setPeaksStartColor)
     Q_PROPERTY(QColor peakEndColor MEMBER peakEndColor WRITE setPeaksEndColor)
+    Q_PROPERTY(QColor dBMarksColor MEMBER dBMarksColor WRITE setDbMarksColor)
 
 public:
     AudioMeter(QWidget *parent);
@@ -74,6 +75,7 @@ public:
     void setMaxPeakColor(const QColor &newColor);
     void setPeaksStartColor(const QColor &newColor);
     void setPeaksEndColor(const QColor &newColor);
+    void setDbMarksColor(const QColor &newColor);
 
 public slots:
     void setStereo(bool stereo);
@@ -91,6 +93,7 @@ private:
     QColor maxPeakColor;
     QColor peakStartColor;  // start gradient color
     QColor peakEndColor;    // end gradient color
+    QColor dBMarksColor;
 
     std::vector<QColor> peakColors;
     std::vector<QColor> rmsColors;
@@ -117,7 +120,6 @@ private:
     QColor interpolateColor(const QColor &start, const QColor &end, float ratio);
 
     void drawDbMarkers(QPainter &painter);
-
 };
 
 

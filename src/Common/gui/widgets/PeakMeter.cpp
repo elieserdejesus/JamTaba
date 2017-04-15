@@ -106,6 +106,7 @@ AudioMeter::AudioMeter(QWidget *parent)
       peakStartColor(Qt::darkGreen),
       peakEndColor(Qt::red),
       maxPeakColor(QColor(0, 0, 0, 80)),
+      dBMarksColor(Qt::lightGray),
       stereo(true)
 {
     //setAttribute(Qt::WA_NoBackground);
@@ -141,6 +142,13 @@ QColor AudioMeter::interpolateColor(const QColor &start, const QColor &end, floa
     int b = (int)(ratio * end.blue()  + (1 - ratio) * start.blue());
 
     return QColor::fromRgb(r, g, b);
+}
+
+void AudioMeter::setDbMarksColor(const QColor &newColor)
+{
+    this->dBMarksColor = newColor;
+
+    update();
 }
 
 void AudioMeter::setRmsColor(const QColor &newColor){
@@ -301,9 +309,7 @@ void AudioMeter::paintEvent(QPaintEvent *)
 void AudioMeter::drawDbMarkers(QPainter &painter)
 {
     float db = 0;
-    //painter.setCompositionMode(QPainter::RasterOp_SetDestination);
-    const static QColor transparentColor(255, 255, 255, 120);
-    painter.setPen(transparentColor);
+    painter.setPen(dBMarksColor);
     QFontMetrics metrics = fontMetrics();
     qreal fontHeight = metrics.height();
     qreal fontAscent = metrics.descent();
