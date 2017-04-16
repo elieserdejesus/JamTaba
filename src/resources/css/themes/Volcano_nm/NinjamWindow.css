@@ -313,10 +313,14 @@ LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down men
 }
 
 LooperWindow QCheckBox:disabled,
-LooperWindow QLabel:disabled,
-LooperWindow QComboBox:disabled
+LooperWindow QLabel:disabled
 {
     color: rgba(0, 0, 0, 90);
+}
+
+#widgetBottom QComboBox:disabled
+{
+    border: none;
 }
 
 LooperWindow QComboBox:disabled
