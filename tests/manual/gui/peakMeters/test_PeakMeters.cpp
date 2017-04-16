@@ -39,7 +39,7 @@ public:
                 float db = button->text().replace(" dB", "").toFloat();
                 float peak = Utils::dbToLinear(db);
                 for (AudioMeter *audioMeter : meters)
-                    audioMeter->setPeak(peak, peak/2, 1.0, 1.0/2);
+                    audioMeter->setPeak(peak, peak/2.0f, peak, peak/2.0f);
 
             });
             buttonsLayout->addWidget(button);
