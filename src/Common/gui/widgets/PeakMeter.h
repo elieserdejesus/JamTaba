@@ -112,6 +112,7 @@ private:
     bool stereo; // draw 2 meters?
 
     static const float MAX_SMOOTHED_LINEAR_VALUE;
+    static const float MAX_LINEAR_VALUE;
     static const float MAX_DB_VALUE;
 
     void paintMaxPeakMarker(QPainter &painter, float maxLinearPeak, const QRect &rect);
@@ -129,7 +130,7 @@ private:
 
 inline float AudioMeter::getSmoothedLinearPeakValue(float linearValue)
 {
-    const static float smoothFactor = 1/7.0f;
+    const static float smoothFactor = 1/6.0f;
 
     return std::pow(linearValue, smoothFactor);
 }
