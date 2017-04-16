@@ -338,7 +338,15 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
         float linearValue = getSmoothedLinearPeakValue(Utils::dbToLinear(db));
 
         float y = (isVertical() ? (MAX_SMOOTHED_LINEAR_VALUE - linearValue) * height() : center) + fontHeight/2.0 - fontAscent;
-        float x = (isVertical() ? center - textWidth/2.0 : (1 - (MAX_SMOOTHED_LINEAR_VALUE - linearValue)) * width() - textWidth);
+        float x = isVertical() ? center - textWidth/2.0 : (1 - (MAX_SMOOTHED_LINEAR_VALUE - linearValue)) * width() - textWidth/2.0;
+
+        if (db == MAX_DB_VALUE) { // the max DB value need be shifted to avoid draw outside widget area
+            if (isVertical())
+                y += fontHeight/2.0f;
+            else
+                x -= textWidth/2.0f;
+        }
+
         painter.drawText(x, y, text);
 
         if (drawTicks) {
