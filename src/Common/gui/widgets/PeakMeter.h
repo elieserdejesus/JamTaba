@@ -111,7 +111,7 @@ private:
 
     bool stereo; // draw 2 meters?
 
-    static const float MAX_LINEAR_VALUE;
+    static const float MAX_SMOOTHED_LINEAR_VALUE;
     static const float MAX_DB_VALUE;
 
     void paintMaxPeakMarker(QPainter &painter, float maxLinearPeak, const QRect &rect);
@@ -122,12 +122,12 @@ private:
 
     QColor interpolateColor(const QColor &start, const QColor &end, float ratio);
 
-    float getSmoothedLinearPeakValue(float linearValue) const;
+    static float getSmoothedLinearPeakValue(float linearValue);
 
     void drawDbMarkers(QPainter &painter);
 };
 
-inline float AudioMeter::getSmoothedLinearPeakValue(float linearValue) const
+inline float AudioMeter::getSmoothedLinearPeakValue(float linearValue)
 {
     const static float smoothFactor = 1/7.0f;
 

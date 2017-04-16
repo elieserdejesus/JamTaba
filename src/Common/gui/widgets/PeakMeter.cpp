@@ -15,8 +15,8 @@ const quint8 BaseMeter::SEGMENTS_SIZE = 6;
 const int AudioMeter::MAX_PEAK_MARKER_SIZE = 2;
 const int AudioMeter::MAX_PEAK_SHOW_TIME = 1500;
 
-const float AudioMeter::MAX_DB_VALUE = 0.0f;//3.0f;
-const float AudioMeter::MAX_LINEAR_VALUE = Utils::poweredGainToLinear(Utils::dbToLinear(AudioMeter::MAX_DB_VALUE));
+const float AudioMeter::MAX_DB_VALUE = 6.0f;
+const float AudioMeter::MAX_SMOOTHED_LINEAR_VALUE = AudioMeter::getSmoothedLinearPeakValue(Utils::dbToLinear(AudioMeter::MAX_DB_VALUE));
 
 bool AudioMeter::paintingMaxPeakMarker = true;
 bool AudioMeter::paintingPeaks = true;
@@ -247,8 +247,10 @@ uint AudioMeter::getParallelSegments() const
     uint parallelSegments = 0;
     if (isPaintingPeaks())
         parallelSegments++;
+
     if (isPaintingRMS())
         parallelSegments++;
+
     if (stereo)
         parallelSegments *= 2;
 
@@ -258,6 +260,8 @@ uint AudioMeter::getParallelSegments() const
 void AudioMeter::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
+
+    const static float peakValuesOffset = MAX_SMOOTHED_LINEAR_VALUE - 1.0f; // peaks are not starting at 0dB, so we need a offset
 
     if (isEnabled()) {
         const uint channels = stereo ? 2 : 1;
@@ -274,12 +278,14 @@ void AudioMeter::paintEvent(QPaintEvent *)
         if (paintingPeaks) {
             for (uint i = 0; i < channels; ++i) {
                 if (currentPeak[i]) {
-                    float peakValue = getSmoothedLinearPeakValue(currentPeak[i]) * rectSize;
+                    float smoothedPeakValue = getSmoothedLinearPeakValue(currentPeak[i]) - peakValuesOffset ;
+                    float peakValue = smoothedPeakValue * rectSize;
                     paintSegments(painter, drawRect, peakValue, peakColors);
                 }
 
                 if (maxPeak[i] && paintingMaxPeakMarker) {
-                    paintMaxPeakMarker(painter, getSmoothedLinearPeakValue(maxPeak[i]), drawRect);
+                    float maxPeakValue = getSmoothedLinearPeakValue(maxPeak[i]) - peakValuesOffset;
+                    paintMaxPeakMarker(painter, maxPeakValue, drawRect);
                 }
 
                 if (isVertical())
@@ -292,7 +298,7 @@ void AudioMeter::paintEvent(QPaintEvent *)
         if (paintingRMS) {
             for (uint i = 0; i < channels; ++i) {
                 if (currentRms[i]) {
-                    float rmsValue = getSmoothedLinearPeakValue(currentRms[i]) * rectSize;
+                    float rmsValue = (getSmoothedLinearPeakValue(currentRms[i]) - peakValuesOffset) * rectSize;
                     paintSegments(painter, drawRect, rmsValue, rmsColors);
                 }
                 if (isVertical())
@@ -325,8 +331,9 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
         int textWidth = metrics.width(text);
 
         float linearValue = getSmoothedLinearPeakValue(Utils::dbToLinear(db));
-        float y = (isVertical() ? (AudioMeter::MAX_LINEAR_VALUE - linearValue) * height() : center) + fontHeight/2.0 - fontAscent;
-        float x = (isVertical() ? center - textWidth/2.0 : linearValue/AudioMeter::MAX_LINEAR_VALUE * width() - textWidth);
+
+        float y = (isVertical() ? (MAX_SMOOTHED_LINEAR_VALUE - linearValue) * height() : center) + fontHeight/2.0 - fontAscent;
+        float x = (isVertical() ? center - textWidth/2.0 : linearValue/MAX_SMOOTHED_LINEAR_VALUE * width() - textWidth);
         painter.drawText(x, y, text);
         db -= 6;
     }
