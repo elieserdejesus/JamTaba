@@ -82,6 +82,7 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
     void recreateInterpolatedColors() override;
 
@@ -110,6 +111,8 @@ private:
     qint64 lastMaxPeakTime[2];
 
     bool stereo; // draw 2 meters?
+
+    QPixmap dbMarkersPixmap;
 
     static const float MAX_SMOOTHED_LINEAR_VALUE;
     static const float MAX_LINEAR_VALUE;

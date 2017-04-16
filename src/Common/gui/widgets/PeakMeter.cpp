@@ -309,10 +309,22 @@ void AudioMeter::paintEvent(QPaintEvent *)
             }
         }
 
-        drawDbMarkers(painter);
+        painter.drawPixmap(0, 0, dbMarkersPixmap);
     }
 
     updateInternalValues(); // compute decay and max peak
+}
+
+void AudioMeter::resizeEvent(QResizeEvent *event)
+{
+    BaseMeter::resizeEvent(event);
+
+    dbMarkersPixmap = QPixmap(width(), height());
+    dbMarkersPixmap.fill(Qt::transparent);
+    QPainter painter(&dbMarkersPixmap);
+    drawDbMarkers(painter);
+
+    update();
 }
 
 void AudioMeter::drawDbMarkers(QPainter &painter)
