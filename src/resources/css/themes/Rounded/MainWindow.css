@@ -11,8 +11,7 @@
     color: rgb(110, 110,110);
 }
 
-#masterMeterL,
-#masterMeterR
+#masterMeter
 {
     max-height: 2px;
     height: 2px;

@@ -1065,8 +1065,8 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update master peaks
     Audio::AudioPeak masterPeak = mainController->getMasterPeak();
-    ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), masterPeak.getLeftRMS());
-    ui.masterMeterR->setPeak(masterPeak.getRightPeak(), masterPeak.getRightRMS());
+    ui.masterMeter->setPeak(masterPeak.getLeftPeak(), masterPeak.getRightPeak(),
+                            masterPeak.getLeftRMS(), masterPeak.getRightRMS());
 
     // update all blinkable buttons
     BlinkableButton::updateAllBlinkableButtons();
@@ -1611,8 +1611,7 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
 
 void MainWindow::setupWidgets()
 {
-    ui.masterMeterL->setOrientation(Qt::Horizontal);
-    ui.masterMeterR->setOrientation(Qt::Horizontal);
+    ui.masterMeter->setOrientation(Qt::Horizontal);
     ui.masterFader->installEventFilter(this);// handle double click in master fader
 
     setChatVisibility(false);// hide chat area until connect in a server to play

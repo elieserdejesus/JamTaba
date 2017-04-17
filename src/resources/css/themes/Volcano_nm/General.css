@@ -339,8 +339,7 @@ AudioMeter
     qproperty-maxPeakColor: rgb(190, 90, 20);
 }
 
-AudioMeter#masterMeterL,
-AudioMeter#masterMeterR,
+AudioMeter#masterMeter
 NinjamPanel #peakMeter
 {
     qproperty-peakStartColor: rgb(190, 90, 29);
