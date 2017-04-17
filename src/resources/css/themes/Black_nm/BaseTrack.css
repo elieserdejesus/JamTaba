@@ -209,6 +209,7 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
     background-color: rgb(180, 180, 180);
 }
 
+/*
 PeakMeter
 {
     background-color: rgba(0, 0, 0, 6);
@@ -216,6 +217,7 @@ PeakMeter
     min-width: 4px;
     min-height: 4px;
 }
+*/
 
 
 /* TrackGroup - used as container for subchannels

@@ -195,11 +195,13 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:hover
     background-color: rgb(217, 157, 116);
 }
 
+/*
 PeakMeter
 {
     background-color: rgba(0, 0, 0, 6);
     border: none;
 }
+*/
 
 
 /* TrackGroup - used as container for subchannels

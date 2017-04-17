@@ -329,34 +329,32 @@ void AudioMeter::resizeEvent(QResizeEvent *event)
 
 void AudioMeter::drawDbMarkers(QPainter &painter)
 {
-    float db = MAX_DB_VALUE;
-
     painter.setPen(dBMarksColor);
     QFontMetrics metrics = fontMetrics();
     qreal fontHeight = metrics.height();
     qreal fontAscent = metrics.descent();
-    qreal center = isVertical() ? width()/2.0 : height()/2.0;
+    int center = isVertical() ? width()/2 : height()/2;
 
     const bool drawTicks = !isVertical();
     const static float tickHeight = 2.5f;
     float tickY = height() - 1 - tickHeight;
 
-    while (db > -64) {
+    static float dbValues[] = {6, 0, -6, -12, -20, -32, -48, -64, -90};
+
+    for (float db : dbValues){
         QString text = QString::number(db);
-        if (db > 0)
-            text = "+" + text;
         int textWidth = metrics.width(text);
 
         float linearValue = getSmoothedLinearPeakValue(Utils::dbToLinear(db));
 
-        float y = (isVertical() ? (MAX_SMOOTHED_LINEAR_VALUE - linearValue) * height() : center) + fontHeight/2.0 - fontAscent;
-        float x = isVertical() ? center - textWidth/2.0 : (1 - (MAX_SMOOTHED_LINEAR_VALUE - linearValue)) * width() - textWidth/2.0;
+        int y = (isVertical() ? (MAX_SMOOTHED_LINEAR_VALUE - linearValue) * height() : center) + fontHeight/2.0 - fontAscent;
+        int x = (isVertical() ? center : (1 - (MAX_SMOOTHED_LINEAR_VALUE - linearValue)) * width()) - textWidth/2;
 
         if (db == MAX_DB_VALUE) { // the max DB value need be shifted to avoid draw outside widget area
             if (isVertical())
-                y += fontHeight/2.0f;
+                y += fontHeight/2;
             else
-                x -= textWidth/2.0f;
+                x -= textWidth/2;
         }
 
         painter.drawText(x, y, text);
@@ -365,8 +363,6 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
             float tickX = (1 - (MAX_SMOOTHED_LINEAR_VALUE - linearValue)) * width() - 1;
             painter.drawLine(tickX, tickY, tickX, tickY + tickHeight);
         }
-
-        db -= 6;
     }
 }
 

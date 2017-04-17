@@ -160,12 +160,13 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
     width: 7px;
 }
 
-
+/*
 PeakMeter
 {
     background-color: rgba(0, 0, 0, 6);
     border: none;
 }
+*/
 
 
 /* TrackGroup - used as container for subchannels

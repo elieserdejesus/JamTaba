@@ -79,16 +79,22 @@ BaseTrackView #peaksDbLabel:hover{
 }
 
 #labelPanR,
-#labelPanL{
+#labelPanL
+{
     color: rgba(0, 0, 0, 160);
     font-size: 9px;
 }
 
 BaseMeter
 {
-    min-width: 4px;
-    min-height: 4px;
+    min-width: 20px;
+    min-height: 20px;
     background-color: rgba(0, 0, 0, 20);
+}
+
+AudioMeter
+{
+    qproperty-dBMarksColor: black;
 }
 
 /*
