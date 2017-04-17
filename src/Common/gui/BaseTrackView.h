@@ -92,9 +92,8 @@ protected:
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 
     //meters
-    AudioMeter *peakMeterLeft;
-    AudioMeter *peakMeterRight;
-    QBoxLayout *metersLayout;// used to group the two meter bars
+    AudioMeter *peakMeter;
+    QBoxLayout *metersLayout;// used to group midi and audio meters
     QLabel *peaksDbLabel;
     QBoxLayout *meterWidgetsLayout;// used to group meters bars and the max peaks Db label
 

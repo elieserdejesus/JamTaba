@@ -55,10 +55,9 @@ void BaseTrackView::setupVerticalLayout()
     levelSlider->setOrientation(Qt::Vertical);
     levelSliderLayout->setDirection(QBoxLayout::TopToBottom);
 
-    peakMeterRight->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
-    peakMeterLeft->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
-    peakMeterLeft->setOrientation(Qt::Vertical);
-    peakMeterRight->setOrientation(Qt::Vertical);
+    peakMeter->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
+    peakMeter->setOrientation(Qt::Vertical);
+
     metersLayout->setDirection(QHBoxLayout::LeftToRight);
     meterWidgetsLayout->setDirection(QHBoxLayout::TopToBottom);
 
@@ -121,16 +120,13 @@ void BaseTrackView::createLayoutStructure()
     levelSliderLayout->addWidget(levelSlider);
     levelSliderLayout->addWidget(lowLevelIcon);
 
-    peakMeterLeft = new AudioMeter(this);
-    peakMeterLeft->setObjectName(QStringLiteral("peakMeterLeft"));
-    peakMeterRight = new AudioMeter(this);
-    peakMeterRight->setObjectName(QStringLiteral("peakMeterRight"));
+    peakMeter = new AudioMeter(this);
+    peakMeter->setObjectName(QStringLiteral("peakMeterLeft"));
 
     metersLayout = new QHBoxLayout();
     metersLayout->setSpacing(1);
     metersLayout->setContentsMargins(0, 0, 0, 0);
-    metersLayout->addWidget(peakMeterLeft);
-    metersLayout->addWidget(peakMeterRight);
+    metersLayout->addWidget(peakMeter);
 
     peaksDbLabel = new QLabel();
     peaksDbLabel->setObjectName(QStringLiteral("peaksDbLabel"));
@@ -339,11 +335,8 @@ void BaseTrackView::refreshStyleSheet()
     style()->unpolish(panSlider);
     style()->polish(panSlider);
 
-    style()->unpolish(peakMeterLeft);
-    style()->polish(peakMeterLeft);
-
-    style()->unpolish(peakMeterRight);
-    style()->polish(peakMeterRight);
+    style()->unpolish(peakMeter);
+    style()->polish(peakMeter);
 
     style()->unpolish(peaksDbLabel);
     style()->polish(peaksDbLabel);
@@ -381,9 +374,7 @@ BaseTrackView *BaseTrackView::getTrackViewByID(long trackID)
 
 void BaseTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight)
 {
-    peakMeterLeft->setPeak(peakLeft, rmsLeft);
-    peakMeterRight->setPeak(peakRight, rmsRight);
-
+    peakMeter->setPeak(peakLeft, peakRight, rmsLeft, rmsRight);
 }
 
 // event filter used to handle double clicks

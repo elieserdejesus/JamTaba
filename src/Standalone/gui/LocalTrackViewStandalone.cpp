@@ -83,7 +83,7 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSiz
 
     const int leftMargin = 1;
 
-    int metersCenter = peakMeterLeft->x() + (peakMeterRight->x() + peakMeterRight->width() - peakMeterLeft->x())/2;
+    int metersCenter = peakMeter->x() + peakMeter->width()/2.0;
     int x1 = metersCenter - 2;
     int y = midiPeakMeter->y() - 2;
     int x2 = metersCenter + 2;
@@ -124,9 +124,9 @@ void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin, 
 
     const int rightMargin = 2;
 
-    int metersCenter = peakMeterLeft->x() + (peakMeterRight->x() + peakMeterRight->width() - peakMeterLeft->x())/2;
+    int metersCenter = peakMeter->x() + peakMeter->width()/2.0;
     int x1 = metersCenter - 2;
-    int y = peakMeterLeft->y() - 2;
+    int y = peakMeter->y() - 2;
     int x2 = metersCenter + 2;
 
     // draw the vertical line
