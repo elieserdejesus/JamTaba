@@ -148,21 +148,6 @@ BaseTrackView[unlighted="true"] #buttonBoost:hover:checked
     background-color: rgb(157, 199, 255);
 }
 
-/* Small Label used to show max peak below peak meters
--------------------------------------------------------*/
-BaseTrackView #peaksDbLabel
-{
-    border: 1px solid rgba(0, 0, 0, 8);
-    background-color: rgba(0, 0, 0, 6);
-    border-radius: 1px;
-}
-
-BaseTrackView[unlighted="true"] #peaksDbLabel
-{
-   border: none;
-   background-color: rgba(0, 0, 0, 10);
-}
-
 
 BaseTrackView
 {

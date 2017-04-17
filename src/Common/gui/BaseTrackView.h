@@ -94,8 +94,6 @@ protected:
     //meters
     AudioMeter *peakMeter;
     QBoxLayout *metersLayout;// used to group midi and audio meters
-    QLabel *peaksDbLabel;
-    QBoxLayout *meterWidgetsLayout;// used to group meters bars and the max peaks Db label
 
     //level slider
     Slider *levelSlider;

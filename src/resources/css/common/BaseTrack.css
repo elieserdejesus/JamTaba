@@ -54,22 +54,6 @@ QPushButton#buttonStereoInversion:checked
 }
 
 
-/* The small label used to show the max peak below peak meters
---------------------------------------------------------------*/
-
-BaseTrackView #peaksDbLabel
-{
-    font-size: 8px;
-    qproperty-alignment: AlignCenter;
-    color: rgba(0, 0, 0, 120);
-    padding: 1px;
-    min-width: 15px;
-}
-BaseTrackView #peaksDbLabel:hover{
-    background-color: rgba(255,255,255, 30);
-    color: black;
-}
-
 /* Pan slider and LR labels
 ----------------------------*/
 #panSlider

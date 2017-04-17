@@ -248,7 +248,6 @@ void NinjamTrackView::setupHorizontalLayout()
     peakMeter->setOrientation(Qt::Horizontal);
     peakMeter->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
     metersLayout->setDirection(QBoxLayout::TopToBottom);
-    meterWidgetsLayout->setDirection(QBoxLayout::LeftToRight);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
 }

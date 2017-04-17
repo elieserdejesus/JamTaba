@@ -235,7 +235,6 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
 
         soloButton->setVisible(!peakMetersOnly);
         muteButton->setVisible(!peakMetersOnly);
-        peaksDbLabel->setVisible(!peakMetersOnly);
         Qt::Alignment alignment = peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter;
         levelSlider->parentWidget()->layout()->setAlignment(levelSlider, alignment);
 
