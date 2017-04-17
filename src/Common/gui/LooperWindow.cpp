@@ -192,7 +192,7 @@ void LooperWindow::updateDrawings()
     // update peak meters
     AudioPeak lastPeak = looper->getLastPeak();
     ui->peakMeter->setPeak(lastPeak.getLeftPeak(), lastPeak.getRightPeak(),
-                           lastPeak.getLeftRMS(), lastPeak.getRightRMS());
+                                lastPeak.getLeftRMS(), lastPeak.getRightRMS());
 }
 
 void LooperWindow::detachCurrentLooper()
