@@ -363,11 +363,20 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
         qreal y = (isVertical() ? (MAX_SMOOTHED_LINEAR_VALUE - linearValue) * height() * RESIZE_FACTOR : center) + fontHeight/2.0 - fontAscent;
         qreal x = (isVertical() ? center : (1 - ((MAX_SMOOTHED_LINEAR_VALUE - linearValue) * RESIZE_FACTOR)) * width()) - textWidth/2;
 
-        if (db == MAX_DB_VALUE) { // the max DB value need be shifted to avoid draw outside widget area
+        // the max DB value need be shifted to avoid draw outside widget area
+        if (db == AudioMeter::MAX_DB_VALUE) {
             if (isVertical())
                 y += fontHeight/2.0;
             else
                 x -= textWidth/2.0;
+        }
+
+        // the MIN DB value need be shifted to avoid draw outside widget area
+        if (db == AudioMeter::MIN_DB_VALUE) {
+            if (isVertical())
+                y -= fontHeight/2.0;
+            else
+                x += textWidth/2.0;
         }
 
         painter.drawText(x, y, text);
