@@ -344,6 +344,7 @@ void AudioMeter::resizeEvent(QResizeEvent *event)
 void AudioMeter::drawDbMarkers(QPainter &painter)
 {
     painter.setPen(dBMarksColor);
+    painter.setFont(font());
     QFontMetrics metrics = fontMetrics();
     qreal fontHeight = metrics.height();
     qreal fontAscent = metrics.descent();
@@ -355,7 +356,6 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
 
     static const std::vector<float> dbValues = createDBValues();
     qreal lastMarkPosition = -1;
-    qDebug() << "";
     for (float db : dbValues) {
         QString text = QString::number(db);
         int textWidth = metrics.width(text);

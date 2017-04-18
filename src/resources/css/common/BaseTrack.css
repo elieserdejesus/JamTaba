@@ -71,8 +71,8 @@ QPushButton#buttonStereoInversion:checked
 
 BaseMeter
 {
-    min-width: 20px;
-    min-height: 20px;
+    min-width: 16px;
+    min-height: 16px;
     background-color: rgba(0, 0, 0, 20);
 }
 
@@ -80,6 +80,7 @@ AudioMeter
 {
     qproperty-dBMarksColor: black;
     border: 1px solid rgb(0, 0, 0, 30);
+    font-size: 8px;
 }
 
 /*
