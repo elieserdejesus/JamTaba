@@ -15,9 +15,14 @@ const quint8 BaseMeter::SEGMENTS_SIZE = 6;
 const int AudioMeter::MAX_PEAK_MARKER_SIZE = 2;
 const int AudioMeter::MAX_PEAK_SHOW_TIME = 1500;
 
-const float AudioMeter::MAX_DB_VALUE = 6.0f;
+const float AudioMeter::MAX_DB_VALUE = 0.0f;
+const float AudioMeter::MIN_DB_VALUE = -60.0f;
 const float AudioMeter::MAX_LINEAR_VALUE = Utils::dbToLinear(AudioMeter::MAX_DB_VALUE);
+const float AudioMeter::MIN_LINEAR_VALUE = Utils::dbToLinear(AudioMeter::MIN_DB_VALUE);
+const float AudioMeter::MIN_SMOOTHED_LINEAR_VALUE = AudioMeter::getSmoothedLinearPeakValue(AudioMeter::MIN_LINEAR_VALUE);
 const float AudioMeter::MAX_SMOOTHED_LINEAR_VALUE = AudioMeter::getSmoothedLinearPeakValue(AudioMeter::MAX_LINEAR_VALUE);
+
+const float AudioMeter::RESIZE_FACTOR = 1.0f/AudioMeter::MIN_SMOOTHED_LINEAR_VALUE;
 
 bool AudioMeter::paintingMaxPeakMarker = true;
 bool AudioMeter::paintingPeaks = true;
@@ -46,9 +51,9 @@ void BaseMeter::resizeEvent(QResizeEvent * /*ev*/)
 }
 
 
-void BaseMeter::paintSegments(QPainter &painter, const QRect &rect, float peakValue, const std::vector<QColor> &segmentsColors)
+void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakPosition, const std::vector<QColor> &segmentsColors)
 {
-    const quint32 segmentsToPaint = (quint32)peakValue /SEGMENTS_SIZE;
+    const quint32 segmentsToPaint = (quint32)peakPosition/SEGMENTS_SIZE;
 
     if (segmentsColors.size() < segmentsToPaint)
         return;
@@ -203,11 +208,11 @@ void AudioMeter::recreateInterpolatedColors()
     }
 }
 
-void AudioMeter::paintMaxPeakMarker(QPainter &painter, float maxLinearPeak, const QRect &rect)
+void AudioMeter::paintMaxPeakMarker(QPainter &painter, float maxPeakPosition, const QRectF &rect)
 {
     const bool isVerticalMeter = isVertical();
-    QRect maxPeakRect(isVerticalMeter ? rect.left() : (rect.left() + maxLinearPeak * rect.width() - MAX_PEAK_MARKER_SIZE),
-                   isVerticalMeter ? (height() - maxLinearPeak * height()) : rect.top(),
+    QRectF maxPeakRect(isVerticalMeter ? rect.left() : (rect.left() + maxPeakPosition - MAX_PEAK_MARKER_SIZE),
+                   isVerticalMeter ? (height() - maxPeakPosition) : rect.top(),
                    isVerticalMeter ? rect.width() - 1 : MAX_PEAK_MARKER_SIZE,
                    isVerticalMeter ? MAX_PEAK_MARKER_SIZE : rect.height());
 
@@ -258,6 +263,14 @@ uint AudioMeter::getParallelSegments() const
     return parallelSegments;
 }
 
+float AudioMeter::getPeakPosition(float linearPeak, float rectSize, float peakValueOffset)
+{
+    const float smoothedPeakValue = getSmoothedLinearPeakValue(linearPeak) - peakValueOffset;
+    const float peakPosition = (1 - ((MAX_SMOOTHED_LINEAR_VALUE - smoothedPeakValue) * RESIZE_FACTOR)) * rectSize;
+
+    return peakPosition;
+}
+
 void AudioMeter::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
@@ -266,8 +279,8 @@ void AudioMeter::paintEvent(QPaintEvent *)
 
     if (isEnabled()) {
         const uint channels = stereo ? 2 : 1;
-        const int rectSize = isVertical() ? height() : width();
-        QRect drawRect(rect());
+        const float rectSize = isVertical() ? height() : width();
+        QRectF drawRect(rect());
 
         const int parallelSegments = getParallelSegments();
 
@@ -279,14 +292,13 @@ void AudioMeter::paintEvent(QPaintEvent *)
         if (paintingPeaks) {
             for (uint i = 0; i < channels; ++i) {
                 if (currentPeak[i]) {
-                    float smoothedPeakValue = getSmoothedLinearPeakValue(currentPeak[i]) - peakValuesOffset ;
-                    float peakValue = smoothedPeakValue * rectSize;
-                    paintSegments(painter, drawRect, peakValue, peakColors);
+                    float peakPosition = getPeakPosition(currentPeak[i], rectSize, peakValuesOffset);
+                    paintSegments(painter, drawRect, peakPosition, peakColors);
                 }
 
                 if (maxPeak[i] && paintingMaxPeakMarker) {
-                    float maxPeakValue = getSmoothedLinearPeakValue(maxPeak[i]) - peakValuesOffset;
-                    paintMaxPeakMarker(painter, maxPeakValue, drawRect);
+                    float maxPeakPosition = getPeakPosition(maxPeak[i], rectSize, peakValuesOffset);
+                    paintMaxPeakMarker(painter, maxPeakPosition, drawRect);
                 }
 
                 if (isVertical())
@@ -299,8 +311,8 @@ void AudioMeter::paintEvent(QPaintEvent *)
         if (paintingRMS) {
             for (uint i = 0; i < channels; ++i) {
                 if (currentRms[i]) {
-                    float rmsValue = (getSmoothedLinearPeakValue(currentRms[i]) - peakValuesOffset) * rectSize;
-                    paintSegments(painter, drawRect, rmsValue, rmsColors);
+                    float rmsPosition = getPeakPosition(currentRms[i], rectSize, peakValuesOffset);
+                    paintSegments(painter, drawRect, rmsPosition, rmsColors);
                 }
                 if (isVertical())
                     drawRect.translate(drawRect.width(), 0);
@@ -339,16 +351,15 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
     const static float tickHeight = 2.5f;
     float tickY = height() - 1 - tickHeight;
 
-    static float dbValues[] = {6, 0, -6, -12, -20, -32, -48, -64, -90};
-
+    static const std::vector<float> dbValues = createDBValues();
     for (float db : dbValues){
         QString text = QString::number(db);
         int textWidth = metrics.width(text);
 
         float linearValue = getSmoothedLinearPeakValue(Utils::dbToLinear(db));
 
-        int y = (isVertical() ? (MAX_SMOOTHED_LINEAR_VALUE - linearValue) * height() : center) + fontHeight/2.0 - fontAscent;
-        int x = (isVertical() ? center : (1 - (MAX_SMOOTHED_LINEAR_VALUE - linearValue)) * width()) - textWidth/2;
+        int y = (isVertical() ? (MAX_SMOOTHED_LINEAR_VALUE - linearValue) * height() * RESIZE_FACTOR : center) + fontHeight/2.0 - fontAscent;
+        int x = (isVertical() ? center : (1 - ((MAX_SMOOTHED_LINEAR_VALUE - linearValue) * RESIZE_FACTOR)) * width()) - textWidth/2;
 
         if (db == MAX_DB_VALUE) { // the max DB value need be shifted to avoid draw outside widget area
             if (isVertical())
@@ -360,10 +371,21 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
         painter.drawText(x, y, text);
 
         if (drawTicks) {
-            float tickX = (1 - (MAX_SMOOTHED_LINEAR_VALUE - linearValue)) * width() - 1;
+            float tickX = (1 - ((MAX_SMOOTHED_LINEAR_VALUE - linearValue) * RESIZE_FACTOR)) * width() - 1;
             painter.drawLine(tickX, tickY, tickX, tickY + tickHeight);
         }
     }
+}
+
+std::vector<float> AudioMeter::createDBValues()
+{
+    std::vector<float> values;
+    float db = AudioMeter::MAX_DB_VALUE;
+    while (db >= AudioMeter::MIN_DB_VALUE) {
+        values.push_back(db);
+        db -= 6;
+    }
+    return values;
 }
 
 void AudioMeter::setPeak(float peak, float rms)

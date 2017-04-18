@@ -20,7 +20,7 @@ protected:
 
     void resizeEvent(QResizeEvent *) override;
 
-    void paintSegments(QPainter &painter, const QRect &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors);
+    void paintSegments(QPainter &painter, const QRectF &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors);
 
     inline bool isVertical() const { return orientation == Qt::Vertical; }
 
@@ -115,10 +115,15 @@ private:
     QPixmap dbMarkersPixmap;
 
     static const float MAX_SMOOTHED_LINEAR_VALUE;
+    static const float MIN_SMOOTHED_LINEAR_VALUE;
     static const float MAX_LINEAR_VALUE;
+    static const float MIN_LINEAR_VALUE;
     static const float MAX_DB_VALUE;
+    static const float MIN_DB_VALUE;
 
-    void paintMaxPeakMarker(QPainter &painter, float maxLinearPeak, const QRect &rect);
+    static const float RESIZE_FACTOR;
+
+    void paintMaxPeakMarker(QPainter &painter, float maxPeakPosition, const QRectF &rect);
 
     void updateInternalValues();
 
@@ -127,13 +132,16 @@ private:
     QColor interpolateColor(const QColor &start, const QColor &end, float ratio);
 
     static float getSmoothedLinearPeakValue(float linearValue);
+    static float getPeakPosition(float linearPeak, float rectSize, float peakValueOffset);
+
+    static std::vector<float> createDBValues();
 
     void drawDbMarkers(QPainter &painter);
 };
 
 inline float AudioMeter::getSmoothedLinearPeakValue(float linearValue)
 {
-    const static float smoothFactor = 1/6.0f;
+    const static float smoothFactor = 1/10.0f; // used to get more equally spaced markers
 
     return std::pow(linearValue, smoothFactor);
 }
