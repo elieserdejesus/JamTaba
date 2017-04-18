@@ -123,7 +123,7 @@ private:
 
     static const float RESIZE_FACTOR;
 
-    void paintMaxPeakMarker(QPainter &painter, float maxPeakPosition, const QRectF &rect);
+    void paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, const QRectF &rect);
 
     void updateInternalValues();
 
@@ -131,17 +131,17 @@ private:
 
     QColor interpolateColor(const QColor &start, const QColor &end, float ratio);
 
-    static float getSmoothedLinearPeakValue(float linearValue);
-    static float getPeakPosition(float linearPeak, float rectSize, float peakValueOffset);
+    static qreal getSmoothedLinearPeakValue(qreal linearValue);
+    static qreal getPeakPosition(qreal linearPeak, qreal rectSize, qreal peakValueOffset);
 
     static std::vector<float> createDBValues();
 
     void drawDbMarkers(QPainter &painter);
 };
 
-inline float AudioMeter::getSmoothedLinearPeakValue(float linearValue)
+inline qreal AudioMeter::getSmoothedLinearPeakValue(qreal linearValue)
 {
-    const static float smoothFactor = 1/10.0f; // used to get more equally spaced markers
+    const static qreal smoothFactor = 1/10.0f; // used to get more equally spaced markers
 
     return std::pow(linearValue, smoothFactor);
 }
