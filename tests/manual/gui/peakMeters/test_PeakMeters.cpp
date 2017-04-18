@@ -84,8 +84,8 @@ public:
             audioMeter->setMaxPeakColor(Qt::yellow);
         }
 
-        setMinimumWidth(600);
-        setMinimumHeight(400);
+        setMinimumWidth(300);
+        setMinimumHeight(200);
 
     }
 
