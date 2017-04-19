@@ -310,7 +310,7 @@ void BaseTrackView::setToWide()
     }
 }
 
-void BaseTrackView::refreshStyleSheet()
+void BaseTrackView::updateStyleSheet()
 {
     style()->unpolish(this);
     style()->polish(this);
@@ -321,8 +321,7 @@ void BaseTrackView::refreshStyleSheet()
     style()->unpolish(panSlider);
     style()->polish(panSlider);
 
-    style()->unpolish(peakMeter);
-    style()->polish(peakMeter);
+    peakMeter->updateStyleSheet();
 
     style()->unpolish(muteButton);
     style()->polish(muteButton);
@@ -340,7 +339,7 @@ void BaseTrackView::setActivatedStatus(bool deactivated)
 {
     setProperty("unlighted", QVariant(deactivated));
     this->activated = !deactivated;
-    refreshStyleSheet();
+    updateStyleSheet();
 }
 
 bool BaseTrackView::isActivated() const

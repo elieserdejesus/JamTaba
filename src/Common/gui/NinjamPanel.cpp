@@ -32,6 +32,11 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
     translate();
 }
 
+void NinjamPanel::updateStyleSheet()
+{
+    ui->peakMeter->updateStyleSheet();
+}
+
 void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier)
 {
     // initialize combos

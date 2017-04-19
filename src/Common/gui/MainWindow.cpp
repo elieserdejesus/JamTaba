@@ -133,10 +133,18 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     }
 }
 
-void MainWindow::updateNightModeInWorldMaps()
+void MainWindow::handleThemeChanged()
 {
     QString themeName = mainController->getTheme();
     MapWidget::setNightMode(MainWindow::themeCanUseNightModeWorldMaps(themeName));
+
+    ui.masterMeter->updateStyleSheet();
+
+    for(auto groupChannels : localGroupChannels) {
+        for (auto trackView : groupChannels->getTracks<LocalTrackView *>()) {
+            trackView->updateStyleSheet();
+        }
+    }
 }
 
 void MainWindow::setTheme(const QString &themeName)
@@ -1672,7 +1680,7 @@ void MainWindow::setupSignals()
 
     connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);
 
-    connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::updateNightModeInWorldMaps);
+    connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::handleThemeChanged);
 
     ui.contentTabWidget->installEventFilter(this);
 }

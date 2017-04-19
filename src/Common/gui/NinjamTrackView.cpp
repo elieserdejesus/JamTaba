@@ -115,7 +115,7 @@ QString NinjamTrackView::getLowCutStateText() const
     return tr("Off"); // just to be shure
 }
 
-void NinjamTrackView::refreshStyleSheet()
+void NinjamTrackView::updateStyleSheet()
 {
     style()->unpolish(channelNameLabel);
     style()->polish(channelNameLabel);
@@ -123,7 +123,7 @@ void NinjamTrackView::refreshStyleSheet()
     style()->polish(buttonLowCut);
     style()->polish(buttonReceive);
 
-    BaseTrackView::refreshStyleSheet();
+    BaseTrackView::updateStyleSheet();
 }
 
 void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialValues)
@@ -200,7 +200,7 @@ void NinjamTrackView::setOrientation(Qt::Orientation newOrientation)
         setupVerticalLayout();
 
     setProperty("horizontal", newOrientation == Qt::Horizontal ? true : false);
-    refreshStyleSheet();
+    updateStyleSheet();
 }
 
 void NinjamTrackView::setupVerticalLayout()

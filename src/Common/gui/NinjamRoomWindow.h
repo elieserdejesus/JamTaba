@@ -71,6 +71,7 @@ protected:
     NinjamPanel *ninjamPanel;// panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
 
     void changeEvent(QEvent *) override;
+
 private:
     MainWindow *mainWindow;
     QMap<QString, NinjamTrackGroupView *> trackGroups;
@@ -168,6 +169,8 @@ private slots:
     void resetBpmComboBox();
 
     void setEstimatatedChunksPerIntervalInAllTracks();
+
+    void updateStylesheet();
 };
 
 #endif // NINJAMROOMWINDOW_H

@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>NinjamPanel</class>
  <widget class="QWidget" name="NinjamPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>735</width>
+    <height>134</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string notr="true"/>
   </property>
@@ -237,7 +245,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>140</width>
+            <width>100</width>
             <height>0</height>
            </size>
           </property>

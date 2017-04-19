@@ -317,9 +317,9 @@ void LocalTrackView::setStereoInversion(bool stereoInverted)
     buttonStereoInversion->setChecked(stereoInverted);
 }
 
-void LocalTrackView::refreshStyleSheet()
+void LocalTrackView::updateStyleSheet()
 {
-    BaseTrackView::refreshStyleSheet();
+    BaseTrackView::updateStyleSheet();
 
     style()->unpolish(buttonStereoInversion); // this is necessary to change the stereo inversion button colors when the transmit button is clicled
     style()->polish(buttonStereoInversion);

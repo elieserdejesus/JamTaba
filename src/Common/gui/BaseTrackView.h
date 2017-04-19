@@ -51,6 +51,8 @@ public:
     virtual void setToNarrow();
     virtual void setToWide();
 
+    virtual void updateStyleSheet();
+
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
@@ -86,8 +88,6 @@ protected:
     virtual void bindThisViewWithTrackNodeSignals();
 
     void createLayoutStructure();
-
-    virtual void refreshStyleSheet();
 
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 

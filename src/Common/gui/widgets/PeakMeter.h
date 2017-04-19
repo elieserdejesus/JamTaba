@@ -13,7 +13,7 @@ public:
     void setDecayTime(quint32 decayTimeInMiliseconds);
     virtual void setOrientation(Qt::Orientation orientation);
     QSize minimumSizeHint() const override;
-
+    virtual void updateStyleSheet();
 protected:
 
     virtual void recreateInterpolatedColors() = 0;
@@ -38,7 +38,9 @@ protected:
     static const int MIN_SIZE;
     static const int DEFAULT_DECAY_TIME;
 };
+
 //========================================================================
+
 class AudioMeter : public BaseMeter
 {
     Q_OBJECT
@@ -57,6 +59,8 @@ public:
     void setPeak(float peak, float rms);
     void setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms);
 
+    void updateStyleSheet() override;
+
     // these functions will affect all meters
     static void setPaintMaxPeakMarker(bool paintMaxPeak);
     static void paintRmsOnly();
@@ -68,8 +72,6 @@ public:
     inline static bool isPaintintMaxPeakMarker() { return paintingMaxPeakMarker; }
     inline static bool isPaintingRMS() { return paintingRMS; }
     inline static bool isPaintingPeaks() { return paintingPeaks; }
-
-    void setOrientation(Qt::Orientation orientation) override;
 
     void setRmsColor(const QColor &newColor);
     void setMaxPeakColor(const QColor &newColor);
@@ -137,6 +139,8 @@ private:
     static std::vector<float> createDBValues();
 
     void drawDbMarkers(QPainter &painter);
+
+    void rebuildDbMarkersPixmap();
 };
 
 inline qreal AudioMeter::getSmoothedLinearPeakValue(qreal linearValue)

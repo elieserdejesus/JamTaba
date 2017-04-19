@@ -43,6 +43,12 @@ BaseMeter::~BaseMeter()
 
 }
 
+void BaseMeter::updateStyleSheet()
+{
+    style()->unpolish(this);
+    style()->polish(this);
+}
+
 void BaseMeter::resizeEvent(QResizeEvent * /*ev*/)
 {
     recreateInterpolatedColors();
@@ -85,8 +91,7 @@ QSize BaseMeter::minimumSizeHint() const
 void BaseMeter::setOrientation(Qt::Orientation orientation)
 {
     this->orientation = orientation;
-    style()->unpolish(this);
-    style()->polish(this);
+    updateStyleSheet();
     update();
 }
 
@@ -128,18 +133,18 @@ AudioMeter::AudioMeter(QWidget *parent)
     }
 }
 
+void AudioMeter::updateStyleSheet()
+{
+    rebuildDbMarkersPixmap();
+    BaseMeter::updateStyleSheet();
+}
+
 void AudioMeter::setStereo(bool stereo)
 {
     if (this->stereo != stereo) {
         this->stereo = stereo;
         update();
     }
-}
-
-void AudioMeter::setOrientation(Qt::Orientation orientation)
-{
-    BaseMeter::setOrientation(orientation);
-    update();
 }
 
 QColor AudioMeter::interpolateColor(const QColor &start, const QColor &end, float ratio)
@@ -323,20 +328,26 @@ void AudioMeter::paintEvent(QPaintEvent *)
             }
         }
 
+        //drawDbMarkers(painter);
         painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
     }
 
     updateInternalValues(); // compute decay and max peak
 }
 
-void AudioMeter::resizeEvent(QResizeEvent *event)
+void AudioMeter::rebuildDbMarkersPixmap()
 {
-    BaseMeter::resizeEvent(event);
-
     dbMarkersPixmap = QPixmap(width(), height());
     dbMarkersPixmap.fill(Qt::transparent);
     QPainter painter(&dbMarkersPixmap);
     drawDbMarkers(painter);
+}
+
+void AudioMeter::resizeEvent(QResizeEvent *event)
+{
+    BaseMeter::resizeEvent(event);
+
+    rebuildDbMarkersPixmap();
 
     update();
 }
