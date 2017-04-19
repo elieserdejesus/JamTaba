@@ -205,7 +205,7 @@ PrivateServerDialog
 
 PrivateServerDialog #comboBoxServers
 {
-    border: 1px solid rgba(0, 0, 0, 60);
+    border: 1px solid rgba(0, 0, 0, 90);
     padding: 1px 2px 1px 2px;
     border-radius: 6px;
     background-color: rgb(180, 207, 250);
@@ -216,7 +216,7 @@ PrivateServerDialog #comboBoxServers
 
 PrivateServerDialog #comboBoxServers:focus
 {
-    border-color: rgba(0, 0, 0, 90);
+    border-color: rgba(0, 0, 0, 120);
     color: black;
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;;

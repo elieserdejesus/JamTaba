@@ -247,6 +247,7 @@ LooperWindow #buttonRec[blinking="true"]:checked
 #widgetBottom QComboBox                         /* the colors inside the combo box*/
 {
     border: 1px solid rgba(0, 0, 0, 180);
+    border-radius: 2px;
     padding: 1px 3px 1px 3px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 #FDE5A9,
@@ -312,10 +313,14 @@ LooperWindow QComboBox QAbstractItemView      /* the colors inside drop down men
 }
 
 LooperWindow QCheckBox:disabled,
-LooperWindow QLabel:disabled,
-LooperWindow QComboBox:disabled
+LooperWindow QLabel:disabled
 {
     color: rgba(0, 0, 0, 90);
+}
+
+#widgetBottom QComboBox:disabled
+{
+    border: none;
 }
 
 LooperWindow QComboBox:disabled
@@ -332,6 +337,7 @@ LooperWindow QGroupBox
 LooperWindow QGroupBox
 {
     border: 1px solid rgba(0, 0, 0, 30);
+    border-radius: 2px;
 }
 
 LooperWindow QCheckBox
