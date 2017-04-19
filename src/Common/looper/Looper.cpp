@@ -271,6 +271,9 @@ void Looper::setLayerLockedState(quint8 layerIndex, bool locked)
     if (canLockLayer(layerIndex)) {
         layers[layerIndex]->setLocked(locked);
 
+        if (locked && focusedLayerIndex == layerIndex)
+            focusedLayerIndex = -1; // clear focused layer when locking
+
         setChanged(true);
 
         emit layerChanged(layerIndex);
@@ -394,7 +397,15 @@ void Looper::selectLayer(quint8 layerIndex)
         return;
 
     if (isStopped() || isPlaying()) {
-        if (layerIndex < maxLayers) {
+
+        bool canSelectLayer = layerIndex < maxLayers;
+
+        // locked layers can't be focused while playing, except in SelectedLayer mode
+        if (isPlaying() && layerIsLocked(layerIndex) && mode != Looper::SelectedLayer) {
+            canSelectLayer = false;
+        }
+
+        if (canSelectLayer) {
             if (mode == Looper::SelectedLayer) {
                 setCurrentLayer(layerIndex);
             }
