@@ -205,7 +205,7 @@ void AudioMeter::recreateInterpolatedColors()
     const int rmsInitialAlpha = rmsColor.alpha() * 0.6; // interpolate rms colors alpha from 60% to 100%
 
     for (quint32 i = 0; i < segments; ++i) {
-        float interpolationPosition = std::pow(((float)i/segments), 2.0);
+        float interpolationPosition = std::pow((static_cast<float>(i)/segments), 3.0);
         peakColors.push_back(interpolateColor(peakStartColor, peakEndColor, interpolationPosition));
 
         QColor newRmsColor(rmsColor);

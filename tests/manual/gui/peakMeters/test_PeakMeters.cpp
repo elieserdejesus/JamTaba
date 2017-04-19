@@ -22,7 +22,7 @@ public:
         :QFrame()
     {
         refreshTimerID = startTimer(1000/30);
-        setStyleSheet("QFrame{ background-color: rgb(40, 40, 40); } QCheckBox{ color: white; } AudioMeter{ border: 1px solid white; min-width: 23px;}");
+        setStyleSheet("QFrame{ background-color: rgb(40, 40, 40); } QCheckBox{ color: white; } AudioMeter{ border: 1px solid black; min-width: 23px;}");
 
         QHBoxLayout *layout = new QHBoxLayout();
         AudioMeter *meter = new AudioMeter(this);
