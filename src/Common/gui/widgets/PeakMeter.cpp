@@ -376,20 +376,12 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
         qreal y = (isVertical() ? (MAX_SMOOTHED_LINEAR_VALUE - linearValue) * height() * RESIZE_FACTOR : center) + fontHeight/2.0 - fontAscent;
         qreal x = (isVertical() ? center : (1 - ((MAX_SMOOTHED_LINEAR_VALUE - linearValue) * RESIZE_FACTOR)) * width()) - textWidth/2;
 
-        // the max DB value need be shifted to avoid draw outside widget area
+        // the max DB value is shifted to avoid draw outside widget area
         if (db == AudioMeter::MAX_DB_VALUE) {
             if (isVertical())
                 y += fontHeight/2.0;
             else
                 x -= textWidth/2.0;
-        }
-
-        // the MIN DB value need be shifted to avoid draw outside widget area
-        if (db == AudioMeter::MIN_DB_VALUE) {
-            if (isVertical())
-                y -= fontHeight/2.0;
-            else
-                x += textWidth/2.0;
         }
 
         // check if current value can be showed or need be skiped because the widget is not big enough
@@ -398,9 +390,10 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
         if (lastMarkPosition >= 0) { // not the first loop iteration?
             skip = isVertical() ?
                         ((currentMarkPosition - lastMarkPosition) <= fontHeight) :
-                        (lastMarkPosition - currentMarkPosition) <= textWidth + 6;
+                        ((lastMarkPosition - currentMarkPosition) <= textWidth + 6);
         }
-        if (skip)
+
+        if (skip || db == AudioMeter::MIN_DB_VALUE)
             continue;
 
         lastMarkPosition = currentMarkPosition;
