@@ -287,14 +287,14 @@ void AudioMeter::paintEvent(QPaintEvent *)
     if (isEnabled()) {
         const uint channels = stereo ? 2 : 1;
         const qreal rectSize = isVertical() ? height() : width();
-        QRectF drawRect(rect());
+        QRectF drawRect(rect().adjusted(1, 1, 0, 0));
 
         const int parallelSegments = getParallelSegments();
 
         if (isVertical())
-            drawRect.setWidth(width()/static_cast<qreal>(parallelSegments));
+            drawRect.setWidth(drawRect.width()/static_cast<qreal>(parallelSegments));
         else
-            drawRect.setHeight(height()/static_cast<qreal>(parallelSegments));
+            drawRect.setHeight(drawRect.height()/static_cast<qreal>(parallelSegments));
 
         if (paintingPeaks) {
             for (uint i = 0; i < channels; ++i) {
