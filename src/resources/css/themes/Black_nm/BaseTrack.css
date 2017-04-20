@@ -179,9 +179,9 @@ BaseTrackView
 /* Setting colors when the track is 'not transmiting'
 -----------------------------------------------------*/
 BaseTrackView[unlighted="true"] #panSlider::handle,         /* pan slider handle */
-BaseTrackView[unlighted="true"] QSlider::handle:vertical,    /* track fader handle */
+BaseTrackView[unlighted="true"] #levelSlider::handle:vertical,    /* track fader handle */
 #panSlider::handle:disabled,
-QSlider::handle:vertical:disabled
+#levelSlider::handle:vertical:disabled
 {
     border: 1px outset rgb(60, 60, 60);
     background: rgb(80, 80, 80);
