@@ -82,6 +82,18 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
 
     updateBpmBpiLabel();
 
+    connect(mainController, &Controller::MainController::themeChanged, this, &NinjamRoomWindow::updateStylesheet);
+}
+
+void NinjamRoomWindow::updateStylesheet()
+{
+    if (ninjamPanel)
+        ninjamPanel->updateStyleSheet();
+
+    auto ninjamTracks = ui->tracksPanel->findChildren<NinjamTrackView *>();
+    for (auto ninjamTrack : ninjamTracks) {
+        ninjamTrack->updateStyleSheet();
+    }
 }
 
 void NinjamRoomWindow::initializeVotingExpirationTimers()

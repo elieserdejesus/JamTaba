@@ -26,6 +26,8 @@ public:
 
     void enableLopperButton(bool enabled);
 
+    void updateStyleSheet() override;
+
     void closeAllPlugins();
 
     void detachMainController();
@@ -60,8 +62,6 @@ protected:
 
     QPushButton *buttonStereoInversion;
     QPushButton *buttonLooper;
-
-    void refreshStyleSheet() override;
 
     virtual void setupMetersLayout();
 

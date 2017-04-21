@@ -59,6 +59,9 @@ public:
 
     bool metronomeFloatingWindowIsVisible() const;
 
+public slots:
+    void updateStyleSheet();
+
 signals:
     void bpiComboActivated(const QString &);
     void bpmComboActivated(const QString &);

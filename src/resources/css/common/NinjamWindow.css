@@ -253,12 +253,6 @@ NinjamTrackView QPushButton#receiveButton
 }
 
 
-NinjamTrackView #peaksDbLabel               /* the label used to show max peak (in bottom of peak meters) */
-{
-    border: 1px solid rgba(0, 0, 0, 8);
-}
-
-
 NinjamTrackView QProgressBar                /* The progress bar in bottom of ninjam tracks showing downloaded interval */
 {
     background-color: rgba(255, 255, 255, 20);

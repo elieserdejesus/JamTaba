@@ -83,7 +83,7 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSiz
 
     const int leftMargin = 1;
 
-    int metersCenter = peakMeterLeft->x() + (peakMeterRight->x() + peakMeterRight->width() - peakMeterLeft->x())/2;
+    int metersCenter = peakMeter->x() + peakMeter->width()/2.0;
     int x1 = metersCenter - 2;
     int y = midiPeakMeter->y() - 2;
     int x2 = metersCenter + 2;
@@ -124,9 +124,9 @@ void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin, 
 
     const int rightMargin = 2;
 
-    int metersCenter = peakMeterLeft->x() + (peakMeterRight->x() + peakMeterRight->width() - peakMeterLeft->x())/2;
+    int metersCenter = peakMeter->x() + peakMeter->width()/2.0;
     int x1 = metersCenter - 2;
-    int y = peakMeterLeft->y() - 2;
+    int y = peakMeter->y() - 2;
     int x2 = metersCenter + 2;
 
     // draw the vertical line
@@ -710,7 +710,7 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
 
     buttonStereoInversion->setEnabled(!inputNode->isMono() && !inputNode->isRoutingMidiInput()); //stereo, midi or no-input can be stereo inverted. Sometimes we are using 'no-input' but using some VSTi generating loops, for example. These VSTi will generate stereo output and can be inverted.
 
-    refreshStyleSheet();
+    updateStyleSheet();
     updateGeometry();
     update();
 }
@@ -802,6 +802,8 @@ void LocalTrackViewStandalone::setToMono(QAction *action)
     controller->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
 
+    peakMeter->setStereo(false);
+
     emit trackInputChanged();
 }
 
@@ -813,6 +815,8 @@ void LocalTrackViewStandalone::setToStereo(QAction *action)
     int firstInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
+
+    peakMeter->setStereo(true);
 
     emit trackInputChanged();
 }
@@ -831,6 +835,8 @@ void LocalTrackViewStandalone::setToMidi(QAction *action)
     int midiDeviceIndex = midiDeviceString.toInt();
 
     controller->setInputTrackToMIDI(getTrackID(), midiDeviceIndex, midiChannel);
+
+    peakMeter->setStereo(true);
 
     emit trackInputChanged();
 }

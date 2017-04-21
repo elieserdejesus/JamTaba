@@ -115,15 +115,18 @@ QString NinjamTrackView::getLowCutStateText() const
     return tr("Off"); // just to be shure
 }
 
-void NinjamTrackView::refreshStyleSheet()
+void NinjamTrackView::updateStyleSheet()
 {
     style()->unpolish(channelNameLabel);
     style()->polish(channelNameLabel);
+
     style()->unpolish(buttonLowCut);
     style()->polish(buttonLowCut);
+
+    style()->unpolish(buttonReceive);
     style()->polish(buttonReceive);
 
-    BaseTrackView::refreshStyleSheet();
+    BaseTrackView::updateStyleSheet();
 }
 
 void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialValues)
@@ -161,6 +164,9 @@ void NinjamTrackView::updateGuiElements()
 
     BaseTrackView::updateGuiElements();
     channelNameLabel->updateMarquee();
+
+    auto trackNode = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
+    peakMeter->setStereo(trackNode->isStereo());
 }
 
 void NinjamTrackView::setActivatedStatus(bool deactivated)
@@ -200,7 +206,7 @@ void NinjamTrackView::setOrientation(Qt::Orientation newOrientation)
         setupVerticalLayout();
 
     setProperty("horizontal", newOrientation == Qt::Horizontal ? true : false);
-    refreshStyleSheet();
+    updateStyleSheet();
 }
 
 void NinjamTrackView::setupVerticalLayout()
@@ -245,12 +251,9 @@ void NinjamTrackView::setupHorizontalLayout()
     levelSlider->setOrientation(Qt::Horizontal);
     levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
 
-    peakMeterLeft->setOrientation(Qt::Horizontal);
-    peakMeterLeft->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
-    peakMeterRight->setOrientation(Qt::Horizontal);
-    peakMeterRight->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
+    peakMeter->setOrientation(Qt::Horizontal);
+    peakMeter->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
     metersLayout->setDirection(QBoxLayout::TopToBottom);
-    meterWidgetsLayout->setDirection(QBoxLayout::LeftToRight);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
 }

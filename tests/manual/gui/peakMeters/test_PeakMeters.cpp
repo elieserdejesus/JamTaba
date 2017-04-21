@@ -7,13 +7,12 @@
 #include <QTimerEvent>
 #include <QTime>
 #include <QHBoxLayout>
+#include <QPushButton>
+#include <QCheckBox>
 #include <cmath>
 #include <gui/widgets/PeakMeter.h>
 
-/**
- * This test is stressing the PeakMeter paint and plotting the fps (frames per second).
- * The idea is build a benchmark to compare fps values when optmizing the PeakMeter painting.
- */
+#include "Utils.h"
 
 class TestMainWindow : public QFrame
 {
@@ -22,23 +21,87 @@ public:
     TestMainWindow()
         :QFrame()
     {
-        refreshTimerID = startTimer(0);
-        frameCount = 0;
-        timeCounter.start();
+        refreshTimerID = startTimer(1000/30);
+        setStyleSheet("QFrame{ background-color: rgb(40, 40, 40); } QCheckBox{ color: white; } AudioMeter{ border: 1px solid black; min-width: 23px;}");
 
-        //create meters
-        const int METERS = 64;
-        const int METER_WIDTH = 5;
         QHBoxLayout *layout = new QHBoxLayout();
-        for (int var = 0; var < METERS; ++var) {
-            AudioMeter *meter = new AudioMeter(this);
-            meter->setMinimumWidth(METER_WIDTH);
-            layout->addWidget(meter, 1);
+        AudioMeter *meter = new AudioMeter(this);
+        meter->setMinimumWidth(20);
+        meters.append(meter);
+
+        layout->addWidget(meter);
+
+        QVBoxLayout *buttonsLayout = new QVBoxLayout();
+        float dbValues[] = {0.0, -6.0, -12.0, -24, 6.0, 12.0};
+        for (float db : dbValues) {
+            QPushButton *button = new QPushButton(QString::number(db) + " dB");
+            connect(button, &QPushButton::clicked, [=](){
+                float db = button->text().replace(" dB", "").toFloat();
+                float peak = Utils::dbToLinear(db);
+                for (AudioMeter *audioMeter : meters)
+                    audioMeter->setPeak(peak, peak/2.0f, peak, peak/2.0f);
+
+            });
+            buttonsLayout->addWidget(button);
         }
+
+        buttonsLayout->addSpacing(20);
+
+        QCheckBox *stereoCheckBox = new QCheckBox("Stereo");
+        stereoCheckBox->setChecked(true);
+        buttonsLayout->addWidget(stereoCheckBox);
+
+        QCheckBox *rmsCheckBox = new QCheckBox("RMS");
+        rmsCheckBox->setChecked(AudioMeter::isPaintingRMS());
+        buttonsLayout->addWidget(rmsCheckBox);
+        connect(rmsCheckBox, &QCheckBox::clicked, [](bool checked){
+            if (checked)
+                AudioMeter::paintPeaksAndRms();
+            else
+                AudioMeter::paintPeaksOnly();
+        });
+
+        QCheckBox *peaksCheckbox = new QCheckBox("Peaks");
+        peaksCheckbox->setChecked(AudioMeter::isPaintingPeaks());
+        buttonsLayout->addWidget(peaksCheckbox);
+        connect(peaksCheckbox, &QCheckBox::clicked, [=](bool checked) {
+            if (checked) {
+                if (rmsCheckBox->isChecked())
+                    AudioMeter::paintPeaksAndRms();
+                else
+                    AudioMeter::paintPeaksOnly();
+            }
+            else {
+                if (rmsCheckBox->isChecked())
+                    AudioMeter::paintRmsOnly();
+            }
+        });
+
+        buttonsLayout->addStretch(1);
+
+        layout->addSpacing(20);
+
+        AudioMeter *hMeter = new AudioMeter(this);
+        hMeter->setOrientation(Qt::Horizontal);
+        hMeter->setMaximumHeight(20);
+        hMeter->setPaintMaxPeakMarker(true);
+        meters.append(hMeter);
+
+        layout->addWidget(hMeter, 1);
+
+        layout->addLayout(buttonsLayout);
+
         setLayout(layout);
 
-        setMinimumWidth(METERS * METER_WIDTH);
-        setMinimumHeight(400);
+        for (AudioMeter *audioMeter : meters) {
+            connect(stereoCheckBox, &QCheckBox::clicked, audioMeter, &AudioMeter::setStereo);
+            audioMeter->setStereo(true);
+            audioMeter->setPaintMaxPeakMarker(true);
+            audioMeter->setMaxPeakColor(Qt::yellow);
+        }
+
+        setMinimumWidth(300);
+        setMinimumHeight(200);
 
     }
 
@@ -49,37 +112,15 @@ public:
 
 protected:
 
-    void paintEvent(QPaintEvent *ev) override
-    {
-        QFrame::paintEvent(ev);
-        frameCount++;
-
-        if(timeCounter.elapsed() >= 1000){
-            int fps = frameCount;
-            qInfo() << "FPS:" << fps;
-            timeCounter.restart();
-            frameCount = 0;
-        }
-    }
-
     void timerEvent(QTimerEvent *) override
     {
-        static float peak = 0;
-        QList<AudioMeter *> meters = findChildren<AudioMeter *>();
-        foreach (AudioMeter *meter, meters) {
-            meter->setPeak(peak, peak);
-        }
-        peak += 0.00001f;
-        //peak = 0.11f;
-        if(peak >= 1)
-            peak = 0;
-        update();
+        for (AudioMeter *meter : meters)
+            meter->update();
     }
 
 private:
     int refreshTimerID;
-    QTime timeCounter;
-    int frameCount;
+    QList<AudioMeter *> meters;
 };
 
 

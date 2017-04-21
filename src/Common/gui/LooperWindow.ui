@@ -230,7 +230,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QSlider" name="mainLevelSlider">
+        <widget class="Slider" name="mainLevelSlider">
          <property name="maximum">
           <number>120</number>
          </property>
@@ -273,24 +273,14 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="metersLayout">
-       <property name="spacing">
-        <number>2</number>
+      <widget class="AudioMeter" name="peakMeter" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <item>
-        <widget class="AudioMeter" name="peakMeterLeft" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="AudioMeter" name="peakMeterRight" native="true"/>
-       </item>
-      </layout>
+      </widget>
      </item>
     </layout>
    </item>
@@ -454,6 +444,11 @@
    <extends>QWidget</extends>
    <header>PeakMeter.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Slider</class>
+   <extends>QSlider</extends>
+   <header>Slider.h</header>
   </customwidget>
   <customwidget>
    <class>BlinkableButton</class>

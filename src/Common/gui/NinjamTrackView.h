@@ -37,8 +37,10 @@ public:
 
     void setOrientation(Qt::Orientation orientation);
 
+    void updateStyleSheet() override;
+
 protected:
-    void refreshStyleSheet() override;
+
     QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const override;
 
     void setupVerticalLayout() override;

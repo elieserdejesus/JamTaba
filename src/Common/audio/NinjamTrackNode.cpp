@@ -66,7 +66,8 @@ public:
     IntervalDecoder(const QByteArray &vorbisData);
     void decode(quint32 maxSamplesToDecode);
     quint32 getDecodedSamples(Audio::SamplesBuffer &outBuffer, uint samplesToDecode);
-    inline int getSampleRate() { return vorbisDecoder.getSampleRate(); }
+    inline int getSampleRate() const { return vorbisDecoder.getSampleRate(); }
+    inline bool isStereo() const { return vorbisDecoder.isStereo(); }
     void stopDecoding();
 private:
     VorbisDecoder vorbisDecoder;
@@ -127,6 +128,14 @@ NinjamTrackNode::NinjamTrackNode(int ID) :
     lowCut(new NinjamTrackNode::LowCutFilter(44100))
 {
 
+}
+
+bool NinjamTrackNode::isStereo() const
+{
+    if (currentDecoder)
+        return currentDecoder->isStereo();
+
+    return true;
 }
 
 void NinjamTrackNode::stopDecoding()

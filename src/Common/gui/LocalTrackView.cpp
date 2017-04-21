@@ -204,8 +204,7 @@ QSize LocalTrackView::sizeHint() const
 
 void LocalTrackView::setupMetersLayout()
 {
-    metersLayout->addWidget(peakMeterLeft);
-    metersLayout->addWidget(peakMeterRight);
+    metersLayout->addWidget(peakMeter);
 }
 
 void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
@@ -217,19 +216,17 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
         Gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
 
         if(peakMetersOnly){//add the peak meters directly in main layout, so these meters are horizontally centered
-            mainLayout->addWidget(peakMeterLeft, 0, 0);
-            mainLayout->addWidget(peakMeterRight, 0, 1);
+            mainLayout->addWidget(peakMeter, 0, 0);
         }
         else{// put the meter in the original layout
             setupMetersLayout();
         }
 
-        const static int spacing = 3;
+        const int spacing = peakMetersOnly ? 0 : 3;
 
         mainLayout->setHorizontalSpacing(spacing);
 
-        peakMeterLeft->setVisible(true);//peak meters are always visible
-        peakMeterRight->setVisible(true);
+        peakMeter->setVisible(true); // peak meter are always visible
 
         QMargins margins = layout()->contentsMargins();
         margins.setLeft(spacing);
@@ -238,7 +235,6 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
 
         soloButton->setVisible(!peakMetersOnly);
         muteButton->setVisible(!peakMetersOnly);
-        peaksDbLabel->setVisible(!peakMetersOnly);
         Qt::Alignment alignment = peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter;
         levelSlider->parentWidget()->layout()->setAlignment(levelSlider, alignment);
 
@@ -321,9 +317,9 @@ void LocalTrackView::setStereoInversion(bool stereoInverted)
     buttonStereoInversion->setChecked(stereoInverted);
 }
 
-void LocalTrackView::refreshStyleSheet()
+void LocalTrackView::updateStyleSheet()
 {
-    BaseTrackView::refreshStyleSheet();
+    BaseTrackView::updateStyleSheet();
 
     style()->unpolish(buttonStereoInversion); // this is necessary to change the stereo inversion button colors when the transmit button is clicled
     style()->polish(buttonStereoInversion);

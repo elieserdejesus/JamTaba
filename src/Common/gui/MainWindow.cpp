@@ -133,10 +133,18 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     }
 }
 
-void MainWindow::updateNightModeInWorldMaps()
+void MainWindow::handleThemeChanged()
 {
     QString themeName = mainController->getTheme();
     MapWidget::setNightMode(MainWindow::themeCanUseNightModeWorldMaps(themeName));
+
+    ui.masterMeter->updateStyleSheet();
+
+    for(auto groupChannels : localGroupChannels) {
+        for (auto trackView : groupChannels->getTracks<LocalTrackView *>()) {
+            trackView->updateStyleSheet();
+        }
+    }
 }
 
 void MainWindow::setTheme(const QString &themeName)
@@ -1065,8 +1073,8 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update master peaks
     Audio::AudioPeak masterPeak = mainController->getMasterPeak();
-    ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), masterPeak.getLeftRMS());
-    ui.masterMeterR->setPeak(masterPeak.getRightPeak(), masterPeak.getRightRMS());
+    ui.masterMeter->setPeak(masterPeak.getLeftPeak(), masterPeak.getRightPeak(),
+                            masterPeak.getLeftRMS(), masterPeak.getRightRMS());
 
     // update all blinkable buttons
     BlinkableButton::updateAllBlinkableButtons();
@@ -1611,8 +1619,7 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
 
 void MainWindow::setupWidgets()
 {
-    ui.masterMeterL->setOrientation(Qt::Horizontal);
-    ui.masterMeterR->setOrientation(Qt::Horizontal);
+    ui.masterMeter->setOrientation(Qt::Horizontal);
     ui.masterFader->installEventFilter(this);// handle double click in master fader
 
     setChatVisibility(false);// hide chat area until connect in a server to play
@@ -1673,7 +1680,7 @@ void MainWindow::setupSignals()
 
     connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);
 
-    connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::updateNightModeInWorldMaps);
+    connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::handleThemeChanged);
 
     ui.contentTabWidget->installEventFilter(this);
 }
@@ -1686,6 +1693,8 @@ void MainWindow::updateUserName()
 
 void MainWindow::initializeMasterFader()
 {
+    ui.masterFader->setSliderType(Slider::AudioSlider);
+
     float lastMasterGain = mainController->getSettings().getLastMasterGain();
     int faderPosition = lastMasterGain * 100;
     ui.masterFader->setValue(faderPosition);

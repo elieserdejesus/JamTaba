@@ -15,6 +15,7 @@
 #include "looper/LooperPersistence.h"
 #include "looper/LooperLayer.h"
 #include "widgets/BlinkableButton.h"
+#include "widgets/Slider.h"
 
 using namespace Audio;
 
@@ -73,8 +74,8 @@ private:
         void setMuteButtonVisibility(bool show);
         void enableMuteButton(bool enabled);
 
-        QSlider *panSlider;
-        QSlider *gainSlider;
+        Slider *panSlider;
+        Slider *gainSlider;
         QLabel *labelPanL;
         QLabel *labelPanR;
         BlinkableButton *muteButton;

@@ -40,6 +40,8 @@ public:
 
     bool isPlaying();
 
+    bool isStereo() const;
+
     /** Discard all downloaded (but not played yet) intervals */
     void discardDownloadedIntervals(bool keepMostRecentInterval);
 

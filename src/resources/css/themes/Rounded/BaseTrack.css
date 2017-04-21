@@ -103,13 +103,9 @@ BaseTrackView[unlighted="true"]
         stop:1 rgb(90, 90, 90));
 }
 
-PeakMeter
+AudioMeter
 {
-    background-color: rgba(0, 0, 0, 10);
-    border: 1px inset rgba(0, 0, 0, 15);
-    border-radius: 1px;
-    min-width: 2px;
-    min-height: 2px;
+    qproperty-dBMarksColor: rgb(60, 60, 60);
 }
 
 
@@ -152,16 +148,6 @@ BaseTrackView[unlighted="true"] QSlider::add-page:vertical
     background: rgb(255,255,255, 50);
 }
 
-
-BaseTrackView #peaksDbLabel                             /* label used to show max peak */
-{
-    border-radius: 1px;
-    border: 1px solid rgba(0, 0, 0, 25);
-    background-color: rgba(0, 0, 0, 15);
-}
-
-
-BaseTrackView[unlighted="true"] #peaksDbLabel,
 BaseTrackView[unlighted="true"] .QPushButton
 {
    border: none;

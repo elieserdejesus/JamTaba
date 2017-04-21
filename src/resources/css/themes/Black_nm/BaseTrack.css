@@ -148,22 +148,6 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(80, 80, 80));
 }
 
-/* Small Label used to show max peak below peak meters
--------------------------------------------------------*/
-BaseTrackView #peaksDbLabel
-{
-    color: rgb(140, 140, 140);
-    border: 1px solid rgba(0, 0, 0, 8);
-    background-color: rgba(0, 0, 0, 6);
-}
-
-BaseTrackView[unlighted="true"] #peaksDbLabel
-{
-   border: none;
-   background-color: rgba(0, 0, 0, 10);
-}
-
-
 BaseTrackView
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -209,14 +193,11 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
     background-color: rgb(180, 180, 180);
 }
 
-PeakMeter
+AudioMeter
 {
-    background-color: rgba(0, 0, 0, 6);
-    border: none;
-    min-width: 4px;
-    min-height: 4px;
+    qproperty-dBMarksColor: rgb(180, 180, 180);
+    border: 1px solid rgba(0, 0, 0, 40);
 }
-
 
 /* TrackGroup - used as container for subchannels
 ---------------------------------------------------*/

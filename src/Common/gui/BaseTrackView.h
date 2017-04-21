@@ -4,13 +4,13 @@
 #include <QWidget>
 #include "audio/core/AudioPeak.h"
 #include "MultiStateButton.h"
+#include "Slider.h"
 
 class AudioMeter;
 class QLabel;
 class QPushButton;
 class QGroupBox;
 class QSpacerItem;
-class QSlider;
 class QVBoxLayout;
 class QHBoxLayout;
 class QBoxLayout;
@@ -51,15 +51,14 @@ public:
     virtual void setToNarrow();
     virtual void setToWide();
 
+    virtual void updateStyleSheet();
+
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
     virtual void updateGuiElements();
 
-    inline Controller::MainController *getMainController() const
-    {
-        return mainController;
-    }
+    Controller::MainController *getMainController() const;
 
     virtual void setActivatedStatus(bool deactivated);
 
@@ -90,23 +89,18 @@ protected:
 
     void createLayoutStructure();
 
-    virtual void refreshStyleSheet();
-
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 
     //meters
-    AudioMeter *peakMeterLeft;
-    AudioMeter *peakMeterRight;
-    QBoxLayout *metersLayout;// used to group the two meter bars
-    QLabel *peaksDbLabel;
-    QBoxLayout *meterWidgetsLayout;// used to group meters bars and the max peaks Db label
+    AudioMeter *peakMeter;
+    QBoxLayout *metersLayout;// used to group midi and audio meters
 
     //level slider
-    QSlider *levelSlider;
+    Slider *levelSlider;
     QBoxLayout *levelSliderLayout;// used to group the level slider and the two 'speaker' icons
 
     // pan slider
-    QSlider *panSlider;
+    Slider *panSlider;
     QLabel *labelPanL;
     QLabel *labelPanR;
     QHBoxLayout *panWidgetsLayout;
@@ -152,5 +146,10 @@ private slots:
     void setSoloStatus(bool newSoloStatus);
     void setBoostStatus(float newBoostValue);
 };
+
+inline Controller::MainController* BaseTrackView::getMainController() const
+{
+    return mainController;
+}
 
 #endif // TRACKVIEW_H

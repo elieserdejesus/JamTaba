@@ -230,7 +230,7 @@ private slots:
     void changeTheme(QAction *action);
     void translateThemeMenu();
 
-    void updateNightModeInWorldMaps();
+    void handleThemeChanged();
 
     void updateUserNameLineEditToolTip();
 

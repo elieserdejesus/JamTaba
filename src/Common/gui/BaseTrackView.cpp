@@ -40,7 +40,6 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
 
     panSlider->installEventFilter(this);
     levelSlider->installEventFilter(this);
-    peaksDbLabel->installEventFilter(this);
 
     // add in static map
     BaseTrackView::trackViews.insert(trackID, this);
@@ -55,12 +54,10 @@ void BaseTrackView::setupVerticalLayout()
     levelSlider->setOrientation(Qt::Vertical);
     levelSliderLayout->setDirection(QBoxLayout::TopToBottom);
 
-    peakMeterRight->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
-    peakMeterLeft->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
-    peakMeterLeft->setOrientation(Qt::Vertical);
-    peakMeterRight->setOrientation(Qt::Vertical);
+    peakMeter->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
+    peakMeter->setOrientation(Qt::Vertical);
+
     metersLayout->setDirection(QHBoxLayout::LeftToRight);
-    meterWidgetsLayout->setDirection(QHBoxLayout::TopToBottom);
 
     muteSoloLayout->setDirection(QBoxLayout::TopToBottom);
 
@@ -88,22 +85,24 @@ void BaseTrackView::createLayoutStructure()
     labelPanR->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     labelPanR->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-    panSlider = new QSlider();
+    panSlider = new Slider();
     panSlider->setObjectName(QStringLiteral("panSlider"));
     panSlider->setMinimum(-4);
     panSlider->setMaximum(4);
     panSlider->setOrientation(Qt::Horizontal);
+    panSlider->setSliderType(Slider::PanSlider);
 
     panWidgetsLayout->addWidget(labelPanL);
     panWidgetsLayout->addWidget(panSlider);
     panWidgetsLayout->addWidget(labelPanR);
 
-    levelSlider = new QSlider();
+    levelSlider = new Slider();
     levelSlider->setObjectName(QStringLiteral("levelSlider"));
     levelSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
     levelSlider->setMaximum(120);
     levelSlider->setValue(100);
     levelSlider->setTickPosition(QSlider::NoTicks);
+    levelSlider->setSliderType(Slider::AudioSlider);
 
     levelSliderLayout = new QVBoxLayout();
     levelSliderLayout->setSpacing(2);
@@ -119,26 +118,13 @@ void BaseTrackView::createLayoutStructure()
     levelSliderLayout->addWidget(levelSlider);
     levelSliderLayout->addWidget(lowLevelIcon);
 
-    peakMeterLeft = new AudioMeter(this);
-    peakMeterLeft->setObjectName(QStringLiteral("peakMeterLeft"));
-    peakMeterRight = new AudioMeter(this);
-    peakMeterRight->setObjectName(QStringLiteral("peakMeterRight"));
+    peakMeter = new AudioMeter(this);
+    peakMeter->setObjectName(QStringLiteral("peakMeter"));
 
     metersLayout = new QHBoxLayout();
     metersLayout->setSpacing(1);
     metersLayout->setContentsMargins(0, 0, 0, 0);
-    metersLayout->addWidget(peakMeterLeft);
-    metersLayout->addWidget(peakMeterRight);
-
-    peaksDbLabel = new QLabel();
-    peaksDbLabel->setObjectName(QStringLiteral("peaksDbLabel"));
-    peaksDbLabel->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum));
-
-    meterWidgetsLayout = new QVBoxLayout();
-    meterWidgetsLayout->setSpacing(1);
-    meterWidgetsLayout->setContentsMargins(0, 0, 0, 0);
-    meterWidgetsLayout->addLayout(metersLayout, 1);
-    meterWidgetsLayout->addWidget(peaksDbLabel);
+    metersLayout->addWidget(peakMeter);
 
     muteButton = new QPushButton();
     muteButton->setObjectName(QStringLiteral("muteButton"));
@@ -175,7 +161,7 @@ void BaseTrackView::createLayoutStructure()
     primaryChildsLayout->addLayout(panWidgetsLayout);
     primaryChildsLayout->addLayout(levelSliderLayout, 1);
 
-    secondaryChildsLayout->addLayout(meterWidgetsLayout);
+    secondaryChildsLayout->addLayout(metersLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
     secondaryChildsLayout->addWidget(buttonBoost);
 
@@ -286,8 +272,6 @@ void BaseTrackView::updateGuiElements()
     Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
     if (peak.getMaxPeak() > maxPeak.getMaxPeak()) {
         maxPeak.update(peak);
-        double db = Utils::linearToDb(maxPeak.getMaxPeak());
-        peaksDbLabel->setText(QString::number(db, 'f', 0));
     }
     // update the track peaks
     setPeaks(peak.getLeftPeak(), peak.getRightPeak(), peak.getLeftRMS(), peak.getRightRMS());
@@ -326,7 +310,7 @@ void BaseTrackView::setToWide()
     }
 }
 
-void BaseTrackView::refreshStyleSheet()
+void BaseTrackView::updateStyleSheet()
 {
     style()->unpolish(this);
     style()->polish(this);
@@ -337,14 +321,7 @@ void BaseTrackView::refreshStyleSheet()
     style()->unpolish(panSlider);
     style()->polish(panSlider);
 
-    style()->unpolish(peakMeterLeft);
-    style()->polish(peakMeterLeft);
-
-    style()->unpolish(peakMeterRight);
-    style()->polish(peakMeterRight);
-
-    style()->unpolish(peaksDbLabel);
-    style()->polish(peaksDbLabel);
+    peakMeter->updateStyleSheet();
 
     style()->unpolish(muteButton);
     style()->polish(muteButton);
@@ -362,7 +339,7 @@ void BaseTrackView::setActivatedStatus(bool deactivated)
 {
     setProperty("unlighted", QVariant(deactivated));
     this->activated = !deactivated;
-    refreshStyleSheet();
+    updateStyleSheet();
 }
 
 bool BaseTrackView::isActivated() const
@@ -379,20 +356,12 @@ BaseTrackView *BaseTrackView::getTrackViewByID(long trackID)
 
 void BaseTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight)
 {
-    peakMeterLeft->setPeak(peakLeft, rmsLeft);
-    peakMeterRight->setPeak(peakRight, rmsRight);
-
+    peakMeter->setPeak(peakLeft, peakRight, rmsLeft, rmsRight);
 }
 
 // event filter used to handle double clicks
 bool BaseTrackView::eventFilter(QObject *source, QEvent *ev)
 {
-    if (source == peaksDbLabel && ev->type() == QEvent::MouseButtonRelease) {
-        maxPeak.zero();
-        peaksDbLabel->setText("");
-        return true;
-    }
-    // --------------
     if (ev->type() == QEvent::MouseButtonDblClick) {
         if (source == levelSlider || source == panSlider) {
             if (source == levelSlider)

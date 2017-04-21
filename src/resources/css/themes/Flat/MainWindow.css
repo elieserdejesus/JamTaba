@@ -28,8 +28,7 @@
     color: rgb(60, 60, 60);
 }
 
-#masterMeterL,
-#masterMeterR
+#masterMeter
 {
     max-height: 4px;
     height: 4px;

@@ -161,7 +161,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>274</height>
+            <height>268</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -279,7 +279,7 @@
              </widget>
             </item>
             <item alignment="Qt::AlignVCenter">
-             <widget class="QSlider" name="masterFader">
+             <widget class="Slider" name="masterFader">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
@@ -313,17 +313,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="masterMetersLayout">
-            <property name="spacing">
-             <number>2</number>
-            </property>
-            <item>
-             <widget class="AudioMeter" name="masterMeterL" native="true"/>
-            </item>
-            <item>
-             <widget class="AudioMeter" name="masterMeterR" native="true"/>
-            </item>
-           </layout>
+           <widget class="AudioMeter" name="masterMeter" native="true"/>
           </item>
          </layout>
         </widget>
@@ -400,7 +390,7 @@
              <x>0</x>
              <y>0</y>
              <width>843</width>
-             <height>314</height>
+             <height>308</height>
             </rect>
            </property>
           </widget>
@@ -701,6 +691,11 @@
    <class>UserNameLineEdit</class>
    <extends>QLineEdit</extends>
    <header>UserNameLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Slider</class>
+   <extends>QSlider</extends>
+   <header>Slider.h</header>
   </customwidget>
  </customwidgets>
  <resources>
