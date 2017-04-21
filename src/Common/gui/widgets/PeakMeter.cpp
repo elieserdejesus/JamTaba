@@ -286,8 +286,6 @@ void AudioMeter::paintEvent(QPaintEvent *)
 
     if (isEnabled()) {
 
-        painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
-
         const uint channels = stereo ? 2 : 1;
         const qreal rectSize = isVertical() ? height() : width();
         QRectF drawRect(rect().adjusted(1, 1, 0, 0));
@@ -323,6 +321,8 @@ void AudioMeter::paintEvent(QPaintEvent *)
             else
                 drawRect.translate(0.0, drawRect.height());
         }
+
+        painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
    }
 
     updateInternalValues(); // compute decay and max peak
