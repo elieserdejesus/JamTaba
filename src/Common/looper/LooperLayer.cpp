@@ -22,7 +22,7 @@ LooperLayer::LooperLayer()
       rightGain(1),
       muteState(MuteState::Unmuted)
 {
-    //
+    setPan(0); // center
 }
 
 LooperLayer::~LooperLayer()
