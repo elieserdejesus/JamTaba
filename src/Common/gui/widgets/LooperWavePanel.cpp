@@ -56,7 +56,7 @@ void LooperWavePanel::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasUrls()) {
         for(auto url : event->mimeData()->urls()) {
-            if (LooperWavePanel::isAudioFile(url)) {
+            if (!looper->layerIsLocked(layerID) && LooperWavePanel::isAudioFile(url)) {
                 event->acceptProposedAction();
                 break;
             }
@@ -66,7 +66,7 @@ void LooperWavePanel::dragEnterEvent(QDragEnterEvent *event)
 
 void LooperWavePanel::dropEvent(QDropEvent *ev)
 {
-    if (ev->mimeData()->hasUrls()) {
+    if (ev->mimeData()->hasUrls() && !looper->layerIsLocked(layerID)) {
         QStringList audioFilePaths;
         for (const QUrl &url : ev->mimeData()->urls()) {
             if (LooperWavePanel::isAudioFile(url)) {

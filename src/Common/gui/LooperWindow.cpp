@@ -977,8 +977,16 @@ void LooperWindow::loadAudioFiles(const QStringList &audioFilePaths)
     }
 }
 
-void LooperWindow::loadAudioFilesIntoLayer(const QStringList &audioFilePaths, quint8 firstLayerIndex)
+void LooperWindow::loadAudioFilesIntoLayer(const QStringList &audioFilePaths, qint8 firstLayerIndex)
 {
+    if (firstLayerIndex < 0)
+        firstLayerIndex = 0;
+
+    if (looper->layerIsLocked(firstLayerIndex) && !audioFilePaths.isEmpty()) {
+        QMessageBox::warning(this, tr("Error loading audio file!"), tr("Can't load the file '%1'").arg(QFileInfo(audioFilePaths.first()).fileName()));
+        return;
+    }
+
     const uint currentSampleRate = mainController->getSampleRate();
     const uint samplesPerInterval = mainController->getNinjamController()->getSamplesPerInterval();
     quint8 layerIndex = firstLayerIndex;
