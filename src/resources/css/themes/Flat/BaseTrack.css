@@ -110,7 +110,6 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
     background-color: rgba(0, 0, 0, 50);
 }
 
-
 BaseTrackView
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -146,14 +145,10 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
     width: 7px;
 }
 
-/*
-PeakMeter
+AudioMeter
 {
-    background-color: rgba(0, 0, 0, 6);
-    border: none;
+    qproperty-dBMarksColor: rgb(70, 70, 70);
 }
-*/
-
 
 /* TrackGroup - used as container for subchannels
 ---------------------------------------------------*/

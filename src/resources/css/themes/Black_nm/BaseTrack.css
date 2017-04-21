@@ -193,16 +193,11 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
     background-color: rgb(180, 180, 180);
 }
 
-/*
-PeakMeter
+AudioMeter
 {
-    background-color: rgba(0, 0, 0, 6);
-    border: none;
-    min-width: 4px;
-    min-height: 4px;
+    qproperty-dBMarksColor: rgb(180, 180, 180);
+    border: 1px solid rgba(0, 0, 0, 40);
 }
-*/
-
 
 /* TrackGroup - used as container for subchannels
 ---------------------------------------------------*/

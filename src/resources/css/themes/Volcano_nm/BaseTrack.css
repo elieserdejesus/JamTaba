@@ -96,7 +96,6 @@ BaseTrackView[unlighted="true"] #buttonBoost:checked
     border-top: none;
     border-style: solid;
     border-color: rgba(0, 0, 0, 60);
-    color: rgb(254, 181, 102);
 }
 
 #soloButton, #muteButton
@@ -135,7 +134,6 @@ BaseTrackView[unlighted="true"] #buttonBoost:hover:checked
 {
     background-color: #e56318;
 }
-
 
 BaseTrackView
 {
@@ -181,14 +179,10 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:hover
     background-color: rgb(217, 157, 116);
 }
 
-/*
-PeakMeter
+AudioMeter
 {
-    background-color: rgba(0, 0, 0, 6);
-    border: none;
+    qproperty-dBMarksColor: black;
 }
-*/
-
 
 /* TrackGroup - used as container for subchannels
 ---------------------------------------------------*/

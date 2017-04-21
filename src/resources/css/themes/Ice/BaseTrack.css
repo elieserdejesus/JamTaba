@@ -148,7 +148,6 @@ BaseTrackView[unlighted="true"] #buttonBoost:hover:checked
     background-color: rgb(157, 199, 255);
 }
 
-
 BaseTrackView
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -187,13 +186,10 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:hover
     background-color: rgb(51, 158, 255);
 }
 
-/*
-PeakMeter
+AudioMeter
 {
-    background-color: rgba(0, 0, 0, 6);
-    border: none;
+    qproperty-dBMarksColor: rgb(206, 233, 255);
 }
-*/
 
 
 /* TrackGroup - used as container for subchannels

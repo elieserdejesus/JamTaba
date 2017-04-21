@@ -103,16 +103,10 @@ BaseTrackView[unlighted="true"]
         stop:1 rgb(90, 90, 90));
 }
 
-/*
-PeakMeter
+AudioMeter
 {
-    background-color: rgba(0, 0, 0, 10);
-    border: 1px inset rgba(0, 0, 0, 15);
-    border-radius: 1px;
-    min-width: 2px;
-    min-height: 2px;
+    qproperty-dBMarksColor: rgb(60, 60, 60);
 }
-*/
 
 
 /* SLIDERS ---------------- */
@@ -153,7 +147,6 @@ BaseTrackView[unlighted="true"] QSlider::add-page:vertical
 {
     background: rgb(255,255,255, 50);
 }
-
 
 BaseTrackView[unlighted="true"] .QPushButton
 {
