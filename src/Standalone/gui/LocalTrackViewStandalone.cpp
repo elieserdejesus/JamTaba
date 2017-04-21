@@ -802,6 +802,8 @@ void LocalTrackViewStandalone::setToMono(QAction *action)
     controller->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
 
+    peakMeter->setStereo(false);
+
     emit trackInputChanged();
 }
 
@@ -813,6 +815,8 @@ void LocalTrackViewStandalone::setToStereo(QAction *action)
     int firstInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
+
+    peakMeter->setStereo(true);
 
     emit trackInputChanged();
 }
@@ -831,6 +835,8 @@ void LocalTrackViewStandalone::setToMidi(QAction *action)
     int midiDeviceIndex = midiDeviceString.toInt();
 
     controller->setInputTrackToMIDI(getTrackID(), midiDeviceIndex, midiChannel);
+
+    peakMeter->setStereo(true);
 
     emit trackInputChanged();
 }

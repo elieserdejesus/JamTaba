@@ -119,8 +119,11 @@ void NinjamTrackView::updateStyleSheet()
 {
     style()->unpolish(channelNameLabel);
     style()->polish(channelNameLabel);
+
     style()->unpolish(buttonLowCut);
     style()->polish(buttonLowCut);
+
+    style()->unpolish(buttonReceive);
     style()->polish(buttonReceive);
 
     BaseTrackView::updateStyleSheet();
@@ -161,6 +164,9 @@ void NinjamTrackView::updateGuiElements()
 
     BaseTrackView::updateGuiElements();
     channelNameLabel->updateMarquee();
+
+    auto trackNode = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
+    peakMeter->setStereo(trackNode->isStereo());
 }
 
 void NinjamTrackView::setActivatedStatus(bool deactivated)
