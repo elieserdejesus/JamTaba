@@ -382,8 +382,8 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
         bool skip = false;
         if (lastMarkPosition >= 0) { // not the first loop iteration?
             skip = isVertical() ?
-                        ((currentMarkPosition - lastMarkPosition) <= fontHeight) :
-                        ((lastMarkPosition - currentMarkPosition) <= textWidth + 6);
+                        ((currentMarkPosition - lastMarkPosition) <= fontHeight * 1.3) :
+                        ((lastMarkPosition - currentMarkPosition) <= textWidth * 1.3);
         }
 
         if (skip || db == AudioMeter::MIN_DB_VALUE)
@@ -406,7 +406,7 @@ std::vector<float> AudioMeter::createDBValues()
     qreal db = AudioMeter::MAX_DB_VALUE;
     while (db >= AudioMeter::MIN_DB_VALUE) {
         values.push_back(db);
-        db -= db <= -24 ? 12 : 3;
+        db -= db <= -24 ? 12 : 6;
     }
     return values;
 }
