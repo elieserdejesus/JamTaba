@@ -222,7 +222,7 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
             setupMetersLayout();
         }
 
-        const static int spacing = 3;
+        const int spacing = peakMetersOnly ? 0 : 3;
 
         mainLayout->setHorizontalSpacing(spacing);
 
