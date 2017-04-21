@@ -296,36 +296,29 @@ void AudioMeter::paintEvent(QPaintEvent *)
         else
             drawRect.setHeight(drawRect.height()/static_cast<qreal>(parallelSegments));
 
-        if (paintingPeaks) {
-            for (uint i = 0; i < channels; ++i) {
-                if (currentPeak[i]) {
-                    qreal peakPosition = getPeakPosition(currentPeak[i], rectSize, peakValuesOffset);
-                    paintSegments(painter, drawRect, peakPosition, peakColors);
-                }
-
-                if (maxPeak[i] && paintingMaxPeakMarker) {
-                    qreal maxPeakPosition = getPeakPosition(maxPeak[i], rectSize, peakValuesOffset);
-                    paintMaxPeakMarker(painter, maxPeakPosition, drawRect);
-                }
-
-                if (isVertical())
-                    drawRect.translate(drawRect.width(), 0.0);
-                else
-                    drawRect.translate(0.0, drawRect.height());
+        for (uint i = 0; i < channels; ++i) {
+            if (paintingPeaks && currentPeak[i]) {
+                qreal peakPosition = getPeakPosition(currentPeak[i], rectSize, peakValuesOffset);
+                paintSegments(painter, drawRect, peakPosition, peakColors);
             }
-        }
 
-        if (paintingRMS) {
-            for (uint i = 0; i < channels; ++i) {
-                if (currentRms[i]) {
-                    qreal rmsPosition = getPeakPosition(currentRms[i], rectSize, peakValuesOffset);
-                    paintSegments(painter, drawRect, rmsPosition, rmsColors);
-                }
-                if (isVertical())
-                    drawRect.translate(drawRect.width(), 0.0);
-                else
-                    drawRect.translate(0.0, drawRect.height());
+            if (paintingMaxPeakMarker && maxPeak[i]) {
+                qreal maxPeakPosition = getPeakPosition(maxPeak[i], rectSize, peakValuesOffset);
+                paintMaxPeakMarker(painter, maxPeakPosition, drawRect);
             }
+
+            if (paintingRMS && currentRms[i]) {
+                qreal rmsPosition = getPeakPosition(currentRms[i], rectSize, peakValuesOffset);
+
+                qreal rmsXOffset = (paintingPeaks && isVertical()) ? channels * drawRect.width() : 0;
+                qreal rmsYOffset = (paintingPeaks && !isVertical()) ? channels * drawRect.height() : 0;
+                paintSegments(painter, drawRect.translated(rmsXOffset, rmsYOffset), rmsPosition, rmsColors);
+            }
+
+            if (isVertical())
+                drawRect.translate(drawRect.width(), 0.0);
+            else
+                drawRect.translate(0.0, drawRect.height());
         }
 
         //drawDbMarkers(painter);

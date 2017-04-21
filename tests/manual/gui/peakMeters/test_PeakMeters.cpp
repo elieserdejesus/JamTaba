@@ -61,6 +61,22 @@ public:
                 AudioMeter::paintPeaksOnly();
         });
 
+        QCheckBox *peaksCheckbox = new QCheckBox("Peaks");
+        peaksCheckbox->setChecked(AudioMeter::isPaintingPeaks());
+        buttonsLayout->addWidget(peaksCheckbox);
+        connect(peaksCheckbox, &QCheckBox::clicked, [=](bool checked) {
+            if (checked) {
+                if (rmsCheckBox->isChecked())
+                    AudioMeter::paintPeaksAndRms();
+                else
+                    AudioMeter::paintPeaksOnly();
+            }
+            else {
+                if (rmsCheckBox->isChecked())
+                    AudioMeter::paintRmsOnly();
+            }
+        });
+
         buttonsLayout->addStretch(1);
 
         layout->addSpacing(20);
