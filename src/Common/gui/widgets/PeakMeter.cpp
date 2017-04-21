@@ -285,6 +285,9 @@ void AudioMeter::paintEvent(QPaintEvent *)
     const static qreal peakValuesOffset = MAX_SMOOTHED_LINEAR_VALUE - 1.0f; // peaks are not starting at 0dB, so we need a offset
 
     if (isEnabled()) {
+
+        painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
+
         const uint channels = stereo ? 2 : 1;
         const qreal rectSize = isVertical() ? height() : width();
         QRectF drawRect(rect().adjusted(1, 1, 0, 0));
@@ -320,10 +323,7 @@ void AudioMeter::paintEvent(QPaintEvent *)
             else
                 drawRect.translate(0.0, drawRect.height());
         }
-
-        //drawDbMarkers(painter);
-        painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
-    }
+   }
 
     updateInternalValues(); // compute decay and max peak
 }
@@ -406,7 +406,7 @@ std::vector<float> AudioMeter::createDBValues()
     qreal db = AudioMeter::MAX_DB_VALUE;
     while (db >= AudioMeter::MIN_DB_VALUE) {
         values.push_back(db);
-        db -= 3;
+        db -= db <= -24 ? 12 : 3;
     }
     return values;
 }
