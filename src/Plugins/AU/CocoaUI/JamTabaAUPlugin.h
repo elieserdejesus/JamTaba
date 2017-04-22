@@ -34,7 +34,7 @@ public:
     MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
     
     // JamTabaAUInterface
-    void processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState) override;
+    void processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess) override;
     
     void resizeWindow(int newWidth, int newHeight);
     

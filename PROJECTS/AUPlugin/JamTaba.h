@@ -35,7 +35,7 @@ class JamTabaAUInterface
 {
 public:
     virtual ~JamTabaAUInterface(){}
-    virtual void processAudio(Float32 **inputs, Float32 ** outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState) = 0;
+    virtual void processAudio(Float32 **inputs, Float32 ** outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess) = 0;
 };
 
 

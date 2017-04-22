@@ -133,7 +133,7 @@ OSStatus JamTaba::Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioT
     
     if (JamTaba::jamTabaInstance) {
         updateHostState();
-        JamTaba::jamTabaInstance->processAudio(inputs, outputs, inputsCount, outputsCount, framesToProcess, hostState);
+        JamTaba::jamTabaInstance->processAudio(inputs, outputs, inputsCount, outputsCount, framesToProcess);
     }
     
     

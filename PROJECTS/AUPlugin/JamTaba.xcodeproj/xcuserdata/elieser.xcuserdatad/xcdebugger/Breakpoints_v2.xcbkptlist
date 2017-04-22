@@ -334,28 +334,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm"
-            timestampString = "512836414.623548"
+            timestampString = "514585396.288463"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
             landmarkName = "JamTabaAUPlugin::getHostName()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm"
-            timestampString = "512836414.623548"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
-            landmarkName = "JamTabaAUPlugin::getStartPositionForHostSync()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -371,7 +355,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "119"
             endingLineNumber = "119"
-            landmarkName = "JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &amp;hostState)"
+            landmarkName = "JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -387,7 +371,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "131"
             endingLineNumber = "131"
-            landmarkName = "JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &amp;hostState)"
+            landmarkName = "JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -983,7 +967,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "100"
             endingLineNumber = "100"
-            landmarkName = "JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &amp;hostState)"
+            landmarkName = "JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -999,7 +983,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "105"
             endingLineNumber = "105"
-            landmarkName = "JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &amp;hostState)"
+            landmarkName = "JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1435,6 +1419,36 @@
             endingLineNumber = "682"
             landmarkName = "class AUBase"
             landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AUBase::Start()"
+                  moduleName = "JamTaba"
+                  urlString = "file:///Users/elieser/Desktop/JamTaba/AU_SDK/AUPublic/AUBase/AUBase.h"
+                  timestampString = "514585397.327823"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "682"
+                  endingLineNumber = "682"
+                  offsetFromSymbolStart = "13">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AUBase::Start()"
+                  moduleName = "CocoaJamTabaView"
+                  urlString = "file:///Users/elieser/Desktop/JamTaba/PROJECTS/AUPlugin/../../AU_SDK/AUPublic/AUBase/AUBase.h"
+                  timestampString = "514585397.328067"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "682"
+                  endingLineNumber = "682"
+                  offsetFromSymbolStart = "13">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1451,6 +1465,36 @@
             endingLineNumber = "684"
             landmarkName = "class AUBase"
             landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AUBase::Stop()"
+                  moduleName = "JamTaba"
+                  urlString = "file:///Users/elieser/Desktop/JamTaba/AU_SDK/AUPublic/AUBase/AUBase.h"
+                  timestampString = "514585397.328787"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "684"
+                  endingLineNumber = "684"
+                  offsetFromSymbolStart = "13">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AUBase::Stop()"
+                  moduleName = "CocoaJamTabaView"
+                  urlString = "file:///Users/elieser/Desktop/JamTaba/PROJECTS/AUPlugin/../../AU_SDK/AUPublic/AUBase/AUBase.h"
+                  timestampString = "514585397.329019"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "684"
+                  endingLineNumber = "684"
+                  offsetFromSymbolStart = "13">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1502,7 +1546,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/AUSource/JamTaba.cpp"
@@ -1512,6 +1556,54 @@
             startingLineNumber = "24"
             endingLineNumber = "24"
             landmarkName = "JamTaba::~JamTaba()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../src/Plugins/NinjamControllerPlugin.cpp"
+            timestampString = "514577535.56362"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "NinjamControllerPlugin::startSynchronizedWithHost(qint32 startPosition)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm"
+            timestampString = "514585396.288463"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
+            landmarkName = "JamTabaAUPlugin::getStartPositionForHostSync()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm"
+            timestampString = "514585396.288463"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
+            landmarkName = "JamTabaAUPlugin::getStartPositionForHostSync()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
