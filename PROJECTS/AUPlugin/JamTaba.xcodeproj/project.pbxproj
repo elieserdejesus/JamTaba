@@ -289,6 +289,9 @@
 		2A1C7AAD1E0B5FBC00C7984D /* JamTaba_ViewFactory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.mm */; };
 		2A1C7AAE1E0B5FBE00C7984D /* JamTaba_UIView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADD1073EB19800A2709A /* JamTaba_UIView.mm */; };
 		2A1C7AB41E0B66AC00C7984D /* JamTaba.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1C7AB21E0B66AC00C7984D /* JamTaba.h */; };
+		2A2D725D1EABC04E00979920 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A2D725B1EABC04E00979920 /* Slider.h */; };
+		2A2D725E1EABC04E00979920 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2D725C1EABC04E00979920 /* Slider.cpp */; };
+		2A2D725F1EABC06400979920 /* Slider.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A2D725B1EABC04E00979920 /* Slider.h */; };
 		2A2F70061E08094500A4B6C2 /* libcups.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70051E08094500A4B6C2 /* libcups.dylib */; };
 		2A2F70081E080F7200A4B6C2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70071E080F7200A4B6C2 /* libz.dylib */; };
 		2A3016211E0D907B0013700B /* JamTaba.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BA05A660720730100365D66 /* JamTaba.cpp */; };
@@ -678,6 +681,8 @@
 		2A0DBEB91E0B03C600BEF1FF /* libvorbisfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisfile.a; path = ../../libs/static/mac64/libvorbisfile.a; sourceTree = "<group>"; };
 		2A120A841E0C05D900E0E596 /* jamtaba.qrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = jamtaba.qrc; path = ../../src/resources/jamtaba.qrc; sourceTree = "<group>"; };
 		2A1C7AB21E0B66AC00C7984D /* JamTaba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamTaba.h; sourceTree = "<group>"; };
+		2A2D725B1EABC04E00979920 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Slider.h; sourceTree = "<group>"; };
+		2A2D725C1EABC04E00979920 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Slider.cpp; sourceTree = "<group>"; };
 		2A2F70051E08094500A4B6C2 /* libcups.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcups.dylib; path = usr/lib/libcups.dylib; sourceTree = SDKROOT; };
 		2A2F70071E080F7200A4B6C2 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -1211,6 +1216,8 @@
 		2A0DBBE71E0AF46900BEF1FF /* widgets */ = {
 			isa = PBXGroup;
 			children = (
+				2A2D725B1EABC04E00979920 /* Slider.h */,
+				2A2D725C1EABC04E00979920 /* Slider.cpp */,
 				2A3AE1DC1E80863000D391C5 /* BlinkableButton.h */,
 				2A3AE1DD1E80863000D391C5 /* BlinkableButton.cpp */,
 				2A0DBBE81E0AF46900BEF1FF /* CustomTabWidget.cpp */,
@@ -1660,6 +1667,7 @@
 				2A0DBD711E0AF46B00BEF1FF /* IntervalProgressWindow.h in Headers */,
 				2A0DBE591E0AF46E00BEF1FF /* UsersDataCache.h in Headers */,
 				2AC0D3F01E0AB913005A940A /* NinjamControllerPlugin.h in Headers */,
+				2A2D725D1EABC04E00979920 /* Slider.h in Headers */,
 				8BA4AE54073EB72300A2709A /* JamTaba_ViewFactory.h in Headers */,
 				2AF5A9561E761C3A00D1150A /* LooperWavePanel.h in Headers */,
 				2A0DBE2F1E0AF46D00BEF1FF /* Server.h in Headers */,
@@ -1813,6 +1821,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A120A861E0C05EA00E0E596 /* jamtaba.qrc in Sources */,
+				2A2D725F1EABC06400979920 /* Slider.h in Sources */,
 				2AF5A9531E761BD900D1150A /* Looper.h in Sources */,
 				2A3AE1E01E80863800D391C5 /* BlinkableButton.h in Sources */,
 				2A0DBE961E0AF79300BEF1FF /* PrivateServerDialog.ui in Sources */,
@@ -1870,6 +1879,7 @@
 				2A120A5C1E0BEF3900E0E596 /* ChordLabel.h in Sources */,
 				2A120A5A1E0BEF2C00E0E596 /* ChatPanel.h in Sources */,
 				2A120A5D1E0BEF3E00E0E596 /* ChordsPanel.h in Sources */,
+				2A2D725E1EABC04E00979920 /* Slider.cpp in Sources */,
 				2A120A591E0BEF2A00E0E596 /* ChatMessagePanel.h in Sources */,
 				2A120A581E0BEF2400E0E596 /* BusyDialog.h in Sources */,
 				2A120A521E0BEEED00E0E596 /* AudioDriver.h in Sources */,

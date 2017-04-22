@@ -95,9 +95,12 @@ void JamTabaAUPlugin::resizeWindow(int newWidth, int newHeight)
     }
 }
 
-void JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState)
+void JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess)
 {
-    this->hostState = hostState;
+
+    UInt32 size = sizeof(AUHostState);
+    AudioUnitGetProperty(audioUnit, kJamTabaGetHostState, kAudioUnitScope_Global, 0, &this->hostState, &size);
+
     
     if (!controller)
         return;
@@ -147,7 +150,9 @@ qint32 JamTabaAUPlugin::getStartPositionForHostSync() const
     
      qint32 startPosition = 0;
     
+   
      double samplesPerBeat = (60.0 * hostState.sampleRate)/hostState.tempo;
+    
      if (hostState.ppqPos > 0)
      {
          //when host start button is pressed (and the cursor is aligned in project start) ppqPos is positive in Reaper, but negative in  Cubase
@@ -161,7 +166,7 @@ qint32 JamTabaAUPlugin::getStartPositionForHostSync() const
          }
      }
      else
-     {  //host is returning negative values for timeInfo structure when start button is pressed
+     {  //host is returning negative values OR zero for ppqPos when start button is pressed
          startPosition = hostState.ppqPos * samplesPerBeat; //wil generate a negative value
      }
      return startPosition;

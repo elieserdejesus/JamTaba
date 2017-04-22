@@ -46,6 +46,7 @@ void NinjamControllerPlugin::activateAudioNodes()
 void NinjamControllerPlugin::disableHostSync()
 {
     waitingForHostSync = false;
+    activateAudioNodes();
 }
 
 void NinjamControllerPlugin::startSynchronizedWithHost(qint32 startPosition)
