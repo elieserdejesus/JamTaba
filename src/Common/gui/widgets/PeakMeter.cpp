@@ -69,7 +69,7 @@ void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakP
     qreal x = rect.left();
     qreal y = isVerticalMeter ? (rect.height() - SEGMENTS_SIZE) : rect.top();
     const qreal w = isVerticalMeter ? rect.width() - 1.0 : SEGMENTS_SIZE - 1.0;
-    const qreal h = isVerticalMeter ? (SEGMENTS_SIZE - 1.0) : rect.height() - 1;0;
+    const qreal h = isVerticalMeter ? (SEGMENTS_SIZE - 1.0) : rect.height() - 1.0;
 
     for (quint32 i = 0; i < segmentsToPaint; ++i) {
         painter.fillRect(x, y, w, h, segmentsColors[i]);

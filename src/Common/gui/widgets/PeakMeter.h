@@ -2,6 +2,7 @@
 #define PEAK_METER_H
 
 #include <QFrame>
+#include <cmath>
 
 class BaseMeter : public QFrame
 {

@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QStyle>
+#include <QStyleOptionSlider>
 
 #include "Utils.h"
 
