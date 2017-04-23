@@ -40,7 +40,8 @@ private slots:
     void playing();
     void playing_data();
 
-    void hearLockedLayersOnlyAfterRecord(); // issue #823
+    void hearLockedLayersOnlyAfterRecord(); // first problem in issue #823
+    void monitoringWhenPlayLockedAndHearAllAreChecked(); // second problem in issue #823
 
 private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);

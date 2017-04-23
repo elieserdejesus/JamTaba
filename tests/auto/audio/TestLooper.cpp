@@ -9,6 +9,59 @@
 
 using namespace Audio;
 
+void TestLooper::monitoringWhenPlayLockedAndHearAllAreChecked() // testing second problem described in #823
+{
+    /**
+        II. Another problem I found when recording in sequence mode is that in the case when play locked and hear all/locked are
+        both checked the input audio is muted while recording and you can't hear what's being recorded (but it's NOT muted when in
+        recording waiting state). EDIT: Just tested it and this is happening also in selected layer mode and if play locked is used
+        in all layers mode same problem. So in short:
+
+        silent monitoring of input audio when:
+
+            1.- sequence mode: play locked and hear all/locked are both checked.
+            2.- selected layer mode: play locked and hear all/locked are both checked.
+            3.- all layers mode: play locked checked.
+    */
+
+    const uint cycleLenght = 2;
+
+    Looper looper;
+    looper.setLayers(1, true);
+    looper.setLayerPan(0, -1); // avoid pan law in expected values
+
+    // 'checking' the checkboxes
+    looper.setOption(Looper::PlayLockedLayers, true);
+    looper.setOption(Looper::HearAllLayers, true);
+
+    Looper::Mode modes[] = {Looper::Sequence, Looper::SelectedLayer, Looper::AllLayers};
+
+    for (auto mode : modes) {
+        looper.setMode(mode);
+
+        looper.clearCurrentLayer();
+
+        // waiting to record
+        looper.toggleRecording();
+        Q_ASSERT(looper.isWaitingToRecord());
+
+        // recording
+        looper.startNewCycle(cycleLenght);
+        Q_ASSERT(looper.isRecording());
+        QVERIFY(looper.getCurrentLayerIndex() == 0);
+
+        // check if monitoring is correct
+        looper.addBuffer(createBuffer("2, 2"));
+
+        SamplesBuffer out(1, cycleLenght);
+        looper.mixToBuffer(out);
+
+        checkExpectedValues("2, 2", out);
+
+        looper.startNewCycle(cycleLenght); // stop
+    }
+}
+
 void TestLooper::hearLockedLayersOnlyAfterRecord()
 {
     // testing first problem described in #823

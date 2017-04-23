@@ -127,7 +127,7 @@ void RecordingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 
     const bool hearingAllLayers = looper->getMode() == Looper::AllLayers || looper->getOption(Looper::HearAllLayers);
     if (hearingAllLayers) {
-        if (looper->getOption(Looper::PlayLockedLayers))
+        if (looper->getOption(Looper::PlayLockedLayers) && looper->hasLockedLayers())
             looper->mixLockedLayers(samples, samplesToProcess);
         else
             looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
