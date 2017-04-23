@@ -9,6 +9,70 @@
 
 using namespace Audio;
 
+void TestLooper::hearLockedLayersOnlyAfterRecord()
+{
+    // testing first problem described in #823
+
+    const uint layers = 3;
+    const uint cycleLenght = 2;
+
+    Looper looper;
+    looper.setLayers(layers, true);
+    looper.setMode(Looper::Sequence);
+
+    // simulate pre-recorded material in first 3 layers
+    looper.startNewCycle(cycleLenght);
+    for (uint l = 0; l < layers; ++l) {
+        QString value = QString::number(l+1);
+        looper.setLayerSamples(l, createBuffer(value + ", " + value));
+        looper.setLayerPan(l, -1); // avoiding pan law in expected values
+    }
+
+    // lock the 2 first layers
+    looper.setLayerLockedState(0, true);
+    looper.setLayerLockedState(1, true);
+
+    // 'checking' the "play locked" checkbox
+    looper.setOption(Looper::PlayLockedLayers, true);
+
+    // focusing in unlocked layer
+    looper.selectLayer(layers - 1); // focusing the last layer
+
+    // recording
+    looper.toggleRecording();
+    Q_ASSERT(looper.isWaitingToRecord());
+
+    looper.startNewCycle(cycleLenght);
+    Q_ASSERT(looper.isRecording());
+    QVERIFY(looper.getCurrentLayerIndex() == 2);
+
+    looper.addBuffer(createBuffer("1, 1"));
+
+    // auto stop recording when start new cycle
+    looper.startNewCycle(cycleLenght);
+    Q_ASSERT(looper.isPlaying());
+
+    // check if the first layer content (the first locked layer) will be played correctly
+    QCOMPARE(looper.getCurrentLayerIndex(), static_cast<quint8>(0)); // check if the looper is playing the first locked layer (first layer)
+
+    SamplesBuffer out(1, cycleLenght);
+    looper.mixToBuffer(out);
+    checkExpectedValues("1, 1", out); // checking if the first locked layer is rendered correctly
+
+    looper.startNewCycle(cycleLenght); // go to next (2nd) locked layer
+
+    out.zero();
+    looper.mixToBuffer(out);
+    checkExpectedValues("2, 2", out); // checking if the second locked layer is rendered correctly
+
+    // checking if the next layer will be the first (because we playing locked layers only)
+    out.zero();
+    looper.startNewCycle(cycleLenght); // now the current layer is 0
+    QVERIFY(looper.getCurrentLayerIndex() == static_cast<quint8>(0));
+    looper.mixToBuffer(out);
+    checkExpectedValues("1, 1", out);
+}
+
 void TestLooper::waitingToRecordAndPreserveRecordedMaterialWhenSkipRecording()
 {
     QFETCH(QString, preRecordedSamples);

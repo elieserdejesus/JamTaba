@@ -40,6 +40,8 @@ private slots:
     void playing();
     void playing_data();
 
+    void hearLockedLayersOnlyAfterRecord(); // issue #823
+
 private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
     void checkExpectedValues(QString comaSeparatedExpectedValues, const Audio::SamplesBuffer &buffer);

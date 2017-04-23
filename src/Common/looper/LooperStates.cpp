@@ -98,16 +98,21 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
 {
     Q_UNUSED(samplesInCycle)
 
-    bool isOverdubbing = looper->getOption(Looper::Overdub);
+    const bool isOverdubbing = looper->getOption(Looper::Overdub);
+    const bool isPlayingLockedLayersOnly = looper->getOption(Looper::PlayLockedLayers);
 
     if (looper->mode != Looper::SelectedLayer) {
         if (!isOverdubbing) {
             int nextLayer = looper->getNextUnlockedLayerIndex();
             looper->setCurrentLayer(nextLayer);
-            if ((nextLayer == firstRecordingLayer || nextLayer == 0) || looper->layerIsLocked(nextLayer))  // stop recording (and start playing) when backing to first rec layer
+            if ((nextLayer == firstRecordingLayer || nextLayer == 0) || looper->layerIsLocked(nextLayer)) {  // stop recording (and start playing) when backing to first rec layer
+                if (isPlayingLockedLayersOnly)
+                    looper->setCurrentLayer(looper->getFirstLockedLayerIndex());
                 looper->play();
-            else
+            }
+            else {
                 looper->layers[nextLayer]->zero(); // zero current layer if keep recording
+            }
         }
     }
     else { // SELECTED_LAYER_ONLY when recording
