@@ -241,6 +241,20 @@ void TestLooper::autoPlayAfterRecording_data()
             << (QList<quint8>() << 0)           // locked layers
             << (QList<quint8>() << 1 << 2 << 3);// expected recording layers
 
+    QTest::newRow("Sequence, 4 layers, first layer locked, rec layer=1")
+            << Looper::Sequence                 // looper mode
+            << quint8(4)                        // layers
+            << quint8(1)                        // rec layer
+            << (QList<quint8>() << 0)           // locked layers
+            << (QList<quint8>() << 1 << 2 << 3);// expected recording layers
+
+    QTest::newRow("AllLayers, 4 layers, first layer locked, rec layer=1")
+            << Looper::AllLayers                 // looper mode
+            << quint8(4)                        // layers
+            << quint8(1)                        // rec layer
+            << (QList<quint8>() << 0)           // locked layers
+            << (QList<quint8>() << 1 << 2 << 3);// expected recording layers
+
     QTest::newRow("Sequence, 4 layers, 2nd layer locked, rec layer=0")
             << Looper::Sequence                 // looper mode
             << quint8(4)                        // layers
