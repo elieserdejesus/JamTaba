@@ -22,6 +22,10 @@ void TestLooper::waitingToRecordAndPreserveRecordedMaterialWhenSkipRecording()
     looper.setOption(Looper::Overdub, overdubbing);
     looper.setOption(Looper::HearAllLayers, true);
 
+    for (int l = 0; l < layers; ++l) {
+        looper.setLayerPan(l, -1); // avoiding pan law in expected values
+    }
+
     //create pre recorded content
     looper.startNewCycle(2);
     looper.setLayerSamples(0, createBuffer(preRecordedSamples));
@@ -94,21 +98,21 @@ void TestLooper::autoPlayAfterRecording_data()
     QTest::newRow("Sequence, 4 layers, no locked layers, rec layer=0")
             << Looper::Sequence       // looper mode
             << quint8(4)              // layers
-            << quint8(0)       // rec layer
+            << quint8(0)              // rec layer
             << (QList<quint8>())      // locked layers
             << (QList<quint8>() << 0 << 1 << 2 << 3);     // expected rec layers
 
     QTest::newRow("Sequence, 4 layers, no locked layers, rec layer=2")
             << Looper::Sequence       // looper mode
             << quint8(4)              // layers
-            << quint8(2)       // rec layer
+            << quint8(2)              // rec layer
             << (QList<quint8>())      // locked layers
             << (QList<quint8>() << 2 << 3);     // expected rec layers
 
     QTest::newRow("Sequence, 4 layers, no locked layers, rec layer=3")
             << Looper::Sequence       // looper mode
             << quint8(4)              // layers
-            << quint8(3)       // rec layer
+            << quint8(3)              // rec layer
             << (QList<quint8>())      // locked layers
             << (QList<quint8>() << 3);     // expected rec layers
 
@@ -240,6 +244,7 @@ void TestLooper::waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettin
     Looper looper;
     looper.setMode(Looper::SelectedLayer);
     looper.setLayers(1, true);
+    looper.setLayerPan(0, -1); // avoiding pan law in expected values
 
     looper.setLayerGain(0, layerGain);
 
@@ -287,6 +292,7 @@ void TestLooper::waitingToRecordAndHearingPreRecordedMaterial()
     looper.setMode(Looper::Sequence);
     looper.toggleRecording();
     for (int l = 0; l < layers; ++l) {
+        looper.setLayerPan(l, -1); // avoiding pan law in expected values
         looper.startNewCycle(2);
         Q_ASSERT(looper.isRecording());
         QString value(QString::number(1)); // (1, 1) in all layers
@@ -340,6 +346,8 @@ void TestLooper::recording()
 
     Looper looper;
     looper.setLayers(layers, true);
+    for (uint l = 0; l < layers; ++l)
+        looper.setLayerPan(l, -1); // 100% left to not apply pan law in expected values
 
     //create content in all layers
     looper.setMode(Looper::Sequence);
@@ -475,6 +483,7 @@ void TestLooper::resizeLayersAndCopySamples()
     looper.startNewCycle(newSamplesPerCycle); // force recording stop, resize and copy samples
 
     SamplesBuffer out(1, newSamplesPerCycle);
+    looper.setLayerPan(0, -1); // 100% left to not apply pan law in expected values
     looper.mixToBuffer(out);
     checkExpectedValues(finalBuffer.join(','), out);
 }
@@ -557,11 +566,12 @@ void TestLooper::multiBufferTest()
     looper.startNewCycle(cycleLenghtInSamples);
     Q_ASSERT(looper.isRecording());
 
+    looper.setLayerPan(0, -1); // 100% left to not apply pan law in expected values
     looper.addBuffer(createBuffer("1,2,3"));
-    looper.mixToBuffer(SamplesBuffer(2, 3));
+    looper.mixToBuffer(SamplesBuffer(1, 3));
 
     looper.addBuffer(createBuffer("4,5,6"));
-    looper.mixToBuffer(SamplesBuffer(2, 3));
+    looper.mixToBuffer(SamplesBuffer(1, 3));
 
     SamplesBuffer out(1, 3);
     looper.startNewCycle(cycleLenghtInSamples);
