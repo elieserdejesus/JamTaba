@@ -11,34 +11,32 @@ using namespace Audio;
 
 void TestLooper::monitoringWhenPlayLockedAndHearAllAreChecked() // testing second problem described in #823
 {
-    /**
-        II. Another problem I found when recording in sequence mode is that in the case when play locked and hear all/locked are
-        both checked the input audio is muted while recording and you can't hear what's being recorded (but it's NOT muted when in
-        recording waiting state). EDIT: Just tested it and this is happening also in selected layer mode and if play locked is used
-        in all layers mode same problem. So in short:
-
-        silent monitoring of input audio when:
-
-            1.- sequence mode: play locked and hear all/locked are both checked.
-            2.- selected layer mode: play locked and hear all/locked are both checked.
-            3.- all layers mode: play locked checked.
-    */
-
     const uint cycleLenght = 2;
+    const uint layers = 2;
 
     Looper looper;
-    looper.setLayers(1, true);
-    looper.setLayerPan(0, -1); // avoid pan law in expected values
-
-    // 'checking' the checkboxes
-    looper.setOption(Looper::PlayLockedLayers, true);
-    looper.setOption(Looper::HearAllLayers, true);
+    looper.setLayers(layers, true);
 
     Looper::Mode modes[] = {Looper::Sequence, Looper::SelectedLayer, Looper::AllLayers};
 
     for (auto mode : modes) {
         looper.setMode(mode);
 
+        // 'checking' the checkboxes
+        looper.setOption(Looper::PlayLockedLayers, true);
+        looper.setOption(Looper::HearAllLayers, true);
+
+        looper.setLayerLockedState(0, true); // locking first layer
+
+        // simulate pre-recorded material
+        looper.startNewCycle(cycleLenght);
+        for (uint l = 0; l < layers; ++l) {
+            QString value = QString::number(l+1);
+            looper.setLayerSamples(l, createBuffer(value + ", " + value));
+            looper.setLayerPan(l, -1); // avoiding pan law in expected values
+        }
+
+        looper.selectLayer(1); // second layer, first layer is locked
         looper.clearCurrentLayer();
 
         // waiting to record
@@ -48,15 +46,15 @@ void TestLooper::monitoringWhenPlayLockedAndHearAllAreChecked() // testing secon
         // recording
         looper.startNewCycle(cycleLenght);
         Q_ASSERT(looper.isRecording());
-        QVERIFY(looper.getCurrentLayerIndex() == 0);
+        QVERIFY(looper.getCurrentLayerIndex() == 1);
 
         // check if monitoring is correct
-        looper.addBuffer(createBuffer("2, 2"));
+        SamplesBuffer samples = createBuffer("2, 2");
+        looper.addBuffer(samples); // recording '2, 2'
 
-        SamplesBuffer out(1, cycleLenght);
-        looper.mixToBuffer(out);
+        looper.mixToBuffer(samples);
 
-        checkExpectedValues("2, 2", out);
+        checkExpectedValues("3, 3", samples);
 
         looper.startNewCycle(cycleLenght); // stop
     }
@@ -241,12 +239,12 @@ void TestLooper::autoPlayAfterRecording_data()
             << (QList<quint8>() << 0)           // locked layers
             << (QList<quint8>() << 1 << 2 << 3);// expected recording layers
 
-    QTest::newRow("Sequence, 4 layers, first layer locked, rec layer=1")
+    QTest::newRow("Sequence, 4 layers, first layer locked, rec layer=2")
             << Looper::Sequence                 // looper mode
             << quint8(4)                        // layers
-            << quint8(1)                        // rec layer
+            << quint8(2)                        // rec layer
             << (QList<quint8>() << 0)           // locked layers
-            << (QList<quint8>() << 1 << 2 << 3);// expected recording layers
+            << (QList<quint8>() << 2 << 3);// expected recording layers
 
     QTest::newRow("AllLayers, 4 layers, first layer locked, rec layer=1")
             << Looper::AllLayers                 // looper mode

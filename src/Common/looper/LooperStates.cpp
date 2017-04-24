@@ -103,9 +103,10 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
 
     if (looper->mode != Looper::SelectedLayer) {
         if (!isOverdubbing) {
+            int previousLayer = looper->getCurrentLayerIndex();
             int nextLayer = looper->getNextUnlockedLayerIndex();
             looper->setCurrentLayer(nextLayer);
-            if ((nextLayer == firstRecordingLayer || nextLayer == 0) || looper->layerIsLocked(nextLayer)) {  // stop recording (and start playing) when backing to first rec layer
+            if ((nextLayer == firstRecordingLayer || nextLayer == 0) || looper->layerIsLocked(nextLayer) || previousLayer == looper->getLayers() - 1) {  // stop recording (and start playing) when backing to first rec layer OR last layer is reached
                 if (isPlayingLockedLayersOnly)
                     looper->setCurrentLayer(looper->getFirstLockedLayerIndex());
                 looper->play();
@@ -123,16 +124,18 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
 
 void RecordingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 {
-    samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
-
     const bool hearingAllLayers = looper->getMode() == Looper::AllLayers || looper->getOption(Looper::HearAllLayers);
     if (hearingAllLayers) {
-        if (looper->getOption(Looper::PlayLockedLayers) && looper->hasLockedLayers())
+        if (looper->getOption(Looper::PlayLockedLayers) && looper->hasLockedLayers()) {
             looper->mixLockedLayers(samples, samplesToProcess);
-        else
+        }
+        else {
+            samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
             looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
+        }
     }
     else {
+        samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
         looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);
     }
 }
