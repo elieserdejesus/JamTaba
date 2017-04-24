@@ -207,6 +207,7 @@ private:
 
     void setState(LooperState *state);
 
+    int getFirstLockedLayerIndex(quint8 startingFrom = 0) const;
     int getFirstUnlockedLayerIndex(quint8 startingFrom = 0) const;
     int getNextUnlockedLayerIndex() const;
 

@@ -98,16 +98,22 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
 {
     Q_UNUSED(samplesInCycle)
 
-    bool isOverdubbing = looper->getOption(Looper::Overdub);
+    const bool isOverdubbing = looper->getOption(Looper::Overdub);
+    const bool isPlayingLockedLayersOnly = looper->getOption(Looper::PlayLockedLayers);
 
     if (looper->mode != Looper::SelectedLayer) {
         if (!isOverdubbing) {
+            int previousLayer = looper->getCurrentLayerIndex();
             int nextLayer = looper->getNextUnlockedLayerIndex();
             looper->setCurrentLayer(nextLayer);
-            if ((nextLayer == firstRecordingLayer || nextLayer == 0) || looper->layerIsLocked(nextLayer))  // stop recording (and start playing) when backing to first rec layer
+            if ((nextLayer == firstRecordingLayer || nextLayer == 0) || looper->layerIsLocked(nextLayer) || previousLayer == looper->getLayers() - 1) {  // stop recording (and start playing) when backing to first rec layer OR last layer is reached
+                if (isPlayingLockedLayersOnly)
+                    looper->setCurrentLayer(looper->getFirstLockedLayerIndex());
                 looper->play();
-            else
+            }
+            else {
                 looper->layers[nextLayer]->zero(); // zero current layer if keep recording
+            }
         }
     }
     else { // SELECTED_LAYER_ONLY when recording
@@ -118,14 +124,17 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
 
 void RecordingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 {
-    samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
+    samples.zero(); // zeroing samples before mix to avoid re-add buffered audio and double the incomming samples
 
     const bool hearingAllLayers = looper->getMode() == Looper::AllLayers || looper->getOption(Looper::HearAllLayers);
     if (hearingAllLayers) {
-        if (looper->getOption(Looper::PlayLockedLayers))
+        if (looper->getOption(Looper::PlayLockedLayers) && looper->hasLockedLayers()) {
             looper->mixLockedLayers(samples, samplesToProcess);
-        else
+            looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);
+        }
+        else {
             looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
+        }
     }
     else {
         looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);

@@ -441,6 +441,22 @@ void Looper::setLayers(quint8 maxLayers, bool processChangeRequestNow)
         processChangeRequests();
 }
 
+int Looper::getFirstLockedLayerIndex(quint8 startingFrom) const
+{
+    quint8 testedLayers = 0;
+    quint8 layer = startingFrom % maxLayers;
+
+    while (testedLayers < maxLayers) {
+        if (layers[layer]->isLocked())
+            return layer;
+
+        layer = (layer + 1) % maxLayers;
+        testedLayers++;
+    }
+
+    return -1;
+}
+
 int Looper::getFirstUnlockedLayerIndex(quint8 startingFrom) const
 {
     quint8 testedLayers = 0;

@@ -37,8 +37,14 @@ private slots:
     void waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettings();
     void waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettings_data();
 
+    void recordAndHearingIncommingAudioThroughLooperLayerSettings();
+    void recordAndHearingIncommingAudioThroughLooperLayerSettings_data();
+
     void playing();
     void playing_data();
+
+    void hearLockedLayersOnlyAfterRecord(); // first problem in issue #823
+    void monitoringWhenPlayLockedAndHearAllAreChecked(); // second problem in issue #823
 
 private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
