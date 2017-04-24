@@ -340,6 +340,7 @@
 		2AC0D3EC1E0AB913005A940A /* MainWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D81E0AB913005A940A /* MainWindowPlugin.h */; };
 		2AC0D3F01E0AB913005A940A /* NinjamControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DA1E0AB913005A940A /* NinjamControllerPlugin.h */; };
 		2AC0D3F41E0AB913005A940A /* NinjamRoomWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DC1E0AB913005A940A /* NinjamRoomWindowPlugin.h */; };
+		2ACA3F721EAE3EF000EF369A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ACA3F711EAE3EF000EF369A /* SystemConfiguration.framework */; };
 		2AEFF5531E1835A100843898 /* libQt5Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54E1E1835A100843898 /* libQt5Core.a */; };
 		2AEFF5541E1835A100843898 /* libQt5Gui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54F1E1835A100843898 /* libQt5Gui.a */; };
 		2AEFF5551E1835A100843898 /* libQt5Network.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5501E1835A100843898 /* libQt5Network.a */; };
@@ -716,6 +717,7 @@
 		2AC0D3DC1E0AB913005A940A /* NinjamRoomWindowPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NinjamRoomWindowPlugin.h; path = ../../src/Plugins/NinjamRoomWindowPlugin.h; sourceTree = "<group>"; };
 		2AC0D3DD1E0AB913005A940A /* PreferencesDialogPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferencesDialogPlugin.cpp; path = ../../src/Plugins/PreferencesDialogPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3DE1E0AB913005A940A /* PreferencesDialogPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesDialogPlugin.h; path = ../../src/Plugins/PreferencesDialogPlugin.h; sourceTree = "<group>"; };
+		2ACA3F711EAE3EF000EF369A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		2AEFF54E1E1835A100843898 /* libQt5Core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Core.a; path = "../../../Qt-5.6/lib/libQt5Core.a"; sourceTree = "<group>"; };
 		2AEFF54F1E1835A100843898 /* libQt5Gui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Gui.a; path = "../../../Qt-5.6/lib/libQt5Gui.a"; sourceTree = "<group>"; };
 		2AEFF5501E1835A100843898 /* libQt5Network.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Network.a; path = "../../../Qt-5.6/lib/libQt5Network.a"; sourceTree = "<group>"; };
@@ -833,6 +835,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ACA3F721EAE3EF000EF369A /* SystemConfiguration.framework in Frameworks */,
 				2AEFF5681E1836F800843898 /* Carbon.framework in Frameworks */,
 				2AEFF5671E1836EA00843898 /* IOKit.framework in Frameworks */,
 				2AEFF5641E18368F00843898 /* OpenGL.framework in Frameworks */,
@@ -880,6 +883,7 @@
 		089C166AFE841209C02AAC07 /* FilterDemo */ = {
 			isa = PBXGroup;
 			children = (
+				2ACA3F711EAE3EF000EF369A /* SystemConfiguration.framework */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -2082,7 +2086,7 @@
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -2135,8 +2139,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
-				DEAD_CODE_STRIPPING = YES;
+				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -2241,10 +2246,10 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUGGING_SYMBOLS = YES;
 				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -2262,7 +2267,7 @@
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2279,7 +2284,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
@@ -2298,7 +2303,7 @@
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2315,7 +2320,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
@@ -2334,7 +2339,7 @@
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2354,10 +2359,13 @@
 				CLANG_WARN_EMPTY_BODY = NO;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -2382,7 +2390,7 @@
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = "-Wno-reorder";
 			};
 			name = Development;
@@ -2397,10 +2405,13 @@
 				CLANG_WARN_EMPTY_BODY = NO;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -2425,7 +2436,7 @@
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = "-Wno-reorder";
 			};
 			name = Deployment;
@@ -2440,10 +2451,12 @@
 				CLANG_WARN_EMPTY_BODY = NO;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -2468,7 +2481,7 @@
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = "-Wno-reorder";
 			};
 			name = Default;
