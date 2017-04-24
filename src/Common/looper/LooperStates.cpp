@@ -124,18 +124,19 @@ void RecordingState::handleNewCycle(uint samplesInCycle)
 
 void RecordingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
 {
+    samples.zero(); // zeroing samples before mix to avoid re-add buffered audio and double the incomming samples
+
     const bool hearingAllLayers = looper->getMode() == Looper::AllLayers || looper->getOption(Looper::HearAllLayers);
     if (hearingAllLayers) {
         if (looper->getOption(Looper::PlayLockedLayers) && looper->hasLockedLayers()) {
             looper->mixLockedLayers(samples, samplesToProcess);
+            looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);
         }
         else {
-            samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
             looper->mixAllLayers(samples, samplesToProcess); // user can hear other layers while recording
         }
     }
     else {
-        samples.zero(); // zero samples before mix to avoid re-add buffered samples and double the incomming input samples
         looper->mixLayer(looper->currentLayerIndex, samples, samplesToProcess);
     }
 }

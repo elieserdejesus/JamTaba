@@ -364,6 +364,99 @@ void TestLooper::playing_data()
     QTest::newRow("2 layers, 2nd layer locked, playing locked only") << quint8(2) << (QSet<quint8>() << 1) << (QList<quint8>() << 1 << 1);
 }
 
+void TestLooper::recordAndHearingIncommingAudioThroughLooperLayerSettings()
+{
+    QFETCH(QString, incommingSamples);
+    QFETCH(float, recLayerGain);
+    QFETCH(quint8, recLayer);
+    QFETCH(quint8, layers);
+    QFETCH(QString, expectedSamples);
+    QFETCH(bool, hearingAllLayers);
+    QFETCH(bool, playingLockedLayers);
+    QFETCH(Looper::Mode, looperMode);
+    QFETCH(QList<quint8>, lockedLayers);
+
+    Looper looper;
+    looper.setMode(looperMode);
+    looper.setLayers(layers, true);
+
+    for (uint l = 0; l < layers; ++l)
+        looper.setLayerPan(l, -1); // avoiding pan law in expected values
+
+    QVERIFY(recLayer < layers);
+    QVERIFY(lockedLayers.size() <= layers);
+
+    looper.setLayerGain(recLayer, recLayerGain);
+
+    looper.setOption(Looper::HearAllLayers, hearingAllLayers);
+    looper.setOption(Looper::PlayLockedLayers, playingLockedLayers);
+
+    for (quint8 lockedLayer : lockedLayers)
+        looper.setLayerLockedState(lockedLayer, true);
+
+    looper.selectLayer(recLayer);
+
+    looper.startNewCycle(incommingSamples.size());
+    looper.toggleRecording(); // waiting to record
+    QVERIFY(looper.isWaitingToRecord());
+
+    // recording
+    looper.startNewCycle(incommingSamples.size());
+    Q_ASSERT(looper.isRecording());
+
+    SamplesBuffer buffer = createBuffer(incommingSamples);
+    looper.addBuffer(buffer);   // rec
+    looper.mixToBuffer(buffer); // render
+
+    checkExpectedValues(expectedSamples, buffer);
+}
+
+void TestLooper::recordAndHearingIncommingAudioThroughLooperLayerSettings_data()
+{
+    QTest::addColumn<QString>("incommingSamples");
+    QTest::addColumn<float>("recLayerGain");
+    QTest::addColumn<quint8>("recLayer");
+    QTest::addColumn<quint8>("layers");
+    QTest::addColumn<QString>("expectedSamples");
+    QTest::addColumn<bool>("hearingAllLayers");
+    QTest::addColumn<bool>("playingLockedLayers");
+    QTest::addColumn<Looper::Mode>("looperMode");
+    QTest::addColumn<QList<quint8>>("lockedLayers");
+
+    QTest::newRow("50% gain, Hearing all layers, playing locked, Sequence mode, no locked layers")
+            << QString("2, 2")  // incomming samples
+            << 0.5f             // rec layer gain
+            << quint8(0)        // rec layer
+            << quint8(1)        // layers
+            << QString("1, 1")  // expected samples
+            << true             // hearingAllLayers
+            << true             // playingLockedLayers
+            << Looper::Sequence
+            << QList<quint8>(); // locked layers
+
+    QTest::newRow("50% gain, Hearing all layers, playing locked, Selected Layer mode, first layer locked")
+            << QString("4, 4")  // incomming samples
+            << 0.5f             // layer gain
+            << quint8(1)        // rec layer
+            << quint8(2)        // layers
+            << QString("2, 2")  // expected samples
+            << true             // hearingAllLayers
+            << true             // playingLockedLayers
+            << Looper::SelectedLayer
+            << (QList<quint8>() << 0); // locked layers
+
+    QTest::newRow("50% gain, Playing locked, ALL Layers mode, first layer locked")
+            << QString("4, 4")  // incomming samples
+            << 0.5f             // layer gain
+            << quint8(1)        // rec layer
+            << quint8(2)        // layers
+            << QString("2, 2")  // expected samples
+            << false             // hearingAllLayers
+            << true             // playingLockedLayers
+            << Looper::AllLayers
+            << (QList<quint8>() << 0); // locked layers
+}
+
 void TestLooper::waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettings()
 {
     QFETCH(QString, incommingSamples);

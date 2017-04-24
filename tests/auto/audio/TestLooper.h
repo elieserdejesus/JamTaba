@@ -37,6 +37,9 @@ private slots:
     void waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettings();
     void waitingToRecordAndHearingIncommingAudioThroughLooperLayerSettings_data();
 
+    void recordAndHearingIncommingAudioThroughLooperLayerSettings();
+    void recordAndHearingIncommingAudioThroughLooperLayerSettings_data();
+
     void playing();
     void playing_data();
 
