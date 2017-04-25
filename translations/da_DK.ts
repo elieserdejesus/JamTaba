@@ -175,8 +175,8 @@
         <translation>Gå ind</translation>
     </message>
     <message>
-        <source>Lyt</source>
-        <translation></translation>
+        <source>listen</source>
+        <translation>Lyt</translation>
     </message>
 </context>
 <context>
@@ -974,7 +974,7 @@
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation>Dette er titlen på MessageDialot, der vises, når brugeren klikker på &quot; Sync with host &quot; knappen</translation>
+        <translation>Værts synkronisering</translation>
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
