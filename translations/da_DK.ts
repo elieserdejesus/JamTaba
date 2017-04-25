@@ -474,7 +474,7 @@
     <name>MainFrameClass</name>
     <message>
         <source>Rooms to play</source>
-        <translation>Oversigt over tilgængelige rum/translation>
+        <translation>Oversigt over tilgængelige rum</translation>
     </message>
     <message>
         <source>master</source>
