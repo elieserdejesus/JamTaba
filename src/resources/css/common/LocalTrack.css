@@ -92,8 +92,8 @@ LocalTrackView #midiToolsButton
 
 LocalTrackView #midiPeakMeter                   /* The thin line/meter used to show the midi activity. */
 {
-    max-width: 1px;
-    min-width: 1px;
+    max-width: 3px;
+    min-width: 3px;
     border: none;
 }
 
