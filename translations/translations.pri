@@ -6,4 +6,5 @@ TRANSLATIONS += $$PWD/es_CL.ts
 TRANSLATIONS += $$PWD/fr_FR.ts
 TRANSLATIONS += $$PWD/de_DE.ts
 TRANSLATIONS += $$PWD/pl_PL.ts
+TRANSLATIONS += $$PWD/da_DK.ts
 TRANSLATIONS += $$PWD/en.ts  #this is an empty file (non translated)
