@@ -116,11 +116,11 @@
     </message>
     <message>
         <source>transpose up</source>
-        <translation>Transponere op</translation>
+        <translation>Transponer op</translation>
     </message>
     <message>
         <source>transpose down</source>
-        <translation>Transponere ned</translation>
+        <translation>Transponer ned</translation>
     </message>
 </context>
 <context>
@@ -223,7 +223,7 @@
     </message>
     <message>
         <source>Reset Track Controls</source>
-        <translation>Reset Track Controls</translation>
+        <translation>Nulstil Spor Justeringer</translation>
     </message>
     <message>
         <source>Add channel</source>
@@ -231,11 +231,11 @@
     </message>
     <message>
         <source>Remove channel &quot;%1&quot;</source>
-        <translation>Fjern kanalen &quot;%1&quot;</translation>
+        <translation>Fjern kanal &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Save the preset ...</source>
-        <translation>Gem forudindstillet ...</translation>
+        <translation>Gem forudindstilling ...</translation>
     </message>
     <message>
         <source>Preset name:</source>
@@ -247,15 +247,15 @@
     </message>
     <message>
         <source>Transmit</source>
-        <translation>Transmit</translation>
+        <translation>Transmitter</translation>
     </message>
     <message>
         <source>Delete preset</source>
-        <translation>Slet forudindstillet</translation>
+        <translation>Slet forudindstilling</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation>Sletter forudindstillet ...</translation>
+        <translation>Sletter forudindstilling ...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
@@ -277,7 +277,7 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation>Inverter stereo</translation>
+        <translation>Omvendt stereo</translation>
     </message>
     <message>
         <source>Looper (Available when jamming)</source>
@@ -292,7 +292,7 @@
     </message>
     <message>
         <source>Tools</source>
-        <translation>Værktøj</translation>
+        <translation>Værktøjer</translation>
     </message>
     <message>
         <source>Mono</source>
@@ -363,11 +363,11 @@
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation>Nulstil lag kontroller</translation>
+        <translation>Nulstil lag indstillinger</translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation>Nulstil lagens indhold og kontroller</translation>
+        <translation>Nulstil lagenes indhold og indstillinger</translation>
     </message>
     <message>
         <source>wait (%1)</source>
@@ -474,7 +474,7 @@
     <name>MainFrameClass</name>
     <message>
         <source>Rooms to play</source>
-        <translation>Værelser til at spille</translation>
+        <translation>Oversigt over tilgængelige rum/translation>
     </message>
     <message>
         <source>master</source>
@@ -482,11 +482,11 @@
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
-        <translation>Collapse / udvid dine kontroller ...</translation>
+        <translation>Kollaps / udvid dine indstillinger ...</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation>Indstillinger</translation>
+        <translation>Præferencer</translation>
     </message>
     <message>
         <source>Ninjam</source>
@@ -502,7 +502,7 @@
     </message>
     <message>
         <source>Audio ...</source>
-        <translation>Lydinstillinger ...</translation>
+        <translation>Lyd ...</translation>
     </message>
     <message>
         <source>Midi ...</source>
@@ -602,7 +602,7 @@
     </message>
     <message>
         <source>Show max peaks</source>
-        <translation>Vis maks toppe</translation>
+        <translation>Vis maks peaks</translation>
     </message>
     <message>
         <source>Sound Wave</source>
@@ -950,11 +950,11 @@
     </message>
     <message>
         <source>Wide tracks</source>
-        <translation>Brede tracks</translation>
+        <translation>Brede spor</translation>
     </message>
     <message>
         <source>Narrow tracks</source>
-        <translation>Narrow tracks</translation>
+        <translation>Smalle spor</translation>
     </message>
     <message>
         <source>Connected as &lt;user_name&gt;</source>
@@ -966,11 +966,11 @@
     </message>
     <message>
         <source>Server Licence</source>
-        <translation>Server licens</translation>
+        <translation>Serverlicens</translation>
     </message>
     <message>
         <source>Last chords used</source>
-        <translation>Brugte sidste akkorder</translation>
+        <translation>Sidst brugte akkorder</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
@@ -1086,7 +1086,7 @@
     </message>
     <message>
         <source>scanning %1</source>
-        <translation>Scanning %1</translation>
+        <translation>Scanner %1</translation>
     </message>
 </context>
 <context>
@@ -1109,7 +1109,7 @@
     </message>
     <message>
         <source>Preferences ...</source>
-        <translation>Preferencer ...</translation>
+        <translation>Præferencer ...</translation>
     </message>
     <message>
         <source>Audio</source>
@@ -1213,11 +1213,11 @@
     </message>
     <message>
         <source>Primary Beat:</source>
-        <translation>Primært slag:</translation>
+        <translation>Primært beat:</translation>
     </message>
     <message>
         <source>Secondary Beat:</source>
-        <translation>Sekundært slag:</translation>
+        <translation>Sekundært beat:</translation>
     </message>
     <message>
         <source>Browse ...</source>
