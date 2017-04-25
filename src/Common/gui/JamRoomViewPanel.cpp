@@ -12,7 +12,7 @@
 JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
                                    Controller::MainController *mainController) :
     QFrame(nullptr),
-    ui(new Ui::RoomViewPanel),
+    ui(new Ui::JamRoomViewPanel),
     mainController(mainController),
     roomInfo(roomInfo)
 {

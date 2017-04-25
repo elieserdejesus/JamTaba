@@ -178,6 +178,26 @@
         <source>listen</source>
         <translation></translation>
     </message>
+    <message>
+        <source>This is the server name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackGroupView</name>
@@ -1353,37 +1373,6 @@
     <name>Recorder::ReaperProjectGenerator</name>
     <message>
         <source>Generate Reaper Project file (RPP)</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
         <translation></translation>
     </message>
 </context>

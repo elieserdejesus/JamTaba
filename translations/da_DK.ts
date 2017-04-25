@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="da_DK" sourcelanguage="en">
+<TS version="2.1" language="da_DK" sourcelanguage="en">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -177,6 +177,26 @@
     <message>
         <source>listen</source>
         <translation>Lyt</translation>
+    </message>
+    <message>
+        <source>This is the server name</source>
+        <translation>Dette er server navnet</translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation>Dette er status på rummet</translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation>Klik på denne knap for at lytte på rummet</translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation>Klik denne knap for at gå ind i rummet</translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation>Denne zone viser den lydform der spilles</translation>
     </message>
 </context>
 <context>
@@ -898,16 +918,16 @@
         <translation>Linje</translation>
     </message>
     <message>
-        <source>Lagkage</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>off</source>
         <translation>fra</translation>
     </message>
     <message>
         <source>%1 beats</source>
         <translation>%1 slag</translation>
+    </message>
+    <message>
+        <source>Pie</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1354,37 +1374,6 @@
     <message>
         <source>Generate Reaper Project file (RPP)</source>
         <translation>Generer Reaper Projekt fil (RPP)</translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation>Dette er server navnet</translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation>Dette er status på rummet</translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation>Klik på denne knap for at lytte på rummet</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>Hør</translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation>Klik denne knap for at gå ind i rummet</translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation>Gå</translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
-        <translation>Denne zone viser den lydform der spilles</translation>
     </message>
 </context>
 <context>

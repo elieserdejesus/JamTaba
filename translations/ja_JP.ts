@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ja_JP">
+<TS version="2.1" language="ja_JP">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -182,6 +182,26 @@
     <message>
         <source>listen</source>
         <translation>試聴</translation>
+    </message>
+    <message>
+        <source>This is the server name</source>
+        <translation>サーバ名</translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation>部屋の状態</translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation>試聴する</translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation>入室ボタン</translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation>波形表示</translation>
     </message>
 </context>
 <context>
@@ -1364,37 +1384,6 @@
     <message>
         <source>Generate Reaper Project file (RPP)</source>
         <translation>Reaper用のプロジェクトファイル(.RPP)を生成</translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation>サーバ名</translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation>部屋の状態</translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation>試聴する</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>試聴</translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation>入室ボタン</translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation>入室</translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
-        <translation>波形表示</translation>
     </message>
 </context>
 <context>

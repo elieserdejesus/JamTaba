@@ -178,6 +178,26 @@
         <source>The audio stream of this room is not available at moment!</source>
         <translation>W tej chwili strumień audio z tego pokoju jest niedostępny!</translation>
     </message>
+    <message>
+        <source>This is the server name</source>
+        <translation>To jest nazwa serwera</translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation>To jest status tego pokoju</translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation>Kliknij by podsłuchać tego pokoju</translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation>Kliknij by wejść do tego pokoju</translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation>To strefa wyświetla aktualnie grany &quot;waveform&quot;</translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackGroupView</name>
@@ -1355,37 +1375,6 @@
     <message>
         <source>Generate Reaper Project file (RPP)</source>
         <translation>Wygeneruj plik &quot;Reaper Project&quot;(RPP)</translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation>To jest nazwa serwera</translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation>To jest status tego pokoju</translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation>Kliknij by podsłuchać tego pokoju</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>słuchaj</translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation>Kliknij by wejść do tego pokoju</translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation>wejdź</translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
-        <translation>To strefa wyświetla aktualnie grany &quot;waveform&quot;</translation>
     </message>
 </context>
 <context>

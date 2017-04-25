@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr_FR">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -177,6 +177,26 @@
     <message>
         <source>The audio stream of this room is not available at moment!</source>
         <translation>Le stream audio pour ce salon n&apos;est pas disponible pour le moment!</translation>
+    </message>
+    <message>
+        <source>This is the server name</source>
+        <translation>Nom du serveur</translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation>Cliquer ce bouton pour écouter ce salon</translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation>cliquer ce bouton pour entrer dans ce salon</translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation>Cette zone montre les ondes joués dans ce salon</translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation>Ceci est le statut de ce salon</translation>
     </message>
 </context>
 <context>
@@ -1354,37 +1374,6 @@
     <message>
         <source>Generate Reaper Project file (RPP)</source>
         <translation>Généré un projet reaper(.RPP)</translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation>Nom du serveur</translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation>Cliquer ce bouton pour écouter ce salon</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>écouter</translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation>cliquer ce bouton pour entrer dans ce salon</translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation>entrer</translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
-        <translation>Cette zone montre les ondes joués dans ce salon</translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation>Ceci est le statut de ce salon</translation>
     </message>
 </context>
 <context>

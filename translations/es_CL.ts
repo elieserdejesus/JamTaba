@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_CL" sourcelanguage="en_US">
+<TS version="2.1" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -177,6 +177,26 @@
     <message>
         <source>listen</source>
         <translation>escuchar</translation>
+    </message>
+    <message>
+        <source>This is the server name</source>
+        <translation>Éste es el nombre del servidor</translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation>Éste es el estado de esta sala</translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation>Haz click en este botón para escuchar dentro de la sala</translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation>Haz click en este botón para entrar a la sala</translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation>Esta zona dibuja la forma de onda del sonido que estás escuchando ahora</translation>
     </message>
 </context>
 <context>
@@ -1354,37 +1374,6 @@
     <message>
         <source>Generate Reaper Project file (RPP)</source>
         <translation>Generar Archivo de Projecto de Reaper</translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation>Éste es el nombre del servidor</translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation>Éste es el estado de esta sala</translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation>Haz click en este botón para escuchar dentro de la sala</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>escuchar</translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation>Haz click en este botón para entrar a la sala</translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation>entrar</translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
-        <translation>Esta zona dibuja la forma de onda del sonido que estás escuchando ahora</translation>
     </message>
 </context>
 <context>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.1" language="de_DE">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -177,6 +177,26 @@
     <message>
         <source>The audio stream of this room is not available at moment!</source>
         <translation>Audio von diesem raum ist momentan nicht verfügbar!</translation>
+    </message>
+    <message>
+        <source>This is the server name</source>
+        <translation>das ist der server name</translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation>clicke hier zum abhören des raums</translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation>clicke hier um raum zu betreten</translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation>diese zone zeigt die wellenform des gespielten audio</translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation>das ist der status dieses raums</translation>
     </message>
 </context>
 <context>
@@ -1355,37 +1375,6 @@
     <message>
         <source>Generate Reaper Project file (RPP)</source>
         <translation>generiere Reaper Project datei (RPP)</translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation>das ist der server name</translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation>clicke hier zum abhören des raums</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>abhören</translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation>clicke hier um raum zu betreten</translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation>enter</translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
-        <translation>diese zone zeigt die wellenform des gespielten audio</translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation>das ist der status dieses raums</translation>
     </message>
 </context>
 <context>

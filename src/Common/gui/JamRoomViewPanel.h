@@ -11,7 +11,7 @@
 class MapWidget;
 
 namespace Ui {
-class RoomViewPanel;
+class JamRoomViewPanel;
 }
 
 namespace Geo {
@@ -61,7 +61,7 @@ private slots:
     void updateUserLocation(const QString &userIP);
 
 private:
-    Ui::RoomViewPanel *ui;
+    Ui::JamRoomViewPanel *ui;
     Controller::MainController *mainController;
     Login::RoomInfo roomInfo;
     MapWidget *map;

@@ -181,6 +181,26 @@
         <source>The audio stream of this room is not available at moment!</source>
         <translation>O stream de áudio desta sala não está disponível no momento!</translation>
     </message>
+    <message>
+        <source>This is the server name</source>
+        <translation>Este é o nome do servidor</translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation>Este é o status da sala</translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation>Clique neste botão para ouvir esta sala</translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation>Clique neste botão para entrar na sala</translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation>Esta região mostra a forma de onda do som que está acontecendo na sala</translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackGroupView</name>
@@ -1357,37 +1377,6 @@
     <message>
         <source>Generate Reaper Project file (RPP)</source>
         <translation>Gerar o arquivo de projeto (RPP) do Reaper</translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation>Este é o nome do servidor</translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation>Este é o status da sala</translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation>Clique neste botão para ouvir esta sala</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>ouvir</translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation>Clique neste botão para entrar na sala</translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation>entrar</translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
-        <translation>Esta região mostra a forma de onda do som que está acontecendo na sala</translation>
     </message>
 </context>
 <context>
