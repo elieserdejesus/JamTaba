@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="dk" sourcelanguage="en">
+<TS version="2.0" language="da_DK" sourcelanguage="en">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -54,7 +54,7 @@
     <name>ChatMessagePanel</name>
     <message>
         <source>translate ...</source>
-        <translation>Oversæt</translation>
+        <translation>Oversæt ...</translation>
     </message>
     <message>
         <source>T</source>
@@ -81,7 +81,7 @@
     </message>
     <message>
         <source>clear the messages ...</source>
-        <translation>Ryd meddelelserne</translation>
+        <translation>Ryd meddelelserne ...</translation>
     </message>
     <message>
         <source>Press that button to clear your message</source>
@@ -104,7 +104,7 @@
     <name>ChordsPanel</name>
     <message>
         <source>send the chords to chat...</source>
-        <translation>Send akkordene til chat</translation>
+        <translation>Send akkordene til chat...</translation>
     </message>
     <message>
         <source>send the chords to chat</source>
@@ -127,11 +127,11 @@
     <name>DelayGui</name>
     <message>
         <source>Delay Time (ms):</source>
-        <translation>Forsinkelsestid (ms)</translation>
+        <translation>Forsinkelsestid (ms):</translation>
     </message>
     <message>
         <source>Feedback (db):</source>
-        <translation>Feedback (db)</translation>
+        <translation>Feedback (db):</translation>
     </message>
     <message>
         <source>Level:</source>
@@ -142,7 +142,7 @@
     <name>FxPanelItem</name>
     <message>
         <source>new effect...</source>
-        <translation>Ny effekt</translation>
+        <translation>Ny effekt...</translation>
     </message>
     <message>
         <source>bypass</source>
@@ -164,7 +164,7 @@
     <name>JamRoomViewPanel</name>
     <message>
         <source>%1 / %2 players </source>
-        <translation></translation>
+        <translation>%1 / %2 players </translation>
     </message>
     <message>
         <source>The audio stream of this room is not available at moment!</source>
@@ -175,8 +175,8 @@
         <translation>Gå ind</translation>
     </message>
     <message>
-        <source>Lyt</source>
-        <translation></translation>
+        <source>listen</source>
+        <translation>Lyt</translation>
     </message>
 </context>
 <context>
@@ -191,7 +191,7 @@
     </message>
     <message>
         <source>Add or remove channels...</source>
-        <translation>Tilføj eller fjern kanaler</translation>
+        <translation>Tilføj eller fjern kanaler...</translation>
     </message>
     <message>
         <source>Load preset</source>
@@ -211,11 +211,11 @@
     </message>
     <message>
         <source>Remove channel &quot;%1&quot;</source>
-        <translation>Fjern kanalen</translation>
+        <translation>Fjern kanalen &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Save the preset ...</source>
-        <translation>Gem forudindstillet</translation>
+        <translation>Gem forudindstillet ...</translation>
     </message>
     <message>
         <source>Preset name:</source>
@@ -235,11 +235,11 @@
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation>Sletter forudindstillet</translation>
+        <translation>Sletter forudindstillet ...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation>Vil du gerne slette forudinstilling?</translation>
+        <translation>Vil du gerne slette forudinstilling &apos;%1&apos;</translation>
     </message>
 </context>
 <context>
@@ -250,7 +250,7 @@
     </message>
     <message>
         <source>Remove subchannel %1</source>
-        <translation>Fjern underkanalen% 1</translation>
+        <translation>Fjern underkanalen %1</translation>
     </message>
 </context>
 <context>
@@ -268,7 +268,7 @@
     <name>LocalTrackViewStandalone</name>
     <message>
         <source>Choose input channels ...</source>
-        <translation>Vælg indgangskanaler</translation>
+        <translation>Vælg indgangskanaler ...</translation>
     </message>
     <message>
         <source>Tools</source>
@@ -284,7 +284,7 @@
     </message>
     <message>
         <source>%1  (not enough available inputs to make stereo)</source>
-        <translation>% 1 (ikke nok ledige indgange til at lave stereo)</translation>
+        <translation>%1  (ikke nok ledige indgange til at lave stereo)</translation>
     </message>
     <message>
         <source>MIDI</source>
@@ -296,11 +296,11 @@
     </message>
     <message>
         <source>Channel %1</source>
-        <translation>Kanal% 1</translation>
+        <translation>Kanal %1</translation>
     </message>
     <message>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
-        <translation>% 1 (ingen MIDI-enheder registreret eller aktiveret i 'Preferences' menu ')</translation>
+        <translation>%1  (ingen MIDI-enheder registreret eller aktiveret i &apos;Preferences&apos; menu &apos;)</translation>
     </message>
     <message>
         <source>no input</source>
@@ -355,11 +355,11 @@
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation>Gem looper lag</translation>
+        <translation>Gem looper lag ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation>Loop filnavn</translation>
+        <translation>Loop filnavn:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
@@ -399,7 +399,7 @@
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation>% 1 BPM loops</translation>
+        <translation>%1 BPM loops</translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
@@ -407,15 +407,15 @@
     </message>
     <message>
         <source>Import audio files ...</source>
-        <translation>Importer lydfiler</translation>
+        <translation>Importer lydfiler ...</translation>
     </message>
     <message>
         <source>Importing audio files ...</source>
-        <translation>Importerer lydfiler</translation>
+        <translation>Importerer lydfiler ...</translation>
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation>Gennemse JamTaba-løkker</translation>
+        <translation>Gennemse JamTaba-løkker...</translation>
     </message>
     <message>
         <source>Open loop file</source>
@@ -427,7 +427,7 @@
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
-        <translation>Kan ikke åbne filen</translation>
+        <translation>Kan ikke åbne filen &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Audio files</source>
@@ -462,7 +462,7 @@
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
-        <translation>Collapse / udvid dine kontroller</translation>
+        <translation>Collapse / udvid dine kontroller ...</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -482,43 +482,43 @@
     </message>
     <message>
         <source>Audio ...</source>
-        <translation>Lydinstillinger</translation>
+        <translation>Lydinstillinger ...</translation>
     </message>
     <message>
         <source>Midi ...</source>
-        <translation>Midi</translation>
+        <translation>Midi ...</translation>
     </message>
     <message>
         <source>VST Plugins ...</source>
-        <translation>VST Plugins</translation>
+        <translation>VST Plugins ...</translation>
     </message>
     <message>
         <source>Recording ...</source>
-        <translation>Optagelse</translation>
+        <translation>Optagelse ...</translation>
     </message>
     <message>
         <source>Private Server ...</source>
-        <translation>Privat Server</translation>
+        <translation>Privat Server ...</translation>
     </message>
     <message>
         <source>Ninjam community (Ninbot) ...</source>
-        <translation>Ninjam forum (Ninbot)</translation>
+        <translation>Ninjam forum (Ninbot) ...</translation>
     </message>
     <message>
         <source>Ninjam Official Site ...</source>
-        <translation>Ninjam Officiel Side</translation>
+        <translation>Ninjam Officiel Side ...</translation>
     </message>
     <message>
         <source>Report bugs or suggest improvements ...</source>
-        <translation>Rapporter fejl og kom med forslag til forbedringer</translation>
+        <translation>Rapporter fejl og kom med forslag til forbedringer ...</translation>
     </message>
     <message>
         <source>Wiki ...</source>
-        <translation>Wiki</translation>
+        <translation>Wiki ...</translation>
     </message>
     <message>
         <source>Users Manual ...</source>
-        <translation>Brugermanual</translation>
+        <translation>Brugermanual ...</translation>
     </message>
     <message>
         <source>Full View</source>
@@ -530,7 +530,7 @@
     </message>
     <message>
         <source>Quit...</source>
-        <translation>Luk</translation>
+        <translation>Luk...</translation>
     </message>
     <message>
         <source>Full Screen</source>
@@ -538,11 +538,11 @@
     </message>
     <message>
         <source>Current Version ...</source>
-        <translation>Nuværende Version</translation>
+        <translation>Nuværende Version ...</translation>
     </message>
     <message>
         <source>Metronome ...</source>
-        <translation>Metronom</translation>
+        <translation>Metronom ...</translation>
     </message>
     <message>
         <source>Your Controls</source>
@@ -566,7 +566,7 @@
     </message>
     <message>
         <source>Translators ...</source>
-        <translation>Oversættere</translation>
+        <translation>Oversættere ...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
@@ -606,14 +606,14 @@
     </message>
     <message>
         <source>Looper ...</source>
-        <translation>Looper</translation>
+        <translation>Looper ...</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Loading rooms list ...</source>
-        <translation>Indlæser rum liste</translation>
+        <translation>Indlæser rum liste ...</translation>
     </message>
     <message>
         <source>Error!</source>
@@ -621,7 +621,7 @@
     </message>
     <message>
         <source>disconnecting ...</source>
-        <translation>frakobler</translation>
+        <translation>frakobler ...</translation>
     </message>
     <message>
         <source>Your Jamtaba version is not compatible with previous versions!</source>
@@ -633,7 +633,7 @@
     </message>
     <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
-        <translation>En ny Jamtaba version er tilgængelig til download! Brug venligst</translation>
+        <translation>En ny Jamtaba version er tilgængelig til download! Brug venligst &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</translation>
     </message>
     <message>
         <source>New Jamtaba version available!</source>
@@ -645,7 +645,7 @@
     </message>
     <message>
         <source>Empty name is not allowed!</source>
-        <translation>Tomt navn er ikke tilladt</translation>
+        <translation>Tomt navn er ikke tilladt!</translation>
     </message>
     <message>
         <source>Error</source>
@@ -669,7 +669,7 @@
     </message>
     <message>
         <source>Problem...</source>
-        <translation>Problem</translation>
+        <translation>Problem...</translation>
     </message>
     <message>
         <source>Your name cannot be edited while jamming!</source>
@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Connecting with %1 ... </source>
-        <translation>Forbinder med %1</translation>
+        <translation>Forbinder med %1 ... </translation>
     </message>
     <message>
         <source>Connecting with %1</source>
@@ -771,7 +771,7 @@
     </message>
     <message>
         <source>Key Range:</source>
-        <translation>Toneområde</translation>
+        <translation>Toneområde:</translation>
     </message>
     <message>
         <source>Lower note:</source>
@@ -803,7 +803,7 @@
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation>Markøren vil blive erstattet af værtsnavnet, når Jamtaba kører.</translation>
+        <translation>synkronisere med %1</translation>
     </message>
     <message>
         <source>metronome</source>
@@ -918,7 +918,7 @@
     </message>
     <message>
         <source>read the server licence ...</source>
-        <translation>Læs serverlicensen</translation>
+        <translation>Læs serverlicensen ...</translation>
     </message>
     <message>
         <source>Set tracks layout to horizontal</source>
@@ -966,7 +966,7 @@
     </message>
     <message>
         <source>%1 has joined the room.</source>
-        <translation>%1 har sluttet sig til værelset</translation>
+        <translation>%1 har sluttet sig til værelset.</translation>
     </message>
 </context>
 <context>
@@ -974,7 +974,7 @@
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation>Dette er titlen på MessageDialot, der vises, når brugeren klikker på &quot; Sync with host &quot; knappen</translation>
+        <translation>Værts synkronisering</translation>
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
@@ -982,7 +982,7 @@
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation>Synkroniserer</translation>
+        <translation>Synkroniserer...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
@@ -990,7 +990,7 @@
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation>Prøver at synkronisere</translation>
+        <translation>Prøver at synkronisere ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
@@ -1001,7 +1001,7 @@
     <name>NinjamTrackGroupView</name>
     <message>
         <source>Block %1 in chat</source>
-        <translation>Bloker % 1 i chat</translation>
+        <translation>Bloker %1 i chat</translation>
     </message>
     <message>
         <source>Unblock %1 in chat</source>
@@ -1042,7 +1042,7 @@
     <name>PluginScanDialog</name>
     <message>
         <source>[JamTaba] Scanning plugins ...</source>
-        <translation>[JamTaba] Scanning plugins</translation>
+        <translation>[JamTaba] Scanning plugins ...</translation>
     </message>
     <message>
         <source>This is the plugin scanning dialog box</source>
@@ -1050,11 +1050,11 @@
     </message>
     <message>
         <source>scanning plugins...</source>
-        <translation>Scanner plugins</translation>
+        <translation>Scanner plugins...</translation>
     </message>
     <message>
         <source>Founded plugins:</source>
-        <translation>Fundne plugins</translation>
+        <translation>Fundne plugins:</translation>
     </message>
     <message>
         <source>This is the plugin founded list box</source>
@@ -1073,7 +1073,7 @@
     <name>PreferencesDialog</name>
     <message>
         <source>Choosing Primary beat audio file...</source>
-        <translation>Valg af primær beat-lydfil</translation>
+        <translation>Valg af primær beat-lydfil...</translation>
     </message>
     <message>
         <source>Audio Files</source>
@@ -1081,15 +1081,15 @@
     </message>
     <message>
         <source>Choosing Secondary beat audio file...</source>
-        <translation>Valg af sekundær beat lydfil</translation>
+        <translation>Valg af sekundær beat lydfil...</translation>
     </message>
     <message>
         <source>Choosing recording path ...</source>
-        <translation>Valg af optagelsessti</translation>
+        <translation>Valg af optagelsessti ...</translation>
     </message>
     <message>
         <source>Preferences ...</source>
-        <translation>Preferencer</translation>
+        <translation>Preferencer ...</translation>
     </message>
     <message>
         <source>Audio</source>
@@ -1117,7 +1117,7 @@
     </message>
     <message>
         <source>ASIO panel ...</source>
-        <translation>ASIO panel</translation>
+        <translation>ASIO panel ...</translation>
     </message>
     <message>
         <source>MIDI</source>
@@ -1125,7 +1125,7 @@
     </message>
     <message>
         <source>Enable/disable your midi input devices:</source>
-        <translation>Tilføj/fjern dine midi input enheder</translation>
+        <translation>Tilføj/fjern dine midi input enheder:</translation>
     </message>
     <message>
         <source>VST</source>
@@ -1161,15 +1161,15 @@
     </message>
     <message>
         <source>Plugin Paths:</source>
-        <translation>Plugin sti</translation>
+        <translation>Plugin sti:</translation>
     </message>
     <message>
         <source>Add a new folder to scan ...</source>
-        <translation>Tilføj en ny mappe til scanning</translation>
+        <translation>Tilføj en ny mappe til scanning ...</translation>
     </message>
     <message>
         <source>browse ...</source>
-        <translation>Find</translation>
+        <translation>Find ...</translation>
     </message>
     <message>
         <source>Save multi tracks </source>
@@ -1177,7 +1177,7 @@
     </message>
     <message>
         <source>Record path:</source>
-        <translation>Optagelses sti</translation>
+        <translation>Optagelses sti:</translation>
     </message>
     <message>
         <source>Metronome</source>
@@ -1185,7 +1185,7 @@
     </message>
     <message>
         <source>Built-in metronomes:</source>
-        <translation>Indbygget metronomer</translation>
+        <translation>Indbygget metronomer:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
@@ -1193,15 +1193,15 @@
     </message>
     <message>
         <source>Primary Beat:</source>
-        <translation>Primært slag</translation>
+        <translation>Primært slag:</translation>
     </message>
     <message>
         <source>Secondary Beat:</source>
-        <translation>Sekundært slag</translation>
+        <translation>Sekundært slag:</translation>
     </message>
     <message>
         <source>Browse ...</source>
-        <translation>Find</translation>
+        <translation>Find ...</translation>
     </message>
     <message>
         <source>Use 16 bit audio files!</source>
@@ -1213,15 +1213,15 @@
     </message>
     <message>
         <source>Buffer size:</source>
-        <translation>Buffer størrelse</translation>
+        <translation>Buffer størrelse:</translation>
     </message>
     <message>
         <source>Sample rate:</source>
-        <translation>Sample kvalite</translation>
+        <translation>Sample kvalite:</translation>
     </message>
     <message>
         <source>Encoder quality:</source>
-        <translation>Encoder kvalitet</translation>
+        <translation>Encoder kvalitet:</translation>
     </message>
     <message>
         <source>Low (good for slow internet connections)</source>
@@ -1249,7 +1249,7 @@
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation>Gem loop lag som</translation>
+        <translation>Gem loop lag som ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
@@ -1261,7 +1261,7 @@
     </message>
     <message>
         <source>Bit depth:</source>
-        <translation>Bit dybde</translation>
+        <translation>Bit dybde:</translation>
     </message>
     <message>
         <source>Loops folder</source>
@@ -1269,14 +1269,14 @@
     </message>
     <message>
         <source>Choosing loops folder ...</source>
-        <translation>Vælg mappen til loops</translation>
+        <translation>Vælg mappen til loops ...</translation>
     </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
     <message>
         <source>Adding VST path ...</source>
-        <translation>Tilføjer VST sti</translation>
+        <translation>Tilføjer VST sti ...</translation>
     </message>
     <message>
         <source>scanning %1</source>
@@ -1284,15 +1284,15 @@
     </message>
     <message>
         <source>Add Vst(s) to Black list ...</source>
-        <translation>Tilføj Vst(‘erne) til Sortlisten</translation>
+        <translation>Tilføj Vst(‘erne) til Sortlisten ...</translation>
     </message>
     <message>
         <source>Remove Vst(s) from Black List ...</source>
-        <translation>Fjern Vst(‘erne) fra Sortlisten</translation>
+        <translation>Fjern Vst(‘erne) fra Sortlisten ...</translation>
     </message>
     <message>
         <source>No midi input device detected!</source>
-        <translation>Intet midi input enhed fundet</translation>
+        <translation>Intet midi input enhed fundet!</translation>
     </message>
 </context>
 <context>
@@ -1335,11 +1335,11 @@
     </message>
     <message>
         <source>Connecting with private Ninjam server ...</source>
-        <translation>Forbindelse til privat Ninjam server</translation>
+        <translation>Forbindelse til privat Ninjam server ...</translation>
     </message>
     <message>
         <source>User name:</source>
-        <translation>Brugernavn</translation>
+        <translation>Brugernavn:</translation>
     </message>
 </context>
 <context>
@@ -1406,7 +1406,7 @@
     </message>
     <message>
         <source> User name:</source>
-        <translation>Brugernavn</translation>
+        <translation>Brugernavn:</translation>
     </message>
     <message>
         <source>Type your user name here</source>
