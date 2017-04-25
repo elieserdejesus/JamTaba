@@ -823,7 +823,7 @@
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation>synkronisere med %1</translation>
+        <translation>Synkroniser med %1</translation>
     </message>
     <message>
         <source>metronome</source>
