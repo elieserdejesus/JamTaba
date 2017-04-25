@@ -235,14 +235,21 @@ void MainWindow::initializeLanguageMenu()
     QDir translationsDir(":/tr");
     if (translationsDir.exists()) {
         QStringList locales = translationsDir.entryList();
-        foreach (const QString &translationFile, locales) {
+        for (auto translationFile : locales) {
             QLocale loc(translationFile);
             QString nativeLanguageName = Gui::capitalize(loc.nativeLanguageName());
-            QString englishLanguageName
-                = Gui::capitalize(QLocale::languageToString(loc.language()));                         // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
-            QAction *action = ui.menuLanguage->addAction(
-                nativeLanguageName + " (" + englishLanguageName + ")");
+            QString englishLanguageName = Gui::capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
+
+            QString actionText = nativeLanguageName + " (" + englishLanguageName + ")";
+            auto actions = ui.menuLanguage->actions();
+            QAction *before = actions.isEmpty() ? nullptr : actions.first();
+            while (before && before->text() < actionText) { // sorting the language menu entries
+                actions.removeFirst();
+                before = actions.isEmpty() ? nullptr : actions.first();
+            }
+            QAction *action = new QAction(actionText, ui.menuLanguage);
             action->setData(translationFile); // using the locale (pt_BR, ja_JP) as data
+            ui.menuLanguage->insertAction(before, action);
         }
     } else {
         qCritical() << "translations dir not exist! Can't create the Language menu!";
