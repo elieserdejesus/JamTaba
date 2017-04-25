@@ -450,7 +450,7 @@
     </message>
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
-        <translation type="unfinished"></translation>
+        <translation>O arquivo de loop já existe. Você deseja sobrepor este arquivo?</translation>
     </message>
 </context>
 <context>
