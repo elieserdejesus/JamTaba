@@ -124,7 +124,7 @@ private:
     bool canUseMidiDeviceIndex(int midiDeviceIndex) const;
 
     void paintRoutingMidiArrow(int topMargin, int arrowSize, bool drawMidiWord);
-    void paintReceivingRoutedMidiIndicator(int topMargin, int arrowSize);
+    void paintReceivingRoutedMidiIndicator(int topMargin);
 
     void setAudioRelatedControlsStatus(bool enableControls);
 

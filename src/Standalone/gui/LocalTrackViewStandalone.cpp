@@ -83,7 +83,7 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSiz
 
     const int leftMargin = 1;
 
-    int metersCenter = peakMeter->x() + peakMeter->width()/2.0;
+    int metersCenter = midiPeakMeter->x() + midiPeakMeter->width()/2.0;
     int x1 = metersCenter - 2;
     int y = midiPeakMeter->y() - 2;
     int x2 = metersCenter + 2;
@@ -116,7 +116,7 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSiz
     painter.drawPath(arrow);
 }
 
-void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin, int arrowSize)
+void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin)
 {
     QPainter painter(this);
 
@@ -125,22 +125,21 @@ void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin, 
     const int rightMargin = 2;
 
     int metersCenter = peakMeter->x() + peakMeter->width()/2.0;
+    if (midiPeakMeter->isVisible())
+        metersCenter = midiPeakMeter->x() + midiPeakMeter->width()/2.0;
+
     int x1 = metersCenter - 2;
     int y = peakMeter->y() - 2;
     int x2 = metersCenter + 2;
 
     // draw the vertical line
     int x = x1 + (x2 - x1)/2.0;
-    painter.drawLine(x, y+1, x, topMargin);
+    painter.drawLine(x, y, x, topMargin);
 
     // draw the horizontal line pointing to right subchannel
     y = topMargin;
-    x2 = width() - rightMargin - arrowSize;
+    x2 = width() - rightMargin;
     painter.drawLine(x+1, y, x2, y);
-
-    x2 += 2;
-    painter.drawLine(x2,     y - arrowSize, x2,     y + arrowSize);
-    painter.drawLine(x2 + 1, y - arrowSize, x2 + 1, y + arrowSize);
 }
 
 void LocalTrackViewStandalone::paintEvent(QPaintEvent *ev)
@@ -156,7 +155,7 @@ void LocalTrackViewStandalone::paintEvent(QPaintEvent *ev)
     }
     else {
         if (inputNode->isReceivingRoutedMidiInput()) {
-            paintReceivingRoutedMidiIndicator(topMargin, arrowSize);
+            paintReceivingRoutedMidiIndicator(topMargin);
         }
     }
 }
@@ -801,7 +800,6 @@ void LocalTrackViewStandalone::setToMono(QAction *action)
     int selectedInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
-
     peakMeter->setStereo(false);
 
     emit trackInputChanged();
