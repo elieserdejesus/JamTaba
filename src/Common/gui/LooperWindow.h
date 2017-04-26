@@ -43,7 +43,6 @@ public:
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void keyPressEvent(QKeyEvent *ev) override;
-    bool eventFilter(QObject *source, QEvent *ev);
     void changeEvent(QEvent *ev);
 
 private slots:

@@ -23,6 +23,16 @@ void Slider::paintEvent(QPaintEvent *ev)
     QSlider::paintEvent(ev);
 }
 
+void Slider::mouseDoubleClickEvent(QMouseEvent *ev)
+{
+    Q_UNUSED(ev);
+
+    if (sliderType == Slider::AudioSlider)
+        setValue(100); // set to unit gain
+    else
+        setValue(0); // set pan slider to center
+}
+
 qreal Slider::getMarkerPosition() const
 {
     if (sliderType == Slider::AudioSlider) {

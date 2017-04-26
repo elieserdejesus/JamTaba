@@ -61,7 +61,6 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
 
     ui->peakMeter->setOrientation(Qt::Vertical);
 
-    ui->mainLevelSlider->installEventFilter(this);
     connect(ui->mainLevelSlider, &QSlider::valueChanged, [=](int value){
         if (!looper)
             return;
@@ -234,9 +233,6 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         for (quint8 layerIndex = 0; layerIndex < MAX_LOOP_LAYERS; ++layerIndex) {
             auto layerWavePanel = new LooperWavePanel(looper, layerIndex);
             auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex);
-
-            layerControlsLayout->gainSlider->installEventFilter(this);
-            layerControlsLayout->panSlider->installEventFilter(this);
 
             layerWavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
 
@@ -444,26 +440,6 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
 
     addLayout(levelFaderLayout);
     addLayout(panFaderLayout);
-}
-
-// event filter used to handle double clicks
-bool LooperWindow::eventFilter(QObject *source, QEvent *ev)
-{
-    if (ev->type() == QEvent::MouseButtonDblClick) {
-        QSlider *slider = qobject_cast<QSlider *>(source);
-        if (slider) {
-            if (slider->objectName() == "levelSlider")
-                slider->setValue(100); // set level fader to unit gain
-            else if (slider->objectName() == "panSlider")
-                slider->setValue(0);// set pan slider to center
-            else if (slider->objectName() == "mainLevelSlider")
-                slider->setValue(100);// set main slider to unit gain
-        }
-
-        return true;
-    }
-
-    return QDialog::eventFilter(source, ev);
 }
 
 void LooperWindow::resetAll()

@@ -78,7 +78,6 @@ public slots:
     void setMetronomeFloatingWindowVisibility(bool showFloatingWindow);
 
 protected:
-    bool eventFilter(QObject *source, QEvent *ev);
     void changeEvent(QEvent *) override;
 
     Ui::NinjamPanel *ui;

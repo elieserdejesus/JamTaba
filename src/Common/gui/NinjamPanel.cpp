@@ -23,9 +23,6 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
 
     initializeCombos(bpiComboModifier, bpmComboModifier);
 
-    ui->levelSlider->installEventFilter(this);
-    ui->panSlider->installEventFilter(this);
-
     ui->peakMeter->setOrientation(Qt::Horizontal);
 
     maximizeControlsWidget(true);
@@ -294,20 +291,6 @@ void NinjamPanel::setGainSliderValue(int value)
 void NinjamPanel::setMetronomePeaks(float left, float right, float rmsLeft, float rmsRight)
 {
     ui->peakMeter->setPeak(left, right, rmsLeft, rmsRight);
-}
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++
-bool NinjamPanel::eventFilter(QObject *source, QEvent *ev)
-{
-    if (ev->type() == QEvent::MouseButtonDblClick) {
-        if (source == ui->panSlider)
-            ui->panSlider->setValue(0);// center
-        if (source == ui->levelSlider)
-            ui->levelSlider->setValue(100);// unit gain
-
-        return true;
-    }
-    return QWidget::eventFilter(source, ev);
 }
 
 // ++++++++++++++++++++++++++++++++++++

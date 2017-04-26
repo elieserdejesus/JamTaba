@@ -19,7 +19,8 @@ public:
     void setSliderType(SliderType type);
 
 protected:
-    void paintEvent(QPaintEvent *ev);
+    void paintEvent(QPaintEvent *ev) override;
+    void mouseDoubleClickEvent(QMouseEvent *ev) override;
 
 private:
     void drawMarker(QPainter &painter);

@@ -72,7 +72,6 @@ protected:
 
     void paintEvent(QPaintEvent *) override;
     void changeEvent(QEvent *e) override;
-    bool eventFilter(QObject *source, QEvent *ev);
 
     virtual void translateUI();
 

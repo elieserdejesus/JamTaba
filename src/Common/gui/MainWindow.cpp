@@ -1454,12 +1454,8 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             updatePublicRoomsListLayout();
             return false;
         }
-    } else {
-        if (target == ui.masterFader && event->type() == QEvent::MouseButtonDblClick) {
-            ui.masterFader->setValue(100);
-            return true;
-        }
     }
+
     return QMainWindow::eventFilter(target, event);
 }
 
@@ -1627,7 +1623,6 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
 void MainWindow::setupWidgets()
 {
     ui.masterMeter->setOrientation(Qt::Horizontal);
-    ui.masterFader->installEventFilter(this);// handle double click in master fader
 
     setChatVisibility(false);// hide chat area until connect in a server to play
 

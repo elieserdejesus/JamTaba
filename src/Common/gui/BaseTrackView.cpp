@@ -38,9 +38,6 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     connect(panSlider, &QSlider::valueChanged, this, &BaseTrackView::setPan);
     connect(buttonBoost, &MultiStateButton::stateChanged, this, &BaseTrackView::updateBoostValue);
 
-    panSlider->installEventFilter(this);
-    levelSlider->installEventFilter(this);
-
     // add in static map
     BaseTrackView::trackViews.insert(trackID, this);
 
@@ -357,25 +354,6 @@ BaseTrackView *BaseTrackView::getTrackViewByID(long trackID)
 void BaseTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight)
 {
     peakMeter->setPeak(peakLeft, peakRight, rmsLeft, rmsRight);
-}
-
-// event filter used to handle double clicks
-bool BaseTrackView::eventFilter(QObject *source, QEvent *ev)
-{
-    if (ev->type() == QEvent::MouseButtonDblClick) {
-        if (source == levelSlider || source == panSlider) {
-            if (source == levelSlider)
-                levelSlider->setValue(100); // set level fader to unit gain
-            else
-                panSlider->setValue(0);// set pan slider to center
-            update();
-        }
-
-        return true;
-    }
-    if (ev->type() == QEvent::MouseMove && source == levelSlider)
-        update();
-    return QWidget::eventFilter(source, ev);
 }
 
 BaseTrackView::~BaseTrackView()
