@@ -93,6 +93,7 @@ void Slider::setSliderType(SliderType type)
 {
     if (this->sliderType != type) {
         this->sliderType = type;
+        updateToolTipValue();
         update();
     }
 }
