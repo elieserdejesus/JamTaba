@@ -822,7 +822,7 @@
     <name>NinjamPanel</name>
     <message>
         <source>Sync with %1</source>
-        <extracomment>&apos;%1&apos; Markøren vil blive erstattet af værtsnavnet, når Jamtaba kører.</extracomment>
+        <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
         <translation>Synkroniser med %1</translation>
     </message>
     <message>
