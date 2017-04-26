@@ -225,8 +225,6 @@ private:
 
     bool currentLayerIsLocked() const;
 
-    void initialize();
-
     void processBufferUsingCurrentLayerSettings(SamplesBuffer &buffer);
 
     static QMap<Looper::PlayingOption, bool> getDefaultSupportedPlayingOptions(Looper::Mode mode);

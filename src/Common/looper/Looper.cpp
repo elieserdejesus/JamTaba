@@ -12,23 +12,9 @@
 using namespace Audio;
 
 Looper::Looper()
-    : currentLayerIndex(0),
-      focusedLayerIndex(0),
-      intervalLenght(0),
-      intervalPosition(0),
-      changed(false),
-      maxLayers(4),
-      state(new StoppedState()),
-      mode(Mode::Sequence),
-      resetRequested(false),
-      newMaxLayersRequested(0),
-      mainGain(1.0),
-      loading(false),
-      waitingToStop(false),
-      activated(true),
-      internalBuffer(2)
+    : Looper(Mode::Sequence, 4) // calling overloaded constructor
 {
-    initialize();
+
 }
 
 Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
@@ -48,7 +34,16 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       activated(true),
       internalBuffer(2)
 {
-    initialize();
+    // initialize
+    for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
+        layers[l] = new LooperLayer();
+    }
+
+    Looper::Mode modes[] = {Looper::Sequence, Looper::AllLayers, Looper::SelectedLayer};
+    for (Looper::Mode mode : modes) {
+        modeOptions[mode].recordingOptions = getDefaultSupportedRecordingOptions(mode);
+        modeOptions[mode].playingOptions = getDefaultSupportedPlayingOptions(mode);
+    }
 }
 
 void Looper::waitToStopInNextInterval()
@@ -136,20 +131,6 @@ int Looper::getLastValidLayer() const
 
     return -1; // no valid layers, all layers are empty
 }
-
-void Looper::initialize()
-{
-    for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers
-        layers[l] = new LooperLayer();
-    }
-
-    Looper::Mode modes[] = {Looper::Sequence, Looper::AllLayers, Looper::SelectedLayer};
-    for (Looper::Mode mode : modes) {
-        modeOptions[mode].recordingOptions = getDefaultSupportedRecordingOptions(mode);
-        modeOptions[mode].playingOptions = getDefaultSupportedPlayingOptions(mode);
-    }
-}
-
 
 void Looper::resetLayersContent()
 {
