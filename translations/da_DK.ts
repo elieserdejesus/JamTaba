@@ -831,7 +831,7 @@
     </message>
     <message>
         <source>Slider to change the BPM of the metronome</source>
-        <translation>Skyder for at ændre metronomens BPM</translation>
+        <translation>Skyder til at ændre metronomens slag pr. minut</translation>
     </message>
     <message>
         <source>L</source>
@@ -855,7 +855,7 @@
     </message>
     <message>
         <source>Button to mute the metronome</source>
-        <translation>Knappen til at dæmpe metronomen</translation>
+        <translation>Knap til at dæmpe metronomen</translation>
     </message>
     <message>
         <source>open metronome preferences</source>
