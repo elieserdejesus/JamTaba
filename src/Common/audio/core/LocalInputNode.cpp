@@ -209,13 +209,15 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
 {
     Q_UNUSED(sampleRate);
 
-    /* The input buffer (in) is a multichannel buffer. So, this buffer contains
-     * all channels grabbed from soundcard inputs. If the user select a range of 4
-     * input channels in audio preferences this buffer will contain 4 channels.
-     *
-     * A LocalInputAudioNode instance grab only your input range from this input SamplesBuffer.
-     * Other LocalInputAudioNode instances will read other channels from input SamplesBuffer.
-     */
+    /**
+    *      The input buffer (in) is a multichannel buffer. So, this buffer contains
+    * all channels grabbed from soundcard inputs. For example, if the user selected a range of 4
+    * input channels in audio preferences this buffer will contain 4 channels.
+    *
+    *      A LocalInputNode instance will grab only your input range from 'in'. Other
+    * LocalInputNode instances can read other channel range from 'in'.
+    *
+    */
 
     std::vector<Midi::MidiMessage> filteredMidiBuffer(midiBuffer.size());
     internalInputBuffer.setFrameLenght(out.getFrameLenght());
