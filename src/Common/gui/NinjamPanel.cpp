@@ -18,6 +18,9 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
 {
     ui->setupUi(this);
 
+    ui->levelSlider->setSliderType(Slider::AudioSlider);
+    ui->panSlider->setSliderType(Slider::PanSlider);
+
     initializeCombos(bpiComboModifier, bpmComboModifier);
 
     ui->levelSlider->installEventFilter(this);

@@ -165,7 +165,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="panSlider">
+         <widget class="Slider" name="panSlider">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
             <horstretch>0</horstretch>
@@ -236,7 +236,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="levelSlider">
+         <widget class="Slider" name="levelSlider">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
             <horstretch>0</horstretch>
@@ -478,6 +478,11 @@
    <extends>QWidget</extends>
    <header>intervalProgress/IntervalProgressDisplay.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Slider</class>
+   <extends>QSlider</extends>
+   <header>Slider.h</header>
   </customwidget>
  </customwidgets>
  <resources>
