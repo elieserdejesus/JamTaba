@@ -25,7 +25,8 @@ Looper::Looper()
       mainGain(1.0),
       loading(false),
       waitingToStop(false),
-      activated(true)
+      activated(true),
+      internalBuffer(2)
 {
     initialize();
 }
@@ -44,7 +45,8 @@ Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
       mainGain(1.0),
       loading(false),
       waitingToStop(false),
-      activated(true)
+      activated(true),
+      internalBuffer(2)
 {
     initialize();
 }
@@ -506,10 +508,10 @@ void Looper::mixToBuffer(SamplesBuffer &samples)
         return;
 
     uint samplesToProcess = qMin(samples.getFrameLenght(), intervalLenght - intervalPosition);
-    AudioPeak peakBeforeMix = samples.computePeak();
-    state->mixTo(samples, samplesToProcess);
 
-    AudioPeak peakAfterMix = samples.computePeak();
+    internalBuffer.setFrameLenght(samplesToProcess);
+    internalBuffer.zero();
+    state->mixTo(internalBuffer, samplesToProcess);
 
     // always update intervalPosition to keep the execution in sync when 'play' is pressed
     if (intervalLenght)
@@ -517,7 +519,9 @@ void Looper::mixToBuffer(SamplesBuffer &samples)
 
     processChangeRequests();
 
-    lastPeak = peakAfterMix - peakBeforeMix; // minus operator is overloaded in AudioPeak class
+    lastPeak = internalBuffer.computePeak();
+
+    samples.add(internalBuffer);
 }
 
 void Looper::processChangeRequests()
