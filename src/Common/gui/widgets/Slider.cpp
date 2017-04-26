@@ -1,16 +1,57 @@
 #include "Slider.h"
+#include "Utils.h"
 
 #include <QPainter>
 #include <QStyle>
 #include <QStyleOptionSlider>
-
-#include "Utils.h"
+#include <QToolTip>
 
 Slider::Slider(QWidget *parent)
     : QSlider(parent),
       sliderType(Slider::AudioSlider)
 {
     setMaximum(120);
+
+    connect(this, &Slider::valueChanged, this, &Slider::showToolTip);
+}
+
+void Slider::updateToolTipValue()
+{
+    if (sliderType == Slider::AudioSlider) {
+        double poweredGain = Utils::linearGainToPower(value()/100.0);
+        double faderDb = Utils::linearToDb(poweredGain);
+        int precision = faderDb > -10 ? 1 : 0;
+        QString text = QString::number(faderDb, 'f', precision) + " dB";
+        if (faderDb > 0)
+            text = "+" + text;
+
+        setToolTip(text);
+    }
+    else { // pan slider
+        if (value() == 0) {
+            setToolTip(tr("center"));
+        }
+        else {
+            int percent = qAbs(static_cast<float>(value())/maximum() * 100);
+            QString percentualText = QString::number(percent);
+            if (value() < 0)
+                setToolTip(percentualText + "% " + tr("L"));
+            else
+                setToolTip(percentualText + "% " + tr("R"));
+        }
+    }
+}
+
+void Slider::showToolTip()
+{
+    updateToolTipValue();
+
+    QPoint pos = QCursor::pos();
+    QString text = toolTip();
+    QString currentToolTipText= QToolTip::text();
+    if (currentToolTipText != text || !QToolTip::isVisible()) {
+        QToolTip::showText(pos, text, this);
+    }
 }
 
 void Slider::paintEvent(QPaintEvent *ev)

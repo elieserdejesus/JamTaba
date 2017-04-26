@@ -238,8 +238,6 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
         Qt::Alignment alignment = peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter;
         levelSlider->parentWidget()->layout()->setAlignment(levelSlider, alignment);
 
-        this->drawDbValue = !peakMetersOnly;
-
         updateGeometry();
 
         setProperty("peakMetersOnly", QVariant(peakMetersOnly));

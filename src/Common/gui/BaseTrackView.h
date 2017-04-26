@@ -79,7 +79,6 @@ protected:
 
     bool activated;
     bool narrowed;
-    bool drawDbValue;
 
     virtual void setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight);
 
@@ -124,11 +123,7 @@ private:
     static QMap<long, BaseTrackView *> trackViews;
     Audio::AudioPeak maxPeak;
 
-    void drawFaderDbValue(QPainter &p);
-
     void updateBoostButtonToolTip();
-
-    static const QColor DB_TEXT_COLOR;
 
 protected slots:
     virtual void toggleMuteStatus();

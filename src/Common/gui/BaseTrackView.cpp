@@ -14,7 +14,6 @@
 #include <QButtonGroup>
 #include <QEvent>
 
-const QColor BaseTrackView::DB_TEXT_COLOR = QColor(0, 0, 0, 120);
 const int BaseTrackView::FADER_HEIGHT = 12;
 
 const int BaseTrackView::NARROW_WIDTH = 85;
@@ -26,8 +25,7 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     mainController(mainController),
     trackID(trackID),
     activated(true),
-    narrowed(false),
-    drawDbValue(true)
+    narrowed(false)
 {
     createLayoutStructure();
     setupVerticalLayout();
@@ -392,22 +390,6 @@ void BaseTrackView::paintEvent(QPaintEvent *)
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-
-    if (drawDbValue)
-        drawFaderDbValue(p);
-}
-
-void BaseTrackView::drawFaderDbValue(QPainter &p)
-{
-    p.setPen(DB_TEXT_COLOR);
-
-    double poweredGain = Utils::linearGainToPower(levelSlider->value()/100.0);
-    double faderDb = Utils::linearToDb(poweredGain);
-    int precision = narrowed ? 0 : 1;
-    QString text = QString::number(faderDb, 'f', precision);
-
-    QPoint textPosition = getDbValuePosition(text, p.fontMetrics());
-    p.drawText(textPosition.x(), textPosition.y(), text);
 }
 
 QPoint BaseTrackView::getDbValuePosition(const QString &dbValueText,

@@ -22,7 +22,12 @@ protected:
     void paintEvent(QPaintEvent *ev) override;
     void mouseDoubleClickEvent(QMouseEvent *ev) override;
 
+private slots:
+    void showToolTip();
+    void updateToolTipValue();
+
 private:
+
     void drawMarker(QPainter &painter);
 
     qreal getMarkerPosition() const;
