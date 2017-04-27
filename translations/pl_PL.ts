@@ -331,11 +331,11 @@
     <name>LooperWindow</name>
     <message>
         <source>Load looper layers</source>
-        <translation>Wgraj pętle dla loopera</translation>
+        <translation>Wgraj warstwy dla loopera</translation>
     </message>
     <message>
         <source>Save looper layers</source>
-        <translation>Zapisz pętle Loopera</translation>
+        <translation>Zapisz warstwy Loopera</translation>
     </message>
     <message>
         <source>Reset</source>
@@ -355,19 +355,19 @@
     </message>
     <message>
         <source>Layers</source>
-        <translation>Pętle</translation>
+        <translation>Warstwy</translation>
     </message>
     <message>
         <source>Reset layers content</source>
-        <translation>Usuń pętle</translation>
+        <translation>Usuń warstwy</translation>
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation>Zresetuj ustawienia pętli</translation>
+        <translation>Zresetuj ustawienia warstw</translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation>Skasuj i zresetuj ustawienia pętli</translation>
+        <translation>Skasuj i zresetuj ustawienia warstw</translation>
     </message>
     <message>
         <source>wait (%1)</source>
@@ -375,7 +375,7 @@
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation>Zapisywanie pętli ...</translation>
+        <translation>Zapisywanie warstw lopera ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
@@ -403,19 +403,19 @@
     </message>
     <message>
         <source>Hear all layers while recording</source>
-        <translation>Odtwarzaj wszystkie pętle podczas nagrywania</translation>
+        <translation>Odtwarzaj wszystkie warstwy podczas nagrywania</translation>
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation>Dogrywa do aktualnej pętli dopóki nagrywanie jest aktywne</translation>
+        <translation>Dogrywa do aktualnej warstwy dopóki nagrywanie jest aktywne</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
-        <translation>Odtwarza pętle w kolejności losowej</translation>
+        <translation>Odtwarza warstwy w kolejności losowej</translation>
     </message>
     <message>
         <source>Play locked layers only</source>
-        <translation>Odtwarza tylko zablokowane pętle</translation>
+        <translation>Odtwarza tylko zablokowane warstwy</translation>
     </message>
     <message>
         <source>%1 BPM loops</source>
@@ -467,7 +467,7 @@
     </message>
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
-        <translation type="unfinished"></translation>
+        <translation>Czy chcesz nadpisać istniejący plik?</translation>
     </message>
 </context>
 <context>
@@ -1270,7 +1270,7 @@
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation>Zapisuj pliki pętli jako ...</translation>
+        <translation>Zapisuj pliki warstw lopera jako ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
@@ -1286,7 +1286,7 @@
     </message>
     <message>
         <source>Loops folder</source>
-        <translation>Folder dla pętli</translation>
+        <translation>Folder dla warstw lopera</translation>
     </message>
     <message>
         <source>Choosing loops folder ...</source>
