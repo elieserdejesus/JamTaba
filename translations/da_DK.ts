@@ -435,7 +435,7 @@
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation>Gennemse JamTaba-løkker...</translation>
+        <translation>Gennemse JamTaba loops...</translation>
     </message>
     <message>
         <source>Open loop file</source>
