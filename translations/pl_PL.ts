@@ -467,7 +467,7 @@
     </message>
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pętla plik już istnieje. Czy chcesz nadpisać?</translation>
     </message>
 </context>
 <context>
