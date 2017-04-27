@@ -923,11 +923,11 @@
     </message>
     <message>
         <source>%1 beats</source>
-        <translation>%1 slag</translation>
+        <translation>%1 beats</translation>
     </message>
     <message>
         <source>Pie</source>
-        <translation type="unfinished"></translation>
+        <translation>Tærte</translation>
     </message>
 </context>
 <context>
