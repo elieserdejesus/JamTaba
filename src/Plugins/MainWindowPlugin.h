@@ -39,23 +39,30 @@ protected slots:
 
 private slots:
 
-    void zoomIn();
-    void zoomOut();
+    void increaseWidth();
+    void increaseHeight();
+    void decreaseWidth();
+    void decreaseHeight();
 
     void updateWindowSizeMenu();
 
 private:
     bool firstChannelIsInitialized;
 
-    bool canDecreaseWindowSize() const;
-    bool canIncreaseWindowSize() const;
+    bool canIncreaseWindowWidth() const;
+    bool canIncreaseWindowHeight() const;
+    bool canDecreaseWindowWidth() const;
+    bool canDecreaseWindowHeight() const;
+
     QSize getZoomStepSize() const;
     QSize getMaxWindowSize() const;
 
     void initializeWindowSizeMenu();
 
-    QAction *increaseWindowSizeAction;
-    QAction *decreaseWindowSizeAction;
+    QAction *increaseWindowWidthAction;
+    QAction *increaseWindowHeightAction;
+    QAction *decreaseWindowWidthAction;
+    QAction *decreaseWindowHeightAction;
 
     static const QSize PLUGIN_WINDOW_MIN_SIZE;
 

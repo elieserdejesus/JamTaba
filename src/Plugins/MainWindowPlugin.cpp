@@ -10,14 +10,16 @@
 
 const QSize MainWindowPlugin::PLUGIN_WINDOW_MIN_SIZE = QSize(990, 600);
 
-const quint32 MainWindowPlugin::ZOOM_STEP = 100;
+const quint32 MainWindowPlugin::ZOOM_STEP = 70;
 
 
 MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
     firstChannelIsInitialized(false),
-    increaseWindowSizeAction(nullptr),
-    decreaseWindowSizeAction(nullptr)
+    increaseWindowWidthAction(nullptr),
+    decreaseWindowWidthAction(nullptr),
+    increaseWindowHeightAction(nullptr),
+    decreaseWindowHeightAction(nullptr)
 {
 
     setWindowIcon(QIcon(":/images/logo.png"));
@@ -44,7 +46,7 @@ void MainWindowPlugin::updateLocalInputChannelsGeometry()
 {
     MainWindow::updateLocalInputChannelsGeometry();
 
-    bool usingMinimumSize = !canDecreaseWindowSize();
+    bool usingMinimumSize = !canDecreaseWindowWidth();
     int localChannels = localGroupChannels.size();
     for(LocalTrackGroupView *localChannel : localGroupChannels) {
         if (usingMinimumSize && localChannels > 1)
@@ -56,24 +58,34 @@ void MainWindowPlugin::updateLocalInputChannelsGeometry()
 
 void MainWindowPlugin::initializeWindowSizeMenu()
 {
-
     QMenu *windowSizeMenu = new QMenu(tr("Window Size"));
-    increaseWindowSizeAction = windowSizeMenu->addAction(tr("Increase"), this, SLOT(zoomIn()));
-    decreaseWindowSizeAction = windowSizeMenu->addAction(tr("Decrease"), this, SLOT(zoomOut()));
+
+    QMenu *windowWidthMenu = new QMenu(tr("Width"));
+    increaseWindowWidthAction = windowWidthMenu->addAction(tr("Increase"), this, SLOT(increaseWidth()));
+    decreaseWindowWidthAction = windowWidthMenu->addAction(tr("Decrease"), this, SLOT(decreaseWidth()));
+
+    QMenu *windowHeightMenu = new QMenu(tr("Height"));
+    increaseWindowHeightAction = windowHeightMenu->addAction(tr("Increase"), this, SLOT(increaseHeight()));
+    decreaseWindowHeightAction = windowHeightMenu->addAction(tr("Decrease"), this, SLOT(decreaseHeight()));
 
     connect(windowSizeMenu, &QMenu::aboutToShow, this, &MainWindowPlugin::updateWindowSizeMenu);
 
     ui.menuView->addSeparator();
     ui.menuView->addMenu(windowSizeMenu);
+
+    windowSizeMenu->addMenu(windowWidthMenu);
+    windowSizeMenu->addMenu(windowHeightMenu);
 }
 
 void MainWindowPlugin::updateWindowSizeMenu()
 {
-    if (!increaseWindowSizeAction || !decreaseWindowSizeAction)
+    if (!increaseWindowWidthAction || !decreaseWindowWidthAction || !increaseWindowHeightAction || !decreaseWindowHeightAction)
         return;
 
-    increaseWindowSizeAction->setEnabled(canIncreaseWindowSize());
-    decreaseWindowSizeAction->setEnabled(canDecreaseWindowSize());
+    increaseWindowWidthAction->setEnabled(canIncreaseWindowWidth());
+    decreaseWindowWidthAction->setEnabled(canDecreaseWindowWidth());
+    increaseWindowHeightAction->setEnabled(canIncreaseWindowHeight());
+    decreaseWindowHeightAction->setEnabled(canDecreaseWindowHeight());
 }
 
 NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const Login::RoomInfo &roomInfo,
@@ -112,7 +124,9 @@ PreferencesDialog *MainWindowPlugin::createPreferencesDialog()
 
 QSize MainWindowPlugin::getZoomStepSize() const
 {
-    float scaleFactor = (float)width()/height();
+    QDesktopWidget desktop;
+    QSize screenSize = desktop.availableGeometry().size();
+    float scaleFactor = static_cast<float>(screenSize.width())/screenSize.height();
 
     const int widthStep = ZOOM_STEP * scaleFactor;
     const int heightStep = ZOOM_STEP;
@@ -123,76 +137,105 @@ QSize MainWindowPlugin::getZoomStepSize() const
 QSize MainWindowPlugin::getMaxWindowSize() const
 {
     QDesktopWidget desktop;
-    QSize screenSize = desktop.availableGeometry().size();
-
-    QSize stepSize = getZoomStepSize();
-
-    const int maxWidth = screenSize.width() - stepSize.width();
-    const int maxHeight = screenSize.height() - stepSize.height();
-
-    return QSize(maxWidth, maxHeight);
+    return desktop.availableGeometry().size();
 }
 
-bool MainWindowPlugin::canIncreaseWindowSize() const
+bool MainWindowPlugin::canIncreaseWindowHeight() const
 {
-    QSize stepSize = getZoomStepSize();
     QSize maxWindowsSize = getMaxWindowSize();
-
-    const int newWidth = width() + stepSize.width();
-    const int newHeight = height() + stepSize.height();
-    const int maxWidth = maxWindowsSize.width();
-    const int maxHeight= maxWindowsSize.height();
-
-    return newWidth <= maxWidth && newHeight <= maxHeight;
+    return height() < maxWindowsSize.height();
 }
 
-bool MainWindowPlugin::canDecreaseWindowSize() const
+bool MainWindowPlugin::canIncreaseWindowWidth() const
 {
-    QSize stepSize = getZoomStepSize();
+    QSize maxWindowsSize = getMaxWindowSize();
+    return width() < maxWindowsSize.width();
+}
+
+bool MainWindowPlugin::canDecreaseWindowWidth() const
+{
     QSize minWindowsSize = PLUGIN_WINDOW_MIN_SIZE;
-
-    const int newWidth = width() - stepSize.width();
-    const int newHeight = height() - stepSize.height();
-    const int minWidth = minWindowsSize.width();
-    const int minHeight= minWindowsSize.height();
-
-    return newWidth >= minWidth && newHeight >= minHeight;
+    return width() > minWindowsSize.width();
 }
 
-void MainWindowPlugin::zoomIn()
+bool MainWindowPlugin::canDecreaseWindowHeight() const
+{
+    QSize minWindowsSize = PLUGIN_WINDOW_MIN_SIZE;
+    return height() > minWindowsSize.height();
+}
+
+void MainWindowPlugin::increaseHeight()
 {
     if (isMaximized() || isFullScreen())
         return;
 
-    if (!canIncreaseWindowSize())
+    if (!canIncreaseWindowHeight())
         return;
 
     QSize stepSize = getZoomStepSize();
-    const int newWidth = width() + stepSize.width();
-    const int newHeight = height() + stepSize.height();
-
-    resize(newWidth, newHeight);
-
-    getMainController()->resizePluginEditor(newWidth, newHeight);
-
-}
-
-void MainWindowPlugin::zoomOut()
-{
-    if (isMaximized() || isFullScreen())
-        return;
-
-    if (!canDecreaseWindowSize())
-        return;
-
-    QSize stepSize = getZoomStepSize();
-    const int newWidth = width() - stepSize.width();
-    const int newHeight = height() - stepSize.height();
+    QSize maxSize = getMaxWindowSize();
+    const int newWidth = width(); // changing just the height
+    const int newHeight = qMin(height() + stepSize.height(), maxSize.height());
 
     resize(newWidth, newHeight);
 
     getMainController()->resizePluginEditor(newWidth, newHeight);
 }
+
+void MainWindowPlugin::increaseWidth()
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    if (!canIncreaseWindowWidth())
+        return;
+
+    QSize stepSize = getZoomStepSize();
+    QSize maxSize = getMaxWindowSize();
+    const int newWidth = qMin(width() + stepSize.width(), maxSize.width());
+    const int newHeight = height(); // changing just the width
+
+    resize(newWidth, newHeight);
+
+    getMainController()->resizePluginEditor(newWidth, newHeight);
+}
+
+void MainWindowPlugin::decreaseHeight()
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    if (!canDecreaseWindowHeight())
+        return;
+
+    QSize stepSize = getZoomStepSize();
+    QSize minSize = PLUGIN_WINDOW_MIN_SIZE;
+    const int newWidth = width();
+    const int newHeight = qMax(height() - stepSize.height(), minSize.height());
+
+    resize(newWidth, newHeight);
+
+    getMainController()->resizePluginEditor(newWidth, newHeight);
+}
+
+void MainWindowPlugin::decreaseWidth()
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    if (!canDecreaseWindowWidth())
+        return;
+
+    QSize stepSize = getZoomStepSize();
+    QSize minSize = PLUGIN_WINDOW_MIN_SIZE;
+    const int newWidth = qMax(width() - stepSize.width(), minSize.width());
+    const int newHeight = height(); // keep same height;
+
+    resize(newWidth, newHeight);
+
+    getMainController()->resizePluginEditor(newWidth, newHeight);
+}
+
 
 void MainWindowPlugin::resizeEvent(QResizeEvent *ev)
 {
