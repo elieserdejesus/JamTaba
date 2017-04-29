@@ -49,5 +49,7 @@ VST_SDK/
 GeneratedFiles/
 
 # Xcode files
+
 *.xcbkptlist
 *.xcuserstate
+PROJECTS/AUPlugin/JamTaba.xcodeproj/xcshareddata/
