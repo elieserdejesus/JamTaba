@@ -386,7 +386,6 @@ void LocalInputNode::stopMidiNoteLearn()
 void LocalInputNode::reset()
 {
     AudioNode::reset();
-    setToNoInput();
 
     stereoInverted = false;
 
