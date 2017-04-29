@@ -86,6 +86,7 @@
         <file alias="qtbase_da.qm">../../translations/Qt/qtbase_da.qm</file>
     </qresource>
     <qresource prefix="/images">
+        <file>logo.png</file>
         <file>loop.png</file>
         <file>rec.png</file>
         <file>play.png</file>

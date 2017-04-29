@@ -652,6 +652,7 @@ void NinjamRoomWindow::showServerLicence()
     QString licence = mainController->getNinjamService()->getCurrentServerLicence();
     QMessageBox *msgBox = new QMessageBox();
 
+    msgBox->setWindowIcon(mainWindow->windowIcon());
     msgBox->setTextFormat(Qt::RichText);
     msgBox->setText(licence
               .replace("<", "&lt;")

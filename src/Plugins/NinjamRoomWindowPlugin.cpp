@@ -69,6 +69,7 @@ void NinjamRoomWindowPlugin::setHostSyncState(bool syncWithHost)
 void NinjamRoomWindowPlugin::showMessageBox(const QString &title, const QString &msg)
 {
     QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->setWindowIcon(mainWindow->windowIcon());
     msgBox->setWindowTitle(title);
     msgBox->setText(msg);
     msgBox->setAttribute(Qt::WA_DeleteOnClose);

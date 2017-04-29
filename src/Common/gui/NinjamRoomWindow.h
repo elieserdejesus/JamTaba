@@ -67,13 +67,13 @@ public:
 
 protected:
     Ui::NinjamRoomWindow *ui;
+    MainWindow *mainWindow;
     Controller::MainController *mainController;
     NinjamPanel *ninjamPanel;// panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
 
     void changeEvent(QEvent *) override;
 
 private:
-    MainWindow *mainWindow;
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
 

@@ -13,10 +13,6 @@
   <property name="windowTitle">
    <string notr="true">Jamtaba</string>
   </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>:/images/jt_0001.png</normaloff>:/images/jt_0001.png</iconset>
-  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <property name="sizeConstraint">
@@ -682,6 +678,11 @@
    <container>1</container>
   </customwidget>
   <customwidget>
+   <class>Slider</class>
+   <extends>QSlider</extends>
+   <header>Slider.h</header>
+  </customwidget>
+  <customwidget>
    <class>CustomTabWidget</class>
    <extends>QTabWidget</extends>
    <header>CustomTabWidget.h</header>
@@ -691,11 +692,6 @@
    <class>UserNameLineEdit</class>
    <extends>QLineEdit</extends>
    <header>UserNameLineEdit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Slider</class>
-   <extends>QSlider</extends>
-   <header>Slider.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -8,6 +8,8 @@ IntervalProgressWindow::IntervalProgressWindow(QWidget *parent, IntervalProgress
     :QDialog(parent)
 {
 
+    setWindowIcon(QIcon(":/images/logo.png"));
+
     progressDisplay = new IntervalProgressDisplay(this);
     progressDisplay->setObjectName(QStringLiteral("intervalPanel"));
     progressDisplay->setBeatsPerInterval(beatsPerInterval);

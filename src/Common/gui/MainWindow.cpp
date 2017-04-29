@@ -384,6 +384,7 @@ void MainWindow::showMessageBox(const QString &title, const QString &text, QMess
     messageBox->setWindowTitle(title);
     messageBox->setText(text);
     messageBox->setIcon(icon);
+    messageBox->setWindowIcon(this->windowIcon());
     messageBox->setAttribute(Qt::WA_DeleteOnClose, true);
     messageBox->show();
     messageBox->exec();
@@ -1483,6 +1484,7 @@ void MainWindow::showJamtabaCurrentVersion()
     QString title = tr("About Jamtaba");
     QString text = tr("Jamtaba version is %1").arg(QApplication::applicationVersion());
     QMessageBox *box = new QMessageBox();
+    box->setWindowIcon(this->windowIcon());
     box->setWindowTitle(title);
     box->setText(text);
     box->deleteLater();

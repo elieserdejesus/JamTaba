@@ -19,6 +19,9 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     increaseWindowSizeAction(nullptr),
     decreaseWindowSizeAction(nullptr)
 {
+
+    setWindowIcon(QIcon(":/images/logo.png"));
+
     ui.actionVstPreferences->setVisible(false);
     ui.actionAudioPreferences->setVisible(false);
     ui.actionMidiPreferences->setVisible(false);
