@@ -77,14 +77,13 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
         nativeWidget->setAttribute(Qt::WA_ShowWithoutActivating);
         nativeWidget->setAttribute(Qt::WA_NativeWindow);
         
-        nativeWidget->nativeView();
-        
         auPlugin->nativeView = nativeWidget;
         
         QVBoxLayout *layout = new QVBoxLayout(); // I tried put this layout code inside JamTabaAUPlugin, but doesn«t work :(
         layout->setContentsMargins(0, 0, 0, 0);
         layout->addWidget(auPlugin->mainWindow);
         nativeWidget->setLayout(layout);
+        nativeWidget->show();
     }
     
     NSView *nativeWidgetView = auPlugin->nativeView->nativeView();
@@ -93,12 +92,14 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     NSRect frame;
     frame.origin.x = 0;
     frame.origin.y = 0;
-    frame.size.width  = auPlugin->mainWindow->width();
-    frame.size.height = auPlugin->mainWindow->height();
+    QSize lastSize = auPlugin->getController()->getSettings().getLastWindowSize();
+    QSize windowSize = auPlugin->mainWindow->size();
+    frame.size.width  = lastSize.width() > windowSize.width() ? lastSize.width() : windowSize.width();
+    frame.size.height = lastSize.height() > windowSize.height() ? lastSize.height() :windowSize.height();
     [nativeWidgetView setFrame: frame];
     [uiFreshlyLoadedView setFrame: frame];
-    
-    auPlugin->nativeView->show();
+
+    //auPlugin->nativeView->show();
     QTimer::singleShot(500, auPlugin->mainWindow, SLOT(update()));// necessary to solve a bug in Logic when the custom view is hidded (using generic view) and showed
     //auPlugin->mainWindow->update();
     //[uiFreshlyLoadedView setNeedsDisplay:YES];
