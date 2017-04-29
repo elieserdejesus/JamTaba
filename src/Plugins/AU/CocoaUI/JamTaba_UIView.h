@@ -3,6 +3,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 #include "JamTabaAUPlugin.h"
+#include "MainWindow.h"
 
 /************************************************************************************************************/
 /* NOTE: It is important to rename ALL ui classes when using the XCode Audio Unit with Cocoa View template	*/
@@ -17,11 +18,12 @@
 {	
     // Other Members
     AudioUnit audioUnit;
+    MainWindow *mainWindow;
 
 }
 
 
 - (void)setAudioUnit:(AudioUnit)unit;
-
+- (void)setMainWindow:(MainWindow *)mainWindow;
 
 @end

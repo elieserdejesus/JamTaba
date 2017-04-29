@@ -47,4 +47,7 @@ Makefile*
 libs/
 VST_SDK/
 GeneratedFiles/
-JamTaba.xcodeproj/
+
+# Xcode files
+*.xcbkptlist
+*.xcuserstate

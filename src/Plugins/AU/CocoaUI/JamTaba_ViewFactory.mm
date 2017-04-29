@@ -103,7 +103,9 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     QTimer::singleShot(500, auPlugin->mainWindow, SLOT(update()));// necessary to solve a bug in Logic when the custom view is hidded (using generic view) and showed
     //auPlugin->mainWindow->update();
     //[uiFreshlyLoadedView setNeedsDisplay:YES];
+    
     [uiFreshlyLoadedView setAudioUnit:inAU];
+    [uiFreshlyLoadedView setMainWindow:auPlugin->mainWindow];
     
     NSView *returnView = uiFreshlyLoadedView;
     

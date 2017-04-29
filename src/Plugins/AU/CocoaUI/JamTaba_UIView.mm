@@ -4,11 +4,19 @@
 
 -(id)init
 {
+    mainWindow = nullptr;
     return [super init];
 }
 
 - (void)dealloc {
 
+    if (mainWindow) {
+        // ensuring json config file will be saved when AU view is closed
+        auto controller = mainWindow->getMainController();
+        controller->saveLastUserSettings(mainWindow->getInputsSettings());
+        mainWindow = nullptr;
+    }
+    
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
     [super dealloc];
 }
@@ -16,6 +24,10 @@
 
 - (void)setAudioUnit:(AudioUnit)unit {
     audioUnit = unit;
+}
+
+- (void)setMainWindow:(MainWindow *)mainWindow {
+    self->mainWindow = mainWindow;
 }
 
 - (BOOL) acceptsFirstResponder {

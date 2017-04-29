@@ -38,7 +38,7 @@ JamTabaAUPlugin::JamTabaAUPlugin(AudioUnit audioUnit)
 
 JamTabaAUPlugin::~JamTabaAUPlugin()
 {
-    finalize(); // not called at moment
+    finalize(); 
 }
 
 void JamTabaAUPlugin::initialize()
