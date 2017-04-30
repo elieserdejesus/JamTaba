@@ -24,19 +24,17 @@ ChatPanel #chatText                     /* chat input field */
     border: 1px solid #919191;
 }
 
-
-
-
 /* chat messages */
 ChatMessagePanel
 {
     border: 1px solid rgb(0, 0, 0, 80);
     border-radius: 2px;
+    padding: 3px;
 }
 
-ChatMessagePanel #labelTimeStamp
+ChatMessagePanel #labelMessage
 {
-    margin: 2px;
+    margin-top: 0px;
 }
 
 ChatMessagePanel #translateButton,
@@ -44,8 +42,6 @@ ChatMessagePanel #blockButton
 {
     border: 1px solid rgb(0, 0, 0, 80);
     border-radius: 2px;
-    margin-top: 1px;
-    margin-bottom: 1px;
     max-width: 8px;
     max-height: 6px;
 }
