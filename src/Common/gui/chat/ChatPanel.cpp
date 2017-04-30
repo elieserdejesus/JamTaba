@@ -24,6 +24,15 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
 
     connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
 
+    connect(ui->chatText, &QLineEdit::returnPressed, [=](){
+        //auto scroll when user is typing new messages
+        int scrollValue = ui->chatScroll->verticalScrollBar()->value();
+        int scrollMaximum = ui->chatScroll->verticalScrollBar()->maximum();
+        if (scrollValue < scrollMaximum) { // need auto scroll?
+            ui->chatScroll->verticalScrollBar()->setValue(scrollMaximum);
+        }
+    });
+
     if (textEditorModifier) {
         bool finishEditorPressingReturnKey = false;
         textEditorModifier->modify(ui->chatText, finishEditorPressingReturnKey);
