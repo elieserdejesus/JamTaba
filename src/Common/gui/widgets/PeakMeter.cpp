@@ -441,6 +441,9 @@ void AudioMeter::setPeak(float leftPeak, float rightPeak, float leftRms, float r
 
     float peaks[2] = {leftPeak, rightPeak};
     for (int i = 0; i < 2; ++i) {
+        if (!stereo) // fixing #858
+            peaks[0] = peaks[1] = qMax(leftPeak, rightPeak);
+
         if (peaks[i] > currentPeak[i]) {
             currentPeak[i] = peaks[i];
             if (peaks[i] > maxPeak[i]) {
@@ -452,6 +455,8 @@ void AudioMeter::setPeak(float leftPeak, float rightPeak, float leftRms, float r
 
     float rms[2] = {leftRms, rightRms};
     for (int i = 0; i < 2; ++i) {
+        if (!stereo) // fixing #858
+            rms[0] = rms[1] = qMax(leftRms, rightRms);
         if (rms[i] > currentRms[i])
             currentRms[i] = rms[i];
     }
