@@ -257,8 +257,14 @@ QMenu
 AudioMeter
 {
     /* changing Audio Peak meter custom CSS properties */
-    qproperty-rmsColor: rgb(120, 120, 120);
+    qproperty-rmsColor: rgb(150, 150, 150);
     qproperty-peakStartColor: rgb(0, 180, 0);
     qproperty-peakEndColor: rgb(255, 50, 50);
+    qproperty-maxPeakColor: rgb(150, 150, 150);
+}
+
+AudioMeter#masterMeter
+{
     qproperty-maxPeakColor: rgb(120, 120, 120);
+    qproperty-rmsColor: rgb(120, 120, 120);
 }
