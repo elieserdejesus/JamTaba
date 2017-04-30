@@ -3,6 +3,7 @@
 #include <QHBoxLayout>
 #include <QtGlobal>
 #include <QDialog>
+#include <QIcon>
 
 IntervalProgressWindow::IntervalProgressWindow(QWidget *parent, IntervalProgressDisplay::PaintShape paintShape, int beatsPerInterval, int beatsPerAccent, bool showingAccents)
     :QDialog(parent)
