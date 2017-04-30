@@ -22,7 +22,7 @@ int ChatTextEditor::getMinimumHeight() const
 QSize ChatTextEditor::sizeHint() const
 {
     QSize minimumSize = QTextBrowser::sizeHint();
-    int h = getMinimumHeight() + 10;
+    int h = getMinimumHeight();
     int w = minimumSize.width();
     return QSize(w, h);
 }

@@ -31,19 +31,16 @@
 ------------------------------------------ */
 ChatMessagePanel
 {
-    padding: 3px;
-}
-
-ChatMessagePanel #labelTimeStamp /* chat message timestamp */
-{
-    font-size: 9px;
-    font-style: italic;
+    padding: 0px;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 ChatMessagePanel #labelUserName /* chat message author */
 {
     font-size: 10px;
     font-weight: bold;
+    margin: 0px;
 }
 
 ChatMessagePanel #translateButton,
@@ -67,4 +64,7 @@ ChatMessagePanel #labelMessage
     background-color: transparent;
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
+    padding: 0px;
+    margin: 0px;
+    margin-top: -6px;
 }

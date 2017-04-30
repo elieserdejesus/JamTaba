@@ -58,8 +58,6 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
 
     setMessageLabelText(msg);
 
-    ui->labelTimeStamp->setText(QTime::currentTime().toString("hh:mm:ss"));
-
     ui->translateButton->setVisible(showTranslationButton);
 
     ui->blockButton->setVisible(showBlockButton);

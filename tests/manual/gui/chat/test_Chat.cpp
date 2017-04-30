@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     UsersColorsPool colorsPool;
     QStringList botNames("ninjamers.servebeer.com");
 
-    ChatPanel chatPanel(botNames, &colorsPool);
+    ChatPanel chatPanel(botNames, &colorsPool, nullptr);
     chatPanel.setObjectName(QStringLiteral("ChatPanel"));
 
     chatPanel.addMessage("UserName", "message", true);
