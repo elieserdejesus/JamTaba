@@ -62,6 +62,8 @@ private:
 
     static const int MAX_MESSAGES = 50;
 
+    int previousVerticalScrollBarMaxValue;
+
     QString autoTranslationLanguage;
 
     void createVoteButton(const QString &voteType, quint32 value, quint32 expireTime);

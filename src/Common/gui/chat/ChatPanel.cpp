@@ -38,6 +38,8 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
 
     // disable blue border when QLineEdit has focus in mac
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
+
+    previousVerticalScrollBarMaxValue = ui->chatScroll->verticalScrollBar()->value();
 }
 
 void ChatPanel::changeEvent(QEvent *e)
@@ -111,8 +113,16 @@ void ChatPanel::confirmChordProgression()
 void ChatPanel::autoScroll(int min, int max)
 {
     Q_UNUSED(min)
+
+
     // used to auto scroll down to keep the last added message visible
-    ui->chatScroll->verticalScrollBar()->setValue(max + 10);
+
+    int currentValue = ui->chatScroll->verticalScrollBar()->value();
+    if (currentValue >= previousVerticalScrollBarMaxValue) { // avoid auto scroll if the vertical scroll bar is not in max value position (use is scrolling up)
+        ui->chatScroll->verticalScrollBar()->setValue(max + 10);
+    }
+
+    previousVerticalScrollBarMaxValue = max;
 }
 
 void ChatPanel::sendNewMessage()
