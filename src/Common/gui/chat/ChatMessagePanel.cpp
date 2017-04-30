@@ -49,7 +49,7 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
                                   bool showTranslationButton, bool showBlockButton)
 {
     if (!userName.isEmpty() && !userName.isNull()) {
-        ui->labelUserName->setText(userName + ":");
+        ui->labelUserName->setText(userName);
     } else {
         ui->labelUserName->setVisible(false);
     }
