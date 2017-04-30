@@ -309,10 +309,21 @@ LooperWindow #buttonRec[blinking="true"]:checked
     background-color: rgb(180, 207, 250);
 }
 
+#widget QPushButton,
+#widget BlinkableButton
+{
+    border: 1px solid rgba(0, 0, 0, 160);
+}
+
+#widget QPushButton:disabled
+{
+    border: 1px solid rgba(0, 0, 0, 40);
+}
+
 #widgetBottom QComboBox                         /* the colors inside the combo box*/
 {
     border-radius: 6px;
-    border: 1px solid rgba(0, 0, 0, 90);
+    border: 1px solid rgba(0, 0, 0, 160);
     padding: 1px 3px 1px 3px;
     background-color: rgb(180, 207, 250);
     selection-background-color: rgb(51, 153, 255);
@@ -322,7 +333,6 @@ LooperWindow #buttonRec[blinking="true"]:checked
 #widgetBottom QComboBox:focus
 {
     background-color: rgb(51, 153, 255);
-    border-color: rgba(0, 0, 0, 160);
     color: white;
 }
 
