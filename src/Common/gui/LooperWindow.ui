@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>782</width>
+    <width>801</width>
     <height>500</height>
    </rect>
   </property>
@@ -457,7 +457,6 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>
