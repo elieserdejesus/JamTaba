@@ -179,6 +179,7 @@ private:
             if (checkBox) {
                 OptionType option = qvariant_cast<OptionType>(checkBox->property("option"));
                 checkBox->setText(getOptionName(option));
+                checkBox->setToolTip(getOptionToolTip(option));
             }
         }
     }
