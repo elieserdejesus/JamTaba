@@ -5,15 +5,15 @@
     <name>Audio::Looper</name>
     <message>
         <source>Sequence</source>
-        <translation type="unfinished">シーケンス</translation>
+        <translation>シーケンス</translation>
     </message>
     <message>
         <source>All Layers</source>
-        <translation type="unfinished">すべてのレイヤー</translation>
+        <translation>すべてのレイヤー</translation>
     </message>
     <message>
         <source>Selected Layer</source>
-        <translation type="unfinished">選択されたレイヤー</translation>
+        <translation>選択されたレイヤー</translation>
     </message>
 </context>
 <context>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>Boost</source>
-        <translation type="unfinished">ブースト</translation>
+        <translation>ブースト</translation>
     </message>
 </context>
 <context>
@@ -286,7 +286,7 @@
     </message>
     <message>
         <source>Looper (Available when jamming)</source>
-        <translation type="unfinished">ルーパー（ジャミング時に利用可能）</translation>
+        <translation>ルーパー（ジャミング時に利用可能）</translation>
     </message>
 </context>
 <context>
@@ -336,131 +336,131 @@
     <name>LooperWindow</name>
     <message>
         <source>Load looper layers</source>
-        <translation type="unfinished">ロードループ層</translation>
+        <translation>ルーパーレイヤーを読込</translation>
     </message>
     <message>
         <source>Save looper layers</source>
-        <translation type="unfinished">ルーパーレイヤーを保存</translation>
+        <translation>ルーパーレイヤーを保存</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished">リセット</translation>
+        <translation>リセット</translation>
     </message>
     <message>
         <source>Mode</source>
-        <translation type="unfinished">モード</translation>
+        <translation>モード</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">記録</translation>
+        <translation>記録</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation type="unfinished">プレー</translation>
+        <translation>プレー</translation>
     </message>
     <message>
         <source>Layers</source>
-        <translation type="unfinished">レイヤー</translation>
+        <translation>レイヤー</translation>
     </message>
     <message>
         <source>Reset layers content</source>
-        <translation type="unfinished">レイヤのコンテンツをリセットする</translation>
+        <translation>レイヤのコンテンツをリセットする</translation>
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation type="unfinished">レイヤーコントロールをリセットする</translation>
+        <translation>レイヤーコントロールをリセットする</translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation type="unfinished">レイヤのコンテンツとコントロールをリセットする</translation>
+        <translation>レイヤのコンテンツとコントロールをリセットする</translation>
     </message>
     <message>
         <source>wait (%1)</source>
-        <translation type="unfinished">待機（%1）</translation>
+        <translation>待機（%1）</translation>
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation type="unfinished">ルーパー層を保存する ...</translation>
+        <translation>ルーパー層を保存する ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation type="unfinished">ループファイル名:</translation>
+        <translation>ループファイル名:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation type="unfinished">すべての/ロックされたレイヤーを聞く</translation>
+        <translation>すべての/ロックされたレイヤーを聞く</translation>
     </message>
     <message>
         <source>Overdub</source>
-        <translation type="unfinished">オーバーダビング</translation>
+        <translation>オーバーダビング</translation>
     </message>
     <message>
         <source>Random</source>
-        <translation type="unfinished">ランダム</translation>
+        <translation>ランダム</translation>
     </message>
     <message>
         <source>Locked</source>
-        <translation type="unfinished">ロックされた</translation>
+        <translation>ロックされた</translation>
     </message>
     <message>
         <source>Non empty</source>
-        <translation type="unfinished">空でない</translation>
+        <translation>空でない</translation>
     </message>
     <message>
         <source>Hear all layers while recording</source>
-        <translation type="unfinished">録音中にすべてのレイヤーを聞く</translation>
+        <translation>録音中にすべてのレイヤーを聞く</translation>
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation type="unfinished">RECボタンが押されるまで現在のレイヤをオーバーダビングする</translation>
+        <translation>RECボタンが押されるまで現在のレイヤをオーバーダビングする</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
-        <translation type="unfinished">再生中にレイヤーをランダム化する</translation>
+        <translation>再生中にレイヤーをランダム化する</translation>
     </message>
     <message>
         <source>Play locked layers only</source>
-        <translation type="unfinished">ロックされたレイヤーのみを再生する</translation>
+        <translation>ロックされたレイヤーのみを再生する</translation>
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation type="unfinished">%1 BPMループ</translation>
+        <translation>%1 BPMループ</translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
-        <translation type="unfinished">%1 BPMのループなし</translation>
+        <translation>%1 BPMのループなし</translation>
     </message>
     <message>
         <source>Import audio files ...</source>
-        <translation type="unfinished">オーディオファイルのインポート ...</translation>
+        <translation>オーディオファイルのインポート ...</translation>
     </message>
     <message>
         <source>Importing audio files ...</source>
-        <translation type="unfinished">オーディオファイルのインポート中 ...</translation>
+        <translation>オーディオファイルのインポート中 ...</translation>
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation type="unfinished">JamTabaループをブラウズ...</translation>
+        <translation>JamTabaループをブラウズ...</translation>
     </message>
     <message>
         <source>Open loop file</source>
-        <translation type="unfinished">ループファイルを開く</translation>
+        <translation>ループファイルを開く</translation>
     </message>
     <message>
         <source>Error loading audio file!</source>
-        <translation type="unfinished">オーディオファイルの読み込み中にエラーが発生!</translation>
+        <translation>オーディオファイルの読み込み中にエラーが発生!</translation>
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
-        <translation type="unfinished">ファイル &apos;&apos;%1&apos;を読み込めません</translation>
+        <translation>ファイル &apos;&apos;%1&apos;を読み込めません</translation>
     </message>
     <message>
         <source>Audio files</source>
-        <translation type="unfinished">オーディオファイル</translation>
+        <translation>オーディオファイル</translation>
     </message>
     <message>
         <source>JamTaba Loop Files</source>
-        <translation type="unfinished">JamTabaループファイル</translation>
+        <translation>JamTabaループファイル</translation>
     </message>
     <message>
         <source>L</source>
@@ -631,7 +631,7 @@
     </message>
     <message>
         <source>Looper ...</source>
-        <translation type="unfinished">ルーパー ...</translation>
+        <translation>ルーパー ...</translation>
     </message>
 </context>
 <context>
@@ -753,7 +753,7 @@
     </message>
     <message>
         <source>Channel %1</source>
-        <translation type="unfinished">チャンネル %1</translation>
+        <translation>チャンネル %1</translation>
     </message>
 </context>
 <context>
@@ -1270,35 +1270,35 @@
     </message>
     <message>
         <source>Multi Track Recording</source>
-        <translation type="unfinished">マルチトラック録音</translation>
+        <translation>マルチトラック録音</translation>
     </message>
     <message>
         <source>Looper</source>
-        <translation type="unfinished">ルーパー</translation>
+        <translation>ルーパー</translation>
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation type="unfinished">ループレイヤを次のように保存します ...</translation>
+        <translation>ループレイヤを次のように保存します ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
-        <translation type="unfinished">Oggファイル（ディスク容量を少なくする）</translation>
+        <translation>Oggファイル（ディスク容量を少なくする）</translation>
     </message>
     <message>
         <source>Wave files</source>
-        <translation type="unfinished">Wavファイル</translation>
+        <translation>Wavファイル</translation>
     </message>
     <message>
         <source>Bit depth:</source>
-        <translation type="unfinished">ビット深度:</translation>
+        <translation>ビット深度:</translation>
     </message>
     <message>
         <source>Loops folder</source>
-        <translation type="unfinished">ループフォルダ</translation>
+        <translation>ループフォルダ</translation>
     </message>
     <message>
         <source>Choosing loops folder ...</source>
-        <translation type="unfinished">ループフォルダの選択 ...</translation>
+        <translation>ループフォルダの選択 ...</translation>
     </message>
 </context>
 <context>
