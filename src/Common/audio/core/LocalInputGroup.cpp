@@ -32,9 +32,16 @@ LocalInputNode *LocalInputGroup::getInputNode(quint8 index) const
 
 void LocalInputGroup::mixGroupedInputs(Audio::SamplesBuffer &out)
 {
-    foreach (Audio::LocalInputNode *inputTrack, groupedInputs) {
-        if (!inputTrack->isMuted())
-            out.add(inputTrack->getLastBuffer());
+    for (auto *inputTrack : groupedInputs) {
+        if (!inputTrack->isMuted()) {
+            auto lastBuffer = inputTrack->getLastBuffer();
+            if (lastBuffer.getChannels() == out.getChannels()) {
+                out.add(lastBuffer);
+            }
+            else {
+                out.add(inputTrack->getLastBufferMixedToMono());
+            }
+        }
     }
 }
 

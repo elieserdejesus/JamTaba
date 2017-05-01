@@ -59,6 +59,7 @@ public:
     int getChanneGrouplIndex() const;
 
     const Audio::SamplesBuffer &getLastBuffer() const;
+    SamplesBuffer getLastBufferMixedToMono() const;
 
     void setProcessorsSampleRate(int newSampleRate);
 

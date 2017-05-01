@@ -160,6 +160,22 @@ void LocalInputNode::closeProcessorsWindows()
     }
 }
 
+SamplesBuffer LocalInputNode::getLastBufferMixedToMono() const
+{
+    if (internalOutputBuffer.isMono())
+        return internalOutputBuffer;
+
+    const uint samples = internalOutputBuffer.getFrameLenght();
+    SamplesBuffer lastBuffer(1, samples);
+    float *samplesArray = lastBuffer.getSamplesArray(0);
+    float *internalArrays[2] = {internalOutputBuffer.getSamplesArray(0), internalOutputBuffer.getSamplesArray(1)};
+    for (uint s = 0; s < samples; ++s) {
+        samplesArray[s] = internalArrays[0][s] * leftGain + internalArrays[1][s] * rightGain;
+    }
+
+    return lastBuffer;
+}
+
 void LocalInputNode::setAudioInputSelection(int firstChannelIndex, int channelCount)
 {
     audioInputRange = ChannelRange(firstChannelIndex, channelCount);

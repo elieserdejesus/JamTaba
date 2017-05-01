@@ -105,6 +105,12 @@ protected:
 
     mutable Audio::AudioPeak lastPeak;
     QMutex mutex; // used to protected connections manipulation because nodes can be added or removed by different threads
+
+    // pan
+    float pan;
+    float leftGain;
+    float rightGain;
+
 private:
     AudioNode(const AudioNode &other);
     AudioNode &operator=(const AudioNode &other);
@@ -116,11 +122,6 @@ private:
 
     float gain;
     float boost;
-
-    // pan
-    float pan;
-    float leftGain;
-    float rightGain;
 
     static const double ROOT_2_OVER_2;
     static const double PI_OVER_2;
