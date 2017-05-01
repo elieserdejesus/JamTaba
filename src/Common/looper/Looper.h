@@ -186,7 +186,6 @@ private:
     void setCurrentLayer(quint8 newLayer);
 
     AudioPeak lastPeak;
-    SamplesBuffer internalBuffer;
 
     QSharedPointer<LooperState> state;
 
