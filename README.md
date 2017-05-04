@@ -18,17 +18,20 @@ JamTaba is using some libraries: [portaudio](http://www.portaudio.com/), [rtmidi
 The library **portaudio** was **pre compiled** in windows using **only the ASIO flags**. So, if you don't have any **ASIO driver** installed JamTaba will emit an error message in initialization and fallback to an NullAudioDriver, and no sound will be produced. If you have no ASIO devices please install [Asio4ALL](http://www.asio4all.com/).
 
 ##Downloading Pre Compiled Libs
-- To avoid store big binay files in the GitHub repository the [pre compiled libs](https://dl.dropboxusercontent.com/u/23791949/jamtaba/jamtaba2/JamTaba-static-libs.zip) are stored in my personal dropbox account. Please download this file!
+- To avoid store big binay files in the GitHub repository the [pre compiled libs](https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=0) are stored in a dropbox account. Please download this file!
 - After download the **zip** file with the **pre compiled static libraries** please unpack this file inside a folder **libs** (create this folder). The folders layout will be:
 ```
 [JamTaba source code folder in your hard disk]
+	|_ AU_SDK
 	|_ installers
 	|_ libs	  
 		|_ includes
 		|_ static
 	|_ PROJECTS
 	|_ src
-    |_ tests
+        |_ tests
+        |_ translations	
+        |_ VST_SDK		
 ```
 ***
 
@@ -39,10 +42,15 @@ The library **portaudio** was **pre compiled** in windows using **only the ASIO 
 - Unpack the VST SDK content inside a **VST_SDK** folder (you need create this folder) in JamTaba source code path. After this you have something like that:
 ```
 [JamTaba source code folder in your hard disk]
-	|_ PROJECTS
+	|_ AU_SDK
 	|_ installers
+	|_ libs	  
+	|_ includes
+	|_ static
+	|_ PROJECTS
 	|_ src
-    |_ tests
+        |_ tests
+        |_ translations	
 	|_ VST_SDK       <- create this folder
 		|_ base
 		|_ bin
