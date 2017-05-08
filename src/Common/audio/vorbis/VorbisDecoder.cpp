@@ -33,8 +33,33 @@ VorbisDecoder::~VorbisDecoder()
         ov_clear(&vorbisFile);
 }
 
-size_t VorbisDecoder::consumeTo(void *oggOutBuffer, size_t bytesToConsume)
+bool VorbisDecoder::isMono() const
 {
+    if (vorbisFile.vi)
+        return vorbisFile.vi->channels == 1;
+
+    return true;
+}
+
+int VorbisDecoder::getChannels() const
+{
+    if (vorbisFile.vi)
+        return vorbisFile.vi->channels;
+
+    return 1;
+}
+
+int VorbisDecoder::getSampleRate() const
+{
+    if (vorbisFile.vi)
+        return vorbisFile.vi->rate;
+
+    return 44100;
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++
+size_t VorbisDecoder::consumeTo(void *oggOutBuffer, size_t bytesToConsume){
     size_t len = qMin( bytesToConsume, (size_t)vorbisInput.size());
     if (len > 0) {
         memcpy(oggOutBuffer, vorbisInput.data(), len);

@@ -14,6 +14,7 @@
 #include "ChordsPanel.h"
 #include "MapWidget.h"
 #include "BlinkableButton.h"
+#include "FakeCameraView.h"
 
 #include "LooperWindow.h"
 
@@ -22,6 +23,8 @@
 #include <QRect>
 #include <QDateTime>
 #include <QImage>
+#include <QCameraInfo>
+#include <QCameraViewfinder>
 
 #include "MainController.h"
 #include "ThemeLoader.h"
@@ -50,7 +53,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     roomToJump(nullptr),
     chordsPanel(nullptr),
     lastPerformanceMonitorUpdate(0),
-    camera(nullptr)
+    camera(nullptr),
+    cameraView(nullptr)
 {
     qCDebug(jtGUI) << "Creating MainWindow...";
 
@@ -73,24 +77,84 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     qCDebug(jtGUI) << "MainWindow created!";
 }
 
+void MainWindow::initializeRealCamera()
+{
+    QCameraInfo info = QCameraInfo::defaultCamera();
+    camera = new QCamera(info);
+
+    connect(camera, static_cast<void(QCamera::*)(QCamera::Error)>(&QCamera::error), [=]()
+    {
+        QMessageBox::critical(this, tr("Error!"), camera->errorString());
+    });
+
+    QCameraViewfinder *view = new QCameraViewfinder(this);
+    camera->load(); // loading Camera before ask supported resolutions to avoid an empty list.
+
+    QList<QSize> resolutions = camera->supportedViewfinderResolutions();
+    if (!resolutions.isEmpty()) {
+        QCameraViewfinderSettings settings;
+        QSize lowResolution = resolutions.first();
+        settings.setResolution(lowResolution);
+        camera->setViewfinderSettings(settings);
+
+        mainController->setVideoResolution(lowResolution);
+    }
+    else {
+        qCritical() << "Camera resolutions list is empty!";
+    }
+
+    camera->setViewfinder(view);
+    cameraView = view;
+
+    camera->start();
+
+    if(camera->state() != QCamera::ActiveState) // camera is used by another application?
+        initializeFakeCamera();
+
+}
+
+void MainWindow::initializeFakeCamera()
+{
+    if (camera){
+        camera->deleteLater();
+        camera = nullptr;
+    }
+
+    if (cameraView)
+        cameraView->deleteLater();
+
+    cameraView = new FakeCameraView(this);
+
+    mainController->setVideoResolution(cameraView->minimumSizeHint());
+}
+
 void MainWindow::initializeCamera()
 {
-    this->camera = nullptr;
+    bool availableCameras = !QCameraInfo::availableCameras().isEmpty();
+
+    if (availableCameras)
+        initializeRealCamera();
+    else
+        initializeFakeCamera();
+
+    QLayout *leftPanelLayout = ui.leftPanel->layout();
+    leftPanelLayout->addWidget(cameraView);
+    cameraView->setMaximumHeight(90);
+
 }
 
 bool MainWindow::cameraIsActivated() const
 {
-    return camera != nullptr;
+    return cameraView != nullptr;
 }
 
-QPixmap MainWindow::grabCameraFrame() const
+QImage MainWindow::pickCameraFrame() const
 {
-    if (camera)
-        return camera->getFrame();
+    if (cameraView)
+        return cameraView->grab().toImage();
 
-    return QPixmap();
+    return QImage();
 }
-
 
 void MainWindow::initializeMeteringOptions()
 {
@@ -998,8 +1062,8 @@ void MainWindow::setChatVisibility(bool chatVisible)
     ui.chatTabWidget->setVisible(chatVisible);
 
     // adjust bottom panel colspan
-    int colSpan = chatVisible ? 3 : 2;
-    ui.gridLayout->addWidget(ui.bottomPanel, 1, 0, 1, colSpan);
+    int colSpan = chatVisible ? 2 : 1;
+    ui.gridLayout->addWidget(ui.bottomPanel, 1, 1, 1, colSpan);
 }
 
 void MainWindow::setInputTracksPreparingStatus(bool preparing)

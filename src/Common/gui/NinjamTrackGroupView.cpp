@@ -3,6 +3,7 @@
 #include "MainController.h"
 #include "NinjamController.h"
 #include <QMenu>
+#include <QDateTime>
 
 using namespace Controller;
 using namespace Persistence;
@@ -62,12 +63,33 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
     groupNameLabel->setStyleSheet(styleSheet);
 
+    videoPreview = new QLabel(this);
+    videoPreview->setVisible(false); // video preview will be visible when the first received frame is decoded
+    mainLayout->addWidget(videoPreview);
+
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
     // reacting to chat block/unblock events
-    auto ninjamController = mainController->getNinjamController();
-    connect(ninjamController, &NinjamController::userBlockedInChat, this, &NinjamTrackGroupView::showChatBlockIcon);
-    connect(ninjamController, &NinjamController::userUnblockedInChat, this, &NinjamTrackGroupView::hideChatBlockIcon);
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
+    connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
+}
+
+void NinjamTrackGroupView::setVideoInterval(const QByteArray &encodedVideoData)
+{
+    demuxer.close(); // close previous video interval decoder
+
+    if (!demuxer.open(encodedVideoData)) {
+        qCritical() << "Demuxer can't open video interval data!";
+        demuxer.close();
+    }
+}
+
+void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
+{
+    videoPreview->setPixmap(QPixmap::fromImage(frame));
+
+    videoPreview->setVisible(true);
 }
 
 void NinjamTrackGroupView::hideChatBlockIcon(const QString &unblockedUserName)
@@ -228,6 +250,16 @@ void NinjamTrackGroupView::updateGuiElements()
 {
     TrackGroupView::updateGuiElements();
     groupNameLabel->updateMarquee();
+
+    // video
+    if (demuxer.isOpened()) {
+        quint64 now = QDateTime::currentMSecsSinceEpoch();
+        quint64 timePerFrame = demuxer.getFrameRate() / 1000;
+        if (now - lastVideoRender >= timePerFrame) { // time to show a new video frame?
+            updateVideoFrame(demuxer.decodeNextFrame());
+            lastVideoRender = now;
+        }
+    }
 }
 
 NinjamTrackGroupView::~NinjamTrackGroupView()

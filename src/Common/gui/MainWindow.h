@@ -7,13 +7,14 @@
 #include "LocalTrackGroupView.h"
 #include "ScreensaverBlocker.h"
 #include "TextEditorModifier.h"
-#include "video/Camera.h"
 #include "performance/PerformanceMonitor.h"
 #include "LooperWindow.h"
 
 #include <QTranslator>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QCamera>
+#include <QVideoFrame>
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -69,7 +70,8 @@ public:
 
     virtual TextEditorModifier *createTextEditorModifier() = 0;
 
-    QPixmap grabCameraFrame() const;
+    QImage pickCameraFrame() const;
+
     bool cameraIsActivated() const;
 
     void closeAllFloatingWindows();
@@ -131,7 +133,8 @@ protected:
 
     static const QSize MAIN_WINDOW_MIN_SIZE;
 
-    Camera *camera;
+    QCamera *camera;
+    QWidget *cameraView;
 
 protected slots:
     void closeTab(int index);
@@ -281,6 +284,8 @@ private:
     void initializeGuiRefreshTimer();
 
     void initializeCamera();
+    void initializeRealCamera();
+    void initializeFakeCamera();
 
     void updateUserNameLabel();
 

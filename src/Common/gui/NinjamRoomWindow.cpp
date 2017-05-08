@@ -174,7 +174,7 @@ void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrien
     int licenceButtonIndex = ui->topLayout->indexOf(ui->licenceButton);
     ui->topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
 
-    connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(toggleTracksLayoutOrientation(QAbstractButton*)));
+    connect(buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksLayoutOrientation(QAbstractButton*)));
 }
 
 void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
@@ -209,7 +209,7 @@ void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
     int licenceButtonIndex = ui->topLayout->indexOf(ui->licenceButton);
     ui->topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
 
-    connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(toggleTracksSize(QAbstractButton*)));
+    connect(buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksSize(QAbstractButton*)));
 }
 
 void NinjamRoomWindow::toggleTracksLayoutOrientation(QAbstractButton* buttonClicked)
@@ -738,6 +738,23 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ninjamPanel, SIGNAL(intervalShapeChanged(int)), this, SLOT(setNewIntervalShape(int)));
 
+
+    connect(mainController->getNinjamService(), &Ninjam::Service::videoIntervalCompleted, this, &NinjamRoomWindow::playVideoInterval);
+
+}
+
+void NinjamRoomWindow::playVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData)
+{
+    NinjamTrackGroupView *group = trackGroups[user.getFullName()];
+    if (group) {
+        static int received = 0;
+        QFile f("C:/Users/Elieser/" + user.getName() + QString::number(received++) + ".avi");
+        QDataStream stream(&f);
+        f.open(QIODevice::WriteOnly);
+        stream << encodedVideoData;
+
+        group->setVideoInterval(encodedVideoData);
+    }
 }
 
 void NinjamRoomWindow::handleBpiChanges()

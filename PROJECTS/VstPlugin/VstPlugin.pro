@@ -7,7 +7,7 @@
     error( "Couldn't find the qtwinmigrate common.pri file!" )
 }
 
-QT       += core gui network widgets concurrent
+QT       += core gui network widgets concurrent multimedia multimediawidgets
 
 TARGET = "JamtabaVST2"  #using this name (with a '2' suffix) to match the previons JTBA versions and avoid duplicated plugin in used machines
 TEMPLATE = lib
@@ -28,6 +28,7 @@ INCLUDEPATH += $$SOURCE_PATH/Plugins/VST
 INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
 INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
 INCLUDEPATH += $$ROOT_PATH/libs/includes/minimp3
+INCLUDEPATH += $$ROOT_PATH/libs/includes/ffmpeg
 
 win32{
     INCLUDEPATH += "$$VST_SDK_PATH/"
@@ -100,12 +101,14 @@ win32 {
     CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindowsd #link windows platform statically
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lminimp3 -lvorbisfile -lvorbis -logg
-    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd
+    CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lminimp3 -lvorbisfile -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd -lavcodecd -lavutild -lavformatd -lswscaled -lswresampled
 
     CONFIG(release, debug|release) {
       #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
       QMAKE_CXXFLAGS_RELEASE +=  -GL
       QMAKE_LFLAGS_RELEASE += /LTCG
     }
+
+    QMAKE_LFLAGS += "/NODEFAULTLIB:libcmt"
 }

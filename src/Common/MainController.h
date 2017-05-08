@@ -2,6 +2,7 @@
 #define MAIN_CONTROLLER_H
 
 #include <QScopedPointer>
+#include <QImage>
 
 #include "geo/IpToLocationResolver.h"
 #include "ninjam/Service.h"
@@ -15,7 +16,7 @@
 #include "midi/MidiDriver.h"
 #include "UploadIntervalData.h"
 #include "audio/core/LocalInputGroup.h"
-#include "video/VideoCodec.h"
+#include "video/FFMpegMuxer.h"
 
 class MainWindow;
 
@@ -39,6 +40,8 @@ public:
 
     virtual void start();
     virtual void stop();
+
+    void setVideoResolution(const QSize &resolution);
 
     void setFullScreenView(bool fullScreen);
 
@@ -232,6 +235,8 @@ public slots:
     void setEncodingQuality(float newEncodingQuality);
     void storeLooperBitDepth(quint8 bitDepth);
 
+    void processCapturedFrame(int frameID, const QImage &frame);
+
 protected:
 
     static QString LOG_CONFIG_FILE;
@@ -268,7 +273,7 @@ protected:
 
     virtual void syncWithNinjamIntervalStart(uint intervalLenght);
 
-    VideoEncoder *videoEncoder;
+    FFMpegMuxer *videoEncoder;
 
 private:
     void setAllTracksActivation(bool activated);
@@ -302,13 +307,15 @@ private:
     int lastInputTrackID; // used to generate a unique key/ID for each input track
 
 
-    const static quint8 VIDEO_FPS;
+    const static quint8 CAMERA_FPS;
 
     bool canGrabNewFrameFromCamera() const;
 
-    quint64 lastFrameGrabbedTimeStamp;
+    quint64 lastFrameTimeStamp;
 
     void recreateMetronome();
+
+    uint getFramesPerInterval() const;
 
 protected slots:
 
@@ -325,9 +332,9 @@ protected slots:
     // TODO move this slot to NinjamController
     virtual void handleNewNinjamInterval();
 
-    void processCameraVideo(int intervalPosition);
+    void requestCameraFrame(int intervalPosition);
 
-    void uploadEncodedVideoFrame(const QByteArray &encodedData, int intervalPosition);
+    void uploadEncodedVideoData(const QByteArray &encodedData, bool firstPart);
 
 };
 

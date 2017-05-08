@@ -2,9 +2,9 @@ VST_SDK_PATH = "$$PWD/../VST_SDK"
 
 message("VST PATH: " $$VST_SDK_PATH)
 
-TEMPLATE = lib
+#TEMPLATE = lib
 
-mac:LIBS+= -dead_strip
+mac:LIBS += -dead_strip
 
 ROOT_PATH = "../.."
 SOURCE_PATH = "$$ROOT_PATH/src"
@@ -36,8 +36,6 @@ CONFIG += c++11
 
 PRECOMPILED_HEADER += PreCompiledHeaders.h
 
-HEADERS += video/Camera.h
-HEADERS += video/VideoCodec.h
 HEADERS += midi/MidiDriver.h
 HEADERS += midi/MidiMessage.h
 HEADERS += looper/Looper.h
@@ -65,6 +63,8 @@ HEADERS += audio/SamplesBufferResampler.h
 HEADERS += audio/SamplesBufferRecorder.h
 HEADERS += audio/Mp3Decoder.h
 HEADERS += audio/Resampler.h
+HEADERS += video/FFMpegMuxer.h
+HEADERS += video/FFMpegDemuxer.h
 HEADERS += file/FileReader.h
 HEADERS += file/FileReaderFactory.h
 HEADERS += file/WaveFileReader.h
@@ -121,6 +121,7 @@ HEADERS += gui/widgets/MapMarker.h
 HEADERS += gui/widgets/MultiStateButton.h
 HEADERS += gui/widgets/BlinkableButton.h
 HEADERS += gui/widgets/Slider.h
+HEADERS += gui/widgets/FakeCameraView.h
 HEADERS += gui/BpiUtils.h
 HEADERS += gui/chords/ChordLabel.h
 HEADERS += gui/chords/ChordsPanel.h
@@ -175,6 +176,8 @@ SOURCES += audio/vorbis/VorbisDecoder.cpp
 SOURCES += audio/vorbis/VorbisEncoder.cpp
 SOURCES += audio/core/AudioPeak.cpp
 SOURCES += audio/Resampler.cpp
+SOURCES += video/FFMpegMuxer.cpp
+SOURCES += video/FFMpegDemuxer.cpp
 SOURCES += file/FileReaderFactory.cpp
 SOURCES += file/WaveFileReader.cpp
 SOURCES += file/OggFileReader.cpp
@@ -192,6 +195,7 @@ SOURCES += ninjam/ServerMessagesHandler.cpp
 SOURCES += ninjam/UserChannel.cpp
 SOURCES += gui/widgets/PeakMeter.cpp
 SOURCES += gui/widgets/WavePeakPanel.cpp
+SOURCES += gui/widgets/FakeCameraView.cpp
 SOURCES += gui/LocalTrackView.cpp
 SOURCES += gui/plugins/Guis.cpp
 SOURCES += gui/JamRoomViewPanel.cpp

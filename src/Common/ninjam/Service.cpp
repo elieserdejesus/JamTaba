@@ -24,10 +24,11 @@ class Service::Download
 {
 
 public:
-    Download(const QString &userFullName, quint8 channelIndex, const QByteArray &GUID) :
+    Download(const QString &userFullName, quint8 channelIndex, const QByteArray &GUID, bool audio = true) :
         channelIndex(channelIndex),
         userFullName(userFullName),
-        GUID(GUID)
+        GUID(GUID),
+        containsAudio(audio)
     {
 
     }
@@ -40,6 +41,11 @@ public:
     ~Download()
     {
         //
+    }
+
+    inline bool isAudio() const
+    {
+        return containsAudio;
     }
 
     inline void appendEncodedData(const QByteArray &data)
@@ -72,6 +78,7 @@ private:
     QString userFullName;
     QByteArray GUID; // Global Unique ID
     QByteArray vorbisData;
+    bool containsAudio; // audio or video?
 };
 
 // ++++++++++++++++++++++++++++++++++++++++
@@ -108,7 +115,7 @@ void Service::setupSocketSignals()
     connect(socket, SIGNAL(connected()), this, SLOT(handleSocketConnection()));
 }
 
-void Service::sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &encodedData,
+void Service::sendIntervalPart(const QByteArray &GUID, const QByteArray &encodedData,
                                     bool isLastPart)
 {
     if (!initialized)
@@ -290,7 +297,7 @@ void Service::process(const DownloadIntervalBegin &msg)
         quint8 channelIndex = msg.getChannelIndex();
         QString userFullName = msg.getUserName();
         QByteArray GUID = msg.getGUID();
-        downloads.insert(GUID, Download(userFullName, channelIndex, GUID));
+        downloads.insert(GUID, Download(userFullName, channelIndex, GUID, msg.isAudio()));
     }
 }
 
@@ -299,17 +306,28 @@ void Service::process(const DownloadIntervalWrite &msg)
     if (downloads.contains(msg.getGUID())) {
         Download &download = downloads[msg.getGUID()];
         download.appendEncodedData(msg.getEncodedData());
+
+        if (!download.isAudio())
+            qDebug() << "Receiving video download in channel "<< download.getChannelIndex() << " firstBytes:" << msg.getEncodedData().left(4);
+
         User user = currentServer->getUser(download.getUserFullName());
-        if (user.getChannel(download.getChannelIndex()).isActive()) {
-            if (msg.downloadIsComplete()) {
-                emit audioIntervalCompleted(user, download.getChannelIndex(), download.getEncodedData());
-                downloads.remove(msg.getGUID());
-            } else {
-                emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData().size());
+
+        if (download.isAudio()) {
+            if (user.getChannel(download.getChannelIndex()).isActive()) {
+                if (msg.downloadIsComplete()) {
+                    emit audioIntervalCompleted(user, download.getChannelIndex(), download.getEncodedData());
+                    downloads.remove(msg.getGUID());
+                } else {
+                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData().size());
+                }
             }
         }
+        else if (msg.downloadIsComplete()) { // download is video
+            emit videoIntervalCompleted(user, download.getEncodedData());
+            downloads.remove(msg.getGUID());
+        }
     } else {
-        qCritical("GUID is not in map!");
+        qCritical() << "GUID is not in map!";
     }
 }
 

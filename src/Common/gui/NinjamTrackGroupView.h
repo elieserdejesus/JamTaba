@@ -5,6 +5,7 @@
 #include <QLabel>
 #include "MarqueeLabel.h"
 #include "NinjamTrackView.h"
+#include "video/FFMpegDemuxer.h"
 
 namespace Controller {
 class MainController;
@@ -35,6 +36,8 @@ public:
 
     QSize sizeHint() const override;
 
+    void setVideoInterval(const QByteArray &encodedVideoData);
+
 protected:
     NinjamTrackView *createTrackView(long trackID) override;
 
@@ -48,6 +51,11 @@ private:
     QString userIP;
     Qt::Orientation orientation;
 
+    QLabel *videoPreview;
+    QByteArray encodedVideoData;
+    FFMpegDemuxer demuxer;
+    quint64 lastVideoRender;
+
     void setupHorizontalLayout();
     void setupVerticalLayout();
 
@@ -59,6 +67,8 @@ private slots:
     void unblockChatMessages();
     void hideChatBlockIcon(const QString &unblockedUserName);
     void showChatBlockIcon(const QString &blockedUserName);
+
+    void updateVideoFrame(const QImage &frame);
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H

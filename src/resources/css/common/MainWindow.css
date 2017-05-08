@@ -80,3 +80,12 @@ QTabWidget::tab-bar
 {
     left: 0;
 }
+
+FakeCameraView
+{
+    color: rgba(0, 0, 0, 180);
+    background-color: rgba(0, 0, 0, 50);
+    font-weight: bold;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 16px;
+}
