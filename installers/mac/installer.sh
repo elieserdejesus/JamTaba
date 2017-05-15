@@ -32,7 +32,7 @@ echo “Compiling …”
 cp -R ~/Desktop/Release/Standalone/Jamtaba2.app ~/Desktop/JamTaba/installers/mac/
 cp -R /Library/Audio/Plug-Ins/Components/JamTaba.component ~/Desktop/JamTaba/installers/mac
 
-appdmg /Users/elieser/Desktop/JamTaba/installers/mac/node-appdmg.json ~/Desktop/Jamtaba_2_Installer.dmg
+appdmg ~/Desktop/JamTaba/installers/mac/node-appdmg.json ~/Desktop/Jamtaba_2_Installer.dmg
 
 
 #removing the .app and AU files
