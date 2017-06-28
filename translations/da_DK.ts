@@ -1204,7 +1204,7 @@
         <translation>Metronom</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
+        <source>Metronome Sound:</source>
         <translation>Indbygget metronomer:</translation>
     </message>
     <message>

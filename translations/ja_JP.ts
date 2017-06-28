@@ -1213,7 +1213,7 @@
         <translation>メトロノーム</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
+        <source>Metronome Sound:</source>
         <translation>組込のメトロノーム音:</translation>
     </message>
     <message>

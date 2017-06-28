@@ -1204,8 +1204,8 @@
         <translation>Metrónomo</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
-        <translation>Metrónomos incorporados:</translation>
+        <source>Metronome Sound:</source>
+        <translation>Sonido del Metrónomo:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
