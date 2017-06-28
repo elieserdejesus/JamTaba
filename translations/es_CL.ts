@@ -135,7 +135,7 @@
     </message>
     <message>
         <source>Level:</source>
-        <translation>Volúmen:</translation>
+        <translation>Volumen:</translation>
     </message>
 </context>
 <context>
@@ -478,7 +478,7 @@
     </message>
     <message>
         <source>master</source>
-        <translation>volúmen general</translation>
+        <translation>volumen general</translation>
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
