@@ -398,7 +398,7 @@ void NinjamController::recreateMetronome(int newSampleRate)
 
 //+++++++++++++++
 
-void NinjamController::stop(bool emitDisconnectedingSignal)
+void NinjamController::stop(bool emitDisconnectedSignal)
 {
     if (isRunning()) {
         this->running = false;
@@ -454,7 +454,7 @@ void NinjamController::stop(bool emitDisconnectedingSignal)
     disconnect(ninjamService, SIGNAL(chatMessageReceived(const Ninjam::User &, const QString &)), this, SIGNAL(chatMsgReceived(const Ninjam::User &, const QString &)));
     disconnect(ninjamService, SIGNAL(serverTopicMessageReceived(QString)), this, SIGNAL(topicMessageReceived(QString)));
 
-    ninjamService->disconnectFromServer(emitDisconnectedingSignal);
+    ninjamService->disconnectFromServer(emitDisconnectedSignal);
 
 }
 

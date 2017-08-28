@@ -30,7 +30,7 @@ public:
     virtual ~NinjamController();
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
     void start(const Ninjam::Server &server);
-    void stop(bool emitDisconnectedingSignal);
+    void stop(bool emitDisconnectedSignal);
     bool isRunning() const;
 
     void setMetronomeBeatsPerAccent(int beatsPerAccent);
