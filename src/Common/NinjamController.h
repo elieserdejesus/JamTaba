@@ -172,15 +172,15 @@ private:
 
 private slots:
     // ninjam events
-    void on_ninjamServerBpmChanged(quint16 newBpm);
-    void on_ninjamServerBpiChanged(quint16 oldBpi, quint16 newBpi);
-    void on_ninjamAudiointervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
-    void on_ninjamAudioIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int downloadedBytes);
-    void on_ninjamUserChannelCreated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void on_ninjamUserChannelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void on_ninjamUserChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void on_ninjamUserExited(const Ninjam::User &user);
-    void on_ninjamUserEntered(const Ninjam::User &user);
+    void scheduleBpmChangeEvent(quint16 newBpm);
+    void scheduleBpiChangeEvent(quint16 oldBpi, quint16 newBpi);
+    void handleIntervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
+    void handleIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int downloadedBytes);
+    void addNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void removeNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void updateNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void handleNinjamUserExiting(const Ninjam::User &user);
+    void handleNinjamUserEntering(const Ninjam::User &user);
     void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
 
 }; // end of class
