@@ -31,21 +31,12 @@ public:
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
     void start(const Ninjam::Server &server);
     void stop(bool emitDisconnectedingSignal);
-    bool inline isRunning() const
-    {
-        return running;
-    }
+    bool isRunning() const;
 
     void setMetronomeBeatsPerAccent(int beatsPerAccent);
-    inline int getCurrentBpi() const
-    {
-        return currentBpi;
-    }
 
-    inline int getCurrentBpm() const
-    {
-        return currentBpm;
-    }
+    int getCurrentBpi() const;
+    int getCurrentBpm() const;
 
     void voteBpi(int newBpi);
     void voteBpm(int newBpm);
@@ -64,16 +55,13 @@ public:
     void scheduleEncoderChangeForChannel(int channelIndex);
     void removeEncoder(int groupChannelIndex);
 
-    void scheduleXmitChange(int channelID, bool transmiting);// schedule the change for the next interval
+    void scheduleXmitChange(int channelID, bool transmiting); // schedule the change for the next interval
 
     void setSampleRate(int newSampleRate);
 
-    void reset(bool keepRecentIntervals);// discard downloaded intervals and reset intervalPosition
+    void reset(bool keepRecentIntervals); // discard downloaded intervals and reset intervalPosition
 
-    inline bool isPreparedForTransmit() const
-    {
-        return preparedForTransmit;
-    }
+    bool isPreparedForTransmit() const;
 
     void recreateMetronome(int newSampleRate);
 
@@ -92,7 +80,7 @@ public:
     uint getSamplesPerInterval() const;
 
 signals:
-    void currentBpiChanged(int newBpi); //emitted when a scheduled bpi change is processed in interval start (first beat).
+    void currentBpiChanged(int newBpi); // emitted when a scheduled bpi change is processed in interval start (first beat).
     void currentBpmChanged(int newBpm);
 
     void intervalBeatChanged(int intervalBeat);
@@ -115,14 +103,14 @@ signals:
     void userBlockedInChat(const QString &userName);
     void userUnblockedInChat(const QString &userName);
 
-    void preparingTransmission();// waiting for start transmission
+    void preparingTransmission(); // waiting for start transmission
     void preparedToTransmit(); // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
 
 protected:
     long intervalPosition;
     long samplesInInterval;
 
-    QMap<QString, NinjamTrackNode *> trackNodes;// the other users channels
+    QMap<QString, NinjamTrackNode *> trackNodes; // the other users channels
 
     Controller::MainController *mainController;
 
@@ -146,17 +134,13 @@ private:
     int currentBpm;
 
     QMutex mutex;
-
     QMutex encodersMutex;
 
     long computeTotalSamplesInInterval();
     long getSamplesPerBeat();
 
     void processScheduledChanges();
-    inline bool hasScheduledChanges() const
-    {
-        return !scheduledEvents.isEmpty();
-    }
+    bool hasScheduledChanges() const;
 
     static long generateNewTrackID();
 
@@ -171,7 +155,8 @@ private:
     void setXmitStatus(int channelID, bool transmiting);
 
     // ++++++++++++++++++++ nested classes to handle scheduled events +++++++++++++++++
-    class SchedulableEvent;// the interface for all events
+
+    class SchedulableEvent; // the interface for all events
     class BpiChangeEvent;
     class BpmChangeEvent;
     class InputChannelChangedEvent;// user change the channel input selection from mono to stereo or vice-versa, or user added a new channel, both cases requires a new encoder in next interval
@@ -183,7 +168,7 @@ private:
 
     bool preparedForTransmit;
     int waitingIntervals;
-    static const int TOTAL_PREPARED_INTERVALS = 2;// how many intervals Jamtaba will wait to start trasmiting?
+    static const int TOTAL_PREPARED_INTERVALS = 2; // how many intervals Jamtaba will wait to start trasmiting?
 
 private slots:
     // ninjam events
@@ -199,6 +184,32 @@ private slots:
     void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
 
 }; // end of class
+
+
+inline bool NinjamController::hasScheduledChanges() const
+{
+    return !scheduledEvents.isEmpty();
+}
+
+inline bool NinjamController::isPreparedForTransmit() const
+{
+    return preparedForTransmit;
+}
+
+inline int NinjamController::getCurrentBpi() const
+{
+    return currentBpi;
+}
+
+inline int NinjamController::getCurrentBpm() const
+{
+    return currentBpm;
+}
+
+inline bool NinjamController::isRunning() const
+{
+    return running;
+}
 
 inline uint NinjamController::getSamplesPerInterval() const
 {
