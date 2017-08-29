@@ -8,11 +8,12 @@ namespace Audio {
 
 class FileReader
 {
+
 public:
     virtual bool read(const QString &filePath, Audio::SamplesBuffer& outBuffer, quint32 &sampleRate) = 0;
     virtual ~FileReader(){}
 };
 
-}//namespace
+} // namespace
 
 #endif // AUDIOFILEREADER_H

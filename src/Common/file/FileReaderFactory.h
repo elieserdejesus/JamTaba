@@ -10,10 +10,11 @@ class FileReader;
 
 class FileReaderFactory
 {
+
 public:
     static std::unique_ptr<Audio::FileReader> createFileReader(const QString &filePath);
 };
 
-}//namespace
+} // namespace
 
 #endif // AUDIOFILEREADER_H

@@ -9,6 +9,7 @@ using namespace Audio;
 
 class NullFileReader : public FileReader
 {
+
 public:
     inline bool read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate) override
     {

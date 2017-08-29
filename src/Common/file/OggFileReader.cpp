@@ -17,14 +17,14 @@ bool OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffe
 
     VorbisDecoder decoder;
     decoder.setInputData(oggFile.readAll());
-    decoder.initialize(); //read the ogg headers from file
+    decoder.initialize(); // read the ogg headers from file
     sampleRate = decoder.getSampleRate();
     if (decoder.isMono())
         outBuffer.setToMono();
     else
         outBuffer.setToStereo();
 
-    //decode and append decoded data in 'outBuffer'
+    // decode and append decoded data in 'outBuffer'
     int decodedFrames = 0;
     const int MAX_SAMPLES_PER_DECODE = 1024;
     do

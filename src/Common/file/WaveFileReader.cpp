@@ -11,9 +11,10 @@ using namespace Audio;
 
 class SampleExtractor
 {
+
 public:
-    SampleExtractor(QDataStream *stream)
-        :stream(stream)
+    SampleExtractor(QDataStream *stream) :
+        stream(stream)
     {
     }
     
@@ -23,6 +24,7 @@ public:
     }
 
     virtual float nextSample() = 0;
+
 protected:
     QDataStream *stream;
 };
@@ -180,9 +182,9 @@ bool WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuff
         return false;
     }
 
-    stream >> fmtLength; // Format length
-    stream >> fmtType; // Format type
-    stream >> channels; // Number of channels
+    stream >> fmtLength;  // Format length
+    stream >> fmtType;    // Format type
+    stream >> channels;   // Number of channels
     stream >> sampleRate; // Sample rate
     stream >> sampleRateXBitsPerSampleXChanngelsDivEight; // (Sample Rate * BitsPerSample * Channels) / 8
     stream >> bitsPerSampleXChannelsDivEightPointOne; // (BitsPerSample * Channels) / 8.1
