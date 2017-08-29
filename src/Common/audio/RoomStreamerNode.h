@@ -14,17 +14,15 @@ class Mp3Decoder;
 class AbstractMp3Streamer : public AudioNode
 {
     Q_OBJECT
+
 public:
     explicit AbstractMp3Streamer(Audio::Mp3Decoder *decoder);
-    ~AbstractMp3Streamer();
+    virtual ~AbstractMp3Streamer();
     void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
                           int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
     virtual void stopCurrentStream();
     virtual void setStreamPath(const QString &streamPath);
-    inline bool isStreaming() const
-    {
-        return streaming;
-    }
+    bool isStreaming() const;
 
     virtual int getSampleRate() const;
     virtual bool needResamplingFor(int targetSampleRate) const;
@@ -34,6 +32,7 @@ public:
 
 signals:
     void error(const QString &errorMsg);
+
 private:
     static const int MAX_BYTES_PER_DECODING;
 
@@ -51,7 +50,13 @@ protected:
     int getSamplesToRender(int targetSampleRate, int outLenght);
 };
 
+inline bool AbstractMp3Streamer::isStreaming() const
+{
+    return streaming;
+}
+
 // +++++++++++++++++++++++++++++++++++++++++++++
+
 class NinjamRoomStreamerNode : public AbstractMp3Streamer
 {
     Q_OBJECT
@@ -63,12 +68,13 @@ public:
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
     bool needResamplingFor(int targetSampleRate) const override;
 
-    inline bool isBuffering() const override { return buffering; }
+    bool isBuffering() const override;
 
     int getBufferingPercentage() const override;
 
 protected:
     void initialize(const QString &streamPath);
+
 private:
     QNetworkAccessManager *httpClient;
     bool buffering;
@@ -79,8 +85,16 @@ private slots:
     void on_reply_error(QNetworkReply::NetworkError);
     void on_reply_read();
 };
+
+inline bool NinjamRoomStreamerNode::isBuffering() const
+{
+    return buffering;
+}
+
 // ++++++++++++++++++++++++++++
+
 class AudioFileStreamerNode : public AbstractMp3Streamer
+
 {
 protected:
     void initialize(const QString &streamPath);
@@ -92,7 +106,6 @@ public:
                                   std::vector<Midi::MidiMessage> &midiBuffer) override;
 };
 
-// ++++++++++++++++++++++
-}// namespace end
+} // namespace end
 
 #endif

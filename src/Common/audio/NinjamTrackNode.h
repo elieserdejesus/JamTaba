@@ -13,6 +13,7 @@ class StreamBuffer;
 
 class NinjamTrackNode : public Audio::AudioNode
 {
+
 public:
 
     enum LowCutState
@@ -31,10 +32,7 @@ public:
     LowCutState getLowCutState() const;
 
     bool startNewInterval();
-    inline int getID() const
-    {
-        return ID;
-    }
+    int getID() const;
 
     int getSampleRate() const;
 
@@ -42,15 +40,12 @@ public:
 
     bool isStereo() const;
 
-    /** Discard all downloaded (but not played yet) intervals */
+    // Discard all downloaded (but not played yet) intervals
     void discardDownloadedIntervals(bool keepMostRecentInterval);
 
     void stopDecoding();
 
-    inline void setProcessingLastPartOfInterval(bool status)
-    {
-        this->processingLastPartOfInterval = status;
-    }
+    void setProcessingLastPartOfInterval(bool status);
 
 private:
     int ID;
@@ -74,5 +69,15 @@ private:
     QMutex decodersMutex;
 
 };
+
+inline void NinjamTrackNode::setProcessingLastPartOfInterval(bool status)
+{
+    this->processingLastPartOfInterval = status;
+}
+
+inline int NinjamTrackNode::getID() const
+{
+    return ID;
+}
 
 #endif // NINJAMTRACKNODE_H
