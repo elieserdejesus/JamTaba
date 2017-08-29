@@ -243,9 +243,9 @@
             host->setTempo(newBpm);
     }
 
-    void MainControllerStandalone::connectedNinjamServer(const Ninjam::Server &server)
+    void MainControllerStandalone::connectInNinjamServer(const Ninjam::Server &server)
     {
-        MainController::connectedNinjamServer(server);
+        MainController::connectInNinjamServer(server);
 
         for(Host *host : hosts)
             host->setTempo(server.getBpm());
@@ -285,9 +285,9 @@
             inputTrack->suspendProcessors();// suspend plugins
     }
 
-    void MainControllerStandalone::on_newNinjamInterval()
+    void MainControllerStandalone::handleNewNinjamInterval()
     {
-        MainController::on_newNinjamInterval();
+        MainController::handleNewNinjamInterval();
 
         for(Host *host : hosts)
             host->setPlayingFlag(true);

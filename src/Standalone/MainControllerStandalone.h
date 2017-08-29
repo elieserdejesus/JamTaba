@@ -126,10 +126,10 @@ protected:
 
 protected slots:
     void updateBpm(int newBpm) override;
-    void connectedNinjamServer(const Ninjam::Server &server) override;
+    void connectInNinjamServer(const Ninjam::Server &server) override;
 
 
-    void on_newNinjamInterval() override;
+    void handleNewNinjamInterval() override;
 
     //TODO After the big refatoration these 3 slots can be private slots
     void on_audioDriverStopped();
