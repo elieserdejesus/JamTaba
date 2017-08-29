@@ -32,7 +32,7 @@ LocalInputNode *LocalInputGroup::getInputNode(quint8 index) const
 
 void LocalInputGroup::mixGroupedInputs(Audio::SamplesBuffer &out)
 {
-    for (auto *inputTrack : groupedInputs) {
+    for (auto inputTrack : groupedInputs) {
         if (!inputTrack->isMuted()) {
             auto lastBuffer = inputTrack->getLastBuffer();
             if (lastBuffer.getChannels() == out.getChannels()) {
@@ -55,11 +55,15 @@ int LocalInputGroup::getMaxInputChannelsForEncoding() const
 {
     if (groupedInputs.size() > 1)
         return 2;    // stereo encoding
+
     if (!groupedInputs.isEmpty()) {
+
         if (groupedInputs.first()->isMidi())
             return 2;    // just one midi track, use stereo encoding
+
         if (groupedInputs.first()->isAudio())
             return groupedInputs.first()->getAudioInputRange().getChannels();
+
         if (groupedInputs.first()->isNoInput())
             return 2;    // allow channels using noInput but processing some vst looper in stereo
     }

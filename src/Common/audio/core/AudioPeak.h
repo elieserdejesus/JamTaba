@@ -1,9 +1,12 @@
 #ifndef AUDIOPEAK_H
 #define AUDIOPEAK_H
 
-namespace Audio {
+namespace Audio
+{
+
 class AudioPeak
 {
+
 public:
     AudioPeak(float leftPeak, float rightPeak, float rmsLeft, float rmsRight);
     explicit AudioPeak();
@@ -20,8 +23,8 @@ public:
     AudioPeak operator-(const AudioPeak &otherPeak);
 
 private:
-    float peaks[2]; //max peaks
-    float rms[2]; //rms values
+    float peaks[2]; // max peaks
+    float rms[2]; // rms values
 };
 
 inline float AudioPeak::getLeftPeak() const
@@ -43,6 +46,6 @@ inline float AudioPeak::getRightRMS() const
     return rms[1];
 }
 
-}// namespace
+} // namespace
 
 #endif // AUDIOPEAK_H

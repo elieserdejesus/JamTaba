@@ -8,6 +8,7 @@ using namespace Audio;
 AudioNodeProcessor::AudioNodeProcessor() :
     bypassed(false)
 {
+
 }
 
 void AudioNodeProcessor::setBypass(bool state)
