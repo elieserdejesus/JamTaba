@@ -29,7 +29,7 @@ public:
     void addBpiVoteConfirmationMessage(quint32 newBpiValue, quint32 expireTime);
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);
     void setPreferredTranslationLanguage(const QString &targetLanguage);
-    void updateMessagesGeometry();// called when user switch from mini mode to full view
+    void updateMessagesGeometry(); // called when user switch from mini mode to full view
     void removeMessagesFrom(const QString &userName);
 
 signals:
@@ -112,6 +112,8 @@ private:
     quint32 voteValue;
     QString voteType;
 };
+
+
 
 class ChordProgressionConfirmationButton : public QPushButton
 {

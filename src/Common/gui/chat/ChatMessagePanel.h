@@ -19,7 +19,8 @@ public:
     ~ChatMessagePanel();
     void setPrefferedTranslationLanguage(const QString &targetLanguage);
     void translate();
-    inline QString getUserName() const { return userName; }
+    QString getUserName() const;
+
 signals:
     void startingTranslation();
     void translationFinished();
@@ -55,5 +56,10 @@ private:
     void setMessageLabelText(const QString &msg);
 
 };
+
+inline QString ChatMessagePanel::getUserName() const
+{
+    return userName;
+}
 
 #endif // CHATMESSAGEPANEL_H

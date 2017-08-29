@@ -1,10 +1,9 @@
 #include "ChatTextEditor.h"
 #include <QDebug>
 
-ChatTextEditor::ChatTextEditor(QWidget *parent)
-    :QTextBrowser(parent)
+ChatTextEditor::ChatTextEditor(QWidget *parent) :
+    QTextBrowser(parent)
 {
-    //setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     setSizeAdjustPolicy(QTextEdit::AdjustToContentsOnFirstShow);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
