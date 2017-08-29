@@ -85,6 +85,7 @@ QSize BaseMeter::minimumSizeHint() const
     bool isVerticalMeter = isVertical();
     int w = isVerticalMeter ? MIN_SIZE : width();
     int h = isVerticalMeter ? height() : MIN_SIZE;
+
     return QSize(w, h);
 }
 
@@ -113,8 +114,7 @@ float BaseMeter::limitFloatValue(float value, float minValue, float maxValue)
 }
 
 //--------------------------------------------------------------------------------
-AudioMeter::AudioMeter(QWidget *parent)
-    :
+AudioMeter::AudioMeter(QWidget *parent) :
       BaseMeter(parent),
       rmsColor(QColor(255, 255, 255, 200)),
       peakStartColor(Qt::darkGreen),
@@ -499,9 +499,9 @@ bool AudioMeter::isPaintingRmsOnly()
 
 //--------------------------------------------
 
-MidiActivityMeter::MidiActivityMeter(QWidget *parent)
-    : BaseMeter(parent),
-      midiActivityColor(Qt::red)
+MidiActivityMeter::MidiActivityMeter(QWidget *parent) :
+    BaseMeter(parent),
+    midiActivityColor(Qt::red)
 {
 
 }

@@ -10,6 +10,7 @@ CustomTabWidget::CustomTabWidget(QWidget *parent) :
     //cpuUsage(0),
     memoryUsage(0)
 {
+    //
 }
 
 void CustomTabWidget::setResourcesUsage(int memoryUsage)
@@ -35,12 +36,12 @@ void CustomTabWidget::paintEvent(QPaintEvent *e){
     int rectHeight = tabBar()->height() - V_MARGIM * 2;
     int x = width() - rectWidth;
 
-    //fill the brackground
+    // fill the brackground
     painter.setBrush(RESOURCES_USAGE_BG_COLOR);
     painter.setPen(Qt::NoPen);
     painter.drawRoundedRect(x, V_MARGIM, rectWidth, rectHeight , ROUND, ROUND);
 
-    //draw the text
+    // draw the text
     painter.setPen(RESOURCES_USAGE_TEXT_COLOR);
     int textY = rectHeight - painter.fontMetrics().descent();
     painter.drawText(x + H_MARGIM, textY, string);
