@@ -11,6 +11,7 @@ using namespace Audio;
 AudioMixer::AudioMixer(int sampleRate) :
     sampleRate(sampleRate)
 {
+
 }
 
 void AudioMixer::addNode(AudioNode *node)
@@ -32,8 +33,11 @@ void AudioMixer::removeNode(AudioNode *node)
 AudioMixer::~AudioMixer()
 {
     qCDebug(jtAudio) << "Audio mixer destructor...";
-    foreach (Audio::AudioNode *node, resamplers.keys())
+
+    for (auto node : resamplers.keys()) {
         removeNode(node);
+    }
+
     qCDebug(jtAudio) << "Audio mixer destructor finished!";
 }
 
@@ -43,11 +47,11 @@ void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sample
     // --------------------------------------
     bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
     soloedBuffersInLastProcess = 0;
-    foreach (AudioNode *node, nodes) {
+    for (auto node : nodes) {
         bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
         if (canProcess) {
 
-            // each channel (not subchannel) will receibe a full copy of incomming midi messages
+            // each channel (not subchannel) will receive a full copy of incomming midi messages
             std::vector<Midi::MidiMessage> midiMessages(midiBuffer.size());
             midiMessages.insert(midiMessages.begin(), midiBuffer.begin(), midiBuffer.end());
 
@@ -65,9 +69,7 @@ void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sample
 
     if (attenuateAfterSumming) {
         int nodesConnected = nodes.size();
-        if (nodesConnected > 1)// attenuate
+        if (nodesConnected > 1) // attenuate
             out.applyGain(1.0/nodesConnected, 0.0);
     }
 }
-
-// ++++++++++++++++++++++
