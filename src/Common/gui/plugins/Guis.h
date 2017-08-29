@@ -11,20 +11,23 @@ class JamtabaDelay;
 class Plugin;
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class PluginGui : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit PluginGui(Audio::Plugin *plugin);
 
     QString getPluginName() const;
     Audio::Plugin *getPlugin() const;
+
 protected:
     Audio::Plugin *plugin;
+
 };
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class DelayGui : public PluginGui
 {
     Q_OBJECT
@@ -32,6 +35,7 @@ class DelayGui : public PluginGui
 public:
     explicit DelayGui(Audio::JamtabaDelay *delayPlugin);
     ~DelayGui();
+
 private slots:
     void on_sliderDelayReleased();
     void on_sliderFeedbackReleased();
