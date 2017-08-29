@@ -28,6 +28,7 @@ Location::Location(const QString &country, const QString &countryCode, double la
     longitude(longitude),
     city(sanitize(city))
 {
+    //
 }
 
 QString Location::sanitize(const QString &inputString)
@@ -37,13 +38,11 @@ QString Location::sanitize(const QString &inputString)
     return QString(inputString).replace(regex, QStringLiteral(""));
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++
 IpToLocationResolver::~IpToLocationResolver()
 {
     qCDebug(jtIpToLocation) << "IpToLocationResolver destructor";
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++
 Location NullIpToLocationResolver::resolve(const QString &ip, const QString &languageCode)
 {
     Q_UNUSED(ip)
