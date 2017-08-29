@@ -8,7 +8,7 @@ ChordsPanel::ChordsPanel(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //setup signals and slots
+    // setup signals and slots
     connect(ui->buttonSendToChat, &QPushButton::clicked, this, &ChordsPanel::sendingChordsToChat);
     connect(ui->buttonDiscardChords, &QPushButton::clicked, this, &ChordsPanel::discardChords);
     connect(ui->buttonTransposeUp, &QPushButton::clicked, this, &ChordsPanel::transposeUp);
@@ -22,7 +22,7 @@ ChordsPanel::~ChordsPanel()
 
 void ChordsPanel::setChords(const ChordProgression &progression)
 {
-    if (progression.isEmpty())// empty progression is returned when a incompatible bpi is choosed, for example.
+    if (progression.isEmpty()) // empty progression is returned when a incompatible bpi is choosed, for example.
         return;
 
     clear();
@@ -59,6 +59,7 @@ bool ChordsPanel::setBpi(int newBpi)
 {
     if (this->chordProgression.isEmpty())
         return false;
+
     if (newBpi != this->chordProgression.getBeatsPerInterval()) {
         if (this->chordProgression.canBeUsed(newBpi)) {
             setChords(this->chordProgression.getStretchedVersion(newBpi));
@@ -74,7 +75,7 @@ void ChordsPanel::clear()
 {
     chordProgression.clear();
 
-    foreach (ChordLabel *chordLabel, chordsMap.values()) {
+    for (ChordLabel *chordLabel : chordsMap.values()) {
         ui->gridLayout->removeWidget(chordLabel);
         delete chordLabel;
     }
@@ -83,28 +84,27 @@ void ChordsPanel::clear()
     resetGridLayout();
 }
 
-int ChordsPanel::getEstimatedChordDuration(Chord *chord,
-                                           ChordProgressionMeasure *measure) const
+int ChordsPanel::getEstimatedChordDuration(Chord *chord, ChordProgressionMeasure *measure) const
 {
     int chordsInMeasure = measure->getChords().size();
-    if (chordsInMeasure <= 2)// only one or two chords in the measure?
+    if (chordsInMeasure <= 2) // only one or two chords in the measure?
         return measure->getBeats()/chordsInMeasure;
     if (chordsInMeasure == 3 && measure->getBeats() == 4) {
-        if (chord->getBeat() == 0)// first chord in the progression
-            return 2;// the first chord will ocuppy 2 slots
+        if (chord->getBeat() == 0) // first chord in the progression
+            return 2; // the first chord will ocuppy 2 slots
         else
-            return 1;// the last chords are 1 beat chords
+            return 1; // the last chords are 1 beat chords
     }
     return measure->getBeats();
 }
 
 void ChordsPanel::setCurrentBeat(int beat)
 {
-    if (chordsMap[beat]){
+    if (chordsMap[beat]) {
         currentChordLabel = chordsMap[beat]->setAsCurrentChord();
     }
-    else{
-        if(currentChordLabel){
+    else {
+        if (currentChordLabel) {
             currentChordLabel->incrementIntervalBeat();
         }
     }

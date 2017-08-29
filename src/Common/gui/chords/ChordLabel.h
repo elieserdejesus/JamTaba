@@ -9,6 +9,7 @@ class QPaintEvent;
 class ChordLabel : public QTextEdit
 {
     Q_OBJECT
+
 public:
     explicit ChordLabel(QWidget *parent, Chord *chord, int chordBeats);
     ~ChordLabel();
@@ -19,6 +20,7 @@ protected:
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;
+
 private:
     Chord *chord;
     int currentBeat;

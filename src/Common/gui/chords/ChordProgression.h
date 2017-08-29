@@ -6,6 +6,7 @@
 
 class ChordProgression
 {
+
 public:
     ChordProgression();
     bool isEmpty() const;
