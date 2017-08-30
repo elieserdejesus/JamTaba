@@ -13,6 +13,7 @@
 // ! Easy to use , it is intended to create the folders tree in the user local folder.
 // ! It will create on folder for the plugin version , where the log file and the config
 // ! file ( Jamtaba.Json )
+
 class Configurator
 {
 
@@ -34,8 +35,8 @@ public:
     QDir getThemesDir() const;
 
     // Presets
-    QString getPresetPath(const QString &JsonFile);// used by Settings
-    QStringList getPresetFilesNames(bool fullpath);// all the files names in a folder
+    QString getPresetPath(const QString &JsonFile); // used by Settings
+    QStringList getPresetFilesNames(bool fullpath); // all the files names in a folder
     void deletePreset(const QString &name);
 
 protected:
@@ -48,7 +49,7 @@ private:
     static const QString THEMES_FOLDER_NAME;
     static const QString THEMES_FOLDER_IN_RESOURCES;
 
-    QString logConfigFileName;// the name of the json config file
+    QString logConfigFileName; // the name of the json config file
 
     QDir cacheDir;
     QDir presetsDir;
@@ -57,12 +58,12 @@ private:
 
     bool logFileCreated;
 
-    static QScopedPointer<Configurator> instance;// using a QScopedPointer to auto delete the singleton instance and avoid leak
+    static QScopedPointer<Configurator> instance; // using a QScopedPointer to auto delete the singleton instance and avoid leak
 
     Configurator(); // private constructor for Singleton
 
     void createFoldersTree();
-    void initializeDirs(); //this function is implemented in ConfiguratorStandalone.cpp and in ConfiguratorVST.cpp. Only the correct .cpp file is included in .pro files.
+    void initializeDirs(); // this function is implemented in ConfiguratorStandalone.cpp and in ConfiguratorVST.cpp. Only the correct .cpp file is included in .pro files.
     void exportLogIniFile();
     void setupLogConfigFile();
 

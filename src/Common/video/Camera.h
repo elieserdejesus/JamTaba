@@ -5,6 +5,7 @@
 
 class Camera
 {
+
 public:
     virtual ~Camera() {}
 

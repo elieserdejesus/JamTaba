@@ -5,6 +5,7 @@
 
 class UploadIntervalData
 {
+
 public:
     UploadIntervalData();
 
@@ -34,6 +35,7 @@ private:
     static QByteArray newGUID();
     const QByteArray GUID;
     QByteArray dataToUpload;
+
 };
 
 #endif

@@ -3,9 +3,11 @@
 
 #include <cmath>
 
-class Utils
+class Utils // TODO - use a namespace
 {
+
 public:
+
     static float linearGainToPower(float linearGain)
     {
         return std::pow(linearGain, 3);
