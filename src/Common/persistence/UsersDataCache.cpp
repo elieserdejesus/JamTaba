@@ -60,6 +60,7 @@ QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
 }
 
 // +++++++++++++++++++++++++++++++++++++++
+
 CacheEntry::CacheEntry(const QString &userIp, const QString &userName, quint8 channelID)
 {
     setUserIP(userIp);
@@ -118,12 +119,12 @@ void CacheEntry::setGain(float gain)
     this->gain = gain;
 }
 
-UsersDataCache::UsersDataCache(const QDir &cacheDir)
-    :CACHE_FILE_NAME("tracks_cache.bin"),
-     cacheDir(cacheDir)
+UsersDataCache::UsersDataCache(const QDir &cacheDir) :
+    CACHE_FILE_NAME("tracks_cache.bin"),
+    cacheDir(cacheDir)
 {
-    //check if the tracks_cache_bin file is in the old dir and copy the file to the 'cache' dir.
-    //This piece of code will be deleted in future versions.
+    // check if the tracks_cache_bin file is in the old dir and copy the file to the 'cache' dir.
+    // This piece of code will be deleted in future versions.
     QDir baseDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     QFile oldCacheFile(baseDir.absoluteFilePath(CACHE_FILE_NAME));
     if (oldCacheFile.exists()) {
@@ -148,14 +149,14 @@ CacheEntry UsersDataCache::getUserCacheEntry(const QString &userIp, const QStrin
     QString userUniqueKey = getUserUniqueKey(userIp, userName, channelID);
     if (cacheEntries.contains(userUniqueKey))
         return cacheEntries[userUniqueKey];
-    return CacheEntry(userIp, userName, channelID);// return a entry using default values for pan, gain, mute, etc.
+
+    return CacheEntry(userIp, userName, channelID); // return a entry using default values for pan, gain, mute, etc.
 }
 
 void UsersDataCache::updateUserCacheEntry(CacheEntry entry)
 {
-    QString userKey
-        = getUserUniqueKey(entry.getUserIP(), entry.getUserName(), entry.getChannelID());
-    cacheEntries.insert(userKey, entry);// replace the last value or insert
+    QString userKey = getUserUniqueKey(entry.getUserIP(), entry.getUserName(), entry.getChannelID());
+    cacheEntries.insert(userKey, entry); // replace the last value or insert
 }
 
 QString UsersDataCache::getUserUniqueKey(const QString &userIp, const QString &userName,
