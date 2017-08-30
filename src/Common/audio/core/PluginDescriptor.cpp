@@ -5,17 +5,17 @@
 
 using namespace Audio;
 
-PluginDescriptor::PluginDescriptor()
-    : name(""),
+PluginDescriptor::PluginDescriptor() :
+      name(""),
       category(PluginDescriptor::Invalid_Plugin),
       path(""),
       manufacturer("")
 {
-
+    //
 }
 
-PluginDescriptor::PluginDescriptor(const QString &name, Category category, const QString &manufacturer, const QString &path)
-    : name(name),
+PluginDescriptor::PluginDescriptor(const QString &name, Category category, const QString &manufacturer, const QString &path) :
+      name(name),
       category(category),
       path(path),
       manufacturer(manufacturer)
@@ -82,11 +82,12 @@ QString PluginDescriptor::getVstPluginNameFromPath(const QString &path)
 {
     QString name = QFile(path).fileName();
     int indexOfDirSeparator = name.lastIndexOf("/");
-    if(indexOfDirSeparator >= 0){
+    if (indexOfDirSeparator >= 0) {
         name = name.right(name.length() - indexOfDirSeparator - 1);
     }
+
     int indexOfPoint = name.lastIndexOf(".");
-    if(indexOfPoint > 0){
+    if (indexOfPoint > 0) {
         name = name.left(indexOfPoint);
     }
     return name;

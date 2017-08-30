@@ -14,7 +14,6 @@ LooperState::LooperState(Looper *looper)
 
 }
 
-
 // ------------------------------------------------
 
 StoppedState::StoppedState()
@@ -85,7 +84,7 @@ void PlayingState::mixTo(SamplesBuffer &samples, uint samplesToProcess)
     }
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+// -------------------------------------------------------
 
 RecordingState::RecordingState(Looper *looper, quint8 recordingLayer)
     : LooperState(looper),

@@ -13,6 +13,7 @@ namespace Midi {
 
 class MidiDriver
 {
+
 public:
     MidiDriver();
     virtual ~MidiDriver();
@@ -33,7 +34,7 @@ public:
     virtual void setInputDevicesStatus(const QList<bool> &statuses);
 
 protected:
-    QList<bool> inputDevicesEnabledStatuses;// store the globally enabled midi input devices
+    QList<bool> inputDevicesEnabledStatuses; // store the globally enabled midi input devices
 };
 
 class NullMidiDriver : public MidiDriver
@@ -72,6 +73,7 @@ class NullMidiDriver : public MidiDriver
         return std::vector<MidiMessage>();
     }
 };
-}
+
+} // namespace
 
 #endif // MIDIDRIVER_H

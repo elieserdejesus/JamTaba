@@ -13,9 +13,9 @@
 #include "Utils.h"
 #include "audio/NinjamTrackNode.h"
 
-const int NinjamTrackView::WIDE_HEIGHT = 70; //height used in horizontal layout for wide tracks
+const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
-// +++++++++++++++++++++++++
+
 NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID) :
     BaseTrackView(mainController, trackID),
     orientation(Qt::Vertical),
@@ -49,7 +49,7 @@ void NinjamTrackView::setReceiveState(bool receive)
 {
     setActivatedStatus(!receive);
 
-    //send a message to ninjam server disabling channel receive status
+    // send a message to ninjam server disabling channel receive status
     mainController->setChannelReceiveStatus(userFullName, channelIndex, receive);
 
     // stop rendering downloaded audio
@@ -156,7 +156,6 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
     }
 }
 
-// +++++++++++++++
 void NinjamTrackView::updateGuiElements()
 {
     if (!isActivated())
@@ -173,12 +172,12 @@ void NinjamTrackView::setActivatedStatus(bool deactivated)
 {
     BaseTrackView::setActivatedStatus(deactivated);
 
-    if (deactivated) {// remote user stop xmiting and the track is greyed/unlighted?
+    if (deactivated) { // remote user stop xmiting and the track is greyed/unlighted?
         Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
         if (trackNode)
             trackNode->resetLastPeak(); // reset the internal node last peak to avoid getting the last peak calculated when the remote user was transmiting.
 
-        downloadingFirstInterval = true; //waiting for the first interval
+        downloadingFirstInterval = true; // waiting for the first interval
         chunksDisplay->reset();
     }
 }

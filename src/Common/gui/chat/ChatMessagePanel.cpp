@@ -26,7 +26,8 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, con
     ui->setupUi(this);
 
     initialize(userName, msg, userNameBackgroundColor, textColor, showTranslationButton, showBlockButton);
-    connect(ui->blockButton, SIGNAL(clicked(bool)), this, SLOT(fireBlockingUserSignal()));
+
+    connect(ui->blockButton, &QPushButton::clicked, this, &ChatMessagePanel::fireBlockingUserSignal);
 }
 
 void ChatMessagePanel::focusInEvent(QFocusEvent *ev)
@@ -39,8 +40,8 @@ void ChatMessagePanel::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
         ui->retranslateUi(this);
-
     }
+
     QWidget::changeEvent(e);
 }
 
@@ -50,7 +51,8 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
 {
     if (!userName.isEmpty() && !userName.isNull()) {
         ui->labelUserName->setText(userName);
-    } else {
+    }
+    else {
         ui->labelUserName->setVisible(false);
     }
 
@@ -68,7 +70,7 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
 void ChatMessagePanel::setMessageLabelText(const QString &msg)
 {
     QString newMessage(msg);
-    newMessage = newMessage.replace(QRegExp("<.+?>"), "");// scape html tags
+    newMessage = newMessage.replace(QRegExp("<.+?>"), ""); // scape html tags
     newMessage = newMessage.replace("\n", "<br/>");
     newMessage = replaceLinksInString(newMessage);
 
@@ -106,8 +108,7 @@ void ChatMessagePanel::translate()
     QNetworkRequest req;
     req.setUrl(QUrl(url));
     req.setOriginatingObject(this);
-    req.setRawHeader("User-Agent",
-                     "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36");
+    req.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36");
 
     qCDebug(jtGUI) << "Translating:" << url;
 
@@ -119,7 +120,7 @@ void ChatMessagePanel::translate()
     QObject::connect(httpClient, SIGNAL(finished(QNetworkReply *)), this,
                      SLOT(on_networkReplyFinished(QNetworkReply *)));
 
-    ui->labelMessage->setText("..."); //translating
+    ui->labelMessage->setText("..."); // translating
 }
 
 void ChatMessagePanel::on_translateButton_clicked()
@@ -127,10 +128,11 @@ void ChatMessagePanel::on_translateButton_clicked()
     if (ui->translateButton->isChecked()) {
         if (translatedText.isEmpty())
             translate();
-        else{
+        else {
             setMessageLabelText("<i>" + translatedText + "</i>");
         }
-    } else {
+    }
+    else {
         setMessageLabelText(originalText);
     }
 }

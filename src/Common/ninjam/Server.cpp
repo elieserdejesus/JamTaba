@@ -44,7 +44,7 @@ void Server::addUser(const User &user)
 void Server::updateUserChannel(const UserChannel &serverChannel)
 {
     QString userFullName = serverChannel.getUserFullName();
-    if(users.contains(userFullName)){
+    if (users.contains(userFullName)) {
         quint8 channelIndex = serverChannel.getIndex();
         users[userFullName].updateChannelName(channelIndex, serverChannel.getName());
         users[userFullName].updateChannelReceiveStatus(channelIndex, serverChannel.isActive());
@@ -53,7 +53,7 @@ void Server::updateUserChannel(const UserChannel &serverChannel)
 
 void Server::updateUserChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receive)
 {
-    if(users.contains(userFullName)){
+    if (users.contains(userFullName)) {
         users[userFullName].updateChannelReceiveStatus(channelIndex, receive);
     }
 }
@@ -61,7 +61,7 @@ void Server::updateUserChannelReceiveStatus(const QString &userFullName, quint8 
 void Server::removeUserChannel(const UserChannel &channel)
 {
     QString userFullName = channel.getUserFullName();
-    if(users.contains(userFullName)){
+    if (users.contains(userFullName)) {
         users[userFullName].removeChannel(channel.getIndex());
     }
 }
@@ -74,14 +74,16 @@ void Server::removeUser(const QString &fullUserName)
 void Server::addUserChannel(const UserChannel &newChannel)
 {
     QString userFullName = newChannel.getUserFullName();
-    if(users.contains(userFullName)){
+    if (users.contains(userFullName)) {
         int userChannelsCount = users[userFullName].getChannelsCount();
-        if(userChannelsCount < maxChannels)
+        if (userChannelsCount < maxChannels)
             users[userFullName].addChannel(newChannel);
         else
-            qCritical() << "Can't add more channels for " << userFullName << "(using" <<
-                                        QString::number(userChannelsCount) << " channels). The server maxChannels is " <<
-                                        QString::number(maxChannels);
+            qCritical() << "Can't add more channels for "
+                        << userFullName << "(using"
+                        << QString::number(userChannelsCount)
+                        << " channels). The server maxChannels is "
+                        << QString::number(maxChannels);
     }
 }
 
@@ -89,6 +91,7 @@ User Server::getUser(const QString &userFullName) const
 {
     if (users.contains(userFullName))
         return users[userFullName];
+
     return User("");
 }
 
@@ -111,6 +114,7 @@ bool Server::setBpm(quint16 bpm)
         this->bpm = bpm;
         return true;
     }
+
     return false;
 }
 
@@ -123,5 +127,6 @@ bool Server::setBpi(quint16 bpi)
         this->bpi = bpi;
         return true;
     }
+
     return false;
 }

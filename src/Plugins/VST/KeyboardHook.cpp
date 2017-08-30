@@ -18,6 +18,7 @@ QComboBox is FOCUSED, passing the key[press/release] message to the focused widg
 passing the same event to VST host).
     The QLineEdits are: local channels names and chat text. The QComboBoxes are the ninjam
 BPI and BPM combos.
+
 */
 
 LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lParam)
@@ -33,15 +34,15 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
         if (widgetIsFocusable) {
             KBDLLHOOKSTRUCT *keyData = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
 
-            //SYSTEM events are not 'trapped' by Jamtaba
+            // SYSTEM events are not 'trapped' by Jamtaba
             if (wParam == WM_SYSKEYDOWN || wParam == WM_SYSKEYUP)
                 return CallNextHookEx(NULL, nCode, wParam, lParam);
 
-            bool usingIME = ImmGetOpenStatus(ImmGetContext(GetActiveWindow())); //detect if japanese input (IME) is activated - issue #472
+            bool usingIME = ImmGetOpenStatus(ImmGetContext(GetActiveWindow())); // detect if japanese input (IME) is activated - issue #472
             if (usingIME) {
-                //we need detect if user is pressing VK_RETURN 2 times: 1 time to finish IME notation window and the second time to send the message in ninjam chat.
+                // we need detect if user is pressing VK_RETURN 2 times: 1 time to finish IME notation window and the second time to send the message in ninjam chat.
                 bool hookingReturnKey = KeyboardHook::lastImeKeyUpWasReturn && keyData->vkCode == VK_RETURN;
-                if (wParam == WM_KEYUP) //we need "remember" if the last key was VK_RETURN
+                if (wParam == WM_KEYUP) // we need "remember" if the last key was VK_RETURN
                     KeyboardHook::lastImeKeyUpWasReturn = !hookingReturnKey && keyData->vkCode == VK_RETURN;
 
                 if (!hookingReturnKey)
@@ -69,7 +70,7 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
                 }
                 ev = new QKeyEvent(eventType, keyData->vkCode, modifiers, keyText);
             }
-            else { //other/special keys
+            else { // other/special keys
                 switch (keyData->vkCode) {
                 case VK_BACK:
                     ev = new QKeyEvent(eventType, Qt::Key_Backspace, Qt::NoModifier);
@@ -104,7 +105,7 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
             }
         }
     }
-    return CallNextHookEx(NULL, nCode, wParam, lParam);// Forward the event to VST host
+    return CallNextHookEx(NULL, nCode, wParam, lParam); // Forward the event to VST host
 }
 
 QString KeyboardHook::vkCodeToText(DWORD vkCode, DWORD scanCode)
@@ -123,7 +124,7 @@ QString KeyboardHook::vkCodeToText(DWORD vkCode, DWORD scanCode)
 
 void KeyboardHook::installLowLevelKeyboardHook()
 {
-    if (!globalKeyboardHook) {// not installed?
+    if (!globalKeyboardHook) { // not installed?
         globalKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, globalKeyboardHookProcedure,
                                               qWinAppInst(), NULL);
         if (!globalKeyboardHook)

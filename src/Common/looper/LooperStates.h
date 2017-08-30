@@ -70,6 +70,8 @@ private:
     SamplesBuffer lastInputBuffer;
 };
 
+// -------------------------------------------------------
+
 class RecordingState : public LooperState
 {
 public:

@@ -7,7 +7,7 @@
 // anti troll scheme to avoid multiple connections in ninjam servers
 bool JamTabaPlugin::instanceIsInitialized = false;
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 bool JamTabaPlugin::pluginIsInitialized()
 {
     return JamTabaPlugin::instanceIsInitialized;
@@ -41,7 +41,7 @@ void JamTabaPlugin::initialize()
             QApplication::setApplicationName("Jamtaba 2");
             QApplication::setApplicationVersion(VERSION);
 
-            Persistence::Settings settings;// read from file in constructor
+            Persistence::Settings settings; // read from file in constructor
             settings.load();
             qCDebug(jtVstPlugin)<< "Creating controller!";
             controller.reset(createPluginMainController(settings, this));

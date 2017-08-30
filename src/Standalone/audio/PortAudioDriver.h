@@ -5,8 +5,10 @@
 #include "portaudio.h"
 
 namespace Audio {
+
 class PortAudioDriver : public AudioDriver
 {
+
 public:
     PortAudioDriver(Controller::MainController *mainController, int audioDeviceIndex,
                     int firstInputIndex, int lastInputIndex, int firstOutputIndex,
@@ -69,6 +71,7 @@ private:
     const bool useSystemDefaultDevices;
 
 };
-}
+
+} // namespace
 
 #endif

@@ -134,7 +134,7 @@ void FxPanelItem::showPluginsListMenu(const QPoint &p)
 #endif
     //categories << PluginDescriptor::Native_Plugin; // native plugins are not implemented yet
 
-    for(PluginDescriptor::Category category : categories) { // category = VST, NATIVE, AU
+    for (PluginDescriptor::Category category : categories) { // category = VST, NATIVE, AU
 
         QMenu *categoryMenu = &menu;
         if (categories.size() > 1) {
@@ -145,7 +145,7 @@ void FxPanelItem::showPluginsListMenu(const QPoint &p)
 
         QMap<QString, QList<Audio::PluginDescriptor>> plugins = mainController->getPluginsDescriptors(category);
 
-        for(const QString &manufacturer : plugins.keys()) {
+        for (const QString &manufacturer : plugins.keys()) {
             bool canCreateManufacturerMenu = !manufacturer.isEmpty() && plugins[manufacturer].size() > 1; // when the manufacturer has only one plugin this plugin is showed in the Root menu
             QMenu *parentMenu = categoryMenu;
             if (canCreateManufacturerMenu) {
@@ -167,13 +167,12 @@ void FxPanelItem::showPluginsListMenu(const QPoint &p)
 
 void FxPanelItem::on_contextMenu(QPoint p)
 {
-    if (!containPlugin()) {// show plugins list
+    if (!containPlugin()) { // show plugins list
         showPluginsListMenu(p);
     }
-    else {// show actions list if contain a plugin
+    else { // show actions list if contain a plugin
         QMenu menu(this);
-        menu.connect(&menu, SIGNAL(triggered(QAction *)), this,
-                     SLOT(on_actionMenuTriggered(QAction *)));
+        menu.connect(&menu, SIGNAL(triggered(QAction *)), this, SLOT(on_actionMenuTriggered(QAction *)));
         menu.addAction(tr("bypass"));
         menu.addAction(tr("remove"));
         menu.move(mapToGlobal(p));
@@ -189,12 +188,12 @@ void FxPanelItem::loadSelectedPlugin()
         return;
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();// force the cursor change
+    QApplication::processEvents(); // force the cursor change
 
     // add a new plugin
     Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString(action->data().toString());
     qint32 pluginSlotIndex = localTrackView->getPluginFreeSlotIndex();
-    if (pluginSlotIndex >= 0) { //valid plugin slot (-1 will be returned when no free plugin slots are available)
+    if (pluginSlotIndex >= 0) { // valid plugin slot (-1 will be returned when no free plugin slots are available)
         quint32 trackIndex = localTrackView->getInputIndex();
         Audio::Plugin *plugin = mainController->addPlugin(trackIndex, pluginSlotIndex, descriptor);
         if (plugin) {
@@ -204,7 +203,7 @@ void FxPanelItem::loadSelectedPlugin()
             // if newProcessor is the first added processor, and is a virtual instrument (VSTi), and the subchannel is 'no input' then change the input selection to midi
             if (pluginSlotIndex == 0 && plugin->isVirtualInstrument()) {
                 if (localTrackView->isNoInput()) {
-                    localTrackView->setToMidi();// select the first midi device, all channels
+                    localTrackView->setToMidi(); // select the first midi device, all channels
                 }
             }
         }
@@ -219,13 +218,12 @@ void FxPanelItem::on_actionMenuTriggered(QAction *a)
 {
     if (containPlugin()) {
         if (a->text() == tr("bypass"))
-            bypassButton->click();// simulate a click in the bypass button
+            bypassButton->click(); // simulate a click in the bypass button
         else if (a->text() == tr("remove"))
-            unsetPlugin();// set this->plugin to nullptr AND remove from mainController
+            unsetPlugin(); // set this->plugin to nullptr AND remove from mainController
     }
 }
 
-// ++++++++++++++++++++++++++
 void FxPanelItem::showPluginGui(Audio::Plugin *plugin)
 {
     if (plugin) {

@@ -9,16 +9,16 @@ quint64 BlinkableButton::lastBlinkToggle = 0;
 quint32 BlinkableButton::blinkTime = 250;
 bool BlinkableButton::blinkPropertySetted = false;
 
-BlinkableButton::BlinkableButton(const QString &text, QWidget *parent)
-    : QPushButton(text, parent),
-      blinking(false)
+BlinkableButton::BlinkableButton(const QString &text, QWidget *parent) :
+    QPushButton(text, parent),
+    blinking(false)
 {
     instances.append(this);
 }
 
-BlinkableButton::BlinkableButton(QWidget *parent)
-    : QPushButton(parent),
-      blinking(false)
+BlinkableButton::BlinkableButton(QWidget *parent) :
+    QPushButton(parent),
+    blinking(false)
 {
     instances.append(this);
 }

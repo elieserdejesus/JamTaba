@@ -9,7 +9,6 @@
 
 using namespace Controller;
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainControllerVST::MainControllerVST(const Persistence::Settings &settings, JamTabaVSTPlugin *plugin) :
     MainControllerPlugin(settings, plugin),
     vstPlugin(plugin)

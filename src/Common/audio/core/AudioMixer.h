@@ -22,8 +22,10 @@ class LocalInputNode;
 
 class AudioMixer
 {
+
 private:
     AudioMixer(const AudioMixer &other);
+
 public:
     AudioMixer(int sampleRate);
     ~AudioMixer();
@@ -31,18 +33,21 @@ public:
     void addNode(AudioNode *node);
     void removeNode(AudioNode *node);
 
-    inline void setSampleRate(int newSampleRate)
-    {
-        this->sampleRate = newSampleRate;
-    }
+    void setSampleRate(int newSampleRate);
 
 private:
     QList<AudioNode *> nodes;
     int sampleRate;
     QMap<AudioNode *, SamplesBufferResampler *> resamplers;
     Controller::MainController *mainController;
+
 };
-// +++++++++++++++++++++++
+
+inline void AudioMixer::setSampleRate(int newSampleRate)
+{
+    this->sampleRate = newSampleRate;
 }
+
+} // namespace
 
 #endif

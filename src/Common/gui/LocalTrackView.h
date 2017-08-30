@@ -32,10 +32,7 @@ public:
 
     void detachMainController();
 
-    inline int getInputIndex() const
-    {
-        return getTrackID();
-    }
+    int getInputIndex() const;
 
     Audio::LocalInputNode *getInputNode() const;
 
@@ -44,7 +41,7 @@ public:
     virtual void setPeakMetersOnlyMode(bool peakMetersOnly);
     void togglePeakMetersOnlyMode();
 
-    inline bool isShowingPeakMetersOnly() const { return peakMetersOnly; }
+    bool isShowingPeakMetersOnly() const;
 
     QSize sizeHint() const;
 
@@ -86,5 +83,16 @@ private slots:
     void updateLooperButtonIcon();
 
 };
+
+
+inline bool LocalTrackView::isShowingPeakMetersOnly() const
+{
+    return peakMetersOnly;
+}
+
+inline int LocalTrackView::getInputIndex() const
+{
+    return getTrackID();
+}
 
 #endif

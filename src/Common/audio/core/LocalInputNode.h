@@ -112,7 +112,6 @@ protected:
     void postFaderProcess(Audio::SamplesBuffer &out) override;
 
 private:
-    //int globalFirstInputIndex; // store the first input index selected globally by users in preferences menu
 
     ChannelRange audioInputRange;
     // store user selected input range. For example, user can choose just the
@@ -256,6 +255,6 @@ inline bool LocalInputNode::isActivated() const
     return true;
 }
 
-}//namespace
+} // namespace
 
 #endif

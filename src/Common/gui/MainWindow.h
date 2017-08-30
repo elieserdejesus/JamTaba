@@ -44,15 +44,9 @@ public:
 
     virtual Persistence::LocalInputTrackSettings getInputsSettings() const;
 
-    inline int getChannelGroupsCount() const
-    {
-        return localGroupChannels.size();
-    }
+    int getChannelGroupsCount() const;
 
-    inline QString getChannelGroupName(int index) const
-    {
-        return localGroupChannels.at(index)->getGroupName();
-    }
+    QString getChannelGroupName(int index) const;
 
     void highlightChannelGroup(int index) const;
 
@@ -61,10 +55,7 @@ public:
 
     void exitFromRoom(bool normalDisconnection, QString disconnectionMessage = "");
 
-    virtual inline Controller::MainController *getMainController()
-    {
-        return mainController;
-    }
+    virtual Controller::MainController *getMainController() const;
 
     virtual void loadPreset(const Persistence::Preset &preset);
     void resetLocalChannels();
@@ -216,7 +207,7 @@ private slots:
 
     void hideChordsPanel();
 
-    //preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
+    // preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
     void setJamRecorderStatus(const QString &writerId, bool status);
     void setRecordingPath(const QString &newRecordingPath);
@@ -267,7 +258,7 @@ private:
 
     QScopedPointer<NinjamRoomWindow> ninjamWindow;
 
-    QScopedPointer<Login::RoomInfo> roomToJump;// store the next room reference when jumping from on room to another
+    QScopedPointer<Login::RoomInfo> roomToJump; // store the next room reference when jumping from on room to another
     QString passwordToJump;
 
     static bool jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2);
@@ -324,18 +315,31 @@ private:
 
     void enableLooperButtonInLocalTracks(bool enable);
 
-
-
     static bool themeCanUseNightModeWorldMaps(const QString &themeName);
 
     static QString getStripedThemeName(const QString &fullThemeName);
 
-    PerformanceMonitor performanceMonitor;//cpu and memmory usage
+    PerformanceMonitor performanceMonitor; // cpu and memmory usage
     qint64 lastPerformanceMonitorUpdate;
     static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
     static const QString NIGHT_MODE_SUFFIX;
 
 };
+
+inline Controller::MainController *MainWindow::getMainController() const
+{
+    return mainController;
+}
+
+inline int MainWindow::getChannelGroupsCount() const
+{
+    return localGroupChannels.size();
+}
+
+inline QString MainWindow::getChannelGroupName(int index) const
+{
+    return localGroupChannels.at(index)->getGroupName();
+}
 
 #endif

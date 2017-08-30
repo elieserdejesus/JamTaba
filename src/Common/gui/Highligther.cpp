@@ -8,12 +8,12 @@ Highligther *Highligther::instance = nullptr;
 Highligther::Highligther() :
     lastHighlightedWidget(nullptr)
 {
-    QObject::connect(&timer, SIGNAL(timeout()), this, SLOT(on_timerStopped()));
+    QObject::connect(&timer, &QTimer::timeout, this, &Highligther::on_timerStopped);
 }
 
 void Highligther::highlight(QWidget *w)
 {
-    QObject::connect(w, SIGNAL(destroyed(QObject *)), this, SLOT(on_objectDestroyed(QObject *)));
+    QObject::connect(w, &QWidget::destroyed, this, &Highligther::on_objectDestroyed);
 
     if (lastHighlightedWidget) {
         timer.blockSignals(true);
@@ -30,8 +30,7 @@ void Highligther::stopHighlight()
 {
     if (lastHighlightedWidget) {
         setWidgetHighlightStatus(lastHighlightedWidget, false);
-        QObject::disconnect(lastHighlightedWidget, SIGNAL(destroyed(QObject *)), this,
-                            SLOT(on_objectDestroyed(QObject *)));
+        QObject::disconnect(lastHighlightedWidget, &QWidget::destroyed, this, &Highligther::on_objectDestroyed);
         lastHighlightedWidget = nullptr;
     }
 }
@@ -59,6 +58,7 @@ Highligther *Highligther::getInstance()
 {
     if (!instance)
         instance = new Highligther();
+
     return instance;
 }
 

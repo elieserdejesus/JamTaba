@@ -42,10 +42,7 @@ public:
     void setBufferingPercentage(int percentage);
     void setWaveDrawingMode(WavePeakPanel::WaveDrawingMode mode);
 
-    inline Login::RoomInfo getRoomInfo() const
-    {
-        return roomInfo;
-    }
+    Login::RoomInfo getRoomInfo() const;
 
 signals:
     void startingListeningTheRoom(const Login::RoomInfo &roomInfo);
@@ -71,20 +68,26 @@ private:
     void createWaveDrawingButtonsLayout(QLayout *layout);
     void setWaveDrawingButtonsVisibility(bool showButtons);
 
-     void initialize(const Login::RoomInfo &roomInfo);
-     bool roomContainsBotsOnly(const Login::RoomInfo &roomInfo);
-     bool userIsBot(const Login::UserInfo &userInfo);
-     void updateButtonListen();
+    void initialize(const Login::RoomInfo &roomInfo);
+    bool roomContainsBotsOnly(const Login::RoomInfo &roomInfo);
+    bool userIsBot(const Login::UserInfo &userInfo);
+    void updateButtonListen();
 
-     static bool userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2);
-     QString buildRoomDescriptionString();
+    static bool userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2);
+    QString buildRoomDescriptionString();
 
-     void translateUi();
-     void updateStyleSheet();
-     void createMapWidgets();
-     void updateMap();
+    void translateUi();
+    void updateStyleSheet();
+    void createMapWidgets();
+    void updateMap();
 
-     bool static canShowNinjamServerPort(const QString &serverName);
- };
+    bool static canShowNinjamServerPort(const QString &serverName);
+
+};
+
+inline Login::RoomInfo JamRoomViewPanel::getRoomInfo() const
+{
+    return roomInfo;
+}
 
  #endif // JAMROOMVIEWPANEL_H

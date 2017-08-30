@@ -156,7 +156,7 @@ private:
     int beatsPerInterval;
     int beatsPerAccent;
     bool showAccents;
-    bool usingLowContrastColors;//used to paint with low contrast when using chord progressions
+    bool usingLowContrastColors; // used to paint with low contrast when using chord progressions
 
     static const double PI;
 

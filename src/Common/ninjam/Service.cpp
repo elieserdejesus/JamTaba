@@ -14,12 +14,12 @@ using namespace Ninjam;
 
 const QStringList Service::botNames = buildBotNamesList();
 
-// ++++++++++++++++++++++++++++
 /**
     This is a nested class used to bind the downloaded audio data (encoded in ogg vorbis) with a GUID (global unique ID),
-an user name and a channel index (users can use more than one channel). When a dowload is finished (the ninjam audio interval is
-fully downloaded) we need emit a signal, and in this moment we need the user name and the channel index.
+    an user name and a channel index (users can use more than one channel). When a dowload is finished (the ninjam audio interval is
+    fully downloaded) we need emit a signal, and in this moment we need the user name and the channel index.
 */
+
 class Service::Download
 {
 
@@ -32,14 +32,14 @@ public:
 
     }
 
-    Download()//this constructor is necessary to use Download in a QMap without pointers
+    Download() // this constructor is necessary to use Download in a QMap without pointers
     {
-
+        //
     }
 
     ~Download()
     {
-
+        //
     }
 
     inline void appendEncodedData(const QByteArray &data)
@@ -70,7 +70,7 @@ public:
 private:
     quint8 channelIndex;
     QString userFullName;
-    QByteArray GUID; //Global Unique ID
+    QByteArray GUID; // Global Unique ID
     QByteArray vorbisData;
 };
 
@@ -91,8 +91,7 @@ Service::~Service()
         return;
 
     disconnect(socket, SIGNAL(readyRead()), this, SLOT(handleAllReceivedMessages()));
-    disconnect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
-               SLOT(handleSocketError(QAbstractSocket::SocketError)));
+    disconnect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
     disconnect(socket, SIGNAL(disconnected()), this, SLOT(handleSocketDisconnection()));
     disconnect(socket, SIGNAL(connected()), this, SLOT(handleSocketConnection()));
 
@@ -104,8 +103,7 @@ void Service::setupSocketSignals()
 {
     Q_ASSERT(socket);
     connect(socket, SIGNAL(readyRead()), this, SLOT(handleAllReceivedMessages()));
-    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
-            SLOT(handleSocketError(QAbstractSocket::SocketError)));
+    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
     connect(socket, SIGNAL(disconnected()), this, SLOT(handleSocketDisconnection()));
     connect(socket, SIGNAL(connected()), this, SLOT(handleSocketConnection()));
 }
@@ -115,6 +113,7 @@ void Service::sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &en
 {
     if (!initialized)
         return;
+
     sendMessageToServer(ClientIntervalUploadWrite(GUID, encodedData, isLastPart));
 }
 
@@ -125,19 +124,20 @@ void Service::sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, boo
 
     sendMessageToServer(ClientUploadIntervalBegin(GUID, channelIndex, this->userName, isAudioInterval));
 }
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //this slot is invoked when socket receive new data
 void Service::handleAllReceivedMessages()
 {
     messagesHandler->handleAllMessages();
-    if(needSendKeepAlive()){
+    if (needSendKeepAlive()) {
         sendMessageToServer(ClientKeepAlive());
     }
 }
 
-void Service::clear(){
+void Service::clear()
+{
     initialized = false;
     currentServer.reset();
 }
@@ -161,7 +161,7 @@ void Service::handleSocketDisconnection()
 {
     Q_ASSERT(socket);
     qCDebug(jtNinjamProtocol) << "socket disconnected from " << socket->peerName();
-    if(currentServer){
+    if (currentServer) {
         emit disconnectedFromServer(*currentServer);
     }
     clear();
@@ -199,6 +199,7 @@ float Service::getIntervalPeriod() const
 {
     if (currentServer)
         return 60000.0f / currentServer->getBpm() * currentServer->getBpi();
+
     return 0.0f;
 }
 
@@ -221,7 +222,7 @@ void Service::sendChatMessageToServer(const QString &message)
 
 void Service::sendMessageToServer(const ClientMessage &message)
 {
-    if(!socket)
+    if (!socket)
         return;
 
     QByteArray outBuffer;
@@ -254,7 +255,7 @@ bool Service::needSendKeepAlive() const
 
 void Service::process(const UserInfoChangeNotifyMessage &msg)
 {
-    foreach (const User &user, msg.getUsers()) {
+    for (const User &user : msg.getUsers()) {
         if (!currentServer->containsUser(user)) {
             currentServer->addUser(user);
         }
@@ -262,7 +263,7 @@ void Service::process(const UserInfoChangeNotifyMessage &msg)
         handleUserChannels(user);
 
         // enable receive for all user channels
-        foreach (const UserChannel &channel, user.getChannels()) {
+        for (const UserChannel &channel : user.getChannels()) {
             setChannelReceiveStatus(user.getFullName(), channel.getIndex(), true);
         }
     }
@@ -275,7 +276,7 @@ void Service::setChannelReceiveStatus(const QString &userFullName, quint8 channe
 
         User user = currentServer->getUser(userFullName);
         quint32 channelsMask = 0;
-        foreach (const UserChannel &channel, user.getChannels()) {
+        for (const UserChannel &channel : user.getChannels()) {
             if (channel.isActive() || (channel.getIndex() == channelIndex && receiveChannel))
                 channelsMask |= 1 << channel.getIndex();
         }
@@ -357,10 +358,10 @@ void Service::startServerConnection(const QString &serverIp, int serverPort,
                                     const QString &password)
 {
 
-    clear();//reset some internal state
+    clear(); // reset some internal state
 
-    if(!socket){
-        socket = createSocket();//createSocket is protected and can be overrided to create a custom socket for test purpouses.
+    if (!socket) {
+        socket = createSocket(); // createSocket is protected and can be overrided to create a custom socket for test purpouses.
         setupSocketSignals();
     }
     Q_ASSERT(socket);
@@ -406,12 +407,12 @@ void Service::handleUserChannels(const User &remoteUser)
 {
     // check for new channels
     User localUser = currentServer->getUser(remoteUser.getFullName());
-    foreach (const UserChannel &serverChannel, remoteUser.getChannels()) {
+    for (const UserChannel &serverChannel : remoteUser.getChannels()) {
         if (serverChannel.isActive()) {
             if (!localUser.hasChannel(serverChannel.getIndex())) {
                 currentServer->addUserChannel(serverChannel);
                 emit userChannelCreated(localUser, serverChannel);
-            } else {// check for channel updates
+            } else { // check for channel updates
                 if (localUser.hasChannels()) {
                     if (channelIsOutdate(localUser, serverChannel)) {
                         currentServer->updateUserChannel(serverChannel);
@@ -430,7 +431,7 @@ void Service::handleUserChannels(const User &remoteUser)
 bool Service::channelIsOutdate(const User &user, const UserChannel &serverChannel)
 {
     if (user.getFullName() == serverChannel.getUserFullName()) {
-        if(user.hasChannel(serverChannel.getIndex())){
+        if (user.hasChannel(serverChannel.getIndex())) {
             UserChannel userChannel = user.getChannel(serverChannel.getIndex());
             return userChannel.getName() != serverChannel.getName();
         }
@@ -503,8 +504,10 @@ void Service::process(const ServerConfigChangeNotifyMessage &msg)
 {
     quint16 bpi = msg.getBpi();
     quint16 bpm = msg.getBpm();
+
     if (bpi != currentServer->getBpi())
         setBpi(bpi);
+
     if (bpm != currentServer->getBpm())
         setBpm(bpm);
 }

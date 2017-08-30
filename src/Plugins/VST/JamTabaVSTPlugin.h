@@ -14,10 +14,9 @@
 
 AudioEffect *createEffectInstance(audioMasterCallback audioMaster);
 
-// ++++++++++++++++++++++++++++++++
-
 class JamTabaVSTPlugin : public JamTabaPlugin, public AudioEffectX
 {
+
 public:
     JamTabaVSTPlugin (audioMasterCallback audioMaster);
     ~JamTabaVSTPlugin();
@@ -63,8 +62,6 @@ protected:
     MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
 };
 
-
-/** ----------------------- Inline implementations --------------------------- */
 
 VstPlugCategory JamTabaVSTPlugin::getPlugCategory()
 {

@@ -15,6 +15,7 @@ public:
     virtual void setOrientation(Qt::Orientation orientation);
     QSize minimumSizeHint() const override;
     virtual void updateStyleSheet();
+
 protected:
 
     virtual void recreateInterpolatedColors() = 0;
@@ -23,7 +24,7 @@ protected:
 
     void paintSegments(QPainter &painter, const QRectF &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors);
 
-    inline bool isVertical() const { return orientation == Qt::Vertical; }
+    bool isVertical() const;
 
     static float limitFloatValue(float value, float minValue = 0.0f, float maxValue = 1.0f);
 
@@ -40,12 +41,16 @@ protected:
     static const int DEFAULT_DECAY_TIME;
 };
 
+inline bool BaseMeter::isVertical() const
+{
+    return orientation == Qt::Vertical;
+}
+
 //========================================================================
 
 class AudioMeter : public BaseMeter
 {
     Q_OBJECT
-
 
     // custom properties defined in CSS files
     Q_PROPERTY(QColor rmsColor MEMBER rmsColor WRITE setRmsColor)
@@ -102,7 +107,7 @@ private:
     std::vector<QColor> peakColors;
     std::vector<QColor> rmsColors;
 
-    //static painting flags. Turning on/off will affect all audio meters.
+    // static painting flags. Turning on/off will affect all audio meters.
     static bool paintingMaxPeakMarker;
     static bool paintingPeaks;
     static bool paintingRMS;
@@ -146,13 +151,15 @@ private:
 
 inline qreal AudioMeter::getSmoothedLinearPeakValue(qreal linearValue)
 {
-    const static qreal smoothFactor = 1/10.0f; // used to get more equally spaced markers
+    const static qreal smoothFactor = 1.0/10.0f; // used to get more equally spaced markers
 
     return std::pow(linearValue, smoothFactor);
 }
 
+
 class MidiActivityMeter : public BaseMeter
 {
+
 public:
     MidiActivityMeter(QWidget *parent);
     void setSolidColor(const QColor &color);
@@ -161,6 +168,7 @@ public:
 protected:
     void paintEvent(QPaintEvent *event) override;
     void recreateInterpolatedColors() override;
+
 private:
     QColor midiActivityColor;
     std::vector<QColor> colors;

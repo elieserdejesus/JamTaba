@@ -107,6 +107,7 @@ Configurator *Configurator::getInstance()
 {
     if (Configurator::instance.isNull())
         instance.reset(new Configurator());
+
     return instance.data();
 }
 
@@ -119,7 +120,7 @@ QStringList Configurator::getPresetFilesNames(bool fullpath)
     QFileInfoList fileInfos = presetsDir.entryInfoList(nameFilters, filters, sort);
 
     QStringList filesPaths;
-    foreach (const QFileInfo &item, fileInfos) {
+    for (const QFileInfo &item : fileInfos) {
         if (item.isFile()) {
             if (fullpath)
                 filesPaths.append(item.absoluteFilePath());
@@ -135,6 +136,7 @@ QDir Configurator::getApplicationDataDir()
     QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     if (!dir.exists())
         dir.mkpath(".");
+
     return dir;
 }
 
@@ -142,7 +144,7 @@ bool Configurator::setUp()
 {
     initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
 
-    exportLogIniFile(); //copy log config file from resources to user hard disk
+    exportLogIniFile(); // copy log config file from resources to user hard disk
 
     setupLogConfigFile();
 
@@ -323,10 +325,7 @@ void Configurator::deletePreset(const QString &name)
         qDebug() << "!!! Could not delete Preset " << name;
 }
 
-// -------------------------------------------------------------------------------
-
 Configurator::~Configurator()
 {
+    //
 }
-
-// -------------------------------------------------------------------------------

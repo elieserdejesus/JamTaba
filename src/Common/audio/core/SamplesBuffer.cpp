@@ -5,9 +5,6 @@
 #include <cstring>
 
 using namespace Audio;
-// +++++++++++++++++=
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
@@ -15,10 +12,11 @@ SamplesBuffer::SamplesBuffer(unsigned int channels) :
     channels(channels),
     frameLenght(0),
     rmsRunningSum(0.0f),
-    rmsWindowSize(13230) //300 ms in 44100 KHz
+    rmsWindowSize(13230) // 300 ms in 44100 KHz
 {
     if (channels == 0)
         qCritical() << "AudioSamplesBuffer::channels == 0";
+
     for (unsigned int c = 0; c < channels; ++c)
         samples.push_back(std::vector<float>());
 
@@ -31,14 +29,14 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
     channels(channels),
     frameLenght(frameLenght),
     rmsRunningSum(0.0f),
-    rmsWindowSize(13230) //300 ms in 44100 KHz
+    rmsWindowSize(13230) // 300 ms in 44100 KHz
 {
     for (unsigned int c = 0; c < channels; ++c)
         samples.push_back(std::vector<float>(frameLenght));
 }
 
-SamplesBuffer::SamplesBuffer(const SamplesBuffer &other)
-    : channels(other.channels),
+SamplesBuffer::SamplesBuffer(const SamplesBuffer &other) :
+      channels(other.channels),
       frameLenght(other.frameLenght),
       samples(other.samples),
       rmsRunningSum(other.rmsRunningSum),
@@ -70,7 +68,7 @@ void SamplesBuffer::setRmsWindowSize(int samples)
 void SamplesBuffer::invertStereo()
 {
     if (channels != 2)
-        return; //trying invert a non stereo buffer
+        return; // trying invert a non stereo buffer
 
     std::iter_swap(samples.begin(), samples.begin() + 1); // swap first and second channels
 }
@@ -158,7 +156,8 @@ void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain,
             samples[0][i] *= finalLeftGain;
             samples[1][i] *= finalRightGain;
         }
-    } else {
+    }
+    else {
         applyGain(gainFactor, boostFactor);
     }
 }
@@ -177,19 +176,19 @@ void SamplesBuffer::zero()
 
 AudioPeak SamplesBuffer::computePeak()
 {
-    float abs; //max peak absolute value
+    float abs; // max peak absolute value
     float maxPeaks[2] = {0};// left and right peaks
     for (unsigned int c = 0; c < channels; ++c) {
         float maxPeak = 0;
         for (unsigned int i = 0; i < frameLenght; ++i) {
 
-            //max peak
+            // max peak
             abs = std::fabs(samples[c][i]);
             if (abs > maxPeak)
                 maxPeak = abs;
             maxPeaks[c] = maxPeak;
 
-            //rms running squared sum
+            // rms running squared sum
             squaredSums[c] += samples[c][i] * samples[c][i]; // squaring every sample and summing
         }
         summedSamples += frameLenght;
@@ -199,12 +198,12 @@ AudioPeak SamplesBuffer::computePeak()
         squaredSums[1] = squaredSums[0];
     }
 
-    //time to compute new rms values?
+    // time to compute new rms values?
     if (summedSamples >= rmsWindowSize) {
         lastRmsValues[0] = std::sqrt(squaredSums[0]/summedSamples);
         lastRmsValues[1] = std::sqrt(squaredSums[1]/summedSamples);
 
-        squaredSums[0] = squaredSums[1] = 0.0f; //reinitialize the rms running sum
+        squaredSums[0] = squaredSums[1] = 0.0f; // reinitialize the rms running sum
         summedSamples = 0;
     }
 
@@ -226,7 +225,8 @@ void SamplesBuffer::add(const SamplesBuffer &buffer, int internalWriteOffset)
                 samples[c][s + internalWriteOffset] += buffer.samples[c][s];
             }
         }
-    } else {// samples is stereo and buffer is mono
+    }
+    else { // samples is stereo and buffer is mono
         for (unsigned int s = 0; s < framesToProcess; ++s) {
             Q_ASSERT(s + internalWriteOffset < samples[0].size());
             Q_ASSERT(s + internalWriteOffset < samples[1].size());
@@ -275,8 +275,10 @@ void SamplesBuffer::setToStereo()
         for (uint c = 0; c < channelsToAdd; ++c)
             samples.push_back(std::vector<float>(frameLenght));
     }
+
     for (unsigned int c = 0; c < samples.size(); ++c)
         samples[c].resize(frameLenght);
+
     this->channels = 2;
 }
 
@@ -321,8 +323,7 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, int bufferChannelOffset, in
     }
 }
 
-void SamplesBuffer::set(const SamplesBuffer &buffer, unsigned int bufferOffset,
-                        unsigned int samplesToCopy, unsigned int internalOffset)
+void SamplesBuffer::set(const SamplesBuffer &buffer, uint bufferOffset, uint samplesToCopy, uint internalOffset)
 {
     if (buffer.channels <= 0 || channels <= 0)
         return;
@@ -342,8 +343,9 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, unsigned int bufferOffset,
         for (unsigned int c = 0; c < channels; ++c) {
             std::memcpy(&(samples[c][internalOffset]), &(buffer.samples[c][bufferOffset]), bytesToProcess);
         }
-    } else {// different number of channels
-        if (!isMono()) {// copy every &buffer samples to LR in this buffer
+    }
+    else { // different number of channels
+        if (!isMono()) { // copy every &buffer samples to LR in this buffer
             if (!buffer.isMono()) {
                 int channelsToCopy = qMin(channels, buffer.channels);
                 for (int c = 0; c < channelsToCopy; ++c) {
@@ -357,7 +359,7 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, unsigned int bufferOffset,
                 std::memcpy(&(samples[0][internalOffset]), &(buffer.samples[0][bufferOffset]), bytesToProcess);
                 std::memcpy(&(samples[1][internalOffset]), &(buffer.samples[0][bufferOffset]), bytesToProcess);
             }
-        } else {// this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
+        } else { // this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
             for (unsigned int s = 0; s < framesToProcess; ++s) {
                 const int index = s + bufferOffset;
                 float v = (buffer.samples[0][index] + buffer.samples[1][index])/2.0f;

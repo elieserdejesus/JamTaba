@@ -48,7 +48,7 @@ void MainWindowPlugin::updateLocalInputChannelsGeometry()
 
     bool usingMinimumSize = !canDecreaseWindowWidth();
     int localChannels = localGroupChannels.size();
-    for(LocalTrackGroupView *localChannel : localGroupChannels) {
+    for (LocalTrackGroupView *localChannel : localGroupChannels) {
         if (usingMinimumSize && localChannels > 1)
             localChannel->setToNarrow();
         else
@@ -88,28 +88,28 @@ void MainWindowPlugin::updateWindowSizeMenu()
     decreaseWindowHeightAction->setEnabled(canDecreaseWindowHeight());
 }
 
-NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const Login::RoomInfo &roomInfo,
-                                                    Controller::MainController *mainController)
+NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const Login::RoomInfo &roomInfo, Controller::MainController *mainController)
 {
     return new NinjamRoomWindowPlugin(this, roomInfo, dynamic_cast<MainControllerPlugin*>(mainController));
 }
 
-void MainWindowPlugin::removeAllInputLocalTracks(){
+void MainWindowPlugin::removeAllInputLocalTracks()
+{
     MainWindow::removeAllInputLocalTracks();
 
-    firstChannelIsInitialized = false;//prepare for the next local input tracks initialization (loading presets)
+    firstChannelIsInitialized = false; // prepare for the next local input tracks initialization (loading presets)
 }
 
-void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel){
-
+void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel)
+{
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
 
     // VST plugin always use stereo audio input. We need ensure this when loading presets.
     Audio::LocalInputNode *inputTrackNode = mainController->getInputTrack(subChannelView->getInputIndex());
-    if(inputTrackNode){
+    if (inputTrackNode) {
         int channelIndex = !firstChannelIsInitialized ?  0 : 1;
-        int firstInputIndex = channelIndex * 2;//using inputs 0 & 1 for the 1st channel and inputs 2 & 3 for the 2nd channel. Vst allow up to 2 channels and no subchannels.
+        int firstInputIndex = channelIndex * 2; // using inputs 0 & 1 for the 1st channel and inputs 2 & 3 for the 2nd channel. Vst allow up to 2 channels and no subchannels.
         inputTrackNode->setAudioInputSelection(firstInputIndex, 2);//stereo
         firstChannelIsInitialized = true;
     }

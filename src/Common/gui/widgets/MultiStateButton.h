@@ -8,7 +8,7 @@ class MultiStateButton : public QPushButton
 {
     Q_OBJECT
 
-    //custom properties defined in stylesheet files
+    // custom properties defined in stylesheet files
     Q_PROPERTY(int state MEMBER currentState)
 
 public:

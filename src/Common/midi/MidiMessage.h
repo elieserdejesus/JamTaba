@@ -8,6 +8,7 @@ namespace Midi {
 
 class MidiMessage
 {
+
 public:
     MidiMessage(qint32 data, int sourceID);
     MidiMessage();
@@ -38,7 +39,7 @@ public:
 
 private:
     qint32 data;
-    int sourceID; //the id of the midi device generating the message.
+    int sourceID; // the id of the midi device generating the message.
 };
 
 inline int MidiMessage::getChannel() const
@@ -71,6 +72,6 @@ inline bool MidiMessage::isControl() const
     return getStatus() == 0xB0;
 }
 
-}//namespace
+} // namespace
 
 #endif

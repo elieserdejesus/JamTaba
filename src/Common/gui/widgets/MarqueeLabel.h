@@ -9,7 +9,7 @@ class MarqueeLabel : public QLabel
 
 public:
     explicit MarqueeLabel(QWidget* parent=0);
-    void updateMarquee();//called by an external timer to run the marquee animation. I avoid a internal timer because the Jamtaba MainWindow is running a timer to update the gui elements.
+    void updateMarquee(); // called by an external timer to run the marquee animation. I avoid a internal timer because the Jamtaba MainWindow is running a timer to update the gui elements.
     void setFont(const QFont &);
     static void setTimeBetweenAnimations(quint32 newTime);
 

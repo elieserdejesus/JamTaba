@@ -7,18 +7,20 @@
 #include <QtGlobal>
 
 namespace Audio {
+
 class SamplesBuffer
 {
     friend class AudioNodeProcessor;
+
 private:
     unsigned int channels;
     unsigned int frameLenght;
 
-    //rms calculations
+    // rms calculations
     double rmsRunningSum;
     float squaredSums[2];
     int summedSamples;
-    int rmsWindowSize; //how many samples until have enough data to compute rms?
+    int rmsWindowSize; // how many samples until have enough data to compute rms?
     float lastRmsValues[2];
 
     std::vector< std::vector<float> > samples;
@@ -31,18 +33,15 @@ public:
     ~SamplesBuffer();
 
     void setRmsWindowSize(int samples);
-    static int computeRmsWindowSize(int sampleRate, int windowTimeInMs = 300); //using 300 ms as default
+    static int computeRmsWindowSize(int sampleRate, int windowTimeInMs = 300); // using 300 ms as default
 
-    static const SamplesBuffer ZERO_BUFFER;// a static buffer with zero samples
+    static const SamplesBuffer ZERO_BUFFER; // a static buffer with zero samples
 
-    inline bool isMono() const
-    {
-        return channels == 1;
-    }
+    bool isMono() const;
 
     float *getSamplesArray(unsigned int channel) const;
 
-    void discardFirstSamples(unsigned int samplesToDiscard);// discard N samples and set frame lenght to new size
+    void discardFirstSamples(unsigned int samplesToDiscard); // discard N samples and set frame lenght to new size
     void append(const SamplesBuffer &other);
 
     void applyGain(float gainFactor, float boostFactor);
@@ -64,18 +63,14 @@ public:
 
     Audio::AudioPeak computePeak();
 
-    inline void add(const SamplesBuffer &buffer)
-    {
-        add(buffer, 0);
-    }
+    void add(const SamplesBuffer &buffer);
 
     void add(uint channel, uint sampleIndex, float sampleValue);
     void add(const SamplesBuffer &buffer, int internalWriteOffset);// the offset is used in internal buffer, not in parameter buffer
     void add(uint channel, float *samples, uint samplesToAdd);
 
     // copy samplesToCopy' samples starting from bufferOffset to internal buffer starting in 'internalOffset'
-    void set(const SamplesBuffer &buffer, unsigned int bufferOffset, unsigned int samplesToCopy,
-             unsigned int internalOffset);
+    void set(const SamplesBuffer &buffer, uint bufferOffset, uint samplesToCopy, uint internalOffset);
     void set(const SamplesBuffer &buffer);
     void set(const SamplesBuffer &buffer, int bufferChannelOffset, int channelsToCopy);
     void set(uint channel, uint sampleIndex, float sampleValue);
@@ -84,21 +79,38 @@ public:
 
     unsigned int getFrameLenght() const;
     void setFrameLenght(unsigned int newFrameLenght);
-    inline int getChannels() const
-    {
-        return channels;
-    }
 
-    inline bool isEmpty() const
-    {
-        return frameLenght <= 0;
-    }
+    int getChannels() const;
+
+    bool isEmpty() const;
 };
+
+
+inline int SamplesBuffer::getChannels() const
+{
+    return channels;
+}
+
+inline bool SamplesBuffer::isEmpty() const
+{
+    return frameLenght <= 0;
+}
+
+inline void SamplesBuffer::add(const SamplesBuffer &buffer)
+{
+    add(buffer, 0);
+}
+
+inline bool SamplesBuffer::isMono() const
+{
+    return channels == 1;
+}
 
 inline unsigned int SamplesBuffer::getFrameLenght() const
 {
     return frameLenght;
 }
 
-}
+} // namespace
+
 #endif // SAMPLESBUFFER_H

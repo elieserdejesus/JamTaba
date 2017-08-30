@@ -18,7 +18,7 @@ void WaveFileWriter::write(const QString &filePath, const SamplesBuffer &buffer,
 
     const uint samples = buffer.getFrameLenght();
     const uint dataChunkSize = buffer.getChannels() * buffer.getFrameLenght() * bitDepth/8;// bytes per sample
-    const uint fileSize = dataChunkSize + 44;// WAVE HEADER is 44 bytes
+    const uint fileSize = dataChunkSize + 44; // WAVE HEADER is 44 bytes
 
     QDataStream out(&wavFile);
     out.setByteOrder(QDataStream::LittleEndian);

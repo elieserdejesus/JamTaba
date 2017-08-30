@@ -5,8 +5,10 @@
 
 class CacheHeader
 {
+
     friend QDataStream &operator >>(QDataStream &stream, CacheHeader &cacheHeader);
     friend QDataStream &operator <<(QDataStream &stream, const CacheHeader &cacheHeader);
+
 public:
     CacheHeader(quint32 revision = 0);
 

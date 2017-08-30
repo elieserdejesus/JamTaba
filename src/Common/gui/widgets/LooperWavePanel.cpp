@@ -4,8 +4,8 @@
 #include <QKeyEvent>
 #include <QMimeData>
 
-LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex)
-    : beatsPerInterval(16),
+LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex) :
+      beatsPerInterval(16),
       lastMaxPeak(0),
       accumulatedSamples(0),
       samplesPerPixel(0),
@@ -55,7 +55,7 @@ bool LooperWavePanel::isAudioFile(const QUrl &url)
 void LooperWavePanel::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasUrls()) {
-        for(auto url : event->mimeData()->urls()) {
+        for (auto url : event->mimeData()->urls()) {
             if (!looper->layerIsLocked(layerID) && LooperWavePanel::isAudioFile(url)) {
                 event->acceptProposedAction();
                 break;

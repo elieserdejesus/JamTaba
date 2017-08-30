@@ -17,8 +17,10 @@ signals:
 
 };
 
+
 class VideoDecoder
 {
+
 public:
     virtual ~VideoDecoder(){}
     virtual QPixmap decodeFrame() = 0;

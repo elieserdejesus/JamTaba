@@ -23,21 +23,21 @@ public:
 
     virtual ~PluginDescriptor();
 
-    inline QString getName() const;
+    QString getName() const;
 
-    inline Category getCategory() const;
+    Category getCategory() const;
 
-    inline QString getPath() const;
+    QString getPath() const;
 
-    inline QString getManufacturer() const;
+    QString getManufacturer() const;
 
-    inline bool isValid() const;
+    bool isValid() const;
 
-    inline bool isVST() const;
+    bool isVST() const;
 
-    inline bool isAU() const;
+    bool isAU() const;
 
-    inline bool isNative() const;
+    bool isNative() const;
 
     static QString getVstPluginNameFromPath(const QString &path);
 
@@ -57,42 +57,42 @@ private:
 
 };
 
-QString PluginDescriptor::getManufacturer() const
+inline QString PluginDescriptor::getManufacturer() const
 {
     return manufacturer;
 }
 
-QString PluginDescriptor::getName() const
+inline QString PluginDescriptor::getName() const
 {
     return name;
 }
 
-PluginDescriptor::Category PluginDescriptor::getCategory() const
+inline PluginDescriptor::Category PluginDescriptor::getCategory() const
 {
     return category;
 }
 
-QString PluginDescriptor::getPath() const
+inline QString PluginDescriptor::getPath() const
 {
     return path;
 }
 
-bool PluginDescriptor::isValid() const
+inline bool PluginDescriptor::isValid() const
 {
     return !name.isEmpty() && category != PluginDescriptor::Invalid_Plugin;
 }
 
-bool PluginDescriptor::isVST() const
+inline bool PluginDescriptor::isVST() const
 {
     return category == Category::VST_Plugin;
 }
 
-bool PluginDescriptor::isAU() const
+inline bool PluginDescriptor::isAU() const
 {
     return category == Category::AU_Plugin;
 }
 
-bool PluginDescriptor::isNative() const
+inline bool PluginDescriptor::isNative() const
 {
     return category == Category::Native_Plugin;
 }

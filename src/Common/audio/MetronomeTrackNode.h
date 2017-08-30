@@ -4,16 +4,17 @@
 #include "core/AudioNode.h"
 
 namespace Audio {
+
 class SamplesBuffer;
 
 class MetronomeTrackNode : public Audio::AudioNode
 {
+
 public:
     MetronomeTrackNode(const Audio::SamplesBuffer &firstBeatSamples, const Audio::SamplesBuffer &secondaryBeatSamples);
 
     ~MetronomeTrackNode();
-    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate,
-                                  std::vector<Midi::MidiMessage> &midiBuffer) override;
+    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
     void setSamplesPerBeat(long samplesPerBeat);
     void setIntervalPosition(long intervalPosition);
     void resetInterval();
@@ -37,7 +38,7 @@ private:
     int currentBeat;
     int beatsPerAccent;
 
-    SamplesBuffer *getSamplesBuffer(int beat);// return the correct buffer to play in each beat
+    SamplesBuffer *getSamplesBuffer(int beat); // return the correct buffer to play in each beat
 };
 
 inline bool MetronomeTrackNode::isPlayingAccents() const
@@ -50,6 +51,6 @@ inline int MetronomeTrackNode::getBeatsPerAccent() const
     return beatsPerAccent;
 }
 
-}//namespace
+} // namespace
 
 #endif // METRONOMETRACKNODE_H

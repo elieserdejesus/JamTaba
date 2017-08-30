@@ -14,19 +14,21 @@ namespace Geo {
 class WebIpToLocationResolver : public IpToLocationResolver
 {
     Q_OBJECT
+
 public:
     WebIpToLocationResolver(const QDir &cacheDir);
     ~WebIpToLocationResolver();
     Geo::Location resolve(const QString &ip, const QString &languageCode) override;
+
 private:
     QMap<QString, QString> countryCodesCache; // IP -> country code (2 upper case letters)
-    QMap<QString, QString> countryNamesCache;// country code => translated country name
-    QMap<QString, QPointF> latLongCache; // IP => QPointF(latitude, longitude)
+    QMap<QString, QString> countryNamesCache; // country code => translated country name
+    QMap<QString, QPointF> latLongCache;      // IP => QPointF(latitude, longitude)
     QNetworkAccessManager httpClient;
 
     void requestDataFromWebService(const QString &ip);
 
-    //loading
+    // loading
     void loadCountryCodesFromFile();
     void loadCountryNamesFromFile(const QString &languageCode);
     void loadLatLongsFromFile();
@@ -34,7 +36,7 @@ private:
     bool populateQMapFromFile(const QString &fileName, QMap<QString, QPointF> &map, quint32 expectedCacheHeaderRevision);
 
     bool needLoadTheOldCache();
-    void loadOldCacheContent(); //these functions are used to handle the old 'cache.bin' content used until the version 2.0.13. This will be deleted in future.
+    void loadOldCacheContent(); // these functions are used to handle the old 'cache.bin' content used until the version 2.0.13. This will be deleted in future.
     void deleteOldCacheFile();
 
     //saving
@@ -64,7 +66,9 @@ private:
 private slots:
     void replyFinished(QNetworkReply *);
     void replyError(QNetworkReply::NetworkError);
+
 };
-}
+
+} // namespace
 
 #endif // FREEGEOIPTOLOCATIONRESOLVER_H

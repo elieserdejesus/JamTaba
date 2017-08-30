@@ -4,9 +4,11 @@
 #include "MainController.h"
 #include <QApplication>
 #include "vst/VstPluginFinder.h"
+
 #ifdef Q_OS_MAC
     #include "AU/AudioUnitPluginFinder.h"
 #endif
+
 #include "audio/Host.h"
 #include "audio/core/Plugins.h"
 #include "audio/core/PluginDescriptor.h"
@@ -19,9 +21,9 @@ namespace Midi {
 class MidiDriver;
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++
 
 namespace Controller {
+
 class MainControllerStandalone : public MainController
 {
     Q_OBJECT
@@ -37,7 +39,7 @@ public:
     void scanAudioUnitPlugins();
 #endif
 
-    void addDefaultPluginsScanPath();// add vst path from registry
+    void addDefaultPluginsScanPath(); // add vst path from registry
 
     void clearPluginsList();
 
@@ -50,7 +52,7 @@ public:
     void start() override;
     void stop() override;
 
-    void updateInputTracksRange();// called when input range or method (audio or midi) are changed in preferences
+    void updateInputTracksRange(); // called when input range or method (audio or midi) are changed in preferences
 
     inline virtual float getSampleRate() const override
     {
@@ -78,7 +80,7 @@ public:
 
     bool isUsingNullAudioDriver() const;
 
-    void useNullAudioDriver();// use when the audio driver fails
+    void useNullAudioDriver(); // use when the audio driver fails
 
     void setMainWindow(MainWindow *mainWindow) override;
 
@@ -126,12 +128,12 @@ protected:
 
 protected slots:
     void updateBpm(int newBpm) override;
-    void connectedNinjamServer(const Ninjam::Server &server) override;
+    void connectInNinjamServer(const Ninjam::Server &server) override;
 
 
-    void on_newNinjamInterval() override;
+    void handleNewNinjamInterval() override;
 
-    //TODO After the big refatoration these 3 slots can be private slots
+    // TODO After the big refatoration these 3 slots can be private slots
     void on_audioDriverStopped();
     void on_audioDriverStarted();
     void on_ninjamStartProcessing(int intervalPosition) ;
@@ -164,15 +166,14 @@ private:
  #endif
 
     // used to sort plugins list
-    static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
-                                         const Audio::PluginDescriptor &d2);
+    static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1, const Audio::PluginDescriptor &d2);
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     void scanVstPlugins(bool scanOnlyNewVstPlugins);
 
-
 };
-}
+
+} // namespace
 
 #endif // STANDALONEMAINCONTROLLER_H

@@ -25,7 +25,7 @@ public:
     ~NinjamPanel();
 
     void createHostSyncButton(const QString &hostName);
-    void uncheckHostSyncButton();//used to uncheck the button when the sync with host fail (different BPMs)
+    void uncheckHostSyncButton(); // used to uncheck the button when the sync with host fail (different BPMs)
     bool hostSyncButtonIsChecked() const;
 
     void setMuteButtonStatus(bool checked);
@@ -81,7 +81,7 @@ protected:
     void changeEvent(QEvent *) override;
 
     Ui::NinjamPanel *ui;
-    QPushButton *hostSyncButton;// created only when running as vst plugin
+    QPushButton *hostSyncButton; // created only when running as vst plugin
     IntervalProgressWindow *metronomeFloatingWindow;
 
 private:

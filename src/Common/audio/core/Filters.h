@@ -3,12 +3,14 @@
 
 #include <QtGlobal>
 
-namespace Audio {
+namespace Audio
+{
 
 /** Biquad Filter - Adapted from Ardour code: http://ardour.org/ */
 
 class Filter
 {
+
 public:
     enum FilterType {
         LowPass,
@@ -28,7 +30,7 @@ public:
 
     void setFrequency(double newFrequency);
 
-    /** filter transfer function (filter response for spectrum visualization)
+    /*** Filter transfer function (filter response for spectrum visualization)
      * @param freq frequency
      * @return gain at given frequency in dB (clamped to -120..+120)
      */
@@ -41,7 +43,7 @@ public:
 
 private:
 
-    /** setup filter, compute coefficients
+    /*** Setup filter, compute coefficients
      *
      * @param t filter type (LowPass, HighPass, etc)
      * @param freq filter frequency
@@ -56,6 +58,7 @@ private:
     double b0, b1, b2;
     FilterType type;
 };
+
 } // namespace
 
 #endif

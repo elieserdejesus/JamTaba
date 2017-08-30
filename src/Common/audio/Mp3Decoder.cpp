@@ -18,7 +18,7 @@ Mp3DecoderMiniMp3::Mp3DecoderMiniMp3() :
     NULL_BUFFER(nullptr)
 {
     mp3Decoder = mp3_create();
-    internalShortBuffer = new signed short[INTERNAL_SHORT_BUFFER_SIZE];// recommend by the minimp3 author
+    internalShortBuffer = new signed short[INTERNAL_SHORT_BUFFER_SIZE]; // recommend by the minimp3 author
     reset();
     NULL_BUFFER = new Audio::SamplesBuffer(1);
 }
@@ -36,6 +36,7 @@ void Mp3DecoderMiniMp3::reset()
     array.clear();
     for (int i = 0; i < INTERNAL_SHORT_BUFFER_SIZE; ++i)
         internalShortBuffer[i] = 0;
+
     if (buffer) {
         delete buffer;
         buffer = nullptr;
@@ -46,6 +47,7 @@ int Mp3DecoderMiniMp3::getSampleRate() const
 {
     if (mp3Info.sample_rate <= 0)
         return 44100;
+
     return mp3Info.sample_rate;
 }
 
@@ -54,6 +56,7 @@ const SamplesBuffer *Mp3DecoderMiniMp3::decode(char *inputBuffer, int inputBuffe
     array.append(inputBuffer, inputBufferLenght);
     if (array.size() < MINIMUM_SIZE_TO_DECODE)
         return NULL_BUFFER;
+
     int totalBytesDecoded = 0;
     int bytesDecoded = 0;
     signed short *out = internalShortBuffer;
@@ -71,16 +74,20 @@ const SamplesBuffer *Mp3DecoderMiniMp3::decode(char *inputBuffer, int inputBuffe
             totalBytesDecoded += bytesDecoded;
         }
     } while (bytesDecoded > 0 && bytesLeft > 0);
-    array = array.right(array.size() - totalBytesDecoded);// keep just the undecoded bytes to the next call for decode
+
+    array = array.right(array.size() - totalBytesDecoded); // keep just the undecoded bytes to the next call for decode
     if (totalBytesDecoded <= 0)
         return NULL_BUFFER;
+
     // +++++++++++++++++++++++++++
     int framesDecoded = totalSamplesDecoded/mp3Info.channels;
 
     if (!buffer)
         buffer = new Audio::SamplesBuffer(mp3Info.channels);
+
     if (framesDecoded > AUDIO_SAMPLES_BUFFER_MAX_SIZE)
         framesDecoded = AUDIO_SAMPLES_BUFFER_MAX_SIZE;
+
     buffer->setFrameLenght(framesDecoded);
     int internalIndex = 0;
     for (int i = 0; i < framesDecoded; ++i) {

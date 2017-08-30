@@ -21,7 +21,7 @@ public:
 
     void refreshTrackInputSelection(int inputTrackIndex);
 
-    MainControllerStandalone * getMainController() override
+    MainControllerStandalone * getMainController() const override
     {
         return controller;
     }
@@ -41,7 +41,7 @@ protected:
 
     PreferencesDialog *createPreferencesDialog() override;
 
-protected slots: //TODO change to private slots?
+protected slots: // TODO change to private slots?
     void handleServerConnectionError(const QString &msg);
 
     void setGlobalPreferences(const QList<bool> &, int audioDevice, int firstIn, int lastIn, int firstOut,

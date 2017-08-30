@@ -20,6 +20,7 @@ public:
     static void setTilesDir(const QString &newDir);
     static void setNightMode(bool useNightMode);
     void setBlurMode(bool blurEnabled);
+
 protected:
     void resizeEvent(QResizeEvent *) override;
     void paintEvent(QPaintEvent *event) override;

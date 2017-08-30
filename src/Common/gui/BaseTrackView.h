@@ -66,6 +66,7 @@ public:
 
     static const int NARROW_WIDTH;
     static const int WIDE_WIDTH;
+
 protected:
 
     Controller::MainController *mainController;
@@ -89,13 +90,13 @@ protected:
 
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 
-    //meters
+    // meters
     AudioMeter *peakMeter;
-    QBoxLayout *metersLayout;// used to group midi and audio meters
+    QBoxLayout *metersLayout; // used to group midi and audio meters
 
-    //level slider
+    // level slider
     Slider *levelSlider;
-    QBoxLayout *levelSliderLayout;// used to group the level slider and the two 'speaker' icons
+    QBoxLayout *levelSliderLayout; // used to group the level slider and the two 'speaker' icons
 
     // pan slider
     Slider *panSlider;
@@ -114,11 +115,12 @@ protected:
     // main layout buildind blocks
     QGridLayout *mainLayout;
     QBoxLayout *secondaryChildsLayout; // right side widgets in vertical layout, bottom widgets (2nd row) in horizontal layout
-    QBoxLayout *primaryChildsLayout; // left side widgets in vertical layout, top widgets (2nd row) in horizontal layout
+    QBoxLayout *primaryChildsLayout;   // left side widgets in vertical layout, top widgets (2nd row) in horizontal layout
 
     virtual void setupVerticalLayout();
 
     static const int FADER_HEIGHT;
+
 private:
     static QMap<long, BaseTrackView *> trackViews;
     Audio::AudioPeak maxPeak;

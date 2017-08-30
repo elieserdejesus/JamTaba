@@ -8,15 +8,13 @@
 #include "chords/ChatChordsProgressionParser.h"
 
 ChordLabel *ChordLabel::currentChordLabel = nullptr;
-const QColor ChordLabel::BEAT_PROGRESS_COLOR = QColor(0, 255, 0, 35); //transparent green
-
-// ++++++++++++++++++++++++++++++++++++++++++++=
+const QColor ChordLabel::BEAT_PROGRESS_COLOR = QColor(0, 255, 0, 35); // transparent green
 
 ChordLabel::ChordLabel(QWidget *parent, Chord *chord, int chordBeats) :
     QTextEdit(parent),
     chord(chord),
     currentBeat(0),
-    beatsCount(chordBeats)//how many beats per chord?
+    beatsCount(chordBeats) // how many beats per chord?
 {
     setHtml(chordToHtmlText(chord));
     setStyleSheetPropertyStatus(false);
@@ -34,14 +32,14 @@ ChordLabel::~ChordLabel()
 void ChordLabel::paintEvent(QPaintEvent *ev)
 {
     QTextEdit::paintEvent(ev);
-    if(beatsCount > 0 && currentBeat > 0){
+    if (beatsCount > 0 && currentBeat > 0) {
         QPainter painter(viewport());
         int position = currentBeat * width()/beatsCount;
 
-        //fill the green rectangle, the beat progress indicator
+        // fill the green rectangle, the beat progress indicator
         painter.fillRect(1, 1, position, height()-1, BEAT_PROGRESS_COLOR);
 
-        //draw a two pixel line to highlight the end of above rectangle
+        // draw a two pixel line to highlight the end of above rectangle
         painter.fillRect(position-2, 1, 2, height()-2, BEAT_PROGRESS_COLOR);
     }
 }
@@ -73,7 +71,7 @@ void ChordLabel::keyPressEvent(QKeyEvent *event)
 
 void ChordLabel::incrementIntervalBeat()
 {
-    if(currentBeat < beatsCount){
+    if (currentBeat < beatsCount) {
         currentBeat++;
         repaint();
     }
@@ -83,15 +81,17 @@ ChordLabel *ChordLabel::setAsCurrentChord()
 {
     if (currentChordLabel)
         currentChordLabel->unsetAsCurrentChord();
+
     currentChordLabel = this;
     incrementIntervalBeat();
     setStyleSheetPropertyStatus(true);
+
     return this;
 }
 
 void ChordLabel::unsetAsCurrentChord()
 {
-    if(ChordLabel::currentChordLabel)
+    if (ChordLabel::currentChordLabel)
         ChordLabel::currentChordLabel->currentBeat = 0;
 
     ChordLabel::currentChordLabel = nullptr;
@@ -107,21 +107,25 @@ void ChordLabel::setStyleSheetPropertyStatus(bool status)
 
 QString ChordLabel::chordToHtmlText(Chord *chord)
 {
-    QString finalString = "<strong>" + chord->getRootKey().left(1).toUpper();// the first chord letter
+    QString finalString = "<strong>" + chord->getRootKey().left(1).toUpper(); // the first chord letter
     if (chord->isFlat() || chord->isSharp()) {
-        if (chord->getRootKey().size() > 1)// just in case
+        if (chord->getRootKey().size() > 1) // just in case
             finalString += "<sup>" + chord->getRootKey().mid(1, 1) + "</sup>";
     }
+
     finalString += "</strong>";
     if (chord->hasLettersAfterRoot())
         finalString += chord->getLettersAfterRoot().toLower();
+
     if (chord->hasLastPart())
         finalString += chord->getLastPart();
+
     if (chord->hasBassInversion()) {
         finalString += "/<strong>" + chord->getBassInversion().left(1);
         if (chord->getBassInversion().size() > 1) // chord inversion is flat or sharp?
             finalString += "<sup>" + chord->getBassInversion().mid(1, 1) + "</sup>";
         finalString += "</strong>";
     }
+
     return finalString;
 }

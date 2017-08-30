@@ -40,7 +40,9 @@ protected:
     static QJsonArray getValueFromJson(const QJsonObject &json, const QString &propertyName, QJsonArray fallBackValue);
     static QJsonObject getValueFromJson(const QJsonObject &json, const QString &propertyName, QJsonObject fallBackValue);
 };
+
 // +++++++++++++++++++++++++++++++++++++++++++
+
 class AudioSettings : public SettingsObject
 {
 public:
@@ -56,7 +58,9 @@ public:
     int audioDevice;
     float encodingQuality;
 };
+
 // +++++++++++++++++++++++++++++++++++++
+
 class MidiSettings : public SettingsObject
 {
 public:
@@ -67,6 +71,7 @@ public:
 };
 
 // +++++++++++++++++++++++++++++++++++
+
 class PrivateServerSettings : public SettingsObject
 {
 
@@ -85,6 +90,7 @@ private:
 };
 
 // +++++++++++++++++++++++++++++++++++
+
 class MetronomeSettings : public SettingsObject
 {
 public:
@@ -101,6 +107,7 @@ public:
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++
+
 class WindowSettings : public SettingsObject
 {
 public:
@@ -114,6 +121,7 @@ public:
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++
+
 class VstSettings : public SettingsObject
 {
 public:
@@ -122,7 +130,7 @@ public:
     void read(const QJsonObject &in) override;
     QStringList cachedPlugins;
     QStringList foldersToScan;
-    QStringList blackedPlugins;// vst in blackbox....
+    QStringList blackedPlugins; // vst in blackbox....
 };
 
 class AudioUnitSettings  : public SettingsObject
@@ -135,6 +143,7 @@ public:
 };
 
 // ++++++++++++++++++++++++
+
 class MultiTrackRecordingSettings : public SettingsObject
 {
 public:
@@ -165,13 +174,14 @@ public:
     void read(const QJsonObject &in) override;
 
     quint8 preferredLayersCount; // how many layers in each looper?
-    quint8 preferredMode;// store the last used looper mode
+    quint8 preferredMode; // store the last used looper mode
     QString loopsFolder; // where looper audio files will be saved
     bool encodingAudioWhenSaving;
     quint8 waveFilesBitDepth;
 };
 
 // +++++++++++++++++++++++++++++++++
+
 class Plugin
 {
 public:
@@ -181,10 +191,11 @@ public:
     QString name;
     QString manufacturer;
     bool bypassed;
-    QByteArray data;// saved data to restore in next jam session
+    QByteArray data; // saved data to restore in next jam session
     Audio::PluginDescriptor::Category category; // VST, AU, NATIVE plugin
 };
 // +++++++++++++++++++++++++++++++++
+
 class Subchannel
 {
 public:
@@ -195,12 +206,12 @@ public:
     int midiDevice;
     int midiChannel;
     float gain;
-    int boost;// [-1, 0, +1]
+    int boost; // [-1, 0, +1]
     float pan;
     bool muted;
     bool stereoInverted;
-    qint8 transpose; //midi transpose
-    quint8 lowerMidiNote; //midi rey range
+    qint8 transpose; // midi transpose
+    quint8 lowerMidiNote; // midi rey range
     quint8 higherMidiNote;
     bool routingMidiToFirstSubchannel;
 
@@ -242,7 +253,9 @@ public:
 private:
     QList<Persistence::Plugin> plugins;
 };
+
 // +++++++++++++++++++++++++++++++++
+
 class Channel
 {
 public:
@@ -250,7 +263,9 @@ public:
     QString name;
     QList<Subchannel> subChannels;
 };
+
 // +++++++++++++++++++++++++++++++++
+
 class LocalInputTrackSettings : public SettingsObject
 {
 public:
@@ -267,7 +282,9 @@ public:
         return !channels.isEmpty();
     }
 };
+
 // +++++++++PRESETS+++++++++++++++
+
 class Preset
 {
 public:
@@ -285,6 +302,7 @@ public:
     QString name;
 };
 
+
 class MeteringSettings : public SettingsObject
 {
 public:
@@ -299,6 +317,7 @@ public:
 };
 
 // ++++++++++++++++++++++++
+
 class Settings
 {
 private:
@@ -317,13 +336,13 @@ private:
     MeteringSettings meteringSettings;
     LooperSettings looperSettings;
 
-    QString lastUserName;// the last nick name choosed by user
-    QString translation;// the translation language (en, fr, jp, pt, etc.) being used in chat
-    QString theme; //the style sheet used
-    int ninjamIntervalProgressShape;// Circle, Ellipe or Line
-    float masterFaderGain;// last master fader gain
-    Qt::Orientation tracksLayoutOrientation; //horizontal or vertical
-    bool usingNarrowedTracks; //narrow or wide tracks?
+    QString lastUserName; // the last nick name choosed by user
+    QString translation; // the translation language (en, fr, jp, pt, etc.) being used in chat
+    QString theme; // the style sheet used
+    int ninjamIntervalProgressShape; // Circle, Ellipe or Line
+    float masterFaderGain; // last master fader gain
+    Qt::Orientation tracksLayoutOrientation; // horizontal or vertical
+    bool usingNarrowedTracks; // narrow or wide tracks?
 
     bool readFile(const QList<SettingsObject *> &sections);
     bool writeFile(const QList<SettingsObject *> &sections);

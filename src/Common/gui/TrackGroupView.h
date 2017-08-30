@@ -34,15 +34,12 @@ public:
 
     void updateGuiElements();
 
-    inline int getTracksCount() const
-    {
-        return trackViews.size();
-    }
+    int getTracksCount() const;
 
     void setUnlightStatus(bool unlighted);
     bool isUnlighted() const;
 
-    //is not possible return a covariant container, so I'm using template to return a container of a more specific (derived) type
+    // is not possible return a covariant container, so I'm using template to return a container of a more specific (derived) type
     template<class T>
     QList<T> getTracks() const
     {
@@ -54,7 +51,7 @@ public:
     }
 
 protected:
-    //void paintEvent(QPaintEvent *);
+
     void changeEvent(QEvent *) override;
 
     virtual void translateUi();
@@ -83,5 +80,11 @@ private slots:
 private:
     void setupUI(TextEditorModifier *textEditorFactory);
 };
+
+
+inline int TrackGroupView::getTracksCount() const
+{
+    return trackViews.size();
+}
 
 #endif // TRACKGROUPVIEW_H
