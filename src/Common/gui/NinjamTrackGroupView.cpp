@@ -62,7 +62,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
     groupNameLabel->setStyleSheet(styleSheet);
 
-    connect(mainController, &MainController::ipResolved, this, &NinjamTrackGroupView::updateGeoLocation);
+    connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
     // reacting to chat block/unblock events
     auto ninjamController = mainController->getNinjamController();
