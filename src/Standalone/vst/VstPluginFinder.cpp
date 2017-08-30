@@ -27,7 +27,7 @@ Audio::PluginDescriptor VSTPluginFinder::getPluginDescriptor(const QFileInfo &f)
 QString VSTPluginFinder::getScannerExecutablePath() const
 {
     // try the same jamtaba executable path first
-    QString scannerExePath = QApplication::applicationDirPath() + "/VstScanner";// In the deployed and debug version the VstScanner and Jamtaba2 executables are in the same folder.
+    QString scannerExePath = QApplication::applicationDirPath() + "/VstScanner"; // In the deployed and debug version the VstScanner and Jamtaba2 executables are in the same folder.
 #ifdef Q_OS_WIN
     scannerExePath += ".exe";
 #endif

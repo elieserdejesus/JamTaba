@@ -24,7 +24,7 @@ signals:
     void higherNoteChanged(const QString &newHigherNote);
 
     void transposeChanged(qint8 newTranspose);
-    void learnMidiNoteClicked(bool); //this signal is fired when the 2 learn buttons are clicked
+    void learnMidiNoteClicked(bool); // this signal is fired when the 2 learn buttons are clicked
 
     void midiRoutingCheckBoxClicked(bool checkBoxIsChecked);
 
@@ -38,6 +38,7 @@ private slots:
 
     void learnLowerMidiNoteToggled(bool);
     void learnHigherMidiNoteToggled(bool);
+
 private:
     Ui::MidiToolsDialog *ui;
 };

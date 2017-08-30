@@ -7,7 +7,6 @@
 
 using namespace Controller;
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FxPanel::FxPanel(LocalTrackViewStandalone *parent, MainControllerStandalone *mainController) :
     QWidget(parent),
     controller(mainController),
@@ -24,7 +23,6 @@ FxPanel::FxPanel(LocalTrackViewStandalone *parent, MainControllerStandalone *mai
     }
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void FxPanel::removePlugins()
 {
     QList<FxPanelItem *> items = findChildren<FxPanelItem *>();
@@ -33,8 +31,6 @@ void FxPanel::removePlugins()
             item->unsetPlugin();
     }
 }
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 qint32 FxPanel::getPluginFreeSlotIndex() const
 {
@@ -60,7 +56,6 @@ void FxPanel::addPlugin(Audio::Plugin *plugin, quint32 pluginSlotIndex)
     }
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FxPanel::~FxPanel()
 {
     // delete ui;

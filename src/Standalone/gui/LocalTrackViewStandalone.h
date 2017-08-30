@@ -66,7 +66,7 @@ protected slots:
     void setToMidi(QAction *action) ;
 
 private slots:
-    void showInputSelectionMenu();// build and show the input selection menu
+    void showInputSelectionMenu(); // build and show the input selection menu
     void openMidiToolsDialog();
     void onMidiToolsDialogClosed();
 
@@ -79,7 +79,7 @@ private slots:
     void useLearnedMidiNote(quint8 midiNote);
 
 private:
-    Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience
+    Controller::MainControllerStandalone* controller; //a 'casted' pointer just for convenience
 
     QMenu *createMonoInputsMenu(QMenu *parentMenu);
     QMenu *createStereoInputsMenu(QMenu *parentMenu);
@@ -97,11 +97,11 @@ private:
     QWidget *inputPanel;
     FxPanel *fxPanel;
 
-    MidiActivityMeter *midiPeakMeter;// show midi activity
+    MidiActivityMeter *midiPeakMeter; // show midi activity
 
     void setMidiPeakMeterVisibility(bool visible);
 
-    QString getInputChannelNameOnly(int inputIndex);// return the input channel name without the number/index
+    QString getInputChannelNameOnly(int inputIndex); // return the input channel name without the number/index
 
     quint8 getMidiNoteNumber(const QString &midiNote) const;
     QString getMidiNoteText(quint8 midiNoteNumber) const;

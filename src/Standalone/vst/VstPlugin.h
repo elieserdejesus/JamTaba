@@ -14,8 +14,7 @@ namespace Vst {
 
 class VstHost;
 
-// Plugin's entry point
-typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
+typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host); // Plugin's entry point
 
 class VstPlugin : public Audio::Plugin
 {

@@ -3,10 +3,10 @@
 #include "MainWindowStandalone.h"
 #include "audio/core/LocalInputNode.h"
 
-LocalTrackGroupViewStandalone::LocalTrackGroupViewStandalone(int index,
-                                                             MainWindowStandalone *mainWindow) :
+LocalTrackGroupViewStandalone::LocalTrackGroupViewStandalone(int index, MainWindowStandalone *mainWindow) :
     LocalTrackGroupView(index, mainWindow)
 {
+    //
 }
 
 void LocalTrackGroupViewStandalone::populateMenu(QMenu &menu)
@@ -68,8 +68,7 @@ void LocalTrackGroupViewStandalone::repaintLocalTracks()
 
 LocalTrackViewStandalone *LocalTrackGroupViewStandalone::addTrackView(long trackID)
 {
-    LocalTrackViewStandalone *newTrackView
-        = dynamic_cast<LocalTrackViewStandalone *>(LocalTrackGroupView::addTrackView(trackID));
+    auto newTrackView = dynamic_cast<LocalTrackViewStandalone *>(LocalTrackGroupView::addTrackView(trackID));
     if (newTrackView) {
         if (getTracksCount() > 1)
             newTrackView->setToNoInput();
@@ -81,7 +80,7 @@ LocalTrackViewStandalone *LocalTrackGroupViewStandalone::addTrackView(long track
 
 void LocalTrackGroupViewStandalone::refreshInputSelectionName(int inputTrackIndex)
 {
-    foreach (LocalTrackViewStandalone *trackView, getTracks<LocalTrackViewStandalone *>()) {
+    for (auto trackView : getTracks<LocalTrackViewStandalone *>()) {
         if (trackView->getInputIndex() == inputTrackIndex)
             trackView->refreshInputSelectionName();
     }
@@ -89,6 +88,6 @@ void LocalTrackGroupViewStandalone::refreshInputSelectionName(int inputTrackInde
 
 void LocalTrackGroupViewStandalone::refreshInputSelectionNames()
 {
-    foreach (LocalTrackViewStandalone *trackView, getTracks<LocalTrackViewStandalone *>())
+    for (auto trackView : getTracks<LocalTrackViewStandalone *>())
         trackView->refreshInputSelectionName();
 }
