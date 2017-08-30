@@ -54,7 +54,7 @@ private:
 
     static QScopedPointer<VstHost> hostInstance;
     VstHost();
-    VstHost(const VstHost &);// copy constructor
+    VstHost(const VstHost &); // copy constructor
 
     bool tempoIsValid() const;
 
