@@ -26,7 +26,7 @@ enum class ServerMessageType : quint8 {
     USER_INFO_CHANGE_NOTIFY = 0x03,// received when user add/remove channels or rename a channel
     DOWNLOAD_INTERVAL_BEGIN = 0x04, // received when server is notifiyng about the start of a new audio interval stream
     DOWNLOAD_INTERVAL_WRITE = 0x05, // received for every audio interval chunk. We receive a lot of these messages while jamming.
-    KEEP_ALIVE = 0xfd,// server requesting a keepalive. If Jamtaba not respond the server will disconnect.
+    KEEP_ALIVE = 0xfd, // server requesting a keepalive. If Jamtaba not respond the server will disconnect.
     CHAT_MESSAGE = 0xc0 // received when users are sending chat messages
 };
 
@@ -92,13 +92,15 @@ private:
     QByteArray challenge;
     QString licenceAgreement;
     quint32 serverKeepAlivePeriod;
-    quint32 protocolVersion;// The Protocol Version field should contain 0x00020000.
+    quint32 protocolVersion; // The Protocol Version field should contain 0x00020000.
     void printDebug(QDebug &dbg) const override;
 
     void readFrom(QDataStream &stream) override;
 
 };
+
 // ++++++++++++++++++++++++++++++++
+
 class ServerAuthReplyMessage : public ServerMessage
 {
 
@@ -114,6 +116,7 @@ public:
     {
         if (!userIsAuthenticated())
             qCritical("user is not authenticated!");
+
         return message;
     }
 
@@ -135,7 +138,9 @@ private:
     void printDebug(QDebug &debug) const override;
     void readFrom(QDataStream &stream) override;
 };
+
 // +++++++++++++++++++++++++++++++
+
 class ServerKeepAliveMessage : public ServerMessage
 {
 public:
@@ -145,7 +150,9 @@ private:
     void printDebug(QDebug &dbg) const override;
     void readFrom(QDataStream &stream) override;
 };
+
 // ++++++++++++++++++++++++=
+
 class ServerConfigChangeNotifyMessage : public ServerMessage
 {
 private:
@@ -169,7 +176,9 @@ private:
     void readFrom(QDataStream &stream) override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // ++++++++++++++
+
 class User;
 class UserChannel;
 
@@ -190,6 +199,7 @@ private:
     void readFrom(QDataStream &stream) override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // ++++++++++++=
 
 /*
@@ -216,6 +226,7 @@ enum class  ChatCommandType : quint8 {
 
 class ServerChatMessage : public ServerMessage
 {
+
 public:
     ServerChatMessage(quint32 payload);
 
@@ -238,8 +249,7 @@ private:
     void printDebug(QDebug &dbg) const override;
     void readFrom(QDataStream &stream) override;
 };
-// ++++++++++++++++
-// ++++++++++++++++
+
 /*
 Offset Type        Field
 0x0    uint8_t[16] GUID (binary)
@@ -253,6 +263,7 @@ If the FourCC field is zero then the download is complete.
 
 If the FourCC field contains "OGGv" then this is a valid Ogg Vorbis encoded download.
 */
+
 class DownloadIntervalBegin : public ServerMessage
 {
 
@@ -296,7 +307,7 @@ public:
 private:
     QByteArray GUID;
     quint32 estimatedSize;
-    quint8 fourCC[4];// = new byte[4];
+    quint8 fourCC[4]; // = new byte[4];
     quint8 channelIndex;
     QString userName;
 
@@ -305,7 +316,6 @@ private:
 };
 
 
-// ++++++++++++++++++
 /*
   Offset Type        Field
   0x0    uint8_t[16] GUID (binary)

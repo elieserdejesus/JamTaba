@@ -11,6 +11,7 @@ namespace Ninjam {
 class User;
 
 // +++++++++++++++++++++++++++
+
 class ClientMessage
 {
     friend QDebug &operator<<(QDebug &dbg, const ClientMessage &message);
@@ -43,7 +44,7 @@ private:
 };
 
 // ++++++++++++++++++++++++++++++++++++++=
-// ++++++++++++++++++++++++++++++++++++++=
+
 class ClientAuthUserMessage : public ClientMessage
 {
 
@@ -61,9 +62,12 @@ private:
     void serializeTo(QByteArray &buffer) const override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // +++++++++++++++++++++++++++++++++++++++=
+
 class ClientSetChannel : public ClientMessage
 {
+
 public:
     ClientSetChannel(const QStringList &channels);
     ClientSetChannel(const QString &channelNameToRemove);
@@ -77,7 +81,9 @@ private:
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // ++++++++++++++++++++++++++
+
 class ClientKeepAlive : public ClientMessage
 {
 public:
@@ -87,6 +93,7 @@ private:
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // ++++++++++++++++++++++++++++++
 
 class ClientSetUserMask : public ClientMessage
@@ -103,6 +110,7 @@ private:
 };
 
 // +++++++++++++++++++++++++++
+
 class ChatMessage : public ClientMessage
 {
 public:
@@ -115,6 +123,7 @@ private:
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /**
@@ -125,6 +134,7 @@ Offset Type        Field
 0x18   uint8_t     Channel Index
 0x19   ...         Username (NUL-terminated)
 */
+
 class ClientUploadIntervalBegin : public ClientMessage
 {
 public:
@@ -149,6 +159,7 @@ private:
 };
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++=
+
 class ClientIntervalUploadWrite : public ClientMessage
 {
 
@@ -171,6 +182,6 @@ QDebug &operator<<(QDebug &dbg, const Ninjam::ClientMessage &message);
 
 QByteArray &operator <<(QByteArray &byteArray, const Ninjam::ClientMessage &message);
 
-}
+} // namespace
 
 #endif

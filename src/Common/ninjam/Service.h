@@ -33,7 +33,7 @@ class DownloadIntervalWrite;
 class User;
 class UserChannel;
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class Service : public QObject
 {
     Q_OBJECT
@@ -88,7 +88,7 @@ signals:
     void connectedInServer(const Ninjam::Server &server);
     void chatMessageReceived(const Ninjam::User &sender, const QString &message);
     void serverTopicMessageReceived(const QString &topic);
-    void privateMessageReceived(const Ninjam::User &sender, const QString &message); //TODO this works? I never see a private message in my life :)
+    void privateMessageReceived(const Ninjam::User &sender, const QString &message); // TODO this works? I never see a private message in my life :)
     void userEntered(const Ninjam::User &newUser);
     void userExited(const Ninjam::User &user);
     void error(const QString &msg);
@@ -105,7 +105,6 @@ protected:
     virtual void process(const ServerKeepAliveMessage &msg);
     virtual void process(const DownloadIntervalBegin &msg);
     virtual void process(const DownloadIntervalWrite &msg);
-    // ++++++++++++=
 
 private slots:
     void handleAllReceivedMessages();
@@ -123,7 +122,7 @@ private:
     static const QStringList botNames;
     static QStringList buildBotNamesList();
 
-    long lastSendTime;// time stamp of last send
+    long lastSendTime; // time stamp of last send
     long serverKeepAlivePeriod;
     QString serverLicence;
 
@@ -132,7 +131,7 @@ private:
     bool initialized;
     QString userName;
     QString password;
-    QStringList channels;// channels names
+    QStringList channels; // channels names
 
     void sendMessageToServer(const ClientMessage &message);
     void handleUserChannels(const User &remoteUser);
@@ -141,8 +140,8 @@ private:
     void setBpm(quint16 newBpm);
     void setBpi(quint16 newBpi);
 
-    class Download; //using a nested class here. This class is for internal purpouses only.
-    QMap<QByteArray, Download> downloads;// using GUID as key
+    class Download; // using a nested class here. This class is for internal purpouses only.
+    QMap<QByteArray, Download> downloads; // using GUID as key
 
     bool needSendKeepAlive() const;
 
@@ -152,6 +151,6 @@ private:
 
 };
 
-}// namespace
+} // namespace
 
 #endif
