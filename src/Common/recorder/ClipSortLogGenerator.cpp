@@ -4,14 +4,15 @@
 
 using namespace Recorder;
 
-
-void ClipSortLogGenerator::write(const Jam &jam){
+void ClipSortLogGenerator::write(const Jam &jam)
+{
     QString stringBuffer("");
 
     int intervalIndex = -1;
     double bpm = 0.0;
     int bpi = 0;
     QList<JamInterval> intervals = jam.getJamIntervals();
+
     for (JamInterval interval : intervals) {
         if (interval.getIntervalIndex() != intervalIndex) {
             intervalIndex = interval.getIntervalIndex();
@@ -32,11 +33,10 @@ void ClipSortLogGenerator::write(const Jam &jam){
             .append("\n");
     }
 
-    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    //save
+    // save
     QDir jamDir = QDir(this->clipsortPath);
     QFile projectFile(jamDir.absoluteFilePath("clipsort.log"));
-    if(!projectFile.open(QFile::WriteOnly)){
+    if (!projectFile.open(QFile::WriteOnly)) {
         qCritical() << "Can't write clipsort.log in " << jamDir;
     }
     QTextStream stream(&projectFile);
@@ -51,11 +51,11 @@ void ClipSortLogGenerator::setJamDir(QString newJamName, QString recordBasePath)
     this->clipsortPath = parentDir.absoluteFilePath("Reaper/clipsort");
 }
 
-QString ClipSortLogGenerator::getAudioAbsolutePath(QString audioFileName){
+QString ClipSortLogGenerator::getAudioAbsolutePath(QString audioFileName)
+{
     QDir jamDir = QDir(this->clipsortPath);
     QString replacementFilePath = QUuid::createUuid().toString().remove(QRegExp("[-{}]"));
-    if (!jamDir.exists(replacementFilePath.left(1)) && !jamDir.mkdir(replacementFilePath.left(1)))
-    {
+    if (!jamDir.exists(replacementFilePath.left(1)) && !jamDir.mkdir(replacementFilePath.left(1))) {
         qCritical() << "Could not create clip directory in " << this->clipsortPath;
         return QString::null;
     }
