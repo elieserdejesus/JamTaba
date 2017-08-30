@@ -4,11 +4,12 @@
 #include "NinjamController.h"
 #include <QMenu>
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+using namespace Controller;
+using namespace Persistence;
 
-NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainController, long trackID,
+NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long trackID,
                                            const QString &channelName, const QColor &userColor,
-                                           const Persistence::CacheEntry &initialValues) :
+                                           const CacheEntry &initialValues) :
     TrackGroupView(nullptr),
     mainController(mainController),
     userIP(initialValues.getUserIP()),
@@ -61,12 +62,12 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
     styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
     groupNameLabel->setStyleSheet(styleSheet);
 
-    connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
+    connect(mainController, &MainController::ipResolved, this, &NinjamTrackGroupView::updateGeoLocation);
 
-    //reacting to chat block/unblock events
-    Controller::NinjamController *ninjamController = mainController->getNinjamController();
-    connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
-    connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
+    // reacting to chat block/unblock events
+    auto ninjamController = mainController->getNinjamController();
+    connect(ninjamController, &NinjamController::userBlockedInChat, this, &NinjamTrackGroupView::showChatBlockIcon);
+    connect(ninjamController, &NinjamController::userUnblockedInChat, this, &NinjamTrackGroupView::hideChatBlockIcon);
 }
 
 void NinjamTrackGroupView::hideChatBlockIcon(const QString &unblockedUserName)
@@ -123,7 +124,7 @@ void NinjamTrackGroupView::updateGeoLocation()
 
 void NinjamTrackGroupView::setEstimatedChunksPerInterval(int estimatedChunks)
 {
-    foreach (NinjamTrackView * track, getTracks<NinjamTrackView *>()) {
+    for (NinjamTrackView * track : getTracks<NinjamTrackView *>()) {
         track->setEstimatedChunksPerInterval(estimatedChunks);
     }
 }
@@ -138,18 +139,18 @@ QString NinjamTrackGroupView::getRgbaColorString(const QColor &color, int alpha)
 
 void NinjamTrackGroupView::setOrientation(Qt::Orientation newOrientation)
 {
-    if(newOrientation == orientation)
+    if (newOrientation == orientation)
         return;
 
     orientation = newOrientation;
-    QList<NinjamTrackView *> tracks = getTracks<NinjamTrackView *>();
-    foreach (NinjamTrackView *track, tracks) {
+    auto tracks = getTracks<NinjamTrackView *>();
+    for (NinjamTrackView *track : tracks) {
         track->setOrientation(newOrientation);
     }
 
     if(newOrientation == Qt::Horizontal){
         setupHorizontalLayout();
-        topPanel->setFixedWidth(100);//using fixed width in horizontal layout
+        topPanel->setFixedWidth(100); // using fixed width in horizontal layout
     }
     else{
         setupVerticalLayout();
@@ -197,7 +198,7 @@ QSize NinjamTrackGroupView::sizeHint() const
     if(orientation == Qt::Vertical )
         return TrackGroupView::sizeHint();
 
-    //using horizontal layout
+    // using horizontal layout
     int height = 0;
     foreach (BaseTrackView *trackView, trackViews)
         height += trackView->minimumSizeHint().height();
@@ -214,7 +215,7 @@ NinjamTrackView *NinjamTrackGroupView::addTrackView(long trackID)
 
 void NinjamTrackGroupView::setNarrowStatus(bool narrow)
 {
-    foreach (BaseTrackView *trackView, trackViews) {
+    for (BaseTrackView *trackView : trackViews) {
         bool setToWide = !narrow && trackViews.size() <= 1;
         if (setToWide)
             trackView->setToWide();
@@ -231,4 +232,5 @@ void NinjamTrackGroupView::updateGuiElements()
 
 NinjamTrackGroupView::~NinjamTrackGroupView()
 {
+    //
 }

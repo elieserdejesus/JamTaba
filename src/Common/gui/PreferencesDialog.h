@@ -76,7 +76,7 @@ protected:
     void populateMultiTrackRecordingTab();
     void selectRecordingTab();
 
-    //metronome
+    // metronome
     void populateMetronomeTab();
 
     // looper

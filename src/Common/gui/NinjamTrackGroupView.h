@@ -17,6 +17,7 @@ class CacheEntry;
 class NinjamTrackGroupView : public TrackGroupView
 {
     Q_OBJECT
+
 public:
     NinjamTrackGroupView(Controller::MainController *mainController, long trackID,
                          const QString &channelName, const QColor &userColor, const Persistence::CacheEntry &initialValues);

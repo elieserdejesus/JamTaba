@@ -18,6 +18,7 @@ class QLabel;
 class NinjamTrackView : public BaseTrackView
 {
     Q_OBJECT
+
 public:
     NinjamTrackView(Controller::MainController *mainController, long trackID);
     void setChannelName(const QString &name);
@@ -25,9 +26,9 @@ public:
     void setNinjamChannelData(const QString &userFullName, quint8 channelIndex);
 
     // interval chunks visual feedback
-    void incrementDownloadedChunks();// called when a interval part (a chunk) is received
+    void incrementDownloadedChunks(); // called when a interval part (a chunk) is received
     void finishCurrentDownload(); // called when the interval is fully downloaded
-    void setEstimatedChunksPerInterval(int estimatedChunks);// how many download chunks per interval?
+    void setEstimatedChunksPerInterval(int estimatedChunks); // how many download chunks per interval?
 
     void setActivatedStatus(bool deactivated);
 
@@ -49,8 +50,8 @@ private:
     MarqueeLabel *channelNameLabel;
     MultiStateButton *buttonLowCut;
     QPushButton *buttonReceive;
-    Persistence::CacheEntry cacheEntry;// used to remember the track controls values
-    IntervalChunksDisplay *chunksDisplay;// display downloaded interval chunks
+    Persistence::CacheEntry cacheEntry; // used to remember the track controls values
+    IntervalChunksDisplay *chunksDisplay; // display downloaded interval chunks
 
     // used to send channel receive on/off messages
     QString userFullName;

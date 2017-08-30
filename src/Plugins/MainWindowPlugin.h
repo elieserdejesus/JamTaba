@@ -14,7 +14,7 @@ class MainWindowPlugin : public MainWindow
 public:
     MainWindowPlugin(MainControllerPlugin *mainController);
 
-    inline MainControllerPlugin *getMainController() override
+    inline MainControllerPlugin *getMainController() const override
     {
         return dynamic_cast<MainControllerPlugin *>(mainController);
     }

@@ -6,10 +6,10 @@
 
 namespace Gui {
 
-QString capitalize(const QString &string);
+    QString capitalize(const QString &string);
 
-void setLayoutItemsVisibility(QLayout *layout, bool visible);
+    void setLayoutItemsVisibility(QLayout *layout, bool visible);
 
-}//namespace Gui
+} // namespace
 
 #endif

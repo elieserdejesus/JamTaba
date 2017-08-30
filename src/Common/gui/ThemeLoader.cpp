@@ -38,12 +38,12 @@ bool Loader::canLoad(const QString &themesDir, const QString &themeName)
 
 QString Loader::loadCSS(QString themeDir, QString themeName)
 {
-    //first load the common CSS shared by all themes
+    // first load the common CSS shared by all themes
     QString commonCSSDir(":/css/");
     QString commonCSSName("common");
     QString commonCss = Loader::loadThemeCSSFiles(commonCSSDir, commonCSSName);
 
-    //load the theme and merge with common CSS
+    // load the theme and merge with common CSS
     if (!canLoad(themeDir, themeName))
         return ""; // can't load the theme CSS
 
@@ -72,13 +72,13 @@ QString Loader::loadThemeCSSFiles(QString themesBaseDir, QString themeName)
     QStringList themeSectionNames = getThemeSectionNames();
     foreach (const QString &sectionName, themeSectionNames) {
         QFile sectionFile(themeDir.absoluteFilePath(sectionName));
-        if (sectionFile.exists()){
-            if(sectionFile.open(QFile::ReadOnly))
+        if (sectionFile.exists()) {
+            if (sectionFile.open(QFile::ReadOnly))
                 themeCSS += sectionFile.readAll();
             else
                 qCritical() << "Can't open " << QFileInfo(sectionFile).absoluteFilePath() << sectionFile.errorString();
         }
-        else{
+        else {
             qCritical() << QFileInfo(sectionFile).absoluteFilePath() << " not exists! " << sectionFile.errorString();
         }
     }

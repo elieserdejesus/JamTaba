@@ -19,7 +19,7 @@ const int BaseTrackView::FADER_HEIGHT = 12;
 const int BaseTrackView::NARROW_WIDTH = 85;
 const int BaseTrackView::WIDE_WIDTH = 120;
 
-QMap<long, BaseTrackView *> BaseTrackView::trackViews;// static map to quick lookup the views
+QMap<long, BaseTrackView *> BaseTrackView::trackViews; // static map to quick lookup the views
 
 BaseTrackView::BaseTrackView(Controller::MainController *mainController, long trackID) :
     mainController(mainController),
@@ -244,8 +244,6 @@ void BaseTrackView::setSoloStatus(bool newSoloStatus)
     soloButton->setChecked(newSoloStatus);
 }
 
-// +++++++++
-
 void BaseTrackView::updateBoostValue()
 {
     float boostValue = 0;
@@ -268,6 +266,7 @@ void BaseTrackView::updateGuiElements()
     if (peak.getMaxPeak() > maxPeak.getMaxPeak()) {
         maxPeak.update(peak);
     }
+
     // update the track peaks
     setPeaks(peak.getLeftPeak(), peak.getRightPeak(), peak.getLeftRMS(), peak.getRightRMS());
 
@@ -356,8 +355,7 @@ void BaseTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, flo
 
 BaseTrackView::~BaseTrackView()
 {
-    // qDeleteAll(children());// delete ui;
-    trackViews.remove(this->getTrackID());// remove from static map
+    trackViews.remove(this->getTrackID()); // remove from static map
 }
 
 void BaseTrackView::setPan(int value)

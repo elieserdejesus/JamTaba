@@ -41,7 +41,7 @@ protected:
     static const int DEFAULT_DECAY_TIME;
 };
 
-bool BaseMeter::isVertical() const
+inline bool BaseMeter::isVertical() const
 {
     return orientation == Qt::Vertical;
 }

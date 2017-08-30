@@ -165,19 +165,19 @@ void LocalTrackView::detachMainController()
 
 void LocalTrackView::closeAllPlugins()
 {
-    inputNode->closeProcessorsWindows();// close vst editors
+    inputNode->closeProcessorsWindows(); // close vst editors
 }
 
 void LocalTrackView::mute(bool b)
 {
-    getInputNode()->setMute(b);// audio only
-    muteButton->setChecked(b);// gui only
+    getInputNode()->setMute(b); // audio only
+    muteButton->setChecked(b); // gui only
 }
 
 void LocalTrackView::solo(bool b)
 {
-    getInputNode()->setSolo(b);// audio only
-    soloButton->setChecked(b);// gui only
+    getInputNode()->setSolo(b); // audio only
+    soloButton->setChecked(b); // gui only
 }
 
 void LocalTrackView::initializeBoostButton(Boost boostValue)
@@ -215,10 +215,10 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
         Gui::setLayoutItemsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
         Gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
 
-        if(peakMetersOnly){//add the peak meters directly in main layout, so these meters are horizontally centered
+        if (peakMetersOnly) { // add the peak meters directly in main layout, so these meters are horizontally centered
             mainLayout->addWidget(peakMeter, 0, 0);
         }
-        else{// put the meter in the original layout
+        else { // put the meter in the original layout
             setupMetersLayout();
         }
 

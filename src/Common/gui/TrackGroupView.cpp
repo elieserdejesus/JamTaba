@@ -14,7 +14,7 @@ TrackGroupView::TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *
 {
     setupUI(TextEditorModifier);
 
-    //context menu
+    // context menu
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &TrackGroupView::customContextMenuRequested, this, &TrackGroupView::showContextMenu);
 }
@@ -22,12 +22,12 @@ TrackGroupView::TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *
 void TrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
     Q_UNUSED(contextMenu);
-    //no common actions at moment
+    // no common actions at moment
 }
 
 void TrackGroupView::showContextMenu(const QPoint &pos){
     QMenu contextMenu(this);
-    populateContextMenu(contextMenu); //populate is overrided in subclasses to add more menu actions
+    populateContextMenu(contextMenu); // populate is overrided in subclasses to add more menu actions
     contextMenu.exec(mapToGlobal(pos));
 }
 
@@ -65,7 +65,7 @@ void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
 
     groupNameField = new QLineEdit(topPanel);
     groupNameField->setObjectName(QStringLiteral("groupNameField"));
-    groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0);// disable blue border when QLineEdit has focus in mac
+    groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0); // disable blue border when QLineEdit has focus in mac
 
     if (textEditorModifier) {
         bool finishEditorPressingReturnKey = true;
@@ -97,7 +97,7 @@ void TrackGroupView::changeEvent(QEvent *e)
 
 void TrackGroupView::translateUi()
 {
-    //overrided in subclasses
+    // overrided in subclasses
 }
 
 bool TrackGroupView::isUnlighted() const
@@ -126,26 +126,27 @@ void TrackGroupView::setUnlightStatus(bool unlighted)
 
 void TrackGroupView::updateGuiElements()
 {
-    foreach (BaseTrackView *trackView, trackViews)
+    for (BaseTrackView *trackView : trackViews)
         trackView->updateGuiElements();
 }
 
 TrackGroupView::~TrackGroupView()
 {
-
+    //
 }
 
 
 BaseTrackView *TrackGroupView::addTrackView(long trackID)
 {
-    BaseTrackView* newTrackView = createTrackView(trackID);//this is a factory method and is overrided in some places
+    BaseTrackView* newTrackView = createTrackView(trackID); // this is a factory method and is overrided in some places
     if (tracksLayout) {
         tracksLayout->addWidget(newTrackView);
         trackViews.append(newTrackView);
 
         if (trackViews.size() > 1) {
-            foreach (BaseTrackView *trackView, trackViews)
+            for (BaseTrackView *trackView : trackViews)
                 trackView->setToNarrow();
+
             updateGeometry();
             newTrackView->setActivatedStatus(isUnlighted());
         }
@@ -163,14 +164,15 @@ QString TrackGroupView::getGroupName() const
     return groupNameField->text();
 }
 
-// +++++++++++++++++++++++++++++++++++++++++
 void TrackGroupView::removeTrackView(BaseTrackView *trackView)
 {
     tracksLayout->removeWidget(trackView);
     trackViews.removeOne(trackView);
     trackView->deleteLater();
+
     if (trackViews.size() == 1)
         trackViews.at(0)->setToWide();
+
     updateGeometry();
 }
 
@@ -182,8 +184,6 @@ void TrackGroupView::removeTrackView(int trackIndex)
         qCritical() << "Invalid index " << trackIndex;
 }
 
-// +++++++++++++++++++++++++++++++++++++++++
-
 QSize TrackGroupView::minimumSizeHint() const
 {
     return sizeHint();
@@ -192,7 +192,9 @@ QSize TrackGroupView::minimumSizeHint() const
 QSize TrackGroupView::sizeHint() const
 {
     int width = 0;
-    foreach (BaseTrackView *trackView, trackViews)
+
+    for (BaseTrackView *trackView : trackViews)
         width += trackView->minimumSizeHint().width();
+
     return QSize(width, 10);
 }

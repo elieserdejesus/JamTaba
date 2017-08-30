@@ -693,8 +693,7 @@ void LooperWindow::initializeControls()
     }
 
     // wire signals/slots
-    connect(ui->buttonRec, &QPushButton::clicked, [=]
-    {
+    connect(ui->buttonRec, &QPushButton::clicked, [=] {
         if (looper) {
             looper->toggleRecording();
             if (looper->isWaitingToRecord()) {
@@ -707,8 +706,7 @@ void LooperWindow::initializeControls()
         }
     });
 
-    connect(ui->buttonPlay, &QPushButton::clicked, [=]
-    {
+    connect(ui->buttonPlay, &QPushButton::clicked, [=] {
         if (looper) {
             looper->togglePlay();
             if (looper->isPlaying()) {
@@ -722,16 +720,14 @@ void LooperWindow::initializeControls()
         }
     });
 
-    connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
-    {
+    connect(ui->comboBoxPlayMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index) {
         if (index >= 0 && looper) {
             looper->setMode(ui->comboBoxPlayMode->currentData().value<Looper::Mode>());
             ui->comboBoxPlayMode->clearFocus();
         }
     });
 
-    connect(ui->maxLayersComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index)
-    {
+    connect(ui->maxLayersComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index) {
         if (looper) {
             uint layers = index + 1;
             looper->setLayers(layers);
@@ -815,7 +811,7 @@ QString LooperWindow::getOptionToolTip(Audio::Looper::RecordingOption option)
 {
     switch (option) {
     case Looper::HearAllLayers:   return tr("Hear all layers while recording");
-    case Looper::Overdub:               return tr("Overdub the current layer until REC button is pressed");
+    case Looper::Overdub:         return tr("Overdub the current layer until REC button is pressed");
     }
 
     return QString();
@@ -824,7 +820,7 @@ QString LooperWindow::getOptionToolTip(Audio::Looper::RecordingOption option)
 QString LooperWindow::getOptionToolTip(Audio::Looper::PlayingOption option)
 {
     switch (option) {
-    case Looper::RandomizeLayers:       return tr("Randomize layers while playing");
+    case Looper::RandomizeLayers:   return tr("Randomize layers while playing");
     case Looper::PlayLockedLayers:  return tr("Play locked layers only");
     }
 
@@ -887,7 +883,7 @@ void LooperWindow::showLoadMenu()
     QString matchedMenuText = (!loopsInfos.isEmpty()) ? (tr("%1 BPM loops").arg(currentBpm)) : (tr("No loops for %1 BPM").arg(currentBpm));
     QMenu *bpmMatchedMenu = new QMenu(matchedMenuText);
     menu->addMenu(bpmMatchedMenu);
-    for (LoopInfo loopInfo : loopsInfos) {
+    for (const LoopInfo &loopInfo : loopsInfos) {
         QString loopString = loopInfo.toString();
         QAction *action = bpmMatchedMenu->addAction(loopString);
         connect(action, &QAction::triggered, [=](){

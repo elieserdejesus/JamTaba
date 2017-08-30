@@ -37,7 +37,6 @@ using namespace Persistence;
 
 const QString NinjamRoomWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
 
-// +++++++++++++++++++++++++
 NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo &roomInfo,
                                    Controller::MainController *mainController) :
     QWidget(mainWindow),
@@ -55,7 +54,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
 
     ui->licenceButton->setIcon(QIcon(QPixmap(":/images/licence.png")));
 
-    ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);// tracks are left aligned
+    ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft); // tracks are left aligned
 
     this->ninjamPanel = createNinjamPanel();
 
@@ -72,7 +71,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
 
     setupSignals(mainController->getNinjamController());
 
-    //remember the last tracks layout orientation and size (narrow or wide)
+    // remember the last tracks layout orientation and size (narrow or wide)
     setTracksOrientation(lastTracksLayoutOrientation);
     setTracksSize(lastTracksSize);
 
@@ -125,9 +124,9 @@ void NinjamRoomWindow::changeEvent(QEvent *e)
 
 void NinjamRoomWindow::translate()
 {
-    ui->retranslateUi(this); //translate the fixed elements created in Qt ui designer
+    ui->retranslateUi(this); // translate the fixed elements created in Qt ui designer
 
-    //translate other elements
+    // translate other elements
     horizontalLayoutButton->setToolTip(tr("Set tracks layout to horizontal"));
     verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
     wideButton->setToolTip(tr("Wide tracks"));
@@ -175,7 +174,7 @@ void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrien
     int licenceButtonIndex = ui->topLayout->indexOf(ui->licenceButton);
     ui->topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
 
-    connect( buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksLayoutOrientation(QAbstractButton*)));
+    connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(toggleTracksLayoutOrientation(QAbstractButton*)));
 }
 
 void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
@@ -210,9 +209,7 @@ void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
     int licenceButtonIndex = ui->topLayout->indexOf(ui->licenceButton);
     ui->topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
 
-    connect( buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksSize(QAbstractButton*)));
-
-
+    connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(toggleTracksSize(QAbstractButton*)));
 }
 
 void NinjamRoomWindow::toggleTracksLayoutOrientation(QAbstractButton* buttonClicked)
@@ -242,20 +239,15 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
     panel->setMuteButtonStatus(initialMetronomeMuteStatus);
     panel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
 
-    connect(panel, SIGNAL(bpiComboActivated(QString)), this,
-                     SLOT(setNewBpi(QString)));
-    connect(panel, SIGNAL(bpmComboActivated(QString)), this,
-                     SLOT(setNewBpm(QString)));
-    connect(panel, SIGNAL(accentsComboChanged(int)), this,
-                     SLOT(setNewBeatsPerAccent(int)));
+    connect(panel, &NinjamPanel::bpiComboActivated, this, &NinjamRoomWindow::setNewBpi);
+    connect(panel, &NinjamPanel::bpmComboActivated, this, &NinjamRoomWindow::setNewBpm);
+    connect(panel, &NinjamPanel::accentsComboChanged, this, &NinjamRoomWindow::setNewBeatsPerAccent);
 
-    connect(panel, SIGNAL(gainSliderChanged(int)), this,
-                     SLOT(setMetronomeFaderPosition(int)));
-    connect(panel, SIGNAL(panSliderChanged(int)), this,
-                     SLOT(setMetronomePanSliderPosition(int)));
-    connect(panel, SIGNAL(muteButtonClicked()), this, SLOT(toggleMetronomeMuteStatus()));
-    connect(panel, SIGNAL(soloButtonClicked()), this, SLOT(toggleMetronomeSoloStatus()));
-    connect(panel, SIGNAL(preferencesButtonClicked()), this, SLOT(showMetronomePreferences()));
+    connect(panel, &NinjamPanel::gainSliderChanged, this, &NinjamRoomWindow::setMetronomeFaderPosition);
+    connect(panel, &NinjamPanel::panSliderChanged, this, &NinjamRoomWindow::setMetronomePanSliderPosition);
+    connect(panel, &NinjamPanel::muteButtonClicked, this, &NinjamRoomWindow::toggleMetronomeMuteStatus);
+    connect(panel, &NinjamPanel::soloButtonClicked, this, &NinjamRoomWindow::toggleMetronomeSoloStatus);
+    connect(panel, &NinjamPanel::preferencesButtonClicked, this, &NinjamRoomWindow::showMetronomePreferences);
 
     return panel;
 }
