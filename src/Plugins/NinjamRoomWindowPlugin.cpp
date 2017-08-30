@@ -50,7 +50,7 @@ void NinjamRoomWindowPlugin::setHostSyncState(bool syncWithHost)
         int hostBpm = controller->getHostBpm();
         QString hostName = controller->getHostName();
         if (hostBpm == ninjamBpm) {
-            ninjamController->stopAndWaitForHostSync();// stop ninjam streams and wait until user press play/start in host
+            ninjamController->stopAndWaitForHostSync(); // stop ninjam streams and wait until user press play/start in host
             ninjamPanel->setCurrentBeat(0);
             QString title = tr("Synchronizing...");
             QString message = tr("Press play/start in %1 to sync with Jamtaba!").arg(hostName);
@@ -59,7 +59,7 @@ void NinjamRoomWindowPlugin::setHostSyncState(bool syncWithHost)
             QString title = tr("Trying to sync ...");
             QString message = tr("Change %1 BPM to %2 and try sync again!").arg(hostName, QString::number(ninjamBpm));
             showMessageBox(title, message);
-            ninjamPanel->uncheckHostSyncButton();//the button is unchecked, so user can try again
+            ninjamPanel->uncheckHostSyncButton(); // the button is unchecked, so user can try again
         }
     } else {
         ninjamController->disableHostSync();

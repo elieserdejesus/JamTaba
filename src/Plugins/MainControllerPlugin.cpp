@@ -8,7 +8,6 @@
 
 using namespace Controller;
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainControllerPlugin::MainControllerPlugin(const Persistence::Settings &settings, JamTabaPlugin *plugin) :
     MainController(settings),
     plugin(plugin)
@@ -24,10 +23,10 @@ MainControllerPlugin::~MainControllerPlugin()
 
 Persistence::Preset MainControllerPlugin::loadPreset(const QString &name)
 {
-    return settings.readPresetFromFile(name, false);//don't allow multi subchannels in vst plugin and avoid hacking in json file to create subchannels in VSt plugin.
+    return settings.readPresetFromFile(name, false); // don't allow multi subchannels in vst plugin and avoid hacking in json file to create subchannels in VSt plugin.
 }
 
-// +++++++++++++++++++++++++++++++++++++
+
 int MainControllerPlugin::addInputTrackNode(Audio::LocalInputNode *inputTrackNode)
 {
     int inputTrackID = MainController::addInputTrackNode(inputTrackNode);
@@ -43,7 +42,6 @@ QString MainControllerPlugin::getUserEnvironmentString() const
     return MainController::getUserEnvironmentString() + " running in " + getHostName();
 }
 
-// +++++++++++++++++++++++++++++++++++++
 QString MainControllerPlugin::getHostName() const
 {
     if (plugin)
@@ -87,7 +85,7 @@ void MainControllerPlugin::setCSS(const QString &css)
     
     if (qApp) {
         qCDebug(jtCore) << "setting CSS";
-        qApp->setStyleSheet(css);// qApp is a global variable created in dll main.
+        qApp->setStyleSheet(css); // qApp is a global variable created in dll main.
     }
     else
     {

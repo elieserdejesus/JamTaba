@@ -5,7 +5,6 @@
 #include "NinjamController.h"
 #include "audio/core/PluginDescriptor.h"
 #include "NinjamControllerPlugin.h"
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class JamTabaPlugin;
 
@@ -39,7 +38,7 @@ public:
 
     Midi::MidiDriver *createMidiDriver();
 
-    inline void exit() //TODO remove this ??
+    inline void exit() // TODO remove this ??
     {
     }
 

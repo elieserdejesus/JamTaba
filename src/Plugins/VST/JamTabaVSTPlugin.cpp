@@ -4,11 +4,11 @@
 #include "log/Logging.h"
 #include "Editor.h"
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 AudioEffect *createEffectInstance(audioMasterCallback audioMaster)
 {
-    if (!JamTabaPlugin::pluginIsInitialized())// avoid multiple instances inside a DAW.
+    if (!JamTabaPlugin::pluginIsInitialized()) // avoid multiple instances inside a DAW.
         return new JamTabaVSTPlugin(audioMaster);
+
     return nullptr;
 }
 
@@ -47,12 +47,12 @@ QString JamTabaVSTPlugin::getHostName()
         return "Reaper";// in x64 machines reaper host name is Reaperb32 if you are running a 32 bits plugin
 
     if (lowerCaseHostName.contains("cubase"))
-        return "Cubase";// cubase return "cubase vst" as host name
+        return "Cubase"; // cubase return "cubase vst" as host name
 
     if (lowerCaseHostName == "presonus vst2 host")
         return "Studio One";
 
-    return QString::fromUtf8(tempChars);// preserve original case
+    return QString::fromUtf8(tempChars); // preserve original case
 }
 
 bool JamTabaVSTPlugin::hostIsPlaying() const
@@ -134,7 +134,9 @@ bool JamTabaVSTPlugin::getVendorString(char *text)
 {
     if (!text)
         return false;
+
     vst_strncpy(text, "www.jamtaba.com", kVstMaxVendorStrLen);
+
     return true;
 }
 
@@ -147,8 +149,10 @@ VstInt32 JamTabaVSTPlugin::canDo(char *text)
 {
     if (!text)
         return 0;
+
     if (!strcmp(text, "receiveVstTimeInfo"))
         return 1;
+
     return 0;
 }
 
@@ -156,16 +160,16 @@ qint32 JamTabaVSTPlugin::getStartPositionForHostSync() const
 {
     qint32 startPosition = 0;
     double samplesPerBeat = (60.0 * timeInfo->sampleRate)/timeInfo->tempo;
-    if (timeInfo->ppqPos > 0){ //when host start button is pressed (and the cursor is aligned in project start) ppqPos is positive in Reaper, but negative in  Cubase
+    if (timeInfo->ppqPos > 0) { // when host start button is pressed (and the cursor is aligned in project start) ppqPos is positive in Reaper, but negative in  Cubase
         double cursorPosInMeasure = timeInfo->ppqPos - timeInfo->barStartPos;
-        if (cursorPosInMeasure > 0.00000001) { //the 'cursor' in the vst host is not aligned in the measure start. Whe need shift the interval start a little bit.
-            //comparing with 0.00000001 because when the 'cursor' is in 5th beat Reaper is returning barStartPos = 4.9999999 and ppqPos = 5
+        if (cursorPosInMeasure > 0.00000001) { // the 'cursor' in the vst host is not aligned in the measure start. Whe need shift the interval start a little bit.
+            // comparing with 0.00000001 because when the 'cursor' is in 5th beat Reaper is returning barStartPos = 4.9999999 and ppqPos = 5
             double samplesUntilNextMeasure = (timeInfo->timeSigNumerator - cursorPosInMeasure) * samplesPerBeat;
-            startPosition = -samplesUntilNextMeasure; //shift the start position to compensate the 'cursor' position
+            startPosition = -samplesUntilNextMeasure; // shift the start position to compensate the 'cursor' position
         }
     }
-    else{ //host is returning negative values for timeInfo structure when start button is pressed
-        startPosition = timeInfo->ppqPos * samplesPerBeat; //wil generate a negative value
+    else { // host is returning negative values for timeInfo structure when start button is pressed
+        startPosition = timeInfo->ppqPos * samplesPerBeat; // wil generate a negative value
     }
     return startPosition;
 }
@@ -181,7 +185,7 @@ void JamTabaVSTPlugin::processReplacing(float **inputs, float **outputs, VstInt3
         // ask timeInfo to VST host
 
         timeInfo = getTimeInfo(kVstTransportPlaying | kVstTransportChanged | kVstTempoValid);
-        if (transportStartDetectedInHost()) {// user pressing play/start in host?
+        if (transportStartDetectedInHost()) { // user pressing play/start in host?
             NinjamControllerPlugin *ninjamController = controller->getNinjamController();
             Q_ASSERT(ninjamController);
             if (ninjamController->isWaitingForHostSync())
