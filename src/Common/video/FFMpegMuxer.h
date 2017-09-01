@@ -139,6 +139,8 @@ inline int64_t FFMpegMuxer::getCurrentVideoPresentationTimeStamp() const
 
 inline void FFMpegMuxer::setVideoResolution(const QSize &resolution)
 {
+    qDebug() << "Setting video resolution to" << resolution;
+
     this->videoResolution = resolution;
 }
 

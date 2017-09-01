@@ -628,7 +628,11 @@ bool FFMpegMuxer::openVideoCodec(AVCodec *codec)
     }
 
     /* allocate and init a re-usable frame */
+    qDebug() << "Allocating codec context width:" << codecContext->width << "height:" << codecContext->height;
     videoStream->frame = allocPicture(codecContext->pix_fmt, codecContext->width, codecContext->height);
+
+    qDebug() << "Video frame allocated width:" << videoStream->frame->width << " height:" << videoStream->frame->height;
+
     if (!videoStream->frame) {
         qCritical() << "Could not allocate video frame";
         return false;
@@ -727,7 +731,8 @@ void FFMpegMuxer::fillFrameWithImageData(const QImage &image)
 
     if (codecContext->pix_fmt != AV_PIX_FMT_YUV420P) { /* need image convertion? as we only generate a YUV420P picture, we must convert it to the codec pixel format if needed */
         if (!videoStream->swsContext) {
-            videoStream->swsContext = sws_getContext(codecContext->width, codecContext->height, AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height, codecContext->pix_fmt, SWS_BICUBIC, NULL, NULL, NULL);
+            //videoStream->swsContext = sws_getContext(codecContext->width, codecContext->height, AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height, codecContext->pix_fmt, SWS_BICUBIC, NULL, NULL, NULL);
+            videoStream->swsContext = sws_getContext(image.width(), image.height(), AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height, codecContext->pix_fmt, SWS_BICUBIC, NULL, NULL, NULL);
             if (!videoStream->swsContext) {
                 qCritical() << "Could not initialize the conversion context";
                 return;

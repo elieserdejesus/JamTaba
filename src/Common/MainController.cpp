@@ -66,6 +66,11 @@ void MainController::setVideoResolution(const QSize &resolution)
     videoEncoder->setVideoResolution(resolution);
 }
 
+QSize MainController::getVideoResolution() const
+{
+    return videoEncoder->getVideoResolution();
+}
+
 void MainController::blockUserInChat(const QString &userNameToBlock)
 {
     if (isPlayingInNinjamRoom()) {
@@ -224,7 +229,6 @@ void MainController::handleNewNinjamInterval()
 void MainController::processCapturedFrame(int frameID, const QImage &frame)
 {
     Q_UNUSED(frameID);
-
     if (videoEncoder) {
         videoEncoder->encodeImage(frame); // video encoder will emit a signal when video frame is encoded
     }

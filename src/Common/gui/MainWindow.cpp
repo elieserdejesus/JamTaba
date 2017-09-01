@@ -150,8 +150,11 @@ bool MainWindow::cameraIsActivated() const
 
 QImage MainWindow::pickCameraFrame() const
 {
-    if (cameraView)
-        return cameraView->grab().toImage();
+    if (cameraView) {
+        QImage img = cameraView->grab(QRect(QPoint(0, 0), mainController->getVideoResolution())).toImage();
+        //qDebug() << "got image from camera: " << img.size();
+        return img;
+    }
 
     return QImage();
 }
