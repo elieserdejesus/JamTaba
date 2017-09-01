@@ -277,7 +277,6 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
 void FFMpegMuxer::finishCurrentInterval()
 {
-    qDebug() << "\tFinishing current interval Thread:" << QThread::currentThreadId();
     //QMutexLocker locker(&mutex);
 
     if (!avioContext)
