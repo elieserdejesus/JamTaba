@@ -41,7 +41,8 @@ public:
     virtual void start();
     virtual void stop();
 
-    void setVideoResolution(const QSize &resolution);
+    void setVideoProperties(const QSize &resolution);
+
     QSize getVideoResolution() const;
 
     void setFullScreenView(bool fullScreen);

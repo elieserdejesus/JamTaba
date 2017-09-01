@@ -83,6 +83,9 @@ void NinjamTrackGroupView::setVideoInterval(const QByteArray &encodedVideoData)
         qCritical() << "Demuxer can't open video interval data!";
         demuxer.close();
     }
+    else {
+        qDebug() << "Opening encoded video interval FPS:" << demuxer.getFrameRate() << " bytes:" << encodedVideoData.size();
+    }
 }
 
 void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
@@ -254,10 +257,11 @@ void NinjamTrackGroupView::updateGuiElements()
     // video
     if (demuxer.isOpened()) {
         quint64 now = QDateTime::currentMSecsSinceEpoch();
+
         quint64 timePerFrame = demuxer.getFrameRate() / 1000;
         if (now - lastVideoRender >= timePerFrame) { // time to show a new video frame?
-            updateVideoFrame(demuxer.decodeNextFrame());
             lastVideoRender = now;
+            updateVideoFrame(demuxer.decodeNextFrame());
         }
     }
 }

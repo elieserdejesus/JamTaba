@@ -427,6 +427,7 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID)
          * identical to 1. */
     videoStream->stream->time_base = AVRational{ 1, videoFrameRate };
     codecContext->time_base       = videoStream->stream->time_base;
+    qDebug() << "Setting frame rate to" << videoFrameRate;
 
     codecContext->gop_size      = 12; // emit one intra frame every twelve frames at most
     codecContext->pix_fmt       = AV_PIX_FMT_YUV420P;

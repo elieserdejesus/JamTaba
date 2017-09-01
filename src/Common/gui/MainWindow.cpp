@@ -97,7 +97,7 @@ void MainWindow::initializeRealCamera()
         settings.setResolution(lowResolution);
         camera->setViewfinderSettings(settings);
 
-        mainController->setVideoResolution(lowResolution);
+        mainController->setVideoProperties(lowResolution);
     }
     else {
         qCritical() << "Camera resolutions list is empty!";
@@ -125,7 +125,7 @@ void MainWindow::initializeFakeCamera()
 
     cameraView = new FakeCameraView(this);
 
-    mainController->setVideoResolution(cameraView->minimumSizeHint());
+    mainController->setVideoProperties(cameraView->minimumSizeHint());
 }
 
 void MainWindow::initializeCamera()

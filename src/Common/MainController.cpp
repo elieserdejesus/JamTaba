@@ -62,9 +62,10 @@ void MainController::setChannelReceiveStatus(const QString &userFullName, quint8
     }
 }
 
-void MainController::setVideoResolution(const QSize &resolution)
+void MainController::setVideoProperties(const QSize &resolution)
 {
     videoEncoder->setVideoResolution(resolution);
+    videoEncoder->setVideoFrameRate(CAMERA_FPS);
 }
 
 QSize MainController::getVideoResolution() const
@@ -254,7 +255,7 @@ void MainController::uploadEncodedVideoData(const QByteArray &encodedVideoData, 
 {
     if (ninjamController) {
 
-        static int frameID = 0;
+        static uint frameID = 0;
 
         quint8 videoChannelIndex = 1;
 
