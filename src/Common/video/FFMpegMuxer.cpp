@@ -628,10 +628,8 @@ bool FFMpegMuxer::openVideoCodec(AVCodec *codec)
     }
 
     /* allocate and init a re-usable frame */
-    qDebug() << "Allocating codec context width:" << codecContext->width << "height:" << codecContext->height;
+    //qDebug() << "Allocating codec context width:" << codecContext->width << "height:" << codecContext->height;
     videoStream->frame = allocPicture(codecContext->pix_fmt, codecContext->width, codecContext->height);
-
-    qDebug() << "Video frame allocated width:" << videoStream->frame->width << " height:" << videoStream->frame->height;
 
     if (!videoStream->frame) {
         qCritical() << "Could not allocate video frame";

@@ -161,10 +161,15 @@ class JamMetadataWriter
 public:
     virtual void write(const Jam &metadata) = 0;
     virtual ~JamMetadataWriter(){}
+
     virtual QString getWriterId() const = 0;
     virtual QString getWriterName() const = 0; // Localised
-    virtual void setJamDir(QString newJamName, QString recordBasePath) = 0;
-    virtual QString getAudioAbsolutePath(QString audioFileName) = 0;
+
+    virtual void setJamDir(const QString &newJamName, const QString &recordBasePath) = 0;
+
+    virtual QString getAudioAbsolutePath(const QString &audioFileName) = 0;
+
+    virtual QString getVideoAbsolutePath(const QString &videoFileName) = 0;
 };
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -181,19 +186,19 @@ public:
     {
     }
 
-    void appendEncodedAudio(const QByteArray &data)
+    void appendEncodedData(const QByteArray &data)
     {
-        encodedAudio.append(data);
+        encodedData.append(data);
     }
 
     inline QByteArray getEncodedData() const
     {
-        return encodedAudio;
+        return encodedData;
     }
 
     void clear()
     {
-        encodedAudio.clear();
+        encodedData.clear();
         this->intervalIndex++;
     }
 
@@ -203,7 +208,7 @@ public:
     }
 
 private:
-    QByteArray encodedAudio;
+    QByteArray encodedData;
     int intervalIndex;
 };
 
@@ -212,8 +217,11 @@ class JamRecorder
 public:
     JamRecorder(JamMetadataWriter *jamMetadataWritter);
     ~JamRecorder();
-    void appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex,
+    void appendLocalUserAudio(const QByteArray &encodedAudio, quint8 channelIndex,
                               bool isFirstPartOfInterval, bool isLastPastOfInterval);
+
+    void appendLocalUserVideo(const QByteArray &encodedVideo, bool isFirstPartOfInterval, bool isLastPartOfInterval);
+
     void addRemoteUserAudio(const QString &userName, const QByteArray &encodedAudio, quint8 channelIndex);
     void startRecording(const QString &localUser, const QDir &recordBasePath, int bpm, int bpi, int sampleRate);
 
@@ -238,11 +246,20 @@ private:
     bool running;
     QDir recordBaseDir;
 
-    QMap<quint8, LocalNinjamInterval> localUserIntervals; // use channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
+    /**
+        Audio Intervals: Using channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
+        Video Intervals: Using 255 as default channel index.
+     */
+    QMap<quint8, LocalNinjamInterval> localUserIntervals; // storing encoded data for audio and video intervals
+    static const quint8 VIDEO_CHANNEL_KEY = 255;
 
     QString getNewJamName();
+
     void writeEncodedFile(const QByteArray &encodedData, const QString &path);
+
     static QString buildAudioFileName(const QString &userName, quint8 channelIndex, int currentInterval);
+    static QString buildVideoFileName(const QString &userName, int currentInterval, const QString &fileExtension);
+
     void writeProjectFile();
 
 };
