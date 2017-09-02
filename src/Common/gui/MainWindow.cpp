@@ -14,7 +14,6 @@
 #include "ChordsPanel.h"
 #include "MapWidget.h"
 #include "BlinkableButton.h"
-#include "FakeCameraView.h"
 
 #include "LooperWindow.h"
 
@@ -24,7 +23,6 @@
 #include <QDateTime>
 #include <QImage>
 #include <QCameraInfo>
-#include <QCameraViewfinder>
 
 #include "MainController.h"
 #include "ThemeLoader.h"
@@ -54,6 +52,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     chordsPanel(nullptr),
     lastPerformanceMonitorUpdate(0),
     camera(nullptr),
+    videoFrameGrabber(nullptr),
     cameraView(nullptr)
 {
     qCDebug(jtGUI) << "Creating MainWindow...";
@@ -87,7 +86,7 @@ void MainWindow::initializeRealCamera()
         QMessageBox::critical(this, tr("Error!"), camera->errorString());
     });
 
-    QCameraViewfinder *view = new QCameraViewfinder(this);
+    videoFrameGrabber = new CameraFrameGrabber(this);
     camera->load(); // loading Camera before ask supported resolutions to avoid an empty list.
 
     QList<QSize> resolutions = camera->supportedViewfinderResolutions();
@@ -103,8 +102,15 @@ void MainWindow::initializeRealCamera()
         qCritical() << "Camera resolutions list is empty!";
     }
 
-    camera->setViewfinder(view);
-    cameraView = view;
+    CameraFrameGrabber *frameGrabber = static_cast<CameraFrameGrabber *>(videoFrameGrabber);
+    camera->setViewfinder(frameGrabber);
+
+    cameraView = new QLabel(this);
+
+    connect(frameGrabber, &CameraFrameGrabber::frameAvailable, [=](const QImage &image)
+    {
+        cameraView->setPixmap(QPixmap::fromImage(image)); // show the camera frame in QLabel
+    });
 
     camera->start();
 
@@ -120,10 +126,8 @@ void MainWindow::initializeFakeCamera()
         camera = nullptr;
     }
 
-    if (cameraView)
-        cameraView->deleteLater();
-
-    cameraView = new FakeCameraView(this);
+    if (!videoFrameGrabber)
+        videoFrameGrabber = new DummyFrameGrabber();
 
     mainController->setVideoProperties(cameraView->minimumSizeHint());
 }
@@ -137,8 +141,8 @@ void MainWindow::initializeCamera()
     else
         initializeFakeCamera();
 
-    QLayout *leftPanelLayout = ui.leftPanel->layout();
-    leftPanelLayout->addWidget(cameraView);
+    QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
+    leftPanelLayout->addWidget(cameraView, 0, Qt::AlignCenter);
     cameraView->setMaximumHeight(90);
 
 }
@@ -150,13 +154,8 @@ bool MainWindow::cameraIsActivated() const
 
 QImage MainWindow::pickCameraFrame() const
 {
-    if (cameraView) {
-
-        cameraView->update();
-
-        QImage img = cameraView->grab(QRect(QPoint(0, 0), mainController->getVideoResolution())).toImage();
-        //qDebug() << "got image from camera: " << img.size();
-        return img;
+    if (videoFrameGrabber) {
+        return videoFrameGrabber->grab(cameraView->size());
     }
 
     return QImage();

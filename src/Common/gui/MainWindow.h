@@ -16,6 +16,8 @@
 #include <QCamera>
 #include <QVideoFrame>
 
+#include "FakeCameraView.h"
+
 class PreferencesDialog;
 class LocalTrackView;
 class NinjamRoomWindow;
@@ -134,7 +136,8 @@ protected:
     static const QSize MAIN_WINDOW_MIN_SIZE;
 
     QCamera *camera;
-    QWidget *cameraView;
+    VideoFrameGrabber *videoFrameGrabber;
+    QLabel *cameraView;
 
 protected slots:
     void closeTab(int index);
