@@ -664,7 +664,6 @@ void FFMpegMuxer::imageToYuvPicture(const QImage &image, AVFrame *picture, int w
     //avoiding crash when camera preview is resized
     width = qMin(width, image.width());
     height = qMin(height, image.height());
-    qDebug() << "image to YUV" << image;
 
     // Preparing the buffer to get YUV420P data
     int size = avpicture_get_size(AV_PIX_FMT_YUV420P, width, height);

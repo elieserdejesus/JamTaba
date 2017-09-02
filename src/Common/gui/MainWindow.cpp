@@ -105,12 +105,10 @@ void MainWindow::initializeRealCamera()
     CameraFrameGrabber *frameGrabber = static_cast<CameraFrameGrabber *>(videoFrameGrabber);
     camera->setViewfinder(frameGrabber);
 
-    cameraView = new QLabel(this);
-
-    connect(frameGrabber, &CameraFrameGrabber::frameAvailable, [=](const QImage &image)
-    {
-        cameraView->setPixmap(QPixmap::fromImage(image)); // show the camera frame in QLabel
-    });
+//    connect(frameGrabber, &CameraFrameGrabber::frameAvailable, [=](const QImage &image)
+//    {
+//        cameraView->setPixmap(QPixmap::fromImage(image)); // show the camera frame in QLabel
+//    });
 
     camera->start();
 
@@ -126,24 +124,31 @@ void MainWindow::initializeFakeCamera()
         camera = nullptr;
     }
 
-    if (!videoFrameGrabber)
-        videoFrameGrabber = new DummyFrameGrabber();
+    if (videoFrameGrabber){
+        delete videoFrameGrabber;
+    }
+    videoFrameGrabber = new DummyFrameGrabber();
 
-    mainController->setVideoProperties(cameraView->minimumSizeHint());
+    cameraView->setPixmap(QPixmap::fromImage(videoFrameGrabber->grab(cameraView->size())));
+
+    mainController->setVideoProperties(cameraView->size());
 }
 
 void MainWindow::initializeCamera()
 {
+    cameraView = new QLabel(this);
+
     bool availableCameras = !QCameraInfo::availableCameras().isEmpty();
+
+    QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
+    leftPanelLayout->addWidget(cameraView, 0 , Qt::AlignCenter);
+    cameraView->setMaximumHeight(90);
+    cameraView->setMinimumHeight(90);
 
     if (availableCameras)
         initializeRealCamera();
     else
         initializeFakeCamera();
-
-    QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
-    leftPanelLayout->addWidget(cameraView, 0, Qt::AlignCenter);
-    cameraView->setMaximumHeight(90);
 
 }
 
@@ -155,7 +160,9 @@ bool MainWindow::cameraIsActivated() const
 QImage MainWindow::pickCameraFrame() const
 {
     if (videoFrameGrabber) {
-        return videoFrameGrabber->grab(cameraView->size());
+        QImage frame = videoFrameGrabber->grab(cameraView->size());
+        cameraView->setPixmap(QPixmap::fromImage(frame));
+        return frame;
     }
 
     return QImage();

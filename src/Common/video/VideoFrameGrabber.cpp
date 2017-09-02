@@ -42,25 +42,27 @@ bool CameraFrameGrabber::present(const QVideoFrame& frame)
 QImage DummyFrameGrabber::grab(const QSize &size)
 {
 
-//    QPainter painter(this);
+    QImage image(size, QImage::Format_RGB32);
+    image.fill(Qt::black);
 
-//    painter.fillRect(rect(), palette().background());
+    QPainter painter(&image);
 
-//    static int counter = 0;
+    //painter.fillRect(rect(), palette().background());
 
-//    qint64 now = QDateTime::currentMSecsSinceEpoch();
-//    static qint64 lastCounterUpdate = 0;
+    static int counter = 0;
 
-//    if (now - lastCounterUpdate >= 1000) {
-//        counter++;
-//        lastCounterUpdate = now;
-//    }
+    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    static qint64 lastCounterUpdate = 0;
 
-//    const QString text = QString::number(counter % 10);// "JamTaba";
+    if (now - lastCounterUpdate >= 1000) {
+        counter++;
+        lastCounterUpdate = now;
+    }
 
-//    painter.setPen(palette().text().color());
-//    painter.drawText(rect(), text, QTextOption(Qt::AlignCenter));
-    Q_UNUSED(size)
+    const QString text = QString::number(counter % 10);// "JamTaba";
 
-    return QImage();
+    painter.setPen(Qt::white);
+    painter.drawText(QRect(QPoint(0, 0), size), text, QTextOption(Qt::AlignCenter));
+
+    return image;
 }

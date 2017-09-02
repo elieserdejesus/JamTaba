@@ -16,7 +16,7 @@
 #include <QCamera>
 #include <QVideoFrame>
 
-#include "FakeCameraView.h"
+#include "video/VideoFrameGrabber.h"
 
 class PreferencesDialog;
 class LocalTrackView;
