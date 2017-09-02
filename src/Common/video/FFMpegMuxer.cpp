@@ -121,7 +121,7 @@ void FFMpegMuxer::encodeInBackground()
         mutex.unlock();
 
         if (encodeVideo)
-            encodeVideo = !doEncodeVideoFrame(image);
+            encodeVideo = !doEncodeVideoFrame(image.copy());
 
     }
 }

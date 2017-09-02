@@ -4,7 +4,7 @@
 #include <QVideoWidget>
 #include <QAbstractVideoSurface>
 #include <QWidget>
-
+#include <QThread>
 
 class VideoFrameGrabber
 {
@@ -42,7 +42,6 @@ public:
     inline QImage grab(const QSize &size) override
     {
         Q_UNUSED(size);
-
         return lastImage;
     }
 

@@ -17,6 +17,7 @@
 #include <QVideoFrame>
 
 #include "video/VideoFrameGrabber.h"
+#include "video/VideoWidget.h"
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -137,7 +138,7 @@ protected:
 
     QCamera *camera;
     VideoFrameGrabber *videoFrameGrabber;
-    QLabel *cameraView;
+    VideoWidget *cameraView;
 
 protected slots:
     void closeTab(int index);

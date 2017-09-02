@@ -105,11 +105,6 @@ void MainWindow::initializeRealCamera()
     CameraFrameGrabber *frameGrabber = static_cast<CameraFrameGrabber *>(videoFrameGrabber);
     camera->setViewfinder(frameGrabber);
 
-//    connect(frameGrabber, &CameraFrameGrabber::frameAvailable, [=](const QImage &image)
-//    {
-//        cameraView->setPixmap(QPixmap::fromImage(image)); // show the camera frame in QLabel
-//    });
-
     camera->start();
 
     if(camera->state() != QCamera::ActiveState) // camera is used by another application?
@@ -129,21 +124,22 @@ void MainWindow::initializeFakeCamera()
     }
     videoFrameGrabber = new DummyFrameGrabber();
 
-    cameraView->setPixmap(QPixmap::fromImage(videoFrameGrabber->grab(cameraView->size())));
+    QImage image = videoFrameGrabber->grab(cameraView->size());
+    cameraView->setCurrentFrame(image);
 
     mainController->setVideoProperties(cameraView->size());
 }
 
 void MainWindow::initializeCamera()
 {
-    cameraView = new QLabel(this);
+    cameraView = new VideoWidget(this);
 
     bool availableCameras = !QCameraInfo::availableCameras().isEmpty();
 
     QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
     leftPanelLayout->addWidget(cameraView, 0 , Qt::AlignCenter);
     cameraView->setMaximumHeight(90);
-    cameraView->setMinimumHeight(90);
+    //cameraView->setMinimumHeight(90);
 
     if (availableCameras)
         initializeRealCamera();
@@ -161,7 +157,7 @@ QImage MainWindow::pickCameraFrame() const
 {
     if (videoFrameGrabber) {
         QImage frame = videoFrameGrabber->grab(cameraView->size());
-        cameraView->setPixmap(QPixmap::fromImage(frame));
+        cameraView->setCurrentFrame(frame);
         return frame;
     }
 
