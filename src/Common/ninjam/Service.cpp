@@ -307,9 +307,6 @@ void Service::process(const DownloadIntervalWrite &msg)
         Download &download = downloads[msg.getGUID()];
         download.appendEncodedData(msg.getEncodedData());
 
-        if (!download.isAudio())
-            qDebug() << "Receiving video download in channel "<< download.getChannelIndex() << " firstBytes:" << msg.getEncodedData().left(4);
-
         User user = currentServer->getUser(download.getUserFullName());
 
         if (download.isAudio()) {
