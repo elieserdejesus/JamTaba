@@ -355,7 +355,7 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, qui
 
         videoIntervalToUpload = new UploadIntervalData(); // generate a new GUID
 
-        ninjamService.sendIntervalBegin(videoIntervalToUpload->getGUID(), channelIndex, true); // starting a new audio interval
+        ninjamService.sendIntervalBegin(videoIntervalToUpload->getGUID(), channelIndex, false); // starting a new audio interval
     }
 
     if (!videoIntervalToUpload) {
