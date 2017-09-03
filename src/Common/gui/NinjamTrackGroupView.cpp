@@ -63,9 +63,9 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
     groupNameLabel->setStyleSheet(styleSheet);
 
-    videoPreview = new QLabel(this);
-    videoPreview->setVisible(false); // video preview will be visible when the first received frame is decoded
-    mainLayout->addWidget(videoPreview);
+    videoWidget = new VideoWidget(this);
+    videoWidget->setVisible(false); // video preview will be visible when the first received frame is decoded
+    mainLayout->addWidget(videoWidget, 0, Qt::AlignCenter);
 
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
@@ -90,9 +90,9 @@ void NinjamTrackGroupView::setVideoInterval(const QByteArray &encodedVideoData)
 
 void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
 {
-    videoPreview->setPixmap(QPixmap::fromImage(frame));
+    videoWidget->setCurrentFrame(frame);
 
-    videoPreview->setVisible(true);
+    videoWidget->setVisible(true);
 }
 
 void NinjamTrackGroupView::hideChatBlockIcon(const QString &unblockedUserName)

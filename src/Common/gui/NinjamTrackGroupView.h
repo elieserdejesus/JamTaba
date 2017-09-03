@@ -6,6 +6,7 @@
 #include "MarqueeLabel.h"
 #include "NinjamTrackView.h"
 #include "video/FFMpegDemuxer.h"
+#include "video/VideoWidget.h"
 
 namespace Controller {
 class MainController;
@@ -51,7 +52,7 @@ private:
     QString userIP;
     Qt::Orientation orientation;
 
-    QLabel *videoPreview;
+    VideoWidget *videoWidget;
     QByteArray encodedVideoData;
     FFMpegDemuxer demuxer;
     quint64 lastVideoRender;
