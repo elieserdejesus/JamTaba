@@ -1,9 +1,22 @@
 #include "VideoWidget.h"
+#include <QIcon>
 
 VideoWidget::VideoWidget(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    activated(true)
 {
 
+    iconOn = QIcon(":/images/webcam_on.png");
+    iconOff = QIcon(":/images/webcam_off.png");
+
+}
+
+void VideoWidget::activate(bool status)
+{
+    if (status != activated) {
+        activated = status;
+        update();
+    }
 }
 
 void VideoWidget::setCurrentFrame(const QImage &image)
@@ -14,14 +27,21 @@ void VideoWidget::setCurrentFrame(const QImage &image)
     update();
 }
 
+void VideoWidget::mouseReleaseEvent(QMouseEvent *ev)
+{
+    Q_UNUSED(ev);
+
+    activate(!activated);
+}
+
 void VideoWidget::paintEvent(QPaintEvent *ev)
 {
 
     Q_UNUSED(ev);
 
-    if (!currentImage.isNull()) {
+    QPainter painter(this);
 
-        QPainter painter(this);
+    if (!currentImage.isNull() && activated) {
 
         QRect sourceRect = currentImage.rect();
 
@@ -44,4 +64,12 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
                     currentImage,
                     currentImage.rect());
     }
+    else { // not activated
+        painter.fillRect(rect(), QColor(0, 0, 0, 30));
+    }
+
+    if (activated)
+        iconOn.paint(&painter, rect(), Qt::AlignBottom | Qt::AlignRight);
+    else
+        iconOff.paint(&painter, rect(), Qt::AlignBottom | Qt::AlignRight);
 }
