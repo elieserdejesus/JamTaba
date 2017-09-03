@@ -126,6 +126,9 @@ void MainController::finishUploads()
     for (int channelIndex : audioIntervalsToUpload.keys()) {
         ninjamService.sendIntervalPart(audioIntervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
     }
+
+    if (videoIntervalToUpload)
+        ninjamService.sendIntervalPart(videoIntervalToUpload->getGUID(), QByteArray(), true);
 }
 
 void MainController::quitFromNinjamServer(const QString &error)
@@ -255,18 +258,9 @@ void MainController::uploadEncodedVideoData(const QByteArray &encodedVideoData, 
 {
     if (ninjamController) {
 
-        static uint frameID = 0;
+        const quint8 videoChannelIndex = 0; // always sending video in first channel
 
-        quint8 videoChannelIndex = 1;
-
-        bool lastPart = frameID >= getFramesPerInterval();
-
-        if (!lastPart)
-            frameID++;
-        else
-            frameID = 0; // reset frameID to next video interval
-
-        enqueueDataToUpload(encodedVideoData, videoChannelIndex, firstPart, lastPart);
+        enqueueDataToUpload(encodedVideoData, videoChannelIndex, firstPart);
     }
 }
 
@@ -301,60 +295,99 @@ void MainController::updateBpm(int newBpm)
     }
 }
 
-void MainController::enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart, bool isLastPart)
+void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart)
+{
+
+    Q_ASSERT(encodedData.left(4) ==  "OggS");
+
+    if (isFirstPart) {
+
+        if (audioIntervalsToUpload.contains(channelIndex)) {
+
+            // flush the end of previous interval
+            auto audioInterval = audioIntervalsToUpload[channelIndex];
+            ninjamService.sendIntervalPart(audioInterval->getGUID(), audioInterval->getData(), true); // is the last part of interval
+
+            delete audioInterval;
+        }
+
+
+        auto newInterval = new UploadIntervalData(); // generate a new GUID
+        audioIntervalsToUpload.insert(channelIndex, newInterval);
+
+        ninjamService.sendIntervalBegin(newInterval->getGUID(), channelIndex, true); // starting a new audio interval
+    }
+
+    auto interval = audioIntervalsToUpload[channelIndex];
+    if (!interval) {
+        return;
+    }
+
+    interval->appendData(encodedData);
+
+    bool canSend = interval->getTotalBytes() >= 4096;
+    if (canSend) {
+        ninjamService.sendIntervalPart(interval->getGUID(), interval->getData(), false); // is not the last part of interval
+        interval->clear();
+    }
+
+    if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
+        for (auto jamRecorder : getActiveRecorders()) {
+            jamRecorder->appendLocalUserAudio(encodedData, channelIndex, isFirstPart);
+        }
+    }
+
+}
+
+void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart)
+{
+    if (isFirstPart) {
+
+        Q_ASSERT(encodedData.left(4) ==  "RIFF");
+
+        if (videoIntervalToUpload) {
+
+            // flush the end of previous interval
+            ninjamService.sendIntervalPart(videoIntervalToUpload->getGUID(), videoIntervalToUpload->getData(), true); // is the last part of interval
+
+            delete videoIntervalToUpload;
+        }
+
+        videoIntervalToUpload = new UploadIntervalData(); // generate a new GUID
+
+        ninjamService.sendIntervalBegin(videoIntervalToUpload->getGUID(), channelIndex, true); // starting a new audio interval
+    }
+
+    if (!videoIntervalToUpload) {
+        return;
+    }
+
+    videoIntervalToUpload->appendData(encodedData);
+
+    bool canSend = videoIntervalToUpload->getTotalBytes() >= 4096;
+    if (canSend) {
+        ninjamService.sendIntervalPart(videoIntervalToUpload->getGUID(), videoIntervalToUpload->getData(), false); // is not the last part of interval
+        videoIntervalToUpload->clear();
+    }
+
+    if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
+        for (auto jamRecorder : getActiveRecorders()) {
+            jamRecorder->appendLocalUserVideo(encodedData, isFirstPart);
+        }
+    }
+}
+
+void MainController::enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart)
 {
     /** The audio thread is firing this event. This thread (main/gui thread) write the encoded bytes in socket.
         We can't write in the socket from audio thread.*/
 
     bool isAudioData = encodedData.left(4) == "OggS"; // all ogg chunks are prefixed with 'OggS' string
 
-    if (isFirstPart) {
-
-        if (isAudioData) {
-            if (audioIntervalsToUpload.contains(channelIndex))
-                delete audioIntervalsToUpload[channelIndex];
-
-            audioIntervalsToUpload.insert(channelIndex, new UploadIntervalData()); // generate a new GUID
-        }
-        else {
-            if (videoIntervalToUpload)
-                delete videoIntervalToUpload;
-
-            videoIntervalToUpload = new UploadIntervalData(); // generate a new GUID to the video interval
-        }
-
-        QByteArray GUID = isAudioData ? audioIntervalsToUpload[channelIndex]->getGUID() : videoIntervalToUpload->getGUID();
-
-        ninjamService.sendIntervalBegin(GUID, channelIndex, isAudioData);
-    }
-
-
-    UploadIntervalData *upload = isAudioData ? audioIntervalsToUpload[channelIndex] : videoIntervalToUpload;
-    if (!upload) {
-        qCritical() << "Upload is NULL!!!";
-        return;
-    }
-
-    upload->appendData(encodedData);
-
-    bool canSend = upload->getTotalBytes() >= 4096 || isLastPart;
-    if (canSend) {
-        ninjamService.sendIntervalPart(upload->getGUID(), upload->getData(), isLastPart);
-        //qDebug() << "Sending data isVideo:" << !isAudioData << "channel:" << channelIndex << " GUID:" << upload->getGUID() << " bytes:" << upload->getData().left(4);
-        upload->clear();
-    }
-
-
-    if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
-        for (auto jamRecorder : getActiveRecorders()) {
-            if (isAudioData) {
-                jamRecorder->appendLocalUserAudio(encodedData, channelIndex, isFirstPart, isLastPart);
-            }
-            else {
-                jamRecorder->appendLocalUserVideo(encodedData, isFirstPart, isLastPart);
-            }
-        }
-    }
+    if (isAudioData)
+        enqueueAudioDataToUpload(encodedData, channelIndex, isFirstPart);
+    else
+        enqueueVideoDataToUpload(encodedData, channelIndex, isFirstPart);
 }
 
 int MainController::getMaxAudioChannelsForEncoding(uint trackGroupIndex) const

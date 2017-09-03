@@ -320,6 +320,9 @@ private:
 
     uint getFramesPerInterval() const;
 
+    void enqueueAudioDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
+    void enqueueVideoDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
+
 protected slots:
 
     // ninjam
@@ -327,7 +330,7 @@ protected slots:
     virtual void disconnectFromNinjamServer(const Ninjam::Server &server);
     virtual void quitFromNinjamServer(const QString &error);
 
-    virtual void enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart, bool isLastPart);
+    virtual void enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
 
     virtual void updateBpi(int newBpi);
     virtual void updateBpm(int newBpm);

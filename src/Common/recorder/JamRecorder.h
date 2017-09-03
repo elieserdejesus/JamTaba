@@ -207,6 +207,11 @@ public:
         return intervalIndex;
     }
 
+    inline bool isEmpty() const
+    {
+        return encodedData.isEmpty();
+    }
+
 private:
     QByteArray encodedData;
     int intervalIndex;
@@ -218,9 +223,9 @@ public:
     JamRecorder(JamMetadataWriter *jamMetadataWritter);
     ~JamRecorder();
     void appendLocalUserAudio(const QByteArray &encodedAudio, quint8 channelIndex,
-                              bool isFirstPartOfInterval, bool isLastPastOfInterval);
+                              bool isFirstPartOfInterval);
 
-    void appendLocalUserVideo(const QByteArray &encodedVideo, bool isFirstPartOfInterval, bool isLastPartOfInterval);
+    void appendLocalUserVideo(const QByteArray &encodedVideo, bool isFirstPartOfInterval);
 
     void addRemoteUserAudio(const QString &userName, const QByteArray &encodedAudio, quint8 channelIndex);
     void startRecording(const QString &localUser, const QDir &recordBasePath, int bpm, int bpi, int sampleRate);

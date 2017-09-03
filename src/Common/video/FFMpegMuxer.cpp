@@ -205,6 +205,7 @@ int FFMpegMuxer::writeCallback(void *instancePointer, uint8_t *buffer, int buffe
     }
 
     bool isFirstPacket = instance->videoPts == 0;
+
     emit instance->dataEncoded(encodedBytes, isFirstPacket);
 
     return bufferSize;
@@ -279,23 +280,33 @@ void FFMpegMuxer::finishCurrentInterval()
 {
     //QMutexLocker locker(&mutex);
 
-    if (!avioContext)
+    if (!avioContext) {
+        qCritical() << "avioContext is null";
         return;
+    }
 
-    if (videoStream)
-        if (!videoStream->stream->codec || !avcodec_is_open(videoStream->stream->codec))
-        return;
-
-    if (audioStream)
-        if (!audioStream->stream->codec || !avcodec_is_open(audioStream->stream->codec))
+    if (videoStream) {
+        if (!videoStream->stream->codec || !avcodec_is_open(videoStream->stream->codec)) {
+            qCritical() << "video codec is null or not opened!";
             return;
+        }
+    }
+
+    if (audioStream) {
+        if (!audioStream->stream->codec || !avcodec_is_open(audioStream->stream->codec)) {
+            qCritical() << "audio codec is null or not opened!";
+            return;
+        }
+    }
 
 
     /** Write the trailer, if any. The trailer must be written before you close the CodecContexts opened when you
      * wrote the header; otherwise av_write_trailer() may try to use memory that was freed on av_codec_close(). */
+
     int ret = av_write_trailer(formatContext);
     if(ret != 0)
         qCritical() << "Decoder Error while writing trailer:" << av_err2str(ret) << ret;
+
 
     avio_flush(avioContext);
 
@@ -320,6 +331,7 @@ void FFMpegMuxer::finishCurrentInterval()
     }
 
     initialized = false;
+
 }
 
 int FFMpegMuxer::writeFrame(const AVRational *time_base, AVStream *stream, AVPacket *packet)
@@ -427,7 +439,6 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID)
          * identical to 1. */
     videoStream->stream->time_base = AVRational{ 1, videoFrameRate };
     codecContext->time_base       = videoStream->stream->time_base;
-    qDebug() << "Setting frame rate to" << videoFrameRate;
 
     codecContext->gop_size      = 12; // emit one intra frame every twelve frames at most
     codecContext->pix_fmt       = AV_PIX_FMT_YUV420P;
