@@ -203,12 +203,17 @@ void JamRecorder::appendLocalUserVideo(const QByteArray &encodedVideo, bool isFi
 
     bool needSave = isFirstPartOfInterval && !videoInterval.isEmpty();
     if (needSave) {
-        QString videoFileName = buildVideoFileName(localUserName, videoInterval.getIntervalIndex(), "avi");
-        QString videoFilePath = jamMetadataWritter->getVideoAbsolutePath(videoFileName);
+
         QByteArray encodedData(videoInterval.getEncodedData());
-        Q_ASSERT(encodedData.left(4) == "RIFF");
-        QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, videoFilePath);
-        videoInterval.clear();
+
+        bool canSave = encodedData.left(4) == "RIFF";
+        if (canSave) {
+            QString videoFileName = buildVideoFileName(localUserName, videoInterval.getIntervalIndex(), "avi");
+            QString videoFilePath = jamMetadataWritter->getVideoAbsolutePath(videoFileName);
+
+            QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, videoFilePath);
+            videoInterval.clear();
+        }
     }
 
     videoInterval.appendEncodedData(encodedVideo);
@@ -304,16 +309,6 @@ void JamRecorder::newInterval()
         globalIntervalIndex++;
         writeProjectFile();
     }
-    //        if (newPath == null) {
-    //            if (recording) {
-    //                globalInterval++;
-    //                writeProjectFile();
-    //            }
-    //        } else {
-    //            end();
-    //            globalInterval = 0;
-    //            jam = jam.cloneToNewRecordPath(newPath);
-    //            newPath = null;
-    //        }
+
 }
 

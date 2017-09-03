@@ -747,12 +747,6 @@ void NinjamRoomWindow::playVideoInterval(const Ninjam::User &user, const QByteAr
 {
     NinjamTrackGroupView *group = trackGroups[user.getFullName()];
     if (group) {
-        static int received = 0;
-        QFile f("C:/Users/Elieser/" + user.getName() + QString::number(received++) + ".avi");
-        QDataStream stream(&f);
-        f.open(QIODevice::WriteOnly);
-        stream << encodedVideoData;
-
         group->setVideoInterval(encodedVideoData);
     }
 }
