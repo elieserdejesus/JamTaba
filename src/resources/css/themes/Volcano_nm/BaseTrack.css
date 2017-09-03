@@ -137,13 +137,11 @@ BaseTrackView[unlighted="true"] #buttonBoost:hover:checked
 
 BaseTrackView
 {
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-stop: 0.0 #FFD470,
-stop: 0.15 #FDE09B,
-stop: 0.9 #FDE5A9,
-stop: 1.0 #EF820D);
+    background: none;
 
     border: none; /*1px solid rgb(61, 61, 61);*/
+    border-right: 1px solid rgba(0, 0, 0, 20);
+    border-left: 1px solid rgba(0, 0, 0, 20);
     font-size: 8px;
 }
 
@@ -190,6 +188,13 @@ AudioMeter
 TrackGroupView
 {
     border: none;
+    border-radius: 3px;
+
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop: 0.0 #FFD470,
+    stop: 0.15 #FDE09B,
+    stop: 0.9 #FDE5A9,
+    stop: 1.0 #EF820D);
 }
 
 TrackGroupView #topPanel                                /* topPanel is used to show channel name */
