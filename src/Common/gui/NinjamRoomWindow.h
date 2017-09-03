@@ -133,7 +133,7 @@ private slots:
     void showMetronomePreferences();
 
     // video
-    void playVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData);
+    void setVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData);
 
     // ninjam controller events
     void addChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);

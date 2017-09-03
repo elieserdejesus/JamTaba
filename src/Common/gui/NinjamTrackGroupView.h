@@ -37,7 +37,7 @@ public:
 
     QSize sizeHint() const override;
 
-    void setVideoInterval(const QByteArray &encodedVideoData);
+    void addVideoInterval(const QByteArray &encodedVideoData);
 
 protected:
     NinjamTrackView *createTrackView(long trackID) override;
@@ -56,6 +56,7 @@ private:
     QByteArray encodedVideoData;
     FFMpegDemuxer demuxer;
     quint64 lastVideoRender;
+    QList<QByteArray> videoIntervals; // downloaded video intervals
 
     void setupHorizontalLayout();
     void setupVerticalLayout();
@@ -70,6 +71,8 @@ private slots:
     void showChatBlockIcon(const QString &blockedUserName);
 
     void updateVideoFrame(const QImage &frame);
+
+    void startVideoIntervalDecoding();
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H

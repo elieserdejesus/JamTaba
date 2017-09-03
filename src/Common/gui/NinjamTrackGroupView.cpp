@@ -73,15 +73,27 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     Controller::NinjamController *ninjamController = mainController->getNinjamController();
     connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
     connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
+    connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoIntervalDecoding()));
 }
 
-void NinjamTrackGroupView::setVideoInterval(const QByteArray &encodedVideoData)
+void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)
+{
+    videoIntervals << encodedVideoData;
+}
+
+void NinjamTrackGroupView::startVideoIntervalDecoding()
 {
     demuxer.close(); // close previous video interval decoder
 
-    if (!demuxer.open(encodedVideoData)) {
-        qCritical() << "Demuxer can't open video interval data!";
-        demuxer.close();
+    if (!videoIntervals.isEmpty()) {
+        const QByteArray &videoData = videoIntervals.takeLast();
+
+        videoIntervals.clear(); // always take the last video interval and discard others (if downloaded but not played yet)
+
+        if (!demuxer.open(videoData)) {
+            qCritical() << "Demuxer can't open video interval data!";
+            demuxer.close();
+        }
     }
 }
 

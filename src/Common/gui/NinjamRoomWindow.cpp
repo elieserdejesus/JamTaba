@@ -739,15 +739,15 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
     connect(ninjamPanel, SIGNAL(intervalShapeChanged(int)), this, SLOT(setNewIntervalShape(int)));
 
 
-    connect(mainController->getNinjamService(), &Ninjam::Service::videoIntervalCompleted, this, &NinjamRoomWindow::playVideoInterval);
+    connect(mainController->getNinjamService(), &Ninjam::Service::videoIntervalCompleted, this, &NinjamRoomWindow::setVideoInterval);
 
 }
 
-void NinjamRoomWindow::playVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData)
+void NinjamRoomWindow::setVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData)
 {
     NinjamTrackGroupView *group = trackGroups[user.getFullName()];
     if (group) {
-        group->setVideoInterval(encodedVideoData);
+        group->addVideoInterval(encodedVideoData);
     }
 }
 
