@@ -1,14 +1,12 @@
 #include "VideoWidget.h"
 #include <QIcon>
 
-VideoWidget::VideoWidget(QWidget *parent) :
+VideoWidget::VideoWidget(QWidget *parent, bool activated) :
     QWidget(parent),
-    activated(true)
+    activated(activated)
 {
 
-    iconOn = QIcon(":/images/webcam_on.png");
-    iconOff = QIcon(":/images/webcam_off.png");
-
+    webcamIcon = QIcon(":/images/webcam.png");
 }
 
 void VideoWidget::activate(bool status)
@@ -16,6 +14,8 @@ void VideoWidget::activate(bool status)
     if (status != activated) {
         activated = status;
         update();
+
+        emit statusChanged(activated);
     }
 }
 
@@ -32,6 +32,8 @@ void VideoWidget::mouseReleaseEvent(QMouseEvent *ev)
     Q_UNUSED(ev);
 
     activate(!activated);
+
+    updateGeometry();
 }
 
 void VideoWidget::paintEvent(QPaintEvent *ev)
@@ -59,17 +61,26 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
         qreal targetX = (width() - targetWidth) / 2.0;
         qreal targetY = (height() - targetHeight) / 2.0;
 
-        painter.drawImage(
-                    QRectF(targetX, targetY, targetWidth, targetHeight),
-                    currentImage,
-                    currentImage.rect());
+        QRectF targetRect(targetX, targetY, targetWidth, targetHeight);
+        painter.drawImage(targetRect, currentImage, currentImage.rect());
     }
     else { // not activated
+
         painter.fillRect(rect(), QColor(0, 0, 0, 30));
     }
 
+    bool paintIcon = !activated || underMouse();
+    Qt::Alignment alignment = !activated ? Qt::AlignCenter : (Qt::AlignRight | Qt::AlignBottom);
+
+    if (paintIcon)
+        webcamIcon.paint(&painter, rect().marginsRemoved(QMargins(3, 3, 3, 3)), alignment);
+
+}
+
+QSize VideoWidget::minimumSizeHint() const
+{
     if (activated)
-        iconOn.paint(&painter, rect(), Qt::AlignBottom | Qt::AlignRight);
-    else
-        iconOff.paint(&painter, rect(), Qt::AlignBottom | Qt::AlignRight);
+        return QSize(120, 90);
+
+    return QSize(30, 30);
 }

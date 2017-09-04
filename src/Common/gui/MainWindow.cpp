@@ -69,15 +69,36 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeTranslator();
     initializeThemeMenu();
     initializeMeteringOptions();
-    initializeCamera();
+    initializeCameraWidget();
     setupWidgets();
     setupSignals();
 
     qCDebug(jtGUI) << "MainWindow created!";
 }
 
-void MainWindow::initializeRealCamera()
+void MainWindow::changeCameraStatus(bool activated)
 {
+    if (camera) {
+
+        // camera is used by another application?
+        if (camera->status() == QCamera::UnloadedStatus && camera->state() == QCamera::UnloadedState) {
+            cameraView->setVisible(false);
+        }
+    }
+
+    if (!activated) {
+        if (camera) {
+            camera->unload();
+            camera->deleteLater();
+            camera = nullptr;
+
+            videoFrameGrabber->deleteLater();
+            videoFrameGrabber = nullptr;
+
+            return;
+        }
+    }
+
     QCameraInfo info = QCameraInfo::defaultCamera();
     camera = new QCamera(info);
 
@@ -87,6 +108,16 @@ void MainWindow::initializeRealCamera()
     });
 
     videoFrameGrabber = new CameraFrameGrabber(this);
+
+    connect(videoFrameGrabber, &CameraFrameGrabber::frameAvailable, [=](const QImage &frame) {
+
+        if (!mainController->isPlayingInNinjamRoom()) {
+            if (cameraView)
+                cameraView->setCurrentFrame(frame);
+        }
+
+    });
+
     camera->load(); // loading Camera before ask supported resolutions to avoid an empty list.
 
     QList<QSize> resolutions = camera->supportedViewfinderResolutions();
@@ -96,66 +127,57 @@ void MainWindow::initializeRealCamera()
         settings.setResolution(lowResolution);
         camera->setViewfinderSettings(settings);
 
+        //getBestSupportedFrameRate();
+
         mainController->setVideoProperties(lowResolution);
     }
     else {
         qCritical() << "Camera resolutions list is empty!";
     }
 
-    CameraFrameGrabber *frameGrabber = static_cast<CameraFrameGrabber *>(videoFrameGrabber);
-    camera->setViewfinder(frameGrabber);
+    camera->setViewfinder(videoFrameGrabber);
 
     camera->start();
 
-    if(camera->state() != QCamera::ActiveState) // camera is used by another application?
-        initializeFakeCamera();
+    if(camera->state() != QCamera::ActiveState) { // camera is used by another application?
+        camera->unload();
 
+        videoFrameGrabber->deleteLater();
+        videoFrameGrabber = nullptr;
+
+        cameraView->activate(false);
+    }
 }
 
-void MainWindow::initializeFakeCamera()
+void MainWindow::initializeCameraWidget()
 {
-    if (camera){
-        camera->deleteLater();
-        camera = nullptr;
-    }
-
-    if (videoFrameGrabber){
-        delete videoFrameGrabber;
-    }
-    videoFrameGrabber = new DummyFrameGrabber();
-
-    QImage image = videoFrameGrabber->grab(cameraView->size());
-    cameraView->setCurrentFrame(image);
-
-    mainController->setVideoProperties(cameraView->size());
-}
-
-void MainWindow::initializeCamera()
-{
-    cameraView = new VideoWidget(this);
-
     bool availableCameras = !QCameraInfo::availableCameras().isEmpty();
 
-    QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
-    leftPanelLayout->addWidget(cameraView, 0 , Qt::AlignCenter);
-    cameraView->setMaximumHeight(90);
-    //cameraView->setMinimumHeight(90);
+    if (availableCameras) {
 
-    if (availableCameras)
-        initializeRealCamera();
-    else
-        initializeFakeCamera();
+        cameraView = new VideoWidget(this, false);
 
+        connect(cameraView, &VideoWidget::statusChanged, this, &MainWindow::changeCameraStatus);
+
+        QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
+        leftPanelLayout->addWidget(cameraView, 0 , Qt::AlignCenter);
+        cameraView->setMaximumHeight(90);
+    }
+}
+
+QCamera::FrameRateRange MainWindow::getBestSupportedFrameRate() const
+{
+    return QCamera::FrameRateRange();
 }
 
 bool MainWindow::cameraIsActivated() const
 {
-    return cameraView != nullptr;
+    return cameraView && cameraView->isActivated();
 }
 
 QImage MainWindow::pickCameraFrame() const
 {
-    if (videoFrameGrabber) {
+    if (videoFrameGrabber && cameraView) {
         QImage frame = videoFrameGrabber->grab(cameraView->size());
         cameraView->setCurrentFrame(frame);
         return frame;

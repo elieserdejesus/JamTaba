@@ -39,30 +39,30 @@ bool CameraFrameGrabber::present(const QVideoFrame& frame)
 // +++++++++++++++++++=
 
 
-QImage DummyFrameGrabber::grab(const QSize &size)
-{
+//QImage DummyFrameGrabber::grab(const QSize &size)
+//{
 
-    QImage image(size, QImage::Format_RGB32);
-    image.fill(Qt::black);
+//    QImage image(size, QImage::Format_RGB32);
+//    image.fill(Qt::black);
 
-    QPainter painter(&image);
+//    QPainter painter(&image);
 
-    //painter.fillRect(rect(), palette().background());
+//    //painter.fillRect(rect(), palette().background());
 
-    static int counter = 0;
+//    static int counter = 0;
 
-    qint64 now = QDateTime::currentMSecsSinceEpoch();
-    static qint64 lastCounterUpdate = 0;
+//    qint64 now = QDateTime::currentMSecsSinceEpoch();
+//    static qint64 lastCounterUpdate = 0;
 
-    if (now - lastCounterUpdate >= 1000) {
-        counter++;
-        lastCounterUpdate = now;
-    }
+//    if (now - lastCounterUpdate >= 1000) {
+//        counter++;
+//        lastCounterUpdate = now;
+//    }
 
-    const QString text = QString::number(counter % 10);// "JamTaba";
+//    const QString text = QString::number(counter % 10);// "JamTaba";
 
-    painter.setPen(Qt::white);
-    painter.drawText(QRect(QPoint(0, 0), size), text, QTextOption(Qt::AlignCenter));
+//    painter.setPen(Qt::white);
+//    painter.drawText(QRect(QPoint(0, 0), size), text, QTextOption(Qt::AlignCenter));
 
-    return image;
-}
+//    return image;
+//}

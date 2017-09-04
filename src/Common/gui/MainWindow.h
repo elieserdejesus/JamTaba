@@ -137,7 +137,7 @@ protected:
     static const QSize MAIN_WINDOW_MIN_SIZE;
 
     QCamera *camera;
-    VideoFrameGrabber *videoFrameGrabber;
+    CameraFrameGrabber *videoFrameGrabber;
     VideoWidget *cameraView;
 
 protected slots:
@@ -232,6 +232,7 @@ private slots:
 
     void updateUserNameLineEditToolTip();
 
+    void changeCameraStatus(bool activated);
 private:
 
     BusyDialog busyDialog;
@@ -287,9 +288,9 @@ private:
 
     void initializeGuiRefreshTimer();
 
-    void initializeCamera();
-    void initializeRealCamera();
-    void initializeFakeCamera();
+    void initializeCameraWidget();
+
+    QCamera::FrameRateRange getBestSupportedFrameRate() const;
 
     void updateUserNameLabel();
 

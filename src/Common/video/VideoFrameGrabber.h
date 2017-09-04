@@ -15,12 +15,12 @@ public:
 };
 
 
-class DummyFrameGrabber : public VideoFrameGrabber
-{
+//class DummyFrameGrabber : public VideoFrameGrabber
+//{
 
-public:
-    virtual QImage grab(const QSize &size) override;
-};
+//public:
+//    virtual QImage grab(const QSize &size) override;
+//};
 
 class CameraFrameGrabber : public QAbstractVideoSurface, public VideoFrameGrabber
 {
