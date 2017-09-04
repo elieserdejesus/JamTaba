@@ -151,10 +151,9 @@ void MainWindow::changeCameraStatus(bool activated)
 
 void MainWindow::initializeCameraWidget()
 {
-    bool availableCameras = !QCameraInfo::availableCameras().isEmpty();
+    auto cameras = QCameraInfo::availableCameras();
 
-    if (availableCameras) {
-
+    if (!cameras.isEmpty()) {
         cameraView = new VideoWidget(this, false);
 
         connect(cameraView, &VideoWidget::statusChanged, this, &MainWindow::changeCameraStatus);

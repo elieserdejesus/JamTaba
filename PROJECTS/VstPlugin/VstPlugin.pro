@@ -9,6 +9,8 @@
 
 QT       += core gui network widgets concurrent multimedia multimediawidgets
 
+QTPLUGIN += dsengine # necessary to use QCamera inside VST plugin
+
 TARGET = "JamtabaVST2"  #using this name (with a '2' suffix) to match the previons JTBA versions and avoid duplicated plugin in used machines
 TEMPLATE = lib
 CONFIG += shared
@@ -95,10 +97,12 @@ win32 {
     #release platform libs
     CONFIG(release, debug|release): LIBS += -lQt5PlatformSupport
     CONFIG(release, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
+    CONFIG(debug, debug|release):   LIBS += -L$(QTDIR)\plugins\mediaservice\ -ldsengine # necessary to use QCamera
 
     #debug platform libs
     CONFIG(debug, debug|release): LIBS += -lQt5PlatformSupportd #link windows platform statically
     CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindowsd #link windows platform statically
+    CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\mediaservice\ -ldsengined # necessary to use QCamera
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lminimp3 -lvorbisfile -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample
