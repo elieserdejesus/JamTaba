@@ -21,10 +21,10 @@ void VideoWidget::activate(bool status)
 
 void VideoWidget::setCurrentFrame(const QImage &image)
 {
-
     this->currentImage = image;
 
-    update();
+    if (activated)
+        update();
 }
 
 void VideoWidget::mouseReleaseEvent(QMouseEvent *ev)
