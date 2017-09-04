@@ -97,6 +97,9 @@ void NinjamTrackGroupView::startVideoIntervalDecoding()
             demuxer.close();
         }
     }
+    else {
+        videoWidget->setVisible(false); // hide the video widget when transmition is stopped
+    }
 }
 
 void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
