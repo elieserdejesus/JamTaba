@@ -775,8 +775,9 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
     int gotPacket = 0;
     AVPacket packet = { 0 };
 
-    Q_ASSERT(videoStream->stream != nullptr);
-    Q_ASSERT(videoStream->stream->codec != nullptr);
+    Q_ASSERT(videoStream->stream);
+    Q_ASSERT(videoStream->stream->codec);
+    Q_ASSERT(videoStream->frame);
 
     fillFrameWithImageData(image);
 

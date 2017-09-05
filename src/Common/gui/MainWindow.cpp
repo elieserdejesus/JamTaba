@@ -111,7 +111,7 @@ void MainWindow::changeCameraStatus(bool activated)
 
     connect(videoFrameGrabber, &CameraFrameGrabber::frameAvailable, [=](const QImage &frame) {
 
-        if (!mainController->isPlayingInNinjamRoom()) {
+        if (mainController && !mainController->isPlayingInNinjamRoom()) {
             if (cameraView)
                 cameraView->setCurrentFrame(frame);
         }
@@ -762,6 +762,14 @@ void MainWindow::handleIncompatiblity()
 
 void MainWindow::detachMainController()
 {
+    if (videoFrameGrabber) { // necessary to avoid crash VST host when Jamtaba is removed
+        disconnect(videoFrameGrabber, &CameraFrameGrabber::frameAvailable, this, nullptr);
+    }
+
+    if (camera) { // necessary to avoid crash VST host when Jamtaba is removed
+        camera->unload();
+    }
+
     mainController = nullptr;
 }
 
@@ -1214,6 +1222,7 @@ MainWindow::~MainWindow()
 {
     qCDebug(jtGUI) << "MainWindow destructor...";
     setParent(nullptr);
+
     if (mainController)
         mainController->stop();
 
