@@ -400,15 +400,20 @@
         <file>loading.gif</file>
         <file>logging.ini</file>
         <file>metronome/Clave_1st.ogg</file>
-        <file>metronome/Clave_2nd.ogg</file>
         <file>metronome/Snap_1st.ogg</file>
-        <file>metronome/Snap_2nd.ogg</file>
         <file>metronome/Ninjam_1st.ogg</file>
-        <file>metronome/Ninjam_2nd.ogg</file>
         <file>metronome/TicToc_1st.ogg</file>
-        <file>metronome/TicToc_2nd.ogg</file>
         <file>metronome/Default_1st.ogg</file>
-        <file>metronome/Default_2nd.ogg</file>
+        <file>metronome/Clave_accent.ogg</file>
+        <file>metronome/Clave_off.ogg</file>
+        <file>metronome/Default_accent.ogg</file>
+        <file>metronome/Default_off.ogg</file>
+        <file>metronome/Ninjam_accent.ogg</file>
+        <file>metronome/Ninjam_off.ogg</file>
+        <file>metronome/Snap_accent.ogg</file>
+        <file>metronome/Snap_off.ogg</file>
+        <file>metronome/TicToc_accent.ogg</file>
+        <file>metronome/TicToc_off.ogg</file>
     </qresource>
     <qresource prefix="/tiles">
         <file>map/0/0/0.png</file>
