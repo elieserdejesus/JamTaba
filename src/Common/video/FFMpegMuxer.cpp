@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QtConcurrent/QtConcurrent>
 #include <QMutex>
+#include <cstring> // to use std:memset in mingw
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class BaseOutputStream
