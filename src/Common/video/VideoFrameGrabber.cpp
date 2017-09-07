@@ -18,7 +18,6 @@ bool CameraFrameGrabber::present(const QVideoFrame& frame)
         if (cloneFrame.map(QAbstractVideoBuffer::ReadOnly)) {
 
             QImage::Format imageFormat = QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat());
-
             if (imageFormat != QImage::Format_Invalid) {
                 lastImage = QImage(cloneFrame.bits(), cloneFrame.width(), cloneFrame.height(), imageFormat)
                         .copy() // necessary

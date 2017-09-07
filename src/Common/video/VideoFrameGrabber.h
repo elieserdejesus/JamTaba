@@ -32,9 +32,16 @@ public:
 
     inline QList<QVideoFrame::PixelFormat>supportedPixelFormats(QAbstractVideoBuffer::HandleType type) const override
     {
-        Q_UNUSED(type)
-
-        return QList<QVideoFrame::PixelFormat>() << QVideoFrame::Format_RGB32;
+        if (type == QAbstractVideoBuffer::NoHandle) {
+             return QList<QVideoFrame::PixelFormat>()
+                         << QVideoFrame::Format_RGB32
+                         << QVideoFrame::Format_ARGB32
+                         << QVideoFrame::Format_ARGB32_Premultiplied
+                         << QVideoFrame::Format_RGB565
+                         << QVideoFrame::Format_RGB555;
+             } else {
+                 return QList<QVideoFrame::PixelFormat>();
+             }
     }
 
     bool present(const QVideoFrame& frame) override;
