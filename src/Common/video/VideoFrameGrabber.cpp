@@ -20,8 +20,11 @@ bool CameraFrameGrabber::present(const QVideoFrame& frame)
             QImage::Format imageFormat = QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat());
             if (imageFormat != QImage::Format_Invalid) {
                 lastImage = QImage(cloneFrame.bits(), cloneFrame.width(), cloneFrame.height(), imageFormat)
-                        .copy() // necessary
-                        .mirrored(false, true);
+                        .copy(); // necessary
+
+#ifdef Q_OS_WIN
+                lastImage = lastImage.mirrored(false, true);
+#endif
 
                 emit frameAvailable(lastImage);
             }
