@@ -1446,9 +1446,9 @@ void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
 }
 
 void MainWindow::setCustomMetronome(const QString &primaryBeatFile,
-                                    const QString &secondaryBeatFile)
+                                    const QString &offBeatFile, const QString &accentBeatFile)
 {
-    mainController->setCustomMetronome(primaryBeatFile, secondaryBeatFile);
+    mainController->setCustomMetronome(primaryBeatFile, offBeatFile, accentBeatFile);
 }
 
 void MainWindow::setMultiTrackRecordingStatus(bool recording)

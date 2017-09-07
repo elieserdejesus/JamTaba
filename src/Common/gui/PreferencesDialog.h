@@ -32,7 +32,7 @@ public:
     virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders);
 
 signals:
-    void customMetronomeSelected(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile);
+    void customMetronomeSelected(const QString &primaryBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile);
     void builtInMetronomeSelected(const QString &metronomeAlias);
     void multiTrackRecordingStatusChanged(bool recording);
     void jamRecorderStatusChanged(const QString &writerId, bool status);
@@ -51,7 +51,8 @@ protected slots:
 private slots:
     void openRecordingPathBrowser();
     void openPrimaryBeatAudioFileBrowser();
-    void openSecondaryBeatAudioFileBrowser();
+    void openOffBeatAudioFileBrowser();
+    void openAccentBeatAudioFileBrowser();
 
     void emitEncodingQualityChanged();
 

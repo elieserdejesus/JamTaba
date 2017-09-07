@@ -4,14 +4,14 @@
 
 using namespace Audio;
 
-MetronomeTrackNode::MetronomeTrackNode(const SamplesBuffer &firstBeatSamples, const SamplesBuffer &secondaryBeatSamples) :
+MetronomeTrackNode::MetronomeTrackNode(const SamplesBuffer &firstBeatSamples, const SamplesBuffer &offBeatSamples, const SamplesBuffer &accentBeatSamples) :
     firstBeatBuffer(firstBeatSamples),
-    secondaryBeatBuffer(secondaryBeatSamples),
+    offBeatBuffer(offBeatSamples),
+    accentBeatBuffer(accentBeatSamples),
     samplesPerBeat(0),
     intervalPosition(0),
     beatPosition(0),
-    currentBeat(0),
-    beatsPerAccent(0)
+    currentBeat(0)
 {
     resetInterval();
 }
@@ -26,14 +26,41 @@ void MetronomeTrackNode::setPrimaryBeatSamples(const SamplesBuffer &firstBeatSam
     firstBeatBuffer.set(firstBeatSamples);
 }
 
-void MetronomeTrackNode::setSecondaryBeatSamples(const SamplesBuffer &secondaryBeatSamples)
+void MetronomeTrackNode::setOffBeatSamples(const SamplesBuffer &offBeatSamples)
 {
-    secondaryBeatBuffer.set(secondaryBeatSamples);
+    offBeatBuffer.set(offBeatSamples);
+}
+
+void MetronomeTrackNode::setAccentBeatSamples(const SamplesBuffer &accentBeatSamples)
+{
+    accentBeatBuffer.set(accentBeatSamples);
+}
+
+int MetronomeTrackNode::getBeatsPerAccent() const
+{
+    if (this->accentBeats.length() > 0) {
+        // TODO: determine whether accentBeats represents a repetitive sequence
+        // TODO: if so, return frequency else return 0;
+        return 0;
+    } else {
+        return 0;
+    }
 }
 
 void MetronomeTrackNode::setBeatsPerAccent(int beatsPerAccent)
 {
-    this->beatsPerAccent = beatsPerAccent;
+    QList<int> accents = QList<int>();
+    for(int i = 1; i < 256; i++) {
+        if (i % beatsPerAccent == 0) {
+            accents.append(i);
+        }
+    }
+    this->setAccentBeats(accents);
+}
+
+void MetronomeTrackNode::setAccentBeats(QList<int> accentBeats)
+{
+    this->accentBeats = accentBeats;
 }
 
 void MetronomeTrackNode::setSamplesPerBeat(long samplesPerBeat)
@@ -62,10 +89,15 @@ void MetronomeTrackNode::setIntervalPosition(long intervalPosition)
 
 SamplesBuffer *MetronomeTrackNode::getSamplesBuffer(int beat)
 {
-    if (beat == 0 || (isPlayingAccents() && beat % beatsPerAccent == 0)) {
+    if (beat == 0) {
         return &firstBeatBuffer;
     }
-    return &secondaryBeatBuffer;
+    if (isPlayingAccents()) {
+        if (this->accentBeats.contains(beat)) {
+            return &accentBeatBuffer;
+        }
+    }
+    return &offBeatBuffer;
 }
 
 void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,

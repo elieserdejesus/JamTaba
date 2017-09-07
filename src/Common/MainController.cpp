@@ -567,9 +567,9 @@ void MainController::setBuiltInMetronome(const QString &metronomeAlias)
     recreateMetronome();
 }
 
-void MainController::setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile)
+void MainController::setCustomMetronome(const QString &primaryBeatFile, const QString &offBeatFile, const QString &accentBeatFile)
 {
-    settings.setCustomMetronome(primaryBeatFile, secondaryBeatFile);
+    settings.setCustomMetronome(primaryBeatFile, offBeatFile, accentBeatFile);
     recreateMetronome();
 }
 
