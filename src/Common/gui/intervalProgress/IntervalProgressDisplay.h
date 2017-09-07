@@ -35,17 +35,13 @@ public:
 
     void setShowAccents(bool showAccents);
     void setCurrentBeat(int interval);
-    void setBeatsPerAccent(int beatsPerInterval);
+    void setAccentBeats(QList<int> accents);
+    QList<int> getAccentBeats() const;
+
     inline int getBeatsPerInterval() const
     {
         return beatsPerInterval;
     }
-
-    inline int getBeatsPerAccent() const
-    {
-        return beatsPerAccent;
-    }
-
     void setBeatsPerInterval(int beatsPerInterval);
 
     void setPaintMode(PaintShape mode);
@@ -69,11 +65,11 @@ private:
         int beatsPerInterval;
         int currentBeat;
         bool showingAccents;
-        int beatsPerAccent;
+        QList<int> accentBeats;
         qreal elementsSize;//size of circle, pies, etc
         qreal fontSize;
 
-        PaintContext(int width, int height, int beatsPerInterval, int currentBeat, bool showingAccents, int beatsPerAccent, qreal elementsSize, qreal fontSize);
+        PaintContext(int width, int height, int beatsPerInterval, int currentBeat, bool showingAccents, QList<int> accentBeats, qreal elementsSize, qreal fontSize);
     };
 
     struct PaintColors
@@ -154,7 +150,7 @@ private:
 
     int currentBeat;
     int beatsPerInterval;
-    int beatsPerAccent;
+    QList<int> accentBeats;
     bool showAccents;
     bool usingLowContrastColors; // used to paint with low contrast when using chord progressions
 

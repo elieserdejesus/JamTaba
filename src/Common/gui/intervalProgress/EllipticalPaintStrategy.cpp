@@ -106,9 +106,7 @@ qreal IntervalProgressDisplay::EllipticalPaintStrategy::getCircleSize(int beat, 
 
 bool IntervalProgressDisplay::EllipticalPaintStrategy::isMeasureFirstBeat(int beat, int beatOffset, const PaintContext &context) const
 {
-    if (context.beatsPerAccent > 0) //avoid divide by zero in % operation
-        return (beat + beatOffset) % context.beatsPerAccent == 0;
-    return false;
+    return (beat + beatOffset == 0) || context.accentBeats.contains(beat + beatOffset);
 }
 
 void IntervalProgressDisplay::EllipticalPaintStrategy::drawCircles(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors, int beatsToDraw, int beatsToDrawOffset, bool drawPath)
