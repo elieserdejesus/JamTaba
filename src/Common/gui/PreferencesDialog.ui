@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>5</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -586,7 +586,7 @@
        <item alignment="Qt::AlignTop">
         <widget class="QGroupBox" name="groupBoxCustomMetronome">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -604,30 +604,7 @@
           <bool>true</bool>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="textFieldPrimaryBeat"/>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="labelPrimaryBeat">
-            <property name="text">
-             <string>Primary Beat:</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="labelSecondaryBeat">
-            <property name="text">
-             <string>Secondary Beat:</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
+          <item row="0" column="3">
            <widget class="QPushButton" name="browsePrimaryBeatButton">
             <property name="enabled">
              <bool>true</bool>
@@ -640,11 +617,11 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="textFieldSecondaryBeat"/>
-          </item>
           <item row="3" column="2">
-           <widget class="QPushButton" name="browseSecondaryBeatButton">
+           <widget class="QLineEdit" name="textFieldOffBeat"/>
+          </item>
+          <item row="3" column="3">
+           <widget class="QPushButton" name="browseOffBeatButton">
             <property name="text">
              <string>Browse ...</string>
             </property>
@@ -653,13 +630,59 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="0" colspan="3">
+          <item row="3" column="0">
+           <widget class="QLabel" name="labelSecondaryBeat">
+            <property name="text">
+             <string>Off Beat:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
            <widget class="QLabel" name="label16BitWarning">
             <property name="text">
              <string>Use 16 bit audio files!</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLineEdit" name="textFieldPrimaryBeat"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelPrimaryBeat">
+            <property name="text">
+             <string>Primary Beat:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLineEdit" name="textFieldAccentBeat"/>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="labelAccentBeat">
+            <property name="text">
+             <string>Accent Beat:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3">
+           <widget class="QPushButton" name="browseAccentBeatButton">
+            <property name="text">
+             <string>Browse ...</string>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
             </property>
            </widget>
           </item>

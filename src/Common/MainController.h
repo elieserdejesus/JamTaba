@@ -177,10 +177,11 @@ public:
     inline QString getTranslationLanguage() const { return settings.getTranslation(); }
 
     void setBuiltInMetronome(const QString &metronomeAlias);
-    void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
+    void setCustomMetronome(const QString &primaryBeatFile, const QString &offBeatFile, const QString &accentBeatFile);
 
     QString getMetronomeFirstBeatFile() const;
-    QString getMetronomeSecondaryBeatFile() const;
+    QString getMetronomeOffBeatFile() const;
+    QString getMetronomeAccentBeatFile() const;
 
     void saveEncodedAudio(const QString &userName, quint8 channelIndex, const QByteArray &encodedAudio);
 
@@ -366,9 +367,14 @@ inline QString MainController::getMetronomeFirstBeatFile() const
     return settings.getMetronomeFirstBeatFile();
 }
 
-inline QString MainController::getMetronomeSecondaryBeatFile() const
+inline QString MainController::getMetronomeOffBeatFile() const
 {
-    return settings.getMetronomeSecondaryBeatFile();
+    return settings.getMetronomeOffBeatFile();
+}
+
+inline QString MainController::getMetronomeAccentBeatFile() const
+{
+    return settings.getMetronomeAccentBeatFile();
 }
 
 inline bool MainController::isUsingCustomMetronomeSounds() const
