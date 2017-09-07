@@ -160,7 +160,7 @@ macx{
         message("x86_64 build") ## mac 64bit specific build here
         LIBS_PATH = "static/mac64"
     }
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -liconv
     LIBS += -framework IOKit
     LIBS += -framework CoreAudio
     LIBS += -framework CoreMidi

@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QIcon>
+
 
 class VideoWidget : public QWidget
 {

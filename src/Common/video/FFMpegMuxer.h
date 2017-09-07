@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QMutex>
 #include <QThread>
+#include <QDebug>
 #include <QWaitCondition>
 
 #include "FFMpegCommon.h"

@@ -438,7 +438,7 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID)
          * of which frame timestamps are represented. For fixed-fps content,
          * timebase should be 1/framerate and timestamp increments should be
          * identical to 1. */
-    videoStream->stream->time_base = AVRational{ 1, videoFrameRate };
+    videoStream->stream->time_base = AVRational{ 1, static_cast<int>(videoFrameRate) };
     codecContext->time_base       = videoStream->stream->time_base;
 
     codecContext->gop_size      = 12; // emit one intra frame every twelve frames at most

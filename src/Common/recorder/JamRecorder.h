@@ -256,7 +256,7 @@ private:
         Video Intervals: Using 255 as default channel index.
      */
     QMap<quint8, LocalNinjamInterval> localUserIntervals; // storing encoded data for audio and video intervals
-    static const quint8 VIDEO_CHANNEL_KEY = 255;
+    static const quint8 VIDEO_CHANNEL_KEY;
 
     QString getNewJamName();
 

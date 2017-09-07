@@ -6,6 +6,8 @@
 
 using namespace Recorder;
 
+const quint8 JamRecorder::VIDEO_CHANNEL_KEY = 255;
+
 JamAudioFile::JamAudioFile(const QString &path, uint intervalIndex) :
     path(path),
     intervalIndex(intervalIndex)
