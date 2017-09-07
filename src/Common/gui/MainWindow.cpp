@@ -762,9 +762,9 @@ void MainWindow::handleIncompatiblity()
 
 void MainWindow::detachMainController()
 {
-    if (videoFrameGrabber) { // necessary to avoid crash VST host when Jamtaba is removed
-        disconnect(videoFrameGrabber, &CameraFrameGrabber::frameAvailable, this, nullptr);
-    }
+    //if (videoFrameGrabber) { // necessary to avoid crash VST host when Jamtaba is removed
+        //disconnect(videoFrameGrabber, &CameraFrameGrabber::frameAvailable, this, nullptr);
+    //}
 
     if (camera) { // necessary to avoid crash VST host when Jamtaba is removed
         camera->unload();
