@@ -358,21 +358,24 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
 Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sampleRate)
 {
     Audio::SamplesBuffer firstBeatBuffer(2);
-    Audio::SamplesBuffer secondaryBeatBuffer(2);
+    Audio::SamplesBuffer offBeatBuffer(2);
+    Audio::SamplesBuffer accentBeatBuffer(2);
     if (!(mainController->isUsingCustomMetronomeSounds())) {
         QString builtInMetronomeAlias = mainController->getSettings().getBuiltInMetronome();
-        Audio::MetronomeUtils::createBuiltInSounds(builtInMetronomeAlias, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+        Audio::MetronomeUtils::createBuiltInSounds(builtInMetronomeAlias, firstBeatBuffer, offBeatBuffer, accentBeatBuffer, sampleRate);
     }
     else {
         QString firstBeatAudioFile = mainController->getMetronomeFirstBeatFile();
-        QString secondaryBeatAudioFile = mainController->getMetronomeSecondaryBeatFile();
-        Audio::MetronomeUtils::createCustomSounds(firstBeatAudioFile, secondaryBeatAudioFile, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+        QString offBeatAudioFile = mainController->getMetronomeOffBeatFile();
+        QString accentBeatAudioFile = mainController->getMetronomeOffBeatFile();
+        Audio::MetronomeUtils::createCustomSounds(firstBeatAudioFile, offBeatAudioFile, accentBeatAudioFile, firstBeatBuffer, offBeatBuffer, accentBeatBuffer, sampleRate);
     }
 
     Audio::MetronomeUtils::removeSilenceInBufferStart(firstBeatBuffer);
-    Audio::MetronomeUtils::removeSilenceInBufferStart(secondaryBeatBuffer);
+    Audio::MetronomeUtils::removeSilenceInBufferStart(offBeatBuffer);
+    Audio::MetronomeUtils::removeSilenceInBufferStart(accentBeatBuffer);
 
-    return new Audio::MetronomeTrackNode(firstBeatBuffer, secondaryBeatBuffer);
+    return new Audio::MetronomeTrackNode(firstBeatBuffer, offBeatBuffer, accentBeatBuffer);
 }
 
 void NinjamController::recreateMetronome(int newSampleRate)
