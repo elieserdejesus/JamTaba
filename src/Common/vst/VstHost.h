@@ -5,36 +5,39 @@
 #include <QScopedPointer>
 #include <QObject>
 #include "midi/MidiMessage.h"
+#include "../audio/Host.h"
 
 namespace Vst {
 
 class VstPlugin;
 class VstLoader;
 
-class Host : public QObject
+class VstHost : public QObject, public Host
 {
+
     Q_OBJECT
 
     friend class VstPlugin;
     friend class VstLoader;
 
 public:
-    static Host *getInstance();
+    static VstHost *getInstance();
 
-    ~Host();
-    int getSampleRate() const;
-    inline int getBufferSize() const
+    ~VstHost();
+    int getSampleRate() const override;
+    inline int getBufferSize() const override
     {
         return blockSize;
     }
 
-    QList<Midi::MidiMessage> pullReceivedMidiMessages();
+    std::vector<Midi::MidiMessage> pullReceivedMidiMessages() override;
 
-    void setSampleRate(int sampleRate);
-    void setBlockSize(int blockSize);
-    void setTempo(int bpm);
-    void setPlayingFlag(bool playing);
-    void update(int intervalPosition);
+    void setSampleRate(int sampleRate) override;
+    void setBlockSize(int blockSize) override;
+    void setTempo(int bpm) override;
+    void setPlayingFlag(bool playing) override;
+    void setPositionInSamples(int intervalPosition) override;
+
 protected:
     static long VSTCALLBACK hostCallback(AEffect *effect, long opcode, long index, long value,
                                          void *ptr, float opt);
@@ -44,19 +47,17 @@ signals:
 
 private:
     VstTimeInfo vstTimeInfo;
-    QList<Midi::MidiMessage> receivedMidiMessages;
 
     int blockSize;
 
     void clearVstTimeInfoFlags();
 
-    static QScopedPointer<Host> hostInstance;
-    Host();
-    Host(const Host &);// copy constructor
+    static QScopedPointer<VstHost> hostInstance;
+    VstHost();
+    VstHost(const VstHost &); // copy constructor
 
     bool tempoIsValid() const;
 
-    long callBack(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
 };
 }
 

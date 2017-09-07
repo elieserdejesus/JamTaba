@@ -17,8 +17,6 @@
 *.DS_Store
 *~
 
-# Qt-Linguist
-*.qm
 
 # Qt-es
 
@@ -48,4 +46,10 @@ Makefile*
 
 libs/
 VST_SDK/
+GeneratedFiles/
 
+# Xcode files
+
+*.xcbkptlist
+*.xcuserstate
+PROJECTS/AUPlugin/JamTaba.xcodeproj/xcshareddata/

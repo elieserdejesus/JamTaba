@@ -3,13 +3,15 @@
 
 #include <QFrame>
 #include <QLabel>
+#include <QPushButton>
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
+#include "WavePeakPanel.h"
 
 class MapWidget;
 
 namespace Ui {
-class RoomViewPanel;
+class JamRoomViewPanel;
 }
 
 namespace Geo {
@@ -38,11 +40,9 @@ public:
 
     void setShowBufferingState(bool showBuffering);
     void setBufferingPercentage(int percentage);
+    void setWaveDrawingMode(WavePeakPanel::WaveDrawingMode mode);
 
-    inline Login::RoomInfo getRoomInfo() const
-    {
-        return roomInfo;
-    }
+    Login::RoomInfo getRoomInfo() const;
 
 signals:
     void startingListeningTheRoom(const Login::RoomInfo &roomInfo);
@@ -58,10 +58,15 @@ private slots:
     void updateUserLocation(const QString &userIP);
 
 private:
-    Ui::RoomViewPanel *ui;
+    Ui::JamRoomViewPanel *ui;
     Controller::MainController *mainController;
     Login::RoomInfo roomInfo;
     MapWidget *map;
+
+    QLayout *waveDrawingButtonsLayout;
+    QMap<WavePeakPanel::WaveDrawingMode, QPushButton*> waveDrawingButtons;
+    void createWaveDrawingButtonsLayout(QLayout *layout);
+    void setWaveDrawingButtonsVisibility(bool showButtons);
 
     void initialize(const Login::RoomInfo &roomInfo);
     bool roomContainsBotsOnly(const Login::RoomInfo &roomInfo);
@@ -77,6 +82,12 @@ private:
     void updateMap();
 
     bool static canShowNinjamServerPort(const QString &serverName);
+
 };
 
-#endif // JAMROOMVIEWPANEL_H
+inline Login::RoomInfo JamRoomViewPanel::getRoomInfo() const
+{
+    return roomInfo;
+}
+
+ #endif // JAMROOMVIEWPANEL_H

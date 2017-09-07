@@ -3,6 +3,7 @@
 #include <QtWidgets>
 #include <QDebug>
 #include <cmath>
+#include <QEvent>
 
 
 #ifndef M_PI
@@ -17,12 +18,6 @@ bool MapWidget::usingNightMode = false;
 const int MapWidget::ZOOM = 1; // fixed zoom level
 
 QHash<QPoint, QPixmap> MapWidget::tilePixmaps;
-
-// some consts used to translate map tiles to lat,long
-const qreal deg2rad = M_PI/180.0;
-const qreal A_EARTH = 6378137;
-const qreal flattening = 1.0/298.257223563;
-const qreal NAV_E2 = (2.0-flattening)*flattening;
 
 uint qHash(const QPoint& p)
 {
@@ -48,24 +43,6 @@ QPointF tileForCoordinate(QPointF latLong, int zoom)
     return tileForCoordinate(latLong.x(), latLong.y(), zoom);
 }
 
-qreal longitudeFromTile(qreal tx, int zoom)
-{
-    qreal zn = static_cast<qreal>(1 << zoom);
-    qreal divider = zn * 360.0 - 180.0;
-    if (divider != 0)
-        return tx / divider;
-
-    return 0;
-}
-
-qreal latitudeFromTile(qreal ty, int zoom)
-{
-    qreal zn = static_cast<qreal>(1 << zoom);
-    qreal n = M_PI - 2 * M_PI * ty / zn;
-    qreal lng = 180.0 / M_PI * atan(0.5 * (exp(n) - exp(-n)));
-    return lng;
-}
-
 qreal getDistance(const QPointF &p1, const QPointF &p2)
 {
     qreal x = qAbs(p1.x() - p2.x());
@@ -73,21 +50,31 @@ qreal getDistance(const QPointF &p1, const QPointF &p2)
     return std::sqrt(x * x + y * y);
 }
 
-MapWidget::MapWidget(QWidget *parent)
-    : QWidget(parent),
-      showingMarkers(true)
+MapWidget::MapWidget(QWidget *parent) :
+    QWidget(parent),
+    blurActivated(false)
 {
 
     loadTiles();
     setCenter(QPointF(0, 0));
+    installEventFilter(this);
+    initializeFonts();
 }
 
-void MapWidget::setMarkersVisibility(bool showMarkers)
+void MapWidget::setBlurMode(bool blurEnabled)
 {
-    if (showingMarkers != showMarkers) {
-        showingMarkers = showMarkers;
-    }
-    update();
+    this->blurActivated = blurEnabled;
+}
+
+void MapWidget::initializeFonts()
+{
+    QFont widgetFont = font();
+    userFont.setFamily(widgetFont.family());
+    userFont.setPointSize(widgetFont.pointSize());
+    userFont.setBold(true);
+
+    countryFont.setFamily(userFont.family());
+    countryFont.setPointSize(userFont.pointSize());
 }
 
 void MapWidget::setTilesDir(const QString &newDir)
@@ -103,7 +90,7 @@ QPointF MapWidget::getCenterLatLong() const
     if (markers.count() == 1)
         return markers.first().getLatLong();
 
-    double minLatitude = 1000.0; //storing min and max lat and long to computer the center point in the map
+    double minLatitude = 1000.0; // storing min and max lat and long to computer the center point in the map
     double minLongitude = 1000.0;
     double maxLatitude = -1000.0;
     double maxLongitude = -1000.0;
@@ -261,7 +248,7 @@ void MapWidget::loadTiles()
 
 void MapWidget::updateMapPositionsCache()
 {
-    static const int markersHeight = fontMetrics().height() + TEXT_MARGIM * 2;
+    static const int markersHeight = fontMetrics().height() * 2;
     qreal ellipseX = TEXT_MARGIM;
     qreal ellipseY = TEXT_MARGIM + markersHeight/2;
     qreal ellipseWidth = width() - getMaximumMarkerWidth() - TEXT_MARGIM * 2;
@@ -326,10 +313,11 @@ void MapWidget::paintEvent(QPaintEvent *event)
 
     drawMapTiles(p, event->rect());
 
-    if (showingMarkers)
-        drawPlayersMarkers(p);
-    else
-        drawPlayersList(p);
+    drawPlayersMarkers(p);
+
+    if (blurActivated) {
+        p.fillRect(rect(), QColor(0, 0, 0, 140)); // draw a transparent black layer and create more contrast to show the sound wave
+    }
 
     p.end();
 
@@ -353,12 +341,11 @@ QPointF MapWidget::getMarkerScreenCoordinate(const MapMarker &marker) const
     return QPointF(x, y);
 }
 
-int MapWidget::getMaximumMarkerWidth() const
+int MapWidget::getMaximumMarkerWidth()
 {
     int maxWidth = 0;
-    QPointF anchor(0, 0);
     for (const MapMarker &marker : markers) {
-        int markerWidth = getMarkerRect(marker, anchor).width();
+        int markerWidth = getMarkerSize(marker).width();
         if (markerWidth > maxWidth)
             maxWidth = markerWidth;
     }
@@ -403,7 +390,7 @@ void MapWidget::drawPlayersMarkers(QPainter &p)
         }
     }
 
-    //finally drawing the markers
+    // finally drawing the markers
     for (int positionIndex : map.keys()) {
         if (!map[positionIndex].isEmpty()) {
             const MapMarker &marker = map[positionIndex].first();
@@ -426,9 +413,8 @@ bool MapWidget::rectIntersectsSomeMarker(const QRectF &rect, const QList<MapMark
     return false;
 }
 
-MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<MapWidget::Position> &positions) const
+MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<MapWidget::Position> &positions)
 {
-
     if (positions.isEmpty())
         return MapWidget::Position(QPointF(0, 0), 0);
 
@@ -436,11 +422,14 @@ MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker 
     QPointF markerPosition = getMarkerScreenCoordinate(marker);
     qreal minDistance = 1000.0;
     QPointF position = positions.first().coords;
+
     for (int i = 1; i < positions.size(); ++i) {
+
         const QPointF &ellipsePosition = positions.at(i).coords;
         qreal distance = getDistance(markerPosition, ellipsePosition);
+
         if (distance < minDistance) {
-            QRectF markerRect = getMarkerRect(marker, ellipsePosition);
+            QRectF markerRect(ellipsePosition, getMarkerSize(marker));
             if (!rectIntersectsSomeMarker(markerRect, markers)) { // avoid a rect intersecting markers circles
                 minDistance = distance;
                 position = ellipsePosition;
@@ -448,6 +437,7 @@ MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker 
             }
         }
     }
+
     return MapWidget::Position(position, bestPositionIndex);
 }
 
@@ -460,7 +450,7 @@ QList<MapWidget::Position> MapWidget::getEllipsePositions(int markersHeight, con
 
     QList<MapWidget::Position> positions;
 
-    qreal angle = -M_PI/2.0; //start angle
+    qreal angle = -M_PI/2.0; // start angle
     int index = 0;
     Q_ASSERT(markersHeight > 0);
     const int maxPositions = height()/markersHeight * 2.0;
@@ -526,13 +516,9 @@ QColor MapWidget::getMarkerTextColor()
     return Qt::black;
 }
 
-void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition) const
+void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition)
 {
-    QFontMetrics fMetrics = fontMetrics();
-    QString text = marker.getText();
-    qreal textWidth = fMetrics.width(text);
-
-    QRectF markerRect = getMarkerRect(marker, rectPosition);
+    QRectF markerRect(rectPosition, getMarkerSize(marker));
 
     QColor bgColor = getMarkerTextBackgroundColor();
     painter.setBrush(QBrush(bgColor));
@@ -543,75 +529,69 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.setClipRegion(QRegion(rect()).subtracted(markerRect.toRect()));
     painter.drawLine(markerRect.center(), markerPosition);
 
-    // drawing the dark transparent background
+    // drawing the transparent background
     painter.setClipping(false);
     painter.setPen(Qt::NoPen);
     painter.drawRect(markerRect);
 
-    // drawing the player red marker
+    // drawing the player marker (the small circle)
     const static qreal markerSize = 1.6;
     painter.setBrush(getMarkerColor());
     painter.drawEllipse(markerPosition, markerSize, markerSize);
 
-    //draw the player name text
+    qreal hOffset = rectPosition.x() + TEXT_MARGIM; // left margin
+
+    // draw the player name text
+    QString playerName = marker.getPlayerName();
+    painter.setFont(userFont);
+
+    QFontMetrics metrics = painter.fontMetrics();
+    qreal playerNameWidth = metrics.width(playerName);
     painter.setPen(getMarkerTextColor());
-    qreal textY = rectPosition.y() + TEXT_MARGIM;
-    qreal textX = rectPosition.x() + TEXT_MARGIM;
-    painter.drawText(textX, textY, text);
+    qreal textY = markerRect.center().y() + TEXT_MARGIM + metrics.descent()/2.0;
+    painter.drawText(hOffset, textY, playerName);
+    hOffset += playerNameWidth + TEXT_MARGIM * 3;
 
-    qreal imageX = textX + textWidth + TEXT_MARGIM;
-    qreal imageY = rectPosition.y() - fMetrics.height()/2.0;
-    painter.drawImage(QPointF(imageX, imageY), marker.getFlag());
+    // draw the player country name
+    painter.setFont(countryFont);
+    metrics = painter.fontMetrics();
+
+    QColor countryNameColor(getMarkerTextColor());
+    countryNameColor.setAlpha(180); // country name is drawed using some alpha
+    painter.setPen(countryNameColor);
+    QString countryName = marker.getCountryName();
+    painter.drawText(hOffset, textY, countryName);
+
+    hOffset += metrics.width(countryName);
+
+    painter.setFont(userFont); // restore the normal font
+    metrics = painter.fontMetrics();
+
+    // draw the player country flag
+    const QImage &image = marker.getFlag();
+    qreal imageX = hOffset + TEXT_MARGIM;
+    qreal imageY = markerRect.center().y() - image.height()/2.0;
+    painter.drawImage(QPointF(imageX, imageY), image);
 }
 
-QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor) const
+QSizeF MapWidget::getMarkerSize(const MapMarker &marker) const
 {
-    QFontMetrics fMetrics = fontMetrics();
-    QString text = marker.getText();
     const QImage &flag = marker.getFlag();
-    qreal rectWidth = fMetrics.width(text) + TEXT_MARGIM * 3 + flag.width();
-    qreal height = fMetrics.height() + (TEXT_MARGIM * 2);
-    QRectF rect(anchor.x(), anchor.y() - height/2.0, rectWidth, height);
-    return rect;
-}
 
-void MapWidget::drawPlayersList(QPainter &p)
-{
-    if (markers.isEmpty())
-        return;
+    qreal markerWidth = TEXT_MARGIM; // left margin
 
-    p.setTransform(QTransform());//reset transform
+    QFontMetrics metrics(userFont);
+    markerWidth += metrics.width(marker.getPlayerName());
+    markerWidth += TEXT_MARGIM  * 3; // space between player and country name
 
-    QFontMetrics metrics = fontMetrics();
-    qreal fontHeight = metrics.height();
+    metrics = QFontMetrics(countryFont);
+    markerWidth += metrics.width(marker.getCountryName());
+    markerWidth += TEXT_MARGIM + flag.width();
+    markerWidth += TEXT_MARGIM; // right margin
 
-    //compute the background rectangle width
-    qreal maxWidth = 0;
-    for(const MapMarker &mark : markers) {
-        QString userString = mark.getText();
-        qreal width = metrics.width(userString);
-        if (width > maxWidth)
-            maxWidth = width;
-    }
+    qreal markerHeight = qMax(metrics.height(), flag.height()) + TEXT_MARGIM * 2;
 
-    //draw the background rect
-    static const qreal margim = 5;
-    QRectF backgroundRect(margim, margim, maxWidth + margim * 2, fontHeight * markers.count() + margim * 2);
-    static const QColor bgColor(255, 255, 255, 160);
-    p.setPen(Qt::NoPen);
-    p.setBrush(bgColor);
-    p.drawRect(backgroundRect);
-
-    //draw the players names
-    int y = fontHeight + margim;
-    int x = margim * 2;
-    p.setPen(Qt::black);
-    for(const MapMarker &mark : markers) {
-        QString userString = mark.getText();
-        p.drawText(x, y, userString);
-        y += fontHeight;
-    }
-
+    return QSizeF(markerWidth, markerHeight);
 }
 
 QRect MapWidget::tileRect(const QPoint &tp) const
@@ -621,3 +601,26 @@ QRect MapWidget::tileRect(const QPoint &tp) const
     int y = t.y() * TILES_SIZE + offset.y();
     return QRect(x, y, TILES_SIZE, TILES_SIZE);
 }
+
+bool MapWidget::eventFilter(QObject *object, QEvent *ev)
+{
+    if (ev->type() == QEvent::ToolTip) {
+        QHelpEvent *event = static_cast<QHelpEvent *>(ev);
+        QPoint mousePosition = event->pos();
+
+        // check if mouse is intercepting some marker and show country name as tooltip
+        for (const MapMarker &marker : markers) {
+            QPointF markerPosition = getMarkerScreenCoordinate(marker);
+            QRectF markerRect(markerPosition.x() - 2.5, markerPosition.y() - 2.5, 5, 5);
+            if (markerRect.contains(QPointF(mousePosition))) {
+                QToolTip::showText(event->globalPos(), marker.getCountryName());
+                return true;
+            }else {
+                QToolTip::hideText();
+                event->ignore();
+            }
+        }
+    }
+    return QWidget::eventFilter(object, ev);
+}
+

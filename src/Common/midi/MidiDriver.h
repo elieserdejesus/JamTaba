@@ -3,14 +3,17 @@
 
 #include <QtGlobal>
 #include <QMap>
-#include "MidiMessageBuffer.h"
+
+#include "MidiMessage.h"
+
+#include <vector>
 
 namespace Midi {
 
-class MidiMessage;
 
 class MidiDriver
 {
+
 public:
     MidiDriver();
     virtual ~MidiDriver();
@@ -24,14 +27,14 @@ public:
     virtual int getMaxInputDevices() const = 0;
 
     virtual QString getInputDeviceName(uint index) const = 0;
-    virtual MidiMessageBuffer getBuffer() = 0;
+    virtual std::vector<MidiMessage> getBuffer() = 0;
 
     virtual bool deviceIsGloballyEnabled(int deviceIndex) const;
     int getFirstGloballyEnableInputDevice() const;
     virtual void setInputDevicesStatus(const QList<bool> &statuses);
 
 protected:
-    QList<bool> inputDevicesEnabledStatuses;// store the globally enabled midi input devices
+    QList<bool> inputDevicesEnabledStatuses; // store the globally enabled midi input devices
 };
 
 class NullMidiDriver : public MidiDriver
@@ -65,11 +68,12 @@ class NullMidiDriver : public MidiDriver
         return "";
     }
 
-    inline virtual MidiMessageBuffer getBuffer() override
+    inline std::vector<MidiMessage> getBuffer() override
     {
-        return MidiMessageBuffer(0);
+        return std::vector<MidiMessage>();
     }
 };
-}
+
+} // namespace
 
 #endif // MIDIDRIVER_H

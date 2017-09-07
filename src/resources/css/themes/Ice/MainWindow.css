@@ -1,0 +1,107 @@
+#userNamePanel
+{
+    border-color: rgba(0, 0, 0, 160);
+    padding: 1px;
+    border-radius: 6px;
+}
+
+
+/* these two elements need use the same NON-transparent color to work ok in AU and VSt plugin (using top level text editor) */
+#userNameLineEdit,
+#userNamePanel
+{
+    background-color: rgb(129, 194, 230);
+}
+
+
+#labelYourControls
+{
+    color: black;
+}
+
+#masterTitleLabel,
+#labelMetronomeIControls
+{
+    color: rgb(40, 40, 40);
+}
+
+#masterMeter
+{
+    max-height: 4px;
+    height: 4px;
+    margin: 0px;
+}
+
+#userNameLineEdit
+{
+    border: none;
+}
+
+#userNameLineEdit:read-only
+{
+    color: rgba(0, 0, 0, 90);
+}
+
+/* ------------------------------ */
+
+/* main areas */
+
+QMainWindow
+{
+    background-color:  qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0 rgb(147, 193, 255),
+        stop:1 rgb(20, 57, 99));
+
+    border: 1px solid rgb(0, 0, 15);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+#bottomPanel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #9CC6D1,
+        stop: 1.0 rgb(80, 146, 240));
+    border: none;
+    border-radius: 6px;
+}
+
+#leftPanel
+{
+    background-color: rgb(71, 166, 219);
+    border-radius: 6px;
+}
+
+#contentTabWidget:pane
+{
+    background-color:  qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0 rgb(202, 242, 242),
+        stop:0.5 rgb(155, 245, 242),
+        stop:1 rgb(110, 165, 245));
+
+    border-radius: 6px;
+    border-top-left-radius: 0px;
+}
+
+#contentTabWidget:pane,
+#chatTabWidget:pane
+{
+    border: none;
+    padding: 0px;
+}
+
+
+#chatTabWidget:pane
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(180, 207, 250),
+        stop: 1.0 rgb(110, 165, 245));
+        border-color: rgba(40, 40, 40, 90);
+    color: black;
+}
+
+#chatTabWidget QTabBar::tab
+{
+    background-color: rgb(180, 207, 250);
+    color: black;
+}

@@ -7,13 +7,16 @@
 
 using namespace Ninjam;
 
-ClientMessage::ClientMessage(quint8 msgCode, quint32 payload)
-    :msgType(msgCode), payload(payload){
-
+ClientMessage::ClientMessage(quint8 msgCode, quint32 payload) :
+    msgType(msgCode),
+    payload(payload)
+{
+    //
 }
 
 ClientMessage::~ClientMessage()
 {
+    //
 }
 
 void ClientMessage::serializeString(const QString &string, QDataStream &stream){
@@ -86,79 +89,102 @@ void ClientAuthUserMessage::serializeTo(QByteArray& buffer) const {
     stream << clientCapabilites;
     stream << protocolVersion;
 }
-//+++++++++++++++++++++++++++++++++++++++++++
+
 void ClientAuthUserMessage::printDebug(QDebug &dbg) const
 {
     dbg << "SEND ClientAuthUserMessage{  userName:" << userName << " challenge:" << challenge <<"}" << endl;
 }
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-ClientSetChannel::ClientSetChannel(const QStringList &channels)
-    : ClientMessage(0x82, 0), volume(0), pan(0), flags(0)
+
+ClientSetChannel::ClientSetChannel(const QStringList &channels) :
+    ClientMessage(0x82, 0),
+    volume(0),
+    pan(0),
+    flags(0)
 {
     payload = 2;
     channelNames.append(channels);
     for (int i = 0; i < channelNames.size(); i++) {
-        payload += (channelNames[i].toUtf8().size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
+        payload += (channelNames[i].toUtf8().size() + 1) + 2 + 1 + 1; // NUL + volume(short) + pan(byte) + flags(byte)
     }
 }
 
 
-ClientSetChannel::ClientSetChannel(const QString &channelNameToRemove)
-    : ClientMessage(0x82, 0), volume(0), pan(0), flags(1)//to remove
+ClientSetChannel::ClientSetChannel(const QString &channelNameToRemove) :
+    ClientMessage(0x82, 0),
+    volume(0),
+    pan(0),
+    flags(1) //to remove
 {
     payload = 2;
     channelNames.append(channelNameToRemove);
     for (int i = 0; i < channelNames.size(); i++) {
-        payload += (channelNames[i].toUtf8().size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
+        payload += (channelNames[i].toUtf8().size() + 1) + 2 + 1 + 1; // NUL + volume(short) + pan(byte) + flags(byte)
     }
 }
 
 
-void ClientSetChannel::serializeTo(QByteArray &buffer) const{
+void ClientSetChannel::serializeTo(QByteArray &buffer) const
+{
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     //payload = 0;
     stream << msgType << payload;
     //++++++++
-    stream << quint16(4); //byteBuffer.putShort((short) 4);//parameter size (4 bytes - volume (2 bytes) + pan (1 byte) + flags (1 byte))
+    stream << quint16(4); // parameter size (4 bytes - volume (2 bytes) + pan (1 byte) + flags (1 byte))
     for (int i = 0; i < channelNames.size(); ++i) {
-        serializeString(channelNames[i], stream);// //byteBuffer.put(channelNames[i].getBytes("utf-8"));
-        stream << volume;// byteBuffer.putShort(volume);
-        stream << pan;//byteBuffer.put(pan);
-        stream << flags;//byteBuffer.put(flags);
+        serializeString(channelNames[i], stream);
+        stream << volume;
+        stream << pan;
+        stream << flags;
     }
 }
 
-void ClientSetChannel::printDebug(QDebug &dbg) const{
-    dbg << "SEND ClientSetChannel{ payloadLenght=" << payload << " channelName=" << channelNames << '}' << endl;
+void ClientSetChannel::printDebug(QDebug &dbg) const
+{
+    dbg << "SEND ClientSetChannel{ payloadLenght="
+        << payload
+        << " channelName="
+        << channelNames
+        << '}'
+        << endl;
 }
 
 //+++++++++++++++++++++
-ClientKeepAlive::ClientKeepAlive()
-    :ClientMessage(0xfd, 0)
+
+ClientKeepAlive::ClientKeepAlive() :
+    ClientMessage(0xfd, 0)
 {
 
 }
 
-void ClientKeepAlive::serializeTo(QByteArray &buffer) const{
-    //just the header bytes, no payload
+void ClientKeepAlive::serializeTo(QByteArray &buffer) const
+{
+    // just the header bytes, no payload
     QDataStream stream(&buffer, QIODevice::WriteOnly);
+
     stream.setByteOrder(QDataStream::LittleEndian);
-    stream << msgType << payload;
+
+    stream << msgType
+           << payload;
 }
 
-void ClientKeepAlive::printDebug(QDebug &dbg) const{
-    dbg << "SEND {Client KeepAlive}" << endl;
-}
-//+++++++++++++++++
-ClientSetUserMask::ClientSetUserMask(const QList<QString> &users)
-    :ClientMessage(0x81, 0)
+void ClientKeepAlive::printDebug(QDebug &dbg) const
 {
-    payload = 4 * users.size();//4 bytes (int) flag
-    foreach (const QString &userFullName , users) {
-        usersFullNames.append(userFullName);
-        payload += userFullName.size() + 1;
-    }
+    dbg << "SEND {Client KeepAlive}"
+        << endl;
+}
+
+//+++++++++++++++++
+
+ClientSetUserMask::ClientSetUserMask(const QString &userName, quint32 channelsMask) :
+    ClientMessage(0x81, 0),
+    userName(userName),
+    channelsMask(channelsMask)
+{
+    payload = 4; // 4 bytes (int) flag
+    payload += userName.size() + 1;
 }
 
 void ClientSetUserMask::serializeTo(QByteArray &buffer) const
@@ -168,26 +194,32 @@ void ClientSetUserMask::serializeTo(QByteArray &buffer) const
     stream << msgType;
     stream << payload;
     //++++++++++++  END HEADER ++++++++++++
-    foreach (const QString &userName , usersFullNames) {
-        ClientMessage::serializeString(userName, stream);
-        stream << FLAG;
-    }
+
+    ClientMessage::serializeString(userName, stream);
+    stream << channelsMask;
 }
 
 void ClientSetUserMask::printDebug(QDebug &dbg) const
 {
-    dbg << "SEND ClientSetUserMask{ userNames=" << usersFullNames << " flag=" << FLAG << '}';
+    dbg << "SEND ClientSetUserMask{ userName="
+        << userName
+        << " flag="
+        << channelsMask
+        << '}';
 }
 
 //+++++++++++++++++++++++++++++
 
-ChatMessage::ChatMessage(const QString &text)
-    : ClientMessage(0xc0, 0), text(text), command("MSG")
+ChatMessage::ChatMessage(const QString &text) :
+    ClientMessage(0xc0, 0),
+    text(text),
+    command("MSG")
 {
     payload = text.toUtf8().size() + 1 + command.length() + 1;
 }
 
-void ChatMessage::serializeTo(QByteArray &buffer) const{
+void ChatMessage::serializeTo(QByteArray &buffer) const
+{
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << msgType;
@@ -196,27 +228,44 @@ void ChatMessage::serializeTo(QByteArray &buffer) const{
     ClientMessage::serializeString(text, stream);
 }
 
-void ChatMessage::printDebug(QDebug &dbg) const{
-    dbg << "SEND ChatMessage{ payload: " << payload << " " << "command=" << command << " text=" << text << '}';
+void ChatMessage::printDebug(QDebug &dbg) const
+{
+    dbg << "SEND ChatMessage{ payload: "
+        << payload
+        << " "
+        << "command="
+        << command
+        << " text="
+        << text
+        << '}';
 }
 
 //+++++++++++++++++++++++++
 
-ClientUploadIntervalBegin::ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName)
-    :ClientMessage( 0x83, 16 + 4 + 4 + 1 + userName.size()),
-      GUID(GUID),
-      estimatedSize(0),
-      //fourCC{'O', 'G', 'G', 'v'},
-      channelIndex(channelIndex),
-      userName(userName)
+ClientUploadIntervalBegin::ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName, bool isAudioInterval) :
+    ClientMessage( 0x83, 16 + 4 + 4 + 1 + userName.size()),
+    GUID(GUID),
+    estimatedSize(0),
+    channelIndex(channelIndex),
+    userName(userName)
 {
-	fourCC[0] = 'O';
-	fourCC[1] = 'G';
-	fourCC[2] = 'G';
-	fourCC[3] = 'v';
+    if (isAudioInterval) {
+        this->fourCC[0] = 'O';
+        this->fourCC[1] = 'G';
+        this->fourCC[2] = 'G';
+        this->fourCC[3] = 'v';
+    }
+    else {
+        // JamTaba Video prefix
+        this->fourCC[0] = 'J';
+        this->fourCC[1] = 'T';
+        this->fourCC[2] = 'B';
+        this->fourCC[3] = 'v';
+    }
 }
 
-void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer) const{
+void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer) const
+{
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     //quint32 payload = 16 + 4 + 4 + 1 + userName.size();
@@ -228,46 +277,64 @@ void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer) const{
     stream << channelIndex;
     stream.writeRawData(userName.toStdString().c_str(), userName.size());
 
-    if((quint32)buffer.size() != payload + 5){
+    if ((quint32)buffer.size() != payload + 5){
         qCritical() << "wrong size!";
     }
 }
 
-void ClientUploadIntervalBegin::printDebug(QDebug &dbg) const{
-    dbg << "SEND ClientUploadIntervalBegin{ GUID "  << QString(GUID) << " fourCC" << QString(fourCC) << "channelIndex: " << channelIndex << "userName:" << userName << "}";
+void ClientUploadIntervalBegin::printDebug(QDebug &dbg) const
+{
+    dbg << "SEND ClientUploadIntervalBegin{ GUID "
+        << QString(GUID)
+        << " fourCC"
+        << QString(fourCC)
+        << "channelIndex: "
+        << channelIndex
+        << "userName:"
+        << userName
+        << "}";
 }
 
 //+++++++++++++++++++++
-ClientIntervalUploadWrite::ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart)
-    :ClientMessage(0x84, 16 + 1 + encodedAudioBuffer.size()),
+
+ClientIntervalUploadWrite::ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedData, bool isLastPart) :
+    ClientMessage(0x84, 16 + 1 + encodedData.size()),
     GUID(GUID),
-      encodedAudioBuffer(encodedAudioBuffer),
+    encodedData(encodedData),
     isLastPart(isLastPart)
 {
 
 }
 
-void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const{
+void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const
+{
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << msgType;
     stream << payload;
 
     stream.writeRawData(GUID.data(), 16);
-    quint8 intervalCompleted = isLastPart ? (quint8) 1 : (quint8) 0;//If the Flag field bit 0 is set then the upload is complete.
+    quint8 intervalCompleted = isLastPart ? (quint8) 1 : (quint8) 0; // If the Flag field bit 0 is set then the upload is complete.
     stream << intervalCompleted;
-    stream.writeRawData( encodedAudioBuffer.data(), encodedAudioBuffer.size() );
+    stream.writeRawData(encodedData.data(), encodedData.size());
 
     Q_ASSERT(buffer.size() == (int)(payload + 5));
 }
 
-
- void ClientIntervalUploadWrite::printDebug(QDebug &dbg) const{
-    dbg << "SEND ClientIntervalUploadWrite{" << "GUID=" << QString(GUID) << ", encodedAudioBuffer= " << payload << " bytes, isLastPart=" << isLastPart << '}';
+void ClientIntervalUploadWrite::printDebug(QDebug &dbg) const
+{
+    dbg << "SEND ClientIntervalUploadWrite{"
+        << "GUID="
+        << QString(GUID)
+        << ", encodedAudioBuffer= "
+        << payload
+        << " bytes, isLastPart="
+        << isLastPart
+        << '}';
 }
 
-
 //+++++++++++++++++++++++++++
+
 QDebug& Ninjam::operator<<(QDebug &dbg, const ClientMessage &message)
 {
     message.printDebug(dbg);

@@ -13,10 +13,6 @@
   <property name="windowTitle">
    <string notr="true">Jamtaba</string>
   </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>:/images/jt_0001.png</normaloff>:/images/jt_0001.png</iconset>
-  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <property name="sizeConstraint">
@@ -204,30 +200,36 @@
       <property name="styleSheet">
        <string notr="true"/>
       </property>
-      <layout class="QVBoxLayout" name="bottomPanelLayout">
+      <layout class="QGridLayout" name="gridLayout_2" columnstretch="1">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
        <property name="leftMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="topMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+       <property name="verticalSpacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="0" alignment="Qt::AlignHCenter">
         <widget class="QFrame" name="masterControlsPanel">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>140</width>
+           <width>180</width>
            <height>0</height>
           </size>
          </property>
@@ -241,13 +243,16 @@
           <property name="spacing">
            <number>0</number>
           </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
           <property name="leftMargin">
            <number>0</number>
           </property>
           <property name="rightMargin">
            <number>0</number>
           </property>
-          <item alignment="Qt::AlignBottom">
+          <item alignment="Qt::AlignVCenter">
            <widget class="QLabel" name="masterTitleLabel">
             <property name="text">
              <string>master</string>
@@ -259,7 +264,7 @@
           </item>
           <item>
            <layout class="QHBoxLayout" name="masterFaderLayout">
-            <item>
+            <item alignment="Qt::AlignVCenter">
              <widget class="QLabel" name="speakerIconLeft">
               <property name="text">
                <string/>
@@ -269,8 +274,8 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QSlider" name="masterFader">
+            <item alignment="Qt::AlignVCenter">
+             <widget class="Slider" name="masterFader">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
@@ -291,7 +296,7 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item alignment="Qt::AlignVCenter">
              <widget class="QLabel" name="speakerIconRight">
               <property name="text">
                <string/>
@@ -304,17 +309,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="masterMetersLayout">
-            <property name="spacing">
-             <number>2</number>
-            </property>
-            <item>
-             <widget class="AudioMeter" name="masterMeterL" native="true"/>
-            </item>
-            <item>
-             <widget class="AudioMeter" name="masterMeterR" native="true"/>
-            </item>
-           </layout>
+           <widget class="AudioMeter" name="masterMeter" native="true"/>
           </item>
          </layout>
         </widget>
@@ -329,6 +324,9 @@
         <horstretch>1</horstretch>
         <verstretch>1</verstretch>
        </sizepolicy>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="tabPosition">
        <enum>QTabWidget::North</enum>
@@ -406,6 +404,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="currentIndex">
        <number>-1</number>
       </property>
@@ -434,6 +435,7 @@
     <addaction name="actionVstPreferences"/>
     <addaction name="actionRecording"/>
     <addaction name="actionMetronome"/>
+    <addaction name="actionLooper"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -481,9 +483,6 @@
      <addaction name="actionShowMaxPeaks"/>
     </widget>
     <addaction name="menuMetering"/>
-    <addaction name="separator"/>
-    <addaction name="actionFullView"/>
-    <addaction name="actionMiniView"/>
     <addaction name="separator"/>
     <addaction name="actionFullscreenMode"/>
    </widget>
@@ -630,6 +629,45 @@
     <string>Show max peaks</string>
    </property>
   </action>
+  <action name="actionSoundWave">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Sound Wave</string>
+   </property>
+  </action>
+  <action name="actionBuildings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Buildings</string>
+   </property>
+  </action>
+  <action name="actionGradient">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Gradient</string>
+   </property>
+  </action>
+  <action name="actionPixelatedSoundWave">
+   <property name="text">
+    <string>Pixelated Sound Wave</string>
+   </property>
+  </action>
+  <action name="actionPixelatedBuildings">
+   <property name="text">
+    <string>Pixelated Buildings</string>
+   </property>
+  </action>
+  <action name="actionLooper">
+   <property name="text">
+    <string>Looper ...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -638,6 +676,11 @@
    <extends>QWidget</extends>
    <header>PeakMeter.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Slider</class>
+   <extends>QSlider</extends>
+   <header>Slider.h</header>
   </customwidget>
   <customwidget>
    <class>CustomTabWidget</class>
@@ -652,6 +695,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

@@ -3,11 +3,9 @@
 */
 
 
-/* Basic boost (-12, 0, +12) buttons stylesheet:
+/* Basic boost (-12, 0, +12) button stylesheet:
 --------------------------------------*/
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero
+#buttonBoost
 {
    margin: 0px;
    font-size: 8px;
@@ -22,6 +20,13 @@
     color: rgb(50,50,50);
 }
 
+#soloButton:disabled,
+#muteButton:disabled
+{
+    color: rgba(0, 0, 0, 30);
+    border-color: rgba(0, 0, 0, 40);
+}
+
 /* button stereo inversion */
 QPushButton#buttonStereoInversion
 {
@@ -32,8 +37,7 @@ QPushButton#buttonStereoInversion
     background-color: rgb(235, 235, 235);
 }
 
-LocalTrackView[unlighted="true"] #buttonStereoInversion,
-QPushButton#buttonStereoInversion[enabled="false"]
+LocalTrackView[unlighted="true"] #buttonStereoInversion
 {
     background-color: rgba(0, 0, 0, 30);
 }
@@ -50,22 +54,6 @@ QPushButton#buttonStereoInversion:checked
 }
 
 
-/* The small label used to show the max peak below peak meters
---------------------------------------------------------------*/
-
-BaseTrackView #peaksDbLabel
-{
-    font-size: 8px;
-    qproperty-alignment: AlignCenter;
-    color: rgba(0, 0, 0, 120);
-    padding: 1px;
-    min-width: 15px;
-}
-BaseTrackView #peaksDbLabel:hover{
-    background-color: rgba(255,255,255, 30);
-    color: black;
-}
-
 /* Pan slider and LR labels
 ----------------------------*/
 #panSlider
@@ -75,16 +63,24 @@ BaseTrackView #peaksDbLabel:hover{
 }
 
 #labelPanR,
-#labelPanL{
+#labelPanL
+{
     color: rgba(0, 0, 0, 160);
     font-size: 9px;
 }
 
 BaseMeter
 {
-    min-width: 4px;
-    min-height: 4px;
+    min-width: 15px;
+    min-height: 15px;
     background-color: rgba(0, 0, 0, 20);
+}
+
+AudioMeter
+{
+    qproperty-dBMarksColor: black;
+    border: 1px solid rgb(0, 0, 0, 30);
+    font-size: 8px;
 }
 
 /*

@@ -15,12 +15,15 @@ class LocalTrackViewStandalone : public LocalTrackView
 {
     Q_OBJECT
 
+    // custom properties defined in CSS files
+    Q_PROPERTY(QColor midiRoutingArrowColor MEMBER midiRoutingArrowColor)
+
 public:
 
     LocalTrackViewStandalone(Controller::MainControllerStandalone* mainController, int channelID);
 
-    void setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode) override;
-    void setUnlightStatus(bool unlighted) override;
+    void setPeakMetersOnlyMode(bool peakMetersOnly) override;
+    void setActivatedStatus(bool unlighted) override;
 
     void updateGuiElements() override;
 
@@ -39,23 +42,31 @@ public:
 
     void refreshInputSelectionName();
 
+    bool isMidi() const;
+    bool isNoInput() const;
+
+    void setToMidi();
+
+signals:
+    void trackInputChanged();
+
 public slots:
     void setToNoInput();
+    void setMidiRouting(bool routingMidiToFirstSubchannel);
+
+protected:
+    void paintEvent(QPaintEvent *ev) override;
+    void translateUI() override;
+    bool eventFilter(QObject *target, QEvent *event) override;
+    void setupMetersLayout() override;
 
 protected slots:
     void setToMono(QAction *action) ;
     void setToStereo(QAction *action) ;
     void setToMidi(QAction *action) ;
 
-protected:
-    void translateUI() override;
-
-    bool eventFilter(QObject *target, QEvent *event) override;
-
-    void setupMetersLayout() override;
-
 private slots:
-    void showInputSelectionMenu();// build and show the input selection menu
+    void showInputSelectionMenu(); // build and show the input selection menu
     void openMidiToolsDialog();
     void onMidiToolsDialogClosed();
 
@@ -66,9 +77,9 @@ private slots:
     void toggleMidiNoteLearn(bool);
 
     void useLearnedMidiNote(quint8 midiNote);
-private:
 
-    Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience
+private:
+    Controller::MainControllerStandalone* controller; //a 'casted' pointer just for convenience
 
     QMenu *createMonoInputsMenu(QMenu *parentMenu);
     QMenu *createStereoInputsMenu(QMenu *parentMenu);
@@ -86,11 +97,11 @@ private:
     QWidget *inputPanel;
     FxPanel *fxPanel;
 
-    MidiActivityMeter *midiPeakMeter;// show midi activity
+    MidiActivityMeter *midiPeakMeter; // show midi activity
 
     void setMidiPeakMeterVisibility(bool visible);
 
-    QString getInputChannelNameOnly(int inputIndex);// return the input channel name without the number/index
+    QString getInputChannelNameOnly(int inputIndex); // return the input channel name without the number/index
 
     quint8 getMidiNoteNumber(const QString &midiNote) const;
     QString getMidiNoteText(quint8 midiNoteNumber) const;
@@ -98,8 +109,10 @@ private:
     void startMidiNoteLearn();
     void stopMidiNoteLearn();
 
-    bool canShowMidiToolsButton();
-    bool canShowInputTypeIcon();
+    bool canShowMidiToolsButton() const;
+    bool canShowInputTypeIcon() const;
+
+    bool isFirstSubchannel() const;
 
     void updateInputText();
     void updateInputIcon();
@@ -110,7 +123,14 @@ private:
     QString getInputTypeIconFile();
     bool canUseMidiDeviceIndex(int midiDeviceIndex) const;
 
+    void paintRoutingMidiArrow(int topMargin, int arrowSize, bool drawMidiWord);
+    void paintReceivingRoutedMidiIndicator(int topMargin);
+
+    void setAudioRelatedControlsStatus(bool enableControls);
+
     MidiToolsDialog *midiToolsDialog;
+
+    QColor midiRoutingArrowColor;
 
     static const QString MIDI_ICON;
     static const QString MONO_ICON;

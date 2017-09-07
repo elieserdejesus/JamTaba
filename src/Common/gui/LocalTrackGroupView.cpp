@@ -7,10 +7,12 @@
 #include "MainController.h"
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame) :
+    TrackGroupView(mainFrame->createTextEditorModifier()),
     index(channelIndex),
     mainFrame(mainFrame),
     peakMeterOnly(false),
-    preparingToTransmit(false)
+    preparingToTransmit(false),
+    usingSmallSpacingInLayouts(false)
 {
     toolButton = createToolButton();
     topPanel->layout()->addWidget(toolButton);
@@ -18,23 +20,15 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     xmitButton = createXmitButton();
     layout()->addWidget(xmitButton);
 
-    QObject::connect(toolButton, SIGNAL(clicked()), this, SLOT(showMenu()));
-    QObject::connect(groupNameField, SIGNAL(editingFinished()), this, SIGNAL(
-                         nameChanged()));
-    QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(toggleTransmitingStatus(bool)));
+    connect(toolButton, &QPushButton::clicked, this, &LocalTrackGroupView::showMenu);
+
+    connect(groupNameField, &QLineEdit::editingFinished, this, &LocalTrackGroupView::nameChanged);
+
+    connect(xmitButton, &QPushButton::toggled, this, &LocalTrackGroupView::toggleTransmitingStatus);
 
     groupNameField->setAlignment(Qt::AlignHCenter);
 
     translateUi();
-}
-
-void LocalTrackGroupView::useSmallSpacingInLayouts(bool useSmallSpacing)
-{
-
-    QList<LocalTrackView*> tracks = getTracks<LocalTrackView*>();
-    foreach (LocalTrackView *trackView, tracks) {
-        trackView->useSmallSpacingInLayouts(useSmallSpacing);
-    }
 }
 
 void LocalTrackGroupView::refreshStyleSheet()
@@ -61,7 +55,7 @@ void LocalTrackGroupView::translateUi()
 void LocalTrackGroupView::updateXmitButtonText()
 {
     if (peakMeterOnly) {
-        xmitButton->setText(tr("X"));
+        xmitButton->setText(""); // no text, just the up arrow icon
     }
     else{
         xmitButton->setText(isPreparingToTransmit() ? tr("Preparing") : tr("Transmit"));
@@ -86,7 +80,7 @@ void LocalTrackGroupView::setPreparingStatus(bool preparing)
 
 void LocalTrackGroupView::toggleTransmitingStatus(bool checked)
 {
-    if (!preparingToTransmit) {// users can't change xmit when is preparing
+    if (!preparingToTransmit) { // users can't change xmit when is preparing
         setUnlightStatus(!checked);
         mainFrame->setTransmitingStatus(getChannelIndex(), checked);
     }
@@ -98,6 +92,7 @@ QPushButton *LocalTrackGroupView::createXmitButton()
     toolButton->setObjectName(QStringLiteral("xmitButton"));
     toolButton->setCheckable(true);
     toolButton->setChecked(true);
+    toolButton->setIcon(QIcon(":/images/transmit.png"));
     return toolButton;
 }
 
@@ -112,8 +107,8 @@ QPushButton *LocalTrackGroupView::createToolButton()
 
 void LocalTrackGroupView::closePluginsWindows()
 {
-    QList<LocalTrackView *> trackViews = getTracks<LocalTrackView *>();
-    foreach (LocalTrackView *trackView, trackViews)
+    auto trackViews = getTracks<LocalTrackView *>();
+    for (auto trackView : trackViews)
         trackView->closeAllPlugins();
 }
 
@@ -124,58 +119,84 @@ void LocalTrackGroupView::addChannel()
 
 void LocalTrackGroupView::resetTracks()
 {
-    foreach (LocalTrackView *track, getTracks<LocalTrackView *>())
+    for (auto track : getTracks<LocalTrackView *>())
         track->reset();
+
+    if (!xmitButton->isChecked())
+        xmitButton->click(); // uncheck/reset the xmit button, the default is xmiting (button checked)
 }
 
-QMenu *LocalTrackGroupView::createPresetsSubMenu()
+QMenu *LocalTrackGroupView::createPresetsDeletingSubMenu()
 {
-    // LOAD - using a submenu to list stored presets
-    QMenu *presetsMenu = new QMenu(tr("Load preset"));
-    presetsMenu->setIcon(QIcon(":/images/preset-load.png"));
-    presetsMenu->installEventFilter(this);// to deal with mouse buttons
+    QMenu *deleteMenu = new QMenu(tr("Delete preset"));
+    deleteMenu->setIcon(QIcon(":/images/preset-delete.png"));
 
     // adding a menu action for each stored preset
-    Configurator *cfg = Configurator::getInstance();
-    QStringList presetsNames = cfg->getPresetFilesNames(false);
-    foreach (const QString &name, presetsNames) {
-        QAction *presetAction = presetsMenu->addAction(QString(name).replace(".json", "")); //strip the file extension from preset name
-        presetAction->setData(name);// putting the preset name in the Action instance we can get this preset name inside slot 'loadPreset'
+    QStringList presetsNames = Configurator::getInstance()->getPresetFilesNames(false);
+    for (const QString &name : presetsNames) {
+        QString stripedName = getStripedPresetName(name);
+        QAction *deleteAction = deleteMenu->addAction(stripedName);
+        deleteAction->setData(name); // putting the preset name (including .json suffix) in the Action instance we can get this preset name inside slot 'loadPreset'
     }
-    QObject::connect(presetsMenu, SIGNAL(triggered(QAction *)), this, SLOT(loadPreset(QAction *)));
-    presetsMenu->setEnabled(!presetsNames.isEmpty());
 
-    return presetsMenu;
+    connect(deleteMenu, &QMenu::triggered, this, &LocalTrackGroupView::deletePreset);
+
+    deleteMenu->setEnabled(!presetsNames.isEmpty());
+
+    return deleteMenu;
+}
+
+QMenu *LocalTrackGroupView::createPresetsLoadingSubMenu()
+{
+    // LOAD - using a submenu to list stored presets
+    QMenu *loadMenu = new QMenu(tr("Load preset"));
+    loadMenu->setIcon(QIcon(":/images/preset-load.png"));
+
+    // adding a menu action for each stored preset
+    QStringList presetsNames = Configurator::getInstance()->getPresetFilesNames(false);
+    for (const QString &name : presetsNames) {
+        QString stripedName = getStripedPresetName(name);
+        QAction *loadAction = loadMenu->addAction(stripedName);
+        loadAction->setData(name); // putting the preset name (including .json suffix) in the Action instance we can get this preset name inside slot 'loadPreset'
+    }
+
+    connect(loadMenu, &QMenu::triggered, this, &LocalTrackGroupView::loadPreset);
+
+    loadMenu->setEnabled(!presetsNames.isEmpty());
+
+    return loadMenu;
 }
 
 void LocalTrackGroupView::createPresetsActions(QMenu &menu)
 {
-    menu.addMenu(createPresetsSubMenu());
+    menu.addMenu(createPresetsLoadingSubMenu()); // loading submenu
 
     // save preset
     QAction *addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), tr("Save preset"));
-    QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(savePreset()));
+    connect(addPresetActionSave, &QAction::triggered, this, &LocalTrackGroupView::savePreset);
+
+    menu.addMenu(createPresetsDeletingSubMenu()); // deleting submenu
 
     // RESET - in case of panic
     QAction *reset = menu.addAction(QIcon(":/images/gear.png"), tr("Reset Track Controls"));
-    QObject::connect(reset, SIGNAL(triggered()), this, SLOT(resetLocalTracks()));
+    connect(reset, &QAction::triggered, this, &LocalTrackGroupView::resetLocalTracks);
 }
 
 void LocalTrackGroupView::createChannelsActions(QMenu &menu)
 {
     QAction *addChannelAction = menu.addAction(QIcon(":/images/more.png"), tr("Add channel"));
-    QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(addChannel()));
-    addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);// at this moment users can't create more channels
+    connect(addChannelAction, &QAction::triggered, this, &LocalTrackGroupView::addChannel);
+
+    addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2); // at this moment users can't create more channels
     if (mainFrame->getChannelGroupsCount() > 1) {
-        // menu.addSeparator();
         for (int i = 2; i <= mainFrame->getChannelGroupsCount(); ++i) {
             QString channelName = mainFrame->getChannelGroupName(i-1);
             QIcon icon(":/images/less.png");
             QString text = tr("Remove channel \"%1\"").arg(channelName);
             QAction *action = menu.addAction(icon, text);
             action->setData(i-1);  // use channel index as action data
-            QObject::connect(action, SIGNAL(triggered(bool)), this, SLOT(removeChannel()));
-            QObject::connect(action, SIGNAL(hovered()), this, SLOT(highlightHoveredChannel()));
+            connect(action, &QAction::triggered, this, &LocalTrackGroupView::removeChannel);
+            connect(action, &QAction::hovered, this, &LocalTrackGroupView::highlightHoveredChannel);
         }
     }
 }
@@ -191,7 +212,7 @@ void LocalTrackGroupView::populateMenu(QMenu &menu)
 void LocalTrackGroupView::showMenu()
 {
     QMenu menu;
-    populateMenu(menu);// populateMenu is overrided in Standalone to add subchannel actions
+    populateMenu(menu); // populateMenu is overrided in Standalone to add subchannel actions
     menu.move(mapToGlobal(toolButton->pos() + QPoint(toolButton->width(), 0)));
     menu.exec();
 }
@@ -200,31 +221,34 @@ void LocalTrackGroupView::addSubChannel()
 {
     if (!trackViews.isEmpty()) {
         addTrackView(getChannelIndex());
-        useSmallSpacingInLayouts(isUsingSmallSpacingInLayouts());
     }
 }
 
-bool LocalTrackGroupView::isUsingSmallSpacingInLayouts() const
+int LocalTrackGroupView::getSubchannelInternalIndex(uint subchannelTrackID) const
 {
-    QList<LocalTrackView*> tracks = getTracks<LocalTrackView*>();
-    if (tracks.isEmpty())
-        return false;
+    for (int i = 0; i < trackViews.count(); ++i) {
+        if (static_cast<uint>(trackViews.at(i)->getTrackID()) == subchannelTrackID)
+            return i;
+    }
 
-    return tracks.first()->isUsingSmallSpacingInLayouts();
+    return -1;
 }
-
-// +++++++++++++++++++++++++++++++++++++++++++
 
 LocalTrackView *LocalTrackGroupView::addTrackView(long trackID)
 {
     if (trackViews.size() >= MAX_SUB_CHANNELS)
         return nullptr;
 
-    BaseTrackView *newTrack = TrackGroupView::addTrackView(trackID);
+    LocalTrackView *newTrack = dynamic_cast<LocalTrackView *>(TrackGroupView::addTrackView(trackID));
 
-    emit trackAdded();
+    bool enableLooperButton = mainFrame->getMainController()->isPlayingInNinjamRoom();
+    newTrack->enableLopperButton(enableLooperButton);
+    connect(newTrack, &LocalTrackView::openLooperEditor, mainFrame, &MainWindow::openLooperWindow);
 
-    return dynamic_cast<LocalTrackView *>(newTrack);
+    if (newTrack)
+        emit trackAdded();
+
+    return newTrack;
 }
 
 LocalTrackView *LocalTrackGroupView::createTrackView(long trackID)
@@ -232,46 +256,47 @@ LocalTrackView *LocalTrackGroupView::createTrackView(long trackID)
     return new LocalTrackView(mainFrame->getMainController(), trackID);
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackGroupView::setToWide()
 {
-    if (trackViews.count() <= 1) {// don't allow 2 wide subchannels
-        foreach (BaseTrackView *trackView, this->trackViews)
+    if (trackViews.count() <= 1) { // don't allow 2 wide subchannels
+        for (BaseTrackView *trackView : this->trackViews) {
             trackView->setToWide();
+        }
     }
 }
 
 void LocalTrackGroupView::setToNarrow()
 {
-    foreach (BaseTrackView *trackView, this->trackViews)
+    for (BaseTrackView *trackView : this->trackViews) {
         trackView->setToNarrow();
+    }
 }
 
 void LocalTrackGroupView::highlightHoveredChannel()
 {
-    int channelGroupIndex = 1;// just the second channel can be highlighted at moment
+    int channelGroupIndex = 1; // just the second channel can be highlighted at moment
     if (channelGroupIndex >= 0 && channelGroupIndex < mainFrame->getChannelGroupsCount())
         mainFrame->highlightChannelGroup(channelGroupIndex);
 }
 
 void LocalTrackGroupView::highlightHoveredSubchannel()
 {
-    int subChannelIndex = 1;// just the second subchannel can be highlighted at moment
+    int subChannelIndex = 1; // just the second subchannel can be highlighted at moment
     if (subChannelIndex >= 0 && subChannelIndex < trackViews.size())
         Highligther::getInstance()->highlight(trackViews.at(subChannelIndex));
 }
 
 void LocalTrackGroupView::removeSubchannel()
 {
-    if (trackViews.size() > 1) {// can't remove the default/first subchannel
-        removeTrackView(1);// always remove the second channel
+    if (trackViews.size() > 1) { // can't remove the default/first subchannel
+        removeTrackView(1); // always remove the second channel
         emit trackRemoved();
     }
 }
 
 void LocalTrackGroupView::detachMainControllerInSubchannels()
 {
-    foreach (LocalTrackView *view, getTracks<LocalTrackView *>())
+    for (LocalTrackView *view : getTracks<LocalTrackView *>())
         view->detachMainController();
 }
 
@@ -308,19 +333,27 @@ void LocalTrackGroupView::savePreset()
 
 void LocalTrackGroupView::resetLocalTracks()
 {
-    mainFrame->resetLocalChannels();//reset all local channels and subchannels
+    mainFrame->resetLocalChannels(); // reset all local channels and subchannels
 }
 
-void LocalTrackGroupView::deletePreset()
+QString LocalTrackGroupView::getStripedPresetName(const QString &presetName)
 {
-    QStringList items = mainFrame->getMainController()->getPresetList();
-    bool ok;
-    QString item = QInputDialog::getItem(this, tr("Remove preset"),
-                                         tr("Preset:"), items, 0, false, &ok);
+    if (presetName.endsWith(".json"))
+        return presetName.left(presetName.size() - 5); // remove '.json' 5 letters
 
-    // delete the file
+    return presetName;
+}
 
-    mainFrame->getMainController()->deletePreset(item);
+void LocalTrackGroupView::deletePreset(QAction *action)
+{
+    QString presetName = action->data().toString();
+    QString stripedName = getStripedPresetName(presetName);
+    QMessageBox::StandardButton reply;
+    QString messageBoxTitle(tr("Deleting preset ..."));
+    QString messageBoxText(tr("You want to delete the preset '%1'").arg(stripedName));
+    reply = QMessageBox::question(this, messageBoxTitle, messageBoxText, QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+        mainFrame->getMainController()->deletePreset(presetName);
 }
 
 // +++++++++++++++++++++++++++++
@@ -329,8 +362,9 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
     if (this->peakMeterOnly != peakMeterOnly) {
         this->peakMeterOnly = peakMeterOnly;
         topPanel->setVisible(!this->peakMeterOnly);
-        foreach (LocalTrackView *view, getTracks<LocalTrackView *>()) {
-            view->setPeakMetersOnlyMode(peakMeterOnly, mainFrame->isRunningInMiniMode());
+
+        for (LocalTrackView *view : getTracks<LocalTrackView *>()) {
+            view->setPeakMetersOnlyMode(peakMeterOnly);
         }
 
         updateXmitButtonText();

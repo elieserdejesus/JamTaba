@@ -2,14 +2,18 @@
 #define MAIN_WINDOW_H
 
 #include "ui_MainWindow.h"
-#include <QMainWindow>
-#include <QMessageBox>
 #include "BusyDialog.h"
 #include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
-#include <QTranslator>
+#include "ScreensaverBlocker.h"
+#include "TextEditorModifier.h"
+#include "video/Camera.h"
+#include "performance/PerformanceMonitor.h"
+#include "LooperWindow.h"
 
-// #include "performance/PerformanceMonitor.h"
+#include <QTranslator>
+#include <QMainWindow>
+#include <QMessageBox>
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -40,15 +44,9 @@ public:
 
     virtual Persistence::LocalInputTrackSettings getInputsSettings() const;
 
-    inline int getChannelGroupsCount() const
-    {
-        return localGroupChannels.size();
-    }
+    int getChannelGroupsCount() const;
 
-    inline QString getChannelGroupName(int index) const
-    {
-        return localGroupChannels.at(index)->getGroupName();
-    }
+    QString getChannelGroupName(int index) const;
 
     void highlightChannelGroup(int index) const;
 
@@ -57,20 +55,7 @@ public:
 
     void exitFromRoom(bool normalDisconnection, QString disconnectionMessage = "");
 
-    inline bool isRunningInMiniMode() const
-    {
-        return !fullViewMode;
-    }
-
-    inline bool isRunningInFullViewMode() const
-    {
-        return fullViewMode;
-    }
-
-    virtual inline Controller::MainController *getMainController()
-    {
-        return mainController;
-    }
+    virtual Controller::MainController *getMainController() const;
 
     virtual void loadPreset(const Persistence::Preset &preset);
     void resetLocalChannels();
@@ -82,8 +67,16 @@ public:
 
     void showMetronomePreferencesDialog();
 
+    virtual TextEditorModifier *createTextEditorModifier() = 0;
+
+    QPixmap grabCameraFrame() const;
+    bool cameraIsActivated() const;
+
+    void closeAllFloatingWindows();
+
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
+    void openLooperWindow(uint trackID);
 
 protected:
     Controller::MainController *mainController;
@@ -94,8 +87,6 @@ protected:
 
     virtual NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &,
                                                  Controller::MainController *) = 0;
-
-    virtual void setFullViewStatus(bool fullViewActivated);
 
     bool eventFilter(QObject *target, QEvent *event);
 
@@ -123,7 +114,7 @@ protected:
 
     void updatePublicRoomsListLayout();
 
-    bool canUseTwoColumnLayout() const;
+    virtual bool canUseTwoColumnLayout() const;
 
     virtual PreferencesDialog *createPreferencesDialog() = 0;
 
@@ -135,6 +126,12 @@ protected:
     void resizeEvent(QResizeEvent *) override;
 
     virtual void doWindowInitialization();
+
+    virtual inline QSize getMinimumWindowSize() const { return MAIN_WINDOW_MIN_SIZE; }
+
+    static const QSize MAIN_WINDOW_MIN_SIZE;
+
+    Camera *camera;
 
 protected slots:
     void closeTab(int index);
@@ -148,8 +145,7 @@ protected slots:
 
     void showPrivateServerDialog();
 
-    // view mode menu
-    void changeViewMode();
+    // view menu
     void updateMeteringMenu();
     void handleMenuMeteringAction(QAction *);
 
@@ -164,7 +160,7 @@ protected slots:
     void showJamtabaTranslators();
 
     // private server
-    void connectInPrivateServer(const QString &server, int serverPort, const QString &password);
+    void connectInPrivateServer(const QString &server, int serverPort, const QString &userName, const QString &password);
 
     // login service
     void showNewVersionAvailableMessage();
@@ -199,21 +195,21 @@ protected slots:
 
     void initializeLocalInputChannels();
 
-    QSize getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWindowSize) const;
+    QSize getSanitizedWindowSize(const QSize &size, const QSize &minimumSize) const;
+
+    virtual void updateLocalInputChannelsGeometry();
 
 private slots:
 
     void showJamtabaCurrentVersion();
 
-    void updateLocalInputChannelsGeometry();
-
     void refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms);
 
     void hideChordsPanel();
 
-    //preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
+    // preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
-    void setJamRecorderStatus(QString writerId, bool status);
+    void setJamRecorderStatus(const QString &writerId, bool status);
     void setRecordingPath(const QString &newRecordingPath);
     void setBuiltInMetronome(const QString &metronomeAlias);
     void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
@@ -225,20 +221,36 @@ private slots:
     void changeTheme(QAction *action);
     void translateThemeMenu();
 
-    void updateNightModeInWorldMaps();
+    void handleThemeChanged();
+
+    void updateUserNameLineEditToolTip();
+
 private:
 
     BusyDialog busyDialog;
-    QTranslator translator;
+    QTranslator jamtabaTranslator; // used to translate jamtaba texts
+    QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
+
+    QMap<uint, LooperWindow *> looperWindows;
+
+    ScreensaverBlocker screensaverBlocker;
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();
     void hideBusyDialog();
     void centerBusyDialog();
 
+    void closeAllLooperWindows();
+
+    void initializeWindowSize();
+
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
-    int timerID;
+    void setTheme(const QString &themeName);
+
+    int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
+    static const quint8 DEFAULT_REFRESH_RATE;
+    static const quint8 MAX_REFRESH_RATE;
 
     QPointF computeLocation() const;
 
@@ -246,7 +258,7 @@ private:
 
     QScopedPointer<NinjamRoomWindow> ninjamWindow;
 
-    QScopedPointer<Login::RoomInfo> roomToJump;// store the next room reference when jumping from on room to another
+    QScopedPointer<Login::RoomInfo> roomToJump; // store the next room reference when jumping from on room to another
     QString passwordToJump;
 
     static bool jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2);
@@ -266,9 +278,11 @@ private:
 
     void initializeMeteringOptions();
 
-    void updateUserNameLabel();
+    void initializeGuiRefreshTimer();
 
-    bool fullViewMode;// full view or mini view mode? This is not the FullScreen mode, full screen is available only in Standalone.
+    void initializeCamera();
+
+    void updateUserNameLabel();
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
@@ -299,17 +313,33 @@ private:
 
     QString getTranslatedThemeName(const QString &themeName);
 
+    void enableLooperButtonInLocalTracks(bool enable);
+
     static bool themeCanUseNightModeWorldMaps(const QString &themeName);
 
-    // PerformanceMonitor performanceMonitor;//cpu and memmory usage
-    // qint64 lastPerformanceMonitorUpdate;
-    // static const int PERFORMANCE_MONITOR_REFRESH_TIME;
+    static QString getStripedThemeName(const QString &fullThemeName);
 
-    // TODO:group these 2 related constants?
-    static const QSize MINI_MODE_MIN_SIZE;
-    static const QSize FULL_VIEW_MODE_MIN_SIZE;
+    PerformanceMonitor performanceMonitor; // cpu and memmory usage
+    qint64 lastPerformanceMonitorUpdate;
+    static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
-    static const int MINI_MODE_MAX_LOCAL_TRACKS_WIDTH;
+    static const QString NIGHT_MODE_SUFFIX;
+
 };
+
+inline Controller::MainController *MainWindow::getMainController() const
+{
+    return mainController;
+}
+
+inline int MainWindow::getChannelGroupsCount() const
+{
+    return localGroupChannels.size();
+}
+
+inline QString MainWindow::getChannelGroupName(int index) const
+{
+    return localGroupChannels.at(index)->getGroupName();
+}
 
 #endif

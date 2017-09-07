@@ -24,7 +24,6 @@ Filter::Filter (FilterType type, double samplerate, double frequency, double Q, 
     initialize(type, frequency, Q, gain);
 }
 
-
 void Filter::process(float *data, const quint32 samples)
 {
     for (uint32_t i = 0; i < samples; ++i) {
@@ -35,11 +34,15 @@ void Filter::process(float *data, const quint32 samples)
         data[i] = z;
     }
 
-
     if (!std::isfinite(z1))
         z1 = 0;
     if (!std::isfinite(z2))
         z2 = 0;
+}
+
+void Filter::setFrequency(double newFrequency)
+{
+    initialize(this->type, newFrequency, 1.0, 1.0); // recompute filter coeficients
 }
 
 void Filter::initialize(FilterType type, double freq, double Q, double gain)
@@ -64,7 +67,7 @@ void Filter::initialize(FilterType type, double freq, double Q, double gain)
     const double alpha = sinW0 / (2.0 * Q);
     const double beta = sqrt(A) / Q;
 
-    double a0;
+    double a0 = 0;
 
     switch (type) {
     case LowPass:

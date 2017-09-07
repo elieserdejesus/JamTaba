@@ -1,0 +1,70 @@
+/* JamRoomViewPanel is the widget used to show ONE public room/server */
+
+JamRoomViewPanel
+{
+    background-color: rgb(35, 35, 35);
+    border: 1px solid black;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+JamRoomViewPanel #content                   /* where the user names and wave form are showed */
+{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(70, 70, 70),
+    stop:1 rgb(25, 25, 25));
+}
+
+JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer.com, etc) */
+{
+    color: rgb(140, 140,140);
+    font-weight: bold;
+}
+
+
+/* empty rooms */
+JamRoomViewPanel[empty="true"] #content
+{
+    background: rgb(255, 255, 255, 10);
+}
+
+JamRoomViewPanel[empty="true"]
+{
+    background-color: rgba(0, 0, 0, 15);
+    border: 1px solid black;
+}
+
+JamRoomViewPanel[empty="true"] #labelRoomStatus
+{
+    color: gray;
+}
+
+JamRoomViewPanel[empty="true"] #labelName
+{
+    font-weight: normal;
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(40, 40, 40));
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
+}
+
+WavePeakPanel
+{
+    /* color used to draw the wave form */
+    qproperty-peaksColor: rgb(200, 200, 200);
+
+    /* color used to draw the loading circle */
+    qproperty-loadingColor: rgb(90, 90, 90);
+}

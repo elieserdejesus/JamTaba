@@ -21,10 +21,19 @@ PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainContro
 
     buildComboBoxItems();
 
-    //setting initial values
+    // setting initial values
     const Persistence::Settings &settings = mainController->getSettings();
     ui->textFieldPassword->setText(settings.getLastPrivateServerPassword());
     ui->textFieldPort->setText(QString::number(settings.getLastPrivateServerPort()));
+    ui->textFieldUserName->setText(mainController->getUserName());
+
+    ui->textFieldUserName->forceCenterAlignment(false);
+    ui->textFieldUserName->setAlignment(Qt::AlignLeft);
+
+    ui->textFieldPassword->setEchoMode(QLineEdit::Password);
+
+    ui->textFieldPassword->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove focus border in Mac
+    ui->textFieldPort->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove focus border in Mac
 }
 
 void PrivateServerDialog::buildComboBoxItems()
@@ -42,8 +51,9 @@ void PrivateServerDialog::accept()
     QString serverName = ui->comboBoxServers->currentText();
     int serverPort = ui->textFieldPort->text().toInt();
     QString serverPassword = ui->textFieldPassword->text();
+    QString userName = ui->textFieldUserName->text();
 
-    emit connectionAccepted(serverName, serverPort, serverPassword);
+    emit connectionAccepted(serverName, serverPort, userName, serverPassword);
 }
 
 QString PrivateServerDialog::getPassword() const

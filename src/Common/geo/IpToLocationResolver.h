@@ -5,37 +5,22 @@
 #include <QObject>
 
 namespace Geo {
+
 class Location
 {
+
 public:
     Location(const QString &countryName, const QString &countryCode, double latitude = -200,
              double longitude = -200, const QString &city = "UNKNOWN");
     Location();
 
-    inline double getLatitude() const
-    {
-        return latitude;
-    }
+    double getLatitude() const;
+    double getLongitude() const;
 
-    inline double getLongitude() const
-    {
-        return longitude;
-    }
+    QString getCountryName() const;
+    QString getCountryCode() const;
 
-    inline QString getCountryName() const
-    {
-        return countryName;
-    }
-
-    inline QString getCountryCode() const
-    {
-        return countryCode;
-    }
-
-    inline QString getCity()    const
-    {
-        return city;
-    }
+    QString getCity() const;
 
     bool isUnknown() const;
 
@@ -48,6 +33,32 @@ private:
 
     static QString sanitize(const QString &inputString);
 };
+
+inline double Location::getLatitude() const
+{
+    return latitude;
+}
+
+inline double Location::getLongitude() const
+{
+    return longitude;
+}
+
+inline QString Location::getCountryName() const
+{
+    return countryName;
+}
+
+inline QString Location::getCountryCode() const
+{
+    return countryCode;
+}
+
+inline QString Location::getCity() const
+{
+    return city;
+}
+
 
 class IpToLocationResolver : public QObject
 {

@@ -10,7 +10,7 @@ scroll area, the text input field, but clear and auto translate buttons).
 ChatPanel #chatText
 {                                           /* text input field used to send chat messages */
     border-color: rgba(0, 0, 0, 80);
-    background-color: rgb(250, 250, 250);
+    background-color: rgb(235, 235, 235);
 }
 
 ChatPanel #chatText:focus                   /* text input field focused */

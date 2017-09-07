@@ -171,8 +171,29 @@ QLineEdit[enabled="false"]
     border: none;
 }
 
+QLineEdit#groupNameField-topLevel,
+#userNameLineEdit-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(197, 197, 197),
+        stop: 0.5 rgb(225, 225, 225),
+        stop: 1.0 rgb(197, 197, 197));
+}
 
+#userNameLineEdit-topLevel
+{
+    border: none;
+}
 
+QLineEdit#chatText-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(197, 197, 197),
+        stop: 0.3 rgb(225, 225, 225),
+        stop: 0.7 rgb(225, 225, 225),
+        stop: 1.0 rgb(197, 197, 197));
+    border: 1px solid #919191;
+}
 
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
@@ -293,10 +314,12 @@ QTabBar::tab:!selected {
 QMenuBar::item
 {
     color: black;
-    background:rgb(225, 225, 225);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 #EAEAEA,
+    stop:1 #CACACA);
 }
 
-QMenuBar::item:selected { /* hover effect for menu bar items */
+QMenuBar::item::enabled:selected { /* hover effect for menu bar items */
 
     border-radius: 2px;
 }

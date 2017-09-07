@@ -9,6 +9,7 @@ class ChordsProgressionParser
 {
 public:
     virtual ChordProgression parse(const QString &string) = 0;
+    virtual ~ChordsProgressionParser(){}
     virtual bool containsProgression(const QString &string) = 0;
 };
 

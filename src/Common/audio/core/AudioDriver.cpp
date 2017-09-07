@@ -20,10 +20,13 @@ ChannelRange::ChannelRange(int firstChannel, int channelsCount) :
     }
 }
 
+
+
 ChannelRange::ChannelRange() :
     firstChannel(-1),
     channelsCount(0)
 {
+
 }
 
 void ChannelRange::setToStereo()
@@ -47,6 +50,7 @@ AudioDriver::AudioDriver(Controller::MainController *mainController) :
     outputBuffer(nullptr),
     mainController(mainController)
 {
+
 }
 
 void AudioDriver::recreateBuffers()

@@ -5,6 +5,8 @@
 #include <QLineEdit>
 #include <QBoxLayout>
 
+#include "TextEditorModifier.h"
+
 namespace Ui {
 class TrackGroupView;
 }
@@ -17,7 +19,7 @@ class TrackGroupView : public QFrame
     Q_OBJECT
 
 public:
-    explicit TrackGroupView(QWidget *parent = 0);
+    explicit TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *parent = 0);
     virtual ~TrackGroupView();
     virtual void setGroupName(const QString &groupName);
     virtual QString getGroupName() const;
@@ -32,15 +34,12 @@ public:
 
     void updateGuiElements();
 
-    inline int getTracksCount() const
-    {
-        return trackViews.size();
-    }
+    int getTracksCount() const;
 
     void setUnlightStatus(bool unlighted);
     bool isUnlighted() const;
 
-    //is not possible return a covariant container, so I'm using template to return a container of a more specific (derived) type
+    // is not possible return a covariant container, so I'm using template to return a container of a more specific (derived) type
     template<class T>
     QList<T> getTracks() const
     {
@@ -52,7 +51,7 @@ public:
     }
 
 protected:
-    //void paintEvent(QPaintEvent *);
+
     void changeEvent(QEvent *) override;
 
     virtual void translateUi();
@@ -79,7 +78,13 @@ private slots:
     void showMaxPeakMarker(bool showMarker);
 
 private:
-    void setupUI();
+    void setupUI(TextEditorModifier *textEditorFactory);
 };
+
+
+inline int TrackGroupView::getTracksCount() const
+{
+    return trackViews.size();
+}
 
 #endif // TRACKGROUPVIEW_H

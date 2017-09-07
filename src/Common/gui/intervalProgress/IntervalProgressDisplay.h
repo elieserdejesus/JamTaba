@@ -51,7 +51,9 @@ public:
     void setPaintMode(PaintShape mode);
     inline PaintShape getPaintMode() const{ return paintMode; }
 
-    QSize minimumSizeHint() const;
+    QSize minimumSizeHint() const override;
+
+    QSize sizeHint() const override;
 
     void setPaintUsingLowContrastColors(bool state);
 
@@ -154,7 +156,7 @@ private:
     int beatsPerInterval;
     int beatsPerAccent;
     bool showAccents;
-    bool usingLowContrastColors;//used to paint with low contrast when using chord progressions
+    bool usingLowContrastColors; // used to paint with low contrast when using chord progressions
 
     static const double PI;
 

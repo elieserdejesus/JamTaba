@@ -1,5 +1,5 @@
 #include "RoomStreamerNode.h"
-#include "codec.h"
+#include "Mp3Decoder.h"
 #include "core/AudioDriver.h"
 #include "core/SamplesBuffer.h"
 #include "log/Logging.h"
@@ -61,7 +61,7 @@ int AbstractMp3Streamer::getSamplesToRender(int targetSampleRate, int outLenght)
 
 void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in,
                                            Audio::SamplesBuffer &out, int targetSampleRate,
-                                           const Midi::MidiMessageBuffer &)
+                                           std::vector<Midi::MidiMessage> &)
 {
     Q_UNUSED(in);
 
@@ -186,7 +186,7 @@ void NinjamRoomStreamerNode::initialize(const QString &streamPath)
 void NinjamRoomStreamerNode::on_reply_error(QNetworkReply::NetworkError /*error*/)
 {
     QString msg = "ERROR playing room stream";
-    qCCritical(jtNinjamRoomStreamer) << msg;
+    qCritical() << msg;
     emit error(msg);
 }
 
@@ -204,7 +204,7 @@ void NinjamRoomStreamerNode::on_reply_read()
                                       << " bufferedSamples: " << bufferedSamples.getFrameLenght();
         }
     } else {
-        qCCritical(jtNinjamRoomStreamer) << "problem in device!";
+        qCritical() << "problem in device!";
     }
 }
 
@@ -213,7 +213,7 @@ NinjamRoomStreamerNode::~NinjamRoomStreamerNode()
 }
 
 void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
-                                              int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
+                                              int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer)
 {
     Q_UNUSED(in)
     QMutexLocker locker(&mutex);
@@ -223,7 +223,7 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
         buffering = true;
     if (buffering)
         return;
-    int samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
+    uint samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
     while (bufferedSamples.getFrameLenght() < samplesToRender) {// need decoding?
         decode(256);
         if (bytesToDecode.isEmpty()) {// no more bytes to decode
@@ -258,7 +258,7 @@ void AudioFileStreamerNode::initialize(const QString &streamPath)
     AbstractMp3Streamer::initialize(streamPath);
     QFile *f = new QFile(streamPath);
     if (!f->open(QIODevice::ReadOnly))
-        qCCritical(jtNinjamRoomStreamer) << "error opening the file " << streamPath;
+        qCritical() << "error opening the file " << streamPath;
     this->device = f;
     bytesToDecode.append(f->readAll());
 }
@@ -268,7 +268,7 @@ AudioFileStreamerNode::~AudioFileStreamerNode()
 }
 
 void AudioFileStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
-                                             int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
+                                             int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer)
 {
     while (bufferedSamples.getFrameLenght() < out.getFrameLenght())
         decode(1024 + 1024);

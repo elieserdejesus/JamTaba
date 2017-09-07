@@ -3,8 +3,13 @@
 
 #include "MainController.h"
 #include <QApplication>
-#include "vst/PluginFinder.h"
-#include "vst/VstHost.h"
+#include "vst/VstPluginFinder.h"
+
+#ifdef Q_OS_MAC
+    #include "AU/AudioUnitPluginFinder.h"
+#endif
+
+#include "audio/Host.h"
 #include "audio/core/Plugins.h"
 #include "audio/core/PluginDescriptor.h"
 
@@ -16,14 +21,9 @@ namespace Midi {
 class MidiDriver;
 }
 
-namespace JamtabaVstPlugin {
-class VstHost;
-class PluginFinder;
-}
-
-// ++++++++++++++++++++++++++++++++++++++++++
 
 namespace Controller {
+
 class MainControllerStandalone : public MainController
 {
     Q_OBJECT
@@ -32,27 +32,29 @@ public:
     MainControllerStandalone(Persistence::Settings settings, QApplication *application);
     ~MainControllerStandalone();
 
-    void initializePluginsList(const QStringList &paths);
+    void initializeVstPluginsList(const QStringList &paths);
 
-    void addDefaultPluginsScanPath();// add vst path from registry
+#ifdef Q_OS_MAC
+    void initializeAudioUnitPluginsList(const QStringList &paths);
+    void scanAudioUnitPlugins();
+#endif
+
+    void addDefaultPluginsScanPath(); // add vst path from registry
+
+    void clearPluginsList();
 
     void clearPluginsCache();
     QStringList getSteinbergRecommendedPaths();
-    bool pluginsScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
+    bool vstScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
 
     void quit();
 
     void start() override;
     void stop() override;
 
-    void updateInputTracksRange();// called when input range or method (audio or midi) are changed in preferences
+    void updateInputTracksRange(); // called when input range or method (audio or midi) are changed in preferences
 
-    inline Vst::Host *getVstHost() const
-    {
-        return vstHost;
-    }
-
-    inline virtual int getSampleRate() const override
+    inline virtual float getSampleRate() const override
     {
         return audioDriver->getSampleRate();
     }
@@ -78,22 +80,22 @@ public:
 
     bool isUsingNullAudioDriver() const;
 
-    void useNullAudioDriver();// use when the audio driver fails
+    void useNullAudioDriver(); // use when the audio driver fails
 
     void setMainWindow(MainWindow *mainWindow) override;
 
-    void cancelPluginFinder();
+    void cancelPluginFinders();
 
-    inline Vst::PluginFinder *getPluginFinder() const
+    inline audio::VSTPluginFinder *getVstPluginFinder() const
     {
-        return pluginFinder.data();
+        return vstPluginFinder.data();
     }
 
     void removePlugin(int inputTrackIndex, Audio::Plugin *PLUGIN);
-    QList<Audio::PluginDescriptor> getPluginsDescriptors();
+    QMap<QString, QList<Audio::PluginDescriptor> > getPluginsDescriptors(Audio::PluginDescriptor::Category category);
     Audio::Plugin *addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex, const Audio::PluginDescriptor &descriptor);
 
-    Midi::MidiMessageBuffer pullMidiMessagesFromPlugins() override;
+    std::vector<Midi::MidiMessage> pullMidiMessagesFromPlugins() override;
 
 public slots:
     void setSampleRate(int newSampleRate) override;
@@ -105,8 +107,8 @@ public slots:
     void addBlackVstToSettings(const QString &path);
     void removeBlackVstFromSettings(const QString &pluginPath);
 
-    void scanAllPlugins();
-    void scanOnlyNewPlugins();
+    void scanAllVstPlugins();
+    void scanOnlyNewVstPlugins();
 
     void openExternalAudioControlPanel();
 
@@ -122,28 +124,31 @@ protected:
 
     void setupNinjamControllerSignals() override;
 
-    Midi::MidiMessageBuffer pullMidiMessagesFromDevices() override;
+    std::vector<Midi::MidiMessage> pullMidiMessagesFromDevices() override;
 
 protected slots:
     void updateBpm(int newBpm) override;
-    void connectedNinjamServer(const Ninjam::Server &server) override;
+    void connectInNinjamServer(const Ninjam::Server &server) override;
 
 
-    void on_newNinjamInterval() override;
+    void handleNewNinjamInterval() override;
 
-    //TODO After the big refatoration these 3 slots can be private slots
+    // TODO After the big refatoration these 3 slots can be private slots
     void on_audioDriverStopped();
     void on_audioDriverStarted();
     void on_ninjamStartProcessing(int intervalPosition) ;
 
-    void on_VSTPluginFounded(QString name, QString group, QString path);
+    void addFoundedVstPlugin(const QString &name, const QString &path);
+#ifdef Q_OS_MAC
+    void addFoundedAudioUnitPlugin(const QString &name, const QString &path);
+#endif
 
 private slots:
-    void on_vstPluginRequestedWindowResize(QString pluginName, int newWidht, int newHeight);
+    void setVstPluginWindowSize(QString pluginName, int newWidht, int newHeight);
 
 private:
-    // VST
-    Vst::Host *vstHost;// static instance released inside Vst::Host using QSCopedPointer
+    // VST and AU hosts
+    QList<Host *> hosts;
     QApplication *application;
 
     QScopedPointer<Audio::AudioDriver> audioDriver;
@@ -155,20 +160,20 @@ private:
 
     bool inputIndexIsValid(int inputIndex);
 
-    QScopedPointer<Vst::PluginFinder> pluginFinder;
-
-    Vst::PluginFinder *createPluginFinder();
+    QScopedPointer<audio::VSTPluginFinder> vstPluginFinder;
+#ifdef Q_OS_MAC
+    QScopedPointer<audio::AudioUnitPluginFinder> auPluginFinder;
+ #endif
 
     // used to sort plugins list
-    static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
-                                         const Audio::PluginDescriptor &d2);
+    static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1, const Audio::PluginDescriptor &d2);
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
-    void scanPlugins(bool scanOnlyNewPlugins);
-
+    void scanVstPlugins(bool scanOnlyNewVstPlugins);
 
 };
-}
+
+} // namespace
 
 #endif // STANDALONEMAINCONTROLLER_H

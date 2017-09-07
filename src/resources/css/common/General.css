@@ -31,7 +31,7 @@ QPushButton:checked
     color: rgb(0,0,0);
 }
 
-QPushButton[enabled="false"]        /* disabled buttons */
+QPushButton:disabled
 {
     background: none;
     color: rgba(0, 0, 0, 30);
@@ -86,7 +86,6 @@ QScrollArea > QWidget > QWidget
 }
 
 QMenuBar::item:selected { /* hover effect for menu bar items */
-
     border: 1px outset gray;
     padding: 3px 6px 3px 6px;
     font-size: 11px;
@@ -102,4 +101,20 @@ QMenuBar::item:pressed { /* 'button pressed' item style */
 QMenu::item::disabled
 {
     color: rgba(0, 0, 0, 120);
+}
+
+/* hover effect */
+QMenu::item::enabled:selected
+{
+    background-color: rgba(0, 0, 0, 30);
+}
+
+
+AudioMeter
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(90, 90, 90);
+    qproperty-peakStartColor: green;
+    qproperty-peakEndColor: red;
+    qproperty-maxPeakColor: rgb(90, 90, 90);
 }

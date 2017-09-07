@@ -7,12 +7,21 @@ class WavePeakPanel : public QWidget
 {
     Q_OBJECT
 
-    //custom properties defined in stylesheet files
+    // custom properties defined in stylesheet files
     Q_PROPERTY(QColor peaksColor MEMBER peaksColor)
     Q_PROPERTY(QColor loadingColor MEMBER loadingColor)
 
 public:
     explicit WavePeakPanel(QWidget *parent = 0);
+    virtual ~WavePeakPanel();
+
+    enum WaveDrawingMode
+    {
+        SOUND_WAVE,
+        BUILDINGS,
+        PIXELED_SOUND_WAVE,
+        PIXELED_BUILDINGS
+    };
 
     void addPeak(float peak);
     void clearPeaks();
@@ -21,29 +30,38 @@ public:
 
     void setBufferingPercentage(uint percentage);
     void setShowBuffering(bool setShowBuffering);
+    void setDrawingMode(WavePeakPanel::WaveDrawingMode mode);
 
 protected:
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
 
-private:
-    static const int peaksRectWidth;
-    static const int peaksPad;
+    virtual int getPeaksPad() const;
+    virtual int getPeaksWidth() const;
+
+    bool useAlphaInPreviousSamples;
+
+    std::vector<float> peaksArray;
 
     QColor peaksColor;
-    QColor loadingColor; //color for the loading circle
+
+private:
+    QColor loadingColor; // color for the loading circle
 
     bool showingBuffering;
     int bufferingPercentage;
 
-    std::vector<float> peaksArray;
-
-    uint maxPeaks;// change when widget resize
+    uint maxPeaks; // change when widget resize
 
     int computeMaxPeaks();
     void recreatePeaksArray();
 
-    void drawPeak(QPainter *g, int x, float peak, const QColor &color);
+    void paintBuildings(QPainter &painter, bool pixeled, bool useAlpha);
+    void paintSoundWave(QPainter &painter, bool useAlpha);
+    void paintPixeledSoundWave(QPainter &painter);
+
+    WaveDrawingMode drawingMode;
+
 };
 
 #endif

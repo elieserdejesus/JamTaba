@@ -39,7 +39,7 @@ ChordProgression ChatChordsProgressionParser::parse(const QString &string)
             = cleanedString.split(QRegularExpression(MEASURE_SEPARATORS_REGEX));
         QRegularExpression matcher(CHORD_REGEX);
         int beatsPerMeasure = 4;// using 4 beats as default TODO: try guess a good value based in current ninjam server BPI
-        for (QString measureString : measuresStrings) {
+        for (const QString &measureString : measuresStrings) {
             ChordProgressionMeasure measure(beatsPerMeasure);
             QRegularExpressionMatchIterator i = matcher.globalMatch(measureString);
             while (i.hasNext()) {

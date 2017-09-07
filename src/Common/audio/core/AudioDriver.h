@@ -10,44 +10,61 @@ class MainController;
 }
 
 namespace Audio {
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 class ChannelRange
 {
+
 private:
+
     int firstChannel;
     int channelsCount;
+
 public:
+
     ChannelRange(int firstChannel, int channelsCount);
     ChannelRange();
-    inline int getChannels() const
-    {
-        return channelsCount;
-    }
 
-    inline bool isMono() const
-    {
-        return channelsCount == 1;
-    }
+    int getChannels() const;
+
+    bool isMono() const;
 
     void setToStereo();
     void setToMono();
-    inline int getFirstChannel() const
-    {
-        return firstChannel;
-    }
+    int getFirstChannel() const;
+    int getLastChannel() const;
 
-    inline int getLastChannel() const
-    {
-        return firstChannel + channelsCount - 1;
-    }
-
-    inline bool isEmpty() const
-    {
-        return getChannels() <= 0;
-    }
+    bool isEmpty() const;
 };
 
+
+inline int ChannelRange::getFirstChannel() const
+{
+    return firstChannel;
+}
+
+inline int ChannelRange::getLastChannel() const
+{
+    return firstChannel + channelsCount - 1;
+}
+
+inline bool ChannelRange::isEmpty() const
+{
+    return getChannels() <= 0;
+}
+
+inline int ChannelRange::getChannels() const
+{
+    return channelsCount;
+}
+
+inline bool ChannelRange::isMono() const
+{
+    return channelsCount == 1;
+}
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class AudioDriver : public QObject
 {
     Q_OBJECT
@@ -69,70 +86,50 @@ public:
     virtual bool start() = 0;
     virtual void release() = 0;
 
-    inline int getInputsCount() const
-    {
-        return globalInputRange.getChannels();
-    }
+    int getInputsCount() const;
 
-    inline int getOutputsCount() const
-    {
-        return globalOutputRange.getChannels();
-    }
+    int getOutputsCount() const;
 
-    inline int getFirstSelectedInput() const
-    {
-        return globalInputRange.getFirstChannel();
-    }
+    int getFirstSelectedInput() const;
 
-    inline int getFirstSelectedOutput() const
-    {
-        return globalOutputRange.getFirstChannel();
-    }
+    int getFirstSelectedOutput() const;
 
-    virtual inline int getSampleRate() const
-    {
-        return sampleRate;
-    }
+    virtual int getSampleRate() const;
 
-    virtual inline int getBufferSize() const
-    {
-        return bufferSize;
-    }
+    virtual int getBufferSize() const;
 
     virtual QList<int> getValidSampleRates(int deviceIndex) const = 0;
     virtual QList<int> getValidBufferSizes(int deviceIndex) const = 0;
 
-    virtual int getMaxInputs() const = 0;// return max inputs for an audio device. My fast track ultra (8 channels) return 8, etc.
+    virtual int getMaxInputs() const = 0; // return max inputs for an audio device. My fast track ultra (8 channels) return 8, etc.
     virtual int getMaxOutputs() const = 0;
 
     virtual QString getInputChannelName(unsigned const int index) const = 0;
     virtual QString getOutputChannelName(unsigned const int index) const = 0;
 
-    virtual QString getAudioDeviceName(int index) const = 0;
-    inline QString getAudioDeviceName() const
-    {
-        return getAudioDeviceName(audioDeviceIndex);
-    }
+    virtual QString getAudioInputDeviceName(int index) const = 0;
+    virtual QString getAudioInputDeviceName() const = 0;
+
+    virtual QString getAudioOutputDeviceName(int index) const = 0;
+    virtual QString getAudioOutputDeviceName() const = 0;
 
     virtual int getAudioDeviceIndex() const = 0;
     virtual void setAudioDeviceIndex(int index) = 0;
 
     virtual int getDevicesCount() const = 0;
 
-    const SamplesBuffer &getOutputBuffer() const
-    {
-        return *outputBuffer;
-    }
+    const SamplesBuffer &getOutputBuffer() const;
 
     virtual bool canBeStarted() const = 0;
 
     virtual bool hasControlPanel() const = 0; // ASIO drivers can open control panels to change audio device parameters
     virtual void openControlPanel(void *mainWindowHandle) = 0;
-protected:
-    ChannelRange globalInputRange;// the range of input channels selected in audio preferences menu
-    ChannelRange globalOutputRange;// the range of output channels selected in audio preferences menu
 
-    int audioDeviceIndex;// using same audio device for input and output
+protected:
+    ChannelRange globalInputRange; // the range of input channels selected in audio preferences menu
+    ChannelRange globalOutputRange; // the range of output channels selected in audio preferences menu
+
+    int audioDeviceIndex; // using same audio device for input and output
 
     int sampleRate;
     int bufferSize;
@@ -145,91 +142,191 @@ protected:
     Controller::MainController *mainController;
 };
 
+
+inline const SamplesBuffer &AudioDriver::getOutputBuffer() const
+{
+    return *outputBuffer;
+}
+
+inline int AudioDriver::getInputsCount() const
+{
+    return globalInputRange.getChannels();
+}
+
+inline int AudioDriver::getOutputsCount() const
+{
+    return globalOutputRange.getChannels();
+}
+
+inline int AudioDriver::getFirstSelectedInput() const
+{
+    return globalInputRange.getFirstChannel();
+}
+
+inline int AudioDriver::getFirstSelectedOutput() const
+{
+    return globalOutputRange.getFirstChannel();
+}
+
+inline int AudioDriver::getSampleRate() const
+{
+    return sampleRate;
+}
+
+inline int AudioDriver::getBufferSize() const
+{
+    return bufferSize;
+}
+
+
+
 class NullAudioDriver : public AudioDriver
 {
     Q_OBJECT // just to use qobject_cast and check if NullAudioDriver is being used in MainController
+
 public:
+
     NullAudioDriver() :
         AudioDriver(nullptr)
     {
+
     }
 
-    inline void stop(bool) override
-    {
-    }
+    void stop(bool) override;
 
-    inline bool start() override
-    {
-        return true;
-    }
+    bool start() override;
 
-    inline void release()
-    {
-    }
+    void release();
 
-    inline QList<int> getValidBufferSizes(int) const
-    {
-        return QList<int>();
-    }
+    QList<int> getValidBufferSizes(int) const;
 
-    inline QList<int> getValidSampleRates(int) const
-    {
-        return QList<int>();
-    }
+    QList<int> getValidSampleRates(int) const;
 
-    inline int getMaxInputs() const
-    {
-        return 1;
-    }
+    int getMaxInputs() const;
 
-    inline int getMaxOutputs() const
-    {
-        return 2;
-    }
+    int getMaxOutputs() const;
 
-    inline QString getInputChannelName(const unsigned int) const
-    {
-        return "Silence";
-    }
+    QString getInputChannelName(const unsigned int) const;
 
-    inline QString getOutputChannelName(const unsigned int) const
-    {
-        return "Silence";
-    }
+    QString getOutputChannelName(const unsigned int) const;
 
-    inline QString getAudioDeviceName(int) const
-    {
-        return "NullAudioDriver";
-    }
+    QString getAudioInputDeviceName(int) const;
 
-    inline int getAudioDeviceIndex() const
-    {
-        return 0;
-    }
+    QString getAudioInputDeviceName() const;
 
-    inline void setAudioDeviceIndex(int)
-    {
-    }
+    QString getAudioOutputDeviceName(int) const;
 
-    inline int getDevicesCount() const
-    {
-        return 1;
-    }
+    QString getAudioOutputDeviceName() const;
 
-    inline bool canBeStarted() const
-    {
-        return true;
-    }
+    int getAudioDeviceIndex() const;
 
-    inline bool hasControlPanel() const
-    {
-        return false;
-    }
+    void setAudioDeviceIndex(int);
 
-    inline void openControlPanel(void *)
-    {
-    }
+    int getDevicesCount() const;
+
+    bool canBeStarted() const;
+
+    bool hasControlPanel() const;
+
+    void openControlPanel(void *);
 };
+
+
+inline void NullAudioDriver::stop(bool)
+{
+    //
 }
+
+inline bool NullAudioDriver::start()
+{
+    return true;
+}
+
+inline void NullAudioDriver::release()
+{
+    //
+}
+
+inline QList<int> NullAudioDriver::getValidBufferSizes(int) const
+{
+    return QList<int>();
+}
+
+inline QList<int> NullAudioDriver::getValidSampleRates(int) const
+{
+    return QList<int>();
+}
+
+inline int NullAudioDriver::getMaxInputs() const
+{
+    return 1;
+}
+
+inline int NullAudioDriver::getMaxOutputs() const
+{
+    return 2;
+}
+
+inline QString NullAudioDriver::getInputChannelName(const unsigned int) const
+{
+    return "Silence";
+}
+
+inline QString NullAudioDriver::getOutputChannelName(const unsigned int) const
+{
+    return "Silence";
+}
+
+inline QString NullAudioDriver::getAudioInputDeviceName(int) const
+{
+    return "NullAudioDriver";
+}
+
+inline QString NullAudioDriver::getAudioInputDeviceName() const
+{
+    return getAudioInputDeviceName(0);
+}
+
+inline QString NullAudioDriver::getAudioOutputDeviceName(int) const
+{
+    return "NullAudioDriver";
+}
+
+inline QString NullAudioDriver::getAudioOutputDeviceName() const
+{
+    return getAudioOutputDeviceName(0);
+}
+
+inline int NullAudioDriver::getAudioDeviceIndex() const
+{
+    return 0;
+}
+
+inline void NullAudioDriver::setAudioDeviceIndex(int)
+{
+    //
+}
+
+inline int NullAudioDriver::getDevicesCount() const
+{
+    return 1;
+}
+
+inline bool NullAudioDriver::canBeStarted() const
+{
+    return true;
+}
+
+inline bool NullAudioDriver::hasControlPanel() const
+{
+    return false;
+}
+
+inline void NullAudioDriver::openControlPanel(void *)
+{
+    //
+}
+
+} // namespace
 
 #endif

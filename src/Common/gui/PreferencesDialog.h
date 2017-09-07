@@ -20,7 +20,13 @@ public:
     virtual ~PreferencesDialog();
 
     enum PreferencesTab {
-        TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING, TAB_METRONOME
+        TabAudio,
+        TabMidi,
+        TabVST,
+        TabMultiTrackRecording,
+        TabMetronome,
+        TabLooper
+
     };
 
     virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders);
@@ -32,6 +38,9 @@ signals:
     void jamRecorderStatusChanged(const QString &writerId, bool status);
     void recordingPathSelected(const QString &newRecordingPath);
     void encodingQualityChanged(float newEncodingQuality);
+    void looperAudioEncodingFlagChanged(bool savingEncodedAudio);
+    void looperWaveFilesBitDepthChanged(quint8 bitDepth);
+    void looperFolderChanged(const QString &newLoopsFolder);
 
 public slots:
     void accept() override;
@@ -64,11 +73,14 @@ protected:
     Ui::PreferencesDialog *ui;
 
     // recording
-    void populateRecordingTab();
+    void populateMultiTrackRecordingTab();
     void selectRecordingTab();
 
-    //metronome
+    // metronome
     void populateMetronomeTab();
+
+    // looper
+    void populateLooperTab();
 
     virtual void setupSignals();
     virtual void populateAllTabs();

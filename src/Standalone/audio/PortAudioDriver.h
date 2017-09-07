@@ -5,8 +5,10 @@
 #include "portaudio.h"
 
 namespace Audio {
+
 class PortAudioDriver : public AudioDriver
 {
+
 public:
     PortAudioDriver(Controller::MainController *mainController, int audioDeviceIndex,
                     int firstInputIndex, int lastInputIndex, int firstOutputIndex,
@@ -26,11 +28,12 @@ public:
     QString getInputChannelName(unsigned const int index) const override;
     QString getOutputChannelName(unsigned const int index) const override;
 
-    QString getAudioDeviceName(int index) const override;
-    inline int getAudioDeviceIndex() const
-    {
-        return audioDeviceIndex;
-    }
+    QString getAudioInputDeviceName(int index) const override;
+    QString getAudioOutputDeviceName(int index) const override;
+    QString getAudioInputDeviceName() const override;
+    QString getAudioOutputDeviceName() const override;
+
+    int getAudioDeviceIndex() const;
 
     void setAudioDeviceIndex(int index) override;
 
@@ -65,7 +68,10 @@ private:
 
     void preInitializePortAudioStream(PaStream *stream);
 
+    const bool useSystemDefaultDevices;
+
 };
-}
+
+} // namespace
 
 #endif

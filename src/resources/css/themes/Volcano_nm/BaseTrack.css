@@ -1,0 +1,220 @@
+/* Stylesheet for BaseTrack - Volcano theme */
+
+
+/* Track buttons
+--------------------------------*/
+
+#soloButton,
+#muteButton
+{
+    font-size: 9px;
+    border-color: rgb(110,110,110);
+    padding: 2px;
+    color: rgb(50,50,50);
+}
+
+#buttonBoost,
+#soloButton,
+#muteButton,
+QPushButton#buttonStereoInversion
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop: 0.0 #FDE5A9,
+    stop: 1.0 #FFB301);
+}
+
+
+#buttonBoost
+{
+   padding: 1px;
+   padding-top: 3px;
+   padding-bottom: 3px;
+   border-radius: 2px;
+}
+
+QPushButton#buttonStereoInversion:checked
+{
+    background-color: #B35925;
+}
+
+#buttonBoost:checked
+{
+    background-color: #B35925;
+    color: rgba(0, 0, 0, 160);
+    border-radius: 2px;
+}
+
+#buttonBoost:hover,
+#soloButton:hover,
+#muteButton:hover
+{
+    background-color: #fed87b;
+    color: rgb(80, 80, 80);
+    border-radius: 2px;
+    border-color: rgb(40, 40, 40);
+}
+
+QPushButton#buttonStereoInversion:hover
+{
+    background-color: #fed87b;
+    border-radius: 2px;
+}
+
+#buttonBoost:hover:checked
+{
+    background-color: #e56318;
+    border-radius: 2px;
+    border-color: rgb(20, 20, 20)
+}
+
+QPushButton#buttonStereoInversion:hover:checked
+{
+    background-color: #e56318;
+    border-radius: 2px;
+}
+
+/* button colors when the track is NOT xmiting */
+BaseTrackView[unlighted="true"] #buttonBoost,
+BaseTrackView[unlighted="true"] #soloButton,
+BaseTrackView[unlighted="true"] #muteButton,
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
+
+BaseTrackView[unlighted="true"] #muteButton:checked,
+BaseTrackView[unlighted="true"] #soloButton:checked,
+BaseTrackView[unlighted="true"] #buttonBoost:checked
+{
+    color: rgb(220, 220, 220);
+}
+
+#buttonBoost:checked
+{
+    border-bottom: none;
+    border-top: none;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 60);
+}
+
+#soloButton, #muteButton
+{
+    border: 1px outset #68300F;
+}
+
+#soloButton:checked
+{
+    background-color: rgb(90, 255, 62);
+    color: black;
+}
+
+#soloButton:hover:checked
+{
+    background-color: rgb(125, 255, 108);
+    border-color: rgb(45, 45, 45);
+}
+
+#muteButton:checked
+{
+    background-color: rgb(255, 0, 0);
+    color: white;
+
+}
+
+#muteButton:hover:checked
+{
+    background-color: rgb(255, 40, 40);
+    color: lightgray;
+    border-color: rgb(45, 45, 45);
+}
+
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked,
+BaseTrackView[unlighted="true"] #buttonBoost:hover:checked
+{
+    background-color: #e56318;
+}
+
+BaseTrackView
+{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+stop: 0.0 #FFD470,
+stop: 0.15 #FDE09B,
+stop: 0.9 #FDE5A9,
+stop: 1.0 #EF820D);
+
+    border: none; /*1px solid rgb(61, 61, 61);*/
+    font-size: 8px;
+}
+
+
+
+/* Setting colors when the track is 'not transmiting'
+-----------------------------------------------------*/
+BaseTrackView[unlighted="true"] #panSlider::handle,         /* pan slider handle */
+BaseTrackView[unlighted="true"] QSlider::handle:vertical,    /* track fader handle */
+#panSlider::handle:disabled,
+QSlider::handle:vertical:disabled
+{
+    background: rgb(179, 89, 37);
+    border: 1px outset rgb(137, 69, 29);
+}
+
+BaseTrackView[unlighted="true"],                            /* the track */
+TrackGroupView[unlighted="true"] > #topPanel                /* the track group top panel: used to show user name */
+{
+    background: rgba(199, 129, 77, 100);
+}
+/* -----------------------------------------*/
+
+
+#panSlider::handle
+{
+    width: 7px;
+}
+
+BaseTrackView[unlighted="true"] #panSlider::handle:hover,
+BaseTrackView[unlighted="true"] #levelSlider::handle:hover
+{
+    background-color: rgb(217, 157, 116);
+}
+
+AudioMeter
+{
+    qproperty-dBMarksColor: black;
+}
+
+/* TrackGroup - used as container for subchannels
+---------------------------------------------------*/
+
+TrackGroupView
+{
+    border: none;
+}
+
+TrackGroupView #topPanel                                /* topPanel is used to show channel name */
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #EF820D,
+        stop: 0.5 #FFD470);
+
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+TrackGroupView #groupNameField                          /* the text field used to input channel name */
+{
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 11px;
+    font-weight: normal;
+    border: 1px solid rgb(0, 0, 0, 40);
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 5);
+}
+
+TrackGroupView[unlighted="true"] #groupNameField        /* channel name text field when not xmiting */
+{
+    background-color: rgba(0, 0, 0, 10);
+    border: none;
+}

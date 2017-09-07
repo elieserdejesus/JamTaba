@@ -1,0 +1,335 @@
+/* General stylesheet for Ice theme
+-------------------------------------*/
+
+/* Button ----------------------*/
+QPushButton
+{
+    background-color: rgb(180, 207, 250);
+    border: 1px outset rgba(0, 0, 140, 120);
+    border-radius: 6px;
+}
+
+QPushButton:checked
+{
+    background-color: rgb(129, 181, 255);
+    border: 1px inset rgba(0, 0, 140, 120);
+}
+
+QPushButton:hover
+{
+    background-color: rgb(207, 224, 252);
+}
+
+QPushButton:hover:checked
+{
+    background-color: rgb(179,211,255);
+}
+
+QPushButton:disabled
+{
+    background-color: rgba(0, 0, 0, 20);
+    color: rgba(0, 0, 0, 60)
+}
+
+
+/* Scroll bars ----------------------*/
+QScrollBar:vertical,
+QScrollBar:horizontal
+{
+    background-color: rgba(0, 0, 0, 40);
+    margin: 0px;
+}
+
+QScrollBar:vertical
+{
+    width: 14px;
+    margin-left: 6px;
+}
+
+QScrollBar:horizontal
+{
+    height: 14px;
+    margin-top: 6px;
+}
+
+QScrollBar::handle:vertical:hover,
+QScrollBar::handle:horizontal:hover
+{
+    background-color: rgb(129, 181, 255);
+}
+
+QScrollBar::handle:horizontal
+{
+    max-width: 20px;
+    width: 20px;
+    background-color: #4E9CE5;
+}
+
+QScrollBar::handle:vertical
+{
+    background-color: #4E9CE5;
+    max-height: 20px;
+    height: 20px;
+}
+
+QScrollBar::handle:horizontal
+{
+    background-color: #4E9CE5;
+    max-width: 20px;
+    width: 20px;
+}
+
+QScrollBar::add-line:vertical
+{
+  border: none;
+  height: 10px;
+  subcontrol-position: bottom;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::add-line:horizontal
+{
+  border: none;
+  width: 10px;
+  subcontrol-position: left;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical
+{
+  border: none;
+  height: 10px;
+  subcontrol-position: top;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:horizontal
+{
+  border: none;
+  width: 10px;
+  subcontrol-position: right;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal
+{
+  background: none;
+}
+
+
+
+/* Text fields (QLineEdit class) used in user name, channel name, etc.
+-----------------------------------------------------------------------*/
+QLineEdit
+{
+    border-radius: 6px;
+    background-color: rgb(180, 207, 250);
+    border-color: rgba(0, 0, 0, 90);
+    color: rgba(0, 0, 0, 220);
+}
+
+QLineEdit:focus
+{
+    border-radius: 6px;
+    border-color: rgba(0, 0, 0, 90);
+    background-color: rgb(143, 188, 250);
+    color: black;
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+QLineEdit#groupNameField:focus
+{
+    border-color: rgba(0, 0, 0, 120)
+}
+
+QLineEdit#groupNameField-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(96, 169, 232),
+        stop: 0.5 rgb(180, 207, 250),
+        stop: 1.0 rgb(96, 169, 232));
+    border-color: rgba(0, 0, 0, 120);
+    border-radius: 6px;
+}
+
+#userNameLineEdit-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(129, 194, 230),
+        stop: 0.5 rgb(180, 207, 250),
+        stop: 1.0 rgb(129, 194, 230));
+    border: none;
+}
+
+QLineEdit#chatText-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+    stop: 0.0 rgb(180, 207, 250),
+    stop: 0.3 rgb(202, 242, 242),
+    stop: 0.7 rgb(202, 242, 242),
+    stop: 1.0 rgb(180, 207, 250));
+    border-color: rgba(0, 0, 0, 160);
+}
+
+
+/*  SLIDERs ++++++++++++++++++++++++++++++++ */
+
+QSlider::add-page:vertical,
+QSlider::groove:vertical
+{
+    border-radius: 2px;
+}
+
+QSlider::groove:horizontal
+{
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 50);
+    height: 3px;
+}
+QSlider::groove:vertical
+{
+    background-color: rgba(0, 0, 0, 50);
+    width: 5px;
+}
+
+
+QSlider::handle
+{
+
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(190,217,255),
+        stop: 1.0 rgb(180,207,250));
+
+    border: 1px outset rgba(0, 0, 0, 180);
+}
+
+QSlider::handle:hover
+{
+    background-color: rgb(221, 235, 255);
+}
+
+QSlider::handle:horizontal
+{
+    border-radius: 4px;
+    margin-top: -6px;
+    margin-bottom: -6px;
+    padding: 0px;
+    width: 8px;
+}
+
+QSlider::handle:vertical
+{
+    border-radius: 4px;
+    margin-left: -3px;
+    margin-right: -3px;
+    padding: 0px;
+    height: 13px;
+}
+
+/* TabBar ----------------------*/
+QTabBar::tab
+{
+    background-color: rgb(180, 207, 250);
+    color: black;
+}
+
+QTabBar::tab:selected
+{
+    background-color: rgb(202, 242, 242);
+}
+
+/*
+QTabBar::tab:selected:hover
+{
+    background-color: rgb(202, 249, 248);
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+*/
+
+QTabBar::tab:!selected:hover
+{
+    background-color: rgb(207, 224, 252);
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+QTabBar::tab:selected,
+QTabBar::tab:!selected
+{
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+QTabBar::tab:!selected
+{
+    margin-top: 3px; /* make non-selected tabs look smaller */
+    color: rgb(20, 20, 20);
+}
+
+
+QMenuBar::item
+{
+    color: black;
+    background: transparent; /*rgb(225, 225, 225);*/
+}
+
+QMenuBar::item::enabled:selected { /* hover effect for menu bar items */
+
+    border-radius: 6px;
+}
+
+QMenuBar::item:pressed { /* 'button pressed' item style */
+
+    border-radius: 6px;
+    background-color: rgb(143, 188, 250);
+    color: white;
+}
+
+QMenuBar
+{
+    background-color: rgba(255, 255, 255, 60);
+
+    border-bottom: 1px solid rgba(0, 0, 0, 20);
+    border-top: 1px solid rgb(90, 90, 90);
+    border-left: 1px solid rgb(90, 90, 90);
+    border-right: 1px solid rgb(90, 90, 90);
+
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+QMenu
+{
+    border: 1px outset rgb(80, 80, 80);
+    border-radius: 6px;
+    color: white;
+    background: rgb(128, 180, 255);
+}
+
+QMenu::item::enabled:selected
+{
+    color: white;
+    background-color: rgb(51, 153, 255);
+}
+
+
+QTabWidget::pane
+{
+    background-color: transparent;
+}
+
+
+
+AudioMeter
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(40, 90, 130);
+    qproperty-peakStartColor: rgb(40, 90, 160);
+    qproperty-peakEndColor: red;
+    qproperty-maxPeakColor: rgb(0, 90, 160);
+}

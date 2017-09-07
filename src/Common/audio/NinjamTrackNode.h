@@ -13,30 +13,39 @@ class StreamBuffer;
 
 class NinjamTrackNode : public Audio::AudioNode
 {
+
 public:
+
+    enum LowCutState
+    {
+        OFF, NORMAl, DRASTIC
+    };
+
     explicit NinjamTrackNode(int ID);
     virtual ~NinjamTrackNode();
     void addVorbisEncodedInterval(const QByteArray &encodedBytes);
     void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate,
-                          const Midi::MidiMessageBuffer &midiBuffer);
+                          std::vector<Midi::MidiMessage> &midiBuffer) override;
 
-    void setLowCutStatus(bool activated);
+    void setLowCutState(LowCutState newState);
+    LowCutState setLowCutToNextState();
+    LowCutState getLowCutState() const;
 
     bool startNewInterval();
-    inline int getID() const
-    {
-        return ID;
-    }
+    int getID() const;
 
     int getSampleRate() const;
 
     bool isPlaying();
 
-    void discardIntervals(bool keepMostRecentInterval);
-    inline void setProcessingLastPartOfInterval(bool status)
-    {
-        this->processingLastPartOfInterval = status;
-    }
+    bool isStereo() const;
+
+    // Discard all downloaded (but not played yet) intervals
+    void discardDownloadedIntervals(bool keepMostRecentInterval);
+
+    void stopDecoding();
+
+    void setProcessingLastPartOfInterval(bool status);
 
 private:
     int ID;
@@ -44,7 +53,8 @@ private:
 
     class LowCutFilter;
     QScopedPointer<LowCutFilter> lowCut;
-    const static double LOW_CUT_FREQUENCY;
+    const static double LOW_CUT_NORMAL_FREQUENCY;
+    const static double LOW_CUT_DRASTIC_FREQUENCY;
 
     bool needResamplingFor(int targetSampleRate) const;
 
@@ -59,5 +69,15 @@ private:
     QMutex decodersMutex;
 
 };
+
+inline void NinjamTrackNode::setProcessingLastPartOfInterval(bool status)
+{
+    this->processingLastPartOfInterval = status;
+}
+
+inline int NinjamTrackNode::getID() const
+{
+    return ID;
+}
 
 #endif // NINJAMTRACKNODE_H

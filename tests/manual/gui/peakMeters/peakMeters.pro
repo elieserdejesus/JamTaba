@@ -2,6 +2,8 @@ QT += core gui widgets
 TEMPLATE = app
 TARGET = testPeakMeters
 
+CONFIG += c++11
+
 INCLUDEPATH += .
 INCLUDEPATH += ../../../../src/Common
 VPATH += ../../../../src/Common

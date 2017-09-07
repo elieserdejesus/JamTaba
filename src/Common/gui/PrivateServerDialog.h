@@ -26,7 +26,7 @@ public slots:
     void accept() override;
 
 signals:
-    void connectionAccepted(const QString &server, int serverPort, const QString &password);
+    void connectionAccepted(const QString &server, int serverPort, const QString &userName, const QString &password);
 
 private:
     Ui::PrivateServerDialog *ui;

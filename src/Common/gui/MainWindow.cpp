@@ -13,42 +13,50 @@
 #include "JamRoomViewPanel.h"
 #include "ChordsPanel.h"
 #include "MapWidget.h"
+#include "BlinkableButton.h"
+
+#include "LooperWindow.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QRect>
+#include <QDateTime>
+#include <QImage>
+
 #include "MainController.h"
 #include "ThemeLoader.h"
-// #include "performance/PerformanceMonitor.h"
+#include "performance/PerformanceMonitor.h"
 
 using namespace Audio;
 using namespace Persistence;
 using namespace Controller;
 using namespace Ninjam;
 using namespace Persistence;
+using namespace Login;
 
-const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
-const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 790);
-const int MainWindow::MINI_MODE_MAX_LOCAL_TRACKS_WIDTH = 185;
+const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
+const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
-// const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
+const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
+const quint8 MainWindow::MAX_REFRESH_RATE = 60; // in Hertz
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200; //in miliseconds
+
 MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent) :
     QMainWindow(parent),
     busyDialog(0),
     mainController(mainController),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
-    fullViewMode(true),
-    chordsPanel(nullptr)
-    // lastPerformanceMonitorUpdate(0)
+    chordsPanel(nullptr),
+    lastPerformanceMonitorUpdate(0),
+    camera(nullptr)
 {
-    qCInfo(jtGUI) << "Creating MainWindow...";
+    qCDebug(jtGUI) << "Creating MainWindow...";
 
     ui.setupUi(this);
 
-    setWindowTitle("JamTaba " + QApplication::applicationVersion());
+    setWindowTitle("JamTaba");
 
     initializeLoginService();
     initializeMainTabWidget();
@@ -58,11 +66,31 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeTranslator();
     initializeThemeMenu();
     initializeMeteringOptions();
+    initializeCamera();
     setupWidgets();
     setupSignals();
 
-    qCInfo(jtGUI) << "MainWindow created!";
+    qCDebug(jtGUI) << "MainWindow created!";
 }
+
+void MainWindow::initializeCamera()
+{
+    this->camera = nullptr;
+}
+
+bool MainWindow::cameraIsActivated() const
+{
+    return camera != nullptr;
+}
+
+QPixmap MainWindow::grabCameraFrame() const
+{
+    if (camera)
+        return camera->getFrame();
+
+    return QPixmap();
+}
+
 
 void MainWindow::initializeMeteringOptions()
 {
@@ -84,8 +112,9 @@ void MainWindow::initializeMeteringOptions()
 
 void MainWindow::initializeTranslator()
 {
-    // always install the translator
-    QApplication::instance()->installTranslator(&translator);
+    // always install the translators (one for Jamtaba strings and another for Qt strings)
+    qApp->installTranslator(&jamtabaTranslator);
+    qApp->installTranslator(&qtTranslator);
 
     // remember the last selected language
     QString localeName = mainController->getSettings().getTranslation();
@@ -104,21 +133,45 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     }
 }
 
-void MainWindow::updateNightModeInWorldMaps()
+void MainWindow::handleThemeChanged()
 {
     QString themeName = mainController->getTheme();
     MapWidget::setNightMode(MainWindow::themeCanUseNightModeWorldMaps(themeName));
+
+    ui.masterMeter->updateStyleSheet();
+
+    for (auto groupChannels : localGroupChannels) {
+        for (auto trackView : groupChannels->getTracks<LocalTrackView *>()) {
+            trackView->updateStyleSheet();
+        }
+    }
+}
+
+void MainWindow::setTheme(const QString &themeName)
+{
+    if (!mainController->setTheme(themeName)) {
+        QString errorMessage = tr("Error loading the theme %1").arg(themeName);
+        QMessageBox::critical(this, tr("Error!"), errorMessage);
+    }
 }
 
 void MainWindow::changeTheme(QAction *action)
 {
-    QString theme = action->data().toString();
-    mainController->setTheme(theme);
+    QString themeName = action->data().toString();
+    setTheme(themeName);
 }
 
 bool MainWindow::themeCanUseNightModeWorldMaps(const QString &themeName)
 {
-    return themeName == "Black" || themeName == "Volcano"; // at moment only Black theme is using night mode maps
+    return themeName.endsWith(NIGHT_MODE_SUFFIX);
+}
+
+QString MainWindow::getStripedThemeName(const QString &fullThemeName)
+{
+    if (themeCanUseNightModeWorldMaps(fullThemeName))
+        return fullThemeName.left(fullThemeName.size() - 3); // remove the last 3 letters in theme name
+
+    return fullThemeName;
 }
 
 void MainWindow::initializeThemeMenu()
@@ -127,23 +180,25 @@ void MainWindow::initializeThemeMenu()
     connect(ui.menuTheme, &QMenu::aboutToShow, this, &MainWindow::translateThemeMenu); // the menu is translated before open
 
     // create a menu action for each theme
-    QStringList themeFiles = Theme::Loader::getAvailableThemes(":/style/themes");
-    foreach (const QString &themeFile, themeFiles) {
-        QString themeName = QFileInfo(themeFile).baseName();
-        QAction *action = ui.menuTheme->addAction(themeName);
+    QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
+    QStringList themes = Theme::Loader::getAvailableThemes(themesDir);
+    for (const QString &themeDir : themes) {
+        QString themeName = QFileInfo(themeDir).baseName();
+        QAction *action = ui.menuTheme->addAction(getStripedThemeName(themeName));
         action->setData(themeName);
     }
 }
 
 void MainWindow::translateThemeMenu()
 {
-    foreach (QAction *action, ui.menuTheme->actions()) {
-        QString themeName = action->data().toString();
-        QString menuString = themeName; //use themeName as default text
+    for (QAction *action : ui.menuTheme->actions()) {
+        QString themeName = getStripedThemeName(action->data().toString()); // use themeName as default text
         QString translatedName = getTranslatedThemeName(themeName);
-        if (translatedName != themeName) //maybe we don't have a translation entry for the theme ...
-            menuString = translatedName + " (" + themeName + ")";
-        action->setText(menuString);
+
+        if (translatedName != themeName) // maybe we don't have a translation entry for the theme ...
+            themeName = translatedName + " (" + themeName + ")";
+
+        action->setText(themeName);
     }
 }
 
@@ -154,46 +209,82 @@ QString MainWindow::getTranslatedThemeName(const QString &themeName)
     translatedNames.insert("Flat",    tr("Flat"));
     translatedNames.insert("Rounded", tr("Rounded"));
     translatedNames.insert("Volcano", tr("Volcano"));
+    translatedNames.insert("Ice", tr("Ice"));
 
     if (translatedNames.contains(themeName))
         return translatedNames[themeName];
 
-    return themeName; //returning the original name if we have not a translate entry in the map
+    return themeName; // returning the original name if we have not a translate entry in the map
 }
 
 void MainWindow::loadTranslationFile(const QString &locale)
 {
-    translator.load(locale, ":/tr");
+    if( !jamtabaTranslator.load(locale, ":/tr"))
+        qWarning() << "Can't load the Jamtaba translation for " << locale;
+
+    if (locale != "en") { // avoid load en Qt translation (this file is obviously missing)
+        QString fileName = "qtbase_" + locale;
+        if (!qtTranslator.load(fileName, ":/qt_tr"))
+            qWarning() << "Can't load Qt translation for " << locale;
+    }
 }
 
-// ++++++++++++++++++++++++=
 void MainWindow::initializeLanguageMenu()
 {
     // create a menu action for each translation resource
     QDir translationsDir(":/tr");
     if (translationsDir.exists()) {
         QStringList locales = translationsDir.entryList();
-        foreach (const QString &translationFile, locales) {
+        for (auto translationFile : locales) {
             QLocale loc(translationFile);
             QString nativeLanguageName = Gui::capitalize(loc.nativeLanguageName());
-            QString englishLanguageName
-                = Gui::capitalize(QLocale::languageToString(loc.language()));                         // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
-            QAction *action = ui.menuLanguage->addAction(
-                nativeLanguageName + " (" + englishLanguageName + ")");
+            QString englishLanguageName = Gui::capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
+
+            QString actionText = nativeLanguageName + " (" + englishLanguageName + ")";
+            auto actions = ui.menuLanguage->actions();
+            QAction *before = actions.isEmpty() ? nullptr : actions.first();
+            while (before && before->text() < actionText) { // sorting the language menu entries
+                actions.removeFirst();
+                before = actions.isEmpty() ? nullptr : actions.first();
+            }
+            QAction *action = new QAction(actionText, ui.menuLanguage);
             action->setData(translationFile); // using the locale (pt_BR, ja_JP) as data
+            ui.menuLanguage->insertAction(before, action);
         }
     } else {
         qCritical() << "translations dir not exist! Can't create the Language menu!";
     }
 }
 
-// ++++++++++++++++++++++++=
+void MainWindow::initializeGuiRefreshTimer()
+{
+    quint8 refreshRate = mainController->getSettings().getMeterRefreshRate();
+    if (refreshRate <= 0)
+        refreshRate = DEFAULT_REFRESH_RATE;
+    else if (refreshRate > MAX_REFRESH_RATE)
+        refreshRate = MAX_REFRESH_RATE;
+
+    timerID = startTimer(1000/refreshRate); // timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
+}
+
 void MainWindow::initialize()
 {
-    timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
+    // initialize text modifier here to avoid a pure virtual method call in constructor
+    TextEditorModifier *textEditorModifier = createTextEditorModifier();
+    if (textEditorModifier) {
+        bool finishEditorPressingReturnKey = true;
+        textEditorModifier->modify(ui.userNameLineEdit, finishEditorPressingReturnKey);
+    }
 
-    if (qApp->styleSheet().isEmpty())
-        mainController->setTheme(mainController->getTheme());
+    initializeGuiRefreshTimer();
+
+    if (qApp->styleSheet().isEmpty()) { // allow custom stylesheet via app arguments
+        QString themeName = mainController->getTheme();
+        QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
+        if(!Theme::Loader::canLoad(themesDir, themeName))
+            themeName = "Flat"; // fallback to Flat theme
+        setTheme(themeName);
+    }
 
     showBusyDialog(tr("Loading rooms list ..."));
 
@@ -203,16 +294,14 @@ void MainWindow::initialize()
 void MainWindow::doWindowInitialization()
 {
     initializeLocalInputChannels(); // create the local tracks, load plugins, etc.
-
-    // set window mode: mini mode or full view mode
-    setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
+    initializeWindowSize();
 }
 
-// ++++++++++++++++++++++++=
 void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 {
-    foreach (LocalTrackGroupView *channel, localGroupChannels)
+    for (LocalTrackGroupView *channel : localGroupChannels) {
         channel->setPeakMeterMode(showPeakMetersOnly);
+    }
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     updateLocalInputChannelsGeometry();
@@ -229,39 +318,24 @@ void MainWindow::updateLocalInputChannelsGeometry()
     int minWidth = ui.localTracksWidget->sizeHint().width();
     minWidth += 12;
     int maxWidth = minWidth;
-    bool showingPeakMeterOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
-    Qt::ScrollBarPolicy scrollPolicy = Qt::ScrollBarAlwaysOff;
 
-    // limit the local inputs widget in mini mode
-    if (!showingPeakMeterOnly && isRunningInMiniMode()) {
-        if (minWidth > MINI_MODE_MAX_LOCAL_TRACKS_WIDTH) {
-            minWidth = maxWidth = MINI_MODE_MAX_LOCAL_TRACKS_WIDTH;
-            scrollPolicy = Qt::ScrollBarAlwaysOn;
-        }
-    }
     ui.leftPanel->setMaximumWidth(maxWidth);
     ui.leftPanel->setMinimumWidth(minWidth);
-    ui.scrollArea->setHorizontalScrollBarPolicy(scrollPolicy);
-
-    if (isRunningInMiniMode() && localGroupChannels.count() > 1) {
-        foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
-            trackGroup->setToNarrow();
-    }
 }
 
 void MainWindow::toggleLocalInputsCollapseStatus()
 {
     bool isShowingPeakMetersOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
-    showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly);// toggle
+    showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly); // toggle
 }
 
-// ++++++++++++++++++++++++=
 Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
 {
     LocalInputTrackSettings settings;
-    foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
+    for (LocalTrackGroupView *trackGroupView : localGroupChannels) {
         Channel channel(trackGroupView->getGroupName());
-        foreach (LocalTrackView *trackView, trackGroupView->getTracks<LocalTrackView *>()) {
+        int subchannelsCount = 0;
+        for (LocalTrackView *trackView : trackGroupView->getTracks<LocalTrackView *>()) {
             LocalInputNode *inputNode = trackView->getInputNode();
             ChannelRange inputNodeRange = inputNode->getAudioInputRange();
             int firstInput = inputNodeRange.getFirstChannel();
@@ -276,23 +350,27 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
             qint8 transpose = inputNode->getTranspose();
             quint8 lowerNote = inputNode->getMidiLowerNote();
             quint8 higherNote = inputNode->getMidiHigherNote();
+            bool routindMidiInput = subchannelsCount > 0 && inputNode->isRoutingMidiInput(); // midi routing is not allowed in first subchannel
 
             Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted,
-                           transpose, lowerNote, higherNote);
+                                                                    transpose, lowerNote, higherNote, routindMidiInput);
             channel.subChannels.append(sub);
+
+            subchannelsCount++;
         }
         settings.channels.append(channel);
     }
     return settings;
 }
 
-// ++++++++++++++++++++++++=
 void MainWindow::stopCurrentRoomStream()
 {
     if (mainController->isPlayingRoomStream()) {
         long long roomID = mainController->getCurrentStreamingRoomID();
+
         if (roomViewPanels[roomID])
             roomViewPanels[roomID]->clear(true);
+
         mainController->stopRoomStream();
     }
 }
@@ -303,8 +381,10 @@ void MainWindow::showMessageBox(const QString &title, const QString &text, QMess
     messageBox->setWindowTitle(title);
     messageBox->setText(text);
     messageBox->setIcon(icon);
+    messageBox->setWindowIcon(this->windowIcon());
     messageBox->setAttribute(Qt::WA_DeleteOnClose, true);
     messageBox->show();
+    messageBox->exec();
 }
 
 void MainWindow::handlePublicRoomStreamError(const QString &msg)
@@ -313,11 +393,9 @@ void MainWindow::handlePublicRoomStreamError(const QString &msg)
     showMessageBox(tr("Error!"), msg, QMessageBox::Critical);
 }
 
-// ++++++++++++++++++++++++=
-
 void MainWindow::removeChannelsGroup(int channelIndex)
 {
-    if (localGroupChannels.size() > 1) {// the first channel group can't be removed
+    if (localGroupChannels.size() > 1) { // the first channel group can't be removed
         if (channelIndex >= 0 && channelIndex < localGroupChannels.size()) {
             LocalTrackGroupView *channel = localGroupChannels.at(channelIndex);
             ui.localTracksLayout->removeWidget(channel);
@@ -355,14 +433,15 @@ void MainWindow::addChannelsGroup(const QString &name)
     updateLocalInputChannelsGeometry();
 }
 
-// ++++++++++++++++++++++++=
 void MainWindow::initializeMainTabWidget()
 {
     // the rooms list tab bar is not closable
     QWidget *tabBar = nullptr;
-    tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::RightSide);// try get the tabBar in right side (Windows)
-    if (!tabBar)// try get the tabBar in left side (MAC OSX)
+    tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::RightSide); // try get the tabBar in right side (Windows)
+
+    if (!tabBar) // try get the tabBar in left side (MAC OSX)
         tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::LeftSide);
+
     if (tabBar) {
         tabBar->resize(0, 0);
         tabBar->hide();
@@ -372,7 +451,6 @@ void MainWindow::initializeMainTabWidget()
     connect(ui.contentTabWidget, SIGNAL(tabBarClicked(int)), this, SLOT(changeTab(int)));
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::updateChannelsNames()
 {
     mainController->sendNewChannelsNames(getChannelsNames());
@@ -384,21 +462,18 @@ LocalTrackGroupView *MainWindow::createLocalTrackGroupView(int channelGroupIndex
     return new LocalTrackGroupView(channelGroupIndex, this);
 }
 
-// ++++++++++++++++++=
 LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QString &channelName,
                                                  bool createFirstSubchannel)
 {
     LocalTrackGroupView *localChannel = createLocalTrackGroupView(channelGroupIndex);
 
-    QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(updateChannelsNames()));
+    connect(localChannel, &LocalTrackGroupView::nameChanged, this, &MainWindow::updateChannelsNames);
 
-    QObject::connect(localChannel, SIGNAL(trackAdded()), this,
-                     SLOT(updateLocalInputChannelsGeometry()));
+    connect(localChannel, &LocalTrackGroupView::trackAdded, this, &MainWindow::updateLocalInputChannelsGeometry);
 
-    QObject::connect(localChannel, SIGNAL(trackRemoved()), this,
-                     SLOT(updateLocalInputChannelsGeometry()));
+    connect(localChannel, &LocalTrackGroupView::trackRemoved, this, &MainWindow::updateLocalInputChannelsGeometry);
 
-    if (!localGroupChannels.isEmpty())// the second channel?
+    if (!localGroupChannels.isEmpty()) // the second channel?
         localChannel->setPreparingStatus(localGroupChannels.at(0)->isPreparingToTransmit());
 
     localGroupChannels.append(localChannel);
@@ -406,28 +481,34 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
     localChannel->setGroupName(channelName);
     ui.localTracksLayout->addWidget(localChannel);
 
-    if (createFirstSubchannel)
-        localChannel->addTrackView(channelGroupIndex);
-
-    localChannel->useSmallSpacingInLayouts(isRunningInMiniMode());
+    if (createFirstSubchannel) {
+         localChannel->addTrackView(channelGroupIndex);
+    }
 
     ui.localTracksWidget->updateGeometry();
 
     return localChannel;
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::loadPreset(const Preset &preset)
 {
     if (preset.isValid()) {
         removeAllInputLocalTracks();
         initializeLocalInputChannels(preset.inputTrackSettings);
+
+        //set all loaded channels xmit to ON
+        for (LocalTrackGroupView *trackGroupView :  localGroupChannels ) {
+            mainController->setTransmitingStatus(trackGroupView->getChannelIndex(), true);
+        }
+
         QApplication::processEvents();
     }
 }
 
 void MainWindow::removeAllInputLocalTracks()
 {
+    mainController->removeAllInputTracks();
+
     while (!localGroupChannels.isEmpty()) {
         LocalTrackGroupView *view = localGroupChannels.first();
         ui.localTracksLayout->removeWidget(view);
@@ -436,13 +517,50 @@ void MainWindow::removeAllInputLocalTracks()
     }
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 // this function is overrided in MainWindowStandalone to load input selections and plugins
-void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView,
-                                           const Subchannel &subChannel)
+void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const Subchannel &subChannel)
 {
     BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted, subChannel.stereoInverted);
+}
+
+void MainWindow::openLooperWindow(uint trackID)
+{
+    Q_ASSERT(mainController);
+
+     auto inputTrack = mainController->getInputTrack(trackID);
+     if (inputTrack) {
+        LooperWindow *looperWindow = looperWindows[trackID];
+        if (!looperWindow) {
+            looperWindow = new LooperWindow(this, mainController);
+            looperWindows.insert(trackID, looperWindow);
+        }
+
+        looperWindow->setLooper(inputTrack->getLooper());
+
+        LocalTrackGroupView *channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
+        Q_ASSERT(channel);
+
+        int subchannelInternalIndex = channel->getSubchannelInternalIndex(trackID);
+        QString channelName = channel->getGroupName();
+        if (channelName.isEmpty())
+            channelName = tr("Channel %1").arg(QString::number(channel->getChannelIndex() + 1));
+        else
+            channelName = tr("Channel %1").arg(channelName);
+
+        QString subchannelName("Subchannel " + QString::number(subchannelInternalIndex + 1));
+        QString windowTitle("Looper - " + channelName + " (" + subchannelName + ")");
+        looperWindow->setWindowTitle(windowTitle);
+
+        looperWindow->raise();
+        looperWindow->show();
+        looperWindow->activateWindow();
+
+     }
+     else {
+         qCritical() << "inputTrack or ninjamControler are null";
+     }
 }
 
 void MainWindow::initializeLocalInputChannels()
@@ -452,52 +570,45 @@ void MainWindow::initializeLocalInputChannels()
 
 void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inputsSettings)
 {
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
+    QApplication::setOverrideCursor(Qt::WaitCursor); // this line was hanging/freezing in Mac
 
-    qCInfo(jtGUI) << "Initializing local inputs...";
     int channelIndex = 0;
-    foreach (const Persistence::Channel &channel, inputsSettings.channels) {
-        qCInfo(jtGUI) << "\tCreating channel "<< channel.name;
+    for (const Persistence::Channel &channel : inputsSettings.channels) {
+        qCDebug(jtGUI) << "\tCreating channel "<< channel.name;
         bool createFirstSubChannel = channel.subChannels.isEmpty();
         LocalTrackGroupView *channelView = addLocalChannel(channelIndex, channel.name,
                                                            createFirstSubChannel);
-        foreach (const Persistence::Subchannel &subChannel, channel.subChannels) {
-            qCInfo(jtGUI) << "\t\tCreating sub-channel ";
+        for (const Persistence::Subchannel &subChannel : channel.subChannels) {
+            qCDebug(jtGUI) << "\t\tCreating sub-channel ";
             LocalTrackView *subChannelView = channelView->addTrackView(channelIndex);
             initializeLocalSubChannel(subChannelView, subChannel);
         }
         channelIndex++;
     }
-    if (channelIndex == 0)// no channels in settings file or no settings file...
+    if (channelIndex == 0) // no channels in settings file or no settings file...
         addLocalChannel(0, "", true); // create a channel using an empty name
 
-    qCInfo(jtGUI) << "Initializing local inputs done!";
+    qCDebug(jtGUI) << "Initializing local inputs done!";
 
     QApplication::restoreOverrideCursor();
 }
 
 void MainWindow::initializeLoginService()
 {
-    Login::LoginService *loginService = this->mainController->getLoginService();
+    auto loginService = this->mainController->getLoginService();
 
-    connect(loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)), this,
-            SLOT(refreshPublicRoomsList(const QList<Login::RoomInfo> &)));
+    connect(loginService, &LoginService::roomsListAvailable, this, &MainWindow::refreshPublicRoomsList);
 
-    connect(loginService, SIGNAL(incompatibilityWithServerDetected()), this,
-            SLOT(handleIncompatiblity()));
+    connect(loginService, &LoginService::incompatibilityWithServerDetected, this, &MainWindow::handleIncompatiblity);
 
-    connect(loginService, SIGNAL(newVersionAvailableForDownload()), this,
-            SLOT(showNewVersionAvailableMessage()));
+    connect(loginService, &LoginService::newVersionAvailableForDownload, this, &MainWindow::showNewVersionAvailableMessage);
 
-    connect(loginService, SIGNAL(errorWhenConnectingToServer(QString)), this,
-            SLOT(handleServerConnectionError(QString)));
+    connect(loginService, &LoginService::errorWhenConnectingToServer, this, &MainWindow::handleServerConnectionError);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::closeTab(int index)
 {
-    if (index > 0) {// the first tab is not closable
+    if (index > 0) { // the first tab is not closable
         showBusyDialog(tr("disconnecting ..."));
         if (mainController->getNinjamController()->isRunning())
             mainController->stopNinjamController();
@@ -506,15 +617,14 @@ void MainWindow::closeTab(int index)
 
 void MainWindow::changeTab(int index)
 {
-    if (index > 0) {// click in room tab?
+    if (index > 0) { // click in room tab?
         if (mainController->isPlayingInNinjamRoom() && mainController->isPlayingRoomStream())
             stopCurrentRoomStream();
-    } else {// click in the public rooms tab?
+    } else { // click in the public rooms tab?
         updatePublicRoomsListLayout();
     }
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::showBusyDialog()
 {
     showBusyDialog("");
@@ -536,14 +646,14 @@ void MainWindow::centerBusyDialog()
 {
     if (!busyDialog.parentWidget())
         return;
+
     QSize parentSize = busyDialog.parentWidget()->size();
     QSize busyDialogSize = busyDialog.size();
     int newX = parentSize.width()/2 - busyDialogSize.width()/2;
-    int newY = parentSize.height()/2;// - busyDialogSize.height()/2;
+    int newY = parentSize.height()/2;
     busyDialog.move(newX, newY);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 bool MainWindow::jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2)
 {
     return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
@@ -573,40 +683,26 @@ void MainWindow::handleServerConnectionError(const QString &errorMsg)
 void MainWindow::showNewVersionAvailableMessage()
 {
     hideBusyDialog();
-    QString text
-        =
-            tr(
-                "A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!");
+    QString text = tr("A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!");
     QMessageBox::information(this, tr("New Jamtaba version available!"), text);
 }
 
 JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &roomInfo)
 {
-    JamRoomViewPanel *newJamRoomView = new JamRoomViewPanel(roomInfo, mainController);
+    auto newJamRoomView = new JamRoomViewPanel(roomInfo, mainController);
 
-    connect(newJamRoomView, SIGNAL(startingListeningTheRoom(Login::RoomInfo)), this,
-            SLOT(playPublicRoomStream(Login::RoomInfo)));
+    connect(newJamRoomView, &JamRoomViewPanel::startingListeningTheRoom, this, &MainWindow::playPublicRoomStream);
 
-    connect(newJamRoomView, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)), this,
-            SLOT(stopPublicRoomStream(Login::RoomInfo)));
+    connect(newJamRoomView, &JamRoomViewPanel::finishingListeningTheRoom, this, &MainWindow::stopPublicRoomStream);
 
-    connect(newJamRoomView, SIGNAL(enteringInTheRoom(Login::RoomInfo)), this,
-            SLOT(tryEnterInRoom(Login::RoomInfo)));
+    connect(newJamRoomView, SIGNAL(enteringInTheRoom(Login::RoomInfo)), this, SLOT(tryEnterInRoom(Login::RoomInfo)));
 
     return newJamRoomView;
 }
 
 bool MainWindow::canUseTwoColumnLayout() const
 {
-    if (isFullScreen() || isMaximized())
-        return true;
-
-    if (mainController->isPlayingInNinjamRoom())
-        return false;
-    else
-        return fullViewMode;// if is in mini mode (!fullViewMode) we are using just 1 collumn layout
-
-    return true;
+    return ui.contentTabWidget->width() >= 860;
 }
 
 void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms)
@@ -620,9 +716,9 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
     qSort(sortedRooms.begin(), sortedRooms.end(), jamRoomLessThan);
 
     int index = 0;
-    foreach (const Login::RoomInfo &roomInfo, sortedRooms) {
-        if (roomInfo.getType() == Login::RoomTYPE::NINJAM) {// skipping other rooms at moment
-            bool twoCollumns = canUseTwoColumnLayout();
+    bool twoCollumns = canUseTwoColumnLayout();
+    for (const Login::RoomInfo &roomInfo : sortedRooms) {
+        if (roomInfo.getType() == Login::RoomTYPE::NINJAM) { // skipping other rooms at moment
             int rowIndex = twoCollumns ? (index / 2) : (index);
             int collumnIndex = twoCollumns ? (index % 2) : 0;
             JamRoomViewPanel *roomViewPanel = roomViewPanels[roomInfo.getID()];
@@ -650,14 +746,13 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
     /** updating country flag and country names after refresh the public rooms list. This is necessary because the call to webservice used to get country codes and  country names is not synchronous. So, if country code and name are not cached we receive these data from the webservice after some seconds.*/
 }
 
-// +++++++++++++++++++++++++++++++++++++
 void MainWindow::playPublicRoomStream(const Login::RoomInfo &roomInfo)
 {
     // clear all plots
-    foreach (JamRoomViewPanel *viewPanel, this->roomViewPanels.values())
+    for (JamRoomViewPanel *viewPanel : this->roomViewPanels.values())
         viewPanel->clear(roomInfo.getID() != viewPanel->getRoomInfo().getID());
 
-    if (roomInfo.hasStream())// just in case...
+    if (roomInfo.hasStream()) // just in case...
         mainController->playRoomStream(roomInfo);
 }
 
@@ -670,8 +765,9 @@ void MainWindow::stopPublicRoomStream(const Login::RoomInfo &roomInfo)
 QStringList MainWindow::getChannelsNames() const
 {
     QStringList channelsNames;
-    foreach (LocalTrackGroupView *channel, localGroupChannels)
+    for (LocalTrackGroupView *channel : localGroupChannels)
         channelsNames.append(channel->getGroupName());
+
     return channelsNames;
 }
 
@@ -681,8 +777,10 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
     // stop room stream before enter in a room
     if (mainController->isPlayingRoomStream()) {
         long long roomID = mainController->getCurrentStreamingRoomID();
+
         if (roomViewPanels[roomID])
             roomViewPanels[roomID]->clear(true);
+
         mainController->stopRoomStream();
     }
 
@@ -708,14 +806,14 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
         roomToJump.reset(new Login::RoomInfo(roomInfo));
         passwordToJump = password;
 
-        mainController->stopNinjamController();// disconnect from current ninjam server
-    } else if (mainController->userNameWasChoosed()) {
+        mainController->stopNinjamController(); // disconnect from current ninjam server
+    }
+    else if (mainController->userNameWasChoosed()) {
         showBusyDialog(tr("Connecting with %1 ... ").arg(roomInfo.getName()));
         mainController->enterInRoom(roomInfo, getChannelsNames(), password);
     }
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 {
     qCDebug(jtGUI) << "hidding busy dialog...";
@@ -727,7 +825,6 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
-    ninjamWindow->setFullViewStatus(this->fullViewMode);
     int index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabName);
     ui.contentTabWidget->setCurrentIndex(index);
 
@@ -735,20 +832,17 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "adding ninjam chat panel...";
     ChatPanel *chatPanel = ninjamWindow->getChatPanel();
     ui.chatTabWidget->addTab(chatPanel, "");
-    updateChatTabTitle();// set and translate the chat tab title
+    updateChatTabTitle(); // set and translate the chat tab title
 
-    QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(
-                                           ChordProgression)), this,
-                     SLOT(acceptChordProgression(ChordProgression)));
+    connect(chatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
 
     // add the ninjam panel in main window (bottom panel)
     qCDebug(jtGUI) << "adding ninjam panel...";
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
     ui.bottomPanel->layout()->removeWidget(ui.masterControlsPanel);
-    dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->addWidget(ninjamPanel, 0,
-                                                                     Qt::AlignHCenter);
-    ninjamPanel->addMasterControls(ui.masterControlsPanel);
-    ninjamPanel->setFullViewStatus(fullViewMode);
+
+    dynamic_cast<QGridLayout *>(ui.bottomPanel->layout())->addWidget(ninjamPanel, 0, 0, 1, 1, Qt::AlignHCenter);
+    ninjamPanel->addMasterControls(ui.masterControlsPanel) ;
 
     // show chat area
     setChatVisibility(true);
@@ -756,19 +850,35 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     ui.leftPanel->adjustSize();
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
 
-    QObject::connect(mainController->getNinjamController(), SIGNAL(
-                         preparedToTransmit()), this, SLOT(startTransmission()));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(
-                         preparingTransmission()), this, SLOT(prepareTransmission()));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpiChanged(
-                                                                       int)), this,
-                     SLOT(updateBpi(int)));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpmChanged(
-                                                                       int)), this,
-                     SLOT(updateBpm(int)));
-    QObject::connect(mainController->getNinjamController(), SIGNAL(intervalBeatChanged(
-                                                                       int)), this,
-                     SLOT(updateCurrentIntervalBeat(int)));
+    auto controller = mainController->getNinjamController();
+    connect(controller, &NinjamController::preparedToTransmit, this, &MainWindow::startTransmission);
+    connect(controller, &NinjamController::preparingTransmission, this, &MainWindow::prepareTransmission);
+    connect(controller, &NinjamController::currentBpiChanged, this, &MainWindow::updateBpi);
+    connect(controller, &NinjamController::currentBpmChanged, this, &MainWindow::updateBpm);
+    connect(controller, &NinjamController::intervalBeatChanged, this, &MainWindow::updateCurrentIntervalBeat);
+
+    enableLooperButtonInLocalTracks(true); // looper buttons are enabled when entering in a server
+}
+
+void MainWindow::enableLooperButtonInLocalTracks(bool enable)
+{
+    for (auto trackGroupView : localGroupChannels) {
+        auto tracks = trackGroupView->getTracks<LocalTrackView *>();
+        for (auto track : tracks) {
+            track->enableLopperButton(enable);
+        }
+    }
+}
+
+void MainWindow::updateUserNameLineEditToolTip()
+{
+    bool readOnly = ui.userNameLineEdit->isReadOnly();
+
+    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr(
+        "Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
+
+    ui.userNameLineEdit->setToolTip(toolTip);
+    ui.labelUserNameIcon->setToolTip(toolTip);
 }
 
 void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
@@ -778,10 +888,7 @@ void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
     QString icon = readOnly ? QStringLiteral("pencil-read-only.png") : QStringLiteral("pencil.png");
     ui.labelUserNameIcon->setPixmap(QPixmap(":/images/" + icon));
 
-    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr(
-        "Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
-    ui.userNameLineEdit->setToolTip(toolTip);
-    ui.labelUserNameIcon->setToolTip(toolTip);
+    updateUserNameLineEditToolTip();
 
     if (readOnly) {
         if (ui.userNameLineEdit->hasFocus())
@@ -804,7 +911,7 @@ void MainWindow::showMetronomePreferencesDialog()
 // this signal is received when ninjam controller is ready to transmit (after the 'preparing' intervals).
 void MainWindow::startTransmission()
 {
-    setInputTracksPreparingStatus(false);// tracks are prepared to transmit
+    setInputTracksPreparingStatus(false); // tracks are prepared to transmit
 }
 
 void MainWindow::prepareTransmission()
@@ -813,7 +920,6 @@ void MainWindow::prepareTransmission()
     setInputTracksPreparingStatus(true);
 }
 
-// +++++++++++++++++++++++++++++
 void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMessage)
 {
     hideBusyDialog();
@@ -823,7 +929,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     // remove the jam room tab (the last tab)
     if (ui.contentTabWidget->count() > 1) {
-        ui.contentTabWidget->widget(1)->deleteLater();// delete the room window
+        ui.contentTabWidget->widget(1)->deleteLater(); // delete the room window
         ui.contentTabWidget->removeTab(1);
     }
 
@@ -835,24 +941,24 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     // remove ninjam panel from main window
     if (ninjamWindow)
         ui.bottomPanel->layout()->removeWidget(ninjamWindow->getNinjamPanel());
-    dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->addWidget(ui.masterControlsPanel, 0,
-                                                                     Qt::AlignHCenter);
+
+    dynamic_cast<QGridLayout *>(ui.bottomPanel->layout())->addWidget(ui.masterControlsPanel, 0, 0, 1, 1, Qt::AlignHCenter);
+
     hideChordsPanel();
 
     ninjamWindow.reset();
 
     setChatVisibility(false);
 
-    setInputTracksPreparingStatus(false);/** reset the prepating status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
+    setInputTracksPreparingStatus(false); /** reset the preparing status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
     if (!normalDisconnection) {
         if (!disconnectionMessage.isEmpty())
             showMessageBox(tr("Error"), disconnectionMessage, QMessageBox::Warning);
         else
-            showMessageBox(tr("Error"), tr("Disconnected from ninjam server"),
-                           QMessageBox::Warning);
+            showMessageBox(tr("Error"), tr("Disconnected from ninjam server"), QMessageBox::Warning);
     } else {
-        if (roomToJump) {// waiting the disconnection to connect in a new room?
+        if (roomToJump) { // waiting the disconnection to connect in a new room?
             showBusyDialog(tr("Connecting with %1").arg(roomToJump->getName()));
             mainController->enterInRoom(*roomToJump, getChannelsNames(),
                                         (passwordToJump.isNull()
@@ -861,6 +967,30 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
             passwordToJump = "";
         }
     }
+
+    updatePublicRoomsListLayout();
+
+    enableLooperButtonInLocalTracks(false); // disable looper buttons when exiting from server
+
+    closeAllLooperWindows();
+
+    for (LocalTrackGroupView *trackGroup : localGroupChannels) {
+        for (LocalTrackView *trackView : trackGroup->getTracks<LocalTrackView*>()) {
+            trackView->getInputNode()->stopLooper();
+        }
+    }
+}
+
+void MainWindow::closeAllLooperWindows()
+{
+    for (LooperWindow *looperWindow : looperWindows.values()) {
+        if (looperWindow) {
+            looperWindow->close();
+            looperWindow->detachCurrentLooper();
+            looperWindow->deleteLater();
+        }
+    }
+    looperWindows.clear();
 }
 
 void MainWindow::setChatVisibility(bool chatVisible)
@@ -872,21 +1002,20 @@ void MainWindow::setChatVisibility(bool chatVisible)
     ui.gridLayout->addWidget(ui.bottomPanel, 1, 0, 1, colSpan);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::setInputTracksPreparingStatus(bool preparing)
 {
-    foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
+    for (LocalTrackGroupView *trackGroup : localGroupChannels) {
         trackGroup->setPreparingStatus(preparing);
+    }
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::timerEvent(QTimerEvent *)
 {
     if (!mainController)
         return;
 
     // update local input track peaks
-    foreach (TrackGroupView *channel, localGroupChannels)
+    for (TrackGroupView *channel : localGroupChannels)
         channel->updateGuiElements();
 
     // update metronome peaks
@@ -897,13 +1026,17 @@ void MainWindow::timerEvent(QTimerEvent *)
     }
 
     // update cpu and memmory usage
-// qint64 now = QDateTime::currentMSecsSinceEpoch();
-// if(now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME){
-// ui.tabWidget->setResourcesUsage(performanceMonitor.getCpuUsage(), performanceMonitor.getMemmoryUsage());
-// lastPerformanceMonitorUpdate = now;
-// }
+    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME) {
+        ui.contentTabWidget->setResourcesUsage(performanceMonitor.getMemmoryUsed());
+        lastPerformanceMonitorUpdate = now;
+    }
 
-    // update room stream plot
+    // prevent screen saver if user is playing
+    if (mainController->isPlayingInNinjamRoom())
+        screensaverBlocker.update();
+
+    // update public server stream plot
     if (mainController->isPlayingRoomStream()) {
         long long roomID = mainController->getCurrentStreamingRoomID();
         JamRoomViewPanel *roomView = roomViewPanels[roomID];
@@ -920,38 +1053,54 @@ void MainWindow::timerEvent(QTimerEvent *)
         }
     }
 
+    // update looper window sound waves
+    for (LooperWindow *looperWindow : looperWindows.values()) {
+        if (looperWindow && looperWindow->isVisible()) {
+            looperWindow->updateDrawings();
+        }
+    }
+
     // update master peaks
     Audio::AudioPeak masterPeak = mainController->getMasterPeak();
-    ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), masterPeak.getLeftRMS());
-    ui.masterMeterR->setPeak(masterPeak.getRightPeak(), masterPeak.getRightRMS());
+    ui.masterMeter->setPeak(masterPeak.getLeftPeak(), masterPeak.getRightPeak(),
+                            masterPeak.getLeftRMS(), masterPeak.getRightRMS());
+
+    // update all blinkable buttons
+    BlinkableButton::updateAllBlinkableButtons();
 }
 
-// ++++++++++++=
 void MainWindow::resizeEvent(QResizeEvent *ev)
 {
     Q_UNUSED(ev)
-    if (busyDialog.isVisible())
-        centerBusyDialog();
+
+    centerBusyDialog();
+
+    if (ninjamWindow) {
+        NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
+        if (ninjamPanel) {
+            bool usingLargeWindow = width() >= MAIN_WINDOW_MIN_SIZE.width();
+            ninjamPanel->maximizeControlsWidget(usingLargeWindow);
+        }
+    }
 }
 
 void MainWindow::changeEvent(QEvent *ev)
 {
     if (ev->type() == QEvent::WindowStateChange && mainController) {
-        mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation());
+        mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
+    }
+    else if (ev->type() == QEvent::LanguageChange) {
+        ui.retranslateUi(this); // translate MainWindow.ui static texts
 
-        // show only the peak meters if user is in mini mode and is not maximized or full screen
-        showPeakMetersOnlyInLocalControls(
-            isRunningInMiniMode() && width() <= MINI_MODE_MIN_SIZE.width());
-        updatePublicRoomsListLayout();
-    } else if (ev->type() == QEvent::LanguageChange) {
-        ui.retranslateUi(this);
+        updateUserNameLineEditToolTip(); // translate user name line edit tool tip
+
         if (ninjamWindow)
             updateChatTabTitle(); // translate the chat tab title
     }
+
     QMainWindow::changeEvent(ev);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QPointF MainWindow::computeLocation() const
 {
     QRect screen = QApplication::desktop()->screenGeometry();
@@ -963,10 +1112,11 @@ QPointF MainWindow::computeLocation() const
 void MainWindow::closeEvent(QCloseEvent *)
 {
     if (mainController)
-        mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation());
+        mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
+
+    closeAllFloatingWindows();
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::~MainWindow()
 {
     qCDebug(jtGUI) << "MainWindow destructor...";
@@ -974,8 +1124,9 @@ MainWindow::~MainWindow()
     if (mainController)
         mainController->stop();
 
-    foreach (LocalTrackGroupView *groupView, this->localGroupChannels)
+    for (LocalTrackGroupView *groupView : this->localGroupChannels)
         groupView->detachMainControllerInSubchannels();
+
     mainController = nullptr;
 
     killTimer(timerID);
@@ -983,11 +1134,13 @@ MainWindow::~MainWindow()
     qCDebug(jtGUI) << "MainWindow destructor finished.";
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::connectInPrivateServer(const QString &server, int serverPort,
-                                        const QString &password)
+                                            const QString &userName, const QString &password)
 {
     mainController->storePrivateServerSettings(server, serverPort, password);
+    mainController->setUserName(userName);
+    ui.userNameLineEdit->setText(userName);
+
     Login::RoomInfo roomInfo(server, serverPort, Login::RoomTYPE::NINJAM, 32, 32);
     tryEnterInRoom(roomInfo, password);
 }
@@ -1010,7 +1163,7 @@ void MainWindow::showJamtabaUsersManual()
 
 void MainWindow::showJamtabaTranslators()
 {
-    QString url = "www.jamtaba.com/#translators";
+    QString url = "http://www.jamtaba.com/#translators";
     openUrlInUserBrowser(url);
 }
 
@@ -1023,13 +1176,13 @@ void MainWindow::openUrlInUserBrowser(const QString &url)
 
 void MainWindow::showPrivateServerDialog()
 {
-    PrivateServerDialog *privateServerDialog
-        = new PrivateServerDialog(ui.centralWidget, mainController);
+    auto privateServerDialog = new PrivateServerDialog(ui.centralWidget, mainController);
 
     connect(privateServerDialog, &PrivateServerDialog::connectionAccepted, this, &MainWindow::connectInPrivateServer);
 
     centerDialog(privateServerDialog);
     privateServerDialog->show();
+    privateServerDialog->exec();
 }
 
 void MainWindow::centerDialog(QWidget *dialog)
@@ -1038,7 +1191,7 @@ void MainWindow::centerDialog(QWidget *dialog)
     QSize parentSize = dialog->parentWidget()->size();
     int x = globalPosition.x() + parentSize.width()/2 - dialog->width()/2;
     int y = globalPosition.y();
-    if (dialog->height() >= parentSize.height()/2)// big dialog like preferences panel
+    if (dialog->height() >= parentSize.height()/2) // big dialog like preferences panel
         y += parentSize.height()/2 - dialog->height()/2;
     else // small dialogs
         y += parentSize.height()/3;
@@ -1062,45 +1215,52 @@ void MainWindow::openPreferencesDialog(QAction *action)
     if (action == ui.actionQuit) { // TODO put the Quit action in a better place. A 'Quit' entry in the 'Preferences' menu is not good. A Quit action is not related with Preferences.
         close();
     } else {
-        PreferencesDialog::PreferencesTab initialTab = PreferencesDialog::TAB_RECORDING;
+        PreferencesDialog::PreferencesTab initialTab = PreferencesDialog::TabMultiTrackRecording;
         if (action == ui.actionAudioPreferences)
-            initialTab = PreferencesDialog::TAB_AUDIO;
+            initialTab = PreferencesDialog::TabAudio;
         else if (action == ui.actionMidiPreferences)
-            initialTab = PreferencesDialog::TAB_MIDI;
+            initialTab = PreferencesDialog::TabMidi;
         else if (action == ui.actionVstPreferences)
-            initialTab = PreferencesDialog::TAB_VST;
+            initialTab = PreferencesDialog::TabVST;
         else if (action == ui.actionMetronome)
-            initialTab = PreferencesDialog::TAB_METRONOME;
+            initialTab = PreferencesDialog::TabMetronome;
+        else if (action == ui.actionLooper)
+            initialTab = PreferencesDialog::TabLooper;
 
         stopCurrentRoomStream();
 
-        PreferencesDialog *dialog = createPreferencesDialog();// factory method, overrided in derived classes MainWindowStandalone and MainWindowVST
+        PreferencesDialog *dialog = createPreferencesDialog(); // factory method, overrided in derived classes MainWindowStandalone and MainWindowVST
+
+        qDebug(jtGUI) << "Initializing preferences dialog";
         dialog->initialize(initialTab, &mainController->getSettings(), mainController->getJamRecoders());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
+
+        qCDebug(jtGUI) << "Showing preferences dialog";
         dialog->show();
+        dialog->exec();
     }
 }
 
-// +++++++++++++++++++++++++
 void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 {
     Q_ASSERT(dialog);
 
-    connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this,
-            SLOT(setMultiTrackRecordingStatus(bool)));
+    connect(dialog, &PreferencesDialog::multiTrackRecordingStatusChanged, this, &MainWindow::setMultiTrackRecordingStatus);
 
-    connect(dialog, SIGNAL(jamRecorderStatusChanged(QString, bool)), this,
-            SLOT(setJamRecorderStatus(QString, bool)));
+    connect(dialog, &PreferencesDialog::jamRecorderStatusChanged, this, &MainWindow::setJamRecorderStatus);
 
-    connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this,
-            SLOT(setRecordingPath(const QString &)));
+    connect(dialog, &PreferencesDialog::recordingPathSelected, this, &MainWindow::setRecordingPath);
 
-    connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this,
-            SLOT(setBuiltInMetronome(QString)));
+    connect(dialog, &PreferencesDialog::builtInMetronomeSelected, this, &MainWindow::setBuiltInMetronome);
 
-    connect(dialog, SIGNAL(customMetronomeSelected(QString, QString)), this,
-            SLOT(setCustomMetronome(QString, QString)));
+    connect(dialog, &PreferencesDialog::customMetronomeSelected, this, &MainWindow::setCustomMetronome);
 
     connect(dialog, &PreferencesDialog::encodingQualityChanged, mainController, &MainController::setEncodingQuality);
+
+    connect(dialog, &PreferencesDialog::looperAudioEncodingFlagChanged, mainController, &MainController::storeLooperAudioEncodingFlag);
+
+    connect(dialog, &PreferencesDialog::looperFolderChanged, mainController, &MainController::storeLooperFolder);
+
+    connect(dialog, &PreferencesDialog::looperWaveFilesBitDepthChanged, mainController, &MainController::storeLooperBitDepth);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
@@ -1116,38 +1276,29 @@ void MainWindow::setCustomMetronome(const QString &primaryBeatFile,
 
 void MainWindow::setMultiTrackRecordingStatus(bool recording)
 {
-    mainController->storeRecordingMultiTracksStatus(recording);
+    mainController->storeMultiTrackRecordingStatus(recording);
 }
 
-void MainWindow::setJamRecorderStatus(QString writerId, bool status)
+void MainWindow::setJamRecorderStatus(const QString &writerId, bool status)
 {
     mainController->storeJamRecorderStatus(writerId, status);
 }
 
 void MainWindow::setRecordingPath(const QString &newRecordingPath)
 {
-    mainController->storeRecordingPath(newRecordingPath);
+    mainController->storeMultiTrackRecordingPath(newRecordingPath);
 }
-
-// ++++++++++++++++++++++
 
 void MainWindow::initializeViewMenu()
 {
-    connect(ui.actionMiniView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
-    connect(ui.actionFullView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
+    connect(ui.menuMetering, &QMenu::aboutToShow, this, &MainWindow::updateMeteringMenu);
 
-    connect(ui.menuMetering, SIGNAL(aboutToShow()), this, SLOT(updateMeteringMenu()));
-
-    connect(ui.menuMetering, SIGNAL(triggered(QAction*)), this, SLOT(handleMenuMeteringAction(QAction*)));
+    connect(ui.menuMetering, &QMenu::triggered, this, &MainWindow::handleMenuMeteringAction);
 
     QActionGroup *meteringActionGroup = new QActionGroup(this);
     meteringActionGroup->addAction(ui.actionShowPeaksOnly);
     meteringActionGroup->addAction(ui.actionShowRmsOnly);
     meteringActionGroup->addAction(ui.actionShowPeakAndRMS);
-
-    QActionGroup *viewModeActionGroup = new QActionGroup(this);
-    ui.actionFullView->setActionGroup(viewModeActionGroup);
-    ui.actionMiniView->setActionGroup(viewModeActionGroup);
 }
 
 void MainWindow::handleMenuMeteringAction(QAction *action)
@@ -1162,11 +1313,11 @@ void MainWindow::handleMenuMeteringAction(QAction *action)
         else if (action == ui.actionShowPeaksOnly){
             AudioMeter::paintPeaksOnly();
         }
-        else{ //RMS only
+        else{ // RMS only
             AudioMeter::paintRmsOnly();
         }
     }
-    quint8 meterOption = 0; //rms + peaks
+    quint8 meterOption = 0; // rms + peaks
     if (AudioMeter::isPaintingPeaksOnly())
         meterOption = 1;
     else if (AudioMeter::isPaintingRmsOnly())
@@ -1188,20 +1339,17 @@ void MainWindow::updateMeteringMenu()
     }
 }
 
-void MainWindow::changeViewMode()
-{
-    setFullViewStatus(ui.actionFullView->isChecked());
-}
-
 void MainWindow::updatePublicRoomsListLayout()
 {
     QList<Login::RoomInfo> roomInfos;
-    foreach (JamRoomViewPanel *roomView, roomViewPanels)
+
+    for (JamRoomViewPanel *roomView : roomViewPanels)
         roomInfos.append(roomView->getRoomInfo());
+
     refreshPublicRoomsList(roomInfos);
 }
 
-QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWindowSize) const
+QSize MainWindow::getSanitizedWindowSize(const QSize &size, const QSize &minimumSize) const
 {
     // fixing #343. If MainWindow::showFullScreen() is called after a setMinimumSize(), and the current
     // minimum size is less then desktop size the fullScreen is buggy because we are forcing an
@@ -1215,75 +1363,60 @@ QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWin
     if (topBarHeight == 0) // when the window is fullscreen the topBarHeight is zero (no title window).
         topBarHeight = frameGeometry().height() - geometry().height(); // geometry is the 'window client area', frameGeometry contain the window title bar area. http://doc.qt.io/qt-4.8/application-windows.html#window-geometry
 
-    int minimumWidth = qMin(prefferedMinimumWindowSize.width(), screenSize.width());
-    int minimumHeight
-        = qMin(prefferedMinimumWindowSize.height(), screenSize.height() - topBarHeight);
+    const int minimumWidth = minimumSize.width();
+    const int maximumWidth = screenSize.width();
+    const int minimumHeight = minimumSize.height();
+    const int maximumHeight = screenSize.height() - topBarHeight;
 
-    return QSize(minimumWidth, minimumHeight);
+    QSize finalSize(size);
+    if (finalSize.width() < minimumWidth)
+        finalSize.setWidth(minimumWidth);
+    else
+        if (finalSize.width() > maximumWidth)
+            finalSize.setWidth(maximumWidth);
+
+    if (finalSize.height() < minimumHeight)
+        finalSize.setHeight(minimumHeight);
+    else
+        if (finalSize.height() > maximumHeight)
+            finalSize.setHeight(maximumHeight);
+
+    return finalSize;
 }
 
-void MainWindow::setFullViewStatus(bool fullViewActivated)
+void MainWindow::initializeWindowSize()
 {
-    this->fullViewMode = fullViewActivated;
-    if (isRunningInMiniMode())
-        setMinimumSize(getSanitizedMinimumWindowSize(MINI_MODE_MIN_SIZE));
-    else // full view
-        setMinimumSize(getSanitizedMinimumWindowSize(FULL_VIEW_MODE_MIN_SIZE));
+    setMinimumSize(getMinimumWindowSize());
 
     if (!isMaximized() && !isFullScreen()) {
+        QSize lastSize = mainController->getSettings().getLastWindowSize();
+        QSize newSize = getSanitizedWindowSize(lastSize, minimumSize());
+        resize(newSize);
         showNormal();
-        resize(minimumSize());
     }
 
-    int tabLayoutMargim = 6;
-    ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
-                                     tabLayoutMargim);
-    ui.allRoomsContent->layout()->setSpacing(tabLayoutMargim);
+    const int spaces = 6;
+    ui.tabLayout->setContentsMargins(spaces, spaces, spaces, spaces);
+    ui.allRoomsContent->layout()->setSpacing(spaces);
 
-    // show only the peak meters if user is in mini mode and is not maximized or full screen
-    showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && !isMaximized() && !isFullScreen());
-
-    ui.chatTabWidget->setMinimumWidth(isRunningInFullViewMode() ? 280 : 180); // TODO Refactoring: remove these 'Magic Numbers'
-
-    // refresh the public rooms list
-    if (!mainController->isPlayingInNinjamRoom()) {
-        updatePublicRoomsListLayout();
-    } else {
-        if (ninjamWindow)
-            ninjamWindow->setFullViewStatus(isRunningInFullViewMode());
-    }
+    ui.chatTabWidget->setMinimumWidth(230); // TODO Refactoring: remove these 'Magic Numbers'
 
     // local tracks are narrowed in mini mode if user is using more than 1 subchannel
-    foreach (LocalTrackGroupView *localTrackGroup, localGroupChannels) {
-        if (isRunningInMiniMode()
-            && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1))
+    bool usingSmallWindow = width() < MAIN_WINDOW_MIN_SIZE.width();
+    for (LocalTrackGroupView *localTrackGroup : localGroupChannels) {
+        if (usingSmallWindow && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1))
             localTrackGroup->setToNarrow();
         else
             localTrackGroup->setToWide();
-
-        bool useSmallSpacing = isRunningInMiniMode();
-        localTrackGroup->useSmallSpacingInLayouts(useSmallSpacing);
     }
 
-    ui.actionFullView->setChecked(isRunningInFullViewMode());
-    ui.actionMiniView->setChecked(isRunningInMiniMode());
-
-    int margim = isRunningInFullViewMode() ? 6 : 2;
-    ui.bottomPanelLayout->setContentsMargins(margim, margim, margim, margim);
-    ui.bottomPanelLayout->setSpacing(isRunningInFullViewMode() ? 6 : 2);
-
     if (ninjamWindow) {
-        NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
-        if (ninjamPanel)
-            ninjamPanel->setFullViewStatus(isRunningInFullViewMode());
-
         ChatPanel *chatPanel = ninjamWindow->getChatPanel();
         if (chatPanel)
             chatPanel->updateMessagesGeometry();
     }
 }
 
-// +++++++++++++++++++++++++++
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
     if (event->type() == QEvent::Resize) {
@@ -1291,22 +1424,22 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             updateLocalInputChannelsGeometry();
             return true;
         }
-    } else {
-        if (target == ui.masterFader && event->type() == QEvent::MouseButtonDblClick) {
-            ui.masterFader->setValue(100);
-            return true;
+        else if (target == ui.contentTabWidget) {
+            updatePublicRoomsListLayout();
+            return false;
         }
     }
+
     return QMainWindow::eventFilter(target, event);
 }
 
 void MainWindow::resetLocalChannels()
 {
-    foreach (LocalTrackGroupView *localChannel, localGroupChannels)
+    for (LocalTrackGroupView *localChannel : localGroupChannels) {
         localChannel->resetTracks();
+    }
 }
 
-// ++++++++++++++++++++++++
 void MainWindow::setTransmitingStatus(int channelID, bool xmitStatus)
 {
     mainController->setTransmitingStatus(channelID, xmitStatus);
@@ -1317,29 +1450,30 @@ bool MainWindow::isTransmiting(int channelID) const
     return mainController->isTransmiting(channelID);
 }
 
-// ++++++++++++
-
 void MainWindow::showJamtabaCurrentVersion()
 {
     QString title = tr("About Jamtaba");
     QString text = tr("Jamtaba version is %1").arg(QApplication::applicationVersion());
-    QMessageBox::about(this, title, text);
+    QMessageBox *box = new QMessageBox();
+    box->setWindowIcon(this->windowIcon());
+    box->setWindowTitle(title);
+    box->setText(text);
+    box->deleteLater();
+    box->exec();
 }
 
-// ++++++++++++++++++
 void MainWindow::setMasterGain(int faderPosition)
 {
     float newGain = faderPosition/100.0;
     mainController->setMasterGain(newGain);
 }
 
-// ++++++++++++++++++=
 ChordsPanel *MainWindow::createChordsPanel()
 {
     ChordsPanel *chordsPanel = new ChordsPanel();
-    connect(chordsPanel, SIGNAL(sendingChordsToChat()), this,
-            SLOT(sendCurrentChordProgressionToChat()));
-    connect(chordsPanel, SIGNAL(chordsDiscarded()), this, SLOT(hideChordsPanel()));
+    connect(chordsPanel, &ChordsPanel::sendingChordsToChat, this, &MainWindow::sendCurrentChordProgressionToChat);
+    connect(chordsPanel, &ChordsPanel::chordsDiscarded, this, &MainWindow::hideChordsPanel);
+
     return chordsPanel;
 }
 
@@ -1351,6 +1485,7 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
             chordsPanel = createChordsPanel();
         else
             chordsPanel->setVisible(true);
+
         bool needStrech = progression.getBeatsPerInterval() != currentBpi;
         if (needStrech)
             chordsPanel->setChords(progression.getStretchedVersion(currentBpi));
@@ -1358,9 +1493,15 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
             chordsPanel->setChords(progression);
 
         // add the chord panel in top of bottom panel in main window
-        dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);
-        if (ninjamWindow)
-            ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(true);
+        QGridLayout *bottomLayout = dynamic_cast<QGridLayout *>(ui.bottomPanel->layout());
+        if (bottomLayout) {
+            bottomLayout->addWidget(chordsPanel, 0, 0, 1, 1);
+            if (ninjamWindow) {
+                NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
+                bottomLayout->addWidget(ninjamPanel, 1, 0, 1, 1, Qt::AlignCenter);
+                ninjamPanel->setLowContrastPaintInIntervalPanel(true);
+            }
+        }
 
         sendAcceptedChordProgressionToServer(progression);
 
@@ -1389,7 +1530,7 @@ void MainWindow::sendAcceptedChordProgressionToServer(const ChordProgression &pr
 
 void MainWindow::sendCurrentChordProgressionToChat()
 {
-    if (chordsPanel && mainController) {// just in case
+    if (chordsPanel && mainController) { // just in case
         ChordProgression chordProgression = chordsPanel->getChordProgression();
         mainController->getNinjamController()->sendChatMessage(chordProgression.toString());
     }
@@ -1408,13 +1549,14 @@ void MainWindow::hideChordsPanel()
         ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(false);
 }
 
-// ++++++
 // ninjam controller events
 void MainWindow::updateBpi(int bpi)
 {
     if (!ninjamWindow)
         return;
+
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
+
     if (!ninjamPanel)
         return;
 
@@ -1434,6 +1576,7 @@ void MainWindow::updateBpm(int bpm)
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
     if (!ninjamPanel)
         return;
+
     ninjamPanel->setBpm(bpm);
 }
 
@@ -1441,9 +1584,11 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
 {
     if (!ninjamWindow)
         return;
+
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
     if (!ninjamPanel)
         return;
+
     ninjamPanel->setCurrentBeat(beat);
 
     if (chordsPanel)
@@ -1452,11 +1597,9 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
 
 void MainWindow::setupWidgets()
 {
-    ui.masterMeterL->setOrientation(Qt::Horizontal);
-    ui.masterMeterR->setOrientation(Qt::Horizontal);
-    ui.masterFader->installEventFilter(this);// handle double click in master fader
+    ui.masterMeter->setOrientation(Qt::Horizontal);
 
-    setChatVisibility(false);// hide chat area until connect in a server to play
+    setChatVisibility(false); // hide chat area until connect in a server to play
 
     if (ui.allRoomsContent->layout())
         delete ui.allRoomsContent->layout();
@@ -1467,67 +1610,69 @@ void MainWindow::setupWidgets()
     ui.localTracksWidget->installEventFilter(this);
 
     QString lastUserName = mainController->getUserName();
+
     if (!lastUserName.isEmpty())
         ui.userNameLineEdit->setText(lastUserName);
 }
 
 void MainWindow::setupSignals()
 {
-    connect(ui.menuPreferences, SIGNAL(triggered(QAction *)), this,
-            SLOT(openPreferencesDialog(QAction *)));
+    connect(ui.menuPreferences, &QMenu::triggered, this, &MainWindow::openPreferencesDialog);
 
-    connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this,
-            SLOT(showNinjamCommunityWebPage()));
+    connect(ui.actionNinjam_community_forum, &QAction::triggered, this, &MainWindow::showNinjamCommunityWebPage);
 
-    connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this,
-            SLOT(showNinjamOfficialWebPage()));
+    connect(ui.actionNinjam_Official_Site, &QAction::triggered, this, &MainWindow::showNinjamOfficialWebPage);
 
-    connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this,
-            SLOT(showPrivateServerDialog()));
+    connect(ui.actionPrivate_Server, &QAction::triggered, this, &MainWindow::showPrivateServerDialog);
 
-    connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this,
-            SLOT(showJamtabaIssuesWebPage()));
+    connect(ui.actionReportBugs, &QAction::triggered, this, &MainWindow::showJamtabaIssuesWebPage);
 
-    connect(ui.actionWiki, SIGNAL(triggered(bool)), this,
-            SLOT(showJamtabaWikiWebPage()));
+    connect(ui.actionWiki, &QAction::triggered, this, &MainWindow::showJamtabaWikiWebPage);
 
-    connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this,
-            SLOT(showJamtabaUsersManual()));
+    connect(ui.actionUsersManual, &QAction::triggered, this, &MainWindow::showJamtabaUsersManual);
 
-    connect(ui.actionTranslators, SIGNAL(triggered(bool)), this, SLOT(showJamtabaTranslators()));
+    connect(ui.actionTranslators, &QAction::triggered, this, &MainWindow::showJamtabaTranslators);
 
-    connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this,
-            SLOT(showJamtabaCurrentVersion()));
+    connect(ui.actionCurrentVersion, &QAction::triggered, this, &MainWindow::showJamtabaCurrentVersion);
 
-    connect(ui.localControlsCollapseButton, SIGNAL(clicked()), this,
-            SLOT(toggleLocalInputsCollapseStatus()));
+    connect(ui.localControlsCollapseButton, &QPushButton::clicked, this, &MainWindow::toggleLocalInputsCollapseStatus);
 
-    connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
-            SLOT(handlePublicRoomStreamError(QString)));
+    connect(mainController->getRoomStreamer(), &AbstractMp3Streamer::error, this, &MainWindow::handlePublicRoomStreamError);
 
-    connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
-            SLOT(setMasterGain(int)));
+    connect(ui.masterFader, &Slider::valueChanged, this, &MainWindow::setMasterGain);
 
-    connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+    connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::close);
 
-    connect(ui.menuLanguage, SIGNAL(triggered(QAction *)), this, SLOT(setLanguage(QAction *)));
+    connect(ui.menuLanguage, &QMenu::triggered, this, &MainWindow::setLanguage);
 
-    connect(ui.userNameLineEdit, SIGNAL(editingFinished()), this, SLOT(updateUserName()));
+    connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);
 
-    connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::updateNightModeInWorldMaps);
+    connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::handleThemeChanged);
+
+    ui.contentTabWidget->installEventFilter(this);
 }
 
 void MainWindow::updateUserName()
 {
     QString newUserName = ui.userNameLineEdit->text();
-    qDebug() << "Setting user name to:" << newUserName;
     mainController->setUserName(newUserName);
 }
 
 void MainWindow::initializeMasterFader()
 {
+    ui.masterFader->setSliderType(Slider::AudioSlider);
+
     float lastMasterGain = mainController->getSettings().getLastMasterGain();
     int faderPosition = lastMasterGain * 100;
     ui.masterFader->setValue(faderPosition);
     setMasterGain(faderPosition);
+}
+
+void MainWindow::closeAllFloatingWindows()
+{
+    if (mainController->isPlayingInNinjamRoom() && ninjamWindow) {
+        ninjamWindow->closeMetronomeFloatingWindow();
+    }
+
+    closeAllLooperWindows();
 }

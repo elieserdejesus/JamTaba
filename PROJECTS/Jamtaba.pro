@@ -2,6 +2,10 @@ TEMPLATE = subdirs
 
 SUBDIRS += VstScanner
 
+mac {
+    SUBDIRS += AUScanner
+}
+
 SUBDIRS += Standalone
 
 include(../translations/translations.pri)

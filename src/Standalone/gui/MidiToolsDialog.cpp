@@ -4,7 +4,7 @@
 
 #include "LocalTrackViewStandalone.h"
 
-MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higherNote, qint8 transpose) :
+MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higherNote, qint8 transpose, bool routingMidiInput) :
     QDialog(nullptr),
     ui(new Ui::MidiToolsDialog)
 {
@@ -30,6 +30,14 @@ MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higher
     ui->spinBoxTranspose->setMaximum(24);
     ui->spinBoxTranspose->setMinimum(-24);
     connect(ui->spinBoxTranspose, SIGNAL(valueChanged(int)), SLOT(transposeValueChanged(int)));
+
+    ui->checkBoxMidiRouting->setChecked(routingMidiInput);
+    connect(ui->checkBoxMidiRouting, &QCheckBox::toggled, this, &MidiToolsDialog::midiRoutingCheckBoxClicked);
+}
+
+void MidiToolsDialog::hideMidiRoutingControls()
+{
+    ui->checkBoxMidiRouting->hide();
 }
 
 MidiToolsDialog::~MidiToolsDialog()

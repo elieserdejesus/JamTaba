@@ -7,11 +7,12 @@ ServerMessagesHandler::ServerMessagesHandler(Service *service) :
     service(service),
     device(nullptr)
 {
+    //
 }
 
 ServerMessagesHandler::~ServerMessagesHandler()
 {
-
+    //
 }
 
 void ServerMessagesHandler::initialize(QIODevice *device)
@@ -26,18 +27,18 @@ void ServerMessagesHandler::initialize(QIODevice *device)
 void ServerMessagesHandler::handleAllMessages()
 {
     Q_ASSERT(device);
-    while (device->bytesAvailable() >= 5) {// consume all messages. Every ninjam message contains a 5 bytes header.
+    while (device->bytesAvailable() >= 5) { // consume all messages. Every ninjam message contains a 5 bytes header.
         if (!currentHeader)
             currentHeader.reset(extractNextMessageHeader());
 
-        if (!currentHeader)// just to avoid the possibility of a null header
+        if (!currentHeader) // just to avoid the possibility of a null header
             return;
 
         bool successfullyProcessed = executeMessageHandler(currentHeader.data());
         if (successfullyProcessed)
             currentHeader.reset(); // a new header will be readed from socket in the next loop iteration
         else
-            break;// an incomplete message was founded, break and wait until receive more bytes. The currentHeader will be used in the next iteration.
+            break; // an incomplete message was founded, break and wait until receive more bytes. The currentHeader will be used in the next iteration.
     }
 }
 
@@ -86,5 +87,6 @@ QDataStream &Ninjam::operator >>(QDataStream &stream, MessageHeader *header)
 {
     if (header)
         stream >> header->messageTypeCode >> header->payload;
+
     return stream;
 }

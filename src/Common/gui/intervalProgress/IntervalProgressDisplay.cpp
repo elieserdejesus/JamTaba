@@ -14,8 +14,8 @@ const QColor IntervalProgressDisplay::DEFAULT_SECONDARY_BEATS_COLOR = Qt::gray;
 const QColor IntervalProgressDisplay::DEFAULT_DISABLED_BEATS_COLOR = QColor(0, 0, 0, 15);
 const QColor IntervalProgressDisplay::DEFAULT_LINES_COLOR = Qt::gray;
 
-IntervalProgressDisplay::PaintStrategy::PaintStrategy()
-    :font("Verdana")
+IntervalProgressDisplay::PaintStrategy::PaintStrategy() :
+    font("Verdana")
 {
     font.setStretch(QFont::SemiCondensed);
 }
@@ -24,7 +24,7 @@ IntervalProgressDisplay::PaintStrategy::~PaintStrategy()
 {
 
 }
-// ++++++++++++++++++++++++++++++++++++++++++++++++++
+
 IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     QFrame(parent),
     paintMode(PaintShape::LINEAR),
@@ -39,8 +39,6 @@ IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     currentBeatColor(DEFAULT_CURRENT_BEAT_COLOR)
 
 {
-    //setAttribute(Qt::WA_NoBackground);
-
     setBeatsPerInterval(32);
 
     setShowAccents(false);
@@ -76,8 +74,10 @@ void IntervalProgressDisplay::setCurrentBeat(int beat)
 void IntervalProgressDisplay::setBeatsPerAccent(int beats)
 {
     beatsPerAccent = beats;
+
     if (!isShowingAccents() && beatsPerAccent > 1)
         this->showAccents = true;
+
     update();
 }
 
@@ -132,13 +132,11 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
 qreal IntervalProgressDisplay::getFontSize(PaintShape paintMode) const
 {
     qreal baseFontSize = 8.0;
-    int size;
-    switch (paintMode) {
-        case PaintShape::LINEAR:     return qMax(baseFontSize, width() * 0.015);
-        case PaintShape::CIRCULAR:
-        case PaintShape::ELLIPTICAL:
-        case PaintShape::PIE:        size = qMin(width(), height()); break;
-    }
+
+    int size = qMax(baseFontSize, width() * 0.015);
+    if (paintMode == PaintShape::PIE)
+        size = qMin(width(), height());
+
     return qMax(baseFontSize, size * 0.05);
 }
 
@@ -146,27 +144,32 @@ qreal IntervalProgressDisplay::getFontSize(PaintShape paintMode) const
 qreal IntervalProgressDisplay::getElementsSize(PaintShape paintMode) const
 {
     switch (paintMode) {
-    case PaintShape::LINEAR: return qMax(width() * 0.04, 22.5);
-    case PaintShape::CIRCULAR:
-    case PaintShape::ELLIPTICAL:
-    {
-        int minSize = qMin(width(), height());
-        return qMax(minSize * 0.035, 7.0);
-    }
-    case PaintShape::PIE:
-    {
-        int minSize = qMin(width(), height());
-        return qMax(minSize * 0.1, 8.0);
-    }
+        case PaintShape::LINEAR: return qMax(width() * 0.04, 22.5);
+        case PaintShape::CIRCULAR:
+        case PaintShape::ELLIPTICAL:
+        {
+            int minSize = qMin(width(), height());
+            return qMax(minSize * 0.035, 7.0);
+        }
+        case PaintShape::PIE:
+        {
+            int minSize = qMin(width(), height());
+            return qMax(minSize * 0.1, 8.0);
+        }
     }
     return 0;
 }
 
 void IntervalProgressDisplay::resizeEvent(QResizeEvent *e)
 {
-    if (baseSize.isEmpty()){
+    if (baseSize.isEmpty()) {
         baseSize = e->size();
     }
+}
+
+QSize IntervalProgressDisplay::sizeHint() const
+{
+    return minimumSizeHint();
 }
 
 QSize IntervalProgressDisplay::minimumSizeHint() const
@@ -189,8 +192,8 @@ QSize IntervalProgressDisplay::minimumSizeHint() const
 }
 
 IntervalProgressDisplay::PaintContext::PaintContext(int width, int height, int beatsPerInterval, int currentBeat,
-                                                    bool drawAccents, int beatsPerAccent, qreal elementsSize, qreal fontSize)
-    : width(width),
+                                                    bool drawAccents, int beatsPerAccent, qreal elementsSize, qreal fontSize) :
+      width(width),
       height(height),
       beatsPerInterval(beatsPerInterval),
       currentBeat(currentBeat),
@@ -204,9 +207,9 @@ IntervalProgressDisplay::PaintContext::PaintContext(int width, int height, int b
 
 IntervalProgressDisplay::PaintColors::PaintColors(const QColor &currentBeat,
             const QColor &secondaryBeat, const QColor &accentBeat, const QColor &currentAccentBeat, const QColor &disabledBeats,
-                                                              const QBrush &textColor, QColor linesColor)
+                                                              const QBrush &textColor, QColor linesColor) :
 
-    : currentBeat(currentBeat),
+      currentBeat(currentBeat),
       secondaryBeat(secondaryBeat),
       accentBeat(accentBeat),
       currentAccentBeat(currentAccentBeat),

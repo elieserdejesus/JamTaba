@@ -25,3 +25,37 @@ JamRoomViewPanel #content
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
 }
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 white,
+        stop:0.2 rgba(255, 255, 255, 180),
+        stop:0.85 rgba(255, 255, 255, 180),
+        stop:1 rgba(255,255, 255, 40));
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:checked
+{
+    background-color: rgba(0, 0, 0, 35);
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover
+{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(240, 240, 240),
+    stop:0.2 rgb(255, 255, 255),
+    stop:0.7 rgb(240, 240, 240),
+    stop:1 rgb(210,210, 210)
+);
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover:checked
+{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(180, 180, 180),
+    stop:0.2 rgb(195, 195, 195),
+    stop:0.7 rgb(180, 180, 180),
+    stop:1 rgb(150, 150, 150)
+);
+}

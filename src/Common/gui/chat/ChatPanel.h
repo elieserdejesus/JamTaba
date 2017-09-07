@@ -8,6 +8,7 @@
 #include <QTimer>
 #include "chords/ChordProgression.h"
 #include "UsersColorsPool.h"
+#include "TextEditorModifier.h"
 
 namespace Ui {
 class ChatPanel;
@@ -20,7 +21,7 @@ class ChatPanel : public QWidget
     Q_OBJECT
 
 public:
-    ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool);
+    ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *textEditorModifier);
     virtual ~ChatPanel();
     void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
     void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));
@@ -28,7 +29,7 @@ public:
     void addBpiVoteConfirmationMessage(quint32 newBpiValue, quint32 expireTime);
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);
     void setPreferredTranslationLanguage(const QString &targetLanguage);
-    void updateMessagesGeometry();// called when user switch from mini mode to full view
+    void updateMessagesGeometry(); // called when user switch from mini mode to full view
     void removeMessagesFrom(const QString &userName);
 
 signals:
@@ -51,7 +52,6 @@ private slots:
     void hideTranslationProgressFeedback();
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
     void changeEvent(QEvent *) override;
 
 private:
@@ -62,6 +62,8 @@ private:
 
     static const int MAX_MESSAGES = 50;
 
+    int previousVerticalScrollBarMaxValue;
+
     QString autoTranslationLanguage;
 
     void createVoteButton(const QString &voteType, quint32 value, quint32 expireTime);
@@ -71,6 +73,7 @@ private:
     void addMessagePanelInLayout(ChatMessagePanel *msgPanel);
 
     UsersColorsPool *colorsPool;
+
 };
 
 class NinjamVoteButton : public QPushButton
@@ -109,6 +112,8 @@ private:
     quint32 voteValue;
     QString voteType;
 };
+
+
 
 class ChordProgressionConfirmationButton : public QPushButton
 {

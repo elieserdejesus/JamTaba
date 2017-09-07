@@ -5,7 +5,8 @@
 namespace Audio{
 
 PortAudioDriver::PortAudioDriver(Controller::MainController* mainController, int deviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
-    :AudioDriver(mainController)
+    :AudioDriver(mainController),
+      useSystemDefaultDevices(false)
 {
     globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
     globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);

@@ -7,7 +7,7 @@
 
 NinjamRoomWindow #labelBpmBpi                                /* label used to show current bpi and bpm values inside ninjam room window */
 {
-    color: rgba(0, 0, 0, 100);
+    color: black;
     font-size: 9px;
 }
 
@@ -74,7 +74,7 @@ NinjamPanel #intervalPanel                  /* The widget used to show ninjam co
 
 #panelCombos QLabel             /* The labels in left side of comboboxes (bpi, bpm, accents and shape) */
 {
-    color: black;
+    color: rgba(0, 0, 0, 170);
 }
 
 #panelCombos QComboBox::down-arrow
@@ -182,20 +182,41 @@ NinjamTrackView
 
 NinjamTrackView #soloButton,
 NinjamTrackView #muteButton,
-NinjamTrackView #lowCutButton
+NinjamTrackView #lowCutButton,
+NinjamTrackView #receiveButton
 {
    border-color: rgb(95,95,95);
    color: rgb(40,40,40);
 }
 
-NinjamTrackView #lowCutButton
+NinjamTrackView #lowCutButton,
+NinjamTrackView #receiveButton
 {
     max-width: 8px;
     max-height: 8px;
-    background-image: url(':/images/low_cut.png');
     background-position: center center;
     background-repeat: none;
     border-style: inset;
+}
+
+NinjamTrackView #receiveButton::hover
+{
+    border-style: solid;
+}
+
+NinjamTrackView #lowCutButton[state="0"]
+{
+   background-image: url(':/images/low_cut_off.png');
+}
+
+NinjamTrackView #lowCutButton[state="1"]
+{
+   background-image: url(':/images/low_cut_normal.png');
+}
+
+NinjamTrackView #lowCutButton[state="2"]
+{
+   background-image: url(':/images/low_cut_drastic.png');
 }
 
 NinjamTrackView #lowCutButton::hover
@@ -204,7 +225,14 @@ NinjamTrackView #lowCutButton::hover
     border-color: rgb(80, 80, 80);
 }
 
-NinjamTrackView[horizontal="true"] #lowCutButton
+NinjamTrackView[horizontal="false"] #lowCutButton,
+NinjamTrackView[horizontal="false"] #receiveButton
+{
+    min-height: 8px;
+}
+
+NinjamTrackView[horizontal="true"] #lowCutButton,
+NinjamTrackView[horizontal="true"] #receiveButton
 {
     max-height: 6px;
 }
@@ -214,9 +242,14 @@ NinjamTrackView QPushButton#lowCutButton:!checked
     border-style: outset;
 }
 
-NinjamTrackView #peaksDbLabel               /* the label used to show max peak (in bottom of peak meters) */
+NinjamTrackView QPushButton#receiveButton:!checked
 {
-    border: 1px solid rgba(0, 0, 0, 8);
+    background-color:red;
+}
+
+NinjamTrackView QPushButton#receiveButton
+{
+    background-image: url(':/images/receive.png');
 }
 
 
@@ -235,8 +268,6 @@ NinjamTrackView[horizontal="true"] #muteButton
     padding-bottom: 0px;
 }
 
-
-
 /* Ninjam track groups
 ------------------------*/
 
@@ -247,6 +278,7 @@ NinjamTrackGroupView #groupNameField        /* User name field in ninjam tracks 
     margin-bottom: 3px;
     margin-top: 3px;
     padding: 3px;
+    qproperty-alignment: AlignCenter;
 }
 
 NinjamTrackGroupView #countryLabel          /* country name in ninjam tracks */
@@ -254,6 +286,12 @@ NinjamTrackGroupView #countryLabel          /* country name in ninjam tracks */
     color: rgba(0, 0, 0, 180);
     qproperty-alignment: AlignCenter;
     font-size: 9px;
+}
+
+NinjamTrackView  #channelName
+{
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
 }
 
 IntervalProgressDisplay
@@ -264,4 +302,32 @@ IntervalProgressDisplay
     qproperty-secondaryBeatsColor: gray;
     qproperty-disabledBeatsColor: rgba(0, 0, 0, 15);
     qproperty-linesColor: rgba(0, 0, 0, 40);
+}
+
+LooperWindow
+{
+    font-size: 18pt; /* size of 'wait' text in LooperWindow */
+}
+
+LooperWindow #layersWidget
+{
+    background-color: rgba(0, 0, 0, 10);
+}
+
+LooperWindow #buttonPlay:checked
+{
+    background-color: rgb(0, 195, 0);
+}
+
+
+LooperWindow #buttonRec:checked
+{
+    background-color: rgb(255, 0, 0);
+}
+
+LooperWindow #muteButton:disabled
+{
+    background: none;
+    color: rgba(0, 0, 0, 30);
+    border-color: rgba(0, 0, 0, 40);
 }

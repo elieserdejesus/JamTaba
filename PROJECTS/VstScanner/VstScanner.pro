@@ -1,4 +1,4 @@
-QT += core widgets
+QT += core
 QT -= gui
 
 TARGET = VstScanner
@@ -10,12 +10,17 @@ linux{
     DEFINES += __cdecl="" #avoid tons of errors in VST_SDK in linux
 }
 
-#when debugging the VstScanner executable is generated in the Standalone folder
-CONFIG(debug, debug|release){
-    macx: DESTDIR = $$OUT_PWD/../Standalone/Jamtaba2.app/Contents/MacOS
-    !macx:DESTDIR = $$OUT_PWD/../Standalone/debug
-    message("Generating VstScanner executable in" $$DESTDIR)
+# the VstScanner executable is generated in the Standalone folder
+macx:DESTDIR = $$OUT_PWD/../Standalone/Jamtaba2.app/Contents/MacOS
+linux:DESTDIR = $$OUT_PWD/../Standalone
+win32{
+    CONFIG(debug, debug|release) {
+        DESTDIR = $$OUT_PWD/../Standalone/debug
+    } else {
+        DESTDIR = $$OUT_PWD/../Standalone/release
+    }
 }
+message("Generating VstScanner executable in" $$DESTDIR)
 
 TEMPLATE = app
 
@@ -23,27 +28,32 @@ ROOT_PATH = "../.."
 SOURCE_PATH = $$ROOT_PATH/src
 
 INCLUDEPATH += $$SOURCE_PATH/Common
-INCLUDEPATH += $$SOURCE_PATH/VstScanner
+INCLUDEPATH += $$SOURCE_PATH/Scanners
 INCLUDEPATH += $$ROOT_PATH/VST_SDK/pluginterfaces/vst2.x
 
 VPATH       += $$SOURCE_PATH/Common
-VPATH       += $$SOURCE_PATH/VstScanner
+VPATH       += $$SOURCE_PATH/Scanners
 
 HEADERS += vst/VstHost.h
-HEADERS += VstPluginScanner.h
+HEADERS += vst/Utils.h
+HEADERS += VstScanner/VstPluginScanner.h
+HEADERS += BaseScanner.h
 
-SOURCES += main.cpp
+SOURCES += VstScanner/main.cpp
+SOURCES += BaseScanner.cpp
+SOURCES += VstScanner/VstPluginScanner.cpp
 SOURCES += vst/VstHost.cpp
 SOURCES += vst/VstLoader.cpp
+SOURCES += vst/Utils.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
 SOURCES += midi/MidiMessage.cpp
 SOURCES += log/logging.cpp
-SOURCES += VstPluginScanner.cpp
+
 
 #including the correct implementation for VstPluginChecker
 INCLUDEPATH += $$SOURCE_PATH/Standalone/vst #to allow a simple '#include "VstPluginChecker.h"' in the code
 win32:SOURCES += $$SOURCE_PATH/Standalone/vst/WindowsVstPluginChecker.cpp
-macx:SOURCES  += $$SOURCE_PATH/Standalone/vst/MacVstPluginChecker.cpp
+macx:OBJECTIVE_SOURCES  += $$SOURCE_PATH/Standalone/vst/MacVstPluginChecker.mm
 linux:SOURCES += $$SOURCE_PATH/Standalone/vst/LinuxVstPluginChecker.cpp
 
 win32{
@@ -69,6 +79,7 @@ macx{
     message("VstScanner Mac build")
 
     QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
+    LIBS+= -dead_strip
 
     #mac osx doc icon
     ICON = Jamtaba.icns

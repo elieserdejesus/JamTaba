@@ -1,0 +1,348 @@
+/* General stylesheet for Black theme
+-------------------------------------*/
+
+/* Button ----------------------*/
+QPushButton
+{
+    color: rgb(20, 20, 20);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
+    border: 1px outset rgb(20, 20, 20);
+    border: 1px solid black;
+}
+
+QPushButton:checked
+{
+    color: rgba(0, 0, 0, 160);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
+    border: 1px outset rgb(10, 10, 10);
+}
+
+QPushButton:hover
+{
+    color: rgb(40, 40, 40);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+    border: 1px outset rgb(20, 20, 20);
+}
+
+QPushButton:hover:checked
+{
+    color: rgba(0, 0, 0, 160);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
+    border: 1px outset rgb(10, 10, 10);
+}
+
+QPushButton:disabled
+{
+    background-color: rgba(0, 0, 0, 40);
+    color: rgba(0, 0, 0, 100);
+    border-color: rgba(0, 0, 0, 20);
+}
+
+/* Scroll bars ----------------------*/
+QScrollBar:vertical,
+QScrollBar:horizontal
+{
+    border: none;
+    background-color: rgba(0, 0, 0, 40);
+    margin: 0px;
+}
+
+QScrollBar:vertical
+{
+    width: 14px;
+    margin-left: 6px;
+}
+
+QScrollBar:horizontal
+{
+    height: 14px;
+    margin-top: 6px;
+}
+
+QScrollBar::handle:horizontal
+{
+    background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0,
+        stop:0 rgba(120, 126, 118, 80),
+        stop:0.47 rgba(91, 91, 91, 80),
+        stop:0.49 rgba(81, 75, 77, 80),
+        stop:0.92 rgba(142, 140, 140, 80));
+
+    max-height: 20px;
+    height: 20px;
+}
+
+QScrollBar::handle:horizontal:hover
+{
+    background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0,
+        stop:0 rgba(140, 146, 138, 200),
+        stop:0.47 rgba(121, 121, 121, 200),
+        stop:0.49 rgba(111, 95, 97, 200),
+        stop:0.92 rgba(172, 170, 170, 200)
+    );
+}
+
+
+QScrollBar::handle:vertical
+{
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+        stop:0.92 rgba(120, 126, 118, 80),
+        stop:0.49 rgba(91, 91, 91, 80),
+        stop:0.47 rgba(81, 75, 77, 80),
+        stop:0 rgba(142, 140, 140, 80));
+
+    max-width: 20px;
+    width: 20px;
+}
+
+QScrollBar::handle:vertical:hover
+{
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+        stop:0.92 rgba(140, 146, 138, 200),
+        stop:0.49 rgba(121, 121, 121, 200),
+        stop:0.47 rgba(111, 95, 97, 200),
+        stop:0 rgba(172, 170, 170, 200));
+}
+
+QScrollBar::handle:vertical
+{
+  max-height: 20px;
+  height: 20px;
+}
+
+QScrollBar::handle:horizontal
+{
+  max-width: 20px;
+  width: 20px;
+}
+
+QScrollBar::add-line:vertical
+{
+  border: none;
+  height: 10px;
+  subcontrol-position: bottom;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::add-line:horizontal
+{
+  border: none;
+  width: 10px;
+  subcontrol-position: left;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical
+{
+  border: none;
+  height: 10px;
+  subcontrol-position: top;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:horizontal
+{
+  border: none;
+  width: 10px;
+  subcontrol-position: right;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal
+{
+  background: none;
+}
+
+
+
+/* Text fields (QLineEdit class) used in user name, channel name, etc.
+-----------------------------------------------------------------------*/
+QLineEdit
+{
+    background-color: rgb(100, 100, 100);
+    border-color: rgba(0, 0, 0, 45);
+    color: rgb(60, 60, 60);
+}
+
+QLineEdit:focus
+{
+    background-color: rgb(80, 80, 80);
+    color: rgb(180, 180, 180);
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(140, 140, 140);
+}
+
+QLineEdit#groupNameField:focus, #userNameLineEdit:focus
+{
+    color: rgb(200, 200, 200);
+    selection-background-color: rgb(120, 120, 120);
+    selection-color: rgb(40, 40, 40);
+}
+
+QLineEdit#groupNameField-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1 y2:0,
+         stop: 0.1 rgb(47, 47, 47),
+         stop: 0.5 rgb(85, 85, 85),
+         stop: 1.0 rgb(47, 47, 47));
+}
+
+#userNameLineEdit-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1 y2:0,
+         stop: 0.1 rgb(55, 55, 55),
+         stop: 0.5 rgb(85, 85, 85),
+         stop: 1.0 rgb(55, 55, 55));
+    border: none;
+}
+
+QLineEdit#chatText-topLevel
+{
+    color: black;
+    border-color: rgba(0, 0, 0, 160);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(140, 140, 140),
+        stop: 0.3 rgb(180, 180, 180),
+        stop: 0.7 rgb(180, 180, 180),
+        stop: 1.0 rgb(140, 140, 140));
+}
+
+
+/*  SLIDERs ++++++++++++++++++++++++++++++++ */
+
+QSlider::groove:vertical
+{
+    border: none;
+}
+
+QSlider::groove:horizontal
+{
+    background-color: rgba(0, 0, 0, 50);
+    height: 2px;
+    border: none;
+}
+QSlider::groove:vertical
+{
+    background-color: rgba(0, 0, 0, 50);
+    width: 2px;
+}
+
+QSlider::handle:horizontal
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
+    border: 1px outset rgb(10, 10, 10);
+    border-radius: 2px;
+    margin-top: -8px;
+    margin-bottom: -7px;
+    padding: 0px;
+    width: 8px;
+    height: 15px;
+}
+
+QSlider::handle:vertical
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+    border: 1px outset rgb(30, 30, 30);
+    border-radius: 2px;
+    margin-left: -9px;
+    margin-right: -9px;
+    padding: 0px;
+    height: 9px;
+    width: 24px;
+}
+
+QSlider::handle:horizontal:hover
+{
+    background-color: rgb(140, 140, 140);
+}
+
+QSlider::handle:vertical:hover
+{
+    background-color: rgb(140, 140, 140);
+}
+
+
+
+/* TabBar ----------------------*/
+QTabBar::tab
+{
+    background-color: rgb(200, 200, 200);
+}
+
+QTabBar::tab:selected
+{
+    color: rgb(140, 140,140);
+    background-color: rgb(20, 20, 20);
+}
+
+QTabBar::tab:!selected
+{
+    margin-top: 3px; /* make non-selected tabs look smaller */
+    color: rgb(140, 140,140);
+    background-color: rgb(10, 10, 10);
+}
+
+QTabBar::tab:!selected:hover
+{
+    background-color: rgb(30, 30, 30);
+}
+
+QMenuBar::item
+{
+    color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(50, 50, 50), stop:1 rgb(30, 30, 30));
+}
+
+QMenuBar::item:selected { /* hover effect for menu bar items */
+
+    color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(70, 70, 70), stop:1 rgb(30, 30, 30));
+    border: 1px outset rgb(35, 35, 35);
+
+}
+
+QMenuBar::item:pressed { /* 'button pressed' item style */
+
+    color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(70, 70, 70), stop:1 rgb(30, 30, 30));
+    border: 1px inset rgb(35, 35, 35);
+
+}
+
+QMenuBar
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(50, 50, 50), stop:1 rgb(30, 30, 30));
+    border-bottom: none;
+    border-top: 1px solid rgb(100, 100, 100);
+    border-left: 1px solid rgb(100, 100, 100);
+    border-right: 1px solid rgb(100, 100, 100);
+}
+
+QMenu
+{
+    border: 1px outset rgb(20, 20, 20);
+    color: rgb(140, 140, 140);
+    background-color: rgb(60, 60, 60);
+}
+
+QMenu::item::enabled:selected
+{
+    background-color: rgb(45, 45, 45);
+    color: black; /* fix to issue #500 */
+}
+
+QTabWidget::pane
+{
+    background-color: transparent;
+}
+
+
+
+AudioMeter
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(110, 110, 110);
+    qproperty-maxPeakColor: rgb(110, 110, 110);
+}
