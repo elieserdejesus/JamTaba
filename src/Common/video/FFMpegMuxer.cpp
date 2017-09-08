@@ -121,7 +121,7 @@ void FFMpegMuxer::encodeInBackground()
         QImage image = imagesToEncode.takeFirst();
         mutex.unlock();
 
-        if (encodeVideo)
+        if (encodeVideo && !image.isNull())
             encodeVideo = !doEncodeVideoFrame(image.copy());
 
     }
