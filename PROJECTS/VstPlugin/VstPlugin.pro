@@ -97,7 +97,7 @@ win32 {
     #release platform libs
     CONFIG(release, debug|release): LIBS += -lQt5PlatformSupport
     CONFIG(release, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
-    CONFIG(debug, debug|release):   LIBS += -L$(QTDIR)\plugins\mediaservice\ -ldsengine # necessary to use QCamera
+    CONFIG(release, debug|release):   LIBS += -L$(QTDIR)\plugins\mediaservice\ -ldsengine # necessary to use QCamera
 
     #debug platform libs
     CONFIG(debug, debug|release): LIBS += -lQt5PlatformSupportd #link windows platform statically

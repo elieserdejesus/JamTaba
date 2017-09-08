@@ -766,6 +766,15 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
     if (!videoStream)
         return false;
 
+    if (!videoStream->stream)
+        return false;
+
+    if (!videoStream->stream->codec)
+        return false;
+
+    if (!videoStream->frame)
+        return false;
+
     AVCodecContext *codecContext = videoStream->stream->codec;
 
     if(avcodec_is_open(codecContext) <= 0) {
@@ -775,10 +784,6 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
 
     int gotPacket = 0;
     AVPacket packet = { 0 };
-
-    Q_ASSERT(videoStream->stream);
-    Q_ASSERT(videoStream->stream->codec);
-    Q_ASSERT(videoStream->frame);
 
     fillFrameWithImageData(image);
 
