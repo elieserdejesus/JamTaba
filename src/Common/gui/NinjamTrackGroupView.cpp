@@ -65,9 +65,10 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
 
     videoWidget = new VideoWidget(this);
     videoWidget->setVisible(false); // video preview will be visible when the first received frame is decoded
-    mainLayout->addSpacing(3);
-    mainLayout->addWidget(videoWidget, 0, Qt::AlignCenter);
-    mainLayout->addSpacing(3);
+    QHBoxLayout *videoWidgetLayout = new QHBoxLayout();
+    videoWidgetLayout->addWidget(videoWidget, 0, Qt::AlignCenter);
+    videoWidgetLayout->setContentsMargins(3, 3, 3, 3);
+    mainLayout->addLayout(videoWidgetLayout);
 
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
