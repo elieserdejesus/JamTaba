@@ -30,6 +30,9 @@ void FFMpegDemuxer::close()
     if (formatContext) {
         avformat_close_input(&formatContext);
         formatContext = nullptr;
+        avioContext = nullptr;
+        codecContext = nullptr;
+        swsContext = nullptr;
     }
 
     if (frame) {
@@ -214,17 +217,20 @@ QImage FFMpegDemuxer::decodeNextFrame()
 
     /* read frames from the file */
     int gotFrame;
+    bool gotError = false;
     while (av_read_frame(formatContext, &packet) >= 0) {
         int ret = avcodec_decode_video2(codecContext, frame, &gotFrame, &packet);
         av_free_packet(&packet);
-        bool gotError = ret < 0;
+        gotError = ret < 0;
         if (gotError || gotFrame) {
             if (gotError)
                 qCritical() << av_err2str(ret);
-
             break;
         }
     }
+
+    if (gotError)
+        return QImage();
 
     if (gotFrame) {
         // Convert the image format (init the context the first time)
@@ -232,6 +238,10 @@ QImage FFMpegDemuxer::decodeNextFrame()
         int height = codecContext->height;
         AVPixelFormat sourcePixelFormat = codecContext->pix_fmt;
         AVPixelFormat destinationPixelFormat = AV_PIX_FMT_RGB24;
+
+        if (!frame->width || !frame->height) // 0 size images are skipped
+            return QImage();
+
         swsContext = sws_getCachedContext(swsContext, width, height, sourcePixelFormat, width, height, destinationPixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
 
         if(!swsContext){
