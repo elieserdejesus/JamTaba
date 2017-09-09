@@ -33,7 +33,9 @@ public:
     void stop(bool emitDisconnectedSignal);
     bool isRunning() const;
 
-    void setMetronomeBeatsPerAccent(int beatsPerAccent);
+    void setMetronomeBeatsPerAccent(int beatsPerAccent, int currentBpi);
+    void setMetronomeAccentBeats(QList<int> accentBeats);
+    QList<int> getMetronomeAccentBeats();
 
     int getCurrentBpi() const;
     int getCurrentBpm() const;

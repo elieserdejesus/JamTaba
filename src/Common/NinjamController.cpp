@@ -172,9 +172,11 @@ public:
 
     void process()
     {
+        qCDebug(jtNinjamCore) << "BpiChangeEvent... " << newBpi;
         controller->currentBpi = newBpi;
         controller->samplesInInterval = controller->computeTotalSamplesInInterval();
         emit controller->currentBpiChanged(controller->currentBpi);
+        qCDebug(jtNinjamCore) << "BpiChangeEvent... Done";
     }
 
 private:
@@ -196,7 +198,9 @@ public:
     
     void process()
     {
+        qCDebug(jtNinjamCore) << "BpmChangeEvent... " << newBpm;
         controller->setBpm(newBpm);
+        qCDebug(jtNinjamCore) << "BpmChangeEvent... Done";
     }
 
 private:
@@ -217,7 +221,9 @@ class NinjamController::InputChannelChangedEvent : public SchedulableEvent
         
         void process()
         {
+            qCDebug(jtNinjamCore) << "InputChannelChangedEvent... " << channelIndex;
             controller->recreateEncoderForChannel(channelIndex);
+            qCDebug(jtNinjamCore) << "InputChannelChangedEvent... Done";
         }
     
     private:
@@ -380,12 +386,13 @@ Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sample
 
 void NinjamController::recreateMetronome(int newSampleRate)
 {
+    qCDebug(jtNinjamCore) << "recreateMetronome " << newSampleRate;
     // remove the old metronome
     float oldGain = metronomeTrackNode->getGain();
     float oldPan = metronomeTrackNode->getPan();
     bool oldMutedStatus = metronomeTrackNode->isMuted();
     bool oldSoloStatus = metronomeTrackNode->isSoloed();
-    int oldBeatsPerAccent = metronomeTrackNode->getBeatsPerAccent();
+    QList<int> oldAccentBeats = metronomeTrackNode->getAccentBeats();
 
     mainController->removeTrack(METRONOME_TRACK_ID);
 
@@ -396,7 +403,7 @@ void NinjamController::recreateMetronome(int newSampleRate)
     this->metronomeTrackNode->setPan( oldPan );
     this->metronomeTrackNode->setMute( oldMutedStatus );
     this->metronomeTrackNode->setSolo( oldSoloStatus );
-    this->metronomeTrackNode->setBeatsPerAccent(oldBeatsPerAccent);
+    this->metronomeTrackNode->setAccentBeats(oldAccentBeats);
     mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
 }
 
@@ -672,9 +679,19 @@ void NinjamController::voteBpm(int bpm)
     mainController->getNinjamService()->voteToChangeBPM(bpm);
 }
 
-void NinjamController::setMetronomeBeatsPerAccent(int beatsPerAccent)
+void NinjamController::setMetronomeBeatsPerAccent(int beatsPerAccent, int currentBpi)
 {
-    metronomeTrackNode->setBeatsPerAccent(beatsPerAccent);
+    metronomeTrackNode->setBeatsPerAccent(beatsPerAccent, currentBpi);
+}
+
+QList<int> NinjamController::getMetronomeAccentBeats()
+{
+    return metronomeTrackNode->getAccentBeats();
+}
+
+void NinjamController::setMetronomeAccentBeats(QList<int> accentBeats)
+{
+    metronomeTrackNode->setAccentBeats(accentBeats);
 }
 
 //void NinjamController::deleteDeactivatedTracks(){

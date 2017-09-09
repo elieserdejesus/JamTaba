@@ -19,14 +19,14 @@ public:
     void setIntervalPosition(long intervalPosition);
     void resetInterval();
 
-    void setBeatsPerAccent(int beatsPerAccent); // pass zero to turn off accents
-    void setAccentBeats(QList<int> accents); // pass empty array or null to turn off accents
+    void setBeatsPerAccent(int beatsPerAccent, int currentBpi); // pass zero to turn off accents
 
     bool isPlayingAccents() const;
 
     int getBeatsPerAccent() const; // will return zero even if isPlayingAccents() when pattern is uneven
 
-    QList<int> getAccentBeats(); // will return zero even if isPlayingAccents() when pattern is uneven
+    void setAccentBeats(QList<int> accents); // pass empty list to turn off accents
+    QList<int> getAccentBeats(); // returns the beats with accents
 
     void setPrimaryBeatSamples(const Audio::SamplesBuffer &firstBeatSamples);
     void setOffBeatSamples(const Audio::SamplesBuffer &offBeatSamples);
@@ -49,11 +49,6 @@ private:
 inline bool MetronomeTrackNode::isPlayingAccents() const
 {
     return accentBeats.length() > 0;
-}
-
-inline QList<int> MetronomeTrackNode::getAccentBeats()
-{
-    return this->accentBeats;
 }
 
 } // namespace
