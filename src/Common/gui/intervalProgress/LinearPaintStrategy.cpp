@@ -36,13 +36,10 @@ void IntervalProgressDisplay::LinearPaintStrategy::paint(QPainter &p, const Pain
     if (context.showingAccents) {
         xPos = initialXPos;
         qreal size = context.elementsSize * 0.6f;
-        if (0 > context.currentBeat) {
-            drawPoint(xPos, yPos, size, p, 1, colors.accentBeat, true);
-        }
         foreach (int i, context.accentBeats) {
-            xPos += xSpace * i;
-            if (i > context.currentBeat) {
-                drawPoint(xPos, yPos, size, p, (i + 1), colors.accentBeat, true);
+            xPos += xSpace * (i - 1);
+            if (i >= context.currentBeat) {
+                drawPoint(xPos, yPos, size, p, i, colors.accentBeat, true);
             }
         }
     }
