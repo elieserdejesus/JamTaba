@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>735</width>
-    <height>134</height>
+    <height>147</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -342,25 +342,8 @@
          <property name="spacing">
           <number>6</number>
          </property>
-         <item row="3" column="1">
-          <widget class="QComboBox" name="comboShape">
-           <property name="accessibleDescription">
-            <string>Change the shape here</string>
-           </property>
-           <property name="sizeAdjustPolicy">
-            <enum>QComboBox::AdjustToContents</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="labelShape">
-           <property name="text">
-            <string>Shape</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="1">
-          <widget class="QComboBox" name="comboBeatsPerAccent">
+          <widget class="QComboBox" name="comboAccentBeats">
            <property name="accessibleDescription">
             <string>Change the accent here</string>
            </property>
@@ -379,6 +362,23 @@
            </property>
           </widget>
          </item>
+         <item row="4" column="0" alignment="Qt::AlignRight">
+          <widget class="QLabel" name="labelShape">
+           <property name="text">
+            <string>Shape</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QComboBox" name="comboShape">
+           <property name="accessibleDescription">
+            <string>Change the shape here</string>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QComboBox::AdjustToContents</enum>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0" alignment="Qt::AlignRight">
           <widget class="QLabel" name="labelBPI">
            <property name="toolTip">
@@ -392,6 +392,13 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="0" alignment="Qt::AlignRight">
+          <widget class="QLabel" name="labelAccent">
+           <property name="text">
+            <string>Accent</string>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="1">
           <widget class="QComboBox" name="comboBpi">
            <property name="toolTip">
@@ -402,13 +409,6 @@
            </property>
            <property name="editable">
             <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="labelAccent">
-           <property name="text">
-            <string>Accent</string>
            </property>
           </widget>
          </item>
@@ -428,6 +428,22 @@
            </property>
            <property name="maxVisibleItems">
             <number>40</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="2">
+          <widget class="QLineEdit" name="lineEditAccentBeats">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string extracomment="Enter accent beats separated by space"/>
            </property>
           </widget>
          </item>
@@ -486,7 +502,6 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>
