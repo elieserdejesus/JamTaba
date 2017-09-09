@@ -67,7 +67,6 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     videoWidgetLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     videoWidgetLayout->addWidget(videoWidget, 1);
     videoWidgetLayout->setContentsMargins(3, 3, 3, 3);
-    mainLayout->addLayout(videoWidgetLayout);
 
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
@@ -101,12 +100,17 @@ void NinjamTrackGroupView::startVideoIntervalDecoding()
     }
     else {
         videoWidget->setVisible(false); // hide the video widget when transmition is stopped
+        mainLayout->removeItem(videoWidgetLayout);
+        updateGeometry();
     }
 }
 
 void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
 {
     videoWidget->setCurrentFrame(frame);
+
+    if (!videoWidgetLayout->parent())
+        mainLayout->addLayout(videoWidgetLayout);
 
     videoWidget->setVisible(true);
 }
