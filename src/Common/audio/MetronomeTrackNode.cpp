@@ -1,6 +1,8 @@
 #include "MetronomeTrackNode.h"
+#include "MetronomeUtils.h"
 #include "audio/core/AudioDriver.h"
 #include "audio/core/SamplesBuffer.h"
+#include "log/Logging.h"
 
 using namespace Audio;
 
@@ -11,9 +13,12 @@ MetronomeTrackNode::MetronomeTrackNode(const SamplesBuffer &firstBeatSamples, co
     samplesPerBeat(0),
     intervalPosition(0),
     beatPosition(0),
-    currentBeat(0)
+    currentBeat(0),
+    accentBeats(QList<int>())
 {
     resetInterval();
+
+    qCDebug(jtMetronome) << "MetronomeTrackNode::MetronomeTrackNode done.";
 }
 
 MetronomeTrackNode::~MetronomeTrackNode()
@@ -36,35 +41,20 @@ void MetronomeTrackNode::setAccentBeatSamples(const SamplesBuffer &accentBeatSam
     accentBeatBuffer.set(accentBeatSamples);
 }
 
-int MetronomeTrackNode::getBeatsPerAccent() const
-{
-    if (this->accentBeats.length() > 0) {
-        // TODO: determine whether accentBeats represents a repetitive sequence
-        // TODO: if so, return frequency else return 0;
-        return 0;
-    } else {
-        return 0;
-    }
-}
-
-void MetronomeTrackNode::setBeatsPerAccent(int beatsPerAccent)
-{
-    QList<int> accents = QList<int>();
-    for(int i = 1; i < 256; i++) {
-        if (i % beatsPerAccent == 0) {
-            accents.append(i);
-        }
-    }
-    this->setAccentBeats(accents);
-}
-
 void MetronomeTrackNode::setAccentBeats(QList<int> accentBeats)
 {
+    qCDebug(jtMetronome) << "setAccentBeats " << accentBeats;
     this->accentBeats = accentBeats;
+}
+
+QList<int> MetronomeTrackNode::getAccentBeats()
+{
+    return accentBeats;
 }
 
 void MetronomeTrackNode::setSamplesPerBeat(long samplesPerBeat)
 {
+    qCDebug(jtMetronome) << "setSamplesPerBeat " << samplesPerBeat;
     if (samplesPerBeat <= 0)
         qCritical() << "samples per beat <= 0";
 
@@ -75,6 +65,12 @@ void MetronomeTrackNode::setSamplesPerBeat(long samplesPerBeat)
 void MetronomeTrackNode::resetInterval()
 {
     beatPosition = intervalPosition = 0;
+}
+
+void MetronomeTrackNode::setBeatsPerAccent(int beatsPerAccent, int currentBpi)
+{
+    qCDebug(jtMetronome) << "setBeatsPerAccent" << beatsPerAccent << currentBpi;
+    setAccentBeats(MetronomeUtils::getAccentBeats(beatsPerAccent, currentBpi));
 }
 
 void MetronomeTrackNode::setIntervalPosition(long intervalPosition)
@@ -92,10 +88,8 @@ SamplesBuffer *MetronomeTrackNode::getSamplesBuffer(int beat)
     if (beat == 0) {
         return &firstBeatBuffer;
     }
-    if (isPlayingAccents()) {
-        if (this->accentBeats.contains(beat)) {
-            return &accentBeatBuffer;
-        }
+    if (this->accentBeats.contains(beat)) {
+        return &accentBeatBuffer;
     }
     return &offBeatBuffer;
 }

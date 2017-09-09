@@ -6,6 +6,7 @@
 #include "MainController.h"
 #include "persistence/Settings.h"
 #include "file/FileUtils.h"
+#include "log/Logging.h"
 
 #include <QGridLayout>
 #include <QSpinBox>
@@ -16,6 +17,7 @@
 #include <QStandardItemModel>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDebug>
 
 using namespace Controller;
 using namespace Audio;
@@ -654,6 +656,7 @@ void LooperWindow::updateCurrentBeat(uint currentIntervalBeat)
 
 void LooperWindow::updateBeatsPerInterval()
 {
+    qCDebug(jtGUI) << "LooperWindow::updateBeatsPerInterval";
     if (!mainController || !mainController->getNinjamController())
         return;
 
@@ -666,6 +669,7 @@ void LooperWindow::updateBeatsPerInterval()
         auto wavePanel = layerView.wavePanel;
         wavePanel->setBeatsPerInteval(beatsPerInterval, samplesPerInterval);
     }
+    qCDebug(jtGUI) << "LooperWindow::updateBeatsPerInterval ...done";
 }
 
 void LooperWindow::initializeControls()

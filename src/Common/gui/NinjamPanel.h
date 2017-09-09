@@ -40,7 +40,13 @@ public:
 
     int getPanSliderMaximumValue() const;
     int getGainSliderMaximumValue() const;
-    int getCurrentBeatsPerAccent() const;
+
+    int getAccentBeatsComboValue() const;
+
+    void setAccentBeatsText(QString accentBeats);
+    QString getAccentBeatsText() const;
+    void setAccentBeatsEnabled(bool value);
+    bool isAccentBeatsEnabled() const;
 
     void setBpi(int bpi);
     void setBpm(int bpm);
@@ -66,6 +72,7 @@ signals:
     void bpiComboActivated(const QString &);
     void bpmComboActivated(const QString &);
     void accentsComboChanged(int index);
+    void accentsLineEditFinished(QString value);
     void gainSliderChanged(int value);
     void panSliderChanged(int value);
     void muteButtonClicked();

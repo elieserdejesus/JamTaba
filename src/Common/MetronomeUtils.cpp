@@ -4,6 +4,7 @@
 #include "file/FileReaderFactory.h"
 #include "file/FileReader.h"
 #include "audio/Resampler.h"
+#include "log/Logging.h"
 #include <QString>
 #include <QFileInfo>
 #include <QFile>
@@ -29,6 +30,7 @@ QList<QString> MetronomeUtils::getBuiltInMetronomeAliases()
        int indexOf1st =  fileNameComplete.indexOf("_1st");
        if (indexOf1st >= 0) {
           QString alias = fileNameComplete.left(indexOf1st);
+          qCDebug(jtMetronome) << "getBuiltInMetronomeAliases checking " << alias;
 
           // check that the Off and Accent beat files exists
           QString offFileName = buildMetronomeFileNameFromAlias(alias, "off");
@@ -36,11 +38,26 @@ QList<QString> MetronomeUtils::getBuiltInMetronomeAliases()
           QFileInfo offFile = QFileInfo(fileInfo.dir(), offFileName);
           QFileInfo accentFile = QFileInfo(fileInfo.dir(), accentFileName);
           if (offFile.exists() && accentFile.exists()) {
-            aliases.append(alias);
+              aliases.append(alias);
+              qCDebug(jtMetronome) << alias << " OK";
+          } else {
+              qCDebug(jtMetronome) << alias << " skipped";
           }
        }
     }
     return aliases;
+}
+
+QList<int> MetronomeUtils::getAccentBeats(int beatsPerAccent, int bpi)
+{
+    qCDebug(jtMetronome) << "MetronomeUtils::getAccentBeats" << beatsPerAccent << bpi;
+    QList<int> accentBeats = QList<int>();
+    for(int i = 1; beatsPerAccent > 0 && i < bpi; i++) {
+        if (i % beatsPerAccent == 0) {
+            accentBeats.append(i);
+        }
+    }
+    return accentBeats;
 }
 
 void MetronomeUtils::createBuiltInSounds(const QString &alias, Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &offBeatBuffer, Audio::SamplesBuffer &accentBeatBuffer, quint32 localSampleRate)
@@ -55,7 +72,7 @@ void MetronomeUtils::createBuiltInSound(const QString &alias, const QString &bea
     createBuffer(QFileInfo(DEFAULT_BUILT_IN_METRONOME_DIR, beatFile).absoluteFilePath(), beatBuffer, localSampleRate);
 }
 
-inline QString MetronomeUtils::buildMetronomeFileNameFromAlias(const QString &alias, const QString &beat)
+QString MetronomeUtils::buildMetronomeFileNameFromAlias(const QString &alias, const QString &beat)
 {
     return (!alias.isEmpty() ? alias : DEFAULT_BUILT_IN_METRONOME_ALIAS) + "_" + beat + ".ogg";
 }
@@ -65,18 +82,24 @@ void MetronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const
 {
     if (QFileInfo(firstBeatAudioFile).exists()){
         createBuffer(firstBeatAudioFile, firstBeatBuffer, localSampleRate);
-    } else {//use the default metronome
+        qCDebug(jtMetronome) << firstBeatAudioFile << " OK";
+    } else {//use the default click sound if the first beat audio file is not found
+        qCDebug(jtMetronome) << firstBeatAudioFile << " missing";
         createBuiltInSound("", "1st", firstBeatBuffer, localSampleRate);
     }
     if (QFileInfo(offBeatAudioFile).exists()) {
         createBuffer(offBeatAudioFile, offBeatBuffer, localSampleRate);
-    } else {//using the default click sound if the secondary beat audio file is not setted
+        qCDebug(jtMetronome) << offBeatAudioFile << " OK";
+    } else {//using the default click sound if the off beat audio file is not found
+        qCDebug(jtMetronome) << offBeatAudioFile << " missing";
         createBuiltInSound("", "off", offBeatBuffer, localSampleRate);
     }
     if (QFileInfo(accentBeatAudioFile).exists()) {
         createBuffer(accentBeatAudioFile, accentBeatBuffer, localSampleRate);
-    } else {//using the default click sound if the secondary beat audio file is not setted
-        createBuiltInSound("", "accent", offBeatBuffer, localSampleRate);
+        qCDebug(jtMetronome) << accentBeatAudioFile << " OK";
+    } else {//using the default click sound if the accent beat audio file is not found
+        qCDebug(jtMetronome) << accentBeatAudioFile << " missing";
+        createBuiltInSound("", "accent", accentBeatBuffer, localSampleRate);
     }
 }
 

@@ -22,6 +22,9 @@ public:
     static void removeSilenceInBufferStart(Audio::SamplesBuffer &buffer);
 
     static QList<QString> getBuiltInMetronomeAliases();
+
+    static QList<int> getAccentBeats(int beatsPerAccent, int bpi);
+
 private:
     static void createBuffer(const QString &audioFilePath, Audio::SamplesBuffer &outBuffer, quint32 localSampleRate);
     static void createResampledBuffer(const Audio::SamplesBuffer &buffer, Audio::SamplesBuffer &outBuffer, int originalSampleRate,
