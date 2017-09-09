@@ -278,6 +278,13 @@ void MainController::updateBpi(int newBpi)
             jamRecorder->setBpi(newBpi);
         }
     }
+
+    if (isPlayingInNinjamRoom()) {
+        for (Audio::LocalInputNode *inputTrack: inputTracks.values()) {
+            inputTrack->getLooper()->stop(); // looper is stopped when BPI is changed because the recorded material will be out of sync
+        }
+    }
+    qCDebug(jtCore) << "MainController::updateBpi ...done";
 }
 
 void MainController::updateBpm(int newBpm)
