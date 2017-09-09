@@ -3,6 +3,7 @@
 
 #include "TrackGroupView.h"
 #include <QLabel>
+#include <QBoxLayout>
 #include "MarqueeLabel.h"
 #include "NinjamTrackView.h"
 #include "video/FFMpegDemuxer.h"
@@ -60,6 +61,8 @@ private:
 
     void setupHorizontalLayout();
     void setupVerticalLayout();
+
+    QBoxLayout *videoWidgetLayout;
 
     QString getRgbaColorString(const QColor &color, int alpha);
 

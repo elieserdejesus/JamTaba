@@ -28,8 +28,10 @@ signals:
 
 protected:
     void paintEvent(QPaintEvent *ev) override;
-
+    void resizeEvent(QResizeEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *) override;
+
+    QSize sizeHint() const override;
 
     QSize minimumSizeHint() const override;
 

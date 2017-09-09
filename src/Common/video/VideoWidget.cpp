@@ -21,10 +21,20 @@ void VideoWidget::activate(bool status)
 
 void VideoWidget::setCurrentFrame(const QImage &image)
 {
-    this->currentImage = image;
+    currentImage = image;
+
+    if (!currentImage.isNull() && activated)
+        updateGeometry();
 
     if (activated)
         update();
+}
+
+void VideoWidget::resizeEvent(QResizeEvent *ev)
+{
+    Q_UNUSED(ev);
+
+    updateGeometry();
 }
 
 void VideoWidget::mouseReleaseEvent(QMouseEvent *ev)
@@ -50,7 +60,6 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
         qreal ratio = 1.0;
 
         bool small = height() < width();
-
         if (small)
             ratio =  static_cast<float>(height())/sourceRect.height();
         else
@@ -74,13 +83,28 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
 
     if (paintIcon)
         webcamIcon.paint(&painter, rect().marginsRemoved(QMargins(3, 3, 3, 3)), alignment);
+}
 
+QSize VideoWidget::sizeHint() const
+{
+    return minimumSizeHint();
 }
 
 QSize VideoWidget::minimumSizeHint() const
 {
-    if (activated)
-        return QSize(120, 90);
+    static const int MAX_HEIGHT = 90;
+    static const int MAX_WIDTH = 120;
+    static const int MIN_SIZE = 32;
 
-    return QSize(30, 30);
+    if (activated) {
+        if (!currentImage.isNull()) {
+            bool isInVerticalLayout = parentWidget()->height() > parentWidget()->width();
+            QImage img = isInVerticalLayout ? (currentImage.scaledToWidth(qMin(width(), MAX_WIDTH))) : (currentImage.scaledToHeight(qMin(MAX_HEIGHT, height())));
+            return img.size();
+        }
+
+        return QSize(MAX_WIDTH, MAX_HEIGHT);
+    }
+
+    return QSize(MIN_SIZE, MIN_SIZE);
 }
