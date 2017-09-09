@@ -5,7 +5,7 @@
 #include <QDialog>
 #include <QIcon>
 
-IntervalProgressWindow::IntervalProgressWindow(QWidget *parent, IntervalProgressDisplay::PaintShape paintShape, int beatsPerInterval, int beatsPerAccent, bool showingAccents)
+IntervalProgressWindow::IntervalProgressWindow(QWidget *parent, IntervalProgressDisplay::PaintShape paintShape, int beatsPerInterval, QList<int> accentBeats, bool showingAccents)
     :QDialog(parent)
 {
 
@@ -14,7 +14,7 @@ IntervalProgressWindow::IntervalProgressWindow(QWidget *parent, IntervalProgress
     progressDisplay = new IntervalProgressDisplay(this);
     progressDisplay->setObjectName(QStringLiteral("intervalPanel"));
     progressDisplay->setBeatsPerInterval(beatsPerInterval);
-    progressDisplay->setBeatsPerAccent(beatsPerAccent);
+    progressDisplay->setAccentBeats(accentBeats);
     progressDisplay->setShowAccents(showingAccents);
     setIntervalProgressShape(paintShape);
 
@@ -60,9 +60,9 @@ void IntervalProgressWindow::setCurrentBeat(int currentBeat)
      progressDisplay->setBeatsPerInterval(beatsPerInterval);
  }
 
- void IntervalProgressWindow::setBeatsPerAccent(int beatsPerAccent)
+ void IntervalProgressWindow::setAccentBeats(QList<int> accentBeats)
  {
-     progressDisplay->setBeatsPerAccent(beatsPerAccent);
+     progressDisplay->setAccentBeats(accentBeats);
  }
 
 //QSize IntervalProgressWindow::minimumSizeHint() const

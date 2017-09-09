@@ -246,7 +246,8 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
 
     connect(panel, &NinjamPanel::bpiComboActivated, this, &NinjamRoomWindow::setNewBpi);
     connect(panel, &NinjamPanel::bpmComboActivated, this, &NinjamRoomWindow::setNewBpm);
-    connect(panel, &NinjamPanel::accentsComboChanged, this, &NinjamRoomWindow::setNewBeatsPerAccent);
+    connect(panel, &NinjamPanel::accentsComboChanged, this, &NinjamRoomWindow::handleAccentBeatsComboChange);
+    connect(panel, &NinjamPanel::accentsLineEditFinished, this, &NinjamRoomWindow::handleCustomAccentBeatsChange);
 
     connect(panel, &NinjamPanel::gainSliderChanged, this, &NinjamRoomWindow::setMetronomeFaderPosition);
     connect(panel, &NinjamPanel::panSliderChanged, this, &NinjamRoomWindow::setMetronomePanSliderPosition);
@@ -672,11 +673,48 @@ void NinjamRoomWindow::showServerLicence()
 }
 
 // ----------
-void NinjamRoomWindow::setNewBeatsPerAccent(int index)
+void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 {
     Q_UNUSED(index)
-    int beatsPerAccent = ninjamPanel->getCurrentBeatsPerAccent();
-    mainController->getNinjamController()->setMetronomeBeatsPerAccent(beatsPerAccent);
+    int accentBeatsCb = ninjamPanel->getAccentBeatsComboValue();
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleAccentBeatsComboChange " << accentBeatsCb;
+
+    if (accentBeatsCb == -1) {
+        handleCustomAccentBeatsChange("");
+    } else {
+        int currentBpi = mainController->getNinjamController()->getCurrentBpi();
+        mainController->getNinjamController()->setMetronomeBeatsPerAccent(accentBeatsCb, currentBpi);
+    }
+}
+
+void NinjamRoomWindow::handleCustomAccentBeatsChange(const QString &value)
+{
+    Q_UNUSED(value)
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange '" << ninjamPanel->getAccentBeatsText() << "'; '" << value << "'";
+
+    QStringList accentBeatsStrings;
+    if (ninjamPanel->getAccentBeatsText().trimmed().isEmpty()) {
+        qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange - empty";
+        foreach (int accentBeat, mainController->getNinjamController()->getMetronomeAccentBeats()) {
+            accentBeatsStrings.append(QString::number(accentBeat));
+            qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange " << accentBeat;
+        }
+        ninjamPanel->setAccentBeatsText(accentBeatsStrings.join(" "));
+    } else {
+        accentBeatsStrings = ninjamPanel->getAccentBeatsText().trimmed().split("  *");
+    }
+
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange" << accentBeatsStrings;
+    QList<int> accentBeats;
+    foreach(QString accentBeatString, accentBeatsStrings) {
+        int accentBeat = accentBeatString.toInt();
+        qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange" << accentBeatString << accentBeat;
+        accentBeats.append(accentBeat);
+    }
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange" << accentBeats;
+
+    mainController->getNinjamController()->setMetronomeAccentBeats(accentBeats);
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange ...done";
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

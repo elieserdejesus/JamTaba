@@ -127,7 +127,8 @@ private slots:
     // ninjam panel controls
     void setNewBpi(const QString &);
     void setNewBpm(const QString &);
-    void setNewBeatsPerAccent(int);
+    void handleAccentBeatsComboChange(int);
+    void handleCustomAccentBeatsChange(const QString &);
     void setNewIntervalShape(int);
 
     // metronome events
