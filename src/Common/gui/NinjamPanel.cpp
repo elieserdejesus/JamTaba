@@ -131,8 +131,9 @@ void NinjamPanel::changeEvent(QEvent *e)
 
 void NinjamPanel::setupSignals()
 {
-    connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAccentsStatus(int)));
+    connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), this, SLOT(handleAccentBeatsIndexChanged(int)));
     connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), SIGNAL(accentsComboChanged(int)));
+    connect(ui->lineEditAccentBeats, SIGNAL(textEdited(QString)), this, SLOT(handleAccentBeatsTextEdited(QString)));
     connect(ui->lineEditAccentBeats, SIGNAL(textChanged(QString)), SIGNAL(accentsTextChanged(QString)));
     connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this, SLOT(updateIntervalProgressShape(int)));
 
@@ -315,29 +316,50 @@ void NinjamPanel::setMetronomePeaks(float left, float right, float rmsLeft, floa
     ui->peakMeter->setPeak(left, right, rmsLeft, rmsRight);
 }
 
-void NinjamPanel::updateAccentsStatus(int index)
+void NinjamPanel::handleAccentBeatsIndexChanged(int index)
 {
     Q_UNUSED(index);
-    int beatsPerAccent = ui->comboAccentBeats->currentData().toInt();
-    bool showingAccents = beatsPerAccent > 0;
+    qCDebug(jtNinjamGUI) << "NinjamPanel::handleAccentBeatsIndexChanged " << index;
+    NinjamPanel::updateAccentsStatus();
+}
 
-    ui->intervalPanel->setShowAccents(showingAccents);
-    if (metronomeFloatingWindow) {
-        metronomeFloatingWindow->setShowAccents(showingAccents);
-    }
+void NinjamPanel::handleAccentBeatsTextEdited(const QString &value) {
+    qCDebug(jtNinjamGUI) << "NinjamPanel::handleAccentBeatsTextEdited " << value;
+    NinjamPanel::updateAccentsStatus();
+}
 
-    if (beatsPerAccent != 0) {
-        QList<int> accentBeats;
-        if (beatsPerAccent > 0) {
+void NinjamPanel::updateAccentsStatus()
+{
+    int accentBeatsCb = ui->comboAccentBeats->currentData().toInt();
+    qCDebug(jtNinjamGUI) << "NinjamPanel::updateAccentsStatus " << accentBeatsCb;
+
+    QList<int> accentBeats;
+    if (accentBeatsCb != 0) {
+        if (accentBeatsCb > 0) {
             int bpi = ui->intervalPanel->getBeatsPerInterval();
-            accentBeats = Audio::MetronomeUtils::getAccentBeats(beatsPerAccent, bpi);
+            accentBeats = Audio::MetronomeUtils::getAccentBeats(accentBeatsCb, bpi);
         } else {
+            if (getAccentBeatsText().isEmpty()) {
+                QList<QString> strs;
+                foreach (int b, ui->intervalPanel->getAccentBeats()) {
+                    strs.append(QString::number(b + 1));
+                }
+                // OK, now we're happy the accent beats text is correct
+                setAccentBeatsText(strs.join(" "));
+            }
             accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
+            // We are resposible for forcing this:
+            emit accentsTextChanged("");
         }
         ui->intervalPanel->setAccentBeats(accentBeats);
         if (metronomeFloatingWindow) {
             metronomeFloatingWindow->setAccentBeats(accentBeats);
         }
+    }
+
+    ui->intervalPanel->setShowAccents(!accentBeats.isEmpty());
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->setShowAccents(!accentBeats.isEmpty());
     }
 }
 
