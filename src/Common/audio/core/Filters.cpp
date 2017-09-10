@@ -1,6 +1,7 @@
 #include "Filters.h"
 #include <cfloat>
 #include <cmath>
+#include <cstdint>
 
 using namespace Audio;
 

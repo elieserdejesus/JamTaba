@@ -53,7 +53,8 @@ void MainWindowStandalone::setupSignals()
     connect(ui.actionFullscreenMode, &QAction::triggered, this, &MainWindowStandalone::toggleFullScreen);
 
      audio::PluginFinder *pluginFinder = controller->getVstPluginFinder();
-    Q_ASSERT(pluginFinder);
+    if (!pluginFinder)
+        return;
 
     connect(pluginFinder, &VSTPluginFinder::scanStarted, this, &MainWindowStandalone::showPluginScanDialog);
 

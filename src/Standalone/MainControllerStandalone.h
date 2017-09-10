@@ -56,7 +56,10 @@ public:
 
     inline virtual float getSampleRate() const override
     {
-        return audioDriver->getSampleRate();
+        if (audioDriver)
+            return audioDriver->getSampleRate();
+
+        return 44100;
     }
 
     inline Audio::AudioDriver *getAudioDriver() const
@@ -112,6 +115,8 @@ public slots:
 
     void openExternalAudioControlPanel();
 
+    void connectInNinjamServer(const Ninjam::Server &server) override;
+
 protected:
     Midi::MidiDriver *createMidiDriver();
 
@@ -128,7 +133,6 @@ protected:
 
 protected slots:
     void updateBpm(int newBpm) override;
-    void connectInNinjamServer(const Ninjam::Server &server) override;
 
 
     void handleNewNinjamInterval() override;

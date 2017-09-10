@@ -172,6 +172,31 @@
 		2A120A831E0BF32700E0E596 /* MultiStateButton.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBFB1E0AF46900BEF1FF /* MultiStateButton.h */; };
 		2A120A851E0C05D900E0E596 /* jamtaba.qrc in Resources */ = {isa = PBXBuildFile; fileRef = 2A120A841E0C05D900E0E596 /* jamtaba.qrc */; };
 		2A120A861E0C05EA00E0E596 /* jamtaba.qrc in Sources */ = {isa = PBXBuildFile; fileRef = 2A120A841E0C05D900E0E596 /* jamtaba.qrc */; };
+		2A1362901F6586A4004953CF /* FFMpegCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1362871F6586A4004953CF /* FFMpegCommon.h */; };
+		2A1362911F6586A4004953CF /* FFMpegDemuxer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1362881F6586A4004953CF /* FFMpegDemuxer.cpp */; };
+		2A1362921F6586A4004953CF /* FFMpegDemuxer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1362891F6586A4004953CF /* FFMpegDemuxer.h */; };
+		2A1362931F6586A4004953CF /* FFMpegMuxer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A13628A1F6586A4004953CF /* FFMpegMuxer.cpp */; };
+		2A1362941F6586A4004953CF /* FFMpegMuxer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A13628B1F6586A4004953CF /* FFMpegMuxer.h */; };
+		2A1362951F6586A4004953CF /* VideoFrameGrabber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A13628C1F6586A4004953CF /* VideoFrameGrabber.cpp */; };
+		2A1362961F6586A4004953CF /* VideoFrameGrabber.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A13628D1F6586A4004953CF /* VideoFrameGrabber.h */; };
+		2A1362971F6586A4004953CF /* VideoWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A13628E1F6586A4004953CF /* VideoWidget.cpp */; };
+		2A1362981F6586A4004953CF /* VideoWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A13628F1F6586A4004953CF /* VideoWidget.h */; };
+		2A13629E1F658714004953CF /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362991F658714004953CF /* libavcodec.a */; };
+		2A13629F1F658714004953CF /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A13629A1F658714004953CF /* libavformat.a */; };
+		2A1362A01F658714004953CF /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A13629B1F658714004953CF /* libavutil.a */; };
+		2A1362A11F658714004953CF /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A13629C1F658714004953CF /* libswresample.a */; };
+		2A1362A21F658714004953CF /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A13629D1F658714004953CF /* libswscale.a */; };
+		2A1362A51F6587C0004953CF /* libQt5Multimedia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362A31F6587C0004953CF /* libQt5Multimedia.a */; };
+		2A1362A61F6587C0004953CF /* libQt5MultimediaWidgets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362A41F6587C0004953CF /* libQt5MultimediaWidgets.a */; };
+		2A1362A81F6587FA004953CF /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362A71F6587FA004953CF /* libiconv.dylib */; };
+		2A1362A91F658842004953CF /* FFMpegDemuxer.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A1362891F6586A4004953CF /* FFMpegDemuxer.h */; };
+		2A1362AA1F658842004953CF /* FFMpegMuxer.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A13628B1F6586A4004953CF /* FFMpegMuxer.h */; };
+		2A1362AB1F658842004953CF /* VideoFrameGrabber.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A13628D1F6586A4004953CF /* VideoFrameGrabber.h */; };
+		2A1362AC1F658865004953CF /* VideoWidget.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A13628F1F6586A4004953CF /* VideoWidget.h */; };
+		2A1362AF1F658D3E004953CF /* libqavfcamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362AD1F658D26004953CF /* libqavfcamera.a */; };
+		2A1362B11F659589004953CF /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362B01F659589004953CF /* CoreMedia.framework */; };
+		2A1362B31F6595D2004953CF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362B21F6595D2004953CF /* AVFoundation.framework */; };
+		2A1362B51F659642004953CF /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362B41F659642004953CF /* CoreVideo.framework */; };
 		2A1C7A301E0B5F2C00C7984D /* AudioMixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1A1E0AF46800BEF1FF /* AudioMixer.cpp */; };
 		2A1C7A311E0B5F2C00C7984D /* AudioNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1C1E0AF46800BEF1FF /* AudioNode.cpp */; };
 		2A1C7A321E0B5F2C00C7984D /* AudioNodeProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1E1E0AF46800BEF1FF /* AudioNodeProcessor.cpp */; };
@@ -381,9 +406,6 @@
 		2AF5A9561E761C3A00D1150A /* LooperWavePanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9541E761C3A00D1150A /* LooperWavePanel.h */; };
 		2AF5A9571E761C3A00D1150A /* LooperWavePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9551E761C3A00D1150A /* LooperWavePanel.cpp */; };
 		2AF5A9581E761C4A00D1150A /* LooperWavePanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9541E761C3A00D1150A /* LooperWavePanel.h */; };
-		2AF5A95C1E761D4D00D1150A /* Camera.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A95A1E761D4D00D1150A /* Camera.h */; };
-		2AF5A95D1E761D4D00D1150A /* VideoCodec.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A95B1E761D4D00D1150A /* VideoCodec.h */; };
-		2AF5A95E1E761D5800D1150A /* VideoCodec.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A95B1E761D4D00D1150A /* VideoCodec.h */; };
 		2AF5A9601E761D9900D1150A /* Encoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A95F1E761D9900D1150A /* Encoder.h */; };
 		2AF5A9621E761DAD00D1150A /* Mp3Decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */; };
 		2AF5A9641E761DBC00D1150A /* Mp3Decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */; };
@@ -681,6 +703,27 @@
 		2A0DBEB81E0B03C600BEF1FF /* libvorbisenc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisenc.a; path = ../../libs/static/mac64/libvorbisenc.a; sourceTree = "<group>"; };
 		2A0DBEB91E0B03C600BEF1FF /* libvorbisfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisfile.a; path = ../../libs/static/mac64/libvorbisfile.a; sourceTree = "<group>"; };
 		2A120A841E0C05D900E0E596 /* jamtaba.qrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = jamtaba.qrc; path = ../../src/resources/jamtaba.qrc; sourceTree = "<group>"; };
+		2A1362871F6586A4004953CF /* FFMpegCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFMpegCommon.h; sourceTree = "<group>"; };
+		2A1362881F6586A4004953CF /* FFMpegDemuxer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FFMpegDemuxer.cpp; sourceTree = "<group>"; };
+		2A1362891F6586A4004953CF /* FFMpegDemuxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFMpegDemuxer.h; sourceTree = "<group>"; };
+		2A13628A1F6586A4004953CF /* FFMpegMuxer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FFMpegMuxer.cpp; sourceTree = "<group>"; };
+		2A13628B1F6586A4004953CF /* FFMpegMuxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFMpegMuxer.h; sourceTree = "<group>"; };
+		2A13628C1F6586A4004953CF /* VideoFrameGrabber.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoFrameGrabber.cpp; sourceTree = "<group>"; };
+		2A13628D1F6586A4004953CF /* VideoFrameGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFrameGrabber.h; sourceTree = "<group>"; };
+		2A13628E1F6586A4004953CF /* VideoWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoWidget.cpp; sourceTree = "<group>"; };
+		2A13628F1F6586A4004953CF /* VideoWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoWidget.h; sourceTree = "<group>"; };
+		2A1362991F658714004953CF /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = ../../libs/static/mac64/libavcodec.a; sourceTree = "<group>"; };
+		2A13629A1F658714004953CF /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../../libs/static/mac64/libavformat.a; sourceTree = "<group>"; };
+		2A13629B1F658714004953CF /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ../../libs/static/mac64/libavutil.a; sourceTree = "<group>"; };
+		2A13629C1F658714004953CF /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = ../../libs/static/mac64/libswresample.a; sourceTree = "<group>"; };
+		2A13629D1F658714004953CF /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = ../../libs/static/mac64/libswscale.a; sourceTree = "<group>"; };
+		2A1362A31F6587C0004953CF /* libQt5Multimedia.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Multimedia.a; path = "../../../Qt-5.6/lib/libQt5Multimedia.a"; sourceTree = "<group>"; };
+		2A1362A41F6587C0004953CF /* libQt5MultimediaWidgets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5MultimediaWidgets.a; path = "../../../Qt-5.6/lib/libQt5MultimediaWidgets.a"; sourceTree = "<group>"; };
+		2A1362A71F6587FA004953CF /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		2A1362AD1F658D26004953CF /* libqavfcamera.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqavfcamera.a; path = "../../../Qt-5.6/plugins/mediaservice/libqavfcamera.a"; sourceTree = "<group>"; };
+		2A1362B01F659589004953CF /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		2A1362B21F6595D2004953CF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		2A1362B41F659642004953CF /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		2A1C7AB21E0B66AC00C7984D /* JamTaba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamTaba.h; sourceTree = "<group>"; };
 		2A2D725B1EABC04E00979920 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Slider.h; sourceTree = "<group>"; };
 		2A2D725C1EABC04E00979920 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Slider.cpp; sourceTree = "<group>"; };
@@ -751,8 +794,6 @@
 		2AF5A94A1E761BC500D1150A /* LooperStates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LooperStates.h; sourceTree = "<group>"; };
 		2AF5A9541E761C3A00D1150A /* LooperWavePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LooperWavePanel.h; sourceTree = "<group>"; };
 		2AF5A9551E761C3A00D1150A /* LooperWavePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LooperWavePanel.cpp; sourceTree = "<group>"; };
-		2AF5A95A1E761D4D00D1150A /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
-		2AF5A95B1E761D4D00D1150A /* VideoCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCodec.h; sourceTree = "<group>"; };
 		2AF5A95F1E761D9900D1150A /* Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Encoder.h; sourceTree = "<group>"; };
 		2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mp3Decoder.h; sourceTree = "<group>"; };
 		2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mp3Decoder.cpp; sourceTree = "<group>"; };
@@ -835,6 +876,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A1362B51F659642004953CF /* CoreVideo.framework in Frameworks */,
+				2A1362B31F6595D2004953CF /* AVFoundation.framework in Frameworks */,
+				2A1362B11F659589004953CF /* CoreMedia.framework in Frameworks */,
+				2A1362A81F6587FA004953CF /* libiconv.dylib in Frameworks */,
 				2ACA3F721EAE3EF000EF369A /* SystemConfiguration.framework in Frameworks */,
 				2AEFF5681E1836F800843898 /* Carbon.framework in Frameworks */,
 				2AEFF5671E1836EA00843898 /* IOKit.framework in Frameworks */,
@@ -843,6 +888,12 @@
 				2A1C7AAB1E0B5F6600C7984D /* AudioUnit.framework in Frameworks */,
 				2A1C7AAC1E0B5F6600C7984D /* CoreAudio.framework in Frameworks */,
 				2A1C7AAA1E0B5F6600C7984D /* AudioToolbox.framework in Frameworks */,
+				2A1362AF1F658D3E004953CF /* libqavfcamera.a in Frameworks */,
+				2A13629E1F658714004953CF /* libavcodec.a in Frameworks */,
+				2A13629F1F658714004953CF /* libavformat.a in Frameworks */,
+				2A1362A01F658714004953CF /* libavutil.a in Frameworks */,
+				2A1362A11F658714004953CF /* libswresample.a in Frameworks */,
+				2A1362A21F658714004953CF /* libswscale.a in Frameworks */,
 				2AEFF5611E18363800843898 /* libqtfreetype.a in Frameworks */,
 				2AEFF5551E1835A100843898 /* libQt5Network.a in Frameworks */,
 				2AEFF55D1E18360A00843898 /* libqcocoa.a in Frameworks */,
@@ -861,6 +912,8 @@
 				2A0DBEBC1E0B03C600BEF1FF /* libogg.a in Frameworks */,
 				2AEFF5571E1835A100843898 /* libQt5Widgets.a in Frameworks */,
 				2A0DBEBE1E0B03C600BEF1FF /* libportaudio.a in Frameworks */,
+				2A1362A51F6587C0004953CF /* libQt5Multimedia.a in Frameworks */,
+				2A1362A61F6587C0004953CF /* libQt5MultimediaWidgets.a in Frameworks */,
 				2A2F70081E080F7200A4B6C2 /* libz.dylib in Frameworks */,
 				2A2F70061E08094500A4B6C2 /* libcups.dylib in Frameworks */,
 			);
@@ -894,6 +947,18 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				2A1362B41F659642004953CF /* CoreVideo.framework */,
+				2A1362B21F6595D2004953CF /* AVFoundation.framework */,
+				2A1362B01F659589004953CF /* CoreMedia.framework */,
+				2A1362AD1F658D26004953CF /* libqavfcamera.a */,
+				2A1362A71F6587FA004953CF /* libiconv.dylib */,
+				2A1362A31F6587C0004953CF /* libQt5Multimedia.a */,
+				2A1362A41F6587C0004953CF /* libQt5MultimediaWidgets.a */,
+				2A1362991F658714004953CF /* libavcodec.a */,
+				2A13629A1F658714004953CF /* libavformat.a */,
+				2A13629B1F658714004953CF /* libavutil.a */,
+				2A13629C1F658714004953CF /* libswresample.a */,
+				2A13629D1F658714004953CF /* libswscale.a */,
 				2ACA3F711EAE3EF000EF369A /* SystemConfiguration.framework */,
 				2AEFF5621E18364D00843898 /* libQt5PrintSupport.a */,
 				2AEFF5601E18363800843898 /* libqtfreetype.a */,
@@ -1438,8 +1503,15 @@
 		2AF5A9591E761D4D00D1150A /* video */ = {
 			isa = PBXGroup;
 			children = (
-				2AF5A95A1E761D4D00D1150A /* Camera.h */,
-				2AF5A95B1E761D4D00D1150A /* VideoCodec.h */,
+				2A1362871F6586A4004953CF /* FFMpegCommon.h */,
+				2A1362881F6586A4004953CF /* FFMpegDemuxer.cpp */,
+				2A1362891F6586A4004953CF /* FFMpegDemuxer.h */,
+				2A13628A1F6586A4004953CF /* FFMpegMuxer.cpp */,
+				2A13628B1F6586A4004953CF /* FFMpegMuxer.h */,
+				2A13628C1F6586A4004953CF /* VideoFrameGrabber.cpp */,
+				2A13628D1F6586A4004953CF /* VideoFrameGrabber.h */,
+				2A13628E1F6586A4004953CF /* VideoWidget.cpp */,
+				2A13628F1F6586A4004953CF /* VideoWidget.h */,
 			);
 			path = video;
 			sourceTree = "<group>";
@@ -1576,7 +1648,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A1362941F6586A4004953CF /* FFMpegMuxer.h in Headers */,
 				2A67BDA01E410F3200A8FFF1 /* PerformanceMonitor.h in Headers */,
+				2A1362901F6586A4004953CF /* FFMpegCommon.h in Headers */,
 				2A0DBE671E0AF46E00BEF1FF /* ReaperProjectGenerator.h in Headers */,
 				2AF5A9601E761D9900D1150A /* Encoder.h in Headers */,
 				2A0DBDC71E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */,
@@ -1587,7 +1661,6 @@
 				2A3AE1DE1E80863000D391C5 /* BlinkableButton.h in Headers */,
 				2A0DBE291E0AF46D00BEF1FF /* ClientMessages.h in Headers */,
 				2AF5A9331E76192F00D1150A /* FileReaderFactory.h in Headers */,
-				2AF5A95C1E761D4D00D1150A /* Camera.h in Headers */,
 				2A0DBE371E0AF46D00BEF1FF /* ServerMessagesHandler.h in Headers */,
 				2A0DBCDF1E0AF46900BEF1FF /* BpiUtils.h in Headers */,
 				2A0DBC631E0AF46900BEF1FF /* AudioPeak.h in Headers */,
@@ -1633,7 +1706,6 @@
 				2A0DBCEF1E0AF46A00BEF1FF /* ChatPanel.h in Headers */,
 				2A0DBD611E0AF46A00BEF1FF /* Highligther.h in Headers */,
 				2A0DBD9F1E0AF46B00BEF1FF /* NinjamTrackView.h in Headers */,
-				2AF5A95D1E761D4D00D1150A /* VideoCodec.h in Headers */,
 				2A0DBCBB1E0AF46900BEF1FF /* VorbisDecoder.h in Headers */,
 				2A0DBC5F1E0AF46900BEF1FF /* AudioNodeProcessor.h in Headers */,
 				2A0DBE5B1E0AF46E00BEF1FF /* PreCompiledHeaders.h in Headers */,
@@ -1679,6 +1751,7 @@
 				2A0DBCE91E0AF46900BEF1FF /* ChatMessagePanel.h in Headers */,
 				2A1C7AB41E0B66AC00C7984D /* JamTaba.h in Headers */,
 				2A0DBE6D1E0AF46E00BEF1FF /* Utils.h in Headers */,
+				2A1362981F6586A4004953CF /* VideoWidget.h in Headers */,
 				2A0DBDDD1E0AF46C00BEF1FF /* IntervalChunksDisplay.h in Headers */,
 				2A0DBE031E0AF46C00BEF1FF /* LoginService.h in Headers */,
 				2A0DBCA71E0AF46900BEF1FF /* NinjamTrackNode.h in Headers */,
@@ -1688,9 +1761,11 @@
 				2A0DBD0B1E0AF46A00BEF1FF /* Chord.h in Headers */,
 				2A0DBCBF1E0AF46900BEF1FF /* VorbisEncoder.h in Headers */,
 				2A0DBCD71E0AF46900BEF1FF /* WebIpToLocationResolver.h in Headers */,
+				2A1362961F6586A4004953CF /* VideoFrameGrabber.h in Headers */,
 				2A0DBE111E0AF46D00BEF1FF /* MidiDriver.h in Headers */,
 				2A0DBDF91E0AF46C00BEF1FF /* WavePeakPanel.h in Headers */,
 				2A0DBDFD1E0AF46C00BEF1FF /* Logging.h in Headers */,
+				2A1362921F6586A4004953CF /* FFMpegDemuxer.h in Headers */,
 				2A67BDA91E410FE400A8FFF1 /* ScreensaverBlocker.h in Headers */,
 				2A0DBCA31E0AF46900BEF1FF /* MetronomeTrackNode.h in Headers */,
 				2AF5A9501E761BC500D1150A /* LooperPersistence.h in Headers */,
@@ -1840,7 +1915,7 @@
 				2A0DBE9E1E0AF7EE00BEF1FF /* NinjamRoomWindow.ui in Sources */,
 				2A0DBEA01E0AF80600BEF1FF /* PreferencesDialog.ui in Sources */,
 				2A0DBEA11E0AF82700BEF1FF /* UserNameDialog.ui in Sources */,
-				2AF5A95E1E761D5800D1150A /* VideoCodec.h in Sources */,
+				2A1362AC1F658865004953CF /* VideoWidget.h in Sources */,
 				2AF5A9581E761C4A00D1150A /* LooperWavePanel.h in Sources */,
 				2A67BDAB1E41112600A8FFF1 /* MainWindowPlugin.h in Sources */,
 				2A120A571E0BEF2100E0E596 /* BaseTrackView.h in Sources */,
@@ -1849,6 +1924,9 @@
 				2A120A801E0BF28F00E0E596 /* AudioDriver.cpp in Sources */,
 				2A120A821E0BF2F800E0E596 /* UserNameLineEdit.h in Sources */,
 				2A120A741E0BF0BF00E0E596 /* TrackGroupView.h in Sources */,
+				2A1362A91F658842004953CF /* FFMpegDemuxer.h in Sources */,
+				2A1362AA1F658842004953CF /* FFMpegMuxer.h in Sources */,
+				2A1362AB1F658842004953CF /* VideoFrameGrabber.h in Sources */,
 				2A120A6E1E0BF01800E0E596 /* Configurator.cpp in Sources */,
 				2AF5A93E1E761A3000D1150A /* LooperWindow.h in Sources */,
 				2A120A5F1E0BEF4F00E0E596 /* IntervalProgressDisplay.h in Sources */,
@@ -1874,6 +1952,7 @@
 				2A120A721E0BF05800E0E596 /* NinjamRoomWindowPlugin.h in Sources */,
 				2A120A731E0BF05A00E0E596 /* PreferencesDialogPlugin.h in Sources */,
 				2A120A651E0BEF5E00E0E596 /* NinjamPanel.h in Sources */,
+				2A1362911F6586A4004953CF /* FFMpegDemuxer.cpp in Sources */,
 				2A120A661E0BEF6000E0E596 /* NinjamRoomWindow.h in Sources */,
 				2A120A621E0BEF5700E0E596 /* LocalTrackGroupView.h in Sources */,
 				2AF5A9571E761C3A00D1150A /* LooperWavePanel.cpp in Sources */,
@@ -1884,6 +1963,7 @@
 				2A120A5A1E0BEF2C00E0E596 /* ChatPanel.h in Sources */,
 				2A120A5D1E0BEF3E00E0E596 /* ChordsPanel.h in Sources */,
 				2A2D725E1EABC04E00979920 /* Slider.cpp in Sources */,
+				2A1362971F6586A4004953CF /* VideoWidget.cpp in Sources */,
 				2A120A591E0BEF2A00E0E596 /* ChatMessagePanel.h in Sources */,
 				2A120A581E0BEF2400E0E596 /* BusyDialog.h in Sources */,
 				2A120A521E0BEEED00E0E596 /* AudioDriver.h in Sources */,
@@ -1973,6 +2053,7 @@
 				2AF5A9321E76192F00D1150A /* FileReaderFactory.cpp in Sources */,
 				2AF5A9361E76192F00D1150A /* WaveFileReader.cpp in Sources */,
 				2A1C7A751E0B5F2C00C7984D /* MetronomeUtils.cpp in Sources */,
+				2A1362951F6586A4004953CF /* VideoFrameGrabber.cpp in Sources */,
 				2A1C7A761E0B5F2C00C7984D /* ClientMessages.cpp in Sources */,
 				2AF5A9511E761BC500D1150A /* LooperStates.cpp in Sources */,
 				2A1C7A771E0B5F2C00C7984D /* Server.cpp in Sources */,
@@ -2011,6 +2092,7 @@
 				2A1C7A981E0B5F2C00C7984D /* CABufferList.cpp in Sources */,
 				2A4340371E91B06B00FE3CB7 /* FileUtils.cpp in Sources */,
 				2A1C7A991E0B5F2C00C7984D /* CADebugger.cpp in Sources */,
+				2A1362931F6586A4004953CF /* FFMpegMuxer.cpp in Sources */,
 				2A1C7A9A1E0B5F2C00C7984D /* CADebugMacros.cpp in Sources */,
 				2A1C7A9B1E0B5F2C00C7984D /* CADebugPrintf.cpp in Sources */,
 				2A1C7A9C1E0B5F2C00C7984D /* CAGuard.cpp in Sources */,
@@ -2108,6 +2190,8 @@
 					"/Users/elieser/Desktop/Qt-5.6/lib",
 					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
 					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
+					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
+					"/Users/elieser/Desktop/Qt-5.6/plugins/mediaservice",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
@@ -2163,6 +2247,8 @@
 					"/Users/elieser/Desktop/Qt-5.6/lib",
 					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
 					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
+					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
+					"/Users/elieser/Desktop/Qt-5.6/plugins/mediaservice",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
@@ -2217,6 +2303,8 @@
 					"/Users/elieser/Desktop/Qt-5.6/lib",
 					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
 					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
+					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
+					"/Users/elieser/Desktop/Qt-5.6/plugins/mediaservice",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";

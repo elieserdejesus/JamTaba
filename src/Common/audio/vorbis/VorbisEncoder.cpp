@@ -1,6 +1,6 @@
 #include "VorbisEncoder.h"
 #include <QDebug>
-#include <ctime>
+//#include <ctime>
 #include <QThread>
 #include "log/Logging.h"
 

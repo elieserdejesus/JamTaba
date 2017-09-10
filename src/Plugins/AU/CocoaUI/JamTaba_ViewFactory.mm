@@ -10,6 +10,7 @@
 
 #include <QtPlugin>
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
+Q_IMPORT_PLUGIN(AVFServicePlugin) // Camera
 
 #define APP_VERSION VERSION  // VERSION is defined in Configurator.h
 

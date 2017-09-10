@@ -69,164 +69,164 @@ bool MainControllerStandalone::pluginDescriptorLessThan(const Audio::PluginDescr
     return d1.getName().localeAwareCompare(d2.getName()) < 0;
 }
 
-/**
- * @param category: VST, AU or NATIVE
- * @return A map indexed by plugin Manufacturer name.
- */
+    /**
+     * @param category: VST, AU or NATIVE
+     * @return A map indexed by plugin Manufacturer name.
+     */
 
-QMap<QString, QList<Audio::PluginDescriptor> > MainControllerStandalone::getPluginsDescriptors(Audio::PluginDescriptor::Category category)
-{
-    QMap<QString, QList<Audio::PluginDescriptor> > descriptors;
+    QMap<QString, QList<Audio::PluginDescriptor>> MainControllerStandalone::getPluginsDescriptors(Audio::PluginDescriptor::Category category)
+    {
+        QMap<QString, QList<Audio::PluginDescriptor>> descriptors;
 
-    for (const Audio::PluginDescriptor &descriptor : pluginsDescriptors) {
-        if (descriptor.getCategory() == category) {
-            QString manufacturer = descriptor.getManufacturer();
-            if (!descriptors.contains(manufacturer))
-                descriptors.insert(manufacturer, QList<Audio::PluginDescriptor>());
+        for (const Audio::PluginDescriptor &descriptor : pluginsDescriptors) {
+            if (descriptor.getCategory() == category) {
+                QString manufacturer = descriptor.getManufacturer();
+                if (!descriptors.contains(manufacturer))
+                    descriptors.insert(manufacturer, QList<Audio::PluginDescriptor>());
 
-            descriptors[manufacturer].append(descriptor);
+                 descriptors[manufacturer].append(descriptor);
+            }
+        }
+
+        for(const QString &manufacturer : descriptors.keys()) {
+            qSort(descriptors[manufacturer].begin(), descriptors[manufacturer].end(), pluginDescriptorLessThan);
+        }
+
+        return descriptors;
+    }
+
+    Audio::Plugin *MainControllerStandalone::addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex,
+                                             const Audio::PluginDescriptor &descriptor)
+    {
+        Audio::Plugin *plugin = createPluginInstance(descriptor);
+        if (plugin) {
+            plugin->start();
+            QMutexLocker locker(&mutex);
+            getInputTrack(inputTrackIndex)->addProcessor(plugin, pluginSlotIndex);
+        }
+        return plugin;
+    }
+
+    void MainControllerStandalone::removePlugin(int inputTrackIndex, Audio::Plugin *plugin)
+    {
+        QMutexLocker locker(&mutex);
+        QString pluginName = plugin->getName();
+        try {
+            Audio::AudioNode *trackNode = getInputTrack(inputTrackIndex);
+            if (trackNode)
+                trackNode->removeProcessor(plugin);
+        }
+        catch (...) {
+            qCritical() << "Error removing plugin " << pluginName;
         }
     }
 
-    for (const QString &manufacturer : descriptors.keys()) {
-        qSort(descriptors[manufacturer].begin(), descriptors[manufacturer].end(), pluginDescriptorLessThan);
+    void MainControllerStandalone::addPluginsScanPath(const QString &path)
+    {
+        settings.addVstScanPath(path);
     }
 
-    return descriptors;
-}
-
-Audio::Plugin *MainControllerStandalone::addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex,
-                                                   const Audio::PluginDescriptor &descriptor)
-{
-    Audio::Plugin *plugin = createPluginInstance(descriptor);
-    if (plugin) {
-        plugin->start();
-        QMutexLocker locker(&mutex);
-        getInputTrack(inputTrackIndex)->addProcessor(plugin, pluginSlotIndex);
+    void MainControllerStandalone::removePluginsScanPath(const QString &path)
+    {
+        settings.removeVstScanPath(path);
     }
-    return plugin;
-}
 
-void MainControllerStandalone::removePlugin(int inputTrackIndex, Audio::Plugin *plugin)
-{
-    QMutexLocker locker(&mutex);
-    QString pluginName = plugin->getName();
-    try {
-        Audio::AudioNode *trackNode = getInputTrack(inputTrackIndex);
-        if (trackNode)
-            trackNode->removeProcessor(plugin);
+    void MainControllerStandalone::clearPluginsList()
+    {
+        pluginsDescriptors.clear();
     }
-    catch (...) {
-        qCritical() << "Error removing plugin " << pluginName;
-    }
-}
 
-void MainControllerStandalone::addPluginsScanPath(const QString &path)
-{
-    settings.addVstScanPath(path);
-}
-
-void MainControllerStandalone::removePluginsScanPath(const QString &path)
-{
-    settings.removeVstScanPath(path);
-}
-
-void MainControllerStandalone::clearPluginsList()
-{
-    pluginsDescriptors.clear();
-}
-
-void MainControllerStandalone::clearPluginsCache()
-{
-    settings.clearVstCache();
+    void MainControllerStandalone::clearPluginsCache()
+    {
+        settings.clearVstCache();
 
     #ifdef Q_OS_MAC
-    settings.clearAudioUnitCache();
+        settings.clearAudioUnitCache();
     #endif
-}
 
-// VST BlackList ...
-void MainControllerStandalone::addBlackVstToSettings(const QString &path)
-{
-    settings.addVstToBlackList(path);
-}
-
-void MainControllerStandalone::removeBlackVstFromSettings(const QString &pluginPath)
-{
-    settings.removeVstFromBlackList(pluginPath);
-}
-
-bool MainControllerStandalone::inputIndexIsValid(int inputIndex)
-{
-    return inputIndex >= 0 && inputIndex <= audioDriver->getInputsCount();
-}
-
-void MainControllerStandalone::setInputTrackToMIDI(int localChannelIndex, int midiDevice,
-                                                   int midiChannel, qint8 transpose,
-                                                   quint8 lowerNote, quint8 higherNote)
-{
-    Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
-    if (inputTrack) {
-        inputTrack->setMidiInputSelection(midiDevice, midiChannel);
-        inputTrack->setTranspose(transpose);
-        inputTrack->setMidiHigherNote(higherNote);
-        inputTrack->setMidiLowerNote(lowerNote);
-        if (window)
-            window->refreshTrackInputSelection(localChannelIndex);
-        if (isPlayingInNinjamRoom()) {
-            if (ninjamController)
-                ninjamController->scheduleEncoderChangeForChannel(inputTrack->getChanneGrouplIndex());
-
-        }
     }
-}
 
-void MainControllerStandalone::setInputTrackToNoInput(int localChannelIndex)
-{
-    Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
-    if (inputTrack) {
-        inputTrack->setToNoInput();
+    // VST BlackList ...
+    void MainControllerStandalone::addBlackVstToSettings(const QString &path)
+    {
+        settings.addVstToBlackList(path);
+    }
 
-        if (window)
-            window->refreshTrackInputSelection(localChannelIndex);
+    void MainControllerStandalone::removeBlackVstFromSettings(const QString &pluginPath)
+    {
+        settings.removeVstFromBlackList(pluginPath);
+    }
 
-        if (isPlayingInNinjamRoom()) { // send the finish interval message
-            if (intervalsToUpload.contains(localChannelIndex)) {
-                ninjamService.sendAudioIntervalPart(
-                    intervalsToUpload[localChannelIndex]->getGUID(), QByteArray(), true);
+    bool MainControllerStandalone::inputIndexIsValid(int inputIndex)
+    {
+        return inputIndex >= 0 && inputIndex <= audioDriver->getInputsCount();
+    }
+
+    void MainControllerStandalone::setInputTrackToMIDI(int localChannelIndex, int midiDevice,
+                                                       int midiChannel, qint8 transpose,
+                                                       quint8 lowerNote, quint8 higherNote)
+    {
+        Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
+        if (inputTrack) {
+            inputTrack->setMidiInputSelection(midiDevice, midiChannel);
+            inputTrack->setTranspose(transpose);
+            inputTrack->setMidiHigherNote(higherNote);
+            inputTrack->setMidiLowerNote(lowerNote);
+            if (window)
+                window->refreshTrackInputSelection(localChannelIndex);
+            if (isPlayingInNinjamRoom()) {
                 if (ninjamController)
-                    ninjamController->scheduleEncoderChangeForChannel(
-                        inputTrack->getChanneGrouplIndex());
+                    ninjamController->scheduleEncoderChangeForChannel(inputTrack->getChanneGrouplIndex());
+
             }
         }
     }
-}
 
-void MainControllerStandalone::setInputTrackToStereo(int localChannelIndex, int firstInputIndex)
-{
-    Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
-    if (inputTrack) {
-        if (!inputIndexIsValid(firstInputIndex))
-            firstInputIndex = 0; // use the first channel
-        int availableInputChannels = audioDriver->getInputsCount();
-        if (availableInputChannels > 0) { // we have input channels?
-            if (availableInputChannels >= 2) // can really use stereo?
-                inputTrack->setAudioInputSelection(firstInputIndex, 2);    // stereo
-            else
-                inputTrack->setAudioInputSelection(firstInputIndex, 1);    // mono
-        } else {
+    void MainControllerStandalone::setInputTrackToNoInput(int localChannelIndex)
+    {
+        Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
+        if (inputTrack) {
             inputTrack->setToNoInput();
-        }
-
-        if (window)
-            window->refreshTrackInputSelection(localChannelIndex);
-        if (isPlayingInNinjamRoom()) {
-            if (ninjamController)
-                ninjamController->scheduleEncoderChangeForChannel(inputTrack->getChanneGrouplIndex());
-
+            if (window)
+                window->refreshTrackInputSelection(localChannelIndex);
+            if (isPlayingInNinjamRoom()) {// send the finish interval message
+                if (audioIntervalsToUpload.contains(localChannelIndex)) {
+                    ninjamService.sendIntervalPart(
+                        audioIntervalsToUpload[localChannelIndex]->getGUID(), QByteArray(), true);
+                    if (ninjamController)
+                        ninjamController->scheduleEncoderChangeForChannel(
+                            inputTrack->getChanneGrouplIndex());
+                }
+            }
         }
     }
-}
+
+    void MainControllerStandalone::setInputTrackToStereo(int localChannelIndex, int firstInputIndex)
+    {
+        Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
+        if (inputTrack) {
+            if (!inputIndexIsValid(firstInputIndex))
+                firstInputIndex = 0;//use the first channel
+            int availableInputChannels = audioDriver->getInputsCount();
+            if (availableInputChannels > 0) {//we have input channels?
+                if (availableInputChannels >= 2) //can really use stereo?
+                    inputTrack->setAudioInputSelection(firstInputIndex, 2);// stereo
+                else
+                    inputTrack->setAudioInputSelection(firstInputIndex, 1);//mono
+            }
+            else{
+                inputTrack->setToNoInput();
+            }
+
+            if (window)
+                window->refreshTrackInputSelection(localChannelIndex);
+            if (isPlayingInNinjamRoom()) {
+                if (ninjamController)
+                    ninjamController->scheduleEncoderChangeForChannel(inputTrack->getChanneGrouplIndex());
+
+            }
+        }
+    }
 
 void MainControllerStandalone::updateBpm(int newBpm)
 {
@@ -290,18 +290,19 @@ void MainControllerStandalone::setupNinjamControllerSignals()
 {
     MainController::setupNinjamControllerSignals();
 
-    connect(ninjamController.data(), &NinjamController::startProcessing, this, &MainControllerStandalone::on_ninjamStartProcessing);
+    connect(ninjamController.data(), SIGNAL(startProcessing(int)), this, SLOT(on_ninjamStartProcessing(int)));
 }
 
 void MainControllerStandalone::on_ninjamStartProcessing(int intervalPosition)
 {
-    for (Host *host : hosts)
-        host->setPositionInSamples(intervalPosition);    // update the vst host time line in every audio callback.
+    for (Host *host : hosts) {
+        host->setPositionInSamples(intervalPosition); // update the vst host time line in every audio callback.
+    }
 }
 
 void MainControllerStandalone::addFoundedVstPlugin(const QString &name, const QString &path)
 {
-    bool containThePlugin = false;
+   bool containThePlugin = false;
     for (const Audio::PluginDescriptor descriptor : pluginsDescriptors) {
         if (descriptor.isVST() && descriptor.getPath() == path) {
             containThePlugin = true;
@@ -318,22 +319,20 @@ void MainControllerStandalone::addFoundedVstPlugin(const QString &name, const QS
 }
 
 #ifdef Q_OS_MAC
-void MainControllerStandalone::addFoundedAudioUnitPlugin(const QString &name, const QString &path)
-{
-    bool containThePlugin = false;
-    for (const Audio::PluginDescriptor descriptor : pluginsDescriptors) {
-        if (descriptor.isAU() && descriptor.getPath() == path) {
-            containThePlugin = true;
-            break;
+    void MainControllerStandalone::addFoundedAudioUnitPlugin(const QString &name, const QString &path)
+    {
+        bool containThePlugin = false;
+        foreach (const Audio::PluginDescriptor descriptor, pluginsDescriptors) {
+            if (descriptor.isAU() && descriptor.getPath() == path) {
+                containThePlugin = true;
+                break;
+            }
+        }
+        if (!containThePlugin) {
+            settings.addAudioUnitPlugin(path);
+            pluginsDescriptors.append(AU::createPluginDescriptor(name, path));
         }
     }
-
-    if (!containThePlugin) {
-        settings.addAudioUnitPlugin(path);
-        pluginsDescriptors.append(AU::createPluginDescriptor(name, path));
-    }
-}
-
 #endif
 
 void MainControllerStandalone::setMainWindow(MainWindow *mainWindow)
@@ -373,21 +372,21 @@ Audio::AudioDriver *MainControllerStandalone::createAudioDriver(
 
 MainControllerStandalone::MainControllerStandalone(Persistence::Settings settings, QApplication *application) :
     MainController(settings),
-    application(application)
+    application(application),
+    audioDriver(nullptr)
 {
     application->setQuitOnLastWindowClosed(true);
 
     hosts.append(Vst::VstHost::getInstance());
-    #ifdef Q_OS_MAC
+#ifdef Q_OS_MAC
     hosts.append(AU::AudioUnitHost::getInstance());
-    #endif
+#endif
 
     connect(Vst::VstHost::getInstance(), &Vst::VstHost::pluginRequestingWindowResize,
             this, &MainControllerStandalone::setVstPluginWindowSize);
 }
 
-void MainControllerStandalone::setVstPluginWindowSize(QString pluginName, int newWidht,
-                                                      int newHeight)
+void MainControllerStandalone::setVstPluginWindowSize(QString pluginName, int newWidht, int newHeight)
 {
     QDialog *pluginEditorWindow = Vst::VstPlugin::getPluginEditorWindow(pluginName);
     if (pluginEditorWindow) {
@@ -404,6 +403,7 @@ void MainControllerStandalone::start()
         qCInfo(jtCore) << "Creating midi driver...";
         midiDriver.reset(createMidiDriver());
     }
+
     if (!audioDriver) {
         qCInfo(jtCore) << "Creating audio driver...";
         Audio::AudioDriver *driver = nullptr;
@@ -411,13 +411,15 @@ void MainControllerStandalone::start()
             driver = createAudioDriver(settings);
         }
         catch (const std::runtime_error &error) {
-            qCritical() << "Audio initialization fail: " << QString::fromUtf8(error.what());
+            qCritical() << "Audio initialization fail: " << QString::fromUtf8(
+                error.what());
             QMessageBox::warning(window, "Audio Initialization Problem!", error.what());
         }
         if (!driver)
             driver = new Audio::NullAudioDriver();
 
         audioDriver.reset(driver);
+
 
         QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this, SLOT(setSampleRate(int)));
         QObject::connect(audioDriver.data(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
@@ -436,16 +438,20 @@ void MainControllerStandalone::start()
     if (midiDriver)
         midiDriver->start(settings.getMidiInputDevicesStatus());
 
+
     qCInfo(jtCore) << "Creating plugin finder...";
     vstPluginFinder.reset(new audio::VSTPluginFinder());
-    #ifdef Q_OS_MAC
+
+#ifdef Q_OS_MAC
+
     auPluginFinder.reset(new audio::AudioUnitPluginFinder());
 
     connect(auPluginFinder.data(), &audio::AudioUnitPluginFinder::pluginScanFinished, this, &MainControllerStandalone::addFoundedAudioUnitPlugin);
-    #endif
+
+#endif
 
     connect(vstPluginFinder.data(), &audio::VSTPluginFinder::pluginScanFinished, this,
-            &MainControllerStandalone::addFoundedVstPlugin);
+                                                &MainControllerStandalone::addFoundedVstPlugin);
 
     if (audioDriver) {
         for (Host *host : hosts) {
@@ -461,10 +467,14 @@ void MainControllerStandalone::cancelPluginFinders()
         vstPluginFinder->cancel();
 
 #ifdef Q_OS_MAC
+
     if (auPluginFinder)
         auPluginFinder->cancel();
+
 #endif
+
 }
+
 
 void MainControllerStandalone::setCSS(const QString &css)
 {
@@ -483,64 +493,59 @@ Audio::Plugin *MainControllerStandalone::createPluginInstance(
     if (descriptor.isNative()) {
         if (descriptor.getName() == "Delay")
             return new Audio::JamtabaDelay(audioDriver->getSampleRate());
-    } else if (descriptor.isVST()) {
+    }
+    else if (descriptor.isVST()) {
         Vst::VstHost *host = Vst::VstHost::getInstance();
         Vst::VstPlugin *vstPlugin = new Vst::VstPlugin(host, descriptor.getPath());
         if (vstPlugin->load(descriptor.getPath()))
             return vstPlugin;
     }
-    #ifdef Q_OS_MAC
+
+#ifdef Q_OS_MAC
+
     else if (descriptor.isAU()) {
         return AU::audioUnitPluginfromPath(descriptor.getPath());
     }
-    #endif
+
+#endif
 
     return nullptr;
 }
 
 QStringList MainControllerStandalone::getSteinbergRecommendedPaths()
 {
-    /**
-
+    /*
     On a 64-bit OS
 
     64-bit plugins path = HKEY_LOCAL_MACHINE\SOFTWARE\VST
     32-bit plugins path = HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\VST
-
     */
 
     QStringList vstPaths;
 
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
 
-        #ifdef _WIN64 // 64 bits
-
-            QSettings wowSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\VST\\", QSettings::NativeFormat);
-            vstPaths.append(wowSettings.value("VSTPluginsPath").toString());
-
-        #else // 32 bits
-
-            QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\VST\\", QSettings::NativeFormat);
-            vstPaths.append(settings.value("VSTPluginsPath").toString());
-
-        #endif
+    #ifdef _WIN64 // 64 bits
+        QSettings wowSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\VST\\", QSettings::NativeFormat);
+        vstPaths.append(wowSettings.value("VSTPluginsPath").toString());
+    #else // 32 bits
+        QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\VST\\", QSettings::NativeFormat);
+        vstPaths.append(settings.value("VSTPluginsPath").toString());
     #endif
+#endif
 
-    #ifdef Q_OS_MACX
+#ifdef Q_OS_MACX
+    vstPaths.append("/Library/Audio/Plug-Ins/VST");
+    vstPaths.append("~/Library/Audio/Plug-Ins/VST");
+#endif
 
-        vstPaths.append("/Library/Audio/Plug-Ins/VST");
-        vstPaths.append("~/Library/Audio/Plug-Ins/VST");
+#ifdef Q_OS_LINUX
+    // Steinberg VST 2.4 docs are saying nothing about default paths for VST plugins in Linux. But I see these paths
+    // in a Linux plugin documentation...
 
-    #endif
-
-    #ifdef Q_OS_LINUX
-
-        // Steinberg VST 2.4 docs are saying nothing about default paths for VST plugins in Linux. But I see these paths
-        // in a Linux plugin documentation...
-        vstPaths.append("~/.vst/");
-        vstPaths.append("/user/lib/vst");
-
-    #endif
+    vstPaths.append("~/.vst/");
+    vstPaths.append("/user/lib/vst");
+#endif
 
     return vstPaths;
 }
@@ -553,6 +558,7 @@ void MainControllerStandalone::addDefaultPluginsScanPath()
     // If this value is not founded use the Steinberg recommended paths.
     QSettings jamtabaRegistryEntry("HKEY_CURRENT_USER\\SOFTWARE\\Jamtaba", QSettings::NativeFormat);
     QString vst2InstallDir = jamtabaRegistryEntry.value("VST2InstallDir").toString();
+
     if (!vst2InstallDir.isEmpty())
         vstPaths.append(vst2InstallDir);
     else
@@ -568,6 +574,7 @@ void MainControllerStandalone::addDefaultPluginsScanPath()
  * We need scan plugins when plugins cache is empty OR we have new plugins in scan folders
  * This code is executed whem Jamtaba is started.
 */
+
 bool MainControllerStandalone::vstScanIsNeeded() const
 {
     bool vstCacheIsEmpty = settings.getVstPluginsPaths().isEmpty();
@@ -582,13 +589,13 @@ bool MainControllerStandalone::vstScanIsNeeded() const
 
     bool newVstFounded = false;
     for (const QString &scanFolder : foldersToScan) {
-        QDirIterator folderIterator(scanFolder, QDir::AllDirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+        QDirIterator folderIterator(scanFolder, QDir::AllDirs | QDir::NoDotAndDotDot,  QDirIterator::Subdirectories);
         while (folderIterator.hasNext()) {
-            folderIterator.next();    // point to next file inside current folder
+            folderIterator.next(); // point to next file inside current folder
             QString filePath = folderIterator.filePath();
             if (!skipList.contains(filePath) && Vst::PluginChecker::isValidPluginFile(filePath)) {
-                newVstFounded = true;
-                break;
+                 newVstFounded = true;
+                 break;
             }
         }
         if (newVstFounded)
@@ -602,8 +609,9 @@ bool MainControllerStandalone::vstScanIsNeeded() const
 
 void MainControllerStandalone::initializeAudioUnitPluginsList(const QStringList &paths)
 {
-    for (const QString &path : paths)
+    for (const QString &path : paths) {
         qDebug() << "Inicializando " << path;
+    }
 }
 
 #endif
@@ -616,22 +624,21 @@ void MainControllerStandalone::initializeVstPluginsList(const QStringList &paths
         if (file.exists()) {
             QString pluginName = Audio::PluginDescriptor::getVstPluginNameFromPath(path);
             QString manufacturer = "";
-            pluginsDescriptors.append(Audio::PluginDescriptor(pluginName, category, manufacturer,
-                                                              path));
+            pluginsDescriptors.append(Audio::PluginDescriptor(pluginName, category, manufacturer, path));
         }
     }
 }
 
 void MainControllerStandalone::scanAllVstPlugins()
 {
-    saveLastUserSettings(settings.getInputsSettings());    // save the config file before start scanning
+    saveLastUserSettings(settings.getInputsSettings()); // save the config file before start scanning
     clearPluginsCache();
     scanVstPlugins(false);
 }
 
 void MainControllerStandalone::scanOnlyNewVstPlugins()
 {
-    saveLastUserSettings(settings.getInputsSettings());    // save the config file before start scanning
+    saveLastUserSettings(settings.getInputsSettings()); // save the config file before start scanning
     scanVstPlugins(true);
 }
 
@@ -658,14 +665,14 @@ void MainControllerStandalone::scanAudioUnitPlugins()
     if (auPluginFinder)
         auPluginFinder->scan();
 }
-
 #endif
 
 void MainControllerStandalone::openExternalAudioControlPanel()
 {
-    if (audioDriver->hasControlPanel())    // just in case
+    if (audioDriver->hasControlPanel()) // just in case
         audioDriver->openControlPanel((void *)mainWindow->winId());
 }
+
 
 void MainControllerStandalone::stopNinjamController()
 {
@@ -689,8 +696,7 @@ std::vector<Midi::MidiMessage> MainControllerStandalone::pullMidiMessagesFromPlu
     std::vector<Midi::MidiMessage> receivedMidiMessages;
     for (Host *host : hosts) {
         std::vector<Midi::MidiMessage> pulledMessages = host->pullReceivedMidiMessages();
-        receivedMidiMessages.insert(receivedMidiMessages.end(),
-                                    pulledMessages.begin(), pulledMessages.end());
+        receivedMidiMessages.insert(receivedMidiMessages.end(), pulledMessages.begin(), pulledMessages.end());
     }
 
     return receivedMidiMessages;
@@ -730,33 +736,33 @@ void MainControllerStandalone::useNullAudioDriver()
 
 void MainControllerStandalone::updateInputTracksRange()
 {
-    for (int trackIndex : inputTracks.keys()) {
-
+    for(int trackIndex : inputTracks.keys()) {
         Audio::LocalInputNode *inputTrack = getInputTrack(trackIndex);
 
-        if (!inputTrack)
+        if(!inputTrack)
             continue;
 
         if (!inputTrack->isNoInput()) {
-
-            if (inputTrack->isAudio()) {    // audio track
+            if (inputTrack->isAudio()) { // audio track
                 Audio::ChannelRange inputTrackRange = inputTrack->getAudioInputRange();
 
                 /** If global input range is reduced to 2 channels and user previous selected inputs 3+4 the input range need be corrected to avoid a beautiful crash :) */
                 int globalInputs = audioDriver->getInputsCount();
-
                 if (inputTrackRange.getFirstChannel() >= globalInputs) {
-
-                    if (globalInputs >= inputTrackRange.getChannels()) {    // we have enough channels?
-                        if (inputTrackRange.isMono())
+                    if (globalInputs >= inputTrackRange.getChannels()) { // we have enough channels?
+                        if (inputTrackRange.isMono()) {
                             setInputTrackToMono(trackIndex, 0);
-                        else
+                        }
+                        else {
                             setInputTrackToStereo(trackIndex, 0);
-                    } else {
+                        }
+                    }
+                    else {
                         setInputTrackToNoInput(trackIndex);
                     }
                 }
-            } else {    // midi track
+
+            } else { // midi track
                 int selectedDevice = inputTrack->getMidiDeviceIndex();
                 bool deviceIsValid = selectedDevice >= 0
                                      && selectedDevice < midiDriver->getMaxInputDevices()
@@ -765,7 +771,7 @@ void MainControllerStandalone::updateInputTracksRange()
                     // try another available midi input device
                     int firstAvailableDevice = midiDriver->getFirstGloballyEnableInputDevice();
                     if (firstAvailableDevice >= 0)
-                        setInputTrackToMIDI(trackIndex, firstAvailableDevice, -1);    // select all channels
+                        setInputTrackToMIDI(trackIndex, firstAvailableDevice, -1);// select all channels
                     else
                         setInputTrackToNoInput(trackIndex);
                 }

@@ -160,8 +160,8 @@ NinjamPanel QComboBox
 NinjamTrackGroupView                        /* ninjam track group. If a ninjamer is using 2 channels they will appear grouped */
 {
     border: 1px solid rgb(130, 130, 130);
+    background-color: rgb(200, 200, 200);  /* setting the background, necessary to show a nice video preview bg color */
 }
-
 
 IntervalProgressWindow                      /* The floating window showing the metronome/interval progress */
 {

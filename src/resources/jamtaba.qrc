@@ -86,6 +86,7 @@
         <file alias="qtbase_da.qm">../../translations/Qt/qtbase_da.qm</file>
     </qresource>
     <qresource prefix="/images">
+        <file>webcam.png</file>
         <file>logo.png</file>
         <file>loop.png</file>
         <file>rec.png</file>
@@ -360,7 +361,6 @@
         <file>flags/tf.png</file>
         <file>flags/tg.png</file>
         <file>flags/th.png</file>
-        <file>flags/Thumbs.db</file>
         <file>flags/tj.png</file>
         <file>flags/tk.png</file>
         <file>flags/tl.png</file>

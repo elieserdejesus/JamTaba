@@ -8,7 +8,8 @@
     qt load the platform plugin from a external dll and I have an error about loading the windows platform DLL.
  */
 #include <QtPlugin>
-Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+Q_IMPORT_PLUGIN(DSServicePlugin) // necessary to use QCamera inside VST Plugin
 
 extern AudioEffect *createEffectInstance(audioMasterCallback audioMaster);
 
