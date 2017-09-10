@@ -370,11 +370,10 @@ Audio::AudioDriver *MainControllerStandalone::createAudioDriver(
         );
 }
 
-MainControllerStandalone::MainControllerStandalone(Persistence::Settings settings,
-                                                   QApplication *application) :
+MainControllerStandalone::MainControllerStandalone(Persistence::Settings settings, QApplication *application) :
     MainController(settings),
     application(application),
-    audioDriver(new NullAudioDriver())
+    audioDriver(nullptr)
 {
     application->setQuitOnLastWindowClosed(true);
 

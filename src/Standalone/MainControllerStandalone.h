@@ -56,7 +56,10 @@ public:
 
     inline virtual float getSampleRate() const override
     {
-        return audioDriver->getSampleRate();
+        if (audioDriver)
+            return audioDriver->getSampleRate();
+
+        return 44100;
     }
 
     inline Audio::AudioDriver *getAudioDriver() const
