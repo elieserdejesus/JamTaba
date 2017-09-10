@@ -1,5 +1,6 @@
 #include "VideoWidget.h"
 #include <QIcon>
+#include <QDebug>
 
 VideoWidget::VideoWidget(QWidget *parent, bool activated) :
     QWidget(parent),
@@ -53,6 +54,9 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
 
     QPainter painter(this);
 
+    static const QColor bgColor(0, 0, 0, 30);
+    painter.fillRect(rect(), bgColor);
+
     if (!currentImage.isNull() && activated) {
 
         QRect sourceRect = currentImage.rect();
@@ -73,10 +77,6 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
         QRectF targetRect(targetX, targetY, targetWidth, targetHeight);
         painter.drawImage(targetRect, currentImage, currentImage.rect());
     }
-    else { // not activated
-
-        painter.fillRect(rect(), QColor(0, 0, 0, 30));
-    }
 
     bool paintIcon = !activated || underMouse();
     Qt::Alignment alignment = !activated ? Qt::AlignCenter : (Qt::AlignRight | Qt::AlignBottom);
@@ -96,15 +96,8 @@ QSize VideoWidget::minimumSizeHint() const
     static const int MAX_WIDTH = 120;
     static const int MIN_SIZE = 32;
 
-    if (activated) {
-        if (!currentImage.isNull()) {
-            bool isInVerticalLayout = parentWidget()->height() > parentWidget()->width();
-            QImage img = isInVerticalLayout ? (currentImage.scaledToWidth(qMin(width(), MAX_WIDTH))) : (currentImage.scaledToHeight(qMin(MAX_HEIGHT, height())));
-            return img.size();
-        }
-
+    if (activated)
         return QSize(MAX_WIDTH, MAX_HEIGHT);
-    }
 
     return QSize(MIN_SIZE, MIN_SIZE);
 }
