@@ -677,8 +677,10 @@ void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleAccentBeatsComboChange " << accentBeatsCb << index;
 
     if (accentBeatsCb == -1) {
-        handleCustomAccentBeatsChange("");
+        ninjamPanel->setAccentBeatsTextEnabled(true);
+        // do nothing else until the Ninjam Panel UI works out the accent beats text
     } else {
+        ninjamPanel->setAccentBeatsTextEnabled(false);
         int currentBpi = mainController->getNinjamController()->getCurrentBpi();
         mainController->getNinjamController()->setMetronomeBeatsPerAccent(accentBeatsCb, currentBpi);
     }
