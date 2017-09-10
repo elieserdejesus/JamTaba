@@ -21,6 +21,7 @@
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "persistence/UsersDataCache.h"
+#include "MetronomeUtils.h"
 
 #include <QMessageBox>
 #include <QRegExp>
@@ -685,31 +686,8 @@ void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 void NinjamRoomWindow::handleCustomAccentBeatsChange(const QString &value)
 {
     Q_UNUSED(value)
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange '" << ninjamPanel->getAccentBeatsText() << "'; '" << value << "'";
-
-    QStringList accentBeatsStrings;
-    if (ninjamPanel->getAccentBeatsText().trimmed().isEmpty()) {
-        qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange - empty";
-        foreach (int accentBeat, mainController->getNinjamController()->getMetronomeAccentBeats()) {
-            accentBeatsStrings.append(QString::number(accentBeat));
-            qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange " << accentBeat;
-        }
-        ninjamPanel->setAccentBeatsText(accentBeatsStrings.join(" "));
-    } else {
-        accentBeatsStrings = ninjamPanel->getAccentBeatsText().trimmed().split("  *");
-    }
-
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange" << accentBeatsStrings;
-    QList<int> accentBeats;
-    foreach(QString accentBeatString, accentBeatsStrings) {
-        int accentBeat = accentBeatString.toInt();
-        qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange" << accentBeatString << accentBeat;
-        accentBeats.append(accentBeat);
-    }
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange" << accentBeats;
-
+    QList<int> accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(ninjamPanel->getAccentBeatsText());
     mainController->getNinjamController()->setMetronomeAccentBeats(accentBeats);
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange ...done";
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

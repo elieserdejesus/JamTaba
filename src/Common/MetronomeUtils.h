@@ -25,6 +25,8 @@ public:
 
     static QList<int> getAccentBeats(int beatsPerAccent, int bpi);
 
+    static QList<int> getAccentBeatsFromString(QString value);
+
 private:
     static void createBuffer(const QString &audioFilePath, Audio::SamplesBuffer &outBuffer, quint32 localSampleRate);
     static void createResampledBuffer(const Audio::SamplesBuffer &buffer, Audio::SamplesBuffer &outBuffer, int originalSampleRate,

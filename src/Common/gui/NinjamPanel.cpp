@@ -4,6 +4,7 @@
 #include "BpiUtils.h"
 #include "intervalProgress/IntervalProgressWindow.h"
 #include "TextEditorModifier.h"
+#include "MetronomeUtils.h"
 
 #include <QDebug>
 #include <QtAlgorithms>
@@ -164,7 +165,6 @@ bool NinjamPanel::metronomeFloatingWindowIsVisible() const
 
 void NinjamPanel::setMetronomeFloatingWindowVisibility(bool showFloatingWindow)
 {
-    // TODO
     if (showFloatingWindow){
         if (!metronomeFloatingWindow) {
             IntervalProgressDisplay::PaintShape paintMode = ui->intervalPanel->getPaintMode();
@@ -327,8 +327,10 @@ void NinjamPanel::updateAccentsStatus(int index)
     if (beatsPerAccent != 0) {
         QList<int> accentBeats;
         if (beatsPerAccent > 0) {
-
+            int bpi = ui->intervalPanel->getBeatsPerInterval();
+            accentBeats = Audio::MetronomeUtils::getAccentBeats(beatsPerAccent, bpi);
         } else {
+            accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
         }
         ui->intervalPanel->setAccentBeats(accentBeats);
         if (metronomeFloatingWindow) {
