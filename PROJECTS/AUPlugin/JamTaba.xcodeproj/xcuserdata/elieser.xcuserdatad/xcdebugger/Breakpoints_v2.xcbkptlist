@@ -47,7 +47,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "234"
             endingLineNumber = "234"
-            landmarkName = "MainWindow::initialize()"
+            landmarkName = "MainWindow::handleThemeChanged()"
             landmarkType = "5">
             <Locations>
                <Location
@@ -152,9 +152,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "152"
-            endingLineNumber = "152"
-            landmarkName = "MainWindow::initializeThemeMenu()"
-            landmarkType = "5">
+            endingLineNumber = "152">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1183,7 +1181,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "17"
             endingLineNumber = "17"
-            landmarkName = "-setAudioUnit:"
+            landmarkName = "-dealloc"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1417,36 +1415,6 @@
             endingLineNumber = "682"
             landmarkName = "class AUBase"
             landmarkType = "3">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AUBase::Start()"
-                  moduleName = "JamTaba"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/AU_SDK/AUPublic/AUBase/AUBase.h"
-                  timestampString = "514585397.327823"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "682"
-                  endingLineNumber = "682"
-                  offsetFromSymbolStart = "13">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AUBase::Start()"
-                  moduleName = "CocoaJamTabaView"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/PROJECTS/AUPlugin/../../AU_SDK/AUPublic/AUBase/AUBase.h"
-                  timestampString = "514585397.328067"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "682"
-                  endingLineNumber = "682"
-                  offsetFromSymbolStart = "13">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1463,36 +1431,6 @@
             endingLineNumber = "684"
             landmarkName = "class AUBase"
             landmarkType = "3">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AUBase::Stop()"
-                  moduleName = "JamTaba"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/AU_SDK/AUPublic/AUBase/AUBase.h"
-                  timestampString = "514585397.328787"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "684"
-                  endingLineNumber = "684"
-                  offsetFromSymbolStart = "13">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AUBase::Stop()"
-                  moduleName = "CocoaJamTabaView"
-                  urlString = "file:///Users/elieser/Desktop/JamTaba/PROJECTS/AUPlugin/../../AU_SDK/AUPublic/AUBase/AUBase.h"
-                  timestampString = "514585397.329019"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "684"
-                  endingLineNumber = "684"
-                  offsetFromSymbolStart = "13">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
