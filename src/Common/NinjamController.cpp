@@ -172,11 +172,9 @@ public:
 
     void process()
     {
-        qCDebug(jtNinjamCore) << "BpiChangeEvent... " << newBpi;
         controller->currentBpi = newBpi;
         controller->samplesInInterval = controller->computeTotalSamplesInInterval();
         emit controller->currentBpiChanged(controller->currentBpi);
-        qCDebug(jtNinjamCore) << "BpiChangeEvent... Done";
     }
 
 private:
@@ -198,9 +196,7 @@ public:
     
     void process()
     {
-        qCDebug(jtNinjamCore) << "BpmChangeEvent... " << newBpm;
         controller->setBpm(newBpm);
-        qCDebug(jtNinjamCore) << "BpmChangeEvent... Done";
     }
 
 private:
@@ -221,9 +217,7 @@ class NinjamController::InputChannelChangedEvent : public SchedulableEvent
         
         void process()
         {
-            qCDebug(jtNinjamCore) << "InputChannelChangedEvent... " << channelIndex;
             controller->recreateEncoderForChannel(channelIndex);
-            qCDebug(jtNinjamCore) << "InputChannelChangedEvent... Done";
         }
     
     private:
@@ -386,7 +380,6 @@ Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sample
 
 void NinjamController::recreateMetronome(int newSampleRate)
 {
-    qCDebug(jtNinjamCore) << "recreateMetronome " << newSampleRate;
     // remove the old metronome
     float oldGain = metronomeTrackNode->getGain();
     float oldPan = metronomeTrackNode->getPan();
