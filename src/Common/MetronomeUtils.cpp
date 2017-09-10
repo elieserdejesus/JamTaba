@@ -60,6 +60,21 @@ QList<int> MetronomeUtils::getAccentBeats(int beatsPerAccent, int bpi)
     return accentBeats;
 }
 
+QList<int> MetronomeUtils::getAccentBeatsFromString(QString value)
+{
+    qCDebug(jtMetronome) << "MetronomeUtils::getAccentBeatsFromString" << value;
+
+    QList<int> accentBeats;
+    QList<QString> accentBeatsStrings = value.trimmed().split("  *");
+
+    foreach(QString accentBeatString, accentBeatsStrings) {
+        int accentBeat = accentBeatString.toInt();
+        accentBeats.append(accentBeat);
+    }
+
+    return accentBeats;
+}
+
 void MetronomeUtils::createBuiltInSounds(const QString &alias, Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &offBeatBuffer, Audio::SamplesBuffer &accentBeatBuffer, quint32 localSampleRate)
 {
     createBuiltInSound(alias, "1st", firstBeatBuffer, localSampleRate);
