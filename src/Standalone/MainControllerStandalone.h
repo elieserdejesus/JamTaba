@@ -112,6 +112,8 @@ public slots:
 
     void openExternalAudioControlPanel();
 
+    void connectInNinjamServer(const Ninjam::Server &server) override;
+
 protected:
     Midi::MidiDriver *createMidiDriver();
 
@@ -128,7 +130,6 @@ protected:
 
 protected slots:
     void updateBpm(int newBpm) override;
-    void connectInNinjamServer(const Ninjam::Server &server) override;
 
 
     void handleNewNinjamInterval() override;

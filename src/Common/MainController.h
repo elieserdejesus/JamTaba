@@ -106,7 +106,7 @@ public:
 
     Ninjam::Service *getNinjamService();
 
-    QStringList getBotNames() const;
+    static QStringList getBotNames();
 
     // tracks
     void setTrackMute(int trackID, bool muteStatus, bool blockSignals = false);
@@ -239,6 +239,8 @@ public slots:
 
     void processCapturedFrame(int frameID, const QImage &frame);
 
+    virtual void connectInNinjamServer(const Ninjam::Server &server);
+
 protected:
 
     static QString LOG_CONFIG_FILE;
@@ -326,7 +328,6 @@ private:
 protected slots:
 
     // ninjam
-    virtual void connectInNinjamServer(const Ninjam::Server &server);
     virtual void disconnectFromNinjamServer(const Ninjam::Server &server);
     virtual void quitFromNinjamServer(const QString &error);
 

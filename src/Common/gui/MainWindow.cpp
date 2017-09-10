@@ -418,6 +418,9 @@ void MainWindow::updateLocalInputChannelsGeometry()
 
 void MainWindow::toggleLocalInputsCollapseStatus()
 {
+    if (localGroupChannels.isEmpty())
+        return;
+
     bool isShowingPeakMetersOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
     showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly); // toggle
 }

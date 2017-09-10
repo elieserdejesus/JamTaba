@@ -411,7 +411,7 @@ QString MainController::getUserName() const
     return settings.getUserName();
 }
 
-QStringList MainController::getBotNames() const
+QStringList MainController::getBotNames()
 {
     return Ninjam::Service::getBotNamesList();
 }
@@ -907,7 +907,7 @@ void MainController::stopRoomStream()
 
 bool MainController::isPlayingRoomStream() const
 {
-    return roomStreamer->isStreaming();
+    return roomStreamer && roomStreamer->isStreaming();
 }
 
 void MainController::enterInRoom(const Login::RoomInfo &room, const QStringList &channelsNames, const QString &password)

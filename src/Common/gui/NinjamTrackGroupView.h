@@ -40,6 +40,9 @@ public:
 
     void addVideoInterval(const QByteArray &encodedVideoData);
 
+public slots:
+    void updateVideoFrame(const QImage &frame);
+
 protected:
     NinjamTrackView *createTrackView(long trackID) override;
 
@@ -72,8 +75,6 @@ private slots:
     void unblockChatMessages();
     void hideChatBlockIcon(const QString &unblockedUserName);
     void showChatBlockIcon(const QString &blockedUserName);
-
-    void updateVideoFrame(const QImage &frame);
 
     void startVideoIntervalDecoding();
 };

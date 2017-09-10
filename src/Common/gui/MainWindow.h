@@ -79,9 +79,14 @@ public:
 
     void closeAllFloatingWindows();
 
+    void setTheme(const QString &themeName);
+
+    NinjamRoomWindow* getNinjamRomWindow() const;
+
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
+    void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
 
 protected:
     Controller::MainController *mainController;
@@ -198,8 +203,6 @@ protected slots:
     void updateBpm(int bpm);
     void updateCurrentIntervalBeat(int beat);
 
-    void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
-
     void initializeLocalInputChannels();
 
     QSize getSanitizedWindowSize(const QSize &size, const QSize &minimumSize) const;
@@ -253,8 +256,6 @@ private:
     void initializeWindowSize();
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
-
-    void setTheme(const QString &themeName);
 
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;
@@ -336,6 +337,11 @@ private:
     static const QString NIGHT_MODE_SUFFIX;
 
 };
+
+inline NinjamRoomWindow* MainWindow::getNinjamRomWindow() const
+{
+    return this->ninjamWindow.data();
+}
 
 inline Controller::MainController *MainWindow::getMainController() const
 {
