@@ -72,7 +72,7 @@ signals:
     void bpiComboActivated(const QString &);
     void bpmComboActivated(const QString &);
     void accentsComboChanged(int index);
-    void accentsLineEditFinished(QString value);
+    void accentsTextChanged(QString value);
     void gainSliderChanged(int value);
     void panSliderChanged(int value);
     void muteButtonClicked();

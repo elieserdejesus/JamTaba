@@ -131,7 +131,7 @@ void NinjamPanel::setupSignals()
 {
     connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAccentsStatus(int)));
     connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), SIGNAL(accentsComboChanged(int)));
-    connect(ui->lineEditAccentBeats, SIGNAL(textChanged(QString)), SIGNAL(accentsLineEditFinished(QString)));
+    connect(ui->lineEditAccentBeats, SIGNAL(textChanged(QString)), SIGNAL(accentsTextChanged(QString)));
     connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this, SLOT(updateIntervalProgressShape(int)));
 
     connect(ui->comboBpi, SIGNAL(activated(QString)), this, SLOT(handleBpiComboActication(QString)));

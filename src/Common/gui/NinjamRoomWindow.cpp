@@ -248,7 +248,7 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
     connect(panel, &NinjamPanel::bpiComboActivated, this, &NinjamRoomWindow::setNewBpi);
     connect(panel, &NinjamPanel::bpmComboActivated, this, &NinjamRoomWindow::setNewBpm);
     connect(panel, &NinjamPanel::accentsComboChanged, this, &NinjamRoomWindow::handleAccentBeatsComboChange);
-    connect(panel, &NinjamPanel::accentsLineEditFinished, this, &NinjamRoomWindow::handleCustomAccentBeatsChange);
+    connect(panel, &NinjamPanel::accentsTextChanged, this, &NinjamRoomWindow::handleCustomAccentBeatsChange);
 
     connect(panel, &NinjamPanel::gainSliderChanged, this, &NinjamRoomWindow::setMetronomeFaderPosition);
     connect(panel, &NinjamPanel::panSliderChanged, this, &NinjamRoomWindow::setMetronomePanSliderPosition);
