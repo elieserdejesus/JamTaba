@@ -17,6 +17,7 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
     hostSyncButton(nullptr),
     metronomeFloatingWindow(nullptr)
 {
+    qCDebug(jtNinjamGUI) << "NinjamPanel::NinjamPanel ctor";
     ui->setupUi(this);
 
     ui->levelSlider->setSliderType(Slider::AudioSlider);
@@ -31,6 +32,7 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
     setupSignals();
 
     translate();
+    qCDebug(jtNinjamGUI) << "NinjamPanel::NinjamPanel done";
 }
 
 void NinjamPanel::updateStyleSheet()
@@ -268,9 +270,9 @@ bool NinjamPanel::isAccentBeatsEnabled() const
     return ui->lineEditAccentBeats->isEnabled();
 }
 
-void NinjamPanel::setAccentBeatsEnabled(bool value)
+void NinjamPanel::setAccentBeatsTextEnabled(bool value)
 {
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setAccentBeatsEnabled " << value;
+    qCDebug(jtNinjamGUI) << "NinjamPanel::setAccentBeatsTextEnabled " << value;
     ui->lineEditAccentBeats->setEnabled(value);
 }
 
@@ -281,11 +283,11 @@ QString NinjamPanel::getAccentBeatsText() const
 
 void NinjamPanel::setAccentBeatsText(QString value)
 {
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setCurrentAccentBeats " << value;
+    qCDebug(jtNinjamGUI) << "NinjamPanel::setAccentBeatsText " << value;
     ui->lineEditAccentBeats->blockSignals(false);
     ui->lineEditAccentBeats->setText(value);
     ui->lineEditAccentBeats->blockSignals(true);
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setCurrentAccentBeats done";
+    qCDebug(jtNinjamGUI) << "NinjamPanel::setAccentBeatsText done";
 }
 
 int NinjamPanel::getGainSliderMaximumValue() const

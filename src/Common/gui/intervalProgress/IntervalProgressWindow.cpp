@@ -1,4 +1,6 @@
 #include "IntervalProgressWindow.h"
+#include "log/Logging.h"
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QtGlobal>
@@ -62,6 +64,8 @@ void IntervalProgressWindow::setCurrentBeat(int currentBeat)
 
  void IntervalProgressWindow::setAccentBeats(QList<int> accentBeats)
  {
+     qCDebug(jtNinjamGUI) << "IntervalProgressDisplay::setAccentBeats" << accentBeats;
+
      progressDisplay->setAccentBeats(accentBeats);
  }
 
@@ -94,5 +98,7 @@ void IntervalProgressWindow::setCurrentBeat(int currentBeat)
 
 void IntervalProgressWindow::setShowAccents(bool showAccents)
 {
+    qCDebug(jtNinjamGUI) << "IntervalProgressDisplay::setShowAccents" << showAccents;
+
     progressDisplay->setShowAccents(showAccents);
 }
