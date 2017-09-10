@@ -52,7 +52,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
     tracksSize(TracksSize::WIDE),
     roomInfo(roomInfo)
 {
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow ctor";
     ui->setupUi(this);
 
     ui->licenceButton->setIcon(QIcon(QPixmap(":/images/licence.png")));
@@ -85,6 +85,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
     updateBpmBpiLabel();
 
     connect(mainController, &Controller::MainController::themeChanged, this, &NinjamRoomWindow::updateStylesheet);
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow done";
 }
 
 void NinjamRoomWindow::updateStylesheet()
@@ -678,7 +679,7 @@ void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 {
     Q_UNUSED(index)
     int accentBeatsCb = ninjamPanel->getAccentBeatsComboValue();
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleAccentBeatsComboChange " << accentBeatsCb;
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleAccentBeatsComboChange " << accentBeatsCb << index;
 
     if (accentBeatsCb == -1) {
         handleCustomAccentBeatsChange("");
@@ -691,7 +692,10 @@ void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 void NinjamRoomWindow::handleCustomAccentBeatsChange(const QString &value)
 {
     Q_UNUSED(value)
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange " << value;
+
     QList<int> accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(ninjamPanel->getAccentBeatsText());
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange " << accentBeats;
     mainController->getNinjamController()->setMetronomeAccentBeats(accentBeats);
 }
 

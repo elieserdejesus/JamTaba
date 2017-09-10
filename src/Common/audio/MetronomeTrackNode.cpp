@@ -43,7 +43,7 @@ void MetronomeTrackNode::setAccentBeatSamples(const SamplesBuffer &accentBeatSam
 
 void MetronomeTrackNode::setAccentBeats(QList<int> accentBeats)
 {
-    qCDebug(jtMetronome) << "setAccentBeats " << accentBeats;
+    qCDebug(jtMetronome) << "MetronomeTrackNode::setAccentBeats " << accentBeats;
     this->accentBeats = accentBeats;
 }
 
@@ -69,7 +69,7 @@ void MetronomeTrackNode::resetInterval()
 
 void MetronomeTrackNode::setBeatsPerAccent(int beatsPerAccent, int currentBpi)
 {
-    qCDebug(jtMetronome) << "setBeatsPerAccent" << beatsPerAccent << currentBpi;
+    qCDebug(jtMetronome) << "MetronomeTrackNode::setBeatsPerAccent" << beatsPerAccent << currentBpi;
     setAccentBeats(MetronomeUtils::getAccentBeats(beatsPerAccent, currentBpi));
 }
 
