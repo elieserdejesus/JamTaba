@@ -51,7 +51,7 @@ public:
     void setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel);
 
     // audio interval upload
-    void sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart);
+    void sendIntervalPart(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart);
     void sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, bool isAudioInterval);
 
     void sendNewChannelsListToServer(const QStringList &channelsNames);
@@ -83,6 +83,7 @@ signals:
     void serverBpiChanged(quint16 currentBpi, quint16 lastBpi);
     void serverBpmChanged(quint16 currentBpm);
     void audioIntervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
+    void videoIntervalCompleted(const Ninjam::User &user, const QByteArray &encodedVideoData);
     void audioIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int bytesDownloaded);
     void disconnectedFromServer(const Ninjam::Server &server);
     void connectedInServer(const Ninjam::Server &server);

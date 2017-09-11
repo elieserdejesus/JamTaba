@@ -303,10 +303,7 @@ bool DownloadIntervalBegin::isAudio() const
 
 bool DownloadIntervalBegin::isVideo() const
 {
-   return  fourCC[0] == 'J' &&
-           fourCC[1] == 'T' &&
-           fourCC[2] == 'B' &&
-           fourCC[3] == 'v';
+   return !isAudio();
 }
 
 void DownloadIntervalBegin::printDebug(QDebug &dbg) const
@@ -326,7 +323,7 @@ void DownloadIntervalWrite::printDebug(QDebug &dbg) const
 {
     dbg << "RECEIVE DownloadIntervalWrite{ flags='" << flags << "' GUID={" << GUID
         << "} downloadIsComplete=" << downloadIsComplete() << ", audioData="
-        << encodedAudioData.size() << " bytes }";
+        << encodedData.size() << " bytes }";
 }
 
 DownloadIntervalWrite::DownloadIntervalWrite(quint32 payload) :
@@ -345,10 +342,12 @@ void DownloadIntervalWrite::readFrom(QDataStream &stream)
     stream >> flags;
 
     quint32 lenght = payload - 17;
-    encodedAudioData.resize(lenght);
-    int bytesReaded = stream.readRawData(encodedAudioData.data(), lenght);
-    if (bytesReaded <= 0)
-        qWarning() << "Error reading encoded audio! "  << bytesReaded;
+    if (lenght >= 0) {
+        encodedData.resize(lenght);
+        int bytesReaded = stream.readRawData(encodedData.data(), lenght);
+        if (bytesReaded < 0)
+            qWarning() << "Error reading encoded data!  return:" << bytesReaded << " payload:" << payload << " encodedData.size:" << encodedData.size();
+    }
 }
 
 // ++++++++++++++++++

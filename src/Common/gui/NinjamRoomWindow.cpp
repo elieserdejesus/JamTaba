@@ -34,16 +34,18 @@
 #include <QTimer>
 
 using namespace Persistence;
+using namespace Controller;
 
 const QString NinjamRoomWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
 
 NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo &roomInfo,
-                                   Controller::MainController *mainController) :
+                                                                MainController *mainController) :
     QWidget(mainWindow),
     ui(new Ui::NinjamRoomWindow),
     mainWindow(mainWindow),
     mainController(mainController),
-    chatPanel(new ChatPanel(mainController->getBotNames(), &usersColorsPool, mainWindow->createTextEditorModifier())),
+    chatPanel(new ChatPanel(MainController::getBotNames(), &usersColorsPool,
+                                    mainWindow ? mainWindow->createTextEditorModifier() : nullptr)),
     ninjamPanel(nullptr),
     tracksOrientation(Qt::Vertical),
     tracksSize(TracksSize::WIDE),
@@ -107,7 +109,10 @@ void NinjamRoomWindow::initializeVotingExpirationTimers()
 
 void NinjamRoomWindow::updateBpmBpiLabel()
 {
-    Controller::NinjamController *controller = mainController->getNinjamController();
+    auto controller = mainController->getNinjamController();
+    if (!controller)
+        return;
+
     int bpi = controller->getCurrentBpi();
     int bpm = controller->getCurrentBpm();
     QString newText(QString::number(bpm) + " BPM   " + QString::number(bpi) + " BPI");
@@ -174,7 +179,7 @@ void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrien
     int licenceButtonIndex = ui->topLayout->indexOf(ui->licenceButton);
     ui->topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
 
-    connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(toggleTracksLayoutOrientation(QAbstractButton*)));
+    connect(buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksLayoutOrientation(QAbstractButton*)));
 }
 
 void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
@@ -209,7 +214,7 @@ void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
     int licenceButtonIndex = ui->topLayout->indexOf(ui->licenceButton);
     ui->topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
 
-    connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(toggleTracksSize(QAbstractButton*)));
+    connect(buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksSize(QAbstractButton*)));
 }
 
 void NinjamRoomWindow::toggleTracksLayoutOrientation(QAbstractButton* buttonClicked)
@@ -226,8 +231,8 @@ void NinjamRoomWindow::toggleTracksSize(QAbstractButton *buttonClicked)
 
 NinjamPanel *NinjamRoomWindow::createNinjamPanel()
 {
-    TextEditorModifier *bpiComboModifier = mainWindow->createTextEditorModifier();
-    TextEditorModifier *bpmComboModifier = mainWindow->createTextEditorModifier();
+    TextEditorModifier *bpiComboModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
+    TextEditorModifier *bpmComboModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
     NinjamPanel *panel = new NinjamPanel(bpiComboModifier, bpmComboModifier);
 
     float initialMetronomeGain = mainController->getSettings().getMetronomeGain();
@@ -698,7 +703,9 @@ void NinjamRoomWindow::setNewBpm(const QString &newText)
 
 void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamController)
 {
-    Q_ASSERT(ninjamController);
+    if(!ninjamController)
+        return;
+
     qCDebug(jtNinjamGUI) << "connecting signals in ninjamController...";
     connect(ninjamController, SIGNAL(channelAdded(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(addChannel(Ninjam::User, Ninjam::UserChannel, long)));
 
@@ -738,6 +745,17 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ninjamPanel, SIGNAL(intervalShapeChanged(int)), this, SLOT(setNewIntervalShape(int)));
 
+
+    connect(mainController->getNinjamService(), &Ninjam::Service::videoIntervalCompleted, this, &NinjamRoomWindow::setVideoInterval);
+
+}
+
+void NinjamRoomWindow::setVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData)
+{
+    NinjamTrackGroupView *group = trackGroups[user.getFullName()];
+    if (group) {
+        group->addVideoInterval(encodedVideoData);
+    }
 }
 
 void NinjamRoomWindow::handleBpiChanges()

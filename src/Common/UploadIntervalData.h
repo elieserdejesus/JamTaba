@@ -21,7 +21,7 @@ public:
         return dataToUpload.size();
     }
 
-    inline QByteArray getStoredBytes() const
+    inline QByteArray getData() const
     {
         return dataToUpload;
     }

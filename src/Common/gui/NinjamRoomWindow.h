@@ -59,6 +59,11 @@ public:
     bool metronomeFloatingWindowIsVisible() const;
     void closeMetronomeFloatingWindow();
 
+    QList<NinjamTrackGroupView *> getTrackGroups() const;
+
+public slots:
+    void setChannelXmitStatus(long channelID, bool transmiting);
+
 protected:
     Ui::NinjamRoomWindow *ui;
     MainWindow *mainWindow;
@@ -132,11 +137,13 @@ private slots:
     void toggleMetronomeSoloStatus();
     void showMetronomePreferences();
 
+    // video
+    void setVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData);
+
     // ninjam controller events
     void addChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
     void removeChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
     void changeChannelName(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
-    void setChannelXmitStatus(long channelID, bool transmiting);
     void updateIntervalDownloadingProgressBar(long trackID);
     void hideIntervalDownloadingProgressBar(long trackID);
     void addChatMessage(const Ninjam::User &, const QString &message);
@@ -167,6 +174,10 @@ private slots:
     void updateStylesheet();
 };
 
+inline QList<NinjamTrackGroupView *> NinjamRoomWindow::getTrackGroups() const
+{
+    return trackGroups.values();
+}
 
 inline ChatPanel *NinjamRoomWindow::getChatPanel() const
 {

@@ -6,6 +6,8 @@
 
 using namespace Recorder;
 
+const quint8 JamRecorder::VIDEO_CHANNEL_KEY = 255;
+
 JamAudioFile::JamAudioFile(const QString &path, uint intervalIndex) :
     path(path),
     intervalIndex(intervalIndex)
@@ -135,6 +137,11 @@ void JamRecorder::writeEncodedFile(const QByteArray& encodedData, const QString 
     audioFile.write(encodedData.data(), encodedData.size());
 }
 
+QString JamRecorder::buildVideoFileName(const QString &userName, int currentInterval, const QString &fileExtension)
+{
+    return userName + "_video_" + QString::number(currentInterval) + "." + fileExtension;
+}
+
 QString JamRecorder::buildAudioFileName(const QString &userName, quint8 channelIndex, int currentInterval)
 {
     QString channelName = "Channel " + QString::number(channelIndex + 1);
@@ -157,29 +164,61 @@ JamRecorder::~JamRecorder()
     qCDebug(jtJamRecorder) << "Deleting JamRecorder!";
 }
 
-void JamRecorder::appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex, bool isFirstPartOfInterval, bool isLastPastOfInterval)
+void JamRecorder::appendLocalUserAudio(const QByteArray &encodedAudio, quint8 channelIndex, bool isFirstPartOfInterval)
 {
     if (!running) {
         qCritical() << "Illegal state! Recorder is not running!";
         return;
     }
 
-    //qCDebug(recorder) << "appending encoded audio to a local user channel index:" <<channelIndex;
-    Q_UNUSED(isFirstPartOfInterval)
     if (!localUserIntervals.contains(channelIndex)) {
         localUserIntervals.insert(channelIndex, LocalNinjamInterval(globalIntervalIndex));
     }
 
-    localUserIntervals[channelIndex].appendEncodedAudio(encodedaudio);
-    if (isLastPastOfInterval) {
-        QString audioFileName = buildAudioFileName(localUserName, channelIndex, localUserIntervals[channelIndex].getIntervalIndex());
+    auto &interval = localUserIntervals[channelIndex];
+
+    bool needSave = isFirstPartOfInterval && !interval.isEmpty();
+    if (needSave) {
+        QString audioFileName = buildAudioFileName(localUserName, channelIndex, interval.getIntervalIndex());
         QString audioFilePath = jamMetadataWritter->getAudioAbsolutePath(audioFileName);
-        QByteArray encodedData(localUserIntervals[channelIndex].getEncodedData());
+        QByteArray encodedData(interval.getEncodedData());
         QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, audioFilePath);
-        //writeEncodedFile(localUserIntervals[channelIndex].getEncodedData(), audioFilePath);
-        jam->addAudioFile(localUserName, channelIndex, audioFilePath, localUserIntervals[channelIndex].getIntervalIndex());
-        localUserIntervals[channelIndex].clear();
+        jam->addAudioFile(localUserName, channelIndex, audioFilePath, interval.getIntervalIndex());
+        interval.clear();
     }
+
+    interval.appendEncodedData(encodedAudio);
+}
+
+void JamRecorder::appendLocalUserVideo(const QByteArray &encodedVideo, bool isFirstPartOfInterval)
+{
+    if (!running) {
+        qCritical() << "Illegal state! Recorder is not running!";
+        return;
+    }
+
+    if (!localUserIntervals.contains(VIDEO_CHANNEL_KEY)) {
+        localUserIntervals.insert(VIDEO_CHANNEL_KEY, LocalNinjamInterval(globalIntervalIndex));
+    }
+
+    auto &videoInterval = localUserIntervals[VIDEO_CHANNEL_KEY];
+
+    bool needSave = isFirstPartOfInterval && !videoInterval.isEmpty();
+    if (needSave) {
+
+        QByteArray encodedData(videoInterval.getEncodedData());
+
+        bool canSave = encodedData.left(4) == "RIFF";
+        if (canSave) {
+            QString videoFileName = buildVideoFileName(localUserName, videoInterval.getIntervalIndex(), "avi");
+            QString videoFilePath = jamMetadataWritter->getVideoAbsolutePath(videoFileName);
+
+            QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, videoFilePath);
+            videoInterval.clear();
+        }
+    }
+
+    videoInterval.appendEncodedData(encodedVideo);
 }
 
 void JamRecorder::addRemoteUserAudio(const QString &userName, const QByteArray &encodedAudio, quint8 channelIndex)
@@ -272,16 +311,6 @@ void JamRecorder::newInterval()
         globalIntervalIndex++;
         writeProjectFile();
     }
-    //        if (newPath == null) {
-    //            if (recording) {
-    //                globalInterval++;
-    //                writeProjectFile();
-    //            }
-    //        } else {
-    //            end();
-    //            globalInterval = 0;
-    //            jam = jam.cloneToNewRecordPath(newPath);
-    //            newPath = null;
-    //        }
+
 }
 

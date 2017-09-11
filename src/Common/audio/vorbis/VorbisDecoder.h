@@ -45,23 +45,6 @@ inline bool VorbisDecoder::isStereo() const
     return getChannels() == 2;
 }
 
-inline bool VorbisDecoder::isMono() const
-{
-    return vorbisFile.vi->channels == 1;
-}
-
-inline int VorbisDecoder::getChannels() const
-{
-    return vorbisFile.vi->channels;
-}
-
-inline int VorbisDecoder::getSampleRate() const
-{
-    if (vorbisFile.vi)
-        return vorbisFile.vi->rate;
-    return 44100;
-}
-
 inline bool VorbisDecoder::isInitialized() const
 {
     return initialized;

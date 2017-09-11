@@ -79,6 +79,8 @@ public:
 
     uint getSamplesPerInterval() const;
 
+    QList<NinjamTrackNode *> getTrackNodes() const;
+
 signals:
     void currentBpiChanged(int newBpi); // emitted when a scheduled bpi change is processed in interval start (first beat).
     void currentBpmChanged(int newBpm);
@@ -185,6 +187,10 @@ private slots:
 
 }; // end of class
 
+inline QList<NinjamTrackNode *> NinjamController::getTrackNodes() const
+{
+    return trackNodes.values();
+}
 
 inline bool NinjamController::hasScheduledChanges() const
 {
