@@ -107,7 +107,7 @@ private:
 
 private slots:
     void handleAccentBeatsIndexChanged(int index);
-    void handleAccentBeatsTextEdited(const QString &);
+    void handleAccentBeatsTextEdited();
     void updateIntervalProgressShape(int index);
     void deleteFloatWindow();
 
