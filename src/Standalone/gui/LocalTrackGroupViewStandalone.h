@@ -26,6 +26,12 @@ protected:
 private:
     void createSubChannelActions(QMenu &menu);
 
+private slots:
+     void repaintLocalTracks();
+
+protected slots:
+     void removeSubchannel() override;
+
 };
 
 #endif

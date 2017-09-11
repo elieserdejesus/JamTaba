@@ -5,6 +5,7 @@
 #include "gui/ScanFolderPanel.h"
 #include "QFileDialog"
 #include "persistence/Settings.h"
+#include <QDebug>
 
 /**
  This file contains the common/shared implementation for the Jamtaba plataforms (Win, Mac and Linux) in Standalone. In the Vst Plugin some details are different and implemented in the file VstPreferencesDialog.cpp.
@@ -14,9 +15,7 @@ using namespace Audio;
 using namespace Midi;
 using namespace Controller;
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-
-StandalonePreferencesDialog::StandalonePreferencesDialog(QWidget *parent,
+PreferencesDialogStandalone::PreferencesDialogStandalone(QWidget *parent,
                                                          bool showAudioControlPanelButton,
                                                          Audio::AudioDriver *audioDriver,
                                                          Midi::MidiDriver *midiDriver) :
@@ -36,34 +35,37 @@ StandalonePreferencesDialog::StandalonePreferencesDialog(QWidget *parent,
     connect(ui->comboBufferSize, SIGNAL(activated(int)), this, SLOT(notifyBufferSizeChanged()));
 }
 
-void StandalonePreferencesDialog::notifyBufferSizeChanged()
+void PreferencesDialogStandalone::notifyBufferSizeChanged()
 {
     int newBufferSize = ui->comboBufferSize->currentData().toInt();
     emit bufferSizeChanged(newBufferSize);
 }
 
-void StandalonePreferencesDialog::notifySampleRateChanged()
+void PreferencesDialogStandalone::notifySampleRateChanged()
 {
     int newSampleRate = ui->comboSampleRate->currentData().toInt();
     emit sampleRateChanged(newSampleRate);
 }
 
-void StandalonePreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
+void PreferencesDialogStandalone::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
 {
     PreferencesDialog::initialize(initialTab, settings, jamRecorders);
     int tabIndex = static_cast<int>(initialTab);
     ui->prefsTab->setCurrentIndex(tabIndex);
 }
 
-void StandalonePreferencesDialog::populateAllTabs()
+void PreferencesDialogStandalone::populateAllTabs()
 {
-    PreferencesDialog::populateAllTabs();//populate recording and metronome tabs
+    PreferencesDialog::populateAllTabs(); // populate recording and metronome tabs
+
     populateAudioTab();
+
     populateMidiTab();
+
     populateVstTab();
 }
 
-void StandalonePreferencesDialog::setupSignals()
+void PreferencesDialogStandalone::setupSignals()
 {
     PreferencesDialog::setupSignals();
 
@@ -78,7 +80,7 @@ void StandalonePreferencesDialog::setupSignals()
     connect(ui->buttonControlPanel, SIGNAL(clicked(bool)), this,
             SIGNAL(openingExternalAudioControlPanel()));
 
-    connect(ui->buttonAddVstScanFolder, SIGNAL(clicked(bool)), this, SLOT(addVstScanFolder()));
+    connect(ui->buttonAddVstScanFolder, SIGNAL(clicked(bool)), this, SLOT(showDialogToAddVstScanFolder()));
 
     connect(ui->buttonClearVstAndScan, SIGNAL(clicked(bool)), this, SIGNAL(
                 startingFullPluginsScan()));
@@ -93,7 +95,7 @@ void StandalonePreferencesDialog::setupSignals()
             SLOT(removeBlackListedPlugins()));
 }
 
-void StandalonePreferencesDialog::addVstScanFolder()
+void PreferencesDialogStandalone::showDialogToAddVstScanFolder()
 {
     QFileDialog fileDialog(this, tr("Adding VST path ..."));
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -106,25 +108,25 @@ void StandalonePreferencesDialog::addVstScanFolder()
     }
 }
 
-void StandalonePreferencesDialog::clearScanFolderWidgets()
+void PreferencesDialogStandalone::clearScanFolderWidgets()
 {
     QList<ScanFolderPanel *> panels = ui->panelScanFolders->findChildren<ScanFolderPanel *>();
-    foreach (ScanFolderPanel *panel, panels) {
+    for (ScanFolderPanel *panel : panels) {
         ui->panelScanFolders->layout()->removeWidget(panel);
         panel->deleteLater();
     }
 }
 
-void StandalonePreferencesDialog::removeVstscanFolder()
+void PreferencesDialogStandalone::removeSelectedVstScanFolder()
 {
     QPushButton *buttonClicked = qobject_cast<QPushButton *>(sender());
 
     Q_ASSERT(buttonClicked);
 
     // search the ScanFolderPanel containing the clicked button
-    QList<ScanFolderPanel *> panels = ui->panelScanFolders->findChildren<ScanFolderPanel *>();
+    auto panels = ui->panelScanFolders->findChildren<ScanFolderPanel *>();
     ScanFolderPanel *panelToDelete = nullptr;
-    foreach (ScanFolderPanel *panel, panels) {
+    for (auto panel : panels) {
         if (panel->getRemoveButton() == buttonClicked) {
             panelToDelete = panel;
             break;
@@ -137,39 +139,46 @@ void StandalonePreferencesDialog::removeVstscanFolder()
     }
 }
 
-void StandalonePreferencesDialog::updateVstList(QString path)
+void PreferencesDialogStandalone::addFoundedVstPlugin(const QString &pluginName)
 {
-    ui->vstListWidget->appendPlainText(path);
+    ui->vstListWidget->appendPlainText(pluginName);
 }
 
-void StandalonePreferencesDialog::updateBlackBox()
+void PreferencesDialogStandalone::setCurrentScannedVstPlugin(const QString &pluginPath)
+{
+    ui->labelVstScanStatus->setText(tr("scanning %1").arg(pluginPath));
+}
+
+void PreferencesDialogStandalone::updateBlackBox()
 {
     ui->blackListWidget->clear();
     QStringList badPlugins = settings->getBlackListedPlugins();
-    foreach (const QString &badPlugin, badPlugins)
+    for (const QString &badPlugin : badPlugins)
         ui->blackListWidget->appendPlainText(badPlugin);
 }
 
-void StandalonePreferencesDialog::createWidgetsToNewFolder(QString path)
+void PreferencesDialogStandalone::createWidgetsToNewFolder(const QString &path)
 {
     ScanFolderPanel *panel = new ScanFolderPanel(path);
-    connect(panel->getRemoveButton(), SIGNAL(clicked(bool)), this, SLOT(removeVstscanFolder()));
+    connect(panel->getRemoveButton(), SIGNAL(clicked(bool)), this, SLOT(removeSelectedVstScanFolder()));
     ui->panelScanFolders->layout()->addWidget(panel);
     ui->panelScanFolders->layout()->setAlignment(panel, Qt::AlignTop);
 }
 
-void StandalonePreferencesDialog::clearVstList()
+void PreferencesDialogStandalone::clearVstList()
 {
     ui->vstListWidget->clear();
 }
 
 // open a dialog to add a vst in the blacklist
-void StandalonePreferencesDialog::addBlackListedPlugins()
+void PreferencesDialogStandalone::addBlackListedPlugins()
 {
     QFileDialog vstDialog(this, tr("Add Vst(s) to Black list ..."));
-    vstDialog.setNameFilter("Dll(*.dll)");// TODO in mac the extension is .vst
+    vstDialog.setNameFilter("Dll(*.dll)"); // TODO in mac the extension is .vst
+
     if (!settings->getVstScanFolders().isEmpty())
         vstDialog.setDirectory(settings->getVstScanFolders().first());
+
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
     vstDialog.setFileMode(QFileDialog::ExistingFiles);
 
@@ -182,40 +191,43 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
     }
 }
 
-void StandalonePreferencesDialog::removeBlackListedPlugins()
+void PreferencesDialogStandalone::removeBlackListedPlugins()
 {
     QFileDialog vstDialog(this, tr("Remove Vst(s) from Black List ..."));
-    vstDialog.setNameFilter("Dll(*.dll)");// TODO mac extension is .vst
+    vstDialog.setNameFilter("Dll(*.dll)"); // TODO mac extension is .vst
     QStringList foldersToScan = settings->getVstScanFolders();
+
     if (!foldersToScan.isEmpty())
         vstDialog.setDirectory(foldersToScan.first());
+
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
     vstDialog.setFileMode(QFileDialog::ExistingFiles);
+
     if (vstDialog.exec()) {
         QStringList vstNames = vstDialog.selectedFiles();
-        foreach (const QString &string, vstNames) {
+        for (const QString &string : vstNames) {
             emit vstPluginRemovedFromBlackList(string);
             updateBlackBox();
         }
     }
 }
 
-void StandalonePreferencesDialog::selectAudioTab()
+void PreferencesDialogStandalone::selectAudioTab()
 {
     ui->prefsTab->setCurrentWidget(ui->tabAudio);
 }
 
-void StandalonePreferencesDialog::selectMidiTab()
+void PreferencesDialogStandalone::selectMidiTab()
 {
     ui->prefsTab->setCurrentWidget(ui->tabMidi);
 }
 
-void StandalonePreferencesDialog::selectVstPluginsTab()
+void PreferencesDialogStandalone::selectVstPluginsTab()
 {
     ui->prefsTab->setCurrentWidget(ui->tabVST);
 }
 
-void StandalonePreferencesDialog::clearWidgetLayout(QWidget *widget)
+void PreferencesDialogStandalone::clearWidgetLayout(QWidget *widget)
 {
     QLayoutItem *item;
     while ((item = widget->layout()->takeAt(0)) != 0) {
@@ -225,7 +237,7 @@ void StandalonePreferencesDialog::clearWidgetLayout(QWidget *widget)
     }
 }
 
-void StandalonePreferencesDialog::populateMidiTab()
+void PreferencesDialogStandalone::populateMidiTab()
 {
     clearWidgetLayout(ui->midiContentPanel);
     int maxInputDevices = midiDriver->getMaxInputDevices();
@@ -243,14 +255,15 @@ void StandalonePreferencesDialog::populateMidiTab()
         }
         QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
         ui->midiContentPanel->layout()->addItem(spacer);
-    } else {// no devices detected
+    }
+    else { // no devices detected
         QLabel *label = new QLabel(tr("No midi input device detected!"));
         ui->midiContentPanel->layout()->addWidget(label);
         ui->midiContentPanel->layout()->setAlignment(label, Qt::AlignCenter);
     }
 }
 
-void StandalonePreferencesDialog::populateAudioTab()
+void PreferencesDialogStandalone::populateAudioTab()
 {
     populateAsioDriverCombo();
     populateFirstInputCombo();
@@ -261,22 +274,23 @@ void StandalonePreferencesDialog::populateAudioTab()
     ui->buttonControlPanel->setVisible(showAudioDriverControlPanelButton);
 }
 
-void StandalonePreferencesDialog::populateAsioDriverCombo()
+void PreferencesDialogStandalone::populateAsioDriverCombo()
 {
     int devices = audioDriver->getDevicesCount();
     ui->comboAudioDevice->clear();
     for (int d = 0; d < devices; d++) {
-        ui->comboAudioDevice->addItem(audioDriver->getAudioDeviceName(d), d);// using device index as userData in comboBox
+        ui->comboAudioDevice->addItem(audioDriver->getAudioInputDeviceName(d), d); // using device index as userData in comboBox
     }
     ui->comboAudioDevice->setCurrentIndex(audioDriver->getAudioDeviceIndex());
 }
 
-void StandalonePreferencesDialog::populateFirstInputCombo()
+void PreferencesDialogStandalone::populateFirstInputCombo()
 {
     ui->comboFirstInput->clear();
     int maxInputs = audioDriver->getMaxInputs();
     for (int i = 0; i < maxInputs; i++)
         ui->comboFirstInput->addItem(audioDriver->getInputChannelName(i), i);
+
     int firstInputIndex = audioDriver->getFirstSelectedInput();
     if (firstInputIndex < maxInputs)
         ui->comboFirstInput->setCurrentIndex(firstInputIndex);
@@ -284,7 +298,7 @@ void StandalonePreferencesDialog::populateFirstInputCombo()
         ui->comboFirstInput->setCurrentIndex(0);
 }
 
-void StandalonePreferencesDialog::populateLastInputCombo()
+void PreferencesDialogStandalone::populateLastInputCombo()
 {
     ui->comboLastInput->clear();
     int maxInputs = audioDriver->getMaxInputs();
@@ -302,7 +316,7 @@ void StandalonePreferencesDialog::populateLastInputCombo()
 
 }
 
-void StandalonePreferencesDialog::populateFirstOutputCombo()
+void PreferencesDialogStandalone::populateFirstOutputCombo()
 {
     ui->comboFirstOutput->clear();
     int maxOuts = audioDriver->getMaxOutputs();
@@ -311,16 +325,16 @@ void StandalonePreferencesDialog::populateFirstOutputCombo()
     ui->comboFirstOutput->setCurrentIndex(audioDriver->getFirstSelectedOutput());
 }
 
-void StandalonePreferencesDialog::populateLastOutputCombo()
+void PreferencesDialogStandalone::populateLastOutputCombo()
 {
     ui->comboLastOutput->clear();
     int maxOuts = audioDriver->getMaxOutputs();
     int currentFirstOut = ui->comboFirstOutput->currentData().toInt();
     if (currentFirstOut + 1 < maxOuts)
-        currentFirstOut++;// to avoid 1 channel output
+        currentFirstOut++; // to avoid 1 channel output
 
     int items = 0;
-    const int MAX_ITEMS = 1;// std::min( maxOuts - currentFirstOut, 2);
+    const int MAX_ITEMS = 1; // std::min( maxOuts - currentFirstOut, 2);
     for (int i = currentFirstOut; items < MAX_ITEMS; i++, items++)
         ui->comboLastOutput->addItem(audioDriver->getOutputChannelName(i), i);
     int lastOutputIndex = audioDriver->getFirstSelectedOutput() + audioDriver->getOutputsCount();
@@ -330,31 +344,30 @@ void StandalonePreferencesDialog::populateLastOutputCombo()
     ui->groupBoxOutputs->setEnabled(audioDriver->getMaxOutputs() > 2);
 }
 
-void StandalonePreferencesDialog::populateSampleRateCombo()
+void PreferencesDialogStandalone::populateSampleRateCombo()
 {
     ui->comboSampleRate->clear();
 
     QList<int> sampleRates = audioDriver->getValidSampleRates(audioDriver->getAudioDeviceIndex());
-    foreach (int sampleRate, sampleRates)
+    for (int sampleRate : sampleRates)
         ui->comboSampleRate->addItem(QString::number(sampleRate), sampleRate);
 
     ui->comboSampleRate->setCurrentText(QString::number(audioDriver->getSampleRate()));
     ui->comboSampleRate->setEnabled(!sampleRates.isEmpty());
 }
 
-void StandalonePreferencesDialog::populateBufferSizeCombo()
+void PreferencesDialogStandalone::populateBufferSizeCombo()
 {
     ui->comboBufferSize->clear();
     QList<int> bufferSizes = audioDriver->getValidBufferSizes(audioDriver->getAudioDeviceIndex());
-    foreach (int size, bufferSizes)
+    for (int size : bufferSizes)
         ui->comboBufferSize->addItem(QString::number(size), size);
 
     ui->comboBufferSize->setCurrentText(QString::number(audioDriver->getBufferSize()));
     ui->comboBufferSize->setEnabled(!bufferSizes.isEmpty());
 }
 
-// ++++++++++++
-void StandalonePreferencesDialog::changeAudioDevice(int index)
+void PreferencesDialogStandalone::changeAudioDevice(int index)
 {
     int deviceIndex = ui->comboAudioDevice->itemData(index).toInt();
     audioDriver->setAudioDeviceIndex(deviceIndex);
@@ -362,9 +375,10 @@ void StandalonePreferencesDialog::changeAudioDevice(int index)
     populateFirstInputCombo();
     populateFirstOutputCombo();
     populateSampleRateCombo();
+    populateBufferSizeCombo();
 }
 
-void StandalonePreferencesDialog::accept()
+void PreferencesDialogStandalone::accept()
 {
     int selectedAudioDevice = ui->comboAudioDevice->currentIndex();
     int firstIn = ui->comboFirstInput->currentData().toInt();
@@ -375,7 +389,7 @@ void StandalonePreferencesDialog::accept()
     // build midi inputs devices status
     QList<bool> midiInputsStatus;
     QList<QCheckBox *> boxes = ui->midiContentPanel->findChildren<QCheckBox *>();
-    foreach (QCheckBox *check, boxes)
+    for (QCheckBox *check : boxes)
         midiInputsStatus.append(check->isChecked());
 
     PreferencesDialog::accept();
@@ -384,36 +398,46 @@ void StandalonePreferencesDialog::accept()
                               lastOut);
 }
 
-void StandalonePreferencesDialog::populateVstTab()
+void PreferencesDialogStandalone::populateVstTab()
 {
-    clearScanFolderWidgets();// remove all widgets before add the paths
+    clearScanFolderWidgets(); // remove all widgets before add the paths
 
     // populate the paths
-    foreach (const QString &scanFolder, settings->getVstScanFolders())
+    for (const QString &scanFolder : settings->getVstScanFolders())
         createWidgetsToNewFolder(scanFolder);
 
     // populate the VST list
     ui->vstListWidget->clear();
-    foreach (const QString &path, settings->getVstPluginsPaths())
-        updateVstList(path);
+    ui->labelVstScanStatus->clear();
+    for (const QString &path : settings->getVstPluginsPaths()) {
+        QString pluginName = PluginDescriptor::getVstPluginNameFromPath(path);
+        addFoundedVstPlugin(pluginName);
+    }
 
+    // update black listed plugins
     updateBlackBox();
 }
 
-void StandalonePreferencesDialog::selectTab(int index)
+void PreferencesDialogStandalone::selectTab(int index)
 {
-    switch (index) {
-    case 0:
+    switch (static_cast<PreferencesTab>(index)) {
+    case PreferencesTab::TabAudio:
         populateAudioTab();
         break;
-    case 1:
+    case PreferencesTab::TabMidi:
         populateMidiTab();
         break;
-    case 2:
+    case PreferencesTab::TabVST:
         populateVstTab();
         break;
-    case 3:
-        populateRecordingTab();
+    case PreferencesTab::TabMultiTrackRecording:
+        populateMultiTrackRecordingTab();
+        break;
+    case PreferencesTab::TabLooper:
+        populateLooperTab();
+        break;
+    case PreferencesTab::TabMetronome:
+        populateMetronomeTab();
         break;
     }
 }

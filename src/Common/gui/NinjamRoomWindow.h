@@ -39,17 +39,9 @@ public:
     void updateGeoLocations();
 
     // these two components are exposed to be showed in main window
-    inline ChatPanel *getChatPanel() const
-    {
-        return chatPanel;
-    }
+    ChatPanel *getChatPanel() const;
 
-    inline NinjamPanel *getNinjamPanel() const
-    {
-        return ninjamPanel;
-    }
-
-    void setFullViewStatus(bool fullView);
+    NinjamPanel *getNinjamPanel() const;
 
     void setTracksOrientation(Qt::Orientation orientation);
 
@@ -60,25 +52,27 @@ public:
 
     void setTracksSize(TracksSize size);
 
-    inline QString getRoomName() const { return roomInfo.getName(); }
+    QString getRoomName() const;
 
-    Login::RoomInfo getRoomInfo() const { return roomInfo; }
+    Login::RoomInfo getRoomInfo() const;
+
+    bool metronomeFloatingWindowIsVisible() const;
+    void closeMetronomeFloatingWindow();
 
 protected:
     Ui::NinjamRoomWindow *ui;
+    MainWindow *mainWindow;
     Controller::MainController *mainController;
-    NinjamPanel *ninjamPanel;// panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
+    NinjamPanel *ninjamPanel; // panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
 
     void changeEvent(QEvent *) override;
+
 private:
-    MainWindow *mainWindow;
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
 
     QTimer *bpmVotingExpirationTimer;
     QTimer *bpiVotingExpiratonTimer;
-
-    bool fullViewMode;
 
     Login::RoomInfo roomInfo;
 
@@ -107,7 +101,7 @@ private:
 
     int calculateEstimatedChunksPerInterval() const;
 
-    void updateTracksSizeButtons();// enable or disable tracks size buttons
+    void updateTracksSizeButtons(); // enable or disable tracks size buttons
 
     void updateUserNameLabel();
 
@@ -163,12 +157,35 @@ private slots:
     void showFeedbackAboutUnblockedUserInChat(const QString &userName);
 
     void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked); // horizontal or vertical
-    void toggleTracksSize(QAbstractButton *buttonClicked);// narrow or wide
+    void toggleTracksSize(QAbstractButton *buttonClicked); // narrow or wide
 
     void resetBpiComboBox();
     void resetBpmComboBox();
 
     void setEstimatatedChunksPerIntervalInAllTracks();
+
+    void updateStylesheet();
 };
+
+
+inline ChatPanel *NinjamRoomWindow::getChatPanel() const
+{
+    return chatPanel;
+}
+
+inline NinjamPanel *NinjamRoomWindow::getNinjamPanel() const
+{
+    return ninjamPanel;
+}
+
+inline QString NinjamRoomWindow::getRoomName() const
+{
+    return roomInfo.getName();
+}
+
+inline Login::RoomInfo NinjamRoomWindow::getRoomInfo() const
+{
+    return roomInfo;
+}
 
 #endif // NINJAMROOMWINDOW_H

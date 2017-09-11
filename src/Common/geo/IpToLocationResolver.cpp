@@ -8,10 +8,11 @@ using namespace Geo;
 Location::Location() :
     countryName("UNKNOWN"),
     countryCode("UNKNOWN"),
-    city("UNKNOWN"),
     latitude(-200),
-    longitude(-200)
+    longitude(-200),
+    city("UNKNOWN")
 {
+
 }
 
 bool Location::isUnknown() const
@@ -19,14 +20,15 @@ bool Location::isUnknown() const
     return countryName == "UNKNOWN" && countryCode == "UNKNOWN";
 }
 
-Location::Location(const QString &country, const QString &countryCode, const QString &city, double latitude,
-                   double longitude) :
+Location::Location(const QString &country, const QString &countryCode, double latitude,
+                   double longitude, const QString &city) :
     countryName(sanitize(country)),
     countryCode(sanitize(countryCode)),
-    city(sanitize(city)),
     latitude(latitude),
-    longitude(longitude)
+    longitude(longitude),
+    city(sanitize(city))
 {
+    //
 }
 
 QString Location::sanitize(const QString &inputString)
@@ -36,13 +38,11 @@ QString Location::sanitize(const QString &inputString)
     return QString(inputString).replace(regex, QStringLiteral(""));
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++
 IpToLocationResolver::~IpToLocationResolver()
 {
     qCDebug(jtIpToLocation) << "IpToLocationResolver destructor";
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++
 Location NullIpToLocationResolver::resolve(const QString &ip, const QString &languageCode)
 {
     Q_UNUSED(ip)

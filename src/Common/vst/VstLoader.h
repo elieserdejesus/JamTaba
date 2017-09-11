@@ -5,12 +5,12 @@
 #include "aeffectx.h"
 
 namespace Vst {
-class Host;
+class VstHost;
 
 class VstLoader
 {
 public:
-    static AEffect *load(const QString &path, Vst::Host *host);
+    static AEffect *load(const QString &path, Vst::VstHost *host);
     static void unload(AEffect *effect);
 };
 }

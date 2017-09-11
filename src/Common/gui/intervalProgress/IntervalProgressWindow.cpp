@@ -3,10 +3,13 @@
 #include <QHBoxLayout>
 #include <QtGlobal>
 #include <QDialog>
+#include <QIcon>
 
 IntervalProgressWindow::IntervalProgressWindow(QWidget *parent, IntervalProgressDisplay::PaintShape paintShape, int beatsPerInterval, int beatsPerAccent, bool showingAccents)
     :QDialog(parent)
 {
+
+    setWindowIcon(QIcon(":/images/logo.png"));
 
     progressDisplay = new IntervalProgressDisplay(this);
     progressDisplay->setObjectName(QStringLiteral("intervalPanel"));

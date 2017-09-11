@@ -22,6 +22,7 @@ QColor UsersColorsPool::get(const QString &userName)
     }
 
     pool.insert(userName, availableColors.takeFirst());
+
     return pool[userName];
 }
 

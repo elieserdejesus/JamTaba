@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ja_JP">
 <context>
+    <name>Audio::Looper</name>
+    <message>
+        <source>Sequence</source>
+        <translation>シーケンス</translation>
+    </message>
+    <message>
+        <source>All Layers</source>
+        <translation>すべてのレイヤー</translation>
+    </message>
+    <message>
+        <source>Selected Layer</source>
+        <translation>選択されたレイヤー</translation>
+    </message>
+</context>
+<context>
     <name>BaseTrackView</name>
     <message>
         <source>L</source>
@@ -22,6 +37,10 @@
         <source>S</source>
         <translatorcomment>Solo  表示スペースの都合上, 省略文字を利用</translatorcomment>
         <translation>S</translation>
+    </message>
+    <message>
+        <source>Boost</source>
+        <translation>ブースト</translation>
     </message>
 </context>
 <context>
@@ -48,11 +67,11 @@
     </message>
     <message>
         <source>block chat messages from this user</source>
-        <translation type="unfinished"></translation>
+        <translation>このユーザーからの発言をブロックします</translation>
     </message>
     <message>
         <source>B</source>
-        <translation type="unfinished"></translation>
+        <translation>B</translation>
     </message>
 </context>
 <context>
@@ -131,10 +150,6 @@
         <translation>エフェクトを追加...</translation>
     </message>
     <message>
-        <source>No plugin found! Check the &apos;Preferences -&gt; Vst plugins&apos; menu.</source>
-        <translation>プラグインが検出されませんでした! 設定メニューのVSTプラグインを見直してください.</translation>
-    </message>
-    <message>
         <source>bypass</source>
         <translation>bypass</translation>
     </message>
@@ -168,6 +183,26 @@
         <source>listen</source>
         <translation>試聴</translation>
     </message>
+    <message>
+        <source>This is the server name</source>
+        <translation>サーバ名</translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation>部屋の状態</translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation>試聴する</translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation>入室ボタン</translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation>波形表示</translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackGroupView</name>
@@ -180,20 +215,8 @@
         <translation>プリセット名:</translation>
     </message>
     <message>
-        <source>Remove preset</source>
-        <translation>プリセットを削除</translation>
-    </message>
-    <message>
-        <source>Preset:</source>
-        <translation>プリセット:</translation>
-    </message>
-    <message>
         <source>Preparing</source>
         <translation>準備中</translation>
-    </message>
-    <message>
-        <source>Transmitting</source>
-        <translation>送信中</translation>
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
@@ -224,13 +247,24 @@
         <translation>&quot;%1&quot;チャンネルを削除</translation>
     </message>
     <message>
-        <source>X</source>
-        <translatorcomment>トランスミット</translatorcomment>
-        <translation>X</translation>
-    </message>
-    <message>
         <source>channel name</source>
         <translation>チャンネル名</translation>
+    </message>
+    <message>
+        <source>Transmit</source>
+        <translation>送信中</translation>
+    </message>
+    <message>
+        <source>Delete preset</source>
+        <translation>プリセット削除</translation>
+    </message>
+    <message>
+        <source>Deleting preset ...</source>
+        <translation>プリセットを削除しています...</translation>
+    </message>
+    <message>
+        <source>You want to delete the preset &apos;%1&apos;</source>
+        <translation>プリセット&apos;%1&apos;を削除しますか</translation>
     </message>
 </context>
 <context>
@@ -248,7 +282,11 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>LRを反転</translation>
+    </message>
+    <message>
+        <source>Looper (Available when jamming)</source>
+        <translation>ルーパー（ジャミング時に利用可能）</translation>
     </message>
 </context>
 <context>
@@ -291,7 +329,150 @@
     </message>
     <message>
         <source>no input</source>
-        <translation>入力がありません</translation>
+        <translation>入力なし</translation>
+    </message>
+</context>
+<context>
+    <name>LooperWindow</name>
+    <message>
+        <source>Load looper layers</source>
+        <translation>ルーパーレイヤーを読込</translation>
+    </message>
+    <message>
+        <source>Save looper layers</source>
+        <translation>ルーパーレイヤーを保存</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>リセット</translation>
+    </message>
+    <message>
+        <source>Mode</source>
+        <translation>モード</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>記録</translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation>プレー</translation>
+    </message>
+    <message>
+        <source>Layers</source>
+        <translation>レイヤー</translation>
+    </message>
+    <message>
+        <source>Reset layers content</source>
+        <translation>レイヤのコンテンツをリセットする</translation>
+    </message>
+    <message>
+        <source>Reset layers controls</source>
+        <translation>レイヤーコントロールをリセットする</translation>
+    </message>
+    <message>
+        <source>Reset layers content and controls</source>
+        <translation>レイヤのコンテンツとコントロールをリセットする</translation>
+    </message>
+    <message>
+        <source>wait (%1)</source>
+        <translation>待機（%1）</translation>
+    </message>
+    <message>
+        <source>Saving looper layers ...</source>
+        <translation>ルーパー層を保存する ...</translation>
+    </message>
+    <message>
+        <source>Loop file name:</source>
+        <translation>ループファイル名:</translation>
+    </message>
+    <message>
+        <source>Hear all/Locked</source>
+        <translation>すべての/ロックされたレイヤーを聞く</translation>
+    </message>
+    <message>
+        <source>Overdub</source>
+        <translation>オーバーダビング</translation>
+    </message>
+    <message>
+        <source>Random</source>
+        <translation>ランダム</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>ロックされた</translation>
+    </message>
+    <message>
+        <source>Non empty</source>
+        <translation>空でない</translation>
+    </message>
+    <message>
+        <source>Hear all layers while recording</source>
+        <translation>録音中にすべてのレイヤーを聞く</translation>
+    </message>
+    <message>
+        <source>Overdub the current layer until REC button is pressed</source>
+        <translation>RECボタンが押されるまで現在のレイヤをオーバーダビングする</translation>
+    </message>
+    <message>
+        <source>Randomize layers while playing</source>
+        <translation>再生中にレイヤーをランダム化する</translation>
+    </message>
+    <message>
+        <source>Play locked layers only</source>
+        <translation>ロックされたレイヤーのみを再生する</translation>
+    </message>
+    <message>
+        <source>%1 BPM loops</source>
+        <translation>%1 BPMループ</translation>
+    </message>
+    <message>
+        <source>No loops for %1 BPM</source>
+        <translation>%1 BPMのループなし</translation>
+    </message>
+    <message>
+        <source>Import audio files ...</source>
+        <translation>オーディオファイルのインポート ...</translation>
+    </message>
+    <message>
+        <source>Importing audio files ...</source>
+        <translation>オーディオファイルのインポート中 ...</translation>
+    </message>
+    <message>
+        <source>Browse JamTaba loops...</source>
+        <translation>JamTabaループをブラウズ...</translation>
+    </message>
+    <message>
+        <source>Open loop file</source>
+        <translation>ループファイルを開く</translation>
+    </message>
+    <message>
+        <source>Error loading audio file!</source>
+        <translation>オーディオファイルの読み込み中にエラーが発生!</translation>
+    </message>
+    <message>
+        <source>Can&apos;t load the file &apos;%1&apos;</source>
+        <translation>ファイル &apos;&apos;%1&apos;を読み込めません</translation>
+    </message>
+    <message>
+        <source>Audio files</source>
+        <translation>オーディオファイル</translation>
+    </message>
+    <message>
+        <source>JamTaba Loop Files</source>
+        <translation>JamTabaループファイル</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>R</translation>
+    </message>
+    <message>
+        <source>Loop file already exists. Do you want to overwrite?</source>
+        <translation>ループファイルは既に存在します。 上書きしますか?</translation>
     </message>
 </context>
 <context>
@@ -366,7 +547,7 @@
     </message>
     <message>
         <source>Full View</source>
-        <translation>全画面表示</translation>
+        <translation>最大表示</translation>
     </message>
     <message>
         <source>Mini View</source>
@@ -398,35 +579,59 @@
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <source>Metering</source>
-        <translation type="unfinished"></translation>
+        <translation>メーター</translation>
     </message>
     <message>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマ</translation>
     </message>
     <message>
         <source>Translators ...</source>
-        <translation type="unfinished"></translation>
+        <translation>翻訳者 ...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>ピークメーターのみ表示</translation>
     </message>
     <message>
         <source>Show RMS meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>RMSメーターのみ表示</translation>
     </message>
     <message>
         <source>Show peak + RMS meters</source>
-        <translation type="unfinished"></translation>
+        <translation>ピークメーターとRMSメーターを表示</translation>
     </message>
     <message>
         <source>Show max peaks</source>
-        <translation type="unfinished"></translation>
+        <translation>最大ピークを表示</translation>
+    </message>
+    <message>
+        <source>Sound Wave</source>
+        <translation>音波</translation>
+    </message>
+    <message>
+        <source>Buildings</source>
+        <translation>建物</translation>
+    </message>
+    <message>
+        <source>Gradient</source>
+        <translation>勾配</translation>
+    </message>
+    <message>
+        <source>Pixelated Sound Wave</source>
+        <translation>ピクセル化された音波</translation>
+    </message>
+    <message>
+        <source>Pixelated Buildings</source>
+        <translation>ピクセル化された建物</translation>
+    </message>
+    <message>
+        <source>Looper ...</source>
+        <translation>ルーパー ...</translation>
     </message>
 </context>
 <context>
@@ -445,7 +650,7 @@
     </message>
     <message>
         <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>このバージョンのJamTabaは以前のバージョンと互換性がありません!</translation>
+        <translation>このバージョンのJamtabaは以前のバージョンと互換性がありません!</translation>
     </message>
     <message>
         <source>Server : Compatibility problem</source>
@@ -453,7 +658,7 @@
     </message>
     <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
-        <translation>&lt;a href=&apos;http://www.jamtaba.com&apos;&gt;新しいバージョンのJamTaba&lt;/a&gt;がダウンロード可能です!</translation>
+        <translation>&lt;a href=&apos;http://www.jamtaba.com&apos;&gt;新しいバージョンのJamtaba&lt;/a&gt;がダウンロード可能です!</translation>
     </message>
     <message>
         <source>New Jamtaba version available!</source>
@@ -506,32 +711,64 @@
     </message>
     <message>
         <source>Black</source>
-        <translation type="unfinished"></translation>
+        <translation>黒</translation>
     </message>
     <message>
         <source>Flat</source>
-        <translation type="unfinished"></translation>
+        <translation>フラット</translation>
     </message>
     <message>
         <source>Rounded</source>
-        <translation type="unfinished"></translation>
+        <translation>ラウンド</translation>
     </message>
     <message>
         <source>Error connecting with Jamtaba server!
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Jamtabaサーバへの接続にエラーが発生しました!
+        </translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
-        <translation type="unfinished"></translation>
+        <translation>%1に接続中 ... </translation>
     </message>
     <message>
         <source>Connecting with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1に接続中</translation>
     </message>
     <message>
         <source>Can&apos;t open the link!</source>
-        <translation type="unfinished"></translation>
+        <translation>リンクを開けません!</translation>
+    </message>
+    <message>
+        <source>Volcano</source>
+        <translation>ボルケーノ</translation>
+    </message>
+    <message>
+        <source>Error loading the theme %1</source>
+        <translation>テーマ%1の読み込み中にエラーが発生しました</translation>
+    </message>
+    <message>
+        <source>Ice</source>
+        <translation>氷</translation>
+    </message>
+    <message>
+        <source>Channel %1</source>
+        <translation>チャンネル %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindowPlugin</name>
+    <message>
+        <source>Window Size</source>
+        <translation>ウィンドウサイズ</translation>
+    </message>
+    <message>
+        <source>Increase</source>
+        <translation>増加</translation>
+    </message>
+    <message>
+        <source>Decrease</source>
+        <translation>減少</translation>
     </message>
 </context>
 <context>
@@ -565,15 +802,15 @@
     </message>
     <message>
         <source>Lower note:</source>
-        <translation>Lower note:</translation>
+        <translation>低いノート:</translation>
     </message>
     <message>
         <source>learn</source>
-        <translation>lean</translation>
+        <translation>学ぶ</translation>
     </message>
     <message>
         <source>Higher note:</source>
-        <translation>Higher note:</translation>
+        <translation>高いノート:</translation>
     </message>
     <message>
         <source>Transpose:</source>
@@ -583,9 +820,18 @@
         <source>Semitones:</source>
         <translation>セミトーン:</translation>
     </message>
+    <message>
+        <source>Route MIDI input to first subchannel</source>
+        <translation>MIDI入力を最初のサブチャンネルにルーティングする</translation>
+    </message>
 </context>
 <context>
     <name>NinjamPanel</name>
+    <message>
+        <source>Sync with %1</source>
+        <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
+        <translation>%1と同期する</translation>
+    </message>
     <message>
         <source>metronome</source>
         <translation>メトロノーム</translation>
@@ -720,14 +966,6 @@
         <translation>狭いトラック</translation>
     </message>
     <message>
-        <source>%1 leave the room.</source>
-        <translation>%1 が退室しました.</translation>
-    </message>
-    <message>
-        <source>%1 enter in room.</source>
-        <translation>%1 が入室しました.</translation>
-    </message>
-    <message>
         <source>Connected as &lt;user_name&gt;</source>
         <translation>&lt;user_name&gt;として接続</translation>
     </message>
@@ -741,26 +979,85 @@
     </message>
     <message>
         <source>Last chords used</source>
-        <translation type="unfinished"></translation>
+        <translation>最後に使ったコード</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1の発言はブロックされました</translation>
     </message>
     <message>
         <source>%1 is unblocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1の発言はブロック解除されました</translation>
+    </message>
+    <message>
+        <source>%1 has left the room.</source>
+        <translation>%1 が退室しました.</translation>
+    </message>
+    <message>
+        <source>%1 has joined the room.</source>
+        <translation>%1 が入室しました.</translation>
+    </message>
+</context>
+<context>
+    <name>NinjamRoomWindowPlugin</name>
+    <message>
+        <source>Host sync</source>
+        <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
+        <translation>ホスト同期</translation>
+    </message>
+    <message>
+        <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
+        <translation>BPMが変更されました！%1を停止してBPMを%2に変更してください!</translation>
+    </message>
+    <message>
+        <source>Synchronizing...</source>
+        <translation>同期中...</translation>
+    </message>
+    <message>
+        <source>Press play/start in %1 to sync with Jamtaba!</source>
+        <translation>Jamtabaと同期するには%1で再生/開始を押してください!</translation>
+    </message>
+    <message>
+        <source>Trying to sync ...</source>
+        <translation>同期を試みています ...</translation>
+    </message>
+    <message>
+        <source>Change %1 BPM to %2 and try sync again!</source>
+        <translation>%1のBPMを%2に変更して、もう一度同期を試みてください!</translation>
     </message>
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
     <message>
         <source>Block %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1の発言をブロック</translation>
     </message>
     <message>
         <source>Unblock %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1の発言をブロック解除</translation>
+    </message>
+</context>
+<context>
+    <name>NinjamTrackView</name>
+    <message>
+        <source>Low cut</source>
+        <translation>ローカット</translation>
+    </message>
+    <message>
+        <source>Receive</source>
+        <translation>受け取る</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>オフ</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>中</translation>
+    </message>
+    <message>
+        <source>Drastic</source>
+        <translation>抜本的</translation>
     </message>
 </context>
 <context>
@@ -768,14 +1065,6 @@
     <message>
         <source>Vote - change %1 to %2 </source>
         <translation>%1から%2への変更に投票</translation>
-    </message>
-</context>
-<context>
-    <name>PlayerLabel</name>
-    <message>
-        <source>%1  location is not available at moment!</source>
-        <translatorcomment>地域 %1 の情報は得られませんでした!</translatorcomment>
-        <translation>地域 %1 は得られませんでした!</translation>
     </message>
 </context>
 <context>
@@ -816,8 +1105,8 @@
         <translation>プライマリービートのオーディオファイルを選択...</translation>
     </message>
     <message>
-        <source>Audio Files (*.wav, *.ogg)</source>
-        <translation>オーディオファイル (*.wav, *.ogg)</translation>
+        <source>Audio Files</source>
+        <translation>オーディオファイル</translation>
     </message>
     <message>
         <source>Choosing Secondary beat audio file...</source>
@@ -856,15 +1145,6 @@
         <translation>出力</translation>
     </message>
     <message>
-        <source>Sample rate</source>
-        <translation>サンプリングレート</translation>
-    </message>
-    <message>
-        <source>Buffer size</source>
-        <translation>バッファサイズ
-</translation>
-    </message>
-    <message>
         <source>ASIO panel ...</source>
         <translation>ASIOパネル...</translation>
     </message>
@@ -882,7 +1162,7 @@
     </message>
     <message>
         <source>Vst(i)s loaded</source>
-        <translation>読み込まれたVST(i)s</translation>
+        <translation>読み込まれたVST(i)</translation>
     </message>
     <message>
         <source>Scan only new plugins</source>
@@ -890,7 +1170,7 @@
     </message>
     <message>
         <source>Refresh</source>
-        <translation>リフレッシュ</translation>
+        <translation>更新</translation>
     </message>
     <message>
         <source>Clear plugins cache and scan all plugin folders</source>
@@ -906,7 +1186,7 @@
     </message>
     <message>
         <source>Remove from blackList</source>
-        <translation>ブラックリストから除去</translation>
+        <translation>ブラックリストから削除</translation>
     </message>
     <message>
         <source>Plugin Paths:</source>
@@ -917,12 +1197,8 @@
         <translation>プラグインの場所を追加...</translation>
     </message>
     <message>
-        <source>Recording</source>
-        <translation>録音</translation>
-    </message>
-    <message>
         <source>browse ...</source>
-        <translation>ブラウズ...</translation>
+        <translation>参照...</translation>
     </message>
     <message>
         <source>Save multi tracks </source>
@@ -938,7 +1214,7 @@
     </message>
     <message>
         <source>Built-in metronomes:</source>
-        <translation>組込のメトロノーム:</translation>
+        <translation>組込のメトロノーム音:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
@@ -954,7 +1230,7 @@
     </message>
     <message>
         <source>Browse ...</source>
-        <translation>ブラウズ...</translation>
+        <translation>参照...</translation>
     </message>
     <message>
         <source>Use 16 bit audio files!</source>
@@ -964,13 +1240,92 @@
         <source>ok</source>
         <translation>保存</translation>
     </message>
+    <message>
+        <source>Buffer size:</source>
+        <translation>バッファサイズ:</translation>
+    </message>
+    <message>
+        <source>Sample rate:</source>
+        <translation>サンプリングレート:</translation>
+    </message>
+    <message>
+        <source>Encoder quality:</source>
+        <translation>エンコード品質:</translation>
+    </message>
+    <message>
+        <source>Low (good for slow internet connections)</source>
+        <translation>低 (低速回線向け)</translation>
+    </message>
+    <message>
+        <source>Normal (default)</source>
+        <translation>中 (標準)</translation>
+    </message>
+    <message>
+        <source>High (for good internet connections only)</source>
+        <translation>高 (高速回線向け)</translation>
+    </message>
+    <message>
+        <source>Custom quality</source>
+        <translation>カスタム</translation>
+    </message>
+    <message>
+        <source>Multi Track Recording</source>
+        <translation>マルチトラック録音</translation>
+    </message>
+    <message>
+        <source>Looper</source>
+        <translation>ルーパー</translation>
+    </message>
+    <message>
+        <source>Save loop layers as ...</source>
+        <translation>ループレイヤを次のように保存します ...</translation>
+    </message>
+    <message>
+        <source>Ogg files (use less disk space)</source>
+        <translation>Oggファイル（ディスク容量を少なくする）</translation>
+    </message>
+    <message>
+        <source>Wave files</source>
+        <translation>Wavファイル</translation>
+    </message>
+    <message>
+        <source>Bit depth:</source>
+        <translation>ビット深度:</translation>
+    </message>
+    <message>
+        <source>Loops folder</source>
+        <translation>ループフォルダ</translation>
+    </message>
+    <message>
+        <source>Choosing loops folder ...</source>
+        <translation>ループフォルダの選択 ...</translation>
+    </message>
+</context>
+<context>
+    <name>PreferencesDialogStandalone</name>
+    <message>
+        <source>Adding VST path ...</source>
+        <translation>追加するVSTの場所...</translation>
+    </message>
+    <message>
+        <source>scanning %1</source>
+        <translation>%1を走査中</translation>
+    </message>
+    <message>
+        <source>Add Vst(s) to Black list ...</source>
+        <translation>VSTをブラックリストへ追加...</translation>
+    </message>
+    <message>
+        <source>Remove Vst(s) from Black List ...</source>
+        <translation>VSTをブラックリストから解除...</translation>
+    </message>
+    <message>
+        <source>No midi input device detected!</source>
+        <translation>MIDIデバイスが検出されませんでした!</translation>
+    </message>
 </context>
 <context>
     <name>PrivateServerDialog</name>
-    <message>
-        <source>Connecting in private Ninjam server ...</source>
-        <translation>プライベート Ninjam サーバへ接続中...</translation>
-    </message>
     <message>
         <source>This the private server dialog</source>
         <translation>プライベート サーバ ダイアログ</translation>
@@ -979,10 +1334,6 @@
         <source>Server:</source>
         <translatorcomment>ホスト名/IPアドレス</translatorcomment>
         <translation>サーバ:</translation>
-    </message>
-    <message>
-        <source>type here the name of the server to join</source>
-        <translation>参加するサーバ名を入力</translation>
     </message>
     <message>
         <source>leave blank to connect as annonymous</source>
@@ -1012,54 +1363,27 @@
         <source>OK</source>
         <translation>接続</translation>
     </message>
+    <message>
+        <source>Connecting with private Ninjam server ...</source>
+        <translation>プライベート Ninjam サーバへ接続中...</translation>
+    </message>
+    <message>
+        <source>User name:</source>
+        <translation>ユーザー名:</translation>
+    </message>
 </context>
 <context>
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
-        <translation type="unfinished"></translation>
+        <translation>Reaper用のclipsort.logファイルを生成</translation>
     </message>
 </context>
 <context>
     <name>Recorder::ReaperProjectGenerator</name>
     <message>
         <source>Generate Reaper Project file (RPP)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation>サーバ名</translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation>部屋の状態</translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation>試聴する</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>試聴</translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation>入室ボタン</translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation>入室</translation>
-    </message>
-    <message>
-        <source>That panel shows the musicians actually in that room</source>
-        <translation>参加中のミュージシャン</translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
-        <translation>波形表示</translation>
+        <translation>Reaper用のプロジェクトファイル(.RPP)を生成</translation>
     </message>
 </context>
 <context>
@@ -1067,25 +1391,6 @@
     <message>
         <source>Remove this folder from scanning</source>
         <translation>この場所の走査を取り消す</translation>
-    </message>
-</context>
-<context>
-    <name>StandalonePreferencesDialog</name>
-    <message>
-        <source>Adding VST path ...</source>
-        <translation>追加するVSTの場所...</translation>
-    </message>
-    <message>
-        <source>Add Vst(s) to Black list ...</source>
-        <translation>VSTをブラックリストへ追加...</translation>
-    </message>
-    <message>
-        <source>Remove Vst(s) from Black List ...</source>
-        <translation>VSTをブラックリストから解除...</translation>
-    </message>
-    <message>
-        <source>No midi input device detected!</source>
-        <translation>MIDIデバイスが検出されませんでした!</translation>
     </message>
 </context>
 <context>

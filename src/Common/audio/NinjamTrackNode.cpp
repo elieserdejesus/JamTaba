@@ -7,15 +7,68 @@
 #include <QMutexLocker>
 #include <QDateTime>
 #include <QtConcurrent/QtConcurrent>
+#include "audio/core/Filters.h"
 
+const double NinjamTrackNode::LOW_CUT_DRASTIC_FREQUENCY = 220.0; // in Hertz
+const double NinjamTrackNode::LOW_CUT_NORMAL_FREQUENCY = 120.0; // in Hertz
+
+class NinjamTrackNode::LowCutFilter
+{
+public:
+    LowCutFilter(double sampleRate);
+    void process(Audio::SamplesBuffer &buffer);
+    //inline bool isActivated() const { return activated; }
+    inline NinjamTrackNode::LowCutState getState(){ return this->state; }
+    void setState(NinjamTrackNode::LowCutState state);
+private:
+    NinjamTrackNode::LowCutState state;
+    Audio::Filter leftFilter;
+    Audio::Filter rightFilter;
+};
+
+NinjamTrackNode::LowCutFilter::LowCutFilter(double sampleRate) :
+    state(LowCutState::OFF),
+    leftFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0),
+    rightFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0)
+{
+
+}
+
+void NinjamTrackNode::LowCutFilter::setState(NinjamTrackNode::LowCutState state)
+{
+    this->state = state;
+    if (state != LowCutState::OFF){
+        double frequency = LOW_CUT_NORMAL_FREQUENCY;
+        if (state == LowCutState::DRASTIC)
+            frequency = LOW_CUT_DRASTIC_FREQUENCY;
+
+        leftFilter.setFrequency(frequency);
+        rightFilter.setFrequency(frequency);
+    }
+}
+
+void NinjamTrackNode::LowCutFilter::process(Audio::SamplesBuffer &buffer)
+{
+    if (state == LowCutState::OFF)
+        return;
+
+    quint32 samples = buffer.getFrameLenght();
+    leftFilter.process(buffer.getSamplesArray(0), samples);
+    if (!buffer.isMono())
+        rightFilter.process(buffer.getSamplesArray(1), samples);
+}
+
+//--------------------------------------------------------------------------
 
 class NinjamTrackNode::IntervalDecoder
 {
 public:
     IntervalDecoder(const QByteArray &vorbisData);
     void decode(quint32 maxSamplesToDecode);
-    quint32 getDecodedSamples(Audio::SamplesBuffer &outBuffer, int samplesToDecode);
-    inline int getSampleRate() { return vorbisDecoder.getSampleRate(); }
+    quint32 getDecodedSamples(Audio::SamplesBuffer &outBuffer, uint samplesToDecode);
+    inline int getSampleRate() const { return vorbisDecoder.getSampleRate(); }
+    inline bool isStereo() const { return vorbisDecoder.isStereo(); }
+    void stopDecoding();
 private:
     VorbisDecoder vorbisDecoder;
     Audio::SamplesBuffer decodedBuffer;
@@ -37,7 +90,16 @@ void NinjamTrackNode::IntervalDecoder::decode(quint32 maxSamplesToDecode)
     mutex.unlock();
 }
 
-quint32 NinjamTrackNode::IntervalDecoder::getDecodedSamples(Audio::SamplesBuffer &outBuffer, int samplesToDecode)
+void NinjamTrackNode::IntervalDecoder::stopDecoding()
+{
+    mutex.lock(); // this funcion is called from GUI thread
+
+    vorbisDecoder.setInputData(QByteArray()); // empty data
+
+    mutex.unlock();
+}
+
+quint32 NinjamTrackNode::IntervalDecoder::getDecodedSamples(Audio::SamplesBuffer &outBuffer, uint samplesToDecode)
 {
     mutex.lock();
     while (decodedBuffer.getFrameLenght() < samplesToDecode) { //need decode more samples to fill outBuffer?
@@ -62,9 +124,58 @@ NinjamTrackNode::NinjamTrackNode(int ID) :
     ID(ID),
     processingLastPartOfInterval(false),
     currentDecoder(nullptr),
-    decodersMutex(QMutex::NonRecursive)
+    decodersMutex(QMutex::NonRecursive),
+    lowCut(new NinjamTrackNode::LowCutFilter(44100))
 {
 
+}
+
+bool NinjamTrackNode::isStereo() const
+{
+    if (currentDecoder)
+        return currentDecoder->isStereo();
+
+    return true;
+}
+
+void NinjamTrackNode::stopDecoding()
+{
+    discardDownloadedIntervals(false);
+
+    if (currentDecoder != nullptr)
+        currentDecoder->stopDecoding();
+}
+
+NinjamTrackNode::LowCutState NinjamTrackNode::setLowCutToNextState()
+{
+    LowCutState newState = LowCutState::OFF;
+
+    switch (lowCut->getState() ) {
+
+    case LowCutState::OFF:
+        newState = LowCutState::NORMAl;
+        break;
+    case LowCutState::NORMAl:
+        newState = LowCutState::DRASTIC;
+        break;
+    case LowCutState::DRASTIC:
+        newState = LowCutState::OFF;
+        break;
+    }
+
+    lowCut->setState(newState);
+
+    return newState;
+}
+
+NinjamTrackNode::LowCutState NinjamTrackNode::getLowCutState() const
+{
+    return lowCut->getState();
+}
+
+void NinjamTrackNode::setLowCutState(LowCutState newState)
+{
+    lowCut->setState(newState);
 }
 
 int NinjamTrackNode::getSampleRate() const
@@ -88,7 +199,7 @@ NinjamTrackNode::~NinjamTrackNode()
     decodersMutex.unlock();
 }
 
-void NinjamTrackNode::discardIntervals(bool keepMostRecentInterval)
+void NinjamTrackNode::discardDownloadedIntervals(bool keepMostRecentInterval)
 {
     decodersMutex.lock();
     if (!keepMostRecentInterval) {
@@ -112,7 +223,7 @@ bool NinjamTrackNode::startNewInterval()
 {
     decodersMutex.lock();
     if (currentDecoder) {
-        delete currentDecoder; //discard the precious interval decoder
+        delete currentDecoder; //discard the previous interval decoder
         currentDecoder = nullptr;
     }
     if (!decoders.isEmpty())
@@ -142,7 +253,7 @@ int NinjamTrackNode::getFramesToProcess(int targetSampleRate, int outFrameLenght
 }
 
 void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                                       int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
+                                       int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer)
 {
     if (!isPlaying())
         return;
@@ -162,6 +273,9 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
                 qWarning() << internalInputBuffer.getFrameLenght() << " != "
                            << out.getFrameLenght();
         }
+
+        lowCut->process(internalInputBuffer);
+
         Audio::AudioNode::processReplacing(in, out, sampleRate, midiBuffer);// process internal buffer pan, gain, etc
     }
 }

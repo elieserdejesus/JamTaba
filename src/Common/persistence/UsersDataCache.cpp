@@ -9,9 +9,10 @@
 
 using namespace Persistence;
 
-const quint32 UsersDataCacheHeader::REVISION = 1;
+const quint32 UsersDataCacheHeader::REVISION = 3; // added 3 low cut states (off, normal and drastic) in revision 3
 
 const bool CacheEntry::DEFAULT_MUTED = false;
+const quint8 CacheEntry::DEFAULT_LOW_CUT_STATE = 0; // OFF state is default
 const float CacheEntry::DEFAULT_GAIN = 1.0f;
 const float CacheEntry::DEFAULT_PAN = 0.0f;
 const float CacheEntry::DEFAULT_BOOST = 1.0f;
@@ -32,7 +33,8 @@ QDataStream &operator<<(QDataStream &stream, const CacheEntry &entry)
            << entry.isMuted()
            << entry.getGain()
            << entry.getPan()
-           << entry.getBoost();
+           << entry.getBoost()
+           << entry.getLowCutState();
 }
 
 QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
@@ -40,9 +42,10 @@ QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
     QString userIp, userName;
     quint8 channelID;
     bool muted;
+    int lowCutState;
     float gain, pan, boost;
 
-    stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost;
+    stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost >> lowCutState;
 
     entry.setUserIP(userIp);
     entry.setUserName(userName);
@@ -51,11 +54,13 @@ QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
     entry.setGain(gain);
     entry.setPan(pan);
     entry.setBoost(boost);
+    entry.setLowCutState(lowCutState);
 
     return stream;
 }
 
 // +++++++++++++++++++++++++++++++++++++++
+
 CacheEntry::CacheEntry(const QString &userIp, const QString &userName, quint8 channelID)
 {
     setUserIP(userIp);
@@ -65,6 +70,12 @@ CacheEntry::CacheEntry(const QString &userIp, const QString &userName, quint8 ch
     setGain(DEFAULT_GAIN);
     setPan(DEFAULT_PAN);
     setBoost(DEFAULT_BOOST);
+    setLowCutState(DEFAULT_LOW_CUT_STATE);
+}
+
+void CacheEntry::setLowCutState(quint8 state)
+{
+    this->lowCutState = state;
 }
 
 void CacheEntry::setUserIP(const QString &userIp)
@@ -108,12 +119,12 @@ void CacheEntry::setGain(float gain)
     this->gain = gain;
 }
 
-UsersDataCache::UsersDataCache(const QDir &cacheDir)
-    :CACHE_FILE_NAME("tracks_cache.bin"),
-     cacheDir(cacheDir)
+UsersDataCache::UsersDataCache(const QDir &cacheDir) :
+    CACHE_FILE_NAME("tracks_cache.bin"),
+    cacheDir(cacheDir)
 {
-    //check if the tracks_cache_bin file is in the old dir and copy the file to the 'cache' dir.
-    //This piece of code will be deleted in future versions.
+    // check if the tracks_cache_bin file is in the old dir and copy the file to the 'cache' dir.
+    // This piece of code will be deleted in future versions.
     QDir baseDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     QFile oldCacheFile(baseDir.absoluteFilePath(CACHE_FILE_NAME));
     if (oldCacheFile.exists()) {
@@ -138,14 +149,14 @@ CacheEntry UsersDataCache::getUserCacheEntry(const QString &userIp, const QStrin
     QString userUniqueKey = getUserUniqueKey(userIp, userName, channelID);
     if (cacheEntries.contains(userUniqueKey))
         return cacheEntries[userUniqueKey];
-    return CacheEntry(userIp, userName, channelID);// return a entry using default values for pan, gain, mute, etc.
+
+    return CacheEntry(userIp, userName, channelID); // return a entry using default values for pan, gain, mute, etc.
 }
 
 void UsersDataCache::updateUserCacheEntry(CacheEntry entry)
 {
-    QString userKey
-        = getUserUniqueKey(entry.getUserIP(), entry.getUserName(), entry.getChannelID());
-    cacheEntries.insert(userKey, entry);// replace the last value or insert
+    QString userKey = getUserUniqueKey(entry.getUserIP(), entry.getUserName(), entry.getChannelID());
+    cacheEntries.insert(userKey, entry); // replace the last value or insert
 }
 
 QString UsersDataCache::getUserUniqueKey(const QString &userIp, const QString &userName,
@@ -190,7 +201,7 @@ void UsersDataCache::writeCacheEntriesToFile()
 
         qCDebug(jtCache) << cacheEntries.size() << " items stored in tracks cache file!";
     } else {
-        qCCritical(jtCache) << "Can't open the tracks cache file in"
+        qCritical() << "Can't open the tracks cache file in"
                             << QFileInfo(cacheFile).absoluteFilePath();
     }
 }

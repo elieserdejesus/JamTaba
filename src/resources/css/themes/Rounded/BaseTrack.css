@@ -28,49 +28,34 @@
 
 #muteButton:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
     color: lightgray;
 }
 
 #muteButton:hover:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
     color: white;
 }
 
-/* boost buttons */
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero
+/* boost button */
+#buttonBoost
 {
    padding: 0px;
    padding-top: 2px;
    padding-bottom: 2px;
-   border: 0px;
-   border-radius: 0px;
-}
 
-
-#buttonBoostMinus12
-{
    border-radius: 0px;
    border-bottom-left-radius: 3px;
    border-bottom-right-radius: 3px;
+
+   border: 0px;
    border-top: 1px solid rgba(0, 0, 0, 10);
 }
 
-#buttonBoostPlus12
-{
-   border-radius: 0px;
-   border-top-left-radius: 3px;
-   border-top-right-radius: 3px;
-   border-bottom: 1px solid rgba(0, 0, 0, 10);
-   margin: 0px;
-}
-
-#buttonBoostMinus12:checked,
-#buttonBoostPlus12:checked,
-#buttonBoostZero:checked
+#buttonBoost:checked,
+#lowCutButton:checked,
+QPushButton#buttonStereoInversion:checked
 {
     background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
         stop:0 rgba(255, 255, 255, 160),
@@ -86,6 +71,15 @@ QPushButton#buttonStereoInversion:hover
         stop:0.2 rgb(255, 255, 255),
         stop:0.7 rgb(240, 240, 240),
         stop:1 rgb(210,210, 210));
+}
+
+QPushButton#buttonStereoInversion:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(220, 220, 220),
+        stop:0.2 rgb(235, 235, 235),
+        stop:0.7 rgb(220, 220, 220),
+        stop:1 rgb(190, 190, 190));
 }
 
 BaseTrackView
@@ -109,13 +103,9 @@ BaseTrackView[unlighted="true"]
         stop:1 rgb(90, 90, 90));
 }
 
-PeakMeter
+AudioMeter
 {
-    background-color: rgba(0, 0, 0, 10);
-    border: 1px inset rgba(0, 0, 0, 15);
-    border-radius: 1px;
-    min-width: 2px;
-    min-height: 2px;
+    qproperty-dBMarksColor: rgb(60, 60, 60);
 }
 
 
@@ -140,7 +130,9 @@ PeakMeter
 
 }
 
-BaseTrackView[unlighted="true"] QSlider#panSlider::groove   /* pan slider 'track' when not xmiting */
+BaseTrackView[unlighted="true"] QSlider#panSlider::groove,   /* pan slider 'track' when not xmiting */
+#panSlider::handle:disabled,
+QSlider::handle:vertical:disabled
 {
     border: 1px solid rgba(0, 0, 0, 30);
 }
@@ -156,26 +148,25 @@ BaseTrackView[unlighted="true"] QSlider::add-page:vertical
     background: rgb(255,255,255, 50);
 }
 
-
-BaseTrackView #peaksDbLabel                             /* label used to show max peak */
-{
-    border-radius: 1px;
-    border: 1px solid rgba(0, 0, 0, 25);
-    background-color: rgba(0, 0, 0, 15);
-}
-
-
-BaseTrackView[unlighted="true"] #peaksDbLabel,
 BaseTrackView[unlighted="true"] .QPushButton
 {
    border: none;
    background-color: rgb(100, 100, 100);
 }
 
-BaseTrackView[unlighted="true"] #buttonStereoInversion:hover,
+BaseTrackView[unlighted="true"] #buttonStereoInversion:checked,
 BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
 {
-    background-color: rgba(0, 0, 0, 45);
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0 rgba(255, 255, 255, 160),
+    stop:0.2 rgba(255, 255, 255, 120),
+    stop:0.7 rgba(255, 255, 255, 120),
+    stop:1 rgba(255,255, 255, 30));
+}
+
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover
+{
+    background-color: rgba(0, 0, 0, 30);
 }
 
 /* track group

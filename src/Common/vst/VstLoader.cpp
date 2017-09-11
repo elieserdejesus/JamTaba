@@ -1,5 +1,5 @@
 #include "VstLoader.h"
-#include <QApplication>
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QLoggingCategory>
 #include <QDir>
@@ -9,12 +9,12 @@
 
 using namespace Vst;
 
-AEffect* VstLoader::load(const QString &path, Vst::Host* host){
+AEffect* VstLoader::load(const QString &path, Vst::VstHost* host){
     if(!host){
         return 0;
     }
     QString pluginDir = QFileInfo(path).absoluteDir().absolutePath();
-    QApplication::addLibraryPath(pluginDir);
+    QCoreApplication::addLibraryPath(pluginDir);
 
     QLibrary pluginLib(path);
     AEffect* effect = 0;
@@ -26,7 +26,7 @@ AEffect* VstLoader::load(const QString &path, Vst::Host* host){
     try {
         qCDebug(jtStandaloneVstPlugin) << "loading " << path;
         if(!pluginLib.load()){
-            qCCritical(jtStandaloneVstPlugin) << "error when loading VST plugin " << path << " -> " << pluginLib.errorString();
+            qCritical() << "error when loading VST plugin " << path << " -> " << pluginLib.errorString();
             return 0;
         }
         qCDebug(jtStandaloneVstPlugin) << path << " loaded";
@@ -37,30 +37,30 @@ AEffect* VstLoader::load(const QString &path, Vst::Host* host){
         }
     }
     catch(...){
-        qCCritical(jtStandaloneVstPlugin) << "exception when  getting entry point " << pluginLib.fileName();
+        qCritical() << "exception when  getting entry point " << pluginLib.fileName();
     }
     if(!entryPoint) {
         qCDebug(jtStandaloneVstPlugin) << "Entry point not founded, unloading plugin " << path ;
         return 0;
     }
     qCDebug(jtStandaloneVstPlugin) << "Entry point founded for " << path ;
-    QApplication::processEvents();
+    //QCoreApplication::processEvents();
     try{
         qCDebug(jtStandaloneVstPlugin) << "Initializing effect for " << path ;
         effect = entryPoint( (audioMasterCallback)host->hostCallback);// myHost->vstHost->AudioMasterCallback);
     }
     catch(... ){
-        qCCritical(jtStandaloneVstPlugin) << "Error loading VST plugin";
+        qCritical() << "Error loading VST plugin";
         effect = 0;
     }
 
     if(!effect) {
-        qCCritical(jtStandaloneVstPlugin) << "Error when initializing effect. Unloading " << path ;
+        qCritical() << "Error when initializing effect. Unloading " << path ;
         return 0;
     }
-    QApplication::processEvents();
+    //QCoreApplication::processEvents();
     if (effect->magic != kEffectMagic) {
-        qCCritical(jtStandaloneVstPlugin) << "KEffectMagic error for " << path ;
+        qCritical() << "KEffectMagic error for " << path ;
         return 0;
     }
     return effect;

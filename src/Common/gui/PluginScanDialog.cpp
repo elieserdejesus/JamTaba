@@ -6,7 +6,7 @@ PluginScanDialog::PluginScanDialog(QWidget *parent) :
     ui(new Ui::PluginScanDialog)
 {
     ui->setupUi(this);
-    setModal(true);
+    setModal(false);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 

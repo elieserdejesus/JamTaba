@@ -20,12 +20,12 @@ public:
     bool hasInputDevices() const override;
     int getMaxInputDevices() const override;
     QString getInputDeviceName(uint index) const override;
-    MidiMessageBuffer getBuffer() override;
+    std::vector<Midi::MidiMessage> getBuffer() override;
 
 private:
     QList<RtMidiIn *> midiStreams;
 
-    void consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, MidiMessageBuffer &outBuffer);
+    void consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<MidiMessage> &outBuffer);
 
 };
 }

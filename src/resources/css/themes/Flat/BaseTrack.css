@@ -13,9 +13,7 @@
     color: rgb(50,50,50);
 }
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero,
+#buttonBoost,
 #soloButton,
 #muteButton
 {
@@ -23,9 +21,7 @@
 }
 
 
-#buttonBoostMinus12,
-#buttonBoostPlus12,
-#buttonBoostZero
+#buttonBoost
 {
    padding: 1px;
    padding-top: 3px;
@@ -33,32 +29,54 @@
    border-radius: 1px;
 }
 
-#buttonBoostMinus12:checked,
-#buttonBoostPlus12:checked,
-#buttonBoostZero:checked
+#buttonBoost:checked,
+QPushButton#buttonStereoInversion:checked
 {
     background-color: rgb(200, 200, 200);
     color: rgba(0, 0, 0, 160);
     border-radius: 0px;
 }
 
-/* button colors when the track is NOT xmiting */
-BaseTrackView[unlighted="true"] #buttonBoostMinus12,
-BaseTrackView[unlighted="true"] #buttonBoostZero,
-BaseTrackView[unlighted="true"] #buttonBoostPlus12,
-BaseTrackView[unlighted="true"] #soloButton,
-BaseTrackView[unlighted="true"] #muteButton
+#soloButton:hover,
+#muteButton:hover
 {
-    background-color: rgba(0, 0, 0, 30);
-    border: none;
+    color: black;
 }
 
-#buttonBoostZero:checked
+#buttonBoost:hover:checked
+{
+    background-color: rgb(200, 200, 200);
+    color: rgba(0, 0, 0, 160);
+    border-radius: 0px;
+}
+
+#buttonBoost:checked
 {
     border-bottom: none;
     border-top: none;
     border-style: solid;
     border-color: rgba(0, 0, 0, 60);
+}
+
+/* button colors when the track is NOT xmiting */
+BaseTrackView[unlighted="true"] #buttonBoost,
+BaseTrackView[unlighted="true"] #soloButton,
+BaseTrackView[unlighted="true"] #muteButton,
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
+
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion:hover:checked
+{
+    background-color: rgb(200, 200, 200);
+}
+
+BaseTrackView[unlighted="true"] #soloButton:checked,
+BaseTrackView[unlighted="true"] #buttonBoost:checked
+{
+    color: white;
 }
 
 #soloButton:checked
@@ -87,21 +105,10 @@ BaseTrackView[unlighted="true"] #muteButton
     border-color: rgb(45, 45, 45);
 }
 
-
-/* Small Label used to show max peak below peak meters
--------------------------------------------------------*/
-BaseTrackView #peaksDbLabel
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
 {
-    border: 1px solid rgba(0, 0, 0, 8);
-    background-color: rgba(0, 0, 0, 6);
+    background-color: rgba(0, 0, 0, 50);
 }
-
-BaseTrackView[unlighted="true"] #peaksDbLabel
-{
-   border: none;
-   background-color: rgba(0, 0, 0, 10);
-}
-
 
 BaseTrackView
 {
@@ -118,7 +125,9 @@ BaseTrackView
 /* Setting colors when the track is 'not transmiting'
 -----------------------------------------------------*/
 BaseTrackView[unlighted="true"] #panSlider::handle,         /* pan slider handle */
-BaseTrackView[unlighted="true"] QSlider::handle:vertical    /* track fader handle */
+BaseTrackView[unlighted="true"] QSlider::handle:vertical,    /* track fader handle */
+#panSlider::handle:disabled,
+QSlider::handle:vertical:disabled
 {
     background: rgb(180, 180, 180);
 }
@@ -136,13 +145,10 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
     width: 7px;
 }
 
-
-PeakMeter
+AudioMeter
 {
-    background-color: rgba(0, 0, 0, 6);
-    border: none;
+    qproperty-dBMarksColor: rgb(70, 70, 70);
 }
-
 
 /* TrackGroup - used as container for subchannels
 ---------------------------------------------------*/

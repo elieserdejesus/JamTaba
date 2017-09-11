@@ -132,6 +132,29 @@ QLineEdit#groupNameField:focus
     color: black;
 }
 
+QLineEdit#groupNameField-topLevel,
+#userNameLineEdit-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 white,
+        stop: 0.5 rgb(235, 235, 235),
+        stop: 1.0 white);
+}
+
+#userNameLineEdit-topLevel
+{
+    border: none;
+}
+
+QLineEdit#chatText-topLevel
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(235, 235, 235),
+        stop: 0.3 white,
+        stop: 0.7 white,
+        stop: 1.0 rgb(235, 235, 235));
+    border-color: rgba(0, 0, 0, 160);
+}
 
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
@@ -169,11 +192,11 @@ QSlider::handle:hover
 
 QSlider::handle:horizontal
 {
-    margin-top: -8px;
+    margin-top: -7px;
     margin-bottom: -7px;
     padding: 0px;
     width: 8px;
-    height: 15px;
+    height: 14px;
 }
 
 QSlider::handle:vertical
@@ -228,4 +251,20 @@ QMenu
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop:0 rgb(250, 250, 250),
     stop:1 rgb(230, 230, 230));
+}
+
+
+AudioMeter
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(150, 150, 150);
+    qproperty-peakStartColor: rgb(0, 180, 0);
+    qproperty-peakEndColor: rgb(255, 50, 50);
+    qproperty-maxPeakColor: rgb(150, 150, 150);
+}
+
+AudioMeter#masterMeter
+{
+    qproperty-maxPeakColor: rgb(120, 120, 120);
+    qproperty-rmsColor: rgb(120, 120, 120);
 }

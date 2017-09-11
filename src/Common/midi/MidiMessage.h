@@ -8,6 +8,7 @@ namespace Midi {
 
 class MidiMessage
 {
+
 public:
     MidiMessage(qint32 data, int sourceID);
     MidiMessage();
@@ -26,7 +27,7 @@ public:
 
     quint8 getNoteVelocity() const;
 
-    int getSourceID() const;
+    int getSourceDeviceIndex() const;
 
     int getStatus() const;
 
@@ -38,7 +39,7 @@ public:
 
 private:
     qint32 data;
-    int sourceID; //the id of the midi device generating the message.
+    int sourceID; // the id of the midi device generating the message.
 };
 
 inline int MidiMessage::getChannel() const
@@ -46,7 +47,7 @@ inline int MidiMessage::getChannel() const
     return data & 0x0000000F;
 }
 
-inline int MidiMessage::getSourceID() const
+inline int MidiMessage::getSourceDeviceIndex() const
 {
     return sourceID;
 }
@@ -71,6 +72,6 @@ inline bool MidiMessage::isControl() const
     return getStatus() == 0xB0;
 }
 
-}//namespace
+} // namespace
 
 #endif

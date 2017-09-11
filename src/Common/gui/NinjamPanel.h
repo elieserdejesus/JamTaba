@@ -10,6 +10,7 @@ class QAbstractSlider;
 class QPushButton;
 class QObject;
 class QEvent;
+class TextEditorModifier;
 
 namespace Ui {
 class NinjamPanel;
@@ -20,11 +21,12 @@ class NinjamPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamPanel(QWidget *parent = 0);
+    explicit NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, QWidget *parent = 0);
     ~NinjamPanel();
 
-    void createHostSyncButton(const QString &buttonText);
-    void uncheckHostSyncButton();//used to uncheck the button when the sync with host fail (different BPMs)
+    void createHostSyncButton(const QString &hostName);
+    void uncheckHostSyncButton(); // used to uncheck the button when the sync with host fail (different BPMs)
+    bool hostSyncButtonIsChecked() const;
 
     void setMuteButtonStatus(bool checked);
     void setPanSliderValue(int value);
@@ -51,9 +53,14 @@ public:
 
     void addMasterControls(QWidget *masterControlsPanel);
 
-    void setFullViewStatus(bool fullView);
-
     void setLowContrastPaintInIntervalPanel(bool useLowContrastColors);
+
+    void maximizeControlsWidget(bool maximize);
+
+    bool metronomeFloatingWindowIsVisible() const;
+
+public slots:
+    void updateStyleSheet();
 
 signals:
     void bpiComboActivated(const QString &);
@@ -67,13 +74,16 @@ signals:
     void hostSyncStateChanged(bool syncWithHost);
     void intervalShapeChanged(int newShape);
 
+public slots:
+    void setMetronomeFloatingWindowVisibility(bool showFloatingWindow);
+
 protected:
-    bool eventFilter(QObject *source, QEvent *ev);
     void changeEvent(QEvent *) override;
 
     Ui::NinjamPanel *ui;
-    QPushButton *hostSyncButton;// created only when running as vst plugin
+    QPushButton *hostSyncButton; // created only when running as vst plugin
     IntervalProgressWindow *metronomeFloatingWindow;
+
 private:
     void buildShapeModel();
     void buildAccentsdModel(int bpi);
@@ -83,12 +93,17 @@ private:
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
     void setupSignals();
     void translate();
+    void initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier);
+
+    QString hostName;
 
 private slots:
     void updateAccentsStatus(int index);
     void updateIntervalProgressShape(int index);
-    void toggleMetronomeFloatingWindowVisibility(bool showFloatingWindow);
     void deleteFloatWindow();
+
+    void handleBpiComboActication(const QString &);
+    void handleBpmComboActication(const QString &);
 };
 
 #endif // NINJAMPANEL_H

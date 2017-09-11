@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "ChordProgression.h"
+#include "ChordLabel.h"
 
 namespace Ui {
 class ChordsPanel;
@@ -18,20 +19,9 @@ public:
     void setChords(const ChordProgression &progression);
     void setCurrentBeat(int beat);
     bool setBpi(int bpi); // return true if the new bpi can be use with the currentChordProgression
-    inline bool hasValidProgression() const
-    {
-        return !chordProgression.isEmpty();
-    }
-
-    inline int getCurrentBpi() const
-    {
-        return chordProgression.getBeatsPerInterval();
-    }
-
-    inline ChordProgression getChordProgression() const
-    {
-        return chordProgression;
-    }
+    bool hasValidProgression() const;
+    int getCurrentBpi() const;
+    ChordProgression getChordProgression() const;
 
 signals:
     void sendingChordsToChat();
@@ -41,13 +31,34 @@ public slots:
     void discardChords();
 
 private slots:
-    void on_buttonTransposeUp_clicked();
-    void on_buttonTransposeDown_clicked();
+    void transposeUp();
+    void transposeDown();
 
 private:
     Ui::ChordsPanel *ui;
     ChordProgression chordProgression;
-    int getEstimatedChordDuration(const Chord &chord, const ChordProgressionMeasure &measure) const;
+    QMap<int, ChordLabel *> chordsMap; // mapping beats and chords
+    ChordLabel *currentChordLabel;
+
+    int getEstimatedChordDuration(Chord *chord, ChordProgressionMeasure *measure) const;
+    void resetGridLayout();
+    void clear();
+    void addChord(Chord *chord, int beatToInsert, int durationInBeats);
 };
+
+inline bool ChordsPanel::hasValidProgression() const
+{
+    return !chordProgression.isEmpty();
+}
+
+inline int ChordsPanel::getCurrentBpi() const
+{
+    return chordProgression.getBeatsPerInterval();
+}
+
+inline ChordProgression ChordsPanel::getChordProgression() const
+{
+    return chordProgression;
+}
 
 #endif // QCHORDPANEL_H

@@ -58,10 +58,10 @@ void IntervalProgressDisplay::PiePaintStrategy::drawPies(QPainter &p, const QRec
 
         // drawing the current beat
         if (beat + beatsToDrawOffset >= context.currentBeat) {
-            QPen pen = getPen(beat, beatsToDrawOffset, context);
+            //QPen pen = getPen(beat, beatsToDrawOffset, context);
             QBrush brush = getBrush(beat, beatsToDrawOffset, context, colors);
             p.setBrush(brush);
-            p.setPen(pen);
+            p.setPen(Qt::NoPen);
 
             double degreesPerSlice = 360.0 / beatsToDraw;
             qreal startAngle = -(degreesPerSlice * beat - 90) * 16;

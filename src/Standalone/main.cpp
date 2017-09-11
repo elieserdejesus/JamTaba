@@ -11,18 +11,18 @@
 
 int main(int argc, char* args[] ){
 
-    QApplication::setApplicationName("Jamtaba 2");
+    QApplication::setApplicationName("JamTaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 
-    //start the configurator
+    // start the configurator
     Configurator* configurator = Configurator::getInstance();
     if (!configurator->setUp())
-        qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
+        qCritical() << "JTBConfig->setUp() FAILED !" ;
 
     Persistence::Settings settings;
     settings.load();
 
-//SingleApplication is not working in mac. Using a dirty ifdef until have time to solve the SingleApplication issue in Mac
+// SingleApplication is not working in mac. Using a dirty ifdef until have time to solve the SingleApplication issue in Mac
 #ifdef Q_OS_WIN
     QApplication* application = new SingleApplication(argc, args);
 #else
@@ -43,8 +43,8 @@ int main(int argc, char* args[] ){
     mainController.connectInJamtabaServer();
 
 #ifdef Q_OS_WIN
-    //The SingleApplication class implements a showUp() signal. You can bind to that signal to raise your application's
-    //window when a new instance had been started.
+    // The SingleApplication class implements a showUp() signal. You can bind to that signal to raise your application's
+    // window when a new instance had been started.
     QObject::connect(application, SIGNAL(showUp()), &mainWindow, SLOT(raise()));
 #endif
     int execResult = application->exec();

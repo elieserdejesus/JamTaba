@@ -4,51 +4,99 @@
 #include <QString>
 
 namespace Audio {
+
 class PluginDescriptor
 {
-private:
-    QString name;
-    QString group;
-    QString path;
+
 public:
-    PluginDescriptor(const QString &name, const QString &group, const QString &path = "");
+
+    enum Category {
+        Native_Plugin,
+        VST_Plugin,
+        AU_Plugin,
+        Invalid_Plugin
+    };
+
+    PluginDescriptor(const QString &name, Category category, const QString &manufacturer, const QString &path = "");
+
     PluginDescriptor();
+
     virtual ~PluginDescriptor();
-    inline QString getName() const
-    {
-        return name;
-    }
 
-    inline QString getGroup() const
-    {
-        return group;
-    }
+    QString getName() const;
 
-    inline QString getPath() const
-    {
-        return path;
-    }
+    Category getCategory() const;
 
-    inline bool isValid() const
-    {
-        return !name.isEmpty() && !group.isEmpty();
-    }
+    QString getPath() const;
 
-    inline bool isVST() const
-    {
-        return group.toLower() == "vst";
-    }
+    QString getManufacturer() const;
 
-    inline bool isNative() const
-    {
-        return group.toLower() == "jamtaba";
-    }
+    bool isValid() const;
 
-    static QString getPluginNameFromPath(const QString &path);
+    bool isVST() const;
+
+    bool isAU() const;
+
+    bool isNative() const;
+
+    static QString getVstPluginNameFromPath(const QString &path);
 
     QString toString() const;
+
     static PluginDescriptor fromString(const QString &);
+
+    static QString categoryToString(PluginDescriptor::Category category);
+
+private:
+    QString name;
+    Category category;
+    QString path;
+    QString manufacturer;
+
+    static PluginDescriptor::Category stringToCategory(const QString &string);
+
 };
+
+inline QString PluginDescriptor::getManufacturer() const
+{
+    return manufacturer;
+}
+
+inline QString PluginDescriptor::getName() const
+{
+    return name;
+}
+
+inline PluginDescriptor::Category PluginDescriptor::getCategory() const
+{
+    return category;
+}
+
+inline QString PluginDescriptor::getPath() const
+{
+    return path;
+}
+
+inline bool PluginDescriptor::isValid() const
+{
+    return !name.isEmpty() && category != PluginDescriptor::Invalid_Plugin;
+}
+
+inline bool PluginDescriptor::isVST() const
+{
+    return category == Category::VST_Plugin;
+}
+
+inline bool PluginDescriptor::isAU() const
+{
+    return category == Category::AU_Plugin;
+}
+
+inline bool PluginDescriptor::isNative() const
+{
+    return category == Category::Native_Plugin;
+}
+
 }
 
 #endif // PLUGINDESCRIPTOR_H

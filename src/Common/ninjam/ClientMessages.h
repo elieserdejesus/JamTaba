@@ -11,6 +11,7 @@ namespace Ninjam {
 class User;
 
 // +++++++++++++++++++++++++++
+
 class ClientMessage
 {
     friend QDebug &operator<<(QDebug &dbg, const ClientMessage &message);
@@ -43,7 +44,7 @@ private:
 };
 
 // ++++++++++++++++++++++++++++++++++++++=
-// ++++++++++++++++++++++++++++++++++++++=
+
 class ClientAuthUserMessage : public ClientMessage
 {
 
@@ -61,9 +62,12 @@ private:
     void serializeTo(QByteArray &buffer) const override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // +++++++++++++++++++++++++++++++++++++++=
+
 class ClientSetChannel : public ClientMessage
 {
+
 public:
     ClientSetChannel(const QStringList &channels);
     ClientSetChannel(const QString &channelNameToRemove);
@@ -77,7 +81,9 @@ private:
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // ++++++++++++++++++++++++++
+
 class ClientKeepAlive : public ClientMessage
 {
 public:
@@ -87,22 +93,24 @@ private:
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // ++++++++++++++++++++++++++++++
 
 class ClientSetUserMask : public ClientMessage
 {
 public:
-    explicit ClientSetUserMask(const QList<QString> &users);
+    explicit ClientSetUserMask(const QString &userName, quint32 channelsMask);
 
 private:
-    QStringList usersFullNames;
-    static const quint32 FLAG = 0xFFFFFFFF;
+    QString userName;
+    quint32 channelsMask;
 
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;
 };
 
 // +++++++++++++++++++++++++++
+
 class ChatMessage : public ClientMessage
 {
 public:
@@ -115,6 +123,7 @@ private:
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /**
@@ -125,10 +134,11 @@ Offset Type        Field
 0x18   uint8_t     Channel Index
 0x19   ...         Username (NUL-terminated)
 */
+
 class ClientUploadIntervalBegin : public ClientMessage
 {
 public:
-    ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName);
+    ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName, bool isAudioInterval);
 
     static QByteArray createGUID();
 
@@ -149,16 +159,17 @@ private:
 };
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++=
+
 class ClientIntervalUploadWrite : public ClientMessage
 {
 
 public:
-    ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedAudioBuffer,
+    ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedData,
                               bool isLastPart);
 
 private:
     QByteArray GUID;
-    QByteArray encodedAudioBuffer;
+    QByteArray encodedData;
     bool isLastPart;
 
     void serializeTo(QByteArray &buffer) const override;
@@ -171,6 +182,6 @@ QDebug &operator<<(QDebug &dbg, const Ninjam::ClientMessage &message);
 
 QByteArray &operator <<(QByteArray &byteArray, const Ninjam::ClientMessage &message);
 
-}
+} // namespace
 
 #endif

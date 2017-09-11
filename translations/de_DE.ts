@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de_DE">
 <context>
+    <name>Audio::Looper</name>
+    <message>
+        <source>Sequence</source>
+        <translation>Sequenz</translation>
+    </message>
+    <message>
+        <source>All Layers</source>
+        <translation>Alle Layer</translation>
+    </message>
+    <message>
+        <source>Selected Layer</source>
+        <translation>Ausgewählte Layer</translation>
+    </message>
+</context>
+<context>
     <name>BaseTrackView</name>
     <message>
         <source>L</source>
@@ -18,6 +33,10 @@
     <message>
         <source>S</source>
         <translation>S</translation>
+    </message>
+    <message>
+        <source>Boost</source>
+        <translation>Boost</translation>
     </message>
 </context>
 <context>
@@ -43,11 +62,11 @@
     </message>
     <message>
         <source>block chat messages from this user</source>
-        <translation type="unfinished"></translation>
+        <translation>blocke chat nachrichten von diesem user</translation>
     </message>
     <message>
         <source>B</source>
-        <translation type="unfinished"></translation>
+        <translation>B</translation>
     </message>
 </context>
 <context>
@@ -126,10 +145,6 @@
         <translation>neuer effekt...</translation>
     </message>
     <message>
-        <source>No plugin found! Check the &apos;Preferences -&gt; Vst plugins&apos; menu.</source>
-        <translation>kein plugin gefunden! prüfe die `preferences - &gt;VST plugins menü.</translation>
-    </message>
-    <message>
         <source>bypass</source>
         <translation>bypass</translation>
     </message>
@@ -163,6 +178,26 @@
         <source>The audio stream of this room is not available at moment!</source>
         <translation>Audio von diesem raum ist momentan nicht verfügbar!</translation>
     </message>
+    <message>
+        <source>This is the server name</source>
+        <translation>das ist der server name</translation>
+    </message>
+    <message>
+        <source>Click that button to listen that room</source>
+        <translation>clicke hier zum abhören des raums</translation>
+    </message>
+    <message>
+        <source>Click that button to enter in this room</source>
+        <translation>clicke hier um raum zu betreten</translation>
+    </message>
+    <message>
+        <source>That zone displays the waveform actually played</source>
+        <translation>diese zone zeigt die wellenform des gespielten audio</translation>
+    </message>
+    <message>
+        <source>This is the status of this room</source>
+        <translation>das ist der status dieses raums</translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackGroupView</name>
@@ -173,10 +208,6 @@
     <message>
         <source>Add or remove channels...</source>
         <translation>entferne oder füge kanal hinzu...</translation>
-    </message>
-    <message>
-        <source>X</source>
-        <translation>X</translation>
     </message>
     <message>
         <source>Preparing</source>
@@ -211,20 +242,24 @@
         <translation>voreinstellung name:</translation>
     </message>
     <message>
-        <source>Remove preset</source>
-        <translation>lösche voreinstellung</translation>
-    </message>
-    <message>
-        <source>Preset:</source>
-        <translation>voreinstellung:</translation>
-    </message>
-    <message>
         <source>channel name</source>
         <translation>Kanalnamen</translation>
     </message>
     <message>
-        <source>Transmitting</source>
+        <source>Transmit</source>
         <translation>Übertragen</translation>
+    </message>
+    <message>
+        <source>Delete preset</source>
+        <translation>entferne voreinstellung</translation>
+    </message>
+    <message>
+        <source>Deleting preset ...</source>
+        <translation>entferne voreinstellung ...</translation>
+    </message>
+    <message>
+        <source>You want to delete the preset &apos;%1&apos;</source>
+        <translation>möchtest du das preset löschen &apos;%1&apos;</translation>
     </message>
 </context>
 <context>
@@ -242,7 +277,11 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>invertiere stereo</translation>
+    </message>
+    <message>
+        <source>Looper (Available when jamming)</source>
+        <translation>Looper</translation>
     </message>
 </context>
 <context>
@@ -286,6 +325,149 @@
     <message>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
         <translation>%1 (kein midi gerät erkannt odereinschalten in `preferences`menü)</translation>
+    </message>
+</context>
+<context>
+    <name>LooperWindow</name>
+    <message>
+        <source>Load looper layers</source>
+        <translation>lade Looper Layer</translation>
+    </message>
+    <message>
+        <source>Save looper layers</source>
+        <translation>sichere Looper Layer</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>zurück setzen</translation>
+    </message>
+    <message>
+        <source>Mode</source>
+        <translation>Einstellungen</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Aufnahme</translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation>Abspielen</translation>
+    </message>
+    <message>
+        <source>Layers</source>
+        <translation>Layers</translation>
+    </message>
+    <message>
+        <source>Reset layers content</source>
+        <translation>setze Layerinhalt zurück</translation>
+    </message>
+    <message>
+        <source>Reset layers controls</source>
+        <translation>setze Layercontrols zurück</translation>
+    </message>
+    <message>
+        <source>Reset layers content and controls</source>
+        <translation>setze Layerinhalt-controls zurück</translation>
+    </message>
+    <message>
+        <source>wait (%1)</source>
+        <translation>warte (%1)</translation>
+    </message>
+    <message>
+        <source>Saving looper layers ...</source>
+        <translation>sichere Looper Layer ...</translation>
+    </message>
+    <message>
+        <source>Loop file name:</source>
+        <translation>Loop Dateiname:</translation>
+    </message>
+    <message>
+        <source>Hear all/Locked</source>
+        <translation>höhre alles/gesicherte</translation>
+    </message>
+    <message>
+        <source>Overdub</source>
+        <translation>Overdub</translation>
+    </message>
+    <message>
+        <source>Random</source>
+        <translation>Zufall</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>gesichert</translation>
+    </message>
+    <message>
+        <source>Non empty</source>
+        <translation>nicht leer</translation>
+    </message>
+    <message>
+        <source>Hear all layers while recording</source>
+        <translation>höre alle Layers bei Aufnahme</translation>
+    </message>
+    <message>
+        <source>Overdub the current layer until REC button is pressed</source>
+        <translation>Overdub das aktuelle Layer bis REC gedrückt wird</translation>
+    </message>
+    <message>
+        <source>Randomize layers while playing</source>
+        <translation>Zufalls Layer während des abspielens</translation>
+    </message>
+    <message>
+        <source>Play locked layers only</source>
+        <translation>Spiele nur gesicherte Layers</translation>
+    </message>
+    <message>
+        <source>%1 BPM loops</source>
+        <translation>%1 BPM Loops</translation>
+    </message>
+    <message>
+        <source>No loops for %1 BPM</source>
+        <translation>kein Loop für %1 BPM</translation>
+    </message>
+    <message>
+        <source>Import audio files ...</source>
+        <translation>importiere Audiodatei ...</translation>
+    </message>
+    <message>
+        <source>Importing audio files ...</source>
+        <translation>importiere Audiodatei ...</translation>
+    </message>
+    <message>
+        <source>Browse JamTaba loops...</source>
+        <translation>suche JamTaba Loops...</translation>
+    </message>
+    <message>
+        <source>Open loop file</source>
+        <translation>öffne Loop Datei</translation>
+    </message>
+    <message>
+        <source>Error loading audio file!</source>
+        <translation>Fehler beim Laden der Audiodatei!</translation>
+    </message>
+    <message>
+        <source>Can&apos;t load the file &apos;%1&apos;</source>
+        <translation>Can&apos;t lade die Datei &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>Audio files</source>
+        <translation>Audiodateien</translation>
+    </message>
+    <message>
+        <source>JamTaba Loop Files</source>
+        <translation>Loopdateien</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>R</translation>
+    </message>
+    <message>
+        <source>Loop file already exists. Do you want to overwrite?</source>
+        <translation>Loop-Datei existiert bereits. Möchtest du überschreiben?</translation>
     </message>
 </context>
 <context>
@@ -392,35 +574,59 @@
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>ansicht</translation>
     </message>
     <message>
         <source>Metering</source>
-        <translation type="unfinished"></translation>
+        <translation>pegel</translation>
     </message>
     <message>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema</translation>
     </message>
     <message>
         <source>Translators ...</source>
-        <translation type="unfinished"></translation>
+        <translation>übersetzer...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>zeige pegel spitze</translation>
     </message>
     <message>
         <source>Show RMS meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>zeige RMS pegel</translation>
     </message>
     <message>
         <source>Show peak + RMS meters</source>
-        <translation type="unfinished"></translation>
+        <translation>zeige spitze + RMS pegel</translation>
     </message>
     <message>
         <source>Show max peaks</source>
-        <translation type="unfinished"></translation>
+        <translation>zeige max pegel</translation>
+    </message>
+    <message>
+        <source>Sound Wave</source>
+        <translation>Sound Wave</translation>
+    </message>
+    <message>
+        <source>Buildings</source>
+        <translation>Buildings</translation>
+    </message>
+    <message>
+        <source>Gradient</source>
+        <translation>Gradient</translation>
+    </message>
+    <message>
+        <source>Pixelated Sound Wave</source>
+        <translation>Pixelated Sound Wave</translation>
+    </message>
+    <message>
+        <source>Pixelated Buildings</source>
+        <translation>Pixelated Buildings</translation>
+    </message>
+    <message>
+        <source>Looper ...</source>
+        <translation>Looper ...</translation>
     </message>
 </context>
 <context>
@@ -475,7 +681,7 @@
     </message>
     <message>
         <source>Disconnected from ninjam server</source>
-        <translation>gertennt vom ninjan server</translation>
+        <translation>getrennt vom ninjan server</translation>
     </message>
     <message>
         <source>About Jamtaba</source>
@@ -499,32 +705,64 @@
     </message>
     <message>
         <source>Black</source>
-        <translation type="unfinished"></translation>
+        <translation>schwarz</translation>
     </message>
     <message>
         <source>Flat</source>
-        <translation type="unfinished"></translation>
+        <translation>flach</translation>
     </message>
     <message>
         <source>Rounded</source>
-        <translation type="unfinished"></translation>
+        <translation>abgerundet</translation>
     </message>
     <message>
         <source>Error connecting with Jamtaba server!
 </source>
-        <translation type="unfinished"></translation>
+        <translation>fehler verbindung mit Jamtaba server!
+</translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
-        <translation type="unfinished"></translation>
+        <translation>verbindung mit %1 ...</translation>
     </message>
     <message>
         <source>Connecting with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>verbindung mit %1</translation>
     </message>
     <message>
         <source>Can&apos;t open the link!</source>
-        <translation type="unfinished"></translation>
+        <translation>Can&apos;t öffnet den link!</translation>
+    </message>
+    <message>
+        <source>Volcano</source>
+        <translation>Vulkan</translation>
+    </message>
+    <message>
+        <source>Error loading the theme %1</source>
+        <translation>Fehler beim thema %1 laden</translation>
+    </message>
+    <message>
+        <source>Ice</source>
+        <translation>Eis</translation>
+    </message>
+    <message>
+        <source>Channel %1</source>
+        <translation>Kanal %1</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindowPlugin</name>
+    <message>
+        <source>Window Size</source>
+        <translation>Fenstergrösse</translation>
+    </message>
+    <message>
+        <source>Increase</source>
+        <translation>vergrössern</translation>
+    </message>
+    <message>
+        <source>Decrease</source>
+        <translation>verkleinern</translation>
     </message>
 </context>
 <context>
@@ -576,9 +814,18 @@
         <source>Semitones:</source>
         <translation>halbtöne:</translation>
     </message>
+    <message>
+        <source>Route MIDI input to first subchannel</source>
+        <translation>leite MIDI Eingang zum ersten Unterkanal</translation>
+    </message>
 </context>
 <context>
     <name>NinjamPanel</name>
+    <message>
+        <source>Sync with %1</source>
+        <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
+        <translation>Sync mit %1</translation>
+    </message>
     <message>
         <source>metronome</source>
         <translation>metronom</translation>
@@ -711,14 +958,6 @@
         <translation>schmale spuren</translation>
     </message>
     <message>
-        <source>%1 leave the room.</source>
-        <translation>%1 verlasse den raum.</translation>
-    </message>
-    <message>
-        <source>%1 enter in room.</source>
-        <translation>%1 betrete den raum.</translation>
-    </message>
-    <message>
         <source>Connected as &lt;user_name&gt;</source>
         <translation>Verbunden als &lt;user_name&gt;</translation>
     </message>
@@ -732,26 +971,85 @@
     </message>
     <message>
         <source>Last chords used</source>
-        <translation type="unfinished"></translation>
+        <translation>letzter akkord</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ist geblockt im chat</translation>
     </message>
     <message>
         <source>%1 is unblocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ist freigegeben im chat</translation>
+    </message>
+    <message>
+        <source>%1 has left the room.</source>
+        <translation>%1 hat den raum verlassen.</translation>
+    </message>
+    <message>
+        <source>%1 has joined the room.</source>
+        <translation>%1 hat den raum betreten.</translation>
+    </message>
+</context>
+<context>
+    <name>NinjamRoomWindowPlugin</name>
+    <message>
+        <source>Host sync</source>
+        <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
+        <translation>Host sync</translation>
+    </message>
+    <message>
+        <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
+        <translation>BPM verändert! Bitte stop %1 und ändere BPM zu %2!</translation>
+    </message>
+    <message>
+        <source>Synchronizing...</source>
+        <translation>Syncronisiere...</translation>
+    </message>
+    <message>
+        <source>Press play/start in %1 to sync with Jamtaba!</source>
+        <translation>drücke play/start in %1 zum syncen mit Jamtaba!</translation>
+    </message>
+    <message>
+        <source>Trying to sync ...</source>
+        <translation>versuche zu syncen ...</translation>
+    </message>
+    <message>
+        <source>Change %1 BPM to %2 and try sync again!</source>
+        <translation>ändere %1 BPM zu %2 und versuch nochmal zu syncen!</translation>
     </message>
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
     <message>
         <source>Block %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>blockiere %1 im chat</translation>
     </message>
     <message>
         <source>Unblock %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>gebe frei %1 im chat</translation>
+    </message>
+</context>
+<context>
+    <name>NinjamTrackView</name>
+    <message>
+        <source>Low cut</source>
+        <translation>Tiefpass</translation>
+    </message>
+    <message>
+        <source>Receive</source>
+        <translation>erhalte</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>aus</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>normal</translation>
+    </message>
+    <message>
+        <source>Drastic</source>
+        <translation>drastisch</translation>
     </message>
 </context>
 <context>
@@ -759,13 +1057,6 @@
     <message>
         <source>Vote - change %1 to %2 </source>
         <translation>vote - änderung%1 to %2</translation>
-    </message>
-</context>
-<context>
-    <name>PlayerLabel</name>
-    <message>
-        <source>%1  location is not available at moment!</source>
-        <translation>%1 ort ist nicht erreichbar im moment!</translation>
     </message>
 </context>
 <context>
@@ -806,8 +1097,8 @@
         <translation>Auswahl primär beat audio datei ...</translation>
     </message>
     <message>
-        <source>Audio Files (*.wav, *.ogg)</source>
-        <translation>audio dateien (*.wav,*.ogg)</translation>
+        <source>Audio Files</source>
+        <translation>audio dateien</translation>
     </message>
     <message>
         <source>Choosing Secondary beat audio file...</source>
@@ -844,14 +1135,6 @@
     <message>
         <source>Outputs</source>
         <translation>ausgänge</translation>
-    </message>
-    <message>
-        <source>Sample rate</source>
-        <translation>sample rate</translation>
-    </message>
-    <message>
-        <source>Buffer size</source>
-        <translation>buffer größe</translation>
     </message>
     <message>
         <source>ASIO panel ...</source>
@@ -906,10 +1189,6 @@
         <translation>Füge einen neuen ordner zum scannen hinzu ...</translation>
     </message>
     <message>
-        <source>Recording</source>
-        <translation>aufnehmen</translation>
-    </message>
-    <message>
         <source>browse ...</source>
         <translation>suche ...</translation>
     </message>
@@ -953,13 +1232,92 @@
         <source>ok</source>
         <translation>ok</translation>
     </message>
+    <message>
+        <source>Buffer size:</source>
+        <translation>buffer größe:</translation>
+    </message>
+    <message>
+        <source>Sample rate:</source>
+        <translation>sample rate:</translation>
+    </message>
+    <message>
+        <source>Encoder quality:</source>
+        <translation>Encoder Qualität:</translation>
+    </message>
+    <message>
+        <source>Low (good for slow internet connections)</source>
+        <translation>Niedrig (gut bei langsamer Internetverbindung)</translation>
+    </message>
+    <message>
+        <source>Normal (default)</source>
+        <translation>Normal (default)</translation>
+    </message>
+    <message>
+        <source>High (for good internet connections only)</source>
+        <translation>Hoch (nur bei schneller Internetverbindung)</translation>
+    </message>
+    <message>
+        <source>Custom quality</source>
+        <translation>Benutzerdefinierte Qualität</translation>
+    </message>
+    <message>
+        <source>Multi Track Recording</source>
+        <translation>Multi Track Aufnahme</translation>
+    </message>
+    <message>
+        <source>Looper</source>
+        <translation>Looper</translation>
+    </message>
+    <message>
+        <source>Save loop layers as ...</source>
+        <translation>sichere Looplayers als ...</translation>
+    </message>
+    <message>
+        <source>Ogg files (use less disk space)</source>
+        <translation>Ogg Dateien (wenig speicherplatz)</translation>
+    </message>
+    <message>
+        <source>Wave files</source>
+        <translation>Wave Dateien</translation>
+    </message>
+    <message>
+        <source>Bit depth:</source>
+        <translation>Bit Auflösung:</translation>
+    </message>
+    <message>
+        <source>Loops folder</source>
+        <translation>Loops Ordner</translation>
+    </message>
+    <message>
+        <source>Choosing loops folder ...</source>
+        <translation>wähle Loop Ordner ...</translation>
+    </message>
+</context>
+<context>
+    <name>PreferencesDialogStandalone</name>
+    <message>
+        <source>Adding VST path ...</source>
+        <translation>Vst pfad hinzufügen ...</translation>
+    </message>
+    <message>
+        <source>scanning %1</source>
+        <translation>scanning%1</translation>
+    </message>
+    <message>
+        <source>Add Vst(s) to Black list ...</source>
+        <translation>Füge Vst zu blacklist hinzu ...</translation>
+    </message>
+    <message>
+        <source>Remove Vst(s) from Black List ...</source>
+        <translation>Entferne Vst von blacklist ...</translation>
+    </message>
+    <message>
+        <source>No midi input device detected!</source>
+        <translation>Kein midi input gerät erkannt!</translation>
+    </message>
 </context>
 <context>
     <name>PrivateServerDialog</name>
-    <message>
-        <source>Connecting in private Ninjam server ...</source>
-        <translation>Verbinde zu privatem ninjam server ...</translation>
-    </message>
     <message>
         <source>This the private server dialog</source>
         <translation>privater serverdialog</translation>
@@ -967,10 +1325,6 @@
     <message>
         <source>Server:</source>
         <translation>Server:</translation>
-    </message>
-    <message>
-        <source>type here the name of the server to join</source>
-        <translation>tippe hier den servernamen </translation>
     </message>
     <message>
         <source>leave blank to connect as annonymous</source>
@@ -1000,54 +1354,27 @@
         <source>OK</source>
         <translation>ok</translation>
     </message>
+    <message>
+        <source>Connecting with private Ninjam server ...</source>
+        <translation>Verbinde zu privatem ninjam server ...</translation>
+    </message>
+    <message>
+        <source>User name:</source>
+        <translation>user name:</translation>
+    </message>
 </context>
 <context>
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
-        <translation type="unfinished"></translation>
+        <translation>generiere Reaper &apos;clipsort.log&apos; datei</translation>
     </message>
 </context>
 <context>
     <name>Recorder::ReaperProjectGenerator</name>
     <message>
         <source>Generate Reaper Project file (RPP)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RoomViewPanel</name>
-    <message>
-        <source>This is the server name</source>
-        <translation>das ist der server name</translation>
-    </message>
-    <message>
-        <source>Click that button to listen that room</source>
-        <translation>clicke hier zum abhören des raums</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>abhören</translation>
-    </message>
-    <message>
-        <source>Click that button to enter in this room</source>
-        <translation>clicke hier um raum zu betreten</translation>
-    </message>
-    <message>
-        <source>enter</source>
-        <translation>enter</translation>
-    </message>
-    <message>
-        <source>That panel shows the musicians actually in that room</source>
-        <translation>dieses feld zeigt musiker aktuell im raum</translation>
-    </message>
-    <message>
-        <source>That zone displays the waveform actually played</source>
-        <translation>diese zone zeigt die wellenform des gespielten audio</translation>
-    </message>
-    <message>
-        <source>This is the status of this room</source>
-        <translation>das ist der status dieses raums</translation>
+        <translation>generiere Reaper Project datei (RPP)</translation>
     </message>
 </context>
 <context>
@@ -1055,25 +1382,6 @@
     <message>
         <source>Remove this folder from scanning</source>
         <translation>entferne diesen ordner vom scannen</translation>
-    </message>
-</context>
-<context>
-    <name>StandalonePreferencesDialog</name>
-    <message>
-        <source>Adding VST path ...</source>
-        <translation>Vst pfad hinzufügen ...</translation>
-    </message>
-    <message>
-        <source>Add Vst(s) to Black list ...</source>
-        <translation>Füge Vst zu blacklist hinzu ...</translation>
-    </message>
-    <message>
-        <source>Remove Vst(s) from Black List ...</source>
-        <translation>Entferne Vst von blacklist ...</translation>
-    </message>
-    <message>
-        <source>No midi input device detected!</source>
-        <translation>Kein midi input gerät erkannt!</translation>
     </message>
 </context>
 <context>

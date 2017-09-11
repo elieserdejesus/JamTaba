@@ -21,13 +21,15 @@ public:
 
     void refreshTrackInputSelection(int inputTrackIndex);
 
-    MainControllerStandalone * getMainController() override
+    MainControllerStandalone * getMainController() const override
     {
         return controller;
     }
 
 protected:
-    void closeEvent(QCloseEvent *);
+    void closeEvent(QCloseEvent *) override;
+
+    TextEditorModifier *createTextEditorModifier() override;
 
     NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, MainController *) override;
 
@@ -39,7 +41,7 @@ protected:
 
     PreferencesDialog *createPreferencesDialog() override;
 
-protected slots: //TODO change to private slots?
+protected slots: // TODO change to private slots?
     void handleServerConnectionError(const QString &msg);
 
     void setGlobalPreferences(const QList<bool> &, int audioDevice, int firstIn, int lastIn, int firstOut,
@@ -48,7 +50,7 @@ protected slots: //TODO change to private slots?
     // plugin finder
     void showPluginScanDialog();
     void hidePluginScanDialog(bool finishedWithoutError);
-    void addFoundedPlugin(const QString &name, const QString &group, const QString &path);
+    void showFoundedVstPlugin(const QString &name, const QString &path);
     void setCurrentScanningPlugin(const QString &pluginPath);
     void addPluginToBlackList(const QString &pluginPath);
 
@@ -56,14 +58,14 @@ protected slots: //TODO change to private slots?
 
 private slots:
     void toggleFullScreen();
-
     void closePluginScanDialog();
-
     void restartAudioAndMidi();
 
 private:
     MainControllerStandalone *controller;
     QScopedPointer<PluginScanDialog> pluginScanDialog;
+
+    PreferencesDialog *preferencesDialog; // store the instance to check if dialog is visible e decide show or not the Vst Plugin Scan Dialog
 
     LocalTrackGroupViewStandalone *geTrackGroupViewByName(const QString &trackGroupName) const;
 

@@ -1,0 +1,254 @@
+/* Dialogs in Volcano theme
+-------------------------------------*/
+
+PreferencesDialog
+{
+    background-color: #BD5A1D;
+}
+
+QMessageBox,
+QInputDialog,
+MidiToolsDialog,
+UserNameDialog,
+PrivateServerDialog
+{
+    border-color: rgb(20, 20, 20);
+    color: rgb(220, 220, 220);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.5 rgb(239, 114, 24),
+        stop: 1.0 rgb(197, 34, 1));
+}
+
+LooperWindow
+{
+    /* using the same bottom pane color */
+    background-color: rgb(227, 183, 153);
+}
+
+PrivateServerDialog #label, #label_2, #label_3
+{
+    color: rgb(160, 160, 160);
+}
+
+UserNameDialog #label
+{
+    color: black;
+}
+
+PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #tabLooper
+{
+    border: none;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.5 rgb(239, 114, 24),
+        stop: 1.0 rgb(197, 34, 1));
+}
+
+/* the colors inside the combo box*/
+
+#tabAudio QComboBox,
+#tabLooper QComboBox,
+#tabMetronome QComboBox
+{
+    border: 1px solid rgba(0, 0, 0, 90);
+    padding: 1px 3px 1px 3px;
+    background-color: rgb(254, 181, 102);
+    selection-background-color: rgb(179, 89, 37);
+    selection-color: rgb(254, 181, 102);
+}
+
+PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
+{
+    border: none;
+    color: black;
+    background-color: rgba(254, 181, 102, 150);
+    selection-background-color: rgb(179, 89, 37);
+    selection-color: rgb(254, 181, 102);
+}
+
+PreferencesDialog QComboBox:disabled,
+PreferencesDialog QLabel:disabled,
+PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
+PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
+{
+color: rgba(0, 0, 0, 90);
+}
+
+PreferencesDialog QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
+PreferencesDialog #vstListWidget
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop: 0.0 #FFD470,
+    stop: 0.15 #FDE09B,
+    stop: 0.9 #FDE5A9,
+    stop: 1.0 #EF820D);
+
+}
+
+MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNote, #checkBoxMidiRouting
+{
+    color: rgb(220, 220, 220);
+}
+
+MidiToolsDialog #GroupBoxKeyRange, #GroupBoxTranspose
+{
+    color: rgb(160, 160, 160);
+}
+
+MidiToolsDialog #spinBoxTranspose
+{
+    border: 1px solid rgb(80, 80, 80);
+    color: black;
+    background-color: rgb(254, 181, 102);
+    selection-background-color: rgb(179, 89, 37);
+    selection-color: rgba(254, 181, 102, 150);
+}
+
+PluginScanDialog QPlainTextEdit
+{
+    background: transparent;
+}
+
+PluginScanDialog #labelPluginText
+{
+    color: rgb(20, 20, 20,);
+    font-weight: bold;
+}
+
+PluginScanDialog QPlainTextEdit
+{
+    background: transparent;
+}
+
+PluginScanDialog #labelPluginText
+{
+    font-weight: bold;
+}
+
+PluginScanDialog
+{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.5 rgb(239, 114, 24),
+        stop: 1.0 rgb(197, 34, 1));
+}
+
+PluginScanDialog QGroupBox
+{
+    color: rgb(220, 220, 220);
+    border: 1px solid rgba(0, 0, 0, 100);
+    selection-color: rgb(140, 140, 140);
+}
+
+PrivateServerDialog #comboBoxServers
+{
+    border: 1px solid rgba(0, 0, 0, 100);
+    padding: 1px 2px 1px 2px;
+    background-color: rgb(254, 181, 102);
+    color: rgba(0, 0, 0, 220);
+    selection-background-color: rgb(254, 181, 102);
+    selection-color: black;
+}
+
+PrivateServerDialog #comboBoxServers:focus
+{
+    border-color: rgba(0, 0, 0, 160);
+    color: black;
+    selection-background-color: rgb(179, 89, 37);
+    selection-color: rgba(254, 181, 102, 150);
+}
+
+PrivateServerDialog #comboBoxServers::drop-down
+{
+    border: 0px;
+}
+
+PrivateServerDialog #comboBoxServers::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+PrivateServerDialog #comboBoxServers::down-arrow:disabled,
+PrivateServerDialog #comboBoxServers::down-arrow:hover
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
+#tabAudio QComboBox:focus,
+#tabLooper QComboBox:focus,
+#tabMetronome QComboBox:focus
+{
+    background-color: rgb(179, 89, 37);
+    color: rgb(254, 181, 102);
+}
+
+#tabAudio QComboBox:hover,
+#tabLooper QComboBox:hover,
+#tabMetronome QComboBox:hover
+{
+    background-color: rgb(247, 153, 70);
+}
+
+#tabAudio QComboBox:focus:hover,
+#tabLooper QComboBox:focus:hover,
+#tabMetronome QComboBox:focus:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #B35925,
+        stop: 1.0 #b4673b);
+}
+
+#tabAudio QComboBox::drop-down,
+#tabLooper QComboBox::drop-down,
+#tabMetronome QComboBox::drop-down
+{
+    border: 0px;
+}
+
+#tabAudio QComboBox::down-arrow,
+#tabLooper QComboBox::down-arrow,
+#tabMetronome QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+#tabAudio QComboBox::down-arrow:disabled,
+#tabLooper QComboBox::down-arrow:disabled,
+#tabMetronome QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
+PreferencesDialog QPushButton
+{
+    border: 1px outset rgba(0, 0, 0, 90);
+}
+
+PrivateServerDialog QComboBox QAbstractItemView
+{
+    border: none;
+    color: black;
+    background-color: rgba(254, 181, 102, 150);
+    selection-background-color: rgb(179, 89, 37);
+    selection-color: rgb(254, 181, 102);
+}
+
+BusyDialog
+{
+    border: 1px solid rgba(0, 0, 0, 100);
+    padding: 0px;
+    margin: 0px;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 #FFD470,
+            stop:0.3 #FDE09B,
+            stop:0.6 #FDE5A9,
+            stop:1 #EF820D);
+}
+
+BusyDialog > QLabel /* the text appearing in Busy dialog, like "connecting in ninbot.com" */
+{
+    font-weight: bold;
+    color: black;
+}

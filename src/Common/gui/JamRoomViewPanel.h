@@ -3,11 +3,15 @@
 
 #include <QFrame>
 #include <QLabel>
+#include <QPushButton>
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
+#include "WavePeakPanel.h"
+
+class MapWidget;
 
 namespace Ui {
-class RoomViewPanel;
+class JamRoomViewPanel;
 }
 
 namespace Geo {
@@ -16,6 +20,7 @@ class Location;
 
 namespace Login {
 class AbstractJamRoom;
+class RoomInfo;
 }
 
 namespace Controller {
@@ -35,11 +40,9 @@ public:
 
     void setShowBufferingState(bool showBuffering);
     void setBufferingPercentage(int percentage);
+    void setWaveDrawingMode(WavePeakPanel::WaveDrawingMode mode);
 
-    inline Login::RoomInfo getRoomInfo() const
-    {
-        return roomInfo;
-    }
+    Login::RoomInfo getRoomInfo() const;
 
 signals:
     void startingListeningTheRoom(const Login::RoomInfo &roomInfo);
@@ -50,13 +53,21 @@ protected:
     void changeEvent(QEvent *) override;
 
 private slots:
-    void on_buttonListen_clicked();
-    void on_buttonEnter_clicked();
+    void toggleRoomListening();
+    void enterInTheRoom();
     void updateUserLocation(const QString &userIP);
+
 private:
-    Ui::RoomViewPanel *ui;
+    Ui::JamRoomViewPanel *ui;
     Controller::MainController *mainController;
     Login::RoomInfo roomInfo;
+    MapWidget *map;
+
+    QLayout *waveDrawingButtonsLayout;
+    QMap<WavePeakPanel::WaveDrawingMode, QPushButton*> waveDrawingButtons;
+    void createWaveDrawingButtonsLayout(QLayout *layout);
+    void setWaveDrawingButtonsVisibility(bool showButtons);
+
     void initialize(const Login::RoomInfo &roomInfo);
     bool roomContainsBotsOnly(const Login::RoomInfo &roomInfo);
     bool userIsBot(const Login::UserInfo &userInfo);
@@ -66,6 +77,17 @@ private:
     QString buildRoomDescriptionString();
 
     void translateUi();
+    void updateStyleSheet();
+    void createMapWidgets();
+    void updateMap();
+
+    bool static canShowNinjamServerPort(const QString &serverName);
+
 };
 
-#endif // JAMROOMVIEWPANEL_H
+inline Login::RoomInfo JamRoomViewPanel::getRoomInfo() const
+{
+    return roomInfo;
+}
+
+ #endif // JAMROOMVIEWPANEL_H

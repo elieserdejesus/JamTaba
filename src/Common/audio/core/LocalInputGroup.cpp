@@ -7,7 +7,7 @@ LocalInputGroup::LocalInputGroup(int groupIndex, Audio::LocalInputNode *firstInp
     groupIndex(groupIndex),
     transmiting(true)
 {
-    addInput(firstInput);
+    addInputNode(firstInput);
 }
 
 LocalInputGroup::~LocalInputGroup()
@@ -15,16 +15,33 @@ LocalInputGroup::~LocalInputGroup()
     groupedInputs.clear();
 }
 
-void LocalInputGroup::addInput(Audio::LocalInputNode *input)
+void LocalInputGroup::addInputNode(Audio::LocalInputNode *input)
 {
     groupedInputs.append(input);
 }
 
+LocalInputNode *LocalInputGroup::getInputNode(quint8 index) const
+{
+    if (index < groupedInputs.size()) {
+        return groupedInputs.at(index);
+    }
+
+    return nullptr;
+}
+
+
 void LocalInputGroup::mixGroupedInputs(Audio::SamplesBuffer &out)
 {
-    foreach (Audio::LocalInputNode *inputTrack, groupedInputs) {
-        if (!inputTrack->isMuted())
-            out.add(inputTrack->getLastBuffer());
+    for (auto inputTrack : groupedInputs) {
+        if (!inputTrack->isMuted()) {
+            auto lastBuffer = inputTrack->getLastBuffer();
+            if (lastBuffer.getChannels() == out.getChannels()) {
+                out.add(lastBuffer);
+            }
+            else {
+                out.add(inputTrack->getLastBufferMixedToMono());
+            }
+        }
     }
 }
 
@@ -38,11 +55,15 @@ int LocalInputGroup::getMaxInputChannelsForEncoding() const
 {
     if (groupedInputs.size() > 1)
         return 2;    // stereo encoding
+
     if (!groupedInputs.isEmpty()) {
+
         if (groupedInputs.first()->isMidi())
             return 2;    // just one midi track, use stereo encoding
+
         if (groupedInputs.first()->isAudio())
             return groupedInputs.first()->getAudioInputRange().getChannels();
+
         if (groupedInputs.first()->isNoInput())
             return 2;    // allow channels using noInput but processing some vst looper in stereo
     }

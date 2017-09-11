@@ -2,6 +2,7 @@
 #define PREFERENCES_DIALOG_H
 
 #include <QDialog>
+#include <QCheckBox>
 #include "persistence/Settings.h"
 #include "recorder/JamRecorder.h"
 
@@ -19,7 +20,13 @@ public:
     virtual ~PreferencesDialog();
 
     enum PreferencesTab {
-        TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING, TAB_METRONOME
+        TabAudio,
+        TabMidi,
+        TabVST,
+        TabMultiTrackRecording,
+        TabMetronome,
+        TabLooper
+
     };
 
     virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders);
@@ -30,6 +37,10 @@ signals:
     void multiTrackRecordingStatusChanged(bool recording);
     void jamRecorderStatusChanged(const QString &writerId, bool status);
     void recordingPathSelected(const QString &newRecordingPath);
+    void encodingQualityChanged(float newEncodingQuality);
+    void looperAudioEncodingFlagChanged(bool savingEncodedAudio);
+    void looperWaveFilesBitDepthChanged(quint8 bitDepth);
+    void looperFolderChanged(const QString &newLoopsFolder);
 
 public slots:
     void accept() override;
@@ -42,25 +53,34 @@ private slots:
     void openPrimaryBeatAudioFileBrowser();
     void openSecondaryBeatAudioFileBrowser();
 
-    //void emitFirstBeatAudioFileChanged();
-    //void emitSecondaryBeatAudioFileChanged();
+    void emitEncodingQualityChanged();
 
     void toggleCustomMetronomeSounds(bool usingCustomMetronome);
     void toggleBuiltInMetronomeSounds(bool usingBuiltInMetronome);
+
+    void toggleRecording(bool recording);
+
 private:
+    void populateEncoderQualityComboBox();
+    bool usingCustomEncodingQuality();
     QString selectAudioFile(QString caption, QString initialDir);
     void refreshMetronomeControlsStyleSheet();
     QString openAudioFileBrowser(const QString caption);
     QMap<QCheckBox *, QString> jamRecorderCheckBoxes;
+    static QString getAudioFilesFilter();
+
 protected:
     Ui::PreferencesDialog *ui;
 
     // recording
-    void populateRecordingTab();
+    void populateMultiTrackRecordingTab();
     void selectRecordingTab();
 
-    //metronome
+    // metronome
     void populateMetronomeTab();
+
+    // looper
+    void populateLooperTab();
 
     virtual void setupSignals();
     virtual void populateAllTabs();

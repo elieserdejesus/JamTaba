@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/style/common">
+    <qresource prefix="/css/common">
         <file alias="General.css">css/common/General.css</file>
         <file alias="Dialogs.css">css/common/Dialogs.css</file>
         <file alias="BaseTrack.css">css/common/BaseTrack.css</file>
@@ -10,38 +10,60 @@
         <file alias="Chords.css">css/common/Chords.css</file>
         <file alias="PublicRooms.css">css/common/PublicRooms.css</file>
     </qresource>
-    <qresource prefix="/style/themes/Flat">
-        <file alias="BaseTrack.css">css/themes/Flat/BaseTrack.css</file>
-        <file alias="NinjamWindow.css">css/themes/Flat/NinjamWindow.css</file>
-        <file alias="LocalTrack.css">css/themes/Flat/LocalTrack.css</file>
-        <file alias="Dialogs.css">css/themes/Flat/Dialogs.css</file>
-        <file alias="General.css">css/themes/Flat/General.css</file>
-        <file alias="MainWindow.css">css/themes/Flat/MainWindow.css</file>
-        <file alias="PublicRooms.css">css/themes/Flat/PublicRooms.css</file>
-        <file alias="Chat.css">css/themes/Flat/Chat.css</file>
-        <file alias="Chords.css">css/themes/Flat/Chords.css</file>
+    <qresource prefix="/css/themes/Flat">
+        <file>css/themes/Flat/BaseTrack.css</file>
+        <file>css/themes/Flat/NinjamWindow.css</file>
+        <file>css/themes/Flat/LocalTrack.css</file>
+        <file>css/themes/Flat/Dialogs.css</file>
+        <file>css/themes/Flat/General.css</file>
+        <file>css/themes/Flat/MainWindow.css</file>
+        <file>css/themes/Flat/PublicRooms.css</file>
+        <file>css/themes/Flat/Chat.css</file>
+        <file>css/themes/Flat/Chords.css</file>
     </qresource>
-    <qresource prefix="/style/themes/Black">
-        <file alias="BaseTrack.css">css/themes/Black/BaseTrack.css</file>
-        <file alias="NinjamWindow.css">css/themes/Black/NinjamWindow.css</file>
-        <file alias="LocalTrack.css">css/themes/Black/LocalTrack.css</file>
-        <file alias="Dialogs.css">css/themes/Black/Dialogs.css</file>
-        <file alias="General.css">css/themes/Black/General.css</file>
-        <file alias="MainWindow.css">css/themes/Black/MainWindow.css</file>
-        <file alias="PublicRooms.css">css/themes/Black/PublicRooms.css</file>
-        <file alias="Chat.css">css/themes/Black/Chat.css</file>
-        <file alias="Chords.css">css/themes/Black/Chords.css</file>
+    <qresource prefix="/css/themes/Volcano_nm">
+        <file>css/themes/Volcano_nm/BaseTrack.css</file>
+        <file>css/themes/Volcano_nm/NinjamWindow.css</file>
+        <file>css/themes/Volcano_nm/LocalTrack.css</file>
+        <file>css/themes/Volcano_nm/Dialogs.css</file>
+        <file>css/themes/Volcano_nm/General.css</file>
+        <file>css/themes/Volcano_nm/MainWindow.css</file>
+        <file>css/themes/Volcano_nm/PublicRooms.css</file>
+        <file>css/themes/Volcano_nm/Chat.css</file>
+        <file>css/themes/Volcano_nm/Chords.css</file>
     </qresource>
-    <qresource prefix="/style/themes/Rounded">
-        <file alias="BaseTrack.css">css/themes/Rounded/BaseTrack.css</file>
-        <file alias="Chat.css">css/themes/Rounded/Chat.css</file>
-        <file alias="Chords.css">css/themes/Rounded/Chords.css</file>
-        <file alias="Dialogs.css">css/themes/Rounded/Dialogs.css</file>
-        <file alias="General.css">css/themes/Rounded/General.css</file>
-        <file alias="LocalTrack.css">css/themes/Rounded/LocalTrack.css</file>
-        <file alias="MainWindow.css">css/themes/Rounded/MainWindow.css</file>
-        <file alias="NinjamWindow.css">css/themes/Rounded/NinjamWindow.css</file>
-        <file alias="PublicRooms.css">css/themes/Rounded/PublicRooms.css</file>
+    <qresource prefix="/css/themes/Black_nm">
+        <file>css/themes/Black_nm/BaseTrack.css</file>
+        <file>css/themes/Black_nm/NinjamWindow.css</file>
+        <file>css/themes/Black_nm/LocalTrack.css</file>
+        <file>css/themes/Black_nm/Dialogs.css</file>
+        <file>css/themes/Black_nm/General.css</file>
+        <file>css/themes/Black_nm/MainWindow.css</file>
+        <file>css/themes/Black_nm/PublicRooms.css</file>
+        <file>css/themes/Black_nm/Chat.css</file>
+        <file>css/themes/Black_nm/Chords.css</file>
+    </qresource>
+    <qresource prefix="/css/themes/Rounded">
+        <file>css/themes/Rounded/BaseTrack.css</file>
+        <file>css/themes/Rounded/Chat.css</file>
+        <file>css/themes/Rounded/Chords.css</file>
+        <file>css/themes/Rounded/Dialogs.css</file>
+        <file>css/themes/Rounded/General.css</file>
+        <file>css/themes/Rounded/LocalTrack.css</file>
+        <file>css/themes/Rounded/MainWindow.css</file>
+        <file>css/themes/Rounded/NinjamWindow.css</file>
+        <file>css/themes/Rounded/PublicRooms.css</file>
+    </qresource>
+    <qresource prefix="/css/themes/Ice">
+        <file>css/themes/Ice/BaseTrack.css</file>
+        <file>css/themes/Ice/Chat.css</file>
+        <file>css/themes/Ice/Chords.css</file>
+        <file>css/themes/Ice/Dialogs.css</file>
+        <file>css/themes/Ice/General.css</file>
+        <file>css/themes/Ice/LocalTrack.css</file>
+        <file>css/themes/Ice/MainWindow.css</file>
+        <file>css/themes/Ice/NinjamWindow.css</file>
+        <file>css/themes/Ice/PublicRooms.css</file>
     </qresource>
     <qresource prefix="/tr">
         <file alias="en.qm">../../translations/en.qm</file>
@@ -50,8 +72,30 @@
         <file alias="es_CL.qm">../../translations/es_CL.qm</file>
         <file alias="fr_FR.qm">../../translations/fr_FR.qm</file>
         <file alias="de_DE.qm">../../translations/de_DE.qm</file>
+        <file alias="da_DK.qm">../../translations/da_DK.qm</file>
+        <file alias="pl_PL.qm">../../translations/pl_PL.qm</file>
+    </qresource>
+    <qresource prefix="/qt_tr">
+        <file alias="qtbase_de.qm">../../translations/Qt/qtbase_de.qm</file>
+        <file alias="qtbase_en.qm">../../translations/Qt/qtbase_en.qm</file>
+        <file alias="qtbase_fr.qm">../../translations/Qt/qtbase_fr.qm</file>
+        <file alias="qtbase_ja.qm">../../translations/Qt/qtbase_ja.qm</file>
+        <file alias="qtbase_pl.qm">../../translations/Qt/qtbase_pl.qm</file>
+        <file alias="qtbase_es.qm">../../translations/Qt/qtbase_es.qm</file>
+        <file alias="qtbase_pt.qm">../../translations/Qt/qtbase_pt.qm</file>
+        <file alias="qtbase_da.qm">../../translations/Qt/qtbase_da.qm</file>
     </qresource>
     <qresource prefix="/images">
+        <file>logo.png</file>
+        <file>loop.png</file>
+        <file>rec.png</file>
+        <file>play.png</file>
+        <file>wave_normal.png</file>
+        <file>wave_pixelated.png</file>
+        <file>wave_buildings.png</file>
+        <file>wave_buildings_pixelated.png</file>
+        <file>receive.png</file>
+        <file>transmit.png</file>
         <file>stereo_inverted.png</file>
         <file>stereo_normal.png</file>
         <file>check.png</file>
@@ -76,14 +120,12 @@
         <file>mini arrow right.png</file>
         <file>mini arrow left hover.png</file>
         <file>mini arrow right hover.png</file>
-        <file>rec maginifier.png</file>
-        <file>rec off.png</file>
-        <file>rec on.png</file>
         <file>translate.png</file>
         <file>warning.png</file>
         <file>chat_small.png</file>
         <file>preset-load.png</file>
         <file>preset-save.png</file>
+        <file>preset-delete.png</file>
         <file>discard.png</file>
         <file>level high.png</file>
         <file>level low.png</file>
@@ -95,6 +137,12 @@
         <file>pencil.png</file>
         <file>pencil-read-only.png</file>
         <file>chat_blocked.png</file>
+        <file>low_cut_off.png</file>
+        <file>low_cut_normal.png</file>
+        <file>low_cut_drastic.png</file>
+        <file>delete_layer.png</file>
+        <file>save.png</file>
+        <file>load.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>
@@ -341,6 +389,7 @@
         <file>flags/wales.png</file>
         <file>flags/wf.png</file>
         <file>flags/ws.png</file>
+        <file>flags/xk.png</file>
         <file>flags/ye.png</file>
         <file>flags/yt.png</file>
         <file>flags/za.png</file>
@@ -360,5 +409,92 @@
         <file>metronome/TicToc_2nd.ogg</file>
         <file>metronome/Default_1st.ogg</file>
         <file>metronome/Default_2nd.ogg</file>
+    </qresource>
+    <qresource prefix="/tiles">
+        <file>map/0/0/0.png</file>
+        <file>map/1/0/0.png</file>
+        <file>map/1/0/1.png</file>
+        <file>map/1/1/0.png</file>
+        <file>map/1/1/1.png</file>
+        <file>map/2/0/0.png</file>
+        <file>map/2/0/1.png</file>
+        <file>map/2/0/2.png</file>
+        <file>map/2/0/3.png</file>
+        <file>map/2/1/0.png</file>
+        <file>map/2/1/1.png</file>
+        <file>map/2/1/2.png</file>
+        <file>map/2/1/3.png</file>
+        <file>map/2/2/0.png</file>
+        <file>map/2/2/1.png</file>
+        <file>map/2/2/2.png</file>
+        <file>map/2/2/3.png</file>
+        <file>map/2/3/0.png</file>
+        <file>map/2/3/1.png</file>
+        <file>map/2/3/2.png</file>
+        <file>map/2/3/3.png</file>
+        <file>map/3/0/0.png</file>
+        <file>map/3/0/1.png</file>
+        <file>map/3/0/2.png</file>
+        <file>map/3/0/3.png</file>
+        <file>map/3/0/4.png</file>
+        <file>map/3/0/5.png</file>
+        <file>map/3/0/6.png</file>
+        <file>map/3/0/7.png</file>
+        <file>map/3/1/0.png</file>
+        <file>map/3/1/1.png</file>
+        <file>map/3/1/2.png</file>
+        <file>map/3/1/3.png</file>
+        <file>map/3/1/4.png</file>
+        <file>map/3/1/5.png</file>
+        <file>map/3/1/6.png</file>
+        <file>map/3/1/7.png</file>
+        <file>map/3/2/0.png</file>
+        <file>map/3/2/1.png</file>
+        <file>map/3/2/2.png</file>
+        <file>map/3/2/3.png</file>
+        <file>map/3/2/4.png</file>
+        <file>map/3/2/5.png</file>
+        <file>map/3/2/6.png</file>
+        <file>map/3/2/7.png</file>
+        <file>map/3/3/0.png</file>
+        <file>map/3/3/1.png</file>
+        <file>map/3/3/2.png</file>
+        <file>map/3/3/3.png</file>
+        <file>map/3/3/4.png</file>
+        <file>map/3/3/5.png</file>
+        <file>map/3/3/6.png</file>
+        <file>map/3/3/7.png</file>
+        <file>map/3/4/0.png</file>
+        <file>map/3/4/1.png</file>
+        <file>map/3/4/2.png</file>
+        <file>map/3/4/3.png</file>
+        <file>map/3/4/4.png</file>
+        <file>map/3/4/5.png</file>
+        <file>map/3/4/6.png</file>
+        <file>map/3/4/7.png</file>
+        <file>map/3/5/0.png</file>
+        <file>map/3/5/1.png</file>
+        <file>map/3/5/2.png</file>
+        <file>map/3/5/3.png</file>
+        <file>map/3/5/4.png</file>
+        <file>map/3/5/5.png</file>
+        <file>map/3/5/6.png</file>
+        <file>map/3/5/7.png</file>
+        <file>map/3/6/0.png</file>
+        <file>map/3/6/1.png</file>
+        <file>map/3/6/2.png</file>
+        <file>map/3/6/3.png</file>
+        <file>map/3/6/4.png</file>
+        <file>map/3/6/5.png</file>
+        <file>map/3/6/6.png</file>
+        <file>map/3/6/7.png</file>
+        <file>map/3/7/0.png</file>
+        <file>map/3/7/1.png</file>
+        <file>map/3/7/2.png</file>
+        <file>map/3/7/3.png</file>
+        <file>map/3/7/4.png</file>
+        <file>map/3/7/5.png</file>
+        <file>map/3/7/6.png</file>
+        <file>map/3/7/7.png</file>
     </qresource>
 </RCC>

@@ -1,36 +1,128 @@
 #include "gui/JamRoomViewPanel.h"
 #include "ui_JamRoomViewPanel.h"
 
+#include <QDebug>
 #include "MainController.h"
 #include "ninjam/User.h"
 #include "ninjam/UserChannel.h"
-#include "PlayerLabel.h"
-#include <QDebug>
+#include "ninjam/Server.h"
+#include "MapWidget.h"
+#include "MapMarker.h"
 
-JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
-                                   Controller::MainController *mainController) :
+JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo, Controller::MainController *mainController) :
     QFrame(nullptr),
-    ui(new Ui::RoomViewPanel),
+    ui(new Ui::JamRoomViewPanel),
     mainController(mainController),
     roomInfo(roomInfo)
 {
     ui->setupUi(this);
-    initialize(roomInfo);
-    ui->wavePeakPanel->setEnabled(false);// is enable when user click in listen button
 
-    connect(mainController, SIGNAL(ipResolved(const QString &)), this, SLOT(updateUserLocation(const QString &)));
+    ui->wavePeakPanel->setEnabled(false); // is enable when user click in listen button
+
+    connect(mainController, &Controller::MainController::ipResolved, this, &JamRoomViewPanel::updateUserLocation);
+    connect(ui->buttonListen, &QPushButton::clicked, this, &JamRoomViewPanel::toggleRoomListening);
+    connect(ui->buttonEnter, &QPushButton::clicked, this, &JamRoomViewPanel::enterInTheRoom);
+
+    createMapWidgets();
+
+    // add wave peak panel as a layer in top of map widget
+    ui->content->layout()->removeWidget(ui->wavePeakPanel);
+    QHBoxLayout *mapWidgetLayout = new QHBoxLayout();
+    map->setLayout(mapWidgetLayout);
+    mapWidgetLayout->addWidget(ui->wavePeakPanel);
+    mapWidgetLayout->setContentsMargins(1, 1, 1, 1);
+    mapWidgetLayout->setSpacing(3);
+
+    waveDrawingButtonsLayout = new QVBoxLayout();
+    waveDrawingButtonsLayout->setContentsMargins(0, 0, 0, 0);
+    waveDrawingButtonsLayout->setSpacing(0);
+    createWaveDrawingButtonsLayout(waveDrawingButtonsLayout);
+
+    mapWidgetLayout->addLayout(waveDrawingButtonsLayout);
+    mapWidgetLayout->setAlignment(waveDrawingButtonsLayout, Qt::AlignBottom);
+
+    // 'remember' the wave drawing mode
+    WavePeakPanel::WaveDrawingMode lastDrawingMode = static_cast<WavePeakPanel::WaveDrawingMode>(mainController->getLastWaveDrawingMode());
+    setWaveDrawingMode(lastDrawingMode);
+
+    initialize(roomInfo);
+}
+
+void JamRoomViewPanel::setWaveDrawingButtonsVisibility(bool showButtons)
+{
+    for (QPushButton *button : waveDrawingButtons.values()) {
+        button->setVisible(showButtons);
+    }
+
+    map->setBlurMode(showButtons);
+}
+
+void JamRoomViewPanel::createWaveDrawingButtonsLayout(QLayout *layout)
+{
+    const static QString icons[4] =
+    {
+        "wave_normal",
+        "wave_pixelated",
+        "wave_buildings",
+        "wave_buildings_pixelated"
+    };
+
+    const static WavePeakPanel::WaveDrawingMode drawingModes[4] =
+    {
+        WavePeakPanel::SOUND_WAVE,
+        WavePeakPanel::PIXELED_SOUND_WAVE,
+        WavePeakPanel::BUILDINGS,
+        WavePeakPanel::PIXELED_BUILDINGS
+    };
+
+    QButtonGroup *buttonGroup = new QButtonGroup(this);
+    for (int i = 0; i < 4; ++i) {
+        QPushButton *button = new QPushButton();
+        button->setVisible(false);
+        button->setCheckable(true);
+        button->setObjectName("buttonWaveDrawingMode");
+        button->setIcon(QIcon(":/images/" + icons[i] + ".png"));
+        buttonGroup->addButton(button);
+        layout->addWidget(button);
+
+        WavePeakPanel::WaveDrawingMode drawingMode = drawingModes[i];
+        waveDrawingButtons.insert(drawingMode, button);
+
+        connect(button, &QPushButton::clicked, [drawingMode, this]{
+            setWaveDrawingMode(drawingMode);
+            mainController->storeWaveDrawingMode(drawingMode);
+        });
+    }
+}
+
+void JamRoomViewPanel::setWaveDrawingMode(WavePeakPanel::WaveDrawingMode mode)
+{
+    ui->wavePeakPanel->setDrawingMode(mode);
+
+    QPushButton *button = waveDrawingButtons[mode];
+    if (button) {
+        if (!button->isChecked())
+            button->click();
+    }
+}
+
+void JamRoomViewPanel::createMapWidgets()
+{
+    map = new MapWidget(this);
+    ui->content->layout()->addWidget(map);
 }
 
 void JamRoomViewPanel::updateUserLocation(const QString &userIP)
 {
-    QList<PlayerLabel *> playerLabels = ui->usersPanel->findChildren<PlayerLabel *>();
-    foreach (PlayerLabel *label, playerLabels) {
-        if (label->getUserIP() == userIP) {
-            Geo::Location userLocation = mainController->getGeoLocation(userIP);
-            label->setLocation(userLocation);
+    Q_UNUSED(userIP)
+    for (const Login::UserInfo &user : roomInfo.getUsers()) {
+        if (user.getIp() == userIP) {
+            updateMap();
+            update();
             break;
         }
     }
+
 }
 
 void JamRoomViewPanel::changeEvent(QEvent *e)
@@ -66,33 +158,65 @@ QString JamRoomViewPanel::buildRoomDescriptionString()
     return roomDescription;
 }
 
+void JamRoomViewPanel::updateMap()
+{
+    if (!roomInfo.isEmpty()) {
+        QList<Login::UserInfo> userInfos = roomInfo.getUsers();
+        qSort(userInfos.begin(), userInfos.end(), userInfoLessThan);
+        QList<MapMarker> newMarkers;
+        for (const Login::UserInfo &user : userInfos) {
+            if (!userIsBot(user)) {
+                Geo::Location userLocation = mainController->getGeoLocation(user.getIp());
+                if (userLocation.isUnknown())
+                    continue; // skip invalid locations
+
+                QPointF latLong(userLocation.getLatitude(), userLocation.getLongitude());
+                QPixmap flag(":/flags/flags/" + userLocation.getCountryCode().toLower() + ".png");
+                MapMarker marker(user.getName(), userLocation.getCountryName(), latLong, flag.toImage());
+                newMarkers.append(marker);
+            }
+        }
+
+        map->setMarkers(newMarkers);
+    }
+
+    map->setVisible(!roomInfo.isEmpty());
+    map->update();
+}
+
 void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
 {
     this->roomInfo = roomInfo;
 
     ui->labelRoomStatus->setText(buildRoomDescriptionString());
 
-    // remove all users labels from layout
-    QList<QLabel *> allUserLabels = ui->usersPanel->findChildren<QLabel *>();
-    foreach (QLabel *label, allUserLabels) {
-        ui->usersPanel->layout()->removeWidget(label);
-        label->deleteLater();
-    }
-
-    QList<Login::UserInfo> userInfos = roomInfo.getUsers();
-    qSort(userInfos.begin(), userInfos.end(), userInfoLessThan);
-    foreach (const Login::UserInfo &user, userInfos) {
-        if (!userIsBot(user)) {
-            Geo::Location userLocation = mainController->getGeoLocation(user.getIp());
-            QLabel *label = new PlayerLabel(ui->usersPanel, user, userLocation);
-            ui->usersPanel->layout()->addWidget(label);
-            ui->usersPanel->layout()->setAlignment(Qt::AlignTop);
-        }
-    }
-
     updateButtonListen();
 
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
+
+    updateMap();
+
+    setProperty("empty", roomInfo.isEmpty());
+
+    updateStyleSheet();
+
+}
+
+void JamRoomViewPanel::updateStyleSheet()
+{
+    style()->unpolish(this);
+    style()->unpolish(ui->content);
+    style()->unpolish(ui->labelName);
+    style()->unpolish(ui->labelRoomStatus);
+    style()->unpolish(ui->buttonListen);
+
+    style()->polish(this);
+    style()->polish(ui->content);
+    style()->polish(ui->labelName);
+    style()->polish(ui->labelRoomStatus);
+    style()->polish(ui->buttonListen);
+
+    update();
 }
 
 void JamRoomViewPanel::updateButtonListen()
@@ -103,8 +227,8 @@ void JamRoomViewPanel::updateButtonListen()
         ui->buttonListen->setIcon(QIcon(":/images/warning.png"));
         ui->buttonListen->setToolTip(tr("The audio stream of this room is not available at moment!"));
     } else {
-        ui->buttonListen->setIcon(QIcon());// remove the icon
-        ui->buttonListen->setToolTip("");// clean the tooltip
+        ui->buttonListen->setIcon(QIcon()); // remove the icon
+        ui->buttonListen->setToolTip(""); // clean the tooltip
     }
 
     style()->unpolish(ui->buttonListen);
@@ -139,19 +263,29 @@ bool JamRoomViewPanel::userIsBot(const Login::UserInfo &userInfo)
 bool JamRoomViewPanel::roomContainsBotsOnly(const Login::RoomInfo &roomInfo)
 {
     QStringList botsNames = mainController->getBotNames();
-    foreach (const Login::UserInfo &user, roomInfo.getUsers()) {
+    for (const Login::UserInfo &user : roomInfo.getUsers()) {
         if (!botsNames.contains(user.getName()))
             return false;
     }
     return true;
 }
 
+bool JamRoomViewPanel::canShowNinjamServerPort(const QString &serverName)
+{
+    return serverName.startsWith("ninbot") || serverName.startsWith("ninjamer");
+}
+
 void JamRoomViewPanel::initialize(const Login::RoomInfo &roomInfo)
 {
     QString roomName = roomInfo.getName();
-    if (roomInfo.getType() == Login::RoomTYPE::NINJAM)
+    if (roomName.endsWith(".com"))
+        roomName = roomName.replace(".com", "");
+
+    if (roomInfo.getType() == Login::RoomTYPE::NINJAM && canShowNinjamServerPort(roomName))
         roomName += " (" + QString::number(roomInfo.getPort()) + ")";
+
     ui->labelName->setText(roomName);
+
     refresh(roomInfo);
 }
 
@@ -164,22 +298,33 @@ void JamRoomViewPanel::clear(bool resetListenButton)
 {
     ui->wavePeakPanel->clearPeaks();
     ui->wavePeakPanel->setShowBuffering(false);
+
     if (resetListenButton)
         ui->buttonListen->setChecked(false);
+
     updateButtonListen();
+    updateStyleSheet();
+
+    setWaveDrawingButtonsVisibility(false);
 }
 
-void JamRoomViewPanel::on_buttonListen_clicked()
+void JamRoomViewPanel::toggleRoomListening()
 {
-    if (ui->buttonListen->isChecked())
+    bool listening = ui->buttonListen->isChecked();
+    if (listening)
         emit startingListeningTheRoom(roomInfo);
     else
         emit finishingListeningTheRoom(roomInfo);
-    ui->wavePeakPanel->setEnabled(ui->buttonListen->isChecked());
+
+    ui->wavePeakPanel->setEnabled(listening);
     ui->wavePeakPanel->updateGeometry();
+
+    map->setBlurMode(listening); // when listening the map is drawed with a tranparent black layer in top
+
+    setWaveDrawingButtonsVisibility(listening); // when listening the buttons appears
 }
 
-void JamRoomViewPanel::on_buttonEnter_clicked()
+void JamRoomViewPanel::enterInTheRoom()
 {
     emit enteringInTheRoom(roomInfo);
 }

@@ -11,6 +11,8 @@ namespace Audio {
 class LocalInputNode;
 }
 
+class LooperWindow;
+
 class LocalTrackView : public BaseTrackView
 {
     Q_OBJECT
@@ -22,23 +24,24 @@ public:
 
     virtual ~LocalTrackView();
 
+    void enableLopperButton(bool enabled);
+
+    void updateStyleSheet() override;
+
     void closeAllPlugins();
 
     void detachMainController();
 
-    inline int getInputIndex() const
-    {
-        return getTrackID();
-    }
+    int getInputIndex() const;
 
     Audio::LocalInputNode *getInputNode() const;
 
-    virtual void setUnlightStatus(bool unlighted);
+    virtual void setActivatedStatus(bool unlighted);
 
-    virtual void setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode);
-    void togglePeakMetersOnlyMode(bool runninsInMiniMode);
+    virtual void setPeakMetersOnlyMode(bool peakMetersOnly);
+    void togglePeakMetersOnlyMode();
 
-    inline bool isShowingPeakMetersOnly() const { return peakMetersOnly; }
+    bool isShowingPeakMetersOnly() const;
 
     QSize sizeHint() const;
 
@@ -46,30 +49,50 @@ public:
 
     void mute(bool b);
     void solo(bool b);
-    void initializeBoostButtons(Boost boostValue);
+    void initializeBoostButton(Boost boostValue);
 
-    void useSmallSpacingInLayouts(bool useSmallSpacing);
-    inline bool isUsingSmallSpacingInLayouts() const { return usingSmallSpacing; }
+signals:
+    void openLooperEditor(uint trackIndex);
 
 protected:
     Audio::LocalInputNode *inputNode;
-    QPushButton *buttonStereoInversion;
 
-    void refreshStyleSheet() override;
+    QPushButton *buttonStereoInversion;
+    QPushButton *buttonLooper;
 
     virtual void setupMetersLayout();
 
+    void bindThisViewWithTrackNodeSignals() override;
+
+    void translateUI() override;
+
 private:
-    bool usingSmallSpacing;
     QPushButton *createStereoInversionButton();
+    QPushButton *createLooperButton();
 
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
     bool peakMetersOnly;
     void deleteWidget(QWidget *widget);
 
+    class LooperIconFactory;
+
+    static LooperIconFactory looperIconFactory;
+
 private slots:
     void setStereoInversion(bool stereoInverted);
+    void updateLooperButtonIcon();
 
 };
+
+
+inline bool LocalTrackView::isShowingPeakMetersOnly() const
+{
+    return peakMetersOnly;
+}
+
+inline int LocalTrackView::getInputIndex() const
+{
+    return getTrackID();
+}
 
 #endif

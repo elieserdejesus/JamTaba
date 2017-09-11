@@ -15,6 +15,8 @@ class UserNameLineEdit : public QLineEdit
 public:
     UserNameLineEdit(QWidget *parent=0);
 
+    void forceCenterAlignment(bool forceCenter);
+
 protected:
     void resizeEvent(QResizeEvent *e) override;
     void keyPressEvent(QKeyEvent *e) override;
@@ -29,6 +31,7 @@ private:
     void updateTextAlignment();
     void sanitizeBlankSpaces();
 
+    bool forcingCenterAlignment;
 };
 
 #endif

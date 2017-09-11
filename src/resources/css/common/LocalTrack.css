@@ -8,6 +8,22 @@ FxPanelItem[containPlugin="false"]
     min-height: 14px; /* fixing #442 */
 }
 
+FxPanelItem:disabled
+{
+    background-color: none;
+    border: 1px solid rgba(0, 0, 0 , 10);
+}
+
+FxPanelItem QLabel:disabled
+{
+    color: rgba(0, 0, 0, 140);
+}
+
+FxPanelItem:disabled QPushButton:disabled
+{
+    background-color: rgba(255, 255, 255, 20);
+    border: 1px solid rgba(0, 0, 0, 50);
+}
 
 /* LocalTrackView is widget used to show the user tracks/subchannels.
 ----------------------------------------------------------------------*/
@@ -76,9 +92,20 @@ LocalTrackView #midiToolsButton
 
 LocalTrackView #midiPeakMeter                   /* The thin line/meter used to show the midi activity. */
 {
-    max-width: 1px;
-    min-width: 1px;
+    max-width: 3px;
+    min-width: 3px;
     border: none;
+}
+
+LocalTrackView #buttonLooper
+{
+    /* background-image: url(':/images/loop.png'); IMPORTANT - this image need be setted programatically */
+    background-repeat: none;
+    background-position: center center;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 1px;
+    padding-top: 1px;
 }
 
  /* The transmiting (xmit) button.
@@ -147,4 +174,10 @@ LocalTrackGroupView #groupNameField             /* The channel name for local tr
     padding-left: 0px;
     padding-right: 0px;
     margin: 0px;
+}
+
+
+LocalTrackViewStandalone
+{
+    qproperty-midiRoutingArrowColor: rgba(255, 0, 0, 120);
 }

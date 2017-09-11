@@ -8,11 +8,12 @@
 
 using namespace Audio;
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Plugin::Plugin(const QString &name) :
-    name(name),
+Plugin::Plugin(const PluginDescriptor &pluginDescriptor) :
+    descriptor(pluginDescriptor),
+    name(pluginDescriptor.getName()),
     editorWindow(nullptr)
 {
+    //
 }
 
 void Plugin::closeEditor()
@@ -35,12 +36,13 @@ Plugin::~Plugin()
 }
 
 // ++++++++++++++++++++++++++++
+
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 
 JamtabaDelay::JamtabaDelay(int sampleRate) :
-    Plugin("Delay"),
+    Plugin(PluginDescriptor("Delay", PluginDescriptor::Native_Plugin, "JamTaba")),
     delayTimeInMs(0),
-    internalBuffer(new Audio::SamplesBuffer(2))  // 2 channels, 3 seconds delay
+    internalBuffer(new Audio::SamplesBuffer(2)) // 2 channels, 3 seconds delay
 {
     internalIndex = 0;
     feedbackGain = 0.3f;// feedback start in this gain
@@ -61,7 +63,7 @@ void JamtabaDelay::restoreFromSerializedData(const QByteArray &data)
 void JamtabaDelay::setSampleRate(int newSampleRate)
 {
     this->sampleRate = newSampleRate;
-    delayTimeInSamples = this->sampleRate/2;// half second
+    delayTimeInSamples = this->sampleRate / 2; // half second
     internalBuffer->setFrameLenght(delayTimeInSamples);
 }
 
@@ -73,10 +75,10 @@ JamtabaDelay::~JamtabaDelay()
 
 void JamtabaDelay::start()
 {
+    //
 }
 
-void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out,
-                           const QList<Midi::MidiMessage> &midiBuffer)
+void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out, std::vector<Midi::MidiMessage> &midiBuffer)
 {
     Q_UNUSED(midiBuffer)
     Q_UNUSED(in)
@@ -101,6 +103,7 @@ void JamtabaDelay::setDelayTime(int delayTimeInMs)
     if (delayTimeInMs > 0) {
         if (delayTimeInMs > MAX_DELAY_IN_SECONDS * sampleRate)
             delayTimeInMs = MAX_DELAY_IN_SECONDS * sampleRate;
+
         this->delayTimeInMs = delayTimeInMs;
         this->delayTimeInSamples = delayTimeInMs/1000.0 * sampleRate;
         this->internalBuffer->setFrameLenght(delayTimeInSamples);

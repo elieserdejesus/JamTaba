@@ -1,38 +1,69 @@
 #include "PrivateServerDialog.h"
 #include "ui_PrivateServerDialog.h"
+#include "MainController.h"
+#include "persistence/Settings.h"
 #include <QDebug>
 
-PrivateServerDialog::PrivateServerDialog(QWidget *parent, QString lastServer, int lastServerPort,
-                                         const QString &lastPassword) :
+using namespace Persistence;
+
+PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainController *mainController) :
     QDialog(parent),
-    ui(new Ui::PrivateServerDialog)
+    ui(new Ui::PrivateServerDialog),
+    mainController(mainController)
 {
     ui->setupUi(this);
-    ui->serverTextField->setText(lastServer);
-    ui->passwordTextField->setText(lastPassword);
-    ui->serverPortTextField->setText(QString::number(lastServerPort));
+
+    ui->okButton->setAutoDefault(true);
+    connect(ui->okButton, &QPushButton::clicked, this, &PrivateServerDialog::accept);
 
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-    QObject::connect(ui->okButton, SIGNAL(clicked(bool)), this, SLOT(on_okButtonTriggered()));
+    buildComboBoxItems();
+
+    // setting initial values
+    const Persistence::Settings &settings = mainController->getSettings();
+    ui->textFieldPassword->setText(settings.getLastPrivateServerPassword());
+    ui->textFieldPort->setText(QString::number(settings.getLastPrivateServerPort()));
+    ui->textFieldUserName->setText(mainController->getUserName());
+
+    ui->textFieldUserName->forceCenterAlignment(false);
+    ui->textFieldUserName->setAlignment(Qt::AlignLeft);
+
+    ui->textFieldPassword->setEchoMode(QLineEdit::Password);
+
+    ui->textFieldPassword->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove focus border in Mac
+    ui->textFieldPort->setAttribute(Qt::WA_MacShowFocusRect, 0); // remove focus border in Mac
 }
 
-void PrivateServerDialog::on_okButtonTriggered()
+void PrivateServerDialog::buildComboBoxItems()
 {
-    accept();
-    emit connectionAccepted(ui->serverTextField->text(),
-                            ui->serverPortTextField->text().toInt(), ui->passwordTextField->text());
+    ui->comboBoxServers->clear();
+    QList<QString> servers = mainController->getSettings().getLastPrivateServers();
+    for (const QString &server : servers) {
+        ui->comboBoxServers->addItem(server, server);
+    }
+}
+
+void PrivateServerDialog::accept()
+{
+    QDialog::accept();
+    QString serverName = ui->comboBoxServers->currentText();
+    int serverPort = ui->textFieldPort->text().toInt();
+    QString serverPassword = ui->textFieldPassword->text();
+    QString userName = ui->textFieldUserName->text();
+
+    emit connectionAccepted(serverName, serverPort, userName, serverPassword);
 }
 
 QString PrivateServerDialog::getPassword() const
 {
-    return ui->passwordTextField->text();
+    return ui->textFieldPassword->text();
 }
 
 QString PrivateServerDialog::getServer() const
 {
-    return ui->serverTextField->text();
+    return ui->comboBoxServers->currentText();
 }
 
 PrivateServerDialog::~PrivateServerDialog()

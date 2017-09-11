@@ -3,39 +3,23 @@ NinjamTrackView[horizontal="true"] #panSlider
     max-width: 50px;
 }
 
-NinjamTrackView[horizontal="true"] #buttonBoostMinus12,
-NinjamTrackView[horizontal="true"] #buttonBoostPlus12,
-NinjamTrackView[horizontal="true"] #buttonBoostZero
+NinjamTrackView[horizontal="true"] #buttonBoost
 {
     padding: 1px;
     border: 1px solid rgba(0, 0, 0, 30);
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12
-{
-
-   border-left: 1px solid rgba(0, 0, 0, 10);
-   margin: 0px;
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12
-{
-
-    border-right: 1px solid rgba(0, 0, 0, 10);
     margin: 0px;
-}
-
-NinjamTrackView[horizontal="true"] #buttonBoostZero
-{
     min-width: 12px;
 }
 
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoost:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#receiveButton:hover:checked,
+NinjamTrackView QPushButton#lowCutButton:hover:checked,
+NinjamTrackView QPushButton#receiveButton:hover:checked
 {
     margin-top: -1px;
-    background-color: rgba(0, 0, 0, 30);
+    background-color: rgb(200, 200, 200);
+    border-color: transparent;
 }
 
 NinjamTrackView[horizontal="true"]
@@ -57,11 +41,6 @@ NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
 
 /* Tool buttons: track vertical/horizontal, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
-#licenceButton
-{
-    max-height: 20px;
-    width: 28px;
-}
 
 NinjamRoomWindow QToolButton:hover,
 #licenceButton:hover
@@ -75,13 +54,6 @@ NinjamRoomWindow QToolButton,
 {
     border: 1px solid rgb(150, 150, 150);
     background-color: rgba(255, 255, 255, 10);
-}
-
-NinjamRoomWindow QToolButton
-{
-    height: 20px;
-    min-width: 28px;
-    padding: 0px;
 }
 
 NinjamRoomWindow QToolButton:checked
@@ -105,6 +77,35 @@ NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked{
 NinjamTrackView[unlighted="true"]           /* user is not xmiting */
 {
     background: rgba(0, 0, 0, 20);
+}
+
+NinjamTrackView #lowCutButton:hover
+{
+    color: black;
+}
+
+NinjamTrackView #lowCutButton:!checked
+{
+    background-color: rgb(235, 235, 235);
+}
+
+NinjamTrackView #lowCutButton:checked,
+NinjamTrackView #receiveButton:checked
+{
+    background-color: rgb(205, 205, 205);
+}
+
+NinjamTrackView[unlighted="true"] #lowCutButton,
+NinjamTrackView[unlighted="true"] #receiveButton
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
+
+NinjamTrackView #receiveButton:hover:!checked
+{
+    background-color: rgb(255, 40, 40);
+    border-color: rgba(0, 0, 0, 90);
 }
 
 NinjamTrackView  #channelName               /* channel name for ninjamers */
@@ -143,7 +144,17 @@ NinjamPanel QComboBox
     background-color: rgba(0, 0, 0, 30);
 }
 
-
+#comboBpi-topLevel,
+#comboBpm-topLevel
+{
+    border: none;
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(182, 182, 182),
+        stop: 0.1 rgb(224, 224, 224),
+        stop: 0.45 rgb(224, 224, 224),
+        stop: 0.6 rgb(182, 182, 182),
+        stop: 1.0 rgb(182, 182, 182));
+}
 
 
 NinjamTrackGroupView                        /* ninjam track group. If a ninjamer is using 2 channels they will appear grouped */
@@ -154,5 +165,32 @@ NinjamTrackGroupView                        /* ninjam track group. If a ninjamer
 
 IntervalProgressWindow                      /* The floating window showing the metronome/interval progress */
 {
-    background-color: rgb(220, 220, 220);
+    background-color: rgb(206, 206, 206);
+}
+
+LooperWindow #buttonPlay:hover:checked
+{
+    background-color: rgb(0, 215, 0);
+}
+
+LooperWindow #buttonRec:hover:checked
+{
+    background-color: rgb(255, 40, 40);
+}
+
+
+LooperWindow #buttonRec[blinking="true"]:checked
+{
+    background-color: rgb(250, 250, 250);
+}
+
+LooperWindow QLabel,
+LooperWindow QGroupBox
+{
+    color: rgba(0, 0, 0, 140);;
+}
+
+LooperWindow QGroupBox
+{
+    border: 1px solid rgba(0, 0, 0, 30);
 }

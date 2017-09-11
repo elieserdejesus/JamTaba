@@ -1,18 +1,118 @@
 #include "LocalTrackView.h"
 #include "MainController.h"
 #include "audio/core/LocalInputNode.h"
+#include "GuiUtils.h"
+
 #include <QLayout>
 #include <QPushButton>
 #include <QLabel>
 #include <QSlider>
 #include <QStyle>
+#include <QPainter>
+#include <QIcon>
+#include <QFontMetrics>
+
+class LocalTrackView::LooperIconFactory
+{
+public:
+
+    LooperIconFactory(const QString &originalIconPath)
+        : originalIconPath(originalIconPath)
+    {
+        //
+    }
+
+    QIcon createRecordingIcon() const
+    {
+        // create recording icon
+        QList<QSize> iconSizes = originalIcon.availableSizes();
+        if (!iconSizes.isEmpty()) {
+            QPixmap recPixmap = originalIcon.pixmap(iconSizes.first());
+
+            QPainter painter(&recPixmap);
+            painter.setRenderHint(QPainter::Antialiasing);
+            painter.setBrush(QColor(255, 0, 0, 120));
+            painter.setPen(Qt::NoPen);
+            QRectF rect(recPixmap.rect());
+            painter.drawEllipse(rect.marginsAdded(QMarginsF(-2, -5, -2, -2)));
+            //painter.drawEllipse(recPixmap.width() - radius, recPixmap.height() - radius, radius, radius);
+
+            return QIcon(recPixmap);
+        }
+
+        qCritical() << "icon available sizes is empty!";
+        return originalIcon;
+    }
+
+    QIcon createCurrentLooperLayerIcon(quint8 currentLayer, const QFontMetricsF &fontMetrics)
+    {
+        QIcon layerIcon = layersIcons[currentLayer];
+        if (layerIcon.isNull()) {
+            QList<QSize> sizes = originalIcon.availableSizes();
+            if (!sizes.isEmpty()) {
+                QPixmap pixmap = originalIcon.pixmap(sizes.first());
+                QPainter painter(&pixmap);
+                painter.setRenderHint(QPainter::TextAntialiasing);
+                painter.setRenderHint(QPainter::Antialiasing);
+
+                QString text(QString::number(currentLayer + 1));
+                qreal rectWidth = fontMetrics.width(text) * 2;
+
+                QRectF textRect(pixmap.width() - rectWidth, pixmap.height() - fontMetrics.height(), rectWidth, fontMetrics.height());
+
+                painter.setBrush(QColor(255, 255, 255, 150));
+                painter.setPen(Qt::black);
+                painter.drawEllipse(textRect);
+                painter.drawText(textRect, text, QTextOption(Qt::AlignCenter));
+
+                layerIcon = QIcon(pixmap);
+                layersIcons.insert(currentLayer, layerIcon);
+            }
+            else {
+                qCritical() << "sizes is empty!";
+            }
+        }
+
+        return layerIcon;
+    }
+
+    QIcon getIcon(Audio::Looper *looper, const QFontMetricsF &fontMetrics)
+    {
+        if (originalIcon.isNull()) {
+            this->originalIcon = QIcon(originalIconPath);
+            this->recordingIcon = createRecordingIcon();
+        }
+
+        if (looper) {
+            if (looper->isRecording() || looper->isWaitingToRecord()) {
+                return recordingIcon;
+            }
+            else if (looper->isPlaying()) {
+                quint8 currentLayer = looper->getCurrentLayerIndex();
+                return createCurrentLooperLayerIcon(currentLayer, fontMetrics);
+            }
+        }
+
+        return originalIcon;
+    }
+
+private:
+    QString originalIconPath;
+    QIcon originalIcon;
+    QIcon recordingIcon;
+    QMap<quint8, QIcon> layersIcons;
+};
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+LocalTrackView::LooperIconFactory LocalTrackView::looperIconFactory(":/images/loop.png");
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),
     inputNode(nullptr),
-    usingSmallSpacing(false),
     peakMetersOnly(false),
-    buttonStereoInversion(createStereoInversionButton())
+    buttonStereoInversion(createStereoInversionButton()),
+    buttonLooper(createLooperButton())
 {
     Q_ASSERT(mainController);
 
@@ -23,17 +123,27 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
 
     setInitialValues(1.0f, BaseTrackView::Boost::ZERO, 0.0f, false, false);
 
-    setUnlightStatus(false);
+    setActivatedStatus(false);
 
+    secondaryChildsLayout->addWidget(buttonLooper);
     secondaryChildsLayout->addWidget(buttonStereoInversion);
+
+    connect(inputNode->getLooper(), &Audio::Looper::stateChanged, this, &LocalTrackView::updateLooperButtonIcon);
+    connect(inputNode->getLooper(), &Audio::Looper::currentLayerChanged, this, &LocalTrackView::updateLooperButtonIcon);
 }
 
-void LocalTrackView::useSmallSpacingInLayouts(bool useSmallSpacing)
+void LocalTrackView::updateLooperButtonIcon()
 {
-    int spacing = useSmallSpacing ? 6 : 12;
-    secondaryChildsLayout->setSpacing(spacing );
-    mainLayout->setVerticalSpacing(spacing);
-    this->usingSmallSpacing = useSmallSpacing;
+    // get a new icon based in looper state
+    QIcon newIcon = looperIconFactory.getIcon(inputNode->getLooper(), buttonLooper->fontMetrics());
+    buttonLooper->setIcon(newIcon);
+}
+
+void LocalTrackView::bindThisViewWithTrackNodeSignals()
+{
+    BaseTrackView::bindThisViewWithTrackNodeSignals();
+
+    connect(inputNode, &Audio::LocalInputNode::stereoInversionChanged, this, &LocalTrackView::setStereoInversion);
 }
 
 void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost boostValue,
@@ -41,7 +151,7 @@ void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost bo
 {
     inputNode->setGain(initialGain);
     inputNode->setPan(initialPan);
-    initializeBoostButtons(boostValue);
+    initializeBoostButton(boostValue);
     if (muted)
         inputNode->setMute(muted);
 
@@ -55,32 +165,32 @@ void LocalTrackView::detachMainController()
 
 void LocalTrackView::closeAllPlugins()
 {
-    inputNode->closeProcessorsWindows();// close vst editors
+    inputNode->closeProcessorsWindows(); // close vst editors
 }
 
 void LocalTrackView::mute(bool b)
 {
-    getInputNode()->setMute(b);// audio only
-    muteButton->setChecked(b);// gui only
+    getInputNode()->setMute(b); // audio only
+    muteButton->setChecked(b); // gui only
 }
 
 void LocalTrackView::solo(bool b)
 {
-    getInputNode()->setSolo(b);// audio only
-    soloButton->setChecked(b);// gui only
+    getInputNode()->setSolo(b); // audio only
+    soloButton->setChecked(b); // gui only
 }
 
-void LocalTrackView::initializeBoostButtons(Boost boostValue)
+void LocalTrackView::initializeBoostButton(Boost boostValue)
 {
     switch (boostValue) {
     case Boost::MINUS:
-        buttonBoostMinus12->click();
+        buttonBoost->setState(1);
         break;
     case Boost::PLUS:
-        buttonBoostPlus12->click();
+        buttonBoost->setState(2);
         break;
     default:
-        buttonBoostZero->click();
+        buttonBoost->setState(0);
     }
 }
 
@@ -94,42 +204,39 @@ QSize LocalTrackView::sizeHint() const
 
 void LocalTrackView::setupMetersLayout()
 {
-    metersLayout->addWidget(peakMeterLeft);
-    metersLayout->addWidget(peakMeterRight);
+    metersLayout->addWidget(peakMeter);
 }
 
-void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode)
+void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
 {
     if (this->peakMetersOnly != peakMetersOnly) {
         this->peakMetersOnly = peakMetersOnly;
 
-        BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
-        BaseTrackView::setLayoutWidgetsVisibility(primaryChildsLayout, !this->peakMetersOnly);
+        Gui::setLayoutItemsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
+        Gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
 
-        if(peakMetersOnly){//add the peak meters directly in main layout, so these meters are horizontally centered
-            mainLayout->addWidget(peakMeterLeft, 0, 0);
-            mainLayout->addWidget(peakMeterRight, 0, 1);
+        if (peakMetersOnly) { // add the peak meters directly in main layout, so these meters are horizontally centered
+            mainLayout->addWidget(peakMeter, 0, 0);
         }
-        else{// put the meter in the original layout
+        else { // put the meter in the original layout
             setupMetersLayout();
         }
-        mainLayout->setHorizontalSpacing( peakMetersOnly ? 0 : 6 );
 
-        peakMeterLeft->setVisible(true);//peak meters are always visible
-        peakMeterRight->setVisible(true);
+        const int spacing = peakMetersOnly ? 0 : 3;
+
+        mainLayout->setHorizontalSpacing(spacing);
+
+        peakMeter->setVisible(true); // peak meter are always visible
 
         QMargins margins = layout()->contentsMargins();
-        margins.setLeft((peakMetersOnly || runningInMiniMode) ? 2 : 6);
-        margins.setRight((peakMetersOnly || runningInMiniMode) ? 2 : 6);
+        margins.setLeft(spacing);
+        margins.setRight(spacing);
         layout()->setContentsMargins(margins);
 
         soloButton->setVisible(!peakMetersOnly);
         muteButton->setVisible(!peakMetersOnly);
-        peaksDbLabel->setVisible(!peakMetersOnly);
         Qt::Alignment alignment = peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter;
         levelSlider->parentWidget()->layout()->setAlignment(levelSlider, alignment);
-
-        this->drawDbValue = !peakMetersOnly;
 
         updateGeometry();
 
@@ -139,14 +246,14 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
     }
 }
 
-void LocalTrackView::togglePeakMetersOnlyMode(bool runninsInMiniMode)
+void LocalTrackView::togglePeakMetersOnlyMode()
 {
-    setPeakMetersOnlyMode(!peakMetersOnly, runninsInMiniMode);
+    setPeakMetersOnlyMode(!peakMetersOnly);
 }
 
-void LocalTrackView::setUnlightStatus(bool unlighted)
+void LocalTrackView::setActivatedStatus(bool unlighted)
 {
-    BaseTrackView::setUnlightStatus(unlighted);
+    BaseTrackView::setActivatedStatus(unlighted);
     update();
 }
 
@@ -166,15 +273,40 @@ LocalTrackView::~LocalTrackView()
         mainController->removeInputTrackNode(getTrackID());
 }
 
+QPushButton *LocalTrackView::createLooperButton()
+{
+    QPushButton *button = new QPushButton(QIcon(":/images/loop.png"), "");
+    button->setObjectName(QStringLiteral("buttonLooper"));
+    button->setEnabled(false); // disaled by default
+
+    connect(button, &QPushButton::clicked, [=]{
+        emit openLooperEditor(this->trackID);
+    });
+
+    return button;
+}
+
+void LocalTrackView::enableLopperButton(bool enabled)
+{
+    buttonLooper->setEnabled(enabled && !getInputNode()->isRoutingMidiInput());
+}
 
 QPushButton *LocalTrackView::createStereoInversionButton()
 {
     QPushButton *button = new QPushButton();
     button->setObjectName(QStringLiteral("buttonStereoInversion"));
-    button->setToolTip(tr("Invert stereo"));
     button->setCheckable(true);
-    connect(button, SIGNAL(clicked(bool)), this, SLOT(setStereoInversion(bool)));
+    connect(button, &QPushButton::clicked, this, &LocalTrackView::setStereoInversion);
     return button;
+}
+
+void LocalTrackView::translateUI()
+{
+    BaseTrackView::translateUI();
+
+    buttonStereoInversion->setToolTip(tr("Invert stereo"));
+    buttonLooper->setToolTip(tr("Looper (Available when jamming)"));
+
 }
 
 void LocalTrackView::setStereoInversion(bool stereoInverted)
@@ -183,10 +315,13 @@ void LocalTrackView::setStereoInversion(bool stereoInverted)
     buttonStereoInversion->setChecked(stereoInverted);
 }
 
-void LocalTrackView::refreshStyleSheet()
+void LocalTrackView::updateStyleSheet()
 {
-    BaseTrackView::refreshStyleSheet();
+    BaseTrackView::updateStyleSheet();
 
     style()->unpolish(buttonStereoInversion); // this is necessary to change the stereo inversion button colors when the transmit button is clicled
     style()->polish(buttonStereoInversion);
+
+    style()->unpolish(buttonLooper);
+    style()->polish(buttonLooper);
 }

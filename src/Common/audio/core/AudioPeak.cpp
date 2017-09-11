@@ -18,6 +18,16 @@ AudioPeak::AudioPeak()
     zero();
 }
 
+AudioPeak AudioPeak::operator -(const AudioPeak &otherPeak)
+{
+    float leftPeak = peaks[0] - otherPeak.peaks[0];
+    float rightPeak = peaks[1] - otherPeak.peaks[1];
+    float leftRms = rms[0] = otherPeak.rms[0];
+    float rightRms = rms[1] = otherPeak.rms[1];
+
+    return AudioPeak(leftPeak, rightPeak, leftRms, rightRms);
+}
+
 void AudioPeak::update(const AudioPeak &other)
 {
     peaks[0] = other.peaks[0];

@@ -6,6 +6,10 @@ PluginScanDialog
     background-color: rgb(250, 250, 250);
 }
 
+LooperWindow
+{
+    background-color: rgb(160, 160, 160);
+}
 
 PluginScanDialog QPlainTextEdit
 {
@@ -15,6 +19,17 @@ PluginScanDialog QPlainTextEdit
 PluginScanDialog #labelPluginText
 {
     font-weight: bold;
+}
+
+PrivateServerDialog #comboBoxServers
+{
+    color: rgb(80, 80, 80);
+}
+
+PrivateServerDialog #comboBoxServers:focus
+{
+    color: black;
+    border:1px solid gray;
 }
 
 BusyDialog

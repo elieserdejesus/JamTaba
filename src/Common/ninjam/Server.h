@@ -20,6 +20,7 @@ public:
     void addUserChannel(const UserChannel &newChannel);
     void removeUserChannel(const UserChannel &channel);
     void updateUserChannel(const UserChannel &serverChannel);
+    void updateUserChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receive);
 
     User getUser(const QString &userFullName) const;
 
@@ -45,7 +46,7 @@ public:
 
     void setMaxChannels(int max)
     {
-        this->maxChannels = max;
+        this->maxChannels = (quint8)max;
     }
 
     inline bool hasStream() const
@@ -71,7 +72,7 @@ public:
 
     inline void setMaxUsers(unsigned int maxUsers)
     {
-        this->maxUsers = maxUsers;
+        this->maxUsers = (quint8)maxUsers;
     }
 
     inline void setIsActive(bool active)
@@ -150,7 +151,7 @@ private:
     static const int MIN_BPM = 40;
     static const int MAX_BPM = 400;
     static const int MAX_BPI = 64;
-    static const int MIN_BPI = 3;
+    static const int MIN_BPI = 2;
 };
 
 }// namespace

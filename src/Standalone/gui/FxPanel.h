@@ -34,7 +34,7 @@ public:
 
 private:
     QList<FxPanelItem *> items;
-    Controller::MainControllerStandalone *controller; //storing a 'casted' controller for convenience
+    Controller::MainControllerStandalone *controller; // storing a 'casted' controller for convenience
     LocalTrackViewStandalone *localTrackView;
 };
 

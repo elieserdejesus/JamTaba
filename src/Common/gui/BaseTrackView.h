@@ -3,13 +3,14 @@
 
 #include <QWidget>
 #include "audio/core/AudioPeak.h"
+#include "MultiStateButton.h"
+#include "Slider.h"
 
 class AudioMeter;
 class QLabel;
 class QPushButton;
 class QGroupBox;
 class QSpacerItem;
-class QSlider;
 class QVBoxLayout;
 class QHBoxLayout;
 class QBoxLayout;
@@ -50,29 +51,28 @@ public:
     virtual void setToNarrow();
     virtual void setToWide();
 
+    virtual void updateStyleSheet();
+
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
     virtual void updateGuiElements();
 
-    inline Controller::MainController *getMainController() const
-    {
-        return mainController;
-    }
+    Controller::MainController *getMainController() const;
 
-    virtual void setUnlightStatus(bool unlighted);
+    virtual void setActivatedStatus(bool deactivated);
 
-    static void setLayoutWidgetsVisibility(QLayout *layout, bool visible);
+    bool isActivated() const;
 
     static const int NARROW_WIDTH;
     static const int WIDE_WIDTH;
+
 protected:
 
     Controller::MainController *mainController;
 
     void paintEvent(QPaintEvent *) override;
     void changeEvent(QEvent *e) override;
-    bool eventFilter(QObject *source, QEvent *ev);
 
     virtual void translateUI();
 
@@ -80,32 +80,26 @@ protected:
 
     bool activated;
     bool narrowed;
-    bool drawDbValue;
 
     virtual void setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight);
 
     // this is called in inherited classes [LocalTrackView, NinjamTrackView]
-    void bindThisViewWithTrackNodeSignals();
+    virtual void bindThisViewWithTrackNodeSignals();
 
     void createLayoutStructure();
 
-    virtual void refreshStyleSheet();
-
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 
-    //meters
-    AudioMeter *peakMeterLeft;
-    AudioMeter *peakMeterRight;
-    QBoxLayout *metersLayout;// used to group the two meter bars
-    QLabel *peaksDbLabel;
-    QBoxLayout *meterWidgetsLayout;// used to group meters bars and the max peaks Db label
+    // meters
+    AudioMeter *peakMeter;
+    QBoxLayout *metersLayout; // used to group midi and audio meters
 
-    //level slider
-    QSlider *levelSlider;
-    QBoxLayout *levelSliderLayout;// used to group the level slider and the two 'speaker' icons
+    // level slider
+    Slider *levelSlider;
+    QBoxLayout *levelSliderLayout; // used to group the level slider and the two 'speaker' icons
 
     // pan slider
-    QSlider *panSlider;
+    Slider *panSlider;
     QLabel *labelPanL;
     QLabel *labelPanR;
     QHBoxLayout *panWidgetsLayout;
@@ -116,26 +110,22 @@ protected:
     QBoxLayout *muteSoloLayout;
 
     // boost
-    QPushButton *buttonBoostPlus12;
-    QPushButton *buttonBoostZero;
-    QPushButton *buttonBoostMinus12;
-    QBoxLayout *boostWidgetsLayout;
+    MultiStateButton *buttonBoost;
 
     // main layout buildind blocks
     QGridLayout *mainLayout;
     QBoxLayout *secondaryChildsLayout; // right side widgets in vertical layout, bottom widgets (2nd row) in horizontal layout
-    QBoxLayout *primaryChildsLayout; // left side widgets in vertical layout, top widgets (2nd row) in horizontal layout
+    QBoxLayout *primaryChildsLayout;   // left side widgets in vertical layout, top widgets (2nd row) in horizontal layout
 
     virtual void setupVerticalLayout();
 
     static const int FADER_HEIGHT;
+
 private:
     static QMap<long, BaseTrackView *> trackViews;
     Audio::AudioPeak maxPeak;
 
-    void drawFaderDbValue(QPainter &p);
-
-    static const QColor DB_TEXT_COLOR;
+    void updateBoostButtonToolTip();
 
 protected slots:
     virtual void toggleMuteStatus();
@@ -150,6 +140,12 @@ private slots:
     void setGainSliderPosition(float newGainValue);
     void setMuteStatus(bool newMuteStatus);
     void setSoloStatus(bool newSoloStatus);
+    void setBoostStatus(float newBoostValue);
 };
+
+inline Controller::MainController* BaseTrackView::getMainController() const
+{
+    return mainController;
+}
 
 #endif // TRACKVIEW_H

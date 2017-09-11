@@ -12,12 +12,12 @@ namespace Midi {
 class MidiDriver;
 }
 
-class StandalonePreferencesDialog : public PreferencesDialog
+class PreferencesDialogStandalone : public PreferencesDialog
 {
     Q_OBJECT
 
 public:
-    StandalonePreferencesDialog(QWidget *parent, bool showAudioControlPanelButton, Audio::AudioDriver *audioDriver, Midi::MidiDriver *midiDriver);
+    PreferencesDialogStandalone(QWidget *parent, bool showAudioControlPanelButton, Audio::AudioDriver *audioDriver, Midi::MidiDriver *midiDriver);
     void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders) override;
 
 public slots:
@@ -26,6 +26,9 @@ public slots:
     void populateVstTab();
 
     void clearVstList();
+
+    void addFoundedVstPlugin(const QString &pluginName);
+    void setCurrentScannedVstPlugin(const QString &pluginPath);
 
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn,
@@ -48,8 +51,8 @@ private slots:
     void addBlackListedPlugins();
     void removeBlackListedPlugins();
 
-    void addVstScanFolder();
-    void removeVstscanFolder();
+    void showDialogToAddVstScanFolder();
+    void removeSelectedVstScanFolder();
 
     void populateLastInputCombo();
     void populateLastOutputCombo();
@@ -85,8 +88,8 @@ private:
 
     void populateMidiTab();
 
-    void createWidgetsToNewFolder(QString path);
-    void updateVstList(QString path);
+    void createWidgetsToNewFolder(const QString &path);
+
     void updateBlackBox();
     void clearScanFolderWidgets();
 

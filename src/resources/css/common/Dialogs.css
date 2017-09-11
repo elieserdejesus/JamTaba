@@ -2,6 +2,58 @@
     This file contain common stylesheet to Dialogs.
 */
 
+LooperWindow #loadButton,
+LooperWindow #resetButton
+{
+    max-width: 20px;
+}
+
+LooperWindow #loadButton::menu-indicator,
+LooperWindow #resetButton::menu-indicator
+{
+    image: none;
+}
+
+LooperWindow QGroupBox
+{
+    border: 1px solid rgb(0, 0, 0, 20);
+    padding-top: 9px;
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+LooperWindow QGroupBox::title
+{
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    margin-left: 3px;
+    margin-right: 3px;
+    left: 6px;
+}
+
+LooperWindow #muteButton[blinking="true"]
+{
+    background-color: red;
+    border-color: rgb(180, 0, 0);
+    border-style: solid;
+    color: white;
+}
+
+LooperWindow #buttonPlay[blinking="true"]
+{
+    background-color: rgb(0, 195, 0);
+    border-color: black;
+    border-style: solid;
+}
+
+LooperWindow #buttonRec[blinking="true"]
+{
+    background-color: yellow;
+    border-color: black;
+    border-style: solid;
+}
+
 PreferencesDialog #buttonAddVstScanFolder
 {
     background-image: url(:/images/more.png);
@@ -24,7 +76,8 @@ PreferencesDialog #plainTextEdit
 PreferencesDialog QGroupBox,
 MidiToolsDialog QGroupBox,
 PreferencesDialog #sampleRateLabel,
-PreferencesDialog #bufferSizeLabel
+PreferencesDialog #bufferSizeLabel,
+PreferencesDialog #labelEncoderQuality
 {
     font-weight: bold;
 }

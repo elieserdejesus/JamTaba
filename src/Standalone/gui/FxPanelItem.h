@@ -37,27 +37,29 @@ public:
         return plugin;
     }
 
-    Q_PROPERTY(bool bypassed READ pluginIsBypassed())// to use in stylesheet
-    Q_PROPERTY(bool containPlugin READ containPlugin())// to use in stylesheet
+    Q_PROPERTY(bool bypassed READ pluginIsBypassed()) // to use in stylesheet
+    Q_PROPERTY(bool containPlugin READ containPlugin()) // to use in stylesheet
 
 protected:
-    void mousePressEvent(QMouseEvent *event);
-    void enterEvent(QEvent *);
-    void leaveEvent(QEvent *);
+    void mousePressEvent(QMouseEvent *event) override;
+    void enterEvent(QEvent *) override;
+    void leaveEvent(QEvent *) override;
 
 private slots:
     void on_contextMenu(QPoint p);
     void on_buttonClicked();
     void on_actionMenuTriggered(QAction *a);
-    void on_fxMenuActionTriggered(QAction *a);
+    void loadSelectedPlugin();
 
 private:
     Audio::Plugin *plugin;
     QPushButton *bypassButton;
     QLabel *label;
-    Controller::MainControllerStandalone *mainController;// used to ask about plugins
+    Controller::MainControllerStandalone *mainController; // used to ask about plugins
 
     void showPluginGui(Audio::Plugin *plugin);
+
+    void showPluginsListMenu(const QPoint &p);
 
     static const QString NEW_EFFECT_STRING;
 

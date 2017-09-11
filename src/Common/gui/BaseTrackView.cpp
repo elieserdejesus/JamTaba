@@ -1,10 +1,11 @@
 #include "BaseTrackView.h"
 #include "MainController.h"
+#include "Utils.h"
+#include "PeakMeter.h"
+
 #include <QStyleOption>
 #include <QPainter>
 #include <QDebug>
-#include "Utils.h"
-#include "PeakMeter.h"
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -13,48 +14,30 @@
 #include <QButtonGroup>
 #include <QEvent>
 
-const QColor BaseTrackView::DB_TEXT_COLOR = QColor(0, 0, 0, 120);
 const int BaseTrackView::FADER_HEIGHT = 12;
 
 const int BaseTrackView::NARROW_WIDTH = 85;
 const int BaseTrackView::WIDE_WIDTH = 120;
 
-QMap<long, BaseTrackView *> BaseTrackView::trackViews;// static map to quick lookup the views
+QMap<long, BaseTrackView *> BaseTrackView::trackViews; // static map to quick lookup the views
 
 BaseTrackView::BaseTrackView(Controller::MainController *mainController, long trackID) :
     mainController(mainController),
     trackID(trackID),
     activated(true),
-    narrowed(false),
-    drawDbValue(true)
+    narrowed(false)
 {
     createLayoutStructure();
     setupVerticalLayout();
 
-    QObject::connect(muteButton, SIGNAL(clicked()), this, SLOT(toggleMuteStatus()));
-    QObject::connect(soloButton, SIGNAL(clicked()), this, SLOT(toggleSoloStatus()));
-    QObject::connect(levelSlider, SIGNAL(valueChanged(int)), this, SLOT(setGain(int)));
-    QObject::connect(panSlider, SIGNAL(valueChanged(int)), this, SLOT(setPan(int)));
-    QObject::connect(buttonBoostZero, SIGNAL(clicked(bool)), this,
-                     SLOT(updateBoostValue()));
-    QObject::connect(buttonBoostMinus12, SIGNAL(clicked(bool)), this,
-                     SLOT(updateBoostValue()));
-    QObject::connect(buttonBoostPlus12, SIGNAL(clicked(bool)), this, SLOT(
-                         updateBoostValue()));
-
-    panSlider->installEventFilter(this);
-    levelSlider->installEventFilter(this);
-    peaksDbLabel->installEventFilter(this);
+    connect(muteButton, &QPushButton::clicked, this, &BaseTrackView::toggleMuteStatus);
+    connect(soloButton, &QPushButton::clicked, this, &BaseTrackView::toggleSoloStatus);
+    connect(levelSlider, &QSlider::valueChanged, this, &BaseTrackView::setGain);
+    connect(panSlider, &QSlider::valueChanged, this, &BaseTrackView::setPan);
+    connect(buttonBoost, &MultiStateButton::stateChanged, this, &BaseTrackView::updateBoostValue);
 
     // add in static map
-    trackViews.insert(trackID, this);
-
-    QButtonGroup *boostButtonGroup = new QButtonGroup(this);
-    boostButtonGroup->addButton(buttonBoostMinus12);
-    boostButtonGroup->addButton(buttonBoostZero);
-    boostButtonGroup->addButton(buttonBoostPlus12);
-
-    buttonBoostZero->setChecked(true);
+    BaseTrackView::trackViews.insert(trackID, this);
 
     setAttribute(Qt::WA_NoBackground);
 }
@@ -66,18 +49,15 @@ void BaseTrackView::setupVerticalLayout()
     levelSlider->setOrientation(Qt::Vertical);
     levelSliderLayout->setDirection(QBoxLayout::TopToBottom);
 
-    peakMeterRight->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
-    peakMeterLeft->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
-    peakMeterLeft->setOrientation(Qt::Vertical);
-    peakMeterRight->setOrientation(Qt::Vertical);
+    peakMeter->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
+    peakMeter->setOrientation(Qt::Vertical);
+
     metersLayout->setDirection(QHBoxLayout::LeftToRight);
-    meterWidgetsLayout->setDirection(QHBoxLayout::TopToBottom);
 
     muteSoloLayout->setDirection(QBoxLayout::TopToBottom);
-    boostWidgetsLayout->setDirection(QBoxLayout::TopToBottom);
 
-    mainLayout->setVerticalSpacing(12);
-    mainLayout->setContentsMargins(3, 12, 3, 3);
+    mainLayout->setVerticalSpacing(9);
+    mainLayout->setContentsMargins(3, 0, 3, 3);
 }
 
 void BaseTrackView::createLayoutStructure()
@@ -100,22 +80,24 @@ void BaseTrackView::createLayoutStructure()
     labelPanR->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     labelPanR->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-    panSlider = new QSlider();
+    panSlider = new Slider();
     panSlider->setObjectName(QStringLiteral("panSlider"));
     panSlider->setMinimum(-4);
     panSlider->setMaximum(4);
     panSlider->setOrientation(Qt::Horizontal);
+    panSlider->setSliderType(Slider::PanSlider);
 
     panWidgetsLayout->addWidget(labelPanL);
     panWidgetsLayout->addWidget(panSlider);
     panWidgetsLayout->addWidget(labelPanR);
 
-    levelSlider = new QSlider();
+    levelSlider = new Slider();
     levelSlider->setObjectName(QStringLiteral("levelSlider"));
     levelSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
     levelSlider->setMaximum(120);
     levelSlider->setValue(100);
     levelSlider->setTickPosition(QSlider::NoTicks);
+    levelSlider->setSliderType(Slider::AudioSlider);
 
     levelSliderLayout = new QVBoxLayout();
     levelSliderLayout->setSpacing(2);
@@ -131,26 +113,13 @@ void BaseTrackView::createLayoutStructure()
     levelSliderLayout->addWidget(levelSlider);
     levelSliderLayout->addWidget(lowLevelIcon);
 
-    peakMeterLeft = new AudioMeter(this);
-    peakMeterLeft->setObjectName(QStringLiteral("peakMeterLeft"));
-    peakMeterRight = new AudioMeter(this);
-    peakMeterRight->setObjectName(QStringLiteral("peakMeterRight"));
+    peakMeter = new AudioMeter(this);
+    peakMeter->setObjectName(QStringLiteral("peakMeter"));
 
     metersLayout = new QHBoxLayout();
     metersLayout->setSpacing(1);
     metersLayout->setContentsMargins(0, 0, 0, 0);
-    metersLayout->addWidget(peakMeterLeft);
-    metersLayout->addWidget(peakMeterRight);
-
-    peaksDbLabel = new QLabel();
-    peaksDbLabel->setObjectName(QStringLiteral("peaksDbLabel"));
-    peaksDbLabel->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum));
-
-    meterWidgetsLayout = new QVBoxLayout();
-    meterWidgetsLayout->setSpacing(1);
-    meterWidgetsLayout->setContentsMargins(0, 0, 0, 0);
-    meterWidgetsLayout->addLayout(metersLayout, 1);
-    meterWidgetsLayout->addWidget(peaksDbLabel);
+    metersLayout->addWidget(peakMeter);
 
     muteButton = new QPushButton();
     muteButton->setObjectName(QStringLiteral("muteButton"));
@@ -166,56 +135,48 @@ void BaseTrackView::createLayoutStructure()
     muteSoloLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     muteSoloLayout->setSpacing(1);
     muteSoloLayout->setContentsMargins(0, 0, 0, 0);
-    muteSoloLayout->addWidget(soloButton);
     muteSoloLayout->addWidget(muteButton);
+    muteSoloLayout->addWidget(soloButton);
 
-    boostWidgetsLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-    boostWidgetsLayout->setSpacing(0);
-    boostWidgetsLayout->setContentsMargins(0, 0, 0, 0);
-
-    buttonBoostPlus12 = new QPushButton();
-    buttonBoostPlus12->setObjectName(QStringLiteral("buttonBoostPlus12"));
-    buttonBoostPlus12->setCheckable(true);
-    buttonBoostPlus12->setText("+12");
-
-    buttonBoostZero = new QPushButton();
-    buttonBoostZero->setObjectName(QStringLiteral("buttonBoostZero"));
-    buttonBoostZero->setCheckable(true);
-    buttonBoostZero->setText("0");
-
-    buttonBoostMinus12 = new QPushButton();
-    buttonBoostMinus12->setObjectName(QStringLiteral("buttonBoostMinus12"));
-    buttonBoostMinus12->setCheckable(true);
-    buttonBoostMinus12->setText("-12");
-
-    QButtonGroup *buttonGroup = new QButtonGroup(this);
-    buttonGroup->addButton(buttonBoostMinus12);
-    buttonGroup->addButton(buttonBoostPlus12);
-    buttonGroup->addButton(buttonBoostZero);
-
-    boostWidgetsLayout->addWidget(buttonBoostPlus12);
-    boostWidgetsLayout->addWidget(buttonBoostZero);
-    boostWidgetsLayout->addWidget(buttonBoostMinus12);
+    buttonBoost = new MultiStateButton(3, this); // 3 states: OFF, -12 db and +12 db
+    buttonBoost->setObjectName(QStringLiteral("buttonBoost"));
+    buttonBoost->setCheckable(true);
+    buttonBoost->setText("OFF", 0);
+    buttonBoost->setText("-12", 1);
+    buttonBoost->setText("+12", 2);
 
     primaryChildsLayout = new QVBoxLayout();
     primaryChildsLayout->setSpacing(12);
     primaryChildsLayout->setContentsMargins(0, 0, 0, 0);
 
     secondaryChildsLayout = new QVBoxLayout();
-    secondaryChildsLayout->setSpacing(12);
+    secondaryChildsLayout->setSpacing(6);
     secondaryChildsLayout->setContentsMargins(0, 0, 0, 0);
 
     primaryChildsLayout->addLayout(panWidgetsLayout);
     primaryChildsLayout->addLayout(levelSliderLayout, 1);
 
-    secondaryChildsLayout->addLayout(meterWidgetsLayout);
-    secondaryChildsLayout->addLayout(boostWidgetsLayout);
+    secondaryChildsLayout->addLayout(metersLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
+    secondaryChildsLayout->addWidget(buttonBoost);
 
     mainLayout->addLayout(primaryChildsLayout, 0, 0);
     mainLayout->addLayout(secondaryChildsLayout, 0, 1);
 
+    updateBoostButtonToolTip();
+
     translateUI();
+}
+
+void BaseTrackView::updateBoostButtonToolTip()
+{
+    QString boostText = " OFF [0 dB]";
+    if (buttonBoost->getCurrentState() > 0) {
+        boostText = " (" + buttonBoost->text() + " dB)";
+    }
+
+    QString toolTipText = tr("Boost") + boostText;
+    buttonBoost->setToolTip(toolTipText);
 }
 
 void BaseTrackView::translateUI()
@@ -225,20 +186,19 @@ void BaseTrackView::translateUI()
 
     muteButton->setText(tr("M"));
     soloButton->setText(tr("S"));
+
+    updateBoostButtonToolTip();
 }
 
 void BaseTrackView::bindThisViewWithTrackNodeSignals()
 {
     Audio::AudioNode *trackNode = mainController->getTrackNode(trackID);
     Q_ASSERT(trackNode);
-    QObject::connect(trackNode, SIGNAL(gainChanged(float)), this, SLOT(setGainSliderPosition(
-                                                                           float)));
-    QObject::connect(trackNode, SIGNAL(panChanged(float)), this,
-                     SLOT(setPanKnobPosition(float)));
-    QObject::connect(trackNode, SIGNAL(muteChanged(bool)), this,
-                     SLOT(setMuteStatus(bool)));
-    QObject::connect(trackNode, SIGNAL(soloChanged(bool)), this,
-                     SLOT(setSoloStatus(bool)));
+    connect(trackNode, &Audio::AudioNode::gainChanged, this, &BaseTrackView::setGainSliderPosition);
+    connect(trackNode, &Audio::AudioNode::panChanged, this, &BaseTrackView::setPanKnobPosition);
+    connect(trackNode, &Audio::AudioNode::muteChanged, this, &BaseTrackView::setMuteStatus);
+    connect(trackNode, &Audio::AudioNode::soloChanged, this, &BaseTrackView::setSoloStatus);
+    connect(trackNode, &Audio::AudioNode::boostChanged, this, &BaseTrackView::setBoostStatus);
 }
 
 // ++++++  signals emitted by Audio Node +++++++
@@ -251,6 +211,16 @@ changed only by user mouse interaction, these values can be changed using anothe
 methods (like midi messages).
 
 */
+
+void BaseTrackView::setBoostStatus(float newBoostValue)
+{
+    if (newBoostValue > 1.0) // boost value is a gain multiplier, 1.0 means 0 dB boost (boost OFF)
+        buttonBoost->setState(2); // +12 dB
+    else if (newBoostValue < 1.0)
+        buttonBoost->setState(1); // -12 dB
+    else
+        buttonBoost->setState(0); // 0 dB - OFF
+}
 
 void BaseTrackView::setGainSliderPosition(float newGainValue)
 {
@@ -274,17 +244,17 @@ void BaseTrackView::setSoloStatus(bool newSoloStatus)
     soloButton->setChecked(newSoloStatus);
 }
 
-// +++++++++
-
 void BaseTrackView::updateBoostValue()
 {
     float boostValue = 0;
-    if (buttonBoostMinus12->isChecked())
+    if (buttonBoost->getCurrentState() == 1)
         boostValue = -12;
-    else if (buttonBoostPlus12->isChecked())
+    else if (buttonBoost->getCurrentState() == 2)
         boostValue = 12;
     if (mainController)
         mainController->setTrackBoost(getTrackID(), boostValue);
+
+    updateBoostButtonToolTip();
 }
 
 void BaseTrackView::updateGuiElements()
@@ -295,9 +265,8 @@ void BaseTrackView::updateGuiElements()
     Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
     if (peak.getMaxPeak() > maxPeak.getMaxPeak()) {
         maxPeak.update(peak);
-        double db = Utils::linearToDb(maxPeak.getMaxPeak());
-        peaksDbLabel->setText(QString::number(db, 'f', 0));
     }
+
     // update the track peaks
     setPeaks(peak.getLeftPeak(), peak.getRightPeak(), peak.getLeftRMS(), peak.getRightRMS());
 
@@ -323,7 +292,6 @@ void BaseTrackView::setToNarrow()
 {
     if (!this->narrowed) {
         this->narrowed = true;
-        // mainLayout->setContentsMargins(3, 3, 3, 3);
         updateGeometry();
     }
 }
@@ -332,12 +300,11 @@ void BaseTrackView::setToWide()
 {
     if (narrowed) {
         this->narrowed = false;
-        // mainLayout->setContentsMargins(3, 3, 3, 3);
         updateGeometry();
     }
 }
 
-void BaseTrackView::refreshStyleSheet()
+void BaseTrackView::updateStyleSheet()
 {
     style()->unpolish(this);
     style()->polish(this);
@@ -348,14 +315,7 @@ void BaseTrackView::refreshStyleSheet()
     style()->unpolish(panSlider);
     style()->polish(panSlider);
 
-    style()->unpolish(peakMeterLeft);
-    style()->polish(peakMeterLeft);
-
-    style()->unpolish(peakMeterRight);
-    style()->polish(peakMeterRight);
-
-    style()->unpolish(peaksDbLabel);
-    style()->polish(peaksDbLabel);
+    peakMeter->updateStyleSheet();
 
     style()->unpolish(muteButton);
     style()->polish(muteButton);
@@ -363,22 +323,22 @@ void BaseTrackView::refreshStyleSheet()
     style()->unpolish(soloButton);
     style()->polish(soloButton);
 
-    style()->unpolish(buttonBoostMinus12);
-    style()->polish(buttonBoostMinus12);
-
-    style()->unpolish(buttonBoostPlus12);
-    style()->polish(buttonBoostPlus12);
-
-    style()->unpolish(buttonBoostZero);
-    style()->polish(buttonBoostZero);
+    style()->unpolish(buttonBoost);
+    style()->polish(buttonBoost);
 
     update();
 }
 
-void BaseTrackView::setUnlightStatus(bool unlighted)
+void BaseTrackView::setActivatedStatus(bool deactivated)
 {
-    setProperty("unlighted", QVariant(unlighted));
-    refreshStyleSheet();
+    setProperty("unlighted", QVariant(deactivated));
+    this->activated = !deactivated;
+    updateStyleSheet();
+}
+
+bool BaseTrackView::isActivated() const
+{
+    return activated;
 }
 
 BaseTrackView *BaseTrackView::getTrackViewByID(long trackID)
@@ -390,40 +350,12 @@ BaseTrackView *BaseTrackView::getTrackViewByID(long trackID)
 
 void BaseTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight)
 {
-    peakMeterLeft->setPeak(peakLeft, rmsLeft);
-    peakMeterRight->setPeak(peakRight, rmsRight);
-
-}
-
-// event filter used to handle double clicks
-bool BaseTrackView::eventFilter(QObject *source, QEvent *ev)
-{
-    if (source == peaksDbLabel && ev->type() == QEvent::MouseButtonRelease) {
-        maxPeak.zero();
-        peaksDbLabel->setText("");
-        return true;
-    }
-    // --------------
-    if (ev->type() == QEvent::MouseButtonDblClick) {
-        if (source == levelSlider || source == panSlider) {
-            if (source == levelSlider)
-                levelSlider->setValue(100); // set level fader to unit gain
-            else
-                panSlider->setValue(0);// set pan slider to center
-            update();
-        }
-
-        return true;
-    }
-    if (ev->type() == QEvent::MouseMove && source == levelSlider)
-        update();
-    return QWidget::eventFilter(source, ev);
+    peakMeter->setPeak(peakLeft, peakRight, rmsLeft, rmsRight);
 }
 
 BaseTrackView::~BaseTrackView()
 {
-    // qDeleteAll(children());// delete ui;
-    trackViews.remove(this->getTrackID());// remove from static map
+    trackViews.remove(this->getTrackID()); // remove from static map
 }
 
 void BaseTrackView::setPan(int value)
@@ -456,22 +388,6 @@ void BaseTrackView::paintEvent(QPaintEvent *)
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-
-    if (drawDbValue)
-        drawFaderDbValue(p);
-}
-
-void BaseTrackView::drawFaderDbValue(QPainter &p)
-{
-    p.setPen(DB_TEXT_COLOR);
-
-    double poweredGain = Utils::linearGainToPower(levelSlider->value()/100.0);
-    double faderDb = Utils::linearToDb(poweredGain);
-    int precision = narrowed ? 0 : 1;
-    QString text = QString::number(faderDb, 'f', precision);
-
-    QPoint textPosition = getDbValuePosition(text, p.fontMetrics());
-    p.drawText(textPosition.x(), textPosition.y(), text);
 }
 
 QPoint BaseTrackView::getDbValuePosition(const QString &dbValueText,
@@ -483,20 +399,6 @@ QPoint BaseTrackView::getDbValuePosition(const QString &dbValueText,
     int offset = levelSlider->y() + fontMetrics.height();
     int textY = (1 - sliderPosition) * levelSlider->height() + offset;
     return QPoint(textX, textY);
-}
-
-void BaseTrackView::setLayoutWidgetsVisibility(QLayout *layout, bool visible)
-{
-    for (int i = 0; i < layout->count(); ++i) {
-        QLayoutItem *item = layout->itemAt(i);
-        if (item->layout()) {
-            setLayoutWidgetsVisibility(item->layout(), visible);
-        } else {
-            QWidget *widget = item->widget();
-            if (widget)
-                widget->setVisible(visible);
-        }
-    }
 }
 
 void BaseTrackView::changeEvent(QEvent *e)

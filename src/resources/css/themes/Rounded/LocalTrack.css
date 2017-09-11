@@ -70,6 +70,7 @@ FxPanelItem QPushButton:checked
 #xmitButton[preparing="true"]
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255,255,0), stop:1 rgb(204,204,0));
+    color: rgb(20, 20, 20);
 }
 
 #xmitButton:!checked
@@ -116,4 +117,26 @@ LocalTrackView #inputPanel:hover
 LocalTrackView #midiPeakMeter
 {
     border-radius: 1px;
+}
+
+LocalTrackView[unlighted="false"] #buttonLooper:disabled
+{
+    border: none;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 white,
+        stop:0.2 rgba(255, 255, 255, 180),
+        stop:0.85 rgba(255, 255, 255, 180),
+        stop:1 rgba(255,255, 255, 40));
+}
+
+LocalTrackView[unlighted="true"] #buttonLooper:disabled
+{
+    background-color: rgba(0, 0, 0, 90);
+    border: none;
+}
+
+LocalTrackView[unlighted="true"] #buttonBoost:!checked
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
 }

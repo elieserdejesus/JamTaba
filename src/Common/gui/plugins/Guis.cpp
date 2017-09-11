@@ -12,6 +12,7 @@ PluginGui::PluginGui(Audio::Plugin *plugin) :
     QWidget(0),
     plugin(plugin)
 {
+
 }
 
 QString PluginGui::getPluginName() const
@@ -24,9 +25,8 @@ Audio::Plugin *PluginGui::getPlugin() const
     return plugin;
 }
 
-// ++++++++++++++
-
 // ++++++++++++++++++++++++++++++++++++++++++++++
+
 DelayGui::DelayGui(Audio::JamtabaDelay *delayPlugin) :
     PluginGui(delayPlugin)
 {
@@ -35,13 +35,12 @@ DelayGui::DelayGui(Audio::JamtabaDelay *delayPlugin) :
     // delay time
     sliderDelayTime = new QSlider(Qt::Horizontal, this);
     sliderDelayTime->setMinimum(1);
-    sliderDelayTime->setMaximum(2000);// 2 seconds
+    sliderDelayTime->setMaximum(2000); // 2 seconds
     lineEditDelayTime = new QLineEdit(this);
     mainLayout->addWidget(new QLabel(tr("Delay Time (ms):"), this), 0, 0, Qt::AlignRight);
     mainLayout->addWidget(sliderDelayTime, 0, 1);
     mainLayout->addWidget(lineEditDelayTime, 0, 2);
-    QObject::connect(sliderDelayTime, SIGNAL(sliderReleased()), this,
-                     SLOT(on_sliderDelayReleased()));
+    QObject::connect(sliderDelayTime, &QSlider::sliderReleased, this, &DelayGui::on_sliderDelayReleased);
 
     // feedback
     sliderFeedback = new QSlider(Qt::Horizontal, this);
@@ -49,17 +48,16 @@ DelayGui::DelayGui(Audio::JamtabaDelay *delayPlugin) :
     mainLayout->addWidget(new QLabel(tr("Feedback (db):"), this), 1, 0, Qt::AlignRight);
     mainLayout->addWidget(sliderFeedback, 1, 1);
     mainLayout->addWidget(lineEditFeedback, 1, 2);
-    QObject::connect(sliderFeedback, SIGNAL(sliderReleased()), this,
-                     SLOT(on_sliderFeedbackReleased()));
+    QObject::connect(sliderFeedback, &QSlider::sliderReleased, this, &DelayGui::on_sliderFeedbackReleased);
 
     // level
-    sliderLevel = new QSlider(Qt::Horizontal, this);// wet gain
+    sliderLevel = new QSlider(Qt::Horizontal, this); // wet gain
     sliderLevel->setMaximum(100);
     lineEditLevel = new QLineEdit(this);
     mainLayout->addWidget(new QLabel(tr("Level:"), this), 2, 0, Qt::AlignRight);
     mainLayout->addWidget(sliderLevel, 2, 1);
     mainLayout->addWidget(lineEditLevel, 2, 2);
-    QObject::connect(sliderLevel, SIGNAL(sliderReleased()), this, SLOT(on_sliderLevelReleased()));
+    QObject::connect(sliderLevel, &QSlider::sliderReleased, this, &DelayGui::on_sliderLevelReleased);
 
     // initial values
     sliderDelayTime->setValue(sliderDelayTime->maximum() * 0.25);
@@ -67,7 +65,6 @@ DelayGui::DelayGui(Audio::JamtabaDelay *delayPlugin) :
     sliderLevel->setValue(sliderLevel->maximum() * 0.5);
 }
 
-// ++++++++++++++
 void DelayGui::on_sliderDelayReleased()
 {
     ((Audio::JamtabaDelay *)plugin)->setDelayTime(sliderDelayTime->value());
@@ -89,7 +86,6 @@ void DelayGui::on_sliderLevelReleased()
     lineEditLevel->setText(QString::number(value/100.0, 'f', 1));
 }
 
-// ++++++++++++++
 DelayGui::~DelayGui()
 {
     qDebug() << "detrutor delay GUI";

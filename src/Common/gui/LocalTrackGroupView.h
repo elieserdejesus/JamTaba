@@ -18,17 +18,11 @@ public:
 
     LocalTrackView *addTrackView(long trackID) override;
 
-    inline int getChannelIndex() const
-    {
-        return index;
-    }
+    int getChannelIndex() const;
 
     virtual void setPeakMeterMode(bool peakMeterOnly);
     virtual void togglePeakMeterOnlyMode();
-    bool isShowingPeakMeterOnly() const
-    {
-        return peakMeterOnly;
-    }
+    bool isShowingPeakMeterOnly() const;
 
     void detachMainControllerInSubchannels();
     void closePluginsWindows();
@@ -36,16 +30,12 @@ public:
     void setToNarrow();
     void setToWide();
 
-    void setPreparingStatus(bool preparing);// preparing to transmit
-    inline bool isPreparingToTransmit() const
-    {
-        return preparingToTransmit;
-    }
+    void setPreparingStatus(bool preparing); // preparing to transmit
+    bool isPreparingToTransmit() const;
 
     void resetTracks();
 
-    void useSmallSpacingInLayouts(bool useSmallSpacing);
-    bool isUsingSmallSpacingInLayouts() const;
+    int getSubchannelInternalIndex(uint subchannelTrackID) const;
 
 protected:
 
@@ -65,6 +55,7 @@ private:
     QPushButton *toolButton;
     QPushButton *xmitButton;
     bool preparingToTransmit;
+    bool usingSmallSpacingInLayouts;
 
     int index;
 
@@ -73,11 +64,14 @@ private:
     QPushButton *createToolButton();
     QPushButton *createXmitButton();
 
-    QMenu* createPresetsSubMenu();
+    QMenu* createPresetsLoadingSubMenu();
+    QMenu* createPresetsDeletingSubMenu();
     void createPresetsActions(QMenu &menu);
     void createChannelsActions(QMenu &menu);
 
     void updateXmitButtonText();
+
+    static QString getStripedPresetName(const QString &presetName);
 
 signals:
     void nameChanged();
@@ -85,6 +79,9 @@ signals:
     void trackAdded();
     void presetLoaded();
     void presetSaved();
+
+protected slots:
+    virtual void removeSubchannel();
 
 private slots:
     void showMenu();
@@ -95,15 +92,30 @@ private slots:
     void highlightHoveredSubchannel();
     void highlightHoveredChannel();
 
-    void removeSubchannel();
     void removeChannel();
 
     void loadPreset(QAction *action);
     void savePreset();
     void resetLocalTracks();
-    void deletePreset();
+    void deletePreset(QAction *action);
 
     void toggleTransmitingStatus(bool checked);
 };
+
+
+inline bool LocalTrackGroupView::isPreparingToTransmit() const
+{
+    return preparingToTransmit;
+}
+
+inline bool LocalTrackGroupView::isShowingPeakMeterOnly() const
+{
+    return peakMeterOnly;
+}
+
+inline int LocalTrackGroupView::getChannelIndex() const
+{
+    return index;
+}
 
 #endif // LOCALTRACKGROUPVIEW_H
