@@ -133,7 +133,7 @@ void NinjamPanel::setupSignals()
 {
     connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), this, SLOT(handleAccentBeatsIndexChanged(int)));
     connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), SIGNAL(accentsComboChanged(int)));
-    connect(ui->lineEditAccentBeats, SIGNAL(textEdited(QString)), this, SLOT(handleAccentBeatsTextEdited(QString)));
+    connect(ui->lineEditAccentBeats, SIGNAL(&QLineEdit::returnPressed), this, SLOT(handleAccentBeatsTextEdited()));
     connect(ui->lineEditAccentBeats, SIGNAL(textChanged(QString)), SIGNAL(accentsTextChanged(QString)));
     connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this, SLOT(updateIntervalProgressShape(int)));
 
@@ -323,7 +323,7 @@ void NinjamPanel::handleAccentBeatsIndexChanged(int index)
     NinjamPanel::updateAccentsStatus();
 }
 
-void NinjamPanel::handleAccentBeatsTextEdited(const QString &value) {
+void NinjamPanel::handleAccentBeatsTextEdited() {
     qCDebug(jtNinjamGUI) << "NinjamPanel::handleAccentBeatsTextEdited " << value;
     NinjamPanel::updateAccentsStatus();
 }
