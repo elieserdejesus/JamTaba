@@ -336,7 +336,7 @@ public:
 
     inline QByteArray getEncodedData() const
     {
-        return encodedAudioData;
+        return encodedData;
     }
 
     inline bool downloadIsComplete() const
@@ -347,7 +347,7 @@ public:
 private:
     QByteArray GUID;
     quint8 flags;
-    QByteArray encodedAudioData;
+    QByteArray encodedData;
 
     void readFrom(QDataStream &stream) override;
     void printDebug(QDebug &dbg) const override;

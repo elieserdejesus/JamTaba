@@ -22,6 +22,7 @@
 #include <QRect>
 #include <QDateTime>
 #include <QImage>
+#include <QCameraInfo>
 
 #include "MainController.h"
 #include "ThemeLoader.h"
@@ -50,7 +51,9 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     roomToJump(nullptr),
     chordsPanel(nullptr),
     lastPerformanceMonitorUpdate(0),
-    camera(nullptr)
+    camera(nullptr),
+    videoFrameGrabber(nullptr),
+    cameraView(nullptr)
 {
     qCDebug(jtGUI) << "Creating MainWindow...";
 
@@ -66,31 +69,121 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeTranslator();
     initializeThemeMenu();
     initializeMeteringOptions();
-    initializeCamera();
+    initializeCameraWidget();
     setupWidgets();
     setupSignals();
 
     qCDebug(jtGUI) << "MainWindow created!";
 }
 
-void MainWindow::initializeCamera()
+void MainWindow::changeCameraStatus(bool activated)
 {
-    this->camera = nullptr;
+    if (camera) {
+
+        // camera is used by another application?
+        if (camera->status() == QCamera::UnloadedStatus && camera->state() == QCamera::UnloadedState) {
+            cameraView->setVisible(false);
+        }
+    }
+
+    if (!activated) {
+        if (camera) {
+            camera->unload();
+            camera->deleteLater();
+            camera = nullptr;
+
+            videoFrameGrabber->deleteLater();
+            videoFrameGrabber = nullptr;
+
+            return;
+        }
+    }
+
+    QCameraInfo info = QCameraInfo::defaultCamera();
+    camera = new QCamera(info);
+
+    connect(camera, static_cast<void(QCamera::*)(QCamera::Error)>(&QCamera::error), [=]()
+    {
+        QMessageBox::critical(this, tr("Error!"), camera->errorString());
+    });
+
+    videoFrameGrabber = new CameraFrameGrabber(this);
+
+    connect(videoFrameGrabber, &CameraFrameGrabber::frameAvailable, [=](const QImage &frame) {
+
+        if (mainController && !mainController->isPlayingInNinjamRoom()) {
+            if (cameraView)
+                cameraView->setCurrentFrame(frame);
+        }
+
+    });
+
+    camera->load(); // loading Camera before ask supported resolutions to avoid an empty list.
+
+    QList<QSize> resolutions = camera->supportedViewfinderResolutions();
+    if (!resolutions.isEmpty()) {
+        QCameraViewfinderSettings settings;
+        QSize lowResolution = resolutions.first();
+        settings.setResolution(lowResolution);
+        camera->setViewfinderSettings(settings);
+
+        //getBestSupportedFrameRate();
+
+        mainController->setVideoProperties(lowResolution);
+    }
+    else {
+        qCritical() << "Camera resolutions list is empty!";
+    }
+
+    camera->setViewfinder(videoFrameGrabber);
+
+    camera->start();
+
+    if(camera->state() != QCamera::ActiveState) { // camera is used by another application?
+        camera->unload();
+
+        videoFrameGrabber->deleteLater();
+        videoFrameGrabber = nullptr;
+
+        cameraView->activate(false);
+    }
+}
+
+void MainWindow::initializeCameraWidget()
+{
+    auto cameras = QCameraInfo::availableCameras();
+
+    if (!cameras.isEmpty()) {
+        cameraView = new VideoWidget(this, false);
+
+        connect(cameraView, &VideoWidget::statusChanged, this, &MainWindow::changeCameraStatus);
+
+        QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
+        leftPanelLayout->addWidget(cameraView, 0 , Qt::AlignCenter);
+        cameraView->setMaximumHeight(90);
+    }
+}
+
+QCamera::FrameRateRange MainWindow::getBestSupportedFrameRate() const
+{
+    return QCamera::FrameRateRange();
 }
 
 bool MainWindow::cameraIsActivated() const
 {
-    return camera != nullptr;
+    return cameraView && cameraView->isActivated();
 }
 
-QPixmap MainWindow::grabCameraFrame() const
+QImage MainWindow::pickCameraFrame() const
 {
-    if (camera)
-        return camera->getFrame();
+    if (videoFrameGrabber && cameraView) {
+        QImage frame = videoFrameGrabber->grab(cameraView->size());
+        cameraView->setCurrentFrame(frame);
+        return frame;
+    }
 
-    return QPixmap();
+    return QImage();
 }
-
 
 void MainWindow::initializeMeteringOptions()
 {
@@ -325,6 +418,9 @@ void MainWindow::updateLocalInputChannelsGeometry()
 
 void MainWindow::toggleLocalInputsCollapseStatus()
 {
+    if (localGroupChannels.isEmpty())
+        return;
+
     bool isShowingPeakMetersOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
     showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly); // toggle
 }
@@ -669,6 +765,14 @@ void MainWindow::handleIncompatiblity()
 
 void MainWindow::detachMainController()
 {
+    //if (videoFrameGrabber) { // necessary to avoid crash VST host when Jamtaba is removed
+        //disconnect(videoFrameGrabber, &CameraFrameGrabber::frameAvailable, this, nullptr);
+    //}
+
+    if (camera) { // necessary to avoid crash VST host when Jamtaba is removed
+        camera->unload();
+    }
+
     mainController = nullptr;
 }
 
@@ -998,8 +1102,8 @@ void MainWindow::setChatVisibility(bool chatVisible)
     ui.chatTabWidget->setVisible(chatVisible);
 
     // adjust bottom panel colspan
-    int colSpan = chatVisible ? 3 : 2;
-    ui.gridLayout->addWidget(ui.bottomPanel, 1, 0, 1, colSpan);
+    int colSpan = chatVisible ? 2 : 1;
+    ui.gridLayout->addWidget(ui.bottomPanel, 1, 1, 1, colSpan);
 }
 
 void MainWindow::setInputTracksPreparingStatus(bool preparing)
@@ -1121,6 +1225,7 @@ MainWindow::~MainWindow()
 {
     qCDebug(jtGUI) << "MainWindow destructor...";
     setParent(nullptr);
+
     if (mainController)
         mainController->stop();
 

@@ -3,6 +3,7 @@
 #include "MainController.h"
 #include "NinjamController.h"
 #include <QMenu>
+#include <QDateTime>
 
 using namespace Controller;
 using namespace Persistence;
@@ -15,7 +16,6 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     userIP(initialValues.getUserIP()),
     orientation(Qt::Vertical)
 {
-    setupVerticalLayout();
 
     // change the top panel layout to vertical (original is horizontal)
     topPanelLayout->setDirection(QHBoxLayout::TopToBottom);
@@ -62,12 +62,57 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
     groupNameLabel->setStyleSheet(styleSheet);
 
+    videoWidget = new VideoWidget(this);
+    videoWidget->setVisible(false); // video preview will be visible when the first received frame is decoded
+    videoWidgetLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    videoWidgetLayout->addWidget(videoWidget, 1);
+    videoWidgetLayout->setContentsMargins(3, 3, 3, 3);
+
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
     // reacting to chat block/unblock events
-    auto ninjamController = mainController->getNinjamController();
-    connect(ninjamController, &NinjamController::userBlockedInChat, this, &NinjamTrackGroupView::showChatBlockIcon);
-    connect(ninjamController, &NinjamController::userUnblockedInChat, this, &NinjamTrackGroupView::hideChatBlockIcon);
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
+    connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
+    connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoIntervalDecoding()));
+
+    setupVerticalLayout();
+}
+
+void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)
+{
+    videoIntervals << encodedVideoData;
+}
+
+void NinjamTrackGroupView::startVideoIntervalDecoding()
+{
+    demuxer.close(); // close previous video interval decoder
+
+    if (!videoIntervals.isEmpty()) {
+        const QByteArray &videoData = videoIntervals.takeLast();
+
+        videoIntervals.clear(); // always take the last video interval and discard others (if downloaded but not played yet)
+
+        if (!demuxer.open(videoData)) {
+            qCritical() << "Demuxer can't open video interval data!";
+            demuxer.close();
+        }
+    }
+    else {
+        videoWidget->setVisible(false); // hide the video widget when transmition is stopped
+        mainLayout->removeItem(videoWidgetLayout);
+        updateGeometry();
+    }
+}
+
+void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
+{
+    videoWidget->setCurrentFrame(frame);
+
+    if (!videoWidgetLayout->parent())
+        mainLayout->addLayout(videoWidgetLayout);
+
+    videoWidget->setVisible(true);
 }
 
 void NinjamTrackGroupView::hideChatBlockIcon(const QString &unblockedUserName)
@@ -166,15 +211,17 @@ void NinjamTrackGroupView::setOrientation(Qt::Orientation newOrientation)
 
 void NinjamTrackGroupView::setupHorizontalLayout()
 {
-    tracksLayout->setDirection(QHBoxLayout::TopToBottom);
-    mainLayout->setDirection(QHBoxLayout::LeftToRight);
+    tracksLayout->setDirection(QBoxLayout::TopToBottom);
+    mainLayout->setDirection(QBoxLayout::LeftToRight);
+
     setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
 }
 
 void NinjamTrackGroupView::setupVerticalLayout()
 {
-    tracksLayout->setDirection(QHBoxLayout::LeftToRight);
-    mainLayout->setDirection(QHBoxLayout::TopToBottom);
+    tracksLayout->setDirection(QBoxLayout::LeftToRight);
+    mainLayout->setDirection(QBoxLayout::TopToBottom);
+
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
 }
 
@@ -222,12 +269,25 @@ void NinjamTrackGroupView::setNarrowStatus(bool narrow)
         else
             trackView->setToNarrow();
     }
+
+    updateGeometry();
 }
 
 void NinjamTrackGroupView::updateGuiElements()
 {
     TrackGroupView::updateGuiElements();
     groupNameLabel->updateMarquee();
+
+    // video
+    if (demuxer.isOpened()) {
+        quint64 now = QDateTime::currentMSecsSinceEpoch();
+
+        quint64 timePerFrame = 1000 / demuxer.getFrameRate();
+        if (now - lastVideoRender >= timePerFrame) { // time to show a new video frame?
+            lastVideoRender = now;
+            updateVideoFrame(demuxer.decodeNextFrame());
+        }
+    }
 }
 
 NinjamTrackGroupView::~NinjamTrackGroupView()

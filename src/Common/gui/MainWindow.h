@@ -7,13 +7,17 @@
 #include "LocalTrackGroupView.h"
 #include "ScreensaverBlocker.h"
 #include "TextEditorModifier.h"
-#include "video/Camera.h"
 #include "performance/PerformanceMonitor.h"
 #include "LooperWindow.h"
 
 #include <QTranslator>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QCamera>
+#include <QVideoFrame>
+
+#include "video/VideoFrameGrabber.h"
+#include "video/VideoWidget.h"
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -69,14 +73,20 @@ public:
 
     virtual TextEditorModifier *createTextEditorModifier() = 0;
 
-    QPixmap grabCameraFrame() const;
+    QImage pickCameraFrame() const;
+
     bool cameraIsActivated() const;
 
     void closeAllFloatingWindows();
 
+    void setTheme(const QString &themeName);
+
+    NinjamRoomWindow* getNinjamRomWindow() const;
+
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
+    void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
 
 protected:
     Controller::MainController *mainController;
@@ -131,7 +141,9 @@ protected:
 
     static const QSize MAIN_WINDOW_MIN_SIZE;
 
-    Camera *camera;
+    QCamera *camera;
+    CameraFrameGrabber *videoFrameGrabber;
+    VideoWidget *cameraView;
 
 protected slots:
     void closeTab(int index);
@@ -191,8 +203,6 @@ protected slots:
     void updateBpm(int bpm);
     void updateCurrentIntervalBeat(int beat);
 
-    void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
-
     void initializeLocalInputChannels();
 
     QSize getSanitizedWindowSize(const QSize &size, const QSize &minimumSize) const;
@@ -225,6 +235,7 @@ private slots:
 
     void updateUserNameLineEditToolTip();
 
+    void changeCameraStatus(bool activated);
 private:
 
     BusyDialog busyDialog;
@@ -245,8 +256,6 @@ private:
     void initializeWindowSize();
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
-
-    void setTheme(const QString &themeName);
 
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;
@@ -280,7 +289,9 @@ private:
 
     void initializeGuiRefreshTimer();
 
-    void initializeCamera();
+    void initializeCameraWidget();
+
+    QCamera::FrameRateRange getBestSupportedFrameRate() const;
 
     void updateUserNameLabel();
 
@@ -326,6 +337,11 @@ private:
     static const QString NIGHT_MODE_SUFFIX;
 
 };
+
+inline NinjamRoomWindow* MainWindow::getNinjamRomWindow() const
+{
+    return this->ninjamWindow.data();
+}
 
 inline Controller::MainController *MainWindow::getMainController() const
 {

@@ -60,21 +60,38 @@ void ReaperProjectGenerator::write(const Jam &jam)
     //projectFile.write(stringBuffer.toStdString().c_str(), stringBuffer.size());
 }
 
-void ReaperProjectGenerator::setJamDir(QString newJamName, QString recordBasePath)
+void ReaperProjectGenerator::setJamDir(const QString &newJamName, const QString &recordBasePath)
 {
     QDir parentDir(QDir(recordBasePath).absoluteFilePath(newJamName));
     parentDir.mkpath("Reaper");
     this->rppPath = parentDir.absoluteFilePath("Reaper");
 }
 
-QString ReaperProjectGenerator::getAudioAbsolutePath(QString audioFileName)
+QString ReaperProjectGenerator::getAudioAbsolutePath(const QString &audioFileName)
 {
     QDir jamDir = QDir(this->rppPath);
+
     if (!jamDir.exists("audio") && !jamDir.mkdir("audio")) {
+
         qCritical() << "Could not create audio directory in " << this->rppPath;
-        return QString::null;
+
+        return QString();
     }
+
     return jamDir.absoluteFilePath("audio/" + audioFileName);
+}
+
+QString ReaperProjectGenerator::getVideoAbsolutePath(const QString &videoFileName)
+{
+    QDir jamDir = QDir(this->rppPath);
+
+    if (!jamDir.exists("video") && !jamDir.mkdir("video")) {
+
+        qCritical() << "Could not create video directory in " << this->rppPath;
+
+        return QString();
+    }
+    return jamDir.absoluteFilePath("video/" + videoFileName);
 }
 
 QString ReaperProjectGenerator::buildTrackName(const QString &userName, quint8 channelIndex)

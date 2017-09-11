@@ -3,8 +3,11 @@
 
 #include "TrackGroupView.h"
 #include <QLabel>
+#include <QBoxLayout>
 #include "MarqueeLabel.h"
 #include "NinjamTrackView.h"
+#include "video/FFMpegDemuxer.h"
+#include "video/VideoWidget.h"
 
 namespace Controller {
 class MainController;
@@ -35,6 +38,11 @@ public:
 
     QSize sizeHint() const override;
 
+    void addVideoInterval(const QByteArray &encodedVideoData);
+
+public slots:
+    void updateVideoFrame(const QImage &frame);
+
 protected:
     NinjamTrackView *createTrackView(long trackID) override;
 
@@ -48,8 +56,16 @@ private:
     QString userIP;
     Qt::Orientation orientation;
 
+    VideoWidget *videoWidget;
+    QByteArray encodedVideoData;
+    FFMpegDemuxer demuxer;
+    quint64 lastVideoRender;
+    QList<QByteArray> videoIntervals; // downloaded video intervals
+
     void setupHorizontalLayout();
     void setupVerticalLayout();
+
+    QBoxLayout *videoWidgetLayout;
 
     QString getRgbaColorString(const QColor &color, int alpha);
 
@@ -59,6 +75,8 @@ private slots:
     void unblockChatMessages();
     void hideChatBlockIcon(const QString &unblockedUserName);
     void showChatBlockIcon(const QString &blockedUserName);
+
+    void startVideoIntervalDecoding();
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H

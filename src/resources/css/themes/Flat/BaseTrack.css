@@ -112,11 +112,11 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
 
 BaseTrackView
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0 rgb(240, 240, 240),
-        stop:1 rgb(160, 160, 160));
+    background: none;
 
     border: none; /*1px solid rgb(61, 61, 61);*/
+    border-right: 1px solid rgba(0, 0, 0, 20);
+    border-left: 1px solid rgba(0, 0, 0, 20);
     font-size: 8px;
 }
 
@@ -152,6 +152,13 @@ AudioMeter
 
 /* TrackGroup - used as container for subchannels
 ---------------------------------------------------*/
+
+TrackGroupView
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgb(240, 240, 240),
+            stop:1 rgb(160, 160, 160));
+}
 
 TrackGroupView #topPanel                                /* topPanel is used to show channel name */
 {

@@ -528,7 +528,7 @@ void NinjamController::start(const Ninjam::Server& server)
         // add tracks for users connected in server
         QList<Ninjam::User> users = server.getUsers();
         for (const Ninjam::User &user : users) {
-            for (const Ninjam::UserChannel &channel : user.getChannels()) {
+            for (const auto &channel : user.getChannels()) {
                 addTrack(user, channel);
             }
         }

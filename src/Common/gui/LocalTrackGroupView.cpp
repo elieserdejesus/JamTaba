@@ -263,6 +263,8 @@ void LocalTrackGroupView::setToWide()
             trackView->setToWide();
         }
     }
+
+    updateGeometry();
 }
 
 void LocalTrackGroupView::setToNarrow()
@@ -270,6 +272,8 @@ void LocalTrackGroupView::setToNarrow()
     for (BaseTrackView *trackView : this->trackViews) {
         trackView->setToNarrow();
     }
+
+    updateGeometry();
 }
 
 void LocalTrackGroupView::highlightHoveredChannel()
