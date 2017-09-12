@@ -68,7 +68,7 @@ NinjamTrackView QPushButton#receiveButton:hover:!checked
     stop:1 rgba(175, 0, 0, 200));
 }
 
-/* Tool buttons: track vertical/horizontal, wide/narrow and server licence buttons
+/* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
 
 NinjamRoomWindow QToolButton:hover,
@@ -99,10 +99,16 @@ NinjamRoomWindow QToolButton:checked
 }
 
 
-NinjamRoomWindow QToolButton#buttonVerticalLayout:!checked{
+NinjamRoomWindow QToolButton#buttonVerticalLayout:!checked {
     border-right-color: none;
 }
-NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked{
+
+NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked {
+    border-left-color: none;
+    border-right-color: none;
+}
+
+NinjamRoomWindow QToolButton#buttonGridLayout:!checked {
     border-left-color: none;
 }
 
@@ -112,7 +118,7 @@ NinjamRoomWindow QToolButton#buttonVerticalLayout
     border-bottom-left-radius:6px;
 }
 
-NinjamRoomWindow QToolButton#buttonHorizontalLayout
+NinjamRoomWindow QToolButton#buttonGridLayout
 {
 border-top-right-radius:6px;
 border-bottom-right-radius:6px;

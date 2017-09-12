@@ -4,9 +4,14 @@
 #include "NinjamController.h"
 #include <QMenu>
 #include <QDateTime>
+#include <QLayout>
+#include <QStackedLayout>
 
 using namespace Controller;
 using namespace Persistence;
+
+const uint NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT = 350;
+const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.64;
 
 NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long trackID,
                                            const QString &channelName, const QColor &userColor,
@@ -14,12 +19,12 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     TrackGroupView(nullptr),
     mainController(mainController),
     userIP(initialValues.getUserIP()),
-    orientation(Qt::Vertical)
+    tracksLayoutEnum(TracksLayout::VerticalLayout)
 {
 
     // change the top panel layout to vertical (original is horizontal)
     topPanelLayout->setDirection(QHBoxLayout::TopToBottom);
-    topPanelLayout->setContentsMargins(1, 1, 1, 1);
+    topPanelLayout->setContentsMargins(0, 0, 0, 0);
     topPanelLayout->setSpacing(3);
 
     // replace the original QLineEdit with a MarqueeLabel
@@ -39,16 +44,22 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     topPanelLayout->addLayout(groupNameLayout);
     topPanelLayout->setAlignment(groupNameLayout, Qt::AlignBottom);
 
+    topPanelLayout->setAlignment(countryLabel, Qt::AlignTop);
+
     setGroupName(initialValues.getUserName());
 
-    // country flag label
+    // country flag and label
     countryLabel = new QLabel();
     countryLabel->setObjectName("countryLabel");
-    countryLabel->setTextFormat(Qt::RichText);
-    countryLabel->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum));
+
+    countryFlag = new QLabel();
+
     updateGeoLocation();
+
+    topPanelLayout->addSpacing(6);
+    topPanelLayout->addWidget(countryFlag);
     topPanelLayout->addWidget(countryLabel);
-    topPanelLayout->setAlignment(countryLabel, Qt::AlignTop);
+    topPanelLayout->setAlignment(countryFlag, Qt::AlignCenter);
 
     // create the first subchannel by default
     NinjamTrackView *newTrackView = addTrackView(trackID);
@@ -64,9 +75,13 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
 
     videoWidget = new VideoWidget(this);
     videoWidget->setVisible(false); // video preview will be visible when the first received frame is decoded
-    videoWidgetLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    videoWidgetLayout->addWidget(videoWidget, 1);
-    videoWidgetLayout->setContentsMargins(3, 3, 3, 3);
+    connect(videoWidget, &VideoWidget::visibilityChanged, [=](bool visible) {
+
+        if (tracksLayoutEnum == TracksLayout::GridLayout && visible) {
+            setupGridLayout();
+        }
+
+    });
 
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
@@ -100,7 +115,7 @@ void NinjamTrackGroupView::startVideoIntervalDecoding()
     }
     else {
         videoWidget->setVisible(false); // hide the video widget when transmition is stopped
-        mainLayout->removeItem(videoWidgetLayout);
+        mainLayout->removeWidget(videoWidget);
         updateGeometry();
     }
 }
@@ -108,9 +123,6 @@ void NinjamTrackGroupView::startVideoIntervalDecoding()
 void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
 {
     videoWidget->setCurrentFrame(frame);
-
-    if (!videoWidgetLayout->parent())
-        mainLayout->addLayout(videoWidgetLayout);
 
     videoWidget->setVisible(true);
 }
@@ -158,8 +170,9 @@ void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
 
     Geo::Location location = mainController->getGeoLocation(ip);
     QString countryCode = location.getCountryCode().toLower();
-    QString flagImageHTML = "<img src=:/flags/flags/" + countryCode +".png>";
-    countryLabel->setText(flagImageHTML + "<br>" + location.getCountryName());
+    QString flagImage = ":/flags/flags/" + countryCode +".png";
+    countryFlag->setPixmap(QPixmap(flagImage));
+    countryLabel->setText(location.getCountryName());
 }
 
 void NinjamTrackGroupView::updateGeoLocation()
@@ -182,47 +195,129 @@ QString NinjamTrackGroupView::getRgbaColorString(const QColor &color, int alpha)
     return "rgba(" + QString::number(red) + "," + QString::number(green) + "," + QString::number(blue) + "," + QString::number(alpha) + ")";
 }
 
-void NinjamTrackGroupView::setOrientation(Qt::Orientation newOrientation)
+void NinjamTrackGroupView::setTracksLayout(TracksLayout newLayout)
 {
-    if (newOrientation == orientation)
+    if (newLayout == tracksLayoutEnum)
         return;
 
-    orientation = newOrientation;
+    tracksLayoutEnum = newLayout;
     auto tracks = getTracks<NinjamTrackView *>();
+    Qt::Orientation orientation = getTracksOrientation();
     for (NinjamTrackView *track : tracks) {
-        track->setOrientation(newOrientation);
+        track->setOrientation(orientation);
     }
 
-    if(newOrientation == Qt::Horizontal){
+    if (newLayout == TracksLayout::HorizontalLayout) {
         setupHorizontalLayout();
         topPanel->setFixedWidth(100); // using fixed width in horizontal layout
     }
-    else{
+    else if (newLayout == TracksLayout::VerticalLayout) {
         setupVerticalLayout();
         topPanel->setMaximumWidth(QWIDGETSIZE_MAX);
         topPanel->setMinimumWidth(1);
     }
+    else if(newLayout == TracksLayout::GridLayout) {
+        setupGridLayout();
+        topPanel->setMaximumWidth(QWIDGETSIZE_MAX);
+        topPanel->setMinimumWidth(1);
+    }
+    else {
+        qCritical() << "Invalid layout " << static_cast<quint8>(newLayout);
+    }
 
-    setProperty("horizontal", newOrientation == Qt::Horizontal ? true : false);
+    topPanel->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum));
+
+    setProperty("horizontal", orientation == Qt::Horizontal ? true : false);
     refreshStyleSheet();
 
     updateGeometry();
 }
 
+void NinjamTrackGroupView::setupGridLayout()
+{
+    mainLayout->removeWidget(topPanel);
+    mainLayout->removeItem(tracksLayout);
+    mainLayout->removeWidget(videoWidget);
+
+    int topPanelRowSpan = videoWidget->isVisible() ? 1 : mainLayout->rowCount();
+    mainLayout->addWidget(topPanel, 0, 0, topPanelRowSpan, 1);
+
+    if (videoWidget->isVisible())
+        mainLayout->addWidget(videoWidget, 1, 0, 1, 1);
+
+    mainLayout->addLayout(tracksLayout, 0, 1, mainLayout->rowCount(), 1);
+
+    resetMainLayoutStretch();
+    mainLayout->setColumnStretch(0, 1); // video is streched
+    mainLayout->setRowStretch(1, 1);
+
+    mainLayout->setSpacing(3);
+
+    topPanelLayout->setDirection(videoWidget->isVisible() ? QBoxLayout::LeftToRight : QBoxLayout::TopToBottom);
+
+    tracksLayout->setDirection(QBoxLayout::LeftToRight);
+
+    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred));
+}
+
 void NinjamTrackGroupView::setupHorizontalLayout()
 {
+    mainLayout->removeWidget(topPanel);
+    mainLayout->removeItem(tracksLayout);
+    mainLayout->removeWidget(videoWidget);
+
+    mainLayout->addWidget(topPanel,    0, 0, 1, 1);
+    mainLayout->addLayout(tracksLayout,      0, 1, 1, 1);
+    mainLayout->addWidget(videoWidget, 0, 2, 1, 1);
+
+    mainLayout->setSpacing(0);
+
+    resetMainLayoutStretch();
+    mainLayout->setColumnStretch(1, 1); // tracks are strechted
+
     tracksLayout->setDirection(QBoxLayout::TopToBottom);
-    mainLayout->setDirection(QBoxLayout::LeftToRight);
+    topPanelLayout->setDirection(QBoxLayout::TopToBottom);
+
+    topPanel->setVisible(true);
 
     setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
 }
 
 void NinjamTrackGroupView::setupVerticalLayout()
 {
-    tracksLayout->setDirection(QBoxLayout::LeftToRight);
-    mainLayout->setDirection(QBoxLayout::TopToBottom);
+    mainLayout->removeWidget(topPanel);
+    mainLayout->removeItem(tracksLayout);
+    mainLayout->removeWidget(videoWidget);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
+    mainLayout->addWidget(topPanel, 0, 0, 1, 1);
+    mainLayout->addLayout(tracksLayout, 1, 0, 1, 1);
+    mainLayout->addWidget(videoWidget, 2, 0, 1, 1);
+
+    mainLayout->setSpacing(0);
+
+    resetMainLayoutStretch();
+    mainLayout->setColumnStretch(0, 1);
+    mainLayout->setRowStretch(1, 1); // tracks are strechted
+
+    topPanel->setVisible(true);
+
+    tracksLayout->setDirection(QBoxLayout::LeftToRight);
+    topPanelLayout->setDirection(QBoxLayout::TopToBottom);
+
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
+}
+
+void NinjamTrackGroupView::resetMainLayoutStretch()
+{
+    int rows = mainLayout->rowCount();
+    for (int r = 0; r < rows; ++r) {
+        mainLayout->setRowStretch(r, 0);
+    }
+
+    int collumns = mainLayout->columnCount();
+    for (int c = 0; c < collumns; ++c) {
+        mainLayout->setColumnStretch(c, 0);
+    }
 }
 
 NinjamTrackView *NinjamTrackGroupView::createTrackView(long trackID)
@@ -242,22 +337,38 @@ QString NinjamTrackGroupView::getGroupName() const
 
 QSize NinjamTrackGroupView::sizeHint() const
 {
-    if(orientation == Qt::Vertical )
+    if (tracksLayoutEnum == TracksLayout::VerticalLayout) {
         return TrackGroupView::sizeHint();
+    }
+    else if (tracksLayoutEnum == TracksLayout::HorizontalLayout) {
+        int height = 0;
+        for (auto trackView : trackViews) {
+            height += trackView->minimumSizeHint().height();
+        }
 
-    // using horizontal layout
-    int height = 0;
-    foreach (BaseTrackView *trackView, trackViews)
-        height += trackView->minimumSizeHint().height();
+        return QSize(1, qMax(height, 54));
+    }
 
-    return QSize(1, qMax(height, 54));
+    // grid layout
+    return QSize(NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT, NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT);
 }
 
 NinjamTrackView *NinjamTrackGroupView::addTrackView(long trackID)
 {
     NinjamTrackView *newTrackView = dynamic_cast<NinjamTrackView *>(TrackGroupView::addTrackView(trackID));
-    newTrackView->setOrientation(this->orientation);
+    newTrackView->setOrientation(getTracksOrientation());
     return newTrackView;
+}
+
+Qt::Orientation NinjamTrackGroupView::getTracksOrientation() const
+{
+    if (tracksLayoutEnum == TracksLayout::VerticalLayout)
+        return Qt::Vertical;
+
+    if (tracksLayoutEnum == TracksLayout::HorizontalLayout)
+        return Qt::Horizontal;
+
+    return  Qt::Vertical;
 }
 
 void NinjamTrackGroupView::setNarrowStatus(bool narrow)

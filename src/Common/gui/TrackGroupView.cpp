@@ -56,9 +56,9 @@ void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
     setObjectName(QStringLiteral("TrackGroupView"));
     setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
 
-    mainLayout = new QVBoxLayout(this);
+    mainLayout = new QGridLayout(this);
     mainLayout->setSpacing(0);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setContentsMargins(3, 3, 3, 3);
 
     topPanel = new QWidget(this);
     topPanel->setObjectName(QStringLiteral("topPanel"));
@@ -67,22 +67,29 @@ void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
     groupNameField->setObjectName(QStringLiteral("groupNameField"));
     groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0); // disable blue border when QLineEdit has focus in mac
 
+    topPanelLayout = new QHBoxLayout();
+    topPanelLayout->setObjectName(QStringLiteral("topPanelLayout"));
+    topPanelLayout->setSpacing(3);
+    topPanelLayout->setContentsMargins(6, 12, 6, 12);
+
+    topPanelLayout->addWidget(groupNameField);
+
     if (textEditorModifier) {
         bool finishEditorPressingReturnKey = true;
         textEditorModifier->modify(groupNameField, finishEditorPressingReturnKey);
     }
 
-    topPanelLayout = new QHBoxLayout(topPanel);
-    topPanelLayout->setSpacing(3);
-    topPanelLayout->setContentsMargins(6, 12, 6, 12);
-    topPanelLayout->addWidget(groupNameField);
-
     tracksLayout = new QHBoxLayout();
     tracksLayout->setContentsMargins(0, 0, 0, 0);
     tracksLayout->setSpacing(1);
+    tracksLayout->setObjectName(QStringLiteral("tracksLayout"));
 
-    mainLayout->addWidget(topPanel);
-    mainLayout->addLayout(tracksLayout, 1);
+    topPanel->setLayout(topPanelLayout);
+
+    mainLayout->addWidget(topPanel, 0, 0, 1, 1);
+    mainLayout->addLayout(tracksLayout, 1, 0, 1, 1);
+
+    mainLayout->setRowStretch(1, 1);
 
     translateUi();
 }

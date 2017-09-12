@@ -341,7 +341,7 @@ private:
     QString theme; // the style sheet used
     int ninjamIntervalProgressShape; // Circle, Ellipe or Line
     float masterFaderGain; // last master fader gain
-    Qt::Orientation tracksLayoutOrientation; // horizontal or vertical
+    quint8 tracksLayoutOrientation; // horizontal or vertical
     bool usingNarrowedTracks; // narrow or wide tracks?
 
     bool readFile(const QList<SettingsObject *> &sections);
@@ -378,8 +378,8 @@ public:
     float getLastMasterGain() const;
     void storeMasterGain(float newMasterFaderGain);
 
-    Qt::Orientation getLastTracksLayoutOrientation() const;
-    void storeTracksLayoutOrientation(Qt::Orientation newOrientation);
+    quint8 getLastTracksLayoutOrientation() const;
+    void storeTracksLayoutOrientation(quint8 newOrientation);
 
     bool writePresetToFile(const Preset &preset);
     void deletePreset(const QString &name);
@@ -720,12 +720,12 @@ inline void Settings::storeMasterGain(float newMasterFaderGain)
     masterFaderGain = newMasterFaderGain;
 }
 
-inline Qt::Orientation Settings::getLastTracksLayoutOrientation() const
+inline quint8 Settings::getLastTracksLayoutOrientation() const
 {
     return tracksLayoutOrientation;
 }
 
-inline void Settings::storeTracksLayoutOrientation(Qt::Orientation newOrientation)
+inline void Settings::storeTracksLayoutOrientation(quint8 newOrientation)
 {
     tracksLayoutOrientation = newOrientation;
 }

@@ -101,6 +101,20 @@ QSize VideoWidget::sizeHint() const
     return minimumSizeHint();
 }
 
+void VideoWidget::showEvent(QShowEvent *ev)
+{
+    Q_UNUSED(ev);
+
+    emit visibilityChanged(true);
+}
+
+void VideoWidget::hideEvent(QHideEvent *ev)
+{
+    Q_UNUSED(ev);
+
+    emit visibilityChanged(false);
+}
+
 QSize VideoWidget::minimumSizeHint() const
 {
     static const int MAX_HEIGHT = 90;

@@ -4,6 +4,7 @@
 #include <QFrame>
 #include <QLineEdit>
 #include <QBoxLayout>
+#include <QGridLayout>
 
 #include "TextEditorModifier.h"
 
@@ -29,8 +30,8 @@ public:
     void removeTrackView(BaseTrackView *trackView);
     void removeTrackView(int index);
 
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
 
     void updateGuiElements();
 
@@ -66,7 +67,7 @@ protected:
     QWidget *topPanel;
     QBoxLayout *tracksLayout;
     QBoxLayout *topPanelLayout;
-    QBoxLayout *mainLayout;
+    QGridLayout *mainLayout;
 
     virtual void refreshStyleSheet();
 

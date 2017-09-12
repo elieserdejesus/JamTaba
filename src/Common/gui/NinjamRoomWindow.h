@@ -9,6 +9,7 @@
 #include "loginserver/LoginService.h"
 #include "chat/ChatPanel.h"
 #include "chat/NinjamVotingMessageParser.h"
+#include "NinjamTrackGroupView.h"
 #include <QMessageBox>
 #include "NinjamPanel.h"
 #include "UsersColorsPool.h"
@@ -43,11 +44,12 @@ public:
 
     NinjamPanel *getNinjamPanel() const;
 
-    void setTracksOrientation(Qt::Orientation orientation);
+    void setTracksLayout(TracksLayout newLayout);
 
     enum TracksSize
     {
-        NARROW, WIDE
+        NARROW,
+        WIDE
     };
 
     void setTracksSize(TracksSize size);
@@ -72,6 +74,8 @@ protected:
 
     void changeEvent(QEvent *) override;
 
+    void resizeEvent(QResizeEvent *ev) override;
+
 private:
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
@@ -91,12 +95,13 @@ private:
 
     NinjamTrackView *getTrackViewByID(long trackID);
 
-    Qt::Orientation tracksOrientation;
+    TracksLayout tracksLayout;
     TracksSize tracksSize;
 
-    void createLayoutDirectionButtons(Qt::Orientation initialOrientation);
+    void createLayoutButtons(TracksLayout initialLayout);
     QToolButton *horizontalLayoutButton;
     QToolButton *verticalLayoutButton;
+    QToolButton *gridLayoutButton;
 
     void createTracksSizeButtons(TracksSize lastTracksSize);
     QToolButton *narrowButton;
@@ -119,6 +124,12 @@ private:
     void initializeVotingExpirationTimers();
 
     void showLastChordsInChat();
+
+    void addTrack(NinjamTrackGroupView *track);
+
+    quint8 getGridLayoutMaxCollumns() const;
+
+    void adjustTracksPanelSizePolicy();
 
     static const QString JAMTABA_CHAT_BOT_NAME;
 
@@ -170,6 +181,8 @@ private slots:
     void resetBpmComboBox();
 
     void setEstimatatedChunksPerIntervalInAllTracks();
+
+    void reAddTrackGroups();
 
     void updateStylesheet();
 };
