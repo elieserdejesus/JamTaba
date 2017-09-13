@@ -324,7 +324,7 @@ void NinjamPanel::handleAccentBeatsIndexChanged(int index)
 }
 
 void NinjamPanel::handleAccentBeatsTextEdited() {
-    qCDebug(jtNinjamGUI) << "NinjamPanel::handleAccentBeatsTextEdited " << value;
+    qCDebug(jtNinjamGUI) << "NinjamPanel::handleAccentBeatsTextEdited";
     NinjamPanel::updateAccentsStatus();
 }
 
