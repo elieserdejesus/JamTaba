@@ -1374,9 +1374,9 @@ void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
 }
 
 void MainWindow::setCustomMetronome(const QString &primaryBeatFile,
-                                    const QString &secondaryBeatFile)
+                                    const QString &offBeatFile, const QString &accentBeatFile)
 {
-    mainController->setCustomMetronome(primaryBeatFile, secondaryBeatFile);
+    mainController->setCustomMetronome(primaryBeatFile, offBeatFile, accentBeatFile);
 }
 
 void MainWindow::setMultiTrackRecordingStatus(bool recording)
@@ -1665,12 +1665,14 @@ void MainWindow::updateBpi(int bpi)
     if (!ninjamPanel)
         return;
 
+    qCDebug(jtGUI) << "MainWindow::updateBpi " << bpi;
     ninjamPanel->setBpi(bpi);
     if (chordsPanel) {
         bool bpiWasAccepted = chordsPanel->setBpi(bpi);
         if (!bpiWasAccepted)
             hideChordsPanel();
     }
+    qCDebug(jtGUI) << "MainWindow::updateBpi ...done";
 }
 
 void MainWindow::updateBpm(int bpm)
@@ -1682,7 +1684,9 @@ void MainWindow::updateBpm(int bpm)
     if (!ninjamPanel)
         return;
 
+    qCDebug(jtGUI) << "MainWindow::updateBpm " << bpm;
     ninjamPanel->setBpm(bpm);
+    qCDebug(jtGUI) << "MainWindow::updateBpm ...done";
 }
 
 void MainWindow::updateCurrentIntervalBeat(int beat)

@@ -222,7 +222,7 @@ private slots:
     void setJamRecorderStatus(const QString &writerId, bool status);
     void setRecordingPath(const QString &newRecordingPath);
     void setBuiltInMetronome(const QString &metronomeAlias);
-    void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
+    void setCustomMetronome(const QString &primaryBeatFile, const QString &offBeatFile, const QString &accentBeatFile);
 
     void setLanguage(QAction * languageMenuAction);
 

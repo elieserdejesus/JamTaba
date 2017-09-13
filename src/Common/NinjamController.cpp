@@ -358,21 +358,24 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
 Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sampleRate)
 {
     Audio::SamplesBuffer firstBeatBuffer(2);
-    Audio::SamplesBuffer secondaryBeatBuffer(2);
+    Audio::SamplesBuffer offBeatBuffer(2);
+    Audio::SamplesBuffer accentBeatBuffer(2);
     if (!(mainController->isUsingCustomMetronomeSounds())) {
         QString builtInMetronomeAlias = mainController->getSettings().getBuiltInMetronome();
-        Audio::MetronomeUtils::createBuiltInSounds(builtInMetronomeAlias, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+        Audio::MetronomeUtils::createBuiltInSounds(builtInMetronomeAlias, firstBeatBuffer, offBeatBuffer, accentBeatBuffer, sampleRate);
     }
     else {
         QString firstBeatAudioFile = mainController->getMetronomeFirstBeatFile();
-        QString secondaryBeatAudioFile = mainController->getMetronomeSecondaryBeatFile();
-        Audio::MetronomeUtils::createCustomSounds(firstBeatAudioFile, secondaryBeatAudioFile, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+        QString offBeatAudioFile = mainController->getMetronomeOffBeatFile();
+        QString accentBeatAudioFile = mainController->getMetronomeOffBeatFile();
+        Audio::MetronomeUtils::createCustomSounds(firstBeatAudioFile, offBeatAudioFile, accentBeatAudioFile, firstBeatBuffer, offBeatBuffer, accentBeatBuffer, sampleRate);
     }
 
     Audio::MetronomeUtils::removeSilenceInBufferStart(firstBeatBuffer);
-    Audio::MetronomeUtils::removeSilenceInBufferStart(secondaryBeatBuffer);
+    Audio::MetronomeUtils::removeSilenceInBufferStart(offBeatBuffer);
+    Audio::MetronomeUtils::removeSilenceInBufferStart(accentBeatBuffer);
 
-    return new Audio::MetronomeTrackNode(firstBeatBuffer, secondaryBeatBuffer);
+    return new Audio::MetronomeTrackNode(firstBeatBuffer, offBeatBuffer, accentBeatBuffer);
 }
 
 void NinjamController::recreateMetronome(int newSampleRate)
@@ -382,7 +385,7 @@ void NinjamController::recreateMetronome(int newSampleRate)
     float oldPan = metronomeTrackNode->getPan();
     bool oldMutedStatus = metronomeTrackNode->isMuted();
     bool oldSoloStatus = metronomeTrackNode->isSoloed();
-    int oldBeatsPerAccent = metronomeTrackNode->getBeatsPerAccent();
+    QList<int> oldAccentBeats = metronomeTrackNode->getAccentBeats();
 
     mainController->removeTrack(METRONOME_TRACK_ID);
 
@@ -393,7 +396,7 @@ void NinjamController::recreateMetronome(int newSampleRate)
     this->metronomeTrackNode->setPan( oldPan );
     this->metronomeTrackNode->setMute( oldMutedStatus );
     this->metronomeTrackNode->setSolo( oldSoloStatus );
-    this->metronomeTrackNode->setBeatsPerAccent(oldBeatsPerAccent);
+    this->metronomeTrackNode->setAccentBeats(oldAccentBeats);
     mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
 }
 
@@ -669,9 +672,19 @@ void NinjamController::voteBpm(int bpm)
     mainController->getNinjamService()->voteToChangeBPM(bpm);
 }
 
-void NinjamController::setMetronomeBeatsPerAccent(int beatsPerAccent)
+void NinjamController::setMetronomeBeatsPerAccent(int beatsPerAccent, int currentBpi)
 {
-    metronomeTrackNode->setBeatsPerAccent(beatsPerAccent);
+    metronomeTrackNode->setBeatsPerAccent(beatsPerAccent, currentBpi);
+}
+
+QList<int> NinjamController::getMetronomeAccentBeats()
+{
+    return metronomeTrackNode->getAccentBeats();
+}
+
+void NinjamController::setMetronomeAccentBeats(QList<int> accentBeats)
+{
+    metronomeTrackNode->setAccentBeats(accentBeats);
 }
 
 //void NinjamController::deleteDeactivatedTracks(){

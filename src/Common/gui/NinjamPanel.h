@@ -40,7 +40,13 @@ public:
 
     int getPanSliderMaximumValue() const;
     int getGainSliderMaximumValue() const;
-    int getCurrentBeatsPerAccent() const;
+
+    int getAccentBeatsComboValue() const;
+
+    void setAccentBeatsText(QString accentBeats);
+    QString getAccentBeatsText() const;
+    void setAccentBeatsTextEnabled(bool value);
+    bool isAccentBeatsEnabled() const;
 
     void setBpi(int bpi);
     void setBpm(int bpm);
@@ -66,6 +72,7 @@ signals:
     void bpiComboActivated(const QString &);
     void bpmComboActivated(const QString &);
     void accentsComboChanged(int index);
+    void accentsTextChanged(const QString &);
     void gainSliderChanged(int value);
     void panSliderChanged(int value);
     void muteButtonClicked();
@@ -91,6 +98,7 @@ private:
     static bool compareBpis(const QString &s1, const QString &s2);
     void selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent);
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
+    void updateAccentsStatus();
     void setupSignals();
     void translate();
     void initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier);
@@ -98,7 +106,8 @@ private:
     QString hostName;
 
 private slots:
-    void updateAccentsStatus(int index);
+    void handleAccentBeatsIndexChanged(int index);
+    void handleAccentBeatsTextEdited();
     void updateIntervalProgressShape(int index);
     void deleteFloatWindow();
 

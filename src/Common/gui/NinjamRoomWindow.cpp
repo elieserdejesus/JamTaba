@@ -21,6 +21,7 @@
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "persistence/UsersDataCache.h"
+#include "MetronomeUtils.h"
 
 #include <QMessageBox>
 #include <QRegExp>
@@ -51,7 +52,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
     tracksSize(TracksSize::WIDE),
     roomInfo(roomInfo)
 {
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow ctor";
     ui->setupUi(this);
 
     ui->licenceButton->setIcon(QIcon(QPixmap(":/images/licence.png")));
@@ -84,6 +85,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
     updateBpmBpiLabel();
 
     connect(mainController, &Controller::MainController::themeChanged, this, &NinjamRoomWindow::updateStylesheet);
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow done";
 }
 
 void NinjamRoomWindow::updateStylesheet()
@@ -246,7 +248,8 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
 
     connect(panel, &NinjamPanel::bpiComboActivated, this, &NinjamRoomWindow::setNewBpi);
     connect(panel, &NinjamPanel::bpmComboActivated, this, &NinjamRoomWindow::setNewBpm);
-    connect(panel, &NinjamPanel::accentsComboChanged, this, &NinjamRoomWindow::setNewBeatsPerAccent);
+    connect(panel, &NinjamPanel::accentsComboChanged, this, &NinjamRoomWindow::handleAccentBeatsComboChange);
+    connect(panel, &NinjamPanel::accentsTextChanged, this, &NinjamRoomWindow::handleCustomAccentBeatsChange);
 
     connect(panel, &NinjamPanel::gainSliderChanged, this, &NinjamRoomWindow::setMetronomeFaderPosition);
     connect(panel, &NinjamPanel::panSliderChanged, this, &NinjamRoomWindow::setMetronomePanSliderPosition);
@@ -672,11 +675,30 @@ void NinjamRoomWindow::showServerLicence()
 }
 
 // ----------
-void NinjamRoomWindow::setNewBeatsPerAccent(int index)
+void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 {
     Q_UNUSED(index)
-    int beatsPerAccent = ninjamPanel->getCurrentBeatsPerAccent();
-    mainController->getNinjamController()->setMetronomeBeatsPerAccent(beatsPerAccent);
+    int accentBeatsCb = ninjamPanel->getAccentBeatsComboValue();
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleAccentBeatsComboChange " << accentBeatsCb << index;
+
+    if (accentBeatsCb == -1) {
+        ninjamPanel->setAccentBeatsTextEnabled(true);
+        // do nothing else until the Ninjam Panel UI works out the accent beats text
+    } else {
+        ninjamPanel->setAccentBeatsTextEnabled(false);
+        int currentBpi = mainController->getNinjamController()->getCurrentBpi();
+        mainController->getNinjamController()->setMetronomeBeatsPerAccent(accentBeatsCb, currentBpi);
+    }
+}
+
+void NinjamRoomWindow::handleCustomAccentBeatsChange(const QString &value)
+{
+    Q_UNUSED(value)
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange " << value;
+
+    QList<int> accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(ninjamPanel->getAccentBeatsText());
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange " << accentBeats;
+    mainController->getNinjamController()->setMetronomeAccentBeats(accentBeats);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

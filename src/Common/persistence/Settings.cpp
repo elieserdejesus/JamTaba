@@ -334,7 +334,8 @@ MetronomeSettings::MetronomeSettings() :
     muted(false),
     usingCustomSounds(false),
     customPrimaryBeatAudioFile(""),
-    customSecondaryBeatAudioFile("")
+    customOffBeatAudioFile(""),
+    customAccentBeatAudioFile("")
 {
     //
 }
@@ -346,7 +347,8 @@ void MetronomeSettings::read(const QJsonObject &in)
     muted = getValueFromJson(in, "muted", false);
     usingCustomSounds = getValueFromJson(in, "usingCustomSounds", false);
     customPrimaryBeatAudioFile = getValueFromJson(in, "customPrimaryBeatAudioFile", QString(""));
-    customSecondaryBeatAudioFile = getValueFromJson(in, "customSecondaryBeatAudioFile", QString(""));
+    customOffBeatAudioFile = getValueFromJson(in, "customOffBeatAudioFile", getValueFromJson(in, "customSecondaryBeatAudioFile", QString(""))); // backward compatible
+    customAccentBeatAudioFile = getValueFromJson(in, "customAccentBeatAudioFile", QString(""));
     builtInMetronomeAlias = getValueFromJson(in, "builtInMetronome", QString("Default"));
 }
 
@@ -357,7 +359,8 @@ void MetronomeSettings::write(QJsonObject &out) const
     out["muted"] = muted;
     out["usingCustomSounds"] = usingCustomSounds;
     out["customPrimaryBeatAudioFile"] = customPrimaryBeatAudioFile;
-    out["customSecondaryBeatAudioFile"] = customSecondaryBeatAudioFile;
+    out["customOffBeatAudioFile"] = customOffBeatAudioFile;
+    out["customAccentBeatAudioFile"] = customAccentBeatAudioFile;
     out["builtInMetronome"] = builtInMetronomeAlias;
 }
 
@@ -799,16 +802,18 @@ void Settings::setBuiltInMetronome(const QString &metronomeAlias)
     metronomeSettings.usingCustomSounds = false;
 }
 
-void Settings::setCustomMetronome(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile)
+void Settings::setCustomMetronome(const QString &primaryBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile)
 {
-    if (QFileInfo(primaryBeatAudioFile).exists() && QFileInfo(secondaryBeatAudioFile).exists()) {
+    if (QFileInfo(primaryBeatAudioFile).exists() && QFileInfo(offBeatAudioFile).exists() && QFileInfo(accentBeatAudioFile).exists()) {
         metronomeSettings.customPrimaryBeatAudioFile = primaryBeatAudioFile;
-        metronomeSettings.customSecondaryBeatAudioFile = secondaryBeatAudioFile;
+        metronomeSettings.customOffBeatAudioFile = offBeatAudioFile;
+        metronomeSettings.customAccentBeatAudioFile = accentBeatAudioFile;
         metronomeSettings.usingCustomSounds = true;
     }
     else {
         metronomeSettings.customPrimaryBeatAudioFile = "";
-        metronomeSettings.customSecondaryBeatAudioFile = "";
+        metronomeSettings.customOffBeatAudioFile = "";
+        metronomeSettings.customAccentBeatAudioFile = "";
         metronomeSettings.usingCustomSounds = false;
     }
 }

@@ -1,4 +1,5 @@
 #include "IntervalProgressDisplay.h"
+#include "log/Logging.h"
 
 #include <QPaintEvent>
 #include <QPainter>
@@ -30,7 +31,7 @@ IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     paintMode(PaintShape::LINEAR),
     showAccents(false),
     currentBeat(0),
-    beatsPerAccent(0),
+    accentBeats(QList<int>()),
     usingLowContrastColors(false),
     accentsColor(DEFAULT_ACCENTS_COLOR),
     currentAccentColor(DEFAULT_CURRENT_ACCENT_COLOR),
@@ -59,6 +60,8 @@ void IntervalProgressDisplay::setPaintUsingLowContrastColors(bool useLowContrast
 
 void IntervalProgressDisplay::setShowAccents(bool showAccents)
 {
+    qCDebug(jtNinjamGUI) << "IntervalProgressDisplay::setShowAccents" << showAccents;
+
     this->showAccents = showAccents;
     update();
 }
@@ -71,22 +74,27 @@ void IntervalProgressDisplay::setCurrentBeat(int beat)
     }
 }
 
-void IntervalProgressDisplay::setBeatsPerAccent(int beats)
+void IntervalProgressDisplay::setAccentBeats(QList<int> accents)
 {
-    beatsPerAccent = beats;
+    qCDebug(jtNinjamGUI) << "IntervalProgressDisplay::setAccentBeats" << accents;
 
-    if (!isShowingAccents() && beatsPerAccent > 1)
+    accentBeats = accents;
+
+    if (!isShowingAccents() && !accentBeats.isEmpty())
         this->showAccents = true;
 
     update();
+}
+
+QList<int> IntervalProgressDisplay::getAccentBeats() const
+{
+    return accentBeats;
 }
 
 void IntervalProgressDisplay::setBeatsPerInterval(int beats)
 {
     if (beats > 0 && beats <= 64) {
         this->beatsPerInterval = beats;
-        if (beatsPerAccent <= 0)
-            beatsPerAccent = beats / 2;
     }
 }
 
@@ -121,7 +129,7 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
         p.setRenderHint(QPainter::Antialiasing, true);
         qreal elementsSize = getElementsSize(paintMode);
         qreal fontSize = getFontSize(paintMode);
-        PaintContext paintContext(width(), height(), beatsPerInterval, currentBeat, isShowingAccents(), beatsPerAccent, elementsSize, fontSize);
+        PaintContext paintContext(width(), height(), beatsPerInterval, currentBeat, isShowingAccents(), accentBeats, elementsSize, fontSize);
         QColor currentBeatColor = usingLowContrastColors ? Qt::lightGray : this->currentBeatColor;
         QBrush textBrush = palette().text(); //using the color defined in loaded stylesheet theme
         PaintColors paintColors(currentBeatColor, secondaryBeatsColor, accentsColor, currentAccentColor, disabledBeatsColor, textBrush, linesColor);
@@ -192,13 +200,13 @@ QSize IntervalProgressDisplay::minimumSizeHint() const
 }
 
 IntervalProgressDisplay::PaintContext::PaintContext(int width, int height, int beatsPerInterval, int currentBeat,
-                                                    bool drawAccents, int beatsPerAccent, qreal elementsSize, qreal fontSize) :
+                                                    bool drawAccents, QList<int> accentBeats, qreal elementsSize, qreal fontSize) :
       width(width),
       height(height),
       beatsPerInterval(beatsPerInterval),
       currentBeat(currentBeat),
       showingAccents(drawAccents),
-      beatsPerAccent(beatsPerAccent),
+      accentBeats(accentBeats),
       elementsSize(elementsSize),
       fontSize(fontSize)
 {
