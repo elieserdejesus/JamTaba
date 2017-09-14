@@ -14,6 +14,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QCamera>
+#include <QCameraInfo>
 #include <QVideoFrame>
 
 #include "video/VideoFrameGrabber.h"
@@ -144,6 +145,9 @@ protected:
     QCamera *camera;
     CameraFrameGrabber *videoFrameGrabber;
     VideoWidget *cameraView;
+    QComboBox *cameraCombo;
+    QVBoxLayout *cameraLayout;
+    QString preferredCameraName;
 
 protected slots:
     void closeTab(int index);
@@ -236,6 +240,8 @@ private slots:
     void updateUserNameLineEditToolTip();
 
     void changeCameraStatus(bool activated);
+
+    void selectNewCamera(int cameraIndex);
 private:
 
     BusyDialog busyDialog;
@@ -271,6 +277,10 @@ private:
     QString passwordToJump;
 
     static bool jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2);
+
+    void setCameraComboVisibility(bool show);
+
+    void initializeCamera(const QString &cameraDeviceName);
 
     void initializeLoginService();
     void initializeLocalInputChannels(const Persistence::LocalInputTrackSettings &localInputSettings);

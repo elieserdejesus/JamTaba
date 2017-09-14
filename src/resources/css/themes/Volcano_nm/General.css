@@ -351,3 +351,16 @@ NinjamPanel #peakMeter
     qproperty-peakStartColor: rgb(190, 90, 29);
 }
 
+
+QComboBox
+{
+    background-color: rgba(0, 0, 0, 30);
+    color: rgb(10, 10, 10);
+}
+
+QComboBox QAbstractItemView
+{
+    border: none;
+    color: black;
+    background-color: rgb(184, 147, 121);
+}

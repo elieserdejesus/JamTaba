@@ -346,3 +346,16 @@ AudioMeter
     qproperty-rmsColor: rgb(110, 110, 110);
     qproperty-maxPeakColor: rgb(110, 110, 110);
 }
+
+QComboBox
+{
+    color: rgb(180, 180, 180);
+    background-color: rgba(0, 0, 0, 30);
+}
+
+QComboBox QAbstractItemView
+{
+    border: 1px solid black;
+    color: rgb(180, 180, 180);
+    background-color: rgb(20, 20, 20);
+}

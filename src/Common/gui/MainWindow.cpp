@@ -53,7 +53,9 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     lastPerformanceMonitorUpdate(0),
     camera(nullptr),
     videoFrameGrabber(nullptr),
-    cameraView(nullptr)
+    cameraView(nullptr),
+    cameraLayout(nullptr),
+    cameraCombo(nullptr)
 {
     qCDebug(jtGUI) << "Creating MainWindow...";
 
@@ -76,46 +78,39 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     qCDebug(jtGUI) << "MainWindow created!";
 }
 
-void MainWindow::changeCameraStatus(bool activated)
+void MainWindow::setCameraComboVisibility(bool show)
+{
+    if (!cameraCombo)
+        return;
+
+    if (show) {
+        cameraCombo->clear();
+        auto cameras = QCameraInfo::availableCameras();
+        for (auto cameraInfo : cameras) {
+            cameraCombo->addItem(cameraInfo.description(), cameraInfo.deviceName());
+        }
+    }
+    else {
+        cameraCombo->clear();
+    }
+
+    cameraCombo->setVisible(show && cameraCombo->count() > 1);
+}
+
+void MainWindow::initializeCamera(const QString &cameraDeviceName)
 {
     if (camera) {
-
-        // camera is used by another application?
-        if (camera->status() == QCamera::UnloadedStatus && camera->state() == QCamera::UnloadedState) {
-            cameraView->setVisible(false);
-        }
+        camera->unload();
+        camera->deleteLater();
     }
 
-    if (!activated) {
-        if (camera) {
-            camera->unload();
-            camera->deleteLater();
-            camera = nullptr;
+    preferredCameraName = cameraDeviceName.isEmpty() ? QCameraInfo::defaultCamera().deviceName() : cameraDeviceName;
 
-            videoFrameGrabber->deleteLater();
-            videoFrameGrabber = nullptr;
-
-            return;
-        }
-    }
-
-    QCameraInfo info = QCameraInfo::defaultCamera();
-    camera = new QCamera(info);
+    camera = new QCamera(preferredCameraName.toUtf8());
 
     connect(camera, static_cast<void(QCamera::*)(QCamera::Error)>(&QCamera::error), [=]()
     {
         QMessageBox::critical(this, tr("Error!"), camera->errorString());
-    });
-
-    videoFrameGrabber = new CameraFrameGrabber(this);
-
-    connect(videoFrameGrabber, &CameraFrameGrabber::frameAvailable, [=](const QImage &frame) {
-
-        if (mainController && !mainController->isPlayingInNinjamRoom()) {
-            if (cameraView)
-                cameraView->setCurrentFrame(frame);
-        }
-
     });
 
     camera->load(); // loading Camera before ask supported resolutions to avoid an empty list.
@@ -135,9 +130,65 @@ void MainWindow::changeCameraStatus(bool activated)
         qCritical() << "Camera resolutions list is empty!";
     }
 
-    camera->setViewfinder(videoFrameGrabber);
-
     camera->start();
+
+    setCameraComboVisibility(camera->state() == QCamera::ActiveState);
+
+    // adjust selected camera in combo
+    for(int i = 0 ; i < cameraCombo->count(); i++) {
+        if (cameraCombo->itemData(i) == preferredCameraName) {
+            cameraCombo->setCurrentIndex(i);
+            break;
+        }
+    }
+
+    if (videoFrameGrabber)
+        camera->setViewfinder(videoFrameGrabber);
+}
+
+void MainWindow::changeCameraStatus(bool activated)
+{
+    if (camera) {
+
+        // camera is used by another application?
+        if (camera->status() == QCamera::UnloadedStatus && camera->state() == QCamera::UnloadedState) {
+            camera->unload();
+            cameraView->setVisible(false);
+            return;
+        }
+    }
+
+    if (!activated) {
+        if (camera) {
+            camera->unload();
+            camera->deleteLater();
+            camera = nullptr;
+
+            videoFrameGrabber->deleteLater();
+            videoFrameGrabber = nullptr;
+
+            setCameraComboVisibility(false);
+
+            return;
+        }
+    }
+
+    // activating the camera?
+
+    if (!videoFrameGrabber) {
+        videoFrameGrabber = new CameraFrameGrabber(this);
+
+        connect(videoFrameGrabber, &CameraFrameGrabber::frameAvailable, [=](const QImage &frame) {
+
+            if (mainController && !mainController->isPlayingInNinjamRoom()) {
+                if (cameraView)
+                    cameraView->setCurrentFrame(frame);
+            }
+
+        });
+    }
+
+    initializeCamera(preferredCameraName);
 
     if(camera->state() != QCamera::ActiveState) { // camera is used by another application?
         camera->unload();
@@ -147,6 +198,13 @@ void MainWindow::changeCameraStatus(bool activated)
 
         cameraView->activate(false);
     }
+
+}
+
+void MainWindow::selectNewCamera(int cameraIndex)
+{
+    QString cameraDeviceName = cameraCombo->itemData(cameraIndex).toString();
+    initializeCamera(cameraDeviceName);
 }
 
 void MainWindow::initializeCameraWidget()
@@ -154,13 +212,27 @@ void MainWindow::initializeCameraWidget()
     auto cameras = QCameraInfo::availableCameras();
 
     if (!cameras.isEmpty()) {
-        cameraView = new VideoWidget(this, false);
 
-        connect(cameraView, &VideoWidget::statusChanged, this, &MainWindow::changeCameraStatus);
+        if (!cameraView) {
+            cameraView = new VideoWidget(this, false);
+            cameraView->setMaximumHeight(90);
 
-        QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
-        leftPanelLayout->addWidget(cameraView, 0 , Qt::AlignCenter);
-        cameraView->setMaximumHeight(90);
+            connect(cameraView, &VideoWidget::statusChanged, this, &MainWindow::changeCameraStatus);
+        }
+
+        if (!cameraLayout) {
+            cameraLayout = new QVBoxLayout();
+
+            cameraCombo = new QComboBox();
+            connect(cameraCombo, SIGNAL(activated(int)), this, SLOT(selectNewCamera(int)));
+            cameraCombo->setVisible(false);
+
+            cameraLayout->addWidget(cameraView, 0, Qt::AlignCenter);
+            cameraLayout->addWidget(cameraCombo);
+
+            QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
+            leftPanelLayout->addLayout(cameraLayout);
+        }
     }
 }
 

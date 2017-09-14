@@ -346,3 +346,9 @@ QMenu
     color: black;
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(245, 245, 245), stop:1 rgb(210, 210, 210));
 }
+
+QComboBox               /* bpi, bpm, accents and shape comboboxes */
+{
+    background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
+    color: rgb(20, 20, 20);
+}
