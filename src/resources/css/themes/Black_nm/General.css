@@ -349,13 +349,33 @@ AudioMeter
 
 QComboBox
 {
-    color: rgb(180, 180, 180);
-    background-color: rgba(0, 0, 0, 30);
+    background-color: rgb(140, 140, 140);
+    border-radius: 2px;
+    color: rgb(10, 10, 10);
 }
 
 QComboBox QAbstractItemView
 {
     border: 1px solid black;
-    color: rgb(180, 180, 180);
-    background-color: rgb(20, 20, 20);
+    color: rgb(20, 20, 20);
+    background-color: rgb(130, 130, 130);
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(140, 140, 140);
+}
+
+QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(140, 140, 140),
+    stop:1 rgba(180, 180, 180));
+}
+
+QComboBox::drop-down
+{
+    border: 0px;
+}
+
+QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
 }
