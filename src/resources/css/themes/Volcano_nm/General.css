@@ -354,7 +354,8 @@ NinjamPanel #peakMeter
 
 QComboBox
 {
-    background-color: rgba(0, 0, 0, 30);
+    background-color: rgb(235, 164, 101);
+    border-radius: 2px;
     color: rgb(10, 10, 10);
 }
 
@@ -362,5 +363,24 @@ QComboBox QAbstractItemView
 {
     border: none;
     color: black;
-    background-color: rgb(184, 147, 121);
+    background-color: rgba(254, 181, 102, 150);
+    selection-background-color: rgb(179, 89, 37);
+    selection-color: rgb(254, 181, 102);
+}
+
+QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(235, 164, 101),
+    stop:1 rgba(240, 186, 136));
+}
+
+QComboBox::drop-down
+{
+    border: 0px;
+}
+
+QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
 }
