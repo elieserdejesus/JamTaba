@@ -130,6 +130,9 @@ void MainWindow::initializeCamera(const QString &cameraDeviceName)
         qCritical() << "Camera resolutions list is empty!";
     }
 
+    if (videoFrameGrabber)
+        camera->setViewfinder(videoFrameGrabber);
+
     camera->start();
 
     setCameraComboVisibility(camera->state() == QCamera::ActiveState);
@@ -141,9 +144,6 @@ void MainWindow::initializeCamera(const QString &cameraDeviceName)
             break;
         }
     }
-
-    if (videoFrameGrabber)
-        camera->setViewfinder(videoFrameGrabber);
 }
 
 void MainWindow::changeCameraStatus(bool activated)
