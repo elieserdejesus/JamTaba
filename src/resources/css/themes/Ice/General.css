@@ -367,8 +367,3 @@ QComboBox::down-arrow
 {
     image:url(:/images/arrow-down.png);
 }
-
-QComboBox::down-arrow:hover
-{
-    image:url(:/images/arrow-down-lighter.png);
-}
