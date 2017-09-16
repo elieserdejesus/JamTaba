@@ -345,5 +345,22 @@ QComboBox QAbstractItemView
 {
     border: none;
     color: black;
-    background-color: rgb(100, 143, 181);
+    background-color: rgb(180, 207, 250);
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+QComboBox::drop-down
+{
+    border: 0px;
+}
+
+QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+QComboBox::down-arrow:hover
+{
+    image:url(:/images/arrow-down-lighter.png);
 }
