@@ -105,6 +105,11 @@ PreferencesDialog QPushButton
     border: 1px outset rgba(0, 0, 0, 90);
 }
 
+PreferencesDialog QComboBox
+{
+    color: black;
+}
+
 PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
 {
     border: none;
