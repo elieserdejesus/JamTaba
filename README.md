@@ -82,7 +82,7 @@ Detailed instructions on how to build a **static compiled Qt** to compile the Vs
 	1 - qt5-opensource-src-5.5.1.zip
 	2 - qtbase-opensource-src-5.5.1.zip
 	3 - qtmultimedia-opensource-src-5.5.1.zip
-	4 - qttools-opensource-src-5.5.1
+	4 - qttools-opensource-src-5.5.1.zip
 
 **2** - Extract the dowloaded files in your preferred Qt folder, for example C:/MyQt. All files will be extracted inside 4 subfolders.
 
@@ -110,10 +110,10 @@ Detailed instructions on how to build a **static compiled Qt** to compile the Vs
 
 	configure -debug-and-release -opensource -confirm-license -static -no-sql-psql -no-sql-mysql -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests
 
-	After some seconds you will see **2 messages**:
+* After some seconds you will see **2 messages**:
 
-	Qt is now configured for building. Just run nmake.
-	To reconfigure, run nmake confclean and configure.
+`Qt is now configured for building. Just run nmake.
+To reconfigure, run nmake confclean and configure.`
 
 **9** - Just follow the message, type the command nmake in your prompt and press ENTER. Drink a coffee, the compilation lasted 90 minutes here.
 
