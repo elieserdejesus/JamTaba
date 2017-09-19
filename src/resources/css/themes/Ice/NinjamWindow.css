@@ -324,6 +324,7 @@ LooperWindow #buttonRec[blinking="true"]:checked
 #widgetBottom QComboBox                         /* the colors inside the combo box*/
 {
     border-radius: 6px;
+    color: black;
     border: 1px solid rgba(0, 0, 0, 160);
     padding: 1px 3px 1px 3px;
     background-color: rgb(180, 207, 250);
