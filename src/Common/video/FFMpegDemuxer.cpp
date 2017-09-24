@@ -4,6 +4,7 @@
 #include <QImage>
 #include <QFile>
 #include <QFileInfo>
+#include <QtConcurrent>
 
 FFMpegDemuxer::FFMpegDemuxer()
     : formatContext(nullptr),
@@ -204,10 +205,18 @@ uint FFMpegDemuxer::getFrameRate() const
     return 1;
 }
 
-QImage FFMpegDemuxer::decodeNextFrame()
+void FFMpegDemuxer::decodeNextFrame()
 {
-    if (!initialized)
-        return QImage();
+    QtConcurrent::run(this, &FFMpegDemuxer::decode);
+}
+
+void FFMpegDemuxer::decode()
+{
+
+    if (!initialized) {
+        qWarning() << "Video demuxer not initialized!";
+        return;
+    }
 
     /* initialize packet, set data to NULL, let the demuxer fill it */
     AVPacket packet;
@@ -229,8 +238,10 @@ QImage FFMpegDemuxer::decodeNextFrame()
         }
     }
 
-    if (gotError)
-        return QImage();
+    if (gotError) {
+        qWarning() << "error decoding video frame";
+        return;
+    }
 
     if (gotFrame) {
         // Convert the image format (init the context the first time)
@@ -240,13 +251,13 @@ QImage FFMpegDemuxer::decodeNextFrame()
         AVPixelFormat destinationPixelFormat = AV_PIX_FMT_RGB24;
 
         if (!frame->width || !frame->height) // 0 size images are skipped
-            return QImage();
+            return;
 
         swsContext = sws_getCachedContext(swsContext, width, height, sourcePixelFormat, width, height, destinationPixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
 
         if(!swsContext){
             qCritical() << "Cannot initialize the conversion context!";
-            return QImage();
+            return;
         }
         sws_scale(swsContext, frame->data, frame->linesize, 0, height, frameRGB->data, frameRGB->linesize);
 
@@ -256,8 +267,6 @@ QImage FFMpegDemuxer::decodeNextFrame()
         for(int y=0; y < height; y++)
             memcpy(img.scanLine(y), frameRGB->data[0] + y * frameRGB->linesize[0], width * 3);
 
-        return img;
+        emit frameDecoded(img);
     }
-
-    return QImage();
 }

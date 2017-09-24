@@ -93,7 +93,7 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
     Qt::Alignment alignment = !activated ? Qt::AlignCenter : (Qt::AlignRight | Qt::AlignBottom);
 
     if (paintIcon)
-        webcamIcon.paint(&painter, rect().marginsRemoved(QMargins(3, 3, 3, 3)), alignment);
+        webcamIcon.paint(&painter, targetRect.marginsRemoved(QMargins(3, 3, 3, 3)), alignment);
 }
 
 QSize VideoWidget::sizeHint() const

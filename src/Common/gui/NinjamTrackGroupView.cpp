@@ -75,13 +75,20 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
 
     videoWidget = new VideoWidget(this);
     videoWidget->setVisible(false); // video preview will be visible when the first received frame is decoded
+
     connect(videoWidget, &VideoWidget::visibilityChanged, [=](bool visible) {
 
-        if (tracksLayoutEnum == TracksLayout::GridLayout && visible) {
-            setupGridLayout();
+        if (visible) {
+            if (tracksLayoutEnum == TracksLayout::GridLayout)
+                setupGridLayout();
+            else if (tracksLayoutEnum == TracksLayout::VerticalLayout)
+                setupVerticalLayout();
+            else
+                setupHorizontalLayout();
         }
-
     });
+
+    connect(&demuxer, &FFMpegDemuxer::frameDecoded, this, &NinjamTrackGroupView::updateVideoFrame);
 
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
@@ -396,7 +403,7 @@ void NinjamTrackGroupView::updateGuiElements()
         quint64 timePerFrame = 1000 / demuxer.getFrameRate();
         if (now - lastVideoRender >= timePerFrame) { // time to show a new video frame?
             lastVideoRender = now;
-            updateVideoFrame(demuxer.decodeNextFrame());
+            demuxer.decodeNextFrame(); // video frame decoding is running in a separated thread
         }
     }
 }
