@@ -24,16 +24,44 @@ void VideoWidget::setCurrentFrame(const QImage &image)
 {
     currentImage = image;
 
-    if (!currentImage.isNull() && activated)
+    if (!currentImage.isNull() && activated) {
+
+        updateScaledImage();
         updateGeometry();
+    }
 
     if (activated)
         update();
 }
 
+void VideoWidget::updateScaledImage()
+{
+    QRect sourceRect = currentImage.rect();
+
+    qreal ratio = 1.0;
+
+    bool small = height() < width();
+    if (small)
+        ratio =  static_cast<float>(height())/sourceRect.height();
+    else
+        ratio =  static_cast<float>(width())/sourceRect.width();
+
+    qreal targetHeight = small ? height() : currentImage.height() * ratio;
+    qreal targetWidth = small ? currentImage.width() * ratio : width();
+    qreal targetX = (width() - targetWidth) / 2.0;
+    qreal targetY = (height() - targetHeight) / 2.0;
+
+    targetRect = QRect(targetX, targetY, targetWidth, targetHeight);
+
+    scaledImage = currentImage.scaled(targetRect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+}
+
 void VideoWidget::resizeEvent(QResizeEvent *ev)
 {
     Q_UNUSED(ev);
+
+    if (!currentImage.isNull())
+        updateScaledImage();
 
     updateGeometry();
 }
@@ -58,24 +86,7 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
     painter.fillRect(rect(), bgColor);
 
     if (!currentImage.isNull() && activated) {
-
-        QRect sourceRect = currentImage.rect();
-
-        qreal ratio = 1.0;
-
-        bool small = height() < width();
-        if (small)
-            ratio =  static_cast<float>(height())/sourceRect.height();
-        else
-            ratio =  static_cast<float>(width())/sourceRect.width();
-
-        qreal targetHeight = small ? height() : currentImage.height() * ratio;
-        qreal targetWidth = small ? currentImage.width() * ratio : width();
-        qreal targetX = (width() - targetWidth) / 2.0;
-        qreal targetY = (height() - targetHeight) / 2.0;
-
-        QRectF targetRect(targetX, targetY, targetWidth, targetHeight);
-        painter.drawImage(targetRect, currentImage, currentImage.rect());
+        painter.drawImage(targetRect, scaledImage, scaledImage.rect());
     }
 
     bool paintIcon = !activated || underMouse();

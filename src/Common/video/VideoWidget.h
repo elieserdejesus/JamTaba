@@ -37,6 +37,10 @@ protected:
 
 private:
     QImage currentImage;
+    QImage scaledImage;
+    QRect targetRect;
+
+    void updateScaledImage();
 
     bool activated;
 
