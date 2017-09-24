@@ -2,7 +2,6 @@
 #include "MetronomeUtils.h"
 #include "audio/core/AudioDriver.h"
 #include "audio/core/SamplesBuffer.h"
-#include "log/Logging.h"
 
 using namespace Audio;
 
@@ -43,7 +42,6 @@ void MetronomeTrackNode::setAccentBeatSamples(const SamplesBuffer &accentBeatSam
 
 void MetronomeTrackNode::setAccentBeats(QList<int> accentBeats)
 {
-    qCDebug(jtMetronome) << "MetronomeTrackNode::setAccentBeats " << accentBeats;
     this->accentBeats = accentBeats;
 }
 
@@ -54,7 +52,6 @@ QList<int> MetronomeTrackNode::getAccentBeats()
 
 void MetronomeTrackNode::setSamplesPerBeat(long samplesPerBeat)
 {
-    qCDebug(jtMetronome) << "setSamplesPerBeat " << samplesPerBeat;
     if (samplesPerBeat <= 0)
         qCritical() << "samples per beat <= 0";
 
@@ -69,7 +66,6 @@ void MetronomeTrackNode::resetInterval()
 
 void MetronomeTrackNode::setBeatsPerAccent(int beatsPerAccent, int currentBpi)
 {
-    qCDebug(jtMetronome) << "MetronomeTrackNode::setBeatsPerAccent" << beatsPerAccent << currentBpi;
     setAccentBeats(MetronomeUtils::getAccentBeats(beatsPerAccent, currentBpi));
 }
 

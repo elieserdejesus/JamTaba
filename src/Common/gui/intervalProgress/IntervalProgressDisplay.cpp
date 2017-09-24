@@ -60,8 +60,6 @@ void IntervalProgressDisplay::setPaintUsingLowContrastColors(bool useLowContrast
 
 void IntervalProgressDisplay::setShowAccents(bool showAccents)
 {
-    qCDebug(jtNinjamGUI) << "IntervalProgressDisplay::setShowAccents" << showAccents;
-
     this->showAccents = showAccents;
     update();
 }
@@ -76,8 +74,6 @@ void IntervalProgressDisplay::setCurrentBeat(int beat)
 
 void IntervalProgressDisplay::setAccentBeats(QList<int> accents)
 {
-    qCDebug(jtNinjamGUI) << "IntervalProgressDisplay::setAccentBeats" << accents;
-
     accentBeats = accents;
 
     if (!isShowingAccents() && !accentBeats.isEmpty())

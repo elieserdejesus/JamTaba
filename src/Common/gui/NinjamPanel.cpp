@@ -273,7 +273,6 @@ bool NinjamPanel::isAccentBeatsEnabled() const
 
 void NinjamPanel::setAccentBeatsTextEnabled(bool value)
 {
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setAccentBeatsTextEnabled " << value;
     ui->lineEditAccentBeats->setEnabled(value);
 }
 
@@ -284,11 +283,9 @@ QString NinjamPanel::getAccentBeatsText() const
 
 void NinjamPanel::setAccentBeatsText(QString value)
 {
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setAccentBeatsText " << value;
     ui->lineEditAccentBeats->blockSignals(true);
     ui->lineEditAccentBeats->setText(value);
     ui->lineEditAccentBeats->blockSignals(false);
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setAccentBeatsText done";
 }
 
 int NinjamPanel::getGainSliderMaximumValue() const
@@ -319,19 +316,16 @@ void NinjamPanel::setMetronomePeaks(float left, float right, float rmsLeft, floa
 void NinjamPanel::handleAccentBeatsIndexChanged(int index)
 {
     Q_UNUSED(index);
-    qCDebug(jtNinjamGUI) << "NinjamPanel::handleAccentBeatsIndexChanged " << index;
     NinjamPanel::updateAccentsStatus();
 }
 
 void NinjamPanel::handleAccentBeatsTextEdited() {
-    qCDebug(jtNinjamGUI) << "NinjamPanel::handleAccentBeatsTextEdited";
     NinjamPanel::updateAccentsStatus();
 }
 
 void NinjamPanel::updateAccentsStatus()
 {
     int accentBeatsCb = ui->comboAccentBeats->currentData().toInt();
-    qCDebug(jtNinjamGUI) << "NinjamPanel::updateAccentsStatus " << accentBeatsCb;
 
     QList<int> accentBeats;
     if (accentBeatsCb != 0) {
@@ -482,7 +476,6 @@ void NinjamPanel::selectBeatsPerAccentInCombo(int beatsPerAccent)
 
 void NinjamPanel::setBpi(int bpi)
 {
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setBpi " << bpi;
     ui->comboBpi->blockSignals(true);
     ui->comboBpi->setCurrentText(QString::number(bpi));
     ui->comboBpi->blockSignals(false);
@@ -507,16 +500,13 @@ void NinjamPanel::setBpi(int bpi)
             metronomeFloatingWindow->setShowAccents(false);
         }
     }
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setBpi ...done";
 }
 
 void NinjamPanel::setBpm(int bpm)
 {
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setBpm " << bpm;
     ui->comboBpm->blockSignals(true);
     ui->comboBpm->setCurrentText(QString::number(bpm));
     ui->comboBpm->blockSignals(false);
-    qCDebug(jtNinjamGUI) << "NinjamPanel::setBpm ...done";
 }
 
 NinjamPanel::~NinjamPanel()

@@ -679,7 +679,6 @@ void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 {
     Q_UNUSED(index)
     int accentBeatsCb = ninjamPanel->getAccentBeatsComboValue();
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleAccentBeatsComboChange " << accentBeatsCb << index;
 
     if (accentBeatsCb == -1) {
         ninjamPanel->setAccentBeatsTextEnabled(true);
@@ -694,10 +693,9 @@ void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 void NinjamRoomWindow::handleCustomAccentBeatsChange(const QString &value)
 {
     Q_UNUSED(value)
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange " << value;
 
     QList<int> accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(ninjamPanel->getAccentBeatsText());
-    qCDebug(jtNinjamGUI) << "NinjamRoomWindow::handleCustomAccentBeatsChange " << accentBeats;
+
     mainController->getNinjamController()->setMetronomeAccentBeats(accentBeats);
 }
 

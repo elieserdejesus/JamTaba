@@ -1737,14 +1737,12 @@ void MainWindow::updateBpi(int bpi)
     if (!ninjamPanel)
         return;
 
-    qCDebug(jtGUI) << "MainWindow::updateBpi " << bpi;
     ninjamPanel->setBpi(bpi);
     if (chordsPanel) {
         bool bpiWasAccepted = chordsPanel->setBpi(bpi);
         if (!bpiWasAccepted)
             hideChordsPanel();
     }
-    qCDebug(jtGUI) << "MainWindow::updateBpi ...done";
 }
 
 void MainWindow::updateBpm(int bpm)
@@ -1756,9 +1754,7 @@ void MainWindow::updateBpm(int bpm)
     if (!ninjamPanel)
         return;
 
-    qCDebug(jtGUI) << "MainWindow::updateBpm " << bpm;
     ninjamPanel->setBpm(bpm);
-    qCDebug(jtGUI) << "MainWindow::updateBpm ...done";
 }
 
 void MainWindow::updateCurrentIntervalBeat(int beat)
