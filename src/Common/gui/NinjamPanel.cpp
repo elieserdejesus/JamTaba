@@ -285,9 +285,9 @@ QString NinjamPanel::getAccentBeatsText() const
 void NinjamPanel::setAccentBeatsText(QString value)
 {
     qCDebug(jtNinjamGUI) << "NinjamPanel::setAccentBeatsText " << value;
-    ui->lineEditAccentBeats->blockSignals(false);
-    ui->lineEditAccentBeats->setText(value);
     ui->lineEditAccentBeats->blockSignals(true);
+    ui->lineEditAccentBeats->setText(value);
+    ui->lineEditAccentBeats->blockSignals(false);
     qCDebug(jtNinjamGUI) << "NinjamPanel::setAccentBeatsText done";
 }
 
