@@ -125,7 +125,7 @@ protected:
 
     void updatePublicRoomsListLayout();
 
-    virtual bool canUseTwoColumnLayout() const;
+    virtual bool canUseTwoColumnLayoutInPublicRooms() const;
 
     virtual PreferencesDialog *createPreferencesDialog() = 0;
 

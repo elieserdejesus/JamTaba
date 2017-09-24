@@ -48,7 +48,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
     chatPanel(new ChatPanel(MainController::getBotNames(), &usersColorsPool,
                                     mainWindow ? mainWindow->createTextEditorModifier() : nullptr)),
     ninjamPanel(nullptr),
-    tracksOrientation(Qt::Vertical),
+    tracksLayout(TracksLayout::VerticalLayout),
     tracksSize(TracksSize::WIDE),
     roomInfo(roomInfo)
 {
@@ -66,8 +66,14 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
 
     chatPanel->setPreferredTranslationLanguage(mainController->getSettings().getTranslation());
 
-    Qt::Orientation lastTracksLayoutOrientation = mainController->getLastTracksLayoutOrientation();
-    createLayoutDirectionButtons(lastTracksLayoutOrientation);
+    quint8 lastLayout = mainController->getLastTracksLayout();
+    TracksLayout tracksLayout = TracksLayout::VerticalLayout;
+    if (lastLayout == 1)
+        tracksLayout = TracksLayout::HorizontalLayout;
+    else if (lastLayout == 2)
+            tracksLayout = TracksLayout::GridLayout;
+
+    createLayoutButtons(tracksLayout);
 
     TracksSize lastTracksSize = mainController->isUsingNarrowedTracks() ? TracksSize::NARROW : TracksSize::WIDE;
     createTracksSizeButtons(lastTracksSize);
@@ -75,7 +81,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
     setupSignals(mainController->getNinjamController());
 
     // remember the last tracks layout orientation and size (narrow or wide)
-    setTracksOrientation(lastTracksLayoutOrientation);
+    setTracksLayout(tracksLayout);
     setTracksSize(lastTracksSize);
 
     translate();
@@ -136,6 +142,7 @@ void NinjamRoomWindow::translate()
     // translate other elements
     horizontalLayoutButton->setToolTip(tr("Set tracks layout to horizontal"));
     verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
+    gridLayoutButton->setToolTip(tr("Set tracks layout to grid"));
     wideButton->setToolTip(tr("Wide tracks"));
     narrowButton->setToolTip(tr("Narrow tracks"));
 
@@ -149,7 +156,7 @@ void NinjamRoomWindow::updateUserNameLabel()
     ui->labelUserName->setText(labelText);
 }
 
-void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
+void NinjamRoomWindow::createLayoutButtons(TracksLayout initialLayout)
 {
     horizontalLayoutButton = new QToolButton();
     horizontalLayoutButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
@@ -163,20 +170,32 @@ void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrien
     verticalLayoutButton->setObjectName(QStringLiteral("buttonVerticalLayout"));
     verticalLayoutButton->setCheckable(true);
 
-    if(initialOrientation == Qt::Vertical)
+    gridLayoutButton = new QToolButton();
+    gridLayoutButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
+    gridLayoutButton->setIcon(QIcon(":/images/grid_layout.png"));
+    gridLayoutButton->setObjectName(QStringLiteral("buttonGridLayout"));
+    gridLayoutButton->setCheckable(true);
+
+    if(initialLayout == TracksLayout::VerticalLayout)
         verticalLayoutButton->setChecked(true);
-    else
+    else if(initialLayout == TracksLayout::HorizontalLayout)
         horizontalLayoutButton->setChecked(true);
+    else if (initialLayout == TracksLayout::GridLayout)
+        gridLayoutButton->setChecked(true);
+    else
+        qCritical() << "Invalid initial layout value " << static_cast<quint8>(initialLayout);
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     buttonsLayout->setSpacing(0);
     buttonsLayout->setContentsMargins(0, 0, 0, 0);
     buttonsLayout->addWidget(verticalLayoutButton);
     buttonsLayout->addWidget(horizontalLayoutButton);
+    buttonsLayout->addWidget(gridLayoutButton);
 
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->addButton(verticalLayoutButton);
     buttonGroup->addButton(horizontalLayoutButton);
+    buttonGroup->addButton(gridLayoutButton);
 
     int licenceButtonIndex = ui->topLayout->indexOf(ui->licenceButton);
     ui->topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
@@ -221,8 +240,15 @@ void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
 
 void NinjamRoomWindow::toggleTracksLayoutOrientation(QAbstractButton* buttonClicked)
 {
-    Qt::Orientation newOrientation = buttonClicked == this->verticalLayoutButton ? Qt::Vertical : Qt::Horizontal;
-    setTracksOrientation(newOrientation);
+    if (buttonClicked == verticalLayoutButton) {
+        setTracksLayout(TracksLayout::VerticalLayout);
+    }
+    else if (buttonClicked == horizontalLayoutButton) {
+        setTracksLayout(TracksLayout::HorizontalLayout);
+    }
+    else if (buttonClicked == gridLayoutButton) {
+        setTracksLayout(TracksLayout::GridLayout);
+    }
 }
 
 void NinjamRoomWindow::toggleTracksSize(QAbstractButton *buttonClicked)
@@ -269,14 +295,11 @@ void NinjamRoomWindow::showMetronomePreferences()
     mainWindow->showMetronomePreferencesDialog();
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updateGeoLocations()
 {
     foreach (NinjamTrackGroupView *trackGroup, trackGroups)
         trackGroup->updateGeoLocation();
 }
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 void NinjamRoomWindow::setMetronomePanSliderPosition(int value)
 {
@@ -306,7 +329,6 @@ void NinjamRoomWindow::sendNewChatMessage(const QString &msg)
     mainController->getNinjamController()->sendChatMessage(msg);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 {
     if (chatPanel)
@@ -540,6 +562,66 @@ void NinjamRoomWindow::changeChannelName(const Ninjam::User &, const Ninjam::Use
         trackView->setChannelName(channel.getName());
 }
 
+quint8 NinjamRoomWindow::getGridLayoutMaxCollumns() const
+{
+    static const uint minCollumns = 2;
+    static const uint maxCollumns = 3;
+
+    return qMax(minCollumns, qMin(width()/NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT, maxCollumns));
+}
+
+void NinjamRoomWindow::addTrack(NinjamTrackGroupView *track)
+{
+    int row = 0;
+    int collumn = 0;
+
+    if (tracksLayout == TracksLayout::VerticalLayout) {
+        row = 0;
+        collumn = ui->tracksLayout->count();
+    } else if (tracksLayout == TracksLayout::HorizontalLayout) {
+        row = ui->tracksLayout->count();
+        collumn = 0;
+    }
+    else if (tracksLayout == TracksLayout::GridLayout) {
+
+        quint8 collumns = getGridLayoutMaxCollumns();
+        if (collumns == 0) // avoid divide by zero
+            collumns = 2;
+
+        row = ui->tracksLayout->count() / collumns;
+        collumn = ui->tracksLayout->count() % collumns;
+    }
+
+    Qt::Alignment alignment = tracksLayout == TracksLayout::VerticalLayout ? Qt::AlignLeft : Qt::AlignTop;
+    ui->tracksLayout->addWidget(track, row, collumn, 1, 1, alignment);
+
+
+}
+
+void NinjamRoomWindow::resizeEvent(QResizeEvent *ev)
+{
+    QWidget::resizeEvent(ev);
+
+    if (tracksLayout == TracksLayout::GridLayout) {
+        quint8 preferredCollumns = getGridLayoutMaxCollumns();
+        if (preferredCollumns != ui->tracksLayout->columnCount()) {
+            reAddTrackGroups();
+        }
+    }
+
+}
+
+void NinjamRoomWindow::reAddTrackGroups()
+{
+    for (auto trackGroup : trackGroups.values()) // remove all tracks from layout
+        ui->tracksLayout->removeWidget(trackGroup);
+
+    for (auto trackGroup : trackGroups.values())
+        addTrack(trackGroup);
+
+    adjustTracksPanelSizePolicy();
+}
+
 void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel added - creating channel view:" << user.getFullName() << " "
@@ -557,13 +639,13 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
         QString channelName = channel.getName();
         QColor userColor = usersColorsPool.get(user.getName());// the user channel and your chat messages are painted with same color
         NinjamTrackGroupView *trackGroupView = new NinjamTrackGroupView(mainController, channelID,
-                                                                   channelName, userColor, cacheEntry);
-        trackGroupView->setOrientation(tracksOrientation);
+                                                                           channelName, userColor, cacheEntry);
+        trackGroupView->setTracksLayout(tracksLayout);
         trackGroupView->setNarrowStatus(tracksSize == TracksSize::NARROW);
-        ui->tracksPanel->layout()->addWidget(trackGroupView);
+        addTrack(trackGroupView);
         trackGroups.insert(user.getFullName(), trackGroupView);
         trackGroupView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
-    } else {// the second, or third channel from same user, group with other channels
+    } else { // the second, or third channel from same user, group with other channels
         NinjamTrackGroupView *trackGroup = trackGroups[user.getFullName()];
         if (trackGroup) {
             NinjamTrackView *ninjamTrackView = trackGroup->addTrackView(channelID);
@@ -667,7 +749,7 @@ void NinjamRoomWindow::showServerLicence()
     // hack to set minimum width in QMessageBox
     QSpacerItem *horizontalSpacer = new QSpacerItem(500, 0, QSizePolicy::Minimum,
                                                     QSizePolicy::Expanding);
-    QGridLayout *layout = (QGridLayout *)msgBox->layout();
+    QGridLayout *layout = static_cast<QGridLayout *>(msgBox->layout());
     layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
 
     msgBox->raise();
@@ -841,31 +923,39 @@ void NinjamRoomWindow::setTracksSize(TracksSize newTracksSize)
     updateGeometry();
 }
 
-void NinjamRoomWindow::setTracksOrientation(Qt::Orientation newOrientation)
+void NinjamRoomWindow::adjustTracksPanelSizePolicy()
 {
-    if(newOrientation == tracksOrientation)
-        return;
-
-    tracksOrientation = newOrientation;
-    foreach (NinjamTrackGroupView *group, trackGroups) {
-        group->setOrientation(newOrientation);
+    if (tracksLayout == TracksLayout::HorizontalLayout) {
+        ui->tracksPanel->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
     }
-
-    QBoxLayout *tracksLayout = qobject_cast<QBoxLayout *>(ui->tracksPanel->layout());
-    if(tracksLayout){
-        if(newOrientation == Qt::Horizontal){
-            tracksLayout->setDirection(QBoxLayout::TopToBottom);
-            tracksLayout->setAlignment(Qt::AlignTop);
-        }
-        else{
-            tracksLayout->setDirection(QBoxLayout::LeftToRight);
-            tracksLayout->setAlignment(Qt::AlignLeft);
-        }
+    else if (tracksLayout == TracksLayout::VerticalLayout) {
+        ui->tracksPanel->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding));
+    }
+    else if (tracksLayout == TracksLayout::GridLayout) {
+        ui->tracksPanel->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
+    }
+    else {
+        qCritical() << "Can't adjust for layout value" << static_cast<int>(tracksLayout);
     }
 
     updateGeometry();
+}
 
-    mainController->storeTracksLayoutOrientation(newOrientation);
+void NinjamRoomWindow::setTracksLayout(TracksLayout newLayout)
+{
+    if(newLayout == tracksLayout)
+        return;
+
+    tracksLayout = newLayout;
+    for (auto group : trackGroups) {
+        group->setTracksLayout(newLayout);
+    }
+
+    reAddTrackGroups();
+
+    updateGeometry();
+
+    mainController->storeTracksLayoutOrientation(static_cast<quint8>(newLayout));
 }
 
 void NinjamRoomWindow::updateTracksSizeButtons()

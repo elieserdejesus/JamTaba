@@ -37,12 +37,16 @@ int main(int argc, char *argv[])
     mainWindow->setTheme("volcano_nm");
     mainWindow->setMinimumSize(920, 700);
 
-    int maxUsers = 8;
+    int maxUsers = 5;
     Ninjam::Server server("localhost", 2496, 2, maxUsers);
+
     for (int i = 0; i < maxUsers; ++i) {
         Ninjam::User user("teste" + QString::number(i));
         server.addUser(user);
         server.addUserChannel(Ninjam::UserChannel(user.getFullName(), "channel0", 0));
+        if (rand() % 2 == 0) {
+            server.addUserChannel(Ninjam::UserChannel(user.getFullName(), "channel1", 1));
+        }
     }
 
     controller.connectInNinjamServer(server);
@@ -57,16 +61,18 @@ int main(int argc, char *argv[])
     // setting video frames
     auto ninjamWindow = mainWindow->getNinjamRomWindow();
     auto trackGroups = ninjamWindow->getTrackGroups();
-    for (auto group : trackGroups) {
-        int w = qrand() % 100 + 120;
-        int h = qrand() % 50 + 90;
-        QImage image(w, h, QImage::Format_ARGB32);
-        QPainter painter(&image);
-        painter.fillRect(image.rect(), Qt::black);
-        painter.setPen(Qt::white);
-        painter.drawText(image.rect(), Qt::AlignCenter, group->getGroupName());
+    for (int i =0; i < trackGroups.size(); ++i) {
+        if (i % 2 == 0 ) {
+            int w = qrand() % 100 + 120;
+            int h = qrand() % 50 + 90;
+            QImage image(w, h, QImage::Format_ARGB32);
+            QPainter painter(&image);
+            painter.fillRect(image.rect(), Qt::black);
+            painter.setPen(Qt::white);
+            painter.drawText(image.rect(), Qt::AlignCenter, trackGroups.at(i)->getGroupName());
 
-        group->updateVideoFrame(image);
+            trackGroups.at(i)->updateVideoFrame(image);
+        }
     }
 
     return app.exec();

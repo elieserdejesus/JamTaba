@@ -876,7 +876,7 @@ JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &room
     return newJamRoomView;
 }
 
-bool MainWindow::canUseTwoColumnLayout() const
+bool MainWindow::canUseTwoColumnLayoutInPublicRooms() const
 {
     return ui.contentTabWidget->width() >= 860;
 }
@@ -892,7 +892,7 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
     qSort(sortedRooms.begin(), sortedRooms.end(), jamRoomLessThan);
 
     int index = 0;
-    bool twoCollumns = canUseTwoColumnLayout();
+    bool twoCollumns = canUseTwoColumnLayoutInPublicRooms();
     for (const Login::RoomInfo &roomInfo : sortedRooms) {
         if (roomInfo.getType() == Login::RoomTYPE::NINJAM) { // skipping other rooms at moment
             int rowIndex = twoCollumns ? (index / 2) : (index);

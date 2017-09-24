@@ -25,11 +25,14 @@ public:
 
 signals:
     void statusChanged(bool activated);
+    void visibilityChanged(bool visible);
 
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void resizeEvent(QResizeEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *) override;
+    void hideEvent(QHideEvent *ev) override;
+    void showEvent(QShowEvent *ev) override;
 
     QSize sizeHint() const override;
 
@@ -37,6 +40,10 @@ protected:
 
 private:
     QImage currentImage;
+    QImage scaledImage;
+    QRect targetRect;
+
+    void updateScaledImage();
 
     bool activated;
 

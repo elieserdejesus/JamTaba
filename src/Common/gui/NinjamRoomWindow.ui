@@ -120,10 +120,7 @@
         <height>297</height>
        </rect>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="spacing">
-        <number>6</number>
-       </property>
+      <layout class="QGridLayout" name="tracksLayout">
        <property name="leftMargin">
         <number>0</number>
        </property>

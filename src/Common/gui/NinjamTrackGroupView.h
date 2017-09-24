@@ -17,6 +17,12 @@ namespace Persistence {
 class CacheEntry;
 }
 
+enum class TracksLayout {
+    VerticalLayout,
+    HorizontalLayout,
+    GridLayout
+};
+
 class NinjamTrackGroupView : public TrackGroupView
 {
     Q_OBJECT
@@ -34,11 +40,14 @@ public:
 
     NinjamTrackView *addTrackView(long trackID) override;
 
-    void setOrientation(Qt::Orientation orientation);
+    void setTracksLayout(TracksLayout newLayout);
 
     QSize sizeHint() const override;
 
     void addVideoInterval(const QByteArray &encodedVideoData);
+
+    static const uint MAX_WIDTH_IN_GRID_LAYOUT;
+    static const uint MAX_HEIGHT_IN_GRID_LAYOUT;
 
 public slots:
     void updateVideoFrame(const QImage &frame);
@@ -51,10 +60,11 @@ protected:
 private:
     Controller::MainController *mainController;
     QLabel *countryLabel;
+    QLabel *countryFlag;
     MarqueeLabel *groupNameLabel;
     QLabel *chatBlockIconLabel;
     QString userIP;
-    Qt::Orientation orientation;
+    TracksLayout tracksLayoutEnum;
 
     VideoWidget *videoWidget;
     QByteArray encodedVideoData;
@@ -64,10 +74,13 @@ private:
 
     void setupHorizontalLayout();
     void setupVerticalLayout();
-
-    QBoxLayout *videoWidgetLayout;
+    void setupGridLayout();
 
     QString getRgbaColorString(const QColor &color, int alpha);
+
+    Qt::Orientation getTracksOrientation() const;
+
+    void resetMainLayoutStretch();
 
 private slots:
     void updateGeoLocation(const QString &resolvedIp);

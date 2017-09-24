@@ -84,9 +84,9 @@ public:
     void stopRoomStream(); // stop currentRoom stream
     long long getCurrentStreamingRoomID() const;
 
-    Qt::Orientation getLastTracksLayoutOrientation() const;
+    int getLastTracksLayout() const;
 
-    void storeTracksLayoutOrientation(Qt::Orientation newOrietation);
+    void storeTracksLayoutOrientation(quint8 layout);
 
     void storeTracksSize(bool usingNarrowedTracks);
 
@@ -442,14 +442,14 @@ inline long long MainController::getCurrentStreamingRoomID() const
     return currentStreamingRoomID;
 }
 
-inline Qt::Orientation MainController::getLastTracksLayoutOrientation() const
+inline int MainController::getLastTracksLayout() const
 {
     return settings.getLastTracksLayoutOrientation();
 }
 
-inline void MainController::storeTracksLayoutOrientation(Qt::Orientation newOrietation)
+inline void MainController::storeTracksLayoutOrientation(quint8 layout)
 {
-    settings.storeTracksLayoutOrientation(newOrietation);
+    settings.storeTracksLayoutOrientation(layout);
 }
 
 inline void MainController::storeTracksSize(bool usingNarrowedTracks)

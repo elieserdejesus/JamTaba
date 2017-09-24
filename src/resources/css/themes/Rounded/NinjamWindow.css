@@ -117,7 +117,7 @@ NinjamTrackView[horizontal="true"]
 }
 
 
-/* Ninjam window tool buttons (horizontal/vertical layout, narrow/wide tracks) */
+/* Ninjam window tool buttons (horizontal/vertical/grid layout, narrow/wide tracks) */
 
 NinjamRoomWindow QToolButton
 {
@@ -144,7 +144,7 @@ NinjamRoomWindow QToolButton#buttonVerticalLayout
     border-bottom-left-radius: 3px;
 }
 
-NinjamRoomWindow QToolButton#buttonHorizontalLayout
+NinjamRoomWindow QToolButton#buttonGridLayout
 {
     border-radius: 0px;
     border-top-right-radius: 3px;

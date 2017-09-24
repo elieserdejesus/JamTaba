@@ -79,7 +79,7 @@ NinjamTrackView[horizontal="true"] #levelSlider::handle:horizontal
     border: 1px outset rgb(30, 30, 30);
 }
 
-/* Tool buttons: track vertical/horizontal, wide/narrow and server licence buttons
+/* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
 NinjamRoomWindow QToolButton:hover,
 NinjamRoomWindow QToolButton:hover:checked,
@@ -125,7 +125,15 @@ NinjamRoomWindow QToolButton:!checked
     border: 1px solid black;
     border-right-color: none;
 }
+
 #buttonHorizontalLayout:!checked
+{
+    border: 1px solid black;
+    border-right-color: none;
+    border-left-color: none;
+}
+
+#buttonGridLayout:!checked
 {
     border: 1px solid black;
     border-left-color: none;
