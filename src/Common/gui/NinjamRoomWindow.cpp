@@ -779,6 +779,7 @@ void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 
 void NinjamRoomWindow::handleCustomAccentBeatsChange(const QList<int> &accentBeats)
 {
+    qCDebug(jtNinjamGUI) << "handleCustomAccentBeatsChange" << accentBeats;
     mainController->getNinjamController()->setMetronomeAccentBeats(accentBeats);
 }
 

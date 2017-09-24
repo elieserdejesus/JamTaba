@@ -326,7 +326,7 @@ void NinjamPanel::handleAccentBeatsIndexChanged(int index)
 
 void NinjamPanel::handleAccentBeatsTextEdited() {
     int accentBeatsCb = ui->comboAccentBeats->currentData().toInt();
-    if (accentBeatsCb >= 0)
+    if (accentBeatsCb >= 0) // nothing to do here
         return;
 
     QList<int> accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
@@ -339,6 +339,9 @@ void NinjamPanel::handleAccentBeatsTextEdited() {
     if (metronomeFloatingWindow) {
         metronomeFloatingWindow->setShowAccents(!accentBeats.isEmpty());
     }
+
+    // We are resposible for forcing this:
+    emit accentsBeatsChanged(accentBeats);
 }
 
 void NinjamPanel::updateAccentsStatus()
