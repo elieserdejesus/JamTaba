@@ -16,8 +16,6 @@ MetronomeTrackNode::MetronomeTrackNode(const SamplesBuffer &firstBeatSamples, co
     accentBeats(QList<int>())
 {
     resetInterval();
-
-    qCDebug(jtMetronome) << "MetronomeTrackNode::MetronomeTrackNode done.";
 }
 
 MetronomeTrackNode::~MetronomeTrackNode()
