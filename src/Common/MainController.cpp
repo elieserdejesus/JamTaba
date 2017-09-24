@@ -1,3 +1,9 @@
+#include <QtGlobal>
+
+#ifdef Q_OS_WIN
+    #include "log/stackwalker/WindowsStackWalker.h"
+#endif
+
 #include "MainController.h"
 #include "recorder/JamRecorder.h"
 #include "recorder/ReaperProjectGenerator.h"
@@ -634,13 +640,25 @@ void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffe
     if (!started)
         return;
 
-    if (!isPlayingInNinjamRoom()) {
-        doAudioProcess(in, out, sampleRate);
-    }
-    else {
+    try {
+        if (!isPlayingInNinjamRoom()) {
+            doAudioProcess(in, out, sampleRate);
+        }
+        else {
 
-        if (ninjamController)
-            ninjamController->process(in, out, sampleRate);
+            if (ninjamController)
+                ninjamController->process(in, out, sampleRate);
+        }
+    }
+    catch(...) {
+        qCritical() << "Exception in MainController::process";
+
+        #ifdef Q_OS_WIN
+            WindowsStackWalker stackWalker;
+            stackWalker.ShowCallstack();
+        #endif
+
+        qFatal("Aborting in  MainController::process!");
     }
 }
 

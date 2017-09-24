@@ -1,3 +1,9 @@
+#include <QtGlobal>
+
+#ifdef Q_OS_WIN
+    #include "log/stackwalker/WindowsStackWalker.h"
+#endif
+
 #include "Configurator.h"
 #include <QFile>
 #include <QDebug>
@@ -5,6 +11,8 @@
 #include <QStandardPaths>
 #include <QTime>
 #include <QRegularExpression>
+
+#include <csignal>
 
 #include "log/Logging.h"
 
@@ -140,6 +148,23 @@ QDir Configurator::getApplicationDataDir()
     return dir;
 }
 
+void Configurator::signalHandler(int signal)
+{
+    qCritical() << "Configurator::signalHandler signal:" << signal;
+
+    terminateHandler();
+
+    exit(signal);
+}
+
+void Configurator::terminateHandler()
+{
+#ifdef Q_OS_WIN
+    WindowsStackWalker stackWalker;
+    stackWalker.ShowCallstack();
+#endif
+}
+
 bool Configurator::setUp()
 {
     initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
@@ -147,6 +172,19 @@ bool Configurator::setUp()
     exportLogIniFile(); // copy log config file from resources to user hard disk
 
     setupLogConfigFile();
+
+    std::set_terminate(Configurator::terminateHandler);
+
+    std::signal(SIGABRT, Configurator::signalHandler); // Abnormal termination of the program, such as a call to abort.
+    std::signal(SIGFPE, Configurator::signalHandler);  // An erroneous arithmetic operation, such as a divide by zero or an operation resulting in overflow.
+    std::signal(SIGILL, Configurator::signalHandler);  // Detection of an illegal instruction.
+    std::signal(SIGINT, Configurator::signalHandler);  // Receipt of an interactive attention signal.
+    std::signal(SIGSEGV, Configurator::signalHandler); // An invalid access to storage.
+    std::signal(SIGTERM, Configurator::signalHandler); // A termination request sent to the program.
+
+#ifdef Q_OS_WIN
+    SetUnhandledExceptionFilter(WindowsStackWalker::topLevelExceptionHandler);
+#endif
 
     // themes dir is the same for Standalone and Vst plugin
     themesDir = QDir(getApplicationDataDir().absoluteFilePath(THEMES_FOLDER_NAME));
