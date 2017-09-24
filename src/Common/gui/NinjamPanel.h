@@ -46,7 +46,7 @@ public:
     void setAccentBeatsText(QString accentBeats);
     QString getAccentBeatsText() const;
     void setAccentBeatsReadOnly(bool value);
-    bool isAccentBeatsEnabled() const;
+    void setAccentBeatsVisible(bool value);
 
     void setBpi(int bpi);
     void setBpm(int bpm);

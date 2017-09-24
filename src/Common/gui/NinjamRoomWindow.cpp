@@ -273,6 +273,7 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
     panel->setMuteButtonStatus(initialMetronomeMuteStatus);
     panel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
     panel->setAccentBeatsReadOnly(true);
+    panel->setAccentBeatsVisible(false);
 
     connect(panel, &NinjamPanel::bpiComboActivated, this, &NinjamRoomWindow::setNewBpi);
     connect(panel, &NinjamPanel::bpmComboActivated, this, &NinjamRoomWindow::setNewBpm);
@@ -766,9 +767,11 @@ void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 
     if (accentBeatsCb == -1) {
         ninjamPanel->setAccentBeatsReadOnly(false);
+        ninjamPanel->setAccentBeatsVisible(true);
         // do nothing else until the Ninjam Panel UI works out the accent beats text
     } else {
         ninjamPanel->setAccentBeatsReadOnly(true);
+        ninjamPanel->setAccentBeatsVisible(false);
         int currentBpi = mainController->getNinjamController()->getCurrentBpi();
         mainController->getNinjamController()->setMetronomeBeatsPerAccent(accentBeatsCb, currentBpi);
     }

@@ -271,14 +271,14 @@ int NinjamPanel::getAccentBeatsComboValue() const
     return ui->comboAccentBeats->currentData().toInt();
 }
 
-bool NinjamPanel::isAccentBeatsEnabled() const
-{
-    return ui->lineEditAccentBeats->isEnabled();
-}
-
 void NinjamPanel::setAccentBeatsReadOnly(bool value)
 {
     ui->lineEditAccentBeats->setReadOnly(value);
+}
+
+void NinjamPanel::setAccentBeatsVisible(bool value)
+{
+    ui->lineEditAccentBeats->setVisible(value);
 }
 
 QString NinjamPanel::getAccentBeatsText() const
