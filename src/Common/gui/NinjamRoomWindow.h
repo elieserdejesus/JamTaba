@@ -128,7 +128,7 @@ private slots:
     void setNewBpi(const QString &);
     void setNewBpm(const QString &);
     void handleAccentBeatsComboChange(int);
-    void handleCustomAccentBeatsChange(const QString &);
+    void handleCustomAccentBeatsChange(const QList<int> &);
     void setNewIntervalShape(int);
 
     // metronome events

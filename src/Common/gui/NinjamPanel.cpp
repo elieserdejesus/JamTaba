@@ -11,7 +11,9 @@
 #include <QtMath>
 #include <QFormLayout>
 
-NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, QWidget *parent) :
+NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier,
+                         TextEditorModifier *accentBeatsModifier,
+                         QWidget *parent) :
     QWidget(parent),
     ui(new Ui::NinjamPanel),
     hostSyncButton(nullptr),
@@ -23,7 +25,7 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
     ui->levelSlider->setSliderType(Slider::AudioSlider);
     ui->panSlider->setSliderType(Slider::PanSlider);
 
-    initializeCombos(bpiComboModifier, bpmComboModifier);
+    initializeCombos(bpiComboModifier, bpmComboModifier, accentBeatsModifier);
 
     ui->peakMeter->setOrientation(Qt::Horizontal);
 
@@ -40,7 +42,8 @@ void NinjamPanel::updateStyleSheet()
     ui->peakMeter->updateStyleSheet();
 }
 
-void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier)
+void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier,
+                                   TextEditorModifier *accentBeatsModifier)
 {
     // initialize combos
     const quint16 MIN_BPM = 40;
@@ -62,6 +65,9 @@ void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorMo
 
     if (bpmModifier)
         bpmModifier->modify(ui->comboBpm);
+
+    if (accentBeatsModifier)
+        accentBeatsModifier->modify(ui->lineEditAccentBeats, true);
 
 }
 
@@ -133,19 +139,18 @@ void NinjamPanel::setupSignals()
 {
     connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), this, SLOT(handleAccentBeatsIndexChanged(int)));
     connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), SIGNAL(accentsComboChanged(int)));
-    connect(ui->lineEditAccentBeats, SIGNAL(&QLineEdit::returnPressed), this, SLOT(handleAccentBeatsTextEdited()));
-    connect(ui->lineEditAccentBeats, SIGNAL(textChanged(QString)), SIGNAL(accentsTextChanged(QString)));
+    connect(ui->lineEditAccentBeats, SIGNAL(editingFinished()), this, SLOT(handleAccentBeatsTextEdited()));
     connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this, SLOT(updateIntervalProgressShape(int)));
 
     connect(ui->comboBpi, SIGNAL(activated(QString)), this, SLOT(handleBpiComboActication(QString)));
     connect(ui->comboBpm, SIGNAL(activated(QString)), this, SLOT(handleBpmComboActication(QString)));
-    connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SIGNAL(gainSliderChanged(
-                                                                                  int)));
+
+    connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SIGNAL(gainSliderChanged(int)));
     connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SIGNAL(panSliderChanged(int)));
     connect(ui->muteButton, SIGNAL(clicked(bool)), this, SIGNAL(muteButtonClicked()));
     connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
-    connect(ui->preferencesButton, SIGNAL(clicked(bool)), this, SIGNAL(preferencesButtonClicked()));
 
+    connect(ui->preferencesButton, SIGNAL(clicked(bool)), this, SIGNAL(preferencesButtonClicked()));
     connect(ui->floatingWindowButton, SIGNAL(toggled(bool)), this, SLOT(setMetronomeFloatingWindowVisibility(bool)));
 }
 
@@ -271,9 +276,9 @@ bool NinjamPanel::isAccentBeatsEnabled() const
     return ui->lineEditAccentBeats->isEnabled();
 }
 
-void NinjamPanel::setAccentBeatsTextEnabled(bool value)
+void NinjamPanel::setAccentBeatsReadOnly(bool value)
 {
-    ui->lineEditAccentBeats->setEnabled(value);
+    ui->lineEditAccentBeats->setReadOnly(value);
 }
 
 QString NinjamPanel::getAccentBeatsText() const
@@ -320,7 +325,20 @@ void NinjamPanel::handleAccentBeatsIndexChanged(int index)
 }
 
 void NinjamPanel::handleAccentBeatsTextEdited() {
-    NinjamPanel::updateAccentsStatus();
+    int accentBeatsCb = ui->comboAccentBeats->currentData().toInt();
+    if (accentBeatsCb >= 0)
+        return;
+
+    QList<int> accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
+    ui->intervalPanel->setAccentBeats(accentBeats);
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->setAccentBeats(accentBeats);
+    }
+
+    ui->intervalPanel->setShowAccents(!accentBeats.isEmpty());
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->setShowAccents(!accentBeats.isEmpty());
+    }
 }
 
 void NinjamPanel::updateAccentsStatus()
@@ -343,7 +361,7 @@ void NinjamPanel::updateAccentsStatus()
             }
             accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
             // We are resposible for forcing this:
-            emit accentsTextChanged("");
+            emit accentsBeatsChanged(accentBeats);
         }
         ui->intervalPanel->setAccentBeats(accentBeats);
         if (metronomeFloatingWindow) {
