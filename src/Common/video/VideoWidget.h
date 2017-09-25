@@ -49,6 +49,8 @@ private:
 
     QIcon webcamIcon;
 
+    static const int MIN_SIZE;
+
 };
 
 #endif // VIDEOWIDGET_H
