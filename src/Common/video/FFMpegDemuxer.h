@@ -7,6 +7,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QBuffer>
+#include <QImage>
 
 class FFMpegDemuxer : public QObject
 {
@@ -18,12 +19,13 @@ public:
     ~FFMpegDemuxer();
     bool open(const QByteArray &encodedData);
     void close();
-    QImage decodeNextFrame();
+    void decodeNextFrame();
     uint getFrameRate() const;
     bool isOpened() const;
 
 signals:
     void opened(uint frameRate);
+    void frameDecoded(const QImage &decodedFrame);
 
 private:
     AVFormatContext *formatContext;
@@ -43,6 +45,8 @@ private:
 
     static int readCallback(void *stream, uint8_t *buffer, int bufferSize);
     static int64_t seekCallback(void *opaque, int64_t offset, int whence);
+
+    void decode();
 
     AVInputFormat *probeInputFormat();
 };
