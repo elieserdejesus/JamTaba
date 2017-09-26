@@ -16,6 +16,8 @@ INCLUDEPATH += $$SOURCE_PATH/Common/gui/chords
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chat
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/screensaver
 
+win32:INCLUDEPATH += $$ROOT_PATH/libs/includes/stackwalker
+
 VPATH       += $$SOURCE_PATH/Common
 VPATH       += $$SOURCE_PATH
 
@@ -29,6 +31,10 @@ linux{ #avoid erros in VST SDK when compiling in Linux
 macx{
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++
     LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
+}
+
+win32 {
+    QMAKE_LFLAGS_RELEASE += /DEBUG # releasing with debug symbols
 }
 
 CONFIG += c++11
@@ -218,6 +224,7 @@ SOURCES += gui/chat/NinjamVotingMessageParser.cpp
 win32:SOURCES += gui/screensaver/WindowsScreensaverBlocker.cpp
 linux:SOURCES += gui/screensaver/LinuxScreensaverBlocker.cpp
 OBJECTIVE_SOURCES += gui/screensaver/MacScreensaverBlocker.mm
+win32:SOURCES += log/stackwalker/WindowsStackWalker.cpp
 
 SOURCES += gui/Highligther.cpp
 SOURCES += gui/TrackGroupView.cpp
