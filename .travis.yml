@@ -13,9 +13,3 @@ script:
       make
       ./$dirname #run unit test
     done
-
-#  - qmake "CONFIG+=test" tests/auto/audio/audio.pro
-#  - make
-#  - ./audio #run unit test
-#  - rm Makefile audio *.o #remove files (which are generated from unit test) for next build
-
