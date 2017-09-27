@@ -117,6 +117,7 @@ HEADERS += gui/intervalProgress/IntervalProgressDisplay.h
 HEADERS += gui/intervalProgress/IntervalProgressWindow.h
 HEADERS += gui/PrivateServerDialog.h
 HEADERS += gui/UserNameDialog.h
+HEADERS += gui/CrashReportDialog.h
 HEADERS += gui/MainWindow.h
 HEADERS += gui/widgets/CustomTabWidget.h
 HEADERS += gui/widgets/IntervalChunksDisplay.h
@@ -237,6 +238,7 @@ SOURCES += gui/intervalProgress/CircularPaintStrategy.cpp
 SOURCES += gui/intervalProgress/PiePaintStrategy.cpp
 SOURCES += gui/PrivateServerDialog.cpp
 SOURCES += gui/UserNameDialog.cpp
+SOURCES += gui/CrashReportDialog.cpp
 SOURCES += gui/MainWindow.cpp
 SOURCES += gui/widgets/CustomTabWidget.cpp
 SOURCES += gui/widgets/UserNameLineEdit.cpp
@@ -285,6 +287,7 @@ FORMS += gui/PrivateServerDialog.ui
 FORMS += gui/UserNameDialog.ui
 FORMS += gui/MainWindow.ui
 FORMS += gui/chords/ChordsPanel.ui
+FORMS += gui/CrashReportDialog.ui
 
 RESOURCES += ../resources/jamtaba.qrc
 

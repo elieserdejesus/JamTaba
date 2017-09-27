@@ -17,6 +17,7 @@
 #include "log/Logging.h"
 
 QScopedPointer<Configurator> Configurator::instance(nullptr);
+const QString Configurator::LOG_FILE = "log.txt";
 
 const QString Configurator::PRESETS_FOLDER_NAME = "Presets";
 const QString Configurator::CACHE_FOLDER_NAME = "Cache";
@@ -84,7 +85,7 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
 
     Configurator *configurator = Configurator::getInstance();
     QDir logDir = configurator->getBaseDir();
-    QString path = logDir.absoluteFilePath("log.txt");
+    QString path = logDir.absoluteFilePath(Configurator::LOG_FILE);
 
     QFile outFile(path);
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
@@ -101,6 +102,25 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
 
     if (type == QtFatalMsg)
         abort();
+}
+
+QStringList Configurator::loadPreviousLogContent() const
+{
+    QStringList logContent;
+
+    QDir logDir = getBaseDir();
+    QFile inputFile(logDir.absoluteFilePath(Configurator::LOG_FILE));
+    if (inputFile.open(QIODevice::ReadOnly)) {
+
+        QTextStream stream(&inputFile);
+
+        while (!stream.atEnd())
+            logContent << stream.readLine();
+
+        inputFile.close();
+    }
+
+    return logContent;
 }
 
 Configurator::Configurator() :
@@ -168,6 +188,8 @@ void Configurator::terminateHandler()
 bool Configurator::setUp()
 {
     initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
+
+    lastLogFileContent = loadPreviousLogContent();
 
     exportLogIniFile(); // copy log config file from resources to user hard disk
 

@@ -29,6 +29,8 @@ using namespace Controller;
 
 const quint8 MainController::CAMERA_FPS = 10;
 
+const QString MainController::CRASH_FLAG_STRING = "JamTaba closed without crash :)";
+
 // ++++++++++++++++++++++++++++++++++++++++++++++
 
 MainController::MainController(const Settings &settings) :
@@ -853,6 +855,8 @@ MainController::~MainController()
     qCDebug(jtCore()) << "cleaning jamRecorders done!";
 
     qCDebug(jtCore) << "MainController destructor finished!";
+
+    qDebug() << MainController::CRASH_FLAG_STRING; // used to put a crash flag in the log file
 }
 
 void MainController::saveLastUserSettings(const Persistence::LocalInputTrackSettings &inputsSettings)
@@ -1137,5 +1141,16 @@ QList<Recorder::JamRecorder *> MainController::getActiveRecorders() const
     }
 
     return activeRecorders;
+}
+
+bool MainController::crashedInLastExecution()
+{
+    auto configurator = Configurator::getInstance();
+    QStringList logContent = configurator->getPreviousLogContent();
+    if (!logContent.isEmpty()) {
+        return !logContent.last().contains(MainController::CRASH_FLAG_STRING);
+    }
+
+    return false;
 }
 

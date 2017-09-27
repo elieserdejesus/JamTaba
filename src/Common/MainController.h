@@ -228,6 +228,8 @@ public:
 
     void setAllLoopersStatus(bool activated);
 
+    static bool crashedInLastExecution();
+
 signals:
     void ipResolved(const QString &ip);
     void themeChanged();
@@ -311,7 +313,6 @@ private:
 
     int lastInputTrackID; // used to generate a unique key/ID for each input track
 
-
     const static quint8 CAMERA_FPS;
 
     bool canGrabNewFrameFromCamera() const;
@@ -321,6 +322,8 @@ private:
     void recreateMetronome();
 
     uint getFramesPerInterval() const;
+
+    static const QString CRASH_FLAG_STRING;
 
     void enqueueAudioDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
     void enqueueVideoDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);

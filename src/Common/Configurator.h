@@ -39,6 +39,8 @@ public:
     QStringList getPresetFilesNames(bool fullpath); // all the files names in a folder
     void deletePreset(const QString &name);
 
+    QStringList getPreviousLogContent() const;
+
 protected:
     static QDir createPresetsDir(const QDir &baseDir);
 
@@ -49,6 +51,8 @@ private:
     static const QString THEMES_FOLDER_NAME;
     static const QString THEMES_FOLDER_IN_RESOURCES;
 
+    static const QString LOG_FILE;
+
     QString logConfigFileName; // the name of the json config file
 
     QDir cacheDir;
@@ -57,6 +61,8 @@ private:
     QDir themesDir;
 
     bool logFileCreated;
+
+    QStringList lastLogFileContent;
 
     static QScopedPointer<Configurator> instance; // using a QScopedPointer to auto delete the singleton instance and avoid leak
 
@@ -77,8 +83,14 @@ private:
     static void signalHandler(int signal);
 
     static QString getDebugColor(const QMessageLogContext &context);
+
+    QStringList loadPreviousLogContent() const;
 };
 
+inline QStringList Configurator::getPreviousLogContent() const
+{
+    return lastLogFileContent;
+}
 
 inline bool Configurator::logFileIsCreated() const
 {
