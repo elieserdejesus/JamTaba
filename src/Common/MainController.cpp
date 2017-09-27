@@ -1148,7 +1148,13 @@ bool MainController::crashedInLastExecution()
     auto configurator = Configurator::getInstance();
     QStringList logContent = configurator->getPreviousLogContent();
     if (!logContent.isEmpty()) {
-        return !logContent.last().contains(MainController::CRASH_FLAG_STRING);
+        for (const QString &logLine : logContent) {
+            if (logLine.contains(MainController::CRASH_FLAG_STRING)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     return false;
