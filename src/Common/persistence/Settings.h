@@ -102,7 +102,8 @@ public:
     bool muted;
     bool usingCustomSounds;
     QString customPrimaryBeatAudioFile;
-    QString customSecondaryBeatAudioFile;
+    QString customOffBeatAudioFile;
+    QString customAccentBeatAudioFile;
     QString builtInMetronomeAlias;
 };
 
@@ -359,10 +360,11 @@ public:
 
     void setBuiltInMetronome(const QString &metronomeAlias);
     QString getBuiltInMetronome() const;
-    void setCustomMetronome(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile);
+    void setCustomMetronome(const QString &primaryBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile);
     bool isUsingCustomMetronomeSounds() const;
     QString getMetronomeFirstBeatFile() const;
-    QString getMetronomeSecondaryBeatFile() const;
+    QString getMetronomeOffBeatFile() const;
+    QString getMetronomeAccentBeatFile() const;
 
     void setTheme(const QString theme);
     QString getTheme() const;
@@ -740,9 +742,14 @@ inline QString Settings::getBuiltInMetronome() const
     return metronomeSettings.builtInMetronomeAlias;
 }
 
-inline QString Settings::getMetronomeSecondaryBeatFile() const
+inline QString Settings::getMetronomeOffBeatFile() const
 {
-    return metronomeSettings.customSecondaryBeatAudioFile;
+    return metronomeSettings.customOffBeatAudioFile;
+}
+
+inline QString Settings::getMetronomeAccentBeatFile() const
+{
+    return metronomeSettings.customAccentBeatAudioFile;
 }
 
 inline void Settings::storeTracksSize(bool narrowedTracks)

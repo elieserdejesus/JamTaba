@@ -36,19 +36,19 @@ void IntervalProgressDisplay::LinearPaintStrategy::paint(QPainter &p, const Pain
     if (context.showingAccents) {
         xPos = initialXPos;
         qreal size = context.elementsSize * 0.6f;
-        for (int i = 0; i < context.beatsPerInterval; i += context.beatsPerAccent) {
-            if (i > context.currentBeat) {
+        for (int i = 0; i < context.beatsPerInterval; i++) {
+            if (i > context.currentBeat && context.accentBeats.contains(i)) {
                 drawPoint(xPos, yPos, size, p, (i + 1), colors.accentBeat, true);
             }
-            xPos += xSpace * context.beatsPerAccent;
+            xPos += xSpace;
         }
     }
     // draw current beat
     xPos = initialXPos + (context.currentBeat * xSpace);
     QBrush bgPaint(colors.currentBeat);
-    bool isMeasureFirstBeat = context.currentBeat % context.beatsPerAccent == 0;
     bool isIntervalFirstBeat = context.currentBeat == 0;
-    if (isIntervalFirstBeat || (context.showingAccents && isMeasureFirstBeat )) {
+    bool isMeasureAccentBeat = context.accentBeats.contains(context.currentBeat);
+    if (isIntervalFirstBeat || (context.showingAccents && isMeasureAccentBeat )) {
         bgPaint = colors.currentAccentBeat;// QColor(Qt::green);
     }
     drawPoint(xPos, yPos, context.elementsSize, p, (context.currentBeat + 1), bgPaint, false);

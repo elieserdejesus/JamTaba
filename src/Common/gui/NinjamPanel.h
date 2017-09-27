@@ -21,7 +21,7 @@ class NinjamPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, QWidget *parent = 0);
+    explicit NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, TextEditorModifier *accentBeatsModifier, QWidget *parent = 0);
     ~NinjamPanel();
 
     void createHostSyncButton(const QString &hostName);
@@ -40,7 +40,13 @@ public:
 
     int getPanSliderMaximumValue() const;
     int getGainSliderMaximumValue() const;
-    int getCurrentBeatsPerAccent() const;
+
+    int getAccentBeatsComboValue() const;
+
+    void setAccentBeatsText(QString accentBeats);
+    QString getAccentBeatsText() const;
+    void setAccentBeatsReadOnly(bool value);
+    void setAccentBeatsVisible(bool value);
 
     void setBpi(int bpi);
     void setBpm(int bpm);
@@ -66,6 +72,7 @@ signals:
     void bpiComboActivated(const QString &);
     void bpmComboActivated(const QString &);
     void accentsComboChanged(int index);
+    void accentsBeatsChanged(const QList<int> &);
     void gainSliderChanged(int value);
     void panSliderChanged(int value);
     void muteButtonClicked();
@@ -91,14 +98,16 @@ private:
     static bool compareBpis(const QString &s1, const QString &s2);
     void selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent);
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
+    void updateAccentsStatus();
     void setupSignals();
     void translate();
-    void initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier);
+    void initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier, TextEditorModifier *accentBeatsModifier);
 
     QString hostName;
 
 private slots:
-    void updateAccentsStatus(int index);
+    void handleAccentBeatsIndexChanged(int index);
+    void handleAccentBeatsTextEdited();
     void updateIntervalProgressShape(int index);
     void deleteFloatWindow();
 

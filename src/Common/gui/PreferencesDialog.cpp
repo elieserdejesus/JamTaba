@@ -52,16 +52,20 @@ void PreferencesDialog::refreshMetronomeControlsStyleSheet()
     style()->unpolish(ui->groupBoxCustomMetronome);
     style()->unpolish(ui->groupBoxBuiltInMetronomes);
     style()->unpolish(ui->textFieldPrimaryBeat);
-    style()->unpolish(ui->textFieldSecondaryBeat);
+    style()->unpolish(ui->textFieldOffBeat);
+    style()->unpolish(ui->textFieldAccentBeat);
     style()->unpolish(ui->browsePrimaryBeatButton);
-    style()->unpolish(ui->browseSecondaryBeatButton);
+    style()->unpolish(ui->browseOffBeatButton);
+    style()->unpolish(ui->browseAccentBeatButton);
 
     style()->polish(ui->groupBoxCustomMetronome);
     style()->polish(ui->groupBoxBuiltInMetronomes);
     style()->polish(ui->textFieldPrimaryBeat);
-    style()->polish(ui->textFieldSecondaryBeat);
+    style()->polish(ui->textFieldOffBeat);
+    style()->polish(ui->textFieldAccentBeat);
     style()->polish(ui->browsePrimaryBeatButton);
-    style()->polish(ui->browseSecondaryBeatButton);
+    style()->polish(ui->browseOffBeatButton);
+    style()->polish(ui->browseAccentBeatButton);
 }
 
 void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
@@ -102,7 +106,8 @@ void PreferencesDialog::setupSignals()
     connect(ui->groupBoxCustomMetronome, SIGNAL(toggled(bool)), this, SLOT(toggleCustomMetronomeSounds(bool)));
     connect(ui->groupBoxBuiltInMetronomes, SIGNAL(toggled(bool)), this, SLOT(toggleBuiltInMetronomeSounds(bool)));
     connect(ui->browsePrimaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openPrimaryBeatAudioFileBrowser()));
-    connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openSecondaryBeatAudioFileBrowser()));
+    connect(ui->browseOffBeatButton, SIGNAL(clicked(bool)), this, SLOT(openOffBeatAudioFileBrowser()));
+    connect(ui->browseAccentBeatButton, SIGNAL(clicked(bool)), this, SLOT(openAccentBeatAudioFileBrowser()));
 
     connect(ui->comboBoxEncoderQuality, SIGNAL(activated(int)), this, SLOT(emitEncodingQualityChanged()));
 
@@ -144,7 +149,7 @@ void PreferencesDialog::accept()
         emit builtInMetronomeSelected(ui->comboBuiltInMetronomes->currentText());
     }
     else {
-        emit customMetronomeSelected(ui->textFieldPrimaryBeat->text(), ui->textFieldSecondaryBeat->text());
+        emit customMetronomeSelected(ui->textFieldPrimaryBeat->text(), ui->textFieldOffBeat->text(), ui->textFieldAccentBeat->text());
     }
     QDialog::accept();
 }
@@ -233,7 +238,7 @@ void PreferencesDialog::populateMetronomeTab()
     ui->groupBoxCustomMetronome->setChecked(usingCustomMetronomeSounds);
     ui->groupBoxBuiltInMetronomes->setChecked(!usingCustomMetronomeSounds);
     ui->textFieldPrimaryBeat->setText(settings->getMetronomeFirstBeatFile());
-    ui->textFieldSecondaryBeat->setText(settings->getMetronomeSecondaryBeatFile());
+    ui->textFieldOffBeat->setText(settings->getMetronomeOffBeatFile());
 
     // combo embedded metronome sounds
     QList<QString> metronomeAliases = Audio::MetronomeUtils::getBuiltInMetronomeAliases();
@@ -283,14 +288,25 @@ void PreferencesDialog::openPrimaryBeatAudioFileBrowser()
     }
 }
 
-void PreferencesDialog::openSecondaryBeatAudioFileBrowser()
+void PreferencesDialog::openOffBeatAudioFileBrowser()
 {
-    QString caption = tr("Choosing Secondary beat audio file...");
+    QString caption = tr("Choosing Off beat audio file...");
     QString filter = getAudioFilesFilter();
     QString dir = ".";
     QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
     if (!filePath.isNull()) {
-        ui->textFieldSecondaryBeat->setText(filePath);
+        ui->textFieldOffBeat->setText(filePath);
+    }
+}
+
+void PreferencesDialog::openAccentBeatAudioFileBrowser()
+{
+    QString caption = tr("Choosing Accent beat audio file...");
+    QString filter = getAudioFilesFilter();
+    QString dir = ".";
+    QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
+    if (!filePath.isNull()) {
+        ui->textFieldAccentBeat->setText(filePath);
     }
 }
 
