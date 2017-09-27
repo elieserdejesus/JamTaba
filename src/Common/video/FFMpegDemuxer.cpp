@@ -224,49 +224,55 @@ void FFMpegDemuxer::decode()
     packet.data = nullptr;
     packet.size = 0;
 
-    /* read frames from the file */
     int gotFrame;
     bool gotError = false;
-    while (av_read_frame(formatContext, &packet) >= 0) {
-        int ret = avcodec_decode_video2(codecContext, frame, &gotFrame, &packet);
-        av_free_packet(&packet);
-        gotError = ret < 0;
-        if (gotError || gotFrame) {
-            if (gotError)
-                qCritical() << av_err2str(ret);
-            break;
+
+    try {
+        /* read frames from the file */
+        while (av_read_frame(formatContext, &packet) >= 0) {
+            int ret = avcodec_decode_video2(codecContext, frame, &gotFrame, &packet);
+            av_free_packet(&packet);
+            gotError = ret < 0;
+            if (gotError || gotFrame) {
+                if (gotError)
+                    qCritical() << av_err2str(ret);
+                break;
+            }
         }
-    }
 
-    if (gotError) {
-        qWarning() << "error decoding video frame";
-        return;
-    }
-
-    if (gotFrame) {
-        // Convert the image format (init the context the first time)
-        int width = codecContext->width;
-        int height = codecContext->height;
-        AVPixelFormat sourcePixelFormat = codecContext->pix_fmt;
-        AVPixelFormat destinationPixelFormat = AV_PIX_FMT_RGB24;
-
-        if (!frame->width || !frame->height) // 0 size images are skipped
-            return;
-
-        swsContext = sws_getCachedContext(swsContext, width, height, sourcePixelFormat, width, height, destinationPixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
-
-        if(!swsContext){
-            qCritical() << "Cannot initialize the conversion context!";
+        if (gotError) {
+            qWarning() << "error decoding video frame";
             return;
         }
-        sws_scale(swsContext, frame->data, frame->linesize, 0, height, frameRGB->data, frameRGB->linesize);
 
-        // Convert the frame to QImage
-        QImage img(width, height, QImage::Format_RGB888);
+        if (gotFrame) {
+            // Convert the image format (init the context the first time)
+            int width = codecContext->width;
+            int height = codecContext->height;
+            AVPixelFormat sourcePixelFormat = codecContext->pix_fmt;
+            AVPixelFormat destinationPixelFormat = AV_PIX_FMT_RGB24;
 
-        for(int y=0; y < height; y++)
-            memcpy(img.scanLine(y), frameRGB->data[0] + y * frameRGB->linesize[0], width * 3);
+            if (!frame->width || !frame->height) // 0 size images are skipped
+                return;
 
-        emit frameDecoded(img);
+            swsContext = sws_getCachedContext(swsContext, width, height, sourcePixelFormat, width, height, destinationPixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
+
+            if(!swsContext){
+                qCritical() << "Cannot initialize the conversion context!";
+                return;
+            }
+            sws_scale(swsContext, frame->data, frame->linesize, 0, height, frameRGB->data, frameRGB->linesize);
+
+            // Convert the frame to QImage
+            QImage img(width, height, QImage::Format_RGB888);
+
+            for(int y=0; y < height; y++)
+                memcpy(img.scanLine(y), frameRGB->data[0] + y * frameRGB->linesize[0], width * 3);
+
+            emit frameDecoded(img);
+        }
+    }
+    catch(...) {
+        qCritical() << "Exception in FFMpegDemuxer::decode gotError:" << gotError << " gotFrame:" << gotFrame << " width:" << codecContext->width << " height:"<< codecContext->height;
     }
 }
