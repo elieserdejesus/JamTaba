@@ -1,3 +1,9 @@
+#include <QtGlobal>
+
+#ifdef Q_OS_WIN
+    #include "log/stackwalker/WindowsStackWalker.h"
+#endif
+
 #include "Configurator.h"
 #include <QFile>
 #include <QDebug>
@@ -6,9 +12,12 @@
 #include <QTime>
 #include <QRegularExpression>
 
+#include <csignal>
+
 #include "log/Logging.h"
 
 QScopedPointer<Configurator> Configurator::instance(nullptr);
+const QString Configurator::LOG_FILE = "log.txt";
 
 const QString Configurator::PRESETS_FOLDER_NAME = "Presets";
 const QString Configurator::CACHE_FOLDER_NAME = "Cache";
@@ -76,7 +85,7 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
 
     Configurator *configurator = Configurator::getInstance();
     QDir logDir = configurator->getBaseDir();
-    QString path = logDir.absoluteFilePath("log.txt");
+    QString path = logDir.absoluteFilePath(Configurator::LOG_FILE);
 
     QFile outFile(path);
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
@@ -93,6 +102,25 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
 
     if (type == QtFatalMsg)
         abort();
+}
+
+QStringList Configurator::loadPreviousLogContent() const
+{
+    QStringList logContent;
+
+    QDir logDir = getBaseDir();
+    QFile inputFile(logDir.absoluteFilePath(Configurator::LOG_FILE));
+    if (inputFile.open(QIODevice::ReadOnly)) {
+
+        QTextStream stream(&inputFile);
+
+        while (!stream.atEnd())
+            logContent << stream.readLine();
+
+        inputFile.close();
+    }
+
+    return logContent;
 }
 
 Configurator::Configurator() :
@@ -140,13 +168,45 @@ QDir Configurator::getApplicationDataDir()
     return dir;
 }
 
+void Configurator::signalHandler(int signal)
+{
+    qCritical() << "Configurator::signalHandler signal:" << signal;
+
+    terminateHandler();
+
+    exit(signal);
+}
+
+void Configurator::terminateHandler()
+{
+#ifdef Q_OS_WIN
+    WindowsStackWalker stackWalker;
+    stackWalker.ShowCallstack();
+#endif
+}
+
 bool Configurator::setUp()
 {
     initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
 
+    lastLogFileContent = loadPreviousLogContent();
+
     exportLogIniFile(); // copy log config file from resources to user hard disk
 
     setupLogConfigFile();
+
+    std::set_terminate(Configurator::terminateHandler);
+
+    std::signal(SIGABRT, Configurator::signalHandler); // Abnormal termination of the program, such as a call to abort.
+    std::signal(SIGFPE, Configurator::signalHandler);  // An erroneous arithmetic operation, such as a divide by zero or an operation resulting in overflow.
+    std::signal(SIGILL, Configurator::signalHandler);  // Detection of an illegal instruction.
+    std::signal(SIGINT, Configurator::signalHandler);  // Receipt of an interactive attention signal.
+    std::signal(SIGSEGV, Configurator::signalHandler); // An invalid access to storage.
+    std::signal(SIGTERM, Configurator::signalHandler); // A termination request sent to the program.
+
+#ifdef Q_OS_WIN
+    SetUnhandledExceptionFilter(WindowsStackWalker::topLevelExceptionHandler);
+#endif
 
     // themes dir is the same for Standalone and Vst plugin
     themesDir = QDir(getApplicationDataDir().absoluteFilePath(THEMES_FOLDER_NAME));

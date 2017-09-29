@@ -1,3 +1,9 @@
+#include <QtGlobal>
+
+#ifdef Q_OS_WIN
+    #include "log/stackwalker/WindowsStackWalker.h"
+#endif
+
 #include "MainController.h"
 #include "recorder/JamRecorder.h"
 #include "recorder/ReaperProjectGenerator.h"
@@ -22,6 +28,8 @@ using namespace Ninjam;
 using namespace Controller;
 
 const quint8 MainController::CAMERA_FPS = 10;
+
+const QString MainController::CRASH_FLAG_STRING = "JamTaba closed without crash :)";
 
 // ++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -634,13 +642,25 @@ void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffe
     if (!started)
         return;
 
-    if (!isPlayingInNinjamRoom()) {
-        doAudioProcess(in, out, sampleRate);
-    }
-    else {
+    try {
+        if (!isPlayingInNinjamRoom()) {
+            doAudioProcess(in, out, sampleRate);
+        }
+        else {
 
-        if (ninjamController)
-            ninjamController->process(in, out, sampleRate);
+            if (ninjamController)
+                ninjamController->process(in, out, sampleRate);
+        }
+    }
+    catch(...) {
+        qCritical() << "Exception in MainController::process";
+
+        #ifdef Q_OS_WIN
+            WindowsStackWalker stackWalker;
+            stackWalker.ShowCallstack();
+        #endif
+
+        qFatal("Aborting in  MainController::process!");
     }
 }
 
@@ -835,6 +855,8 @@ MainController::~MainController()
     qCDebug(jtCore()) << "cleaning jamRecorders done!";
 
     qCDebug(jtCore) << "MainController destructor finished!";
+
+    qDebug() << MainController::CRASH_FLAG_STRING; // used to put a crash flag in the log file
 }
 
 void MainController::saveLastUserSettings(const Persistence::LocalInputTrackSettings &inputsSettings)
@@ -1119,5 +1141,22 @@ QList<Recorder::JamRecorder *> MainController::getActiveRecorders() const
     }
 
     return activeRecorders;
+}
+
+bool MainController::crashedInLastExecution()
+{
+    auto configurator = Configurator::getInstance();
+    QStringList logContent = configurator->getPreviousLogContent();
+    if (!logContent.isEmpty()) {
+        for (const QString &logLine : logContent) {
+            if (logLine.contains(MainController::CRASH_FLAG_STRING)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    return false;
 }
 

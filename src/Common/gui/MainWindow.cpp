@@ -14,6 +14,7 @@
 #include "ChordsPanel.h"
 #include "MapWidget.h"
 #include "BlinkableButton.h"
+#include "CrashReportDialog.h"
 
 #include "LooperWindow.h"
 
@@ -434,6 +435,12 @@ void MainWindow::initializeGuiRefreshTimer()
 
 void MainWindow::initialize()
 {
+    if (MainController::crashedInLastExecution()) {
+        CrashReportDialog dialog(this);
+        dialog.setLogDetails(Configurator::getInstance()->getPreviousLogContent());
+        dialog.exec();
+    }
+
     // initialize text modifier here to avoid a pure virtual method call in constructor
     TextEditorModifier *textEditorModifier = createTextEditorModifier();
     if (textEditorModifier) {

@@ -2,9 +2,12 @@
 #include <QIcon>
 #include <QDebug>
 
+const int VideoWidget::MIN_SIZE = 32;
+
 VideoWidget::VideoWidget(QWidget *parent, bool activated) :
     QWidget(parent),
-    activated(activated)
+    activated(activated),
+    targetRect(0, 0, VideoWidget::MIN_SIZE, VideoWidget::MIN_SIZE)
 {
 
     webcamIcon = QIcon(":/images/webcam.png");
@@ -119,10 +122,9 @@ QSize VideoWidget::minimumSizeHint() const
 {
     static const int MAX_HEIGHT = 90;
     static const int MAX_WIDTH = 120;
-    static const int MIN_SIZE = 32;
 
     if (activated)
         return QSize(MAX_WIDTH, MAX_HEIGHT);
 
-    return QSize(MIN_SIZE, MIN_SIZE);
+    return QSize(VideoWidget::MIN_SIZE, VideoWidget::MIN_SIZE);
 }

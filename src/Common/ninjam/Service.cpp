@@ -377,6 +377,9 @@ void Service::startServerConnection(const QString &serverIp, int serverPort,
 
     if (!socket) {
         socket = createSocket(); // createSocket is protected and can be overrided to create a custom socket for test purpouses.
+
+        socket->setSocketOption(QAbstractSocket::LowDelayOption, 1); // low delay socket, disabling Nagle's Algorithm
+
         setupSocketSignals();
     }
     Q_ASSERT(socket);

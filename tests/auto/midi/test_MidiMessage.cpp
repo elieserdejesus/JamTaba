@@ -19,7 +19,7 @@ void TestMidiMessage::transpose()
     QFETCH(quint32, midiMessageData);
     QFETCH(qint8, transpose);
 
-    MidiMessage message(midiMessageData, 0, 0);
+    MidiMessage message(midiMessageData, 0);
     int originalNote = message.getData1();
     message.transpose(transpose);
     QCOMPARE(originalNote + transpose, message.getData1());
