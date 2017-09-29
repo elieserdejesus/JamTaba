@@ -1143,8 +1143,37 @@ QList<Recorder::JamRecorder *> MainController::getActiveRecorders() const
     return activeRecorders;
 }
 
+QString MainController::getVersionFromLogContent()
+{
+    auto configurator = Configurator::getInstance();
+    QStringList logContent = configurator->getPreviousLogContent();
+
+    static const QString START_LINE("Starting Jamtaba ");
+    for (const QString &logLine : logContent) {
+        if (logLine.contains(START_LINE)) {
+            return logLine.mid(logLine.indexOf(START_LINE) + START_LINE.length(), 6).trimmed();
+        }
+    }
+
+    return QString();
+}
+
 bool MainController::crashedInLastExecution()
 {
+
+    // crash in last execution is detected from version 2.1.1
+    QString version = getVersionFromLogContent();
+    QStringList versionParts = version.split(".");
+    if (versionParts.size() != 3) {
+        qWarning() << "Version string must have 3 elements " << version;
+        return false;
+    }
+
+    if (!(versionParts.at(1).toInt() >= 1 && versionParts.at(2).toInt() >= 1)) {
+        qWarning() << "Cant' detect crash in older versions " << version;
+        return false;
+    }
+
     auto configurator = Configurator::getInstance();
     QStringList logContent = configurator->getPreviousLogContent();
     if (!logContent.isEmpty()) {
