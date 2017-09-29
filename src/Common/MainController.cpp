@@ -236,7 +236,8 @@ void MainController::handleNewNinjamInterval()
         }
     }
 
-    videoEncoder->startNewInterval();
+    if (mainWindow->cameraIsActivated())
+        videoEncoder->startNewInterval();
 }
 
 void MainController::processCapturedFrame(int frameID, const QImage &frame)
@@ -310,10 +311,11 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, qui
 
     if (isFirstPart) {
 
-        if (audioIntervalsToUpload.contains(channelIndex)) {
+        auto audioInterval = audioIntervalsToUpload[channelIndex];
+        if (audioInterval) {
 
             // flush the end of previous interval
-            auto audioInterval = audioIntervalsToUpload[channelIndex];
+
             ninjamService.sendIntervalPart(audioInterval->getGUID(), audioInterval->getData(), true); // is the last part of interval
 
             delete audioInterval;
@@ -391,7 +393,6 @@ void MainController::enqueueDataToUpload(const QByteArray &encodedData, quint8 c
         We can't write in the socket from audio thread.*/
 
     bool isAudioData = encodedData.left(4) == "OggS"; // all ogg chunks are prefixed with 'OggS' string
-
     if (isAudioData)
         enqueueAudioDataToUpload(encodedData, channelIndex, isFirstPart);
     else
