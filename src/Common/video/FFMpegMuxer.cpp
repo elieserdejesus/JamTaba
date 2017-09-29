@@ -608,7 +608,7 @@ void FFMpegMuxer::imageToYuvPicture(const QImage &image, AVFrame *picture, int w
     height = qMin(height, image.height());
 
     // Preparing the buffer to get YUV420P data
-    int size = avpicture_get_size(AV_PIX_FMT_YUV420P, width, height);
+    int size = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, width, height, 1);
     uint8_t *pic_dat = (uint8_t *) av_malloc(size);
 
     // Transforming data from RGB to YUV420P
@@ -617,7 +617,7 @@ void FFMpegMuxer::imageToYuvPicture(const QImage &image, AVFrame *picture, int w
     picture->quality = 0;
 
     // Filling AVFrame with YUV420P data
-    avpicture_fill((AVPicture *)picture, pic_dat, AV_PIX_FMT_YUV420P, width, height);
+    av_image_fill_arrays(picture->data, picture->linesize, pic_dat, AV_PIX_FMT_YUV420P, width, height, 1);
 }
 
 void FFMpegMuxer::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint rgbIncrement, bool swapRGB, int width, int height)
