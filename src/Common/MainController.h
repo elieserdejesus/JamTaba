@@ -230,6 +230,7 @@ public:
     void setAllLoopersStatus(bool activated);
 
     static bool crashedInLastExecution();
+    static QString getVersionFromLogContent();
 
 signals:
     void ipResolved(const QString &ip);

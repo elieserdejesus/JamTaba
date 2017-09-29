@@ -6,7 +6,7 @@
 #include <QScopedPointer>
 
 // Define the preprocessor macro to get the app version in Jamtaba.
-#define VERSION "2.1.0"
+#define VERSION "2.1.1"
 #define APP_VERSION VERSION
 
 // ! Configurator class for Jamtaba !
