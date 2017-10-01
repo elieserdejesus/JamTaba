@@ -224,7 +224,7 @@ void FFMpegDemuxer::decode()
     packet.data = nullptr;
     packet.size = 0;
 
-    int gotFrame;
+    int gotFrame = 0;
     bool gotError = false;
 
     try {

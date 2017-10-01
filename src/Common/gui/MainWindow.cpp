@@ -191,7 +191,7 @@ void MainWindow::changeCameraStatus(bool activated)
 
     initializeCamera(preferredCameraName);
 
-    if(camera->state() != QCamera::ActiveState) { // camera is used by another application?
+    if(camera && camera->state() != QCamera::ActiveState) { // camera is used by another application?
         camera->unload();
 
         videoFrameGrabber->deleteLater();
@@ -1854,9 +1854,11 @@ void MainWindow::initializeMasterFader()
 
 void MainWindow::closeAllFloatingWindows()
 {
-    if (mainController->isPlayingInNinjamRoom() && ninjamWindow) {
+    if (!mainController)
+        return;
+
+    if (mainController->isPlayingInNinjamRoom() && ninjamWindow)
         ninjamWindow->closeMetronomeFloatingWindow();
-    }
 
     closeAllLooperWindows();
 }

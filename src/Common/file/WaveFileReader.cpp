@@ -155,7 +155,7 @@ bool WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuff
     quint16 bitsPerSampleXChannelsDivEightPointOne;
     quint16 bitsPerSample;
     char dataHeader[4];
-    quint32 dataSize;
+    quint32 dataSize = 0;
 
     // Create a data stream to analyze the data
     QDataStream stream(&wavFileContent, QIODevice::ReadOnly);

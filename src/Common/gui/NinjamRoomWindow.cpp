@@ -877,9 +877,11 @@ void NinjamRoomWindow::handleBpmChanges()
 
 void NinjamRoomWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
 {
-    if (chatPanel)
-        chatPanel->removeMessagesFrom(userName);
-        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
+    if (!chatPanel)
+        return;
+
+    chatPanel->removeMessagesFrom(userName);
+    chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
 }
 
 void NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
