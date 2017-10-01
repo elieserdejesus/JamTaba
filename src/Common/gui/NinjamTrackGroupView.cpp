@@ -44,13 +44,12 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     topPanelLayout->addLayout(groupNameLayout);
     topPanelLayout->setAlignment(groupNameLayout, Qt::AlignBottom);
 
-    topPanelLayout->setAlignment(countryLabel, Qt::AlignTop);
-
     setGroupName(initialValues.getUserName());
 
     // country flag and label
     countryLabel = new QLabel();
     countryLabel->setObjectName("countryLabel");
+    topPanelLayout->setAlignment(countryLabel, Qt::AlignTop);
 
     countryFlag = new QLabel();
 
