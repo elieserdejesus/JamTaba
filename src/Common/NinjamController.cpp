@@ -30,6 +30,7 @@
 
 #include <cmath>
 #include <cassert>
+#include <vector>
 
 using namespace Controller;
 
@@ -57,7 +58,7 @@ public:
     {
         //qCDebug(jtNinjamCore) << "Adding samples to encode";
         QMutexLocker locker(&mutex);
-        chunksToEncode.append(new EncodingChunk(samplesToEncode, channelIndex, isFirstPart, isLastPart));
+        chunksToEncode.push_back(EncodingChunk(samplesToEncode, channelIndex, isFirstPart, isLastPart));
         // this method is called by Qt main thread (the producer thread).
         hasAvailableChunksToEncode.wakeAll();//wakeup the encoding thread (consumer thread)
 
@@ -80,7 +81,7 @@ protected:
     {
         while (!stopRequested) {
             mutex.lock();
-            if (chunksToEncode.isEmpty()) {
+            if (chunksToEncode.empty()) {
                 hasAvailableChunksToEncode.wait(&mutex);
             }
             
@@ -89,20 +90,23 @@ protected:
                 break;
             }
             
-            EncodingChunk* chunk = chunksToEncode.first();
-            chunksToEncode.removeFirst();
+
+            EncodingChunk &chunk = !chunksToEncode.empty() ? chunksToEncode.front() : EncodingChunk(Audio::SamplesBuffer::ZERO_BUFFER, 0, false, false);
+
+            chunksToEncode.erase(chunksToEncode.begin()); // remove first element
+
             mutex.unlock();
             
-            if (chunk) {
-                QByteArray encodedBytes(controller->encode(chunk->buffer, chunk->channelIndex));
-                if (chunk->lastPart) {
-                    encodedBytes.append(controller->encodeLastPartOfInterval(chunk->channelIndex));
+            if (!chunk.buffer.isEmpty()) {
+                QByteArray encodedBytes(controller->encode(chunk.buffer, chunk.channelIndex));
+                if (chunk.lastPart) {
+                    encodedBytes.append(controller->encodeLastPartOfInterval(chunk.channelIndex));
                 }
 
                 if (!encodedBytes.isEmpty()) {
-                    emit controller->encodedAudioAvailableToSend(encodedBytes, chunk->channelIndex, chunk->firstPart, chunk->lastPart);
+                    emit controller->encodedAudioAvailableToSend(encodedBytes, chunk.channelIndex, chunk.firstPart, chunk.lastPart);
                 }
-                delete chunk;
+
             }
 
         }
@@ -130,7 +134,7 @@ private:
         bool lastPart;
     };
 
-    QList<EncodingChunk*> chunksToEncode;
+    std::vector<EncodingChunk> chunksToEncode;
     QMutex mutex;
     volatile bool stopRequested;
     NinjamController* controller;
