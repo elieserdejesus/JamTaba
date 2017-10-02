@@ -126,13 +126,13 @@ void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode)
             // chunks maxsize is 2048 bytes
             int bytesToProcess = std::min((int)(totalBytesToProcess - bytesProcessed),
                                           MAX_BYTES_PER_DECODING);
-            const Audio::SamplesBuffer *decodedBuffer = decoder->decode(in, bytesToProcess);
+            const Audio::SamplesBuffer decodedBuffer = decoder->decode(in, bytesToProcess);
 
             // prepare in for the next decoding
             in += bytesToProcess;
             bytesProcessed += bytesToProcess;
             // +++++++++++++++++  PROCESS DECODED SAMPLES ++++++++++++++++
-            bufferedSamples.append(*decodedBuffer);
+            bufferedSamples.append(decodedBuffer);
         }
 
         bytesToDecode = bytesToDecode.right(bytesToDecode.size() - bytesProcessed);
