@@ -32,7 +32,7 @@ class MainController : public QObject
     friend class Controller::NinjamController;
 
 protected:
-    MainController(const Persistence::Settings &settings);
+    explicit MainController(const Persistence::Settings &settings);
 
 public:
 

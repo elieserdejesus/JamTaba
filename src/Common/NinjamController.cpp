@@ -40,7 +40,7 @@ class NinjamController::EncodingThread : public QThread // TODO: use better thre
 
 public:
     
-    EncodingThread(NinjamController* controller)
+    explicit EncodingThread(NinjamController* controller)
         : stopRequested(false), 
           controller(controller)
     {
@@ -142,7 +142,7 @@ private:
 class NinjamController::SchedulableEvent // an event scheduled to be processed in next interval
 {
 public:
-    SchedulableEvent(NinjamController* controller) :
+    explicit SchedulableEvent(NinjamController* controller) :
         controller(controller)
     {
         //
@@ -642,7 +642,7 @@ void NinjamController::addTrack(const Ninjam::User &user, const Ninjam::UserChan
 void NinjamController::removeTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel)
 {
     bool channelDeleted = false;
-    long ID;
+    long ID = -1;
     {
         QMutexLocker locker(&mutex);
         //checkThread("removeTrack();");

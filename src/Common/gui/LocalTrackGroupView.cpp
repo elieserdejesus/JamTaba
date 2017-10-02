@@ -279,14 +279,14 @@ void LocalTrackGroupView::setToNarrow()
 void LocalTrackGroupView::highlightHoveredChannel()
 {
     int channelGroupIndex = 1; // just the second channel can be highlighted at moment
-    if (channelGroupIndex >= 0 && channelGroupIndex < mainFrame->getChannelGroupsCount())
+    if (channelGroupIndex < mainFrame->getChannelGroupsCount())
         mainFrame->highlightChannelGroup(channelGroupIndex);
 }
 
 void LocalTrackGroupView::highlightHoveredSubchannel()
 {
     int subChannelIndex = 1; // just the second subchannel can be highlighted at moment
-    if (subChannelIndex >= 0 && subChannelIndex < trackViews.size())
+    if (subChannelIndex < trackViews.size())
         Highligther::getInstance()->highlight(trackViews.at(subChannelIndex));
 }
 

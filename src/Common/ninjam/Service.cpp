@@ -87,7 +87,8 @@ Service::Service() :
     lastSendTime(0),
     initialized(false),
     socket(nullptr),
-    messagesHandler(new ServerMessagesHandler(this))
+    messagesHandler(new ServerMessagesHandler(this)),
+    serverKeepAlivePeriod(30)
 {
 
 }

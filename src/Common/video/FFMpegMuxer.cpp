@@ -197,7 +197,7 @@ void FFMpegMuxer::encodeAudioFrame()
 
 int FFMpegMuxer::writeCallback(void *instancePointer, uint8_t *buffer, int bufferSize)
 {
-    FFMpegMuxer *instance = (FFMpegMuxer *)instancePointer;
+    FFMpegMuxer *instance = static_cast<FFMpegMuxer *>(instancePointer);
 
     QByteArray encodedBytes((const char*)buffer, bufferSize);
 
@@ -368,6 +368,7 @@ void FFMpegMuxer::addAudioStream(AVCodecID codecID)
     AVCodecContext *codecContext = avcodec_alloc_context3(codec);
     if (!codecContext) {
         qCritical() << "Could not alloc an encoding context";
+		return;
     }
     audioStream->stream->codec = codecContext;
 
@@ -550,7 +551,6 @@ bool FFMpegMuxer::doEncodeAudioFrame()
 {
     AVPacket packet = { 0 }; // data and size must be 0;
     AVFrame *frame;
-    int dst_nb_samples;
 
     av_init_packet(&packet);
     AVCodecContext *codecContext = audioStream->stream->codec;
@@ -560,7 +560,7 @@ bool FFMpegMuxer::doEncodeAudioFrame()
     if (frame) {
         /* convert samples from native format to destination codec format, using the resampler */
         /* compute destination number of samples */
-        dst_nb_samples = av_rescale_rnd(swr_get_delay(audioStream->swrContext, codecContext->sample_rate) + frame->nb_samples,
+        int dst_nb_samples = av_rescale_rnd(swr_get_delay(audioStream->swrContext, codecContext->sample_rate) + frame->nb_samples,
                                         codecContext->sample_rate, codecContext->sample_rate, AV_ROUND_UP);
         av_assert0(dst_nb_samples == frame->nb_samples);
 
@@ -607,9 +607,7 @@ bool FFMpegMuxer::doEncodeAudioFrame()
 
 AVFrame *FFMpegMuxer::allocPicture(enum AVPixelFormat pixelFormat, int width, int height)
 {
-    AVFrame *picture = nullptr;
-
-    picture = av_frame_alloc();
+    AVFrame *picture = av_frame_alloc();
     if (!picture)
         return NULL;
 

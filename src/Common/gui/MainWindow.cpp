@@ -611,8 +611,8 @@ void MainWindow::addChannelsGroup(const QString &name)
 void MainWindow::initializeMainTabWidget()
 {
     // the rooms list tab bar is not closable
-    QWidget *tabBar = nullptr;
-    tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::RightSide); // try get the tabBar in right side (Windows)
+
+    auto tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::RightSide); // try get the tabBar in right side (Windows)
 
     if (!tabBar) // try get the tabBar in left side (MAC OSX)
         tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::LeftSide);

@@ -19,7 +19,7 @@ class VstEditor : public AEffEditor
     MainWindow *mainWindow;
 
 public:
-    VstEditor(JamTabaVSTPlugin *jamtaba);
+    explicit VstEditor(JamTabaVSTPlugin *jamtaba);
     ~VstEditor();
 
     bool getRect(ERect **rect) override;

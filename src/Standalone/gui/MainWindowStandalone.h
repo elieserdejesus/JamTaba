@@ -13,7 +13,7 @@ class MainWindowStandalone : public MainWindow
 {
     Q_OBJECT
 public:
-    MainWindowStandalone(MainControllerStandalone *controller);
+    explicit MainWindowStandalone(MainControllerStandalone *controller);
 
     Persistence::LocalInputTrackSettings getInputsSettings() const override;
 

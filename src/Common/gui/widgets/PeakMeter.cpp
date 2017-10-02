@@ -499,7 +499,8 @@ bool AudioMeter::isPaintingRmsOnly()
 
 MidiActivityMeter::MidiActivityMeter(QWidget *parent) :
     BaseMeter(parent),
-    midiActivityColor(Qt::red)
+    midiActivityColor(Qt::red),
+    activityValue(0)
 {
 
 }

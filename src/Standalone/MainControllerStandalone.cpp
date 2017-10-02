@@ -496,9 +496,11 @@ Audio::Plugin *MainControllerStandalone::createPluginInstance(
     }
     else if (descriptor.isVST()) {
         Vst::VstHost *host = Vst::VstHost::getInstance();
-        Vst::VstPlugin *vstPlugin = new Vst::VstPlugin(host, descriptor.getPath());
+        auto vstPlugin = new Vst::VstPlugin(host, descriptor.getPath());
         if (vstPlugin->load(descriptor.getPath()))
             return vstPlugin;
+        else
+            delete vstPlugin; // avoid a memory leak
     }
 
 #ifdef Q_OS_MAC

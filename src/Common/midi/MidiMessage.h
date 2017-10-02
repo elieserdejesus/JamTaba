@@ -12,7 +12,6 @@ class MidiMessage
 public:
     MidiMessage(qint32 data, int sourceID);
     MidiMessage();
-    MidiMessage(const MidiMessage &other);
 
     static MidiMessage fromVector(std::vector<unsigned char> vector, qint32 sourceID);
     static MidiMessage fromArray(const char array[4], qint32 sourceID=-1);

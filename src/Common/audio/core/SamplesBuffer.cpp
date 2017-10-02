@@ -9,30 +9,24 @@ using namespace Audio;
 const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
 SamplesBuffer::SamplesBuffer(unsigned int channels) :
-    channels(channels),
-    frameLenght(0),
-    rmsRunningSum(0.0f),
-    rmsWindowSize(13230) // 300 ms in 44100 KHz
+    SamplesBuffer(channels, 0)
 {
-    if (channels == 0)
-        qCritical() << "AudioSamplesBuffer::channels == 0";
 
-    for (unsigned int c = 0; c < channels; ++c)
-        samples.push_back(std::vector<float>());
-
-    squaredSums[0] = squaredSums[1] = 0.0f;
-    lastRmsValues[0] = lastRmsValues[1] = 0.0f;
-    summedSamples = 0;
 }
 
 SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
     channels(channels),
     frameLenght(frameLenght),
     rmsRunningSum(0.0f),
+    summedSamples(0),
     rmsWindowSize(13230) // 300 ms in 44100 KHz
 {
     for (unsigned int c = 0; c < channels; ++c)
         samples.push_back(std::vector<float>(frameLenght));
+
+    squaredSums[0] = squaredSums[1] = 0.0f;
+    lastRmsValues[0] = lastRmsValues[1] = 0.0f;
+    summedSamples = 0;
 }
 
 SamplesBuffer::SamplesBuffer(const SamplesBuffer &other) :
@@ -40,9 +34,15 @@ SamplesBuffer::SamplesBuffer(const SamplesBuffer &other) :
       frameLenght(other.frameLenght),
       samples(other.samples),
       rmsRunningSum(other.rmsRunningSum),
+      summedSamples(other.summedSamples),
       rmsWindowSize(other.rmsWindowSize)
 {
     // qWarning() << "Samples Buffer copy constructor!";
+    squaredSums[0] = other.squaredSums[0];
+    squaredSums[1] = other.squaredSums[1];
+
+    lastRmsValues[0] = other.lastRmsValues[0];
+    lastRmsValues[1] = other.lastRmsValues[1];
 }
 
 SamplesBuffer &SamplesBuffer::operator=(const SamplesBuffer &other)
@@ -52,6 +52,13 @@ SamplesBuffer &SamplesBuffer::operator=(const SamplesBuffer &other)
     this->samples = other.samples;
     this->rmsRunningSum = other.rmsRunningSum;
     this->rmsWindowSize = other.rmsWindowSize;
+    this->summedSamples = other.summedSamples;
+
+    squaredSums[0] = other.squaredSums[0];
+    squaredSums[1] = other.squaredSums[1];
+
+    lastRmsValues[0] = other.lastRmsValues[0];
+    lastRmsValues[1] = other.lastRmsValues[1];
 
     return *this;
 }
@@ -309,7 +316,7 @@ void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght)
 
 void SamplesBuffer::set(const SamplesBuffer &buffer, int bufferChannelOffset, int channelsToCopy)
 {
-    if (buffer.channels <= 0 || channels <= 0)
+    if (buffer.channels == 0 || channels == 0)
         return;
 
     int framesToCopy = std::min(buffer.getFrameLenght(), frameLenght);
@@ -325,7 +332,7 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, int bufferChannelOffset, in
 
 void SamplesBuffer::set(const SamplesBuffer &buffer, uint bufferOffset, uint samplesToCopy, uint internalOffset)
 {
-    if (buffer.channels <= 0 || channels <= 0)
+    if (buffer.channels == 0 || channels == 0)
         return;
 
     unsigned int framesToProcess = std::min(samplesToCopy, buffer.getFrameLenght() - bufferOffset);

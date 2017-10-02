@@ -28,7 +28,7 @@ class CameraFrameGrabber : public QAbstractVideoSurface, public VideoFrameGrabbe
 
 public:
 
-    CameraFrameGrabber(QObject * parent);
+    explicit CameraFrameGrabber(QObject * parent);
 
     inline QList<QVideoFrame::PixelFormat>supportedPixelFormats(QAbstractVideoBuffer::HandleType type) const override
     {

@@ -15,19 +15,12 @@ VorbisDecoder::VorbisDecoder() :
       initialized(false),
       vorbisInput()
 {
-    outBuffer = new float*[2];
-    outBuffer[0] = new float[2048];
-    outBuffer[1] = new float[2048];
     vorbisFile.vi = nullptr;
 }
 
 VorbisDecoder::~VorbisDecoder()
 {
     qCDebug(jtNinjamVorbisDecoder) << "Destrutor Vorbis Decoder";
-    //TODO this destructor is crashing when a track is removed
-    //delete [] outBuffer[0];
-    //delete [] outBuffer[1];
-    //delete [] outBuffer;
 
     if(initialized)
         ov_clear(&vorbisFile);
@@ -85,6 +78,8 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode)
     if (!initialized) {
         return Audio::SamplesBuffer::ZERO_BUFFER;
     }
+
+    float **outBuffer;
 
     long samplesDecoded = ov_read_float(&vorbisFile, &outBuffer, maxSamplesToDecode, NULL);//currentSection is not used
     if (samplesDecoded < 0) { //error

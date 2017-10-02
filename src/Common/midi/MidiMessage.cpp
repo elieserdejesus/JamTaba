@@ -17,12 +17,6 @@ MidiMessage::MidiMessage() :
 
 }
 
-MidiMessage::MidiMessage(const MidiMessage &other) :
-    MidiMessage(other.data,  other.sourceID)
-{
-
-}
-
 MidiMessage MidiMessage::fromVector(std::vector<unsigned char> vector, qint32 deviceIndex)
 {
     int msgData = 0;

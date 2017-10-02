@@ -69,8 +69,8 @@ class ClientSetChannel : public ClientMessage
 {
 
 public:
-    ClientSetChannel(const QStringList &channels);
-    ClientSetChannel(const QString &channelNameToRemove);
+    explicit ClientSetChannel(const QStringList &channels);
+    explicit ClientSetChannel(const QString &channelNameToRemove);
 
 private:
     QStringList channelNames;

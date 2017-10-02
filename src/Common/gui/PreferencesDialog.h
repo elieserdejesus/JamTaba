@@ -16,7 +16,7 @@ class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    PreferencesDialog(QWidget *parent);
+    explicit PreferencesDialog(QWidget *parent);
     virtual ~PreferencesDialog();
 
     enum PreferencesTab {

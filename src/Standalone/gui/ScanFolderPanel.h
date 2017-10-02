@@ -11,7 +11,7 @@ class ScanFolderPanel : public QWidget
     Q_OBJECT
 
 public:
-    ScanFolderPanel(QString folder);
+    explicit ScanFolderPanel(QString folder);
 
     inline QPushButton *getRemoveButton() const
     {

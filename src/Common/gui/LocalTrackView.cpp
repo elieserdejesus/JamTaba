@@ -16,7 +16,7 @@ class LocalTrackView::LooperIconFactory
 {
 public:
 
-    LooperIconFactory(const QString &originalIconPath)
+    explicit LooperIconFactory(const QString &originalIconPath)
         : originalIconPath(originalIconPath)
     {
         //

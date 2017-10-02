@@ -102,7 +102,7 @@ private:
 class UsersDataCache
 {
 public:
-    UsersDataCache(const QDir &cacheDir);
+    explicit UsersDataCache(const QDir &cacheDir);
     ~UsersDataCache();
 
     // return default values for pan, gain and mute if user is not cached yet

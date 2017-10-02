@@ -18,7 +18,7 @@ class JamTabaVSTPlugin : public JamTabaPlugin, public AudioEffectX
 {
 
 public:
-    JamTabaVSTPlugin (audioMasterCallback audioMaster);
+    explicit JamTabaVSTPlugin (audioMasterCallback audioMaster);
     ~JamTabaVSTPlugin();
 
     //void initialize();    // called first time editor is opened

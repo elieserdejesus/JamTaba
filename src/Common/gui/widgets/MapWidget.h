@@ -15,7 +15,7 @@ class MapWidget: public QWidget
     friend struct MapMarkerComparator;
 
 public:
-    MapWidget(QWidget *parent = 0);
+    explicit MapWidget(QWidget *parent = 0);
     void setMarkers(const QList<MapMarker> &markers);
     static void setTilesDir(const QString &newDir);
     static void setNightMode(bool useNightMode);

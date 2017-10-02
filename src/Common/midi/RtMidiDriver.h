@@ -8,7 +8,7 @@ namespace Midi {
 class RtMidiDriver : public MidiDriver
 {
 public:
-    RtMidiDriver(const QList<bool> &deviceStatuses);
+    explicit RtMidiDriver(const QList<bool> &deviceStatuses);
     ~RtMidiDriver();
 
     void start(const QList<bool> &deviceStatuses) override;

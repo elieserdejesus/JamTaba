@@ -60,7 +60,7 @@ class AudioMeter : public BaseMeter
     Q_PROPERTY(QColor dBMarksColor MEMBER dBMarksColor WRITE setDbMarksColor)
 
 public:
-    AudioMeter(QWidget *parent);
+    explicit AudioMeter(QWidget *parent = nullptr);
 
     void setPeak(float peak, float rms);
     void setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms);
@@ -161,7 +161,7 @@ class MidiActivityMeter : public BaseMeter
 {
 
 public:
-    MidiActivityMeter(QWidget *parent);
+    explicit MidiActivityMeter(QWidget *parent);
     void setSolidColor(const QColor &color);
     void setActivityValue(float value);
 

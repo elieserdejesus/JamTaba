@@ -1,3 +1,5 @@
+#include <QtGlobal>
+
 #include "VstPlugin.h"
 
 #ifdef Q_OS_WIN
@@ -35,10 +37,12 @@ VstPlugin::VstPlugin(Vst::VstHost* host, const QString &pluginPath) :
     Audio::Plugin(Vst::utils::createDescriptor(nullptr, pluginPath)),
     effect(nullptr),
     internalOutputBuffer(nullptr),
+    internalInputBuffer(nullptr),
     host(host),
     loaded(false),
     started(false),
     turnedOn(false),
+    wantMidi(false),
     vstOutputArray(nullptr),
     vstInputArray(nullptr)
 {

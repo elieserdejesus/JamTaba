@@ -208,7 +208,12 @@ AudioSettings::AudioSettings() :
     SettingsObject("audio"),
     sampleRate(44100),
     bufferSize(128),
-    encodingQuality(VorbisEncoder::QUALITY_NORMAL)
+    encodingQuality(VorbisEncoder::QUALITY_NORMAL),
+    firstIn(-1),
+    firstOut(-1),
+    lastIn(-1),
+    lastOut(-1),
+    audioDevice(-1)
 {
 }
 
@@ -1042,7 +1047,9 @@ Settings::Settings() :
     tracksLayoutOrientation(Qt::Vertical),
     masterFaderGain(1.0),
     translation("en"), // english as default language
-    theme("Flat") // flat as default theme
+    theme("Flat"), // flat as default theme,
+    ninjamIntervalProgressShape(0),
+    usingNarrowedTracks(false)
 {
     // qDebug() << "Settings in " << fileDir;
 }

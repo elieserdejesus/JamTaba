@@ -6,7 +6,7 @@
 class ChatTextEditor : public QTextBrowser
 {
 public:
-    ChatTextEditor(QWidget *parent);
+    explicit ChatTextEditor(QWidget *parent);
 
     QSize sizeHint() const override;
     QSize minimumSizeHint() const override;

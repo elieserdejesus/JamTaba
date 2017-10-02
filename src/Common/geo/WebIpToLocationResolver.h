@@ -16,7 +16,7 @@ class WebIpToLocationResolver : public IpToLocationResolver
     Q_OBJECT
 
 public:
-    WebIpToLocationResolver(const QDir &cacheDir);
+    explicit WebIpToLocationResolver(const QDir &cacheDir);
     ~WebIpToLocationResolver();
     Geo::Location resolve(const QString &ip, const QString &languageCode) override;
 

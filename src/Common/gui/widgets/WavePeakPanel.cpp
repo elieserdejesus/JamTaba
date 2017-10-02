@@ -107,7 +107,7 @@ void WavePeakPanel::addPeak(float peak)
 void WavePeakPanel::paintSoundWave(QPainter &painter, bool useAlpha)
 {
     size_t size = peaksArray.size();
-    if (size <= 0) // avoid divide by zero
+    if (size == 0) // avoid divide by zero
         return;
 
     qreal maxPeakHeight = height()/2.0;
@@ -142,7 +142,7 @@ void WavePeakPanel::paintSoundWave(QPainter &painter, bool useAlpha)
 void WavePeakPanel::paintBuildings(QPainter &painter, bool pixeled, bool useAlpha)
 {
     size_t size = peaksArray.size();
-    if (size <= 0) // avoid divide by zero
+    if (size == 0) // avoid divide by zero
         return;
 
     int peaksRectWidth = getPeaksWidth();
@@ -229,7 +229,7 @@ int WavePeakPanel::getPeaksWidth() const
 void WavePeakPanel::paintPixeledSoundWave(QPainter &painter)
 {
     size_t size = peaksArray.size();
-    if (size <= 0) // avoid divide by zero
+    if (size == 0) // avoid divide by zero
         return;
 
     qreal maxPeakHeight = height()/2.0;

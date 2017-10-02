@@ -19,7 +19,7 @@ class SettingsObject // base class for the settings components
 {
 
 public:
-    SettingsObject(const QString &name);
+    explicit SettingsObject(const QString &name);
     virtual ~SettingsObject();
     virtual void write(QJsonObject &out) const = 0;
     virtual void read(const QJsonObject &in) = 0;
@@ -260,7 +260,7 @@ private:
 class Channel
 {
 public:
-    Channel(const QString &name);
+    explicit Channel(const QString &name);
     QString name;
     QList<Subchannel> subChannels;
 };
@@ -270,7 +270,7 @@ public:
 class LocalInputTrackSettings : public SettingsObject
 {
 public:
-    LocalInputTrackSettings(bool createOneTrack = false);
+    explicit LocalInputTrackSettings(bool createOneTrack = false);
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
     void read(const QJsonObject &in, bool allowSubchannels);
