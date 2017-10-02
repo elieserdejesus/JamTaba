@@ -46,8 +46,7 @@ MainController::MainController(const Settings &settings) :
     lastInputTrackID(0),
     usersDataCache(Configurator::getInstance()->getCacheDir()),
     lastFrameTimeStamp(0),
-    videoEncoder(FFMpegMuxer()),
-    videoIntervalToUpload(nullptr)
+    videoEncoder(FFMpegMuxer())
 {
 
     QDir cacheDir = Configurator::getInstance()->getCacheDir();
@@ -135,8 +134,8 @@ void MainController::finishUploads()
         ninjamService.sendIntervalPart(audioInterval.getGUID(), QByteArray(), true);
     }
 
-    if (videoIntervalToUpload)
-        ninjamService.sendIntervalPart(videoIntervalToUpload->getGUID(), QByteArray(), true);
+    if (!videoIntervalToUpload.isEmpty())
+        ninjamService.sendIntervalPart(videoIntervalToUpload.getGUID(), QByteArray(), true);
 }
 
 void MainController::quitFromNinjamServer(const QString &error)
@@ -341,29 +340,23 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, qui
 
         Q_ASSERT(encodedData.left(4) ==  "RIFF");
 
-        if (videoIntervalToUpload) {
+        if (!videoIntervalToUpload.isEmpty()) {
 
             // flush the end of previous interval
-            ninjamService.sendIntervalPart(videoIntervalToUpload->getGUID(), videoIntervalToUpload->getData(), true); // is the last part of interval
-
-            delete videoIntervalToUpload;
+            ninjamService.sendIntervalPart(videoIntervalToUpload.getGUID(), videoIntervalToUpload.getData(), true); // is the last part of interval
         }
 
-        videoIntervalToUpload = new UploadIntervalData(); // generate a new GUID
+        videoIntervalToUpload = UploadIntervalData(); // generate a new GUID
 
-        ninjamService.sendIntervalBegin(videoIntervalToUpload->getGUID(), channelIndex, false); // starting a new audio interval
+        ninjamService.sendIntervalBegin(videoIntervalToUpload.getGUID(), channelIndex, false); // starting a new audio interval
     }
 
-    if (!videoIntervalToUpload) {
-        return;
-    }
+    videoIntervalToUpload.appendData(encodedData);
 
-    videoIntervalToUpload->appendData(encodedData);
-
-    bool canSend = videoIntervalToUpload->getTotalBytes() >= 4096;
+    bool canSend = videoIntervalToUpload.getTotalBytes() >= 4096;
     if (canSend) {
-        ninjamService.sendIntervalPart(videoIntervalToUpload->getGUID(), videoIntervalToUpload->getData(), false); // is not the last part of interval
-        videoIntervalToUpload->clear();
+        ninjamService.sendIntervalPart(videoIntervalToUpload.getGUID(), videoIntervalToUpload.getData(), false); // is not the last part of interval
+        videoIntervalToUpload.clear();
     }
 
     if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
@@ -829,9 +822,6 @@ MainController::~MainController()
     for(auto jamRecorder : jamRecorders) {
         delete jamRecorder;
     }
-
-    if (videoIntervalToUpload)
-        delete videoIntervalToUpload;
 
     audioIntervalsToUpload.clear();
 

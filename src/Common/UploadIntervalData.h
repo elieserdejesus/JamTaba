@@ -15,6 +15,11 @@ public:
         return GUID;
     }
 
+    inline bool isEmpty() const
+    {
+        return dataToUpload.isEmpty();
+    }
+
     void appendData(const QByteArray &encodedData);
 
     inline int getTotalBytes() const
