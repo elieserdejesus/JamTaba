@@ -39,7 +39,7 @@ MainController::MainController(const Settings &settings) :
     mutex(QMutex::Recursive),
     started(false),
     ipToLocationResolver(nullptr),
-    loginService(new Login::LoginService(this)),
+    loginService(Login::LoginService(this)),
     settings(settings),
     mainWindow(nullptr),
     masterGain(1),
