@@ -46,7 +46,7 @@ MainController::MainController(const Settings &settings) :
     lastInputTrackID(0),
     usersDataCache(Configurator::getInstance()->getCacheDir()),
     lastFrameTimeStamp(0),
-    videoEncoder(nullptr),
+    videoEncoder(FFMpegMuxer()),
     videoIntervalToUpload(nullptr)
 {
 
@@ -59,8 +59,7 @@ MainController::MainController(const Settings &settings) :
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ReaperProjectGenerator()));
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ClipSortLogGenerator()));
 
-    videoEncoder = new FFMpegMuxer();
-    connect(videoEncoder, &FFMpegMuxer::dataEncoded, this, &MainController::uploadEncodedVideoData);
+    connect(&videoEncoder, &FFMpegMuxer::dataEncoded, this, &MainController::uploadEncodedVideoData);
 }
 
 void MainController::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
@@ -72,13 +71,13 @@ void MainController::setChannelReceiveStatus(const QString &userFullName, quint8
 
 void MainController::setVideoProperties(const QSize &resolution)
 {
-    videoEncoder->setVideoResolution(resolution);
-    videoEncoder->setVideoFrameRate(CAMERA_FPS);
+    videoEncoder.setVideoResolution(resolution);
+    videoEncoder.setVideoFrameRate(CAMERA_FPS);
 }
 
 QSize MainController::getVideoResolution() const
 {
-    return videoEncoder->getVideoResolution();
+    return videoEncoder.getVideoResolution();
 }
 
 void MainController::blockUserInChat(const QString &userNameToBlock)
@@ -237,18 +236,13 @@ void MainController::handleNewNinjamInterval()
     }
 
     if (mainWindow->cameraIsActivated())
-        videoEncoder->startNewInterval();
+        videoEncoder.startNewInterval();
 }
 
 void MainController::processCapturedFrame(int frameID, const QImage &frame)
 {
     Q_UNUSED(frameID);
-    if (videoEncoder) {
-        videoEncoder->encodeImage(frame); // video encoder will emit a signal when video frame is encoded
-    }
-    else {
-        qDebug() << "video encoder is null";
-    }
+    videoEncoder.encodeImage(frame); // video encoder will emit a signal when video frame is encoded
 }
 
 void MainController::requestCameraFrame(int intervalPosition)

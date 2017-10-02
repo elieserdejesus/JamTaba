@@ -282,7 +282,7 @@ protected:
 
     virtual void syncWithNinjamIntervalStart(uint intervalLenght);
 
-    FFMpegMuxer *videoEncoder;
+    FFMpegMuxer videoEncoder;
 
 private:
     void setAllTracksActivation(bool activated);
