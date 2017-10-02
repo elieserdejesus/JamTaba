@@ -86,45 +86,11 @@ FFMpegMuxer::FFMpegMuxer()
       savingToFile(false),
       formatContext(nullptr),
       avioContext(nullptr),
-      mutex(QMutex::NonRecursive),
       initialized(false),
-      encodingThread(nullptr),
       buffer(nullptr),
       startNewIntervalRequested(false)
 {
-    encodingThread = new QThread(this);
-    this->moveToThread(encodingThread);
-
-    connect(encodingThread, &QThread::started, this, &FFMpegMuxer::encodeInBackground);
-}
-
-void FFMpegMuxer::encodeInBackground()
-{
-
     av_register_all();
-
-    while (!QThread::currentThread()->isInterruptionRequested()) {
-
-        if (startNewIntervalRequested) {
-            if (prepareToEncodeNewInterval())
-                startNewIntervalRequested = false;
-            else
-                qCritical() << "Can't prepare for next interval!";
-        }
-
-        //wait until we have more images to encode
-        mutex.lock();
-        if (imagesToEncode.isEmpty()) {
-            waitingMoreDataToEncode.wait(&mutex);
-        }
-
-        QImage image = imagesToEncode.takeFirst();
-        mutex.unlock();
-
-        if (encodeVideo && !image.isNull())
-            encodeVideo = !doEncodeVideoFrame(image.copy());
-
-    }
 }
 
 void FFMpegMuxer::initialize()
@@ -157,42 +123,33 @@ void FFMpegMuxer::initialize()
 FFMpegMuxer::~FFMpegMuxer()
 {
     finishCurrentInterval();
-
-    encodingThread->requestInterruption();
 }
 
 void FFMpegMuxer::encodeImage(const QImage &image)
 {
-    QMutexLocker locker(&mutex);
+    // encoding in a separated thread
+    QtConcurrent::run([=](){
 
-    if (encodeVideo)
-        imagesToEncode.append(image);
+        if (startNewIntervalRequested) {
+            if (prepareToEncodeNewInterval())
+                startNewIntervalRequested = false;
+            else
+                qCritical() << "Can't prepare for next interval!";
+        }
 
-    waitingMoreDataToEncode.wakeAll(); // wakeup the encodig thread
-
-
-//    if (!initialized)
-//        return;
-
-
-//        bool canEncode = encodeVideo &&
-//                                (!encodeAudio || av_compare_ts(videoStream->frame->pts, videoStream->stream->codec->time_base,
-//                                                                audioStream->frame->pts, audioStream->stream->codec->time_base) <= 0);
-//        if (canEncode) {
-//            encodeVideo = !doEncodeVideoFrame(image);
-//        }
-
-
+        if (encodeVideo && !image.isNull())
+            encodeVideo = !doEncodeVideoFrame(image.copy());
+    });
 }
 
 void FFMpegMuxer::encodeAudioFrame()
 {
-    QMutexLocker locker(&mutex);
-    if (!initialized)
-        return;
+//    QMutexLocker locker(&mutex);
+//    if (!initialized)
+//        return;
 
-    if (encodeAudio)
-        encodeAudio = !doEncodeAudioFrame();
+//    if (encodeAudio)
+//        encodeAudio = !doEncodeAudioFrame();
 }
 
 int FFMpegMuxer::writeCallback(void *instancePointer, uint8_t *buffer, int bufferSize)
@@ -215,11 +172,6 @@ int FFMpegMuxer::writeCallback(void *instancePointer, uint8_t *buffer, int buffe
 void FFMpegMuxer::startNewInterval()
 {
     startNewIntervalRequested = true;
-
-    if (!encodingThread->isRunning()) {
-       encodingThread->start();
-    }
-
 }
 
 bool FFMpegMuxer::prepareToEncodeNewInterval()

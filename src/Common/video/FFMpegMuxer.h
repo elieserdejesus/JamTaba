@@ -55,9 +55,6 @@ signals:
 public slots:
     void startNewInterval();
 
-private slots:
-    void encodeInBackground();
-
 private:
 
     void finishCurrentInterval();
@@ -107,11 +104,6 @@ private:
     QSize videoResolution;
     qreal videoFrameRate;
     uint videoBitRate;
-
-    QMutex mutex;
-    QThread *encodingThread;
-    QWaitCondition waitingMoreDataToEncode;
-    QList<QImage> imagesToEncode;
 
     bool initialized;
     bool startNewIntervalRequested;
