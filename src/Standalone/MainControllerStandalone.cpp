@@ -192,7 +192,7 @@ bool MainControllerStandalone::pluginDescriptorLessThan(const Audio::PluginDescr
             if (isPlayingInNinjamRoom()) {// send the finish interval message
                 if (audioIntervalsToUpload.contains(localChannelIndex)) {
                     ninjamService.sendIntervalPart(
-                        audioIntervalsToUpload[localChannelIndex]->getGUID(), QByteArray(), true);
+                        audioIntervalsToUpload[localChannelIndex].getGUID(), QByteArray(), true);
                     if (ninjamController)
                         ninjamController->scheduleEncoderChangeForChannel(
                             inputTrack->getChanneGrouplIndex());

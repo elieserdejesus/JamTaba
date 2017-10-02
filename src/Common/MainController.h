@@ -266,7 +266,7 @@ protected:
     MainWindow *mainWindow;
 
     // map the input channel indexes to a GUID (used to upload audio to ninjam server)
-    QMap<quint8, UploadIntervalData *> audioIntervalsToUpload;
+    QMap<quint8, UploadIntervalData> audioIntervalsToUpload;
     UploadIntervalData *videoIntervalToUpload;
 
     QMutex mutex;

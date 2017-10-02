@@ -6,6 +6,11 @@ UploadIntervalData::UploadIntervalData() :
 {
 }
 
+UploadIntervalData::~UploadIntervalData()
+{
+    //
+}
+
 void UploadIntervalData::appendData(const QByteArray &encodedData)
 {
     dataToUpload.append(encodedData);

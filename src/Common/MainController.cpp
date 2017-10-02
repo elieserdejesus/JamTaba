@@ -131,7 +131,8 @@ void MainController::setEncodingQuality(float newEncodingQuality)
 void MainController::finishUploads()
 {
     for (int channelIndex : audioIntervalsToUpload.keys()) {
-        ninjamService.sendIntervalPart(audioIntervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
+        auto &audioInterval = audioIntervalsToUpload[channelIndex];
+        ninjamService.sendIntervalPart(audioInterval.getGUID(), QByteArray(), true);
     }
 
     if (videoIntervalToUpload)
@@ -305,34 +306,25 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, qui
 
     if (isFirstPart) {
 
-        auto audioInterval = audioIntervalsToUpload[channelIndex];
-        if (audioInterval) {
+        auto &audioInterval = audioIntervalsToUpload[channelIndex];
 
-            // flush the end of previous interval
+        // flush the end of previous interval
+        ninjamService.sendIntervalPart(audioInterval.getGUID(), audioInterval.getData(), true); // is the last part of interval
 
-            ninjamService.sendIntervalPart(audioInterval->getGUID(), audioInterval->getData(), true); // is the last part of interval
-
-            delete audioInterval;
-        }
-
-
-        auto newInterval = new UploadIntervalData(); // generate a new GUID
+        UploadIntervalData newInterval; // generate a new GUID
         audioIntervalsToUpload.insert(channelIndex, newInterval);
 
-        ninjamService.sendIntervalBegin(newInterval->getGUID(), channelIndex, true); // starting a new audio interval
+        ninjamService.sendIntervalBegin(newInterval.getGUID(), channelIndex, true); // starting a new audio interval
     }
 
-    auto interval = audioIntervalsToUpload[channelIndex];
-    if (!interval) {
-        return;
-    }
+    auto &interval = audioIntervalsToUpload[channelIndex];
 
-    interval->appendData(encodedData);
+    interval.appendData(encodedData);
 
-    bool canSend = interval->getTotalBytes() >= 4096;
+    bool canSend = interval.getTotalBytes() >= 4096;
     if (canSend) {
-        ninjamService.sendIntervalPart(interval->getGUID(), interval->getData(), false); // is not the last part of interval
-        interval->clear();
+        ninjamService.sendIntervalPart(interval.getGUID(), interval.getData(), false); // is not the last part of interval
+        interval.clear();
     }
 
     if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
@@ -841,10 +833,6 @@ MainController::~MainController()
     if (videoIntervalToUpload)
         delete videoIntervalToUpload;
 
-    for (auto audioIntervalToUpload : audioIntervalsToUpload)
-        if (audioIntervalToUpload)
-            delete audioIntervalToUpload;
-
     audioIntervalsToUpload.clear();
 
     qCDebug(jtCore()) << "cleaning jamRecorders done!";
@@ -1071,9 +1059,6 @@ void MainController::stopNinjamController()
         ninjamController->stop(true);
     }
 
-    for (auto uploadInterval : audioIntervalsToUpload) {
-        delete uploadInterval;
-    }
     audioIntervalsToUpload.clear();
 }
 
