@@ -46,8 +46,8 @@ AudioDriver::AudioDriver(Controller::MainController *mainController) :
     audioDeviceIndex(0),
     sampleRate(44100),
     bufferSize(128),
-    inputBuffer(nullptr),
-    outputBuffer(nullptr),
+    inputBuffer(SamplesBuffer(2)),
+    outputBuffer(SamplesBuffer(2)),
     mainController(mainController)
 {
 
@@ -55,9 +55,16 @@ AudioDriver::AudioDriver(Controller::MainController *mainController) :
 
 void AudioDriver::recreateBuffers()
 {
-    inputBuffer.reset(new SamplesBuffer(globalInputRange.getChannels()));
+    if (globalInputRange.isMono())
+        inputBuffer.setToMono();
+    else
+        inputBuffer.setToStereo();
 
-    outputBuffer.reset(new SamplesBuffer(globalOutputRange.getChannels()));
+
+    if (globalOutputRange.isMono())
+        outputBuffer.setToMono();
+    else
+        outputBuffer.setToStereo();
 }
 
 AudioDriver::~AudioDriver()
