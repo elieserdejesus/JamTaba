@@ -12,6 +12,8 @@
 
 #include "FFMpegCommon.h"
 
+#include <memory>
+
 // adapted from FFMpeg muxing.c example
 
 class FFMpegMuxer : public QObject
@@ -88,8 +90,9 @@ private:
     // internal streams
     class VideoOutputStream;
     class AudioOutputStream;
-    VideoOutputStream *videoStream;
-    AudioOutputStream *audioStream;
+
+    std::unique_ptr<VideoOutputStream> videoStream;
+    std::unique_ptr<AudioOutputStream> audioStream;
 
     AVFormatContext *formatContext;
     AVIOContext *avioContext;

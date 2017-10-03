@@ -247,15 +247,9 @@ void FFMpegMuxer::finishCurrentInterval()
     avio_flush(avioContext);
 
     // Close each codec.
-    if (videoStream) {
-        delete videoStream;
-        videoStream = nullptr;
-    }
+    videoStream.reset(nullptr);
 
-    if (audioStream) {
-        delete audioStream;
-        audioStream = nullptr;
-    }
+    audioStream.reset(nullptr);
 
     avformat_free_context(formatContext); // free the stream
 
@@ -281,7 +275,7 @@ void FFMpegMuxer::addAudioStream(AVCodecID codecID)
     if (audioStream)
         return;
 
-    audioStream = new AudioOutputStream();
+    audioStream.reset(new AudioOutputStream());
 
     // find the encoder
     AVCodec *codec = avcodec_find_encoder(codecID);
@@ -337,7 +331,7 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID)
     if (videoStream)
         return false;
 
-    videoStream = new VideoOutputStream();
+    videoStream.reset(new VideoOutputStream());
 
     // find the encoder
     AVCodec *codec = avcodec_find_encoder(codecID);
