@@ -117,7 +117,7 @@ public:
 
 LoginService::LoginService(QObject *parent) :
     QObject(parent),
-    httpClient(new QNetworkAccessManager(this)),
+    httpClient(QNetworkAccessManager(this)),
     pendingReply(nullptr),
     connected(false),
     refreshTimer(new QTimer(this))
@@ -207,7 +207,7 @@ QNetworkReply *LoginService::sendCommandToServer(const QUrlQuery &query, bool sy
     QNetworkRequest request(url);
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork);// disable cache
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded; charset=utf-8"));
-    pendingReply = httpClient->post(request, postData);
+    pendingReply = httpClient.post(request, postData);
 
     if (synchronous && pendingReply) {
         QEventLoop loop;

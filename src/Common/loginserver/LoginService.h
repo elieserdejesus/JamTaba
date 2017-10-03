@@ -184,7 +184,7 @@ private:
         REFRESH_ROOMS_LIST
     };
 
-    QNetworkAccessManager *httpClient;
+    QNetworkAccessManager httpClient;
     QNetworkReply *pendingReply;
     static const QString LOGIN_SERVER_URL;
     bool connected;
