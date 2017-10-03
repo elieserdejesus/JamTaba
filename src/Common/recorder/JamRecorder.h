@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QMap>
 
+#include <memory>
+
 namespace Recorder {
 
 
@@ -244,8 +246,8 @@ public:
 
 private:
     QString currentJamName;
-    Jam *jam;
-    JamMetadataWriter *jamMetadataWritter;
+    std::unique_ptr<Jam> jam;
+    std::unique_ptr<JamMetadataWriter> jamMetadataWritter;
     int globalIntervalIndex;
     QString localUserName;
     bool running;

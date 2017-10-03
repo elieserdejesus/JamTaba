@@ -160,7 +160,6 @@ JamRecorder::JamRecorder(JamMetadataWriter* jamMetadataWritter) :
 
 JamRecorder::~JamRecorder()
 {
-    delete jamMetadataWritter;
     qCDebug(jtJamRecorder) << "Deleting JamRecorder!";
 }
 
@@ -241,13 +240,10 @@ void JamRecorder::startRecording(const QString &localUser, const QDir &recordBas
     this->recordBaseDir = recordBaseDir;
     this->jamMetadataWritter->setJamDir(getNewJamName(), recordBaseDir.absolutePath());
 
-    if (this->jam) {
-        delete this->jam;
-    }
-    this->jam = new Jam(bpm, bpi, sampleRate);
+    jam.reset(new Jam(bpm, bpi, sampleRate));
 
-    this->running = true;
-    qDebug(jtJamRecorder) << this->jamMetadataWritter->getWriterId() << "startRecording!";
+    running = true;
+    qDebug(jtJamRecorder) << jamMetadataWritter->getWriterId() << "startRecording!";
 }
 
 // these methods are called when the user change the preferences. All these methods start a new recording
