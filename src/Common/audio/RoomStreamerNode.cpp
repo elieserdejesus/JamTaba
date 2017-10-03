@@ -167,18 +167,18 @@ bool NinjamRoomStreamerNode::needResamplingFor(int targetSampleRate) const
 void NinjamRoomStreamerNode::initialize(const QString &streamPath)
 {
     AbstractMp3Streamer::initialize(streamPath);
+
     buffering = true;
     bufferedSamples.zero();
     bytesToDecode.clear();
+
     if (!streamPath.isEmpty()) {
+
         qCDebug(jtNinjamRoomStreamer) << "connecting in " << streamPath;
-        if (httpClient)
-            httpClient->deleteLater();
-        httpClient = new QNetworkAccessManager(this);
-        QNetworkReply *reply = httpClient->get(QNetworkRequest(QUrl(streamPath)));
+
+        QNetworkReply *reply = httpClient.get(QNetworkRequest(QUrl(streamPath)));
         QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(on_reply_read()));
-        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this,
-                         SLOT(on_reply_error(QNetworkReply::NetworkError)));
+        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(on_reply_error(QNetworkReply::NetworkError)));
         this->device = reply;
     }
 }

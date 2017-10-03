@@ -76,7 +76,7 @@ protected:
     void initialize(const QString &streamPath);
 
 private:
-    QNetworkAccessManager *httpClient;
+    QNetworkAccessManager httpClient;
     bool buffering;
 
     static const int BUFFER_SIZE;
