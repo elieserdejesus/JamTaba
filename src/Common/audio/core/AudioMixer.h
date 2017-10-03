@@ -34,7 +34,7 @@ public:
 private:
     QList<AudioNode *> nodes;
     int sampleRate;
-    QMap<AudioNode *, SamplesBufferResampler *> resamplers;
+    QMap<AudioNode *, SamplesBufferResampler> resamplers;
 
 };
 
