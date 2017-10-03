@@ -91,7 +91,7 @@ protected:
             }
             
 
-            EncodingChunk &chunk = !chunksToEncode.empty() ? chunksToEncode.front() : EncodingChunk(Audio::SamplesBuffer::ZERO_BUFFER, 0, false, false);
+            EncodingChunk chunk = !chunksToEncode.empty() ? chunksToEncode.front() : EncodingChunk(Audio::SamplesBuffer::ZERO_BUFFER, 0, false, false);
 
             chunksToEncode.erase(chunksToEncode.begin()); // remove first element
 

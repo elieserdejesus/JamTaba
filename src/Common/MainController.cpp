@@ -39,14 +39,14 @@ MainController::MainController(const Settings &settings) :
     mutex(QMutex::Recursive),
     started(false),
     ipToLocationResolver(nullptr),
-    loginService(Login::LoginService(this)),
+    loginService(this),
     settings(settings),
     mainWindow(nullptr),
     masterGain(1),
     lastInputTrackID(0),
     usersDataCache(Configurator::getInstance()->getCacheDir()),
     lastFrameTimeStamp(0),
-    videoEncoder(FFMpegMuxer())
+    videoEncoder()
 {
 
     QDir cacheDir = Configurator::getInstance()->getCacheDir();

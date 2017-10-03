@@ -117,7 +117,7 @@ public:
 
 LoginService::LoginService(QObject *parent) :
     QObject(parent),
-    httpClient(QNetworkAccessManager(this)),
+    httpClient(this),
     pendingReply(nullptr),
     connected(false),
     refreshTimer(new QTimer(this))
