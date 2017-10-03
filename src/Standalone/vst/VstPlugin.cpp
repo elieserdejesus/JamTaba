@@ -36,15 +36,11 @@ QMap<QString, QDialog*> VstPlugin::editorsWindows;
 VstPlugin::VstPlugin(Vst::VstHost* host, const QString &pluginPath) :
     Audio::Plugin(Vst::utils::createDescriptor(nullptr, pluginPath)),
     effect(nullptr),
-    internalOutputBuffer(nullptr),
-    internalInputBuffer(nullptr),
     host(host),
     loaded(false),
     started(false),
     turnedOn(false),
-    wantMidi(false),
-    vstOutputArray(nullptr),
-    vstInputArray(nullptr)
+    wantMidi(false)
 {
     vstMidiEvents.reserved = 0;
     vstMidiEvents.numEvents = 0;
@@ -145,16 +141,9 @@ void VstPlugin::start()
 
     qCDebug(jtVstPlugin) << "starting plugin " << getName() << " thread: " << QThread::currentThreadId();
 
-    int outputs = effect->numOutputs;
-    int inputs = effect->numInputs;
-    qCDebug(jtVstPlugin) << "Criando internalBuffer com " << outputs << " canais e " << host->getBufferSize() << " samples";
-
-    //qWarning() << getName() << " ins:" << effect->numInputs << " outs:" << effect->numOutputs;
-    internalOutputBuffer = new Audio::SamplesBuffer(outputs, host->getBufferSize());
-    internalInputBuffer  = new Audio::SamplesBuffer(inputs, host->getBufferSize());
-
-    vstOutputArray = new float*[outputs];
-    vstInputArray = new float*[inputs];
+    int hostBufferSize = host->getBufferSize();
+    internalOutputBuffer.reset(new Audio::SamplesBuffer(effect->numOutputs, hostBufferSize));
+    internalInputBuffer.reset(new Audio::SamplesBuffer(effect->numInputs, hostBufferSize));
 
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     qCDebug(jtVstPlugin) << "Starting " << getName() << " version " << ver;
@@ -162,20 +151,15 @@ void VstPlugin::start()
     // setting buffer size and sample before open just to avoid problems (I see this trick in VstBoard source code)
     qCDebug(jtVstPlugin) << "setting sample rate and block size " << QThread::currentThreadId();
     effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
-    effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
+    effect->dispatcher(effect, effSetBlockSize, 0, hostBufferSize, NULL, 0.0f);
 
-    //qCDebug(vst) << "opening" << getName();
     effect->dispatcher(effect, effOpen, 0, 0, NULL, 0.0f);
-    //qCDebug(vst) << getName() << "opened";
 
     qCDebug(jtVstPlugin) << "setting sample rate and block size " << QThread::currentThreadId();
     effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
     effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
-    //qCDebug(vst) << "sample rate and block size setted for " << getName();
 
-    //qCDebug(vst) << "checking for plugin midi capabilities";
     wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
-    //qCDebug(vst) << "plugin midi capabilities done: " << wantMidi;
 
     started = true;
     turnedOn = false;
@@ -203,21 +187,10 @@ VstPlugin::~VstPlugin()
         editorWindow = nullptr;
     }
 
-    delete internalOutputBuffer;
-
     for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
         delete this->vstMidiEvents.events[i];
     }
 
-    if (vstOutputArray) {
-        delete [] vstOutputArray;
-        vstOutputArray = nullptr;
-    }
-
-    if (vstInputArray) {
-        delete [] vstInputArray;
-        vstInputArray = nullptr;
-    }
 }
 
 void VstPlugin::unload()
@@ -279,18 +252,20 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     internalInputBuffer->set(in);
 
     int inChannels = internalInputBuffer->getChannels();
-    for (int c = 0; c < inChannels; ++c) {
-        vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
-    }
-
     int outChannels = internalOutputBuffer->getChannels();
-    for (int c = 0; c < outChannels; ++c) {
+
+    std::vector<float *> vstOutputArray(outChannels);
+    std::vector<float *> vstInputArray(inChannels);
+
+    for (int c = 0; c < inChannels; ++c)
+        vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
+
+    for (int c = 0; c < outChannels; ++c)
         vstOutputArray[c] = internalOutputBuffer->getSamplesArray(c);
-    }
 
     VstInt32 sampleFrames = outBuffer.getFrameLenght();
     if (effect->flags & effFlagsCanReplacing) {
-        effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
+        effect->processReplacing(effect, vstInputArray.data(), vstOutputArray.data(), sampleFrames);
     }
 
     /**

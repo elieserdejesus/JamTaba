@@ -6,6 +6,9 @@
 #include <QMap>
 #include <QLibrary>
 
+#include <memory>
+#include <vector>
+
 #define MAX_MIDI_EVENTS 64 // in my tests playing piano I can genenerate just 3 messages per block (256 samples) at maximum
 
 struct VstEvents;
@@ -64,8 +67,8 @@ private:
 
     AEffect *effect;
 
-    Audio::SamplesBuffer *internalOutputBuffer;
-    Audio::SamplesBuffer *internalInputBuffer;
+    std::unique_ptr<Audio::SamplesBuffer> internalOutputBuffer;
+    std::unique_ptr<Audio::SamplesBuffer> internalInputBuffer;
 
     Vst::VstHost *host;
 
@@ -78,10 +81,6 @@ private:
 
     bool loaded;
 
-    float **vstOutputArray;
-    float **vstInputArray;
-
-    // VstEvents* vstEvents;
     void fillVstEventsList(const std::vector<Midi::MidiMessage> &midiBuffer);
 
     template<int N>
