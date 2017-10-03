@@ -30,8 +30,6 @@ public:
 
     void setVideoFrameRate(qreal frameRate);
 
-    void setSaveToFile(bool save);
-
     enum VideoQuality
     {
         LOW_VIDEO_QUALITY = 32000,    // 32 kbps
@@ -85,9 +83,6 @@ private:
     bool encodeVideo;
     bool encodeAudio;
 
-    bool savingToFile;
-    QFile *file;
-
     int64_t videoPts; // pts (presentation time stamp) of the next frame that will be generated
 
     // internal streams
@@ -109,11 +104,6 @@ private:
     bool startNewIntervalRequested;
 
 };
-
-inline void FFMpegMuxer::setSaveToFile(bool save)
-{
-    this->savingToFile = save;
-}
 
 inline void FFMpegMuxer::setVideoQuality(VideoQuality quality)
 {

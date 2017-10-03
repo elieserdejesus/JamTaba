@@ -82,8 +82,6 @@ FFMpegMuxer::FFMpegMuxer()
       videoFrameRate(25),
       videoBitRate(static_cast<uint>(FFMpegMuxer::LOW_VIDEO_QUALITY)),
       videoPts(0),
-      file(nullptr),
-      savingToFile(false),
       formatContext(nullptr),
       avioContext(nullptr),
       initialized(false),
@@ -105,17 +103,6 @@ void FFMpegMuxer::initialize()
     encodeAudio = encodeVideo = false;
     audioStream = nullptr;
     videoStream = nullptr;
-
-    if (savingToFile) {
-        if (file && file->isOpen()) {
-            file->deleteLater();
-        }
-
-        static int counter = 1;
-        file = new QFile("teste" + QString::number(counter++) + ".avi", this);
-        if(!file->open(QIODevice::WriteOnly))
-            qCritical() << "Can't open the file " << file << file->errorString();
-    }
 
     videoPts = 0;
 }
@@ -157,10 +144,6 @@ int FFMpegMuxer::writeCallback(void *instancePointer, uint8_t *buffer, int buffe
     FFMpegMuxer *instance = static_cast<FFMpegMuxer *>(instancePointer);
 
     QByteArray encodedBytes((const char*)buffer, bufferSize);
-
-    if (instance->savingToFile && instance->file) {
-        instance->file->write(encodedBytes);
-    }
 
     bool isFirstPacket = instance->videoPts == 0;
 
@@ -277,11 +260,6 @@ void FFMpegMuxer::finishCurrentInterval()
     avformat_free_context(formatContext); // free the stream
 
     av_free(avioContext);
-
-    if (savingToFile && file && file->isOpen()) {
-        file->deleteLater();
-        file = nullptr;
-    }
 
     initialized = false;
 
