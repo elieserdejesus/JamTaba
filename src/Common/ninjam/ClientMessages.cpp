@@ -20,9 +20,7 @@ ClientMessage::~ClientMessage()
 }
 
 void ClientMessage::serializeString(const QString &string, QDataStream &stream){
-    //serializeByteArray(QByteArray(str.toStdString().c_str()), stream);
 
-    //serializeByteArray(str.toUtf8(), stream);
     QByteArray dataArray = string.toUtf8();
     stream.writeRawData(dataArray.data(), dataArray.size());
 
@@ -30,7 +28,7 @@ void ClientMessage::serializeString(const QString &string, QDataStream &stream){
 }
 
 void ClientMessage::serializeByteArray(const QByteArray &array, QDataStream &stream){
-    //qDebug() << "serializando " << array.size() << " bytes para " << array <<endl;
+
     for (int i = 0; i < array.size(); ++i) {
         stream << quint8(array[i]);
     }
@@ -210,12 +208,31 @@ void ClientSetUserMask::printDebug(QDebug &dbg) const
 
 //+++++++++++++++++++++++++++++
 
-ChatMessage::ChatMessage(const QString &text) :
+ChatMessage::ChatMessage(const QString &text, ChatMessageType type) :
     ClientMessage(0xc0, 0),
-    text(text),
-    command("MSG")
+    text(ChatMessage::satinizeText(text, type)),
+    command(getTypeCommand(type))
 {
-    payload = text.toUtf8().size() + 1 + command.length() + 1;
+    payload = this->text.toUtf8().size() + 1 + command.length() + 1;
+}
+
+QString ChatMessage::satinizeText(const QString &msg, ChatMessageType type)
+{
+    if (type == ChatMessageType::AdminMessage)
+        return msg.right(msg.size() - 1); // remove the first char (/)
+
+    return msg;
+}
+
+QString ChatMessage::getTypeCommand(ChatMessageType type)
+{
+    switch (type) {
+        case ChatMessageType::AdminMessage:   return "ADMIN";
+        case ChatMessageType::PrivateMessage: return "PRIVMSG";
+        case ChatMessageType::TopicMessage:   return "TOPIC";
+    }
+
+    return "MSG";
 }
 
 void ChatMessage::serializeTo(QByteArray &buffer) const

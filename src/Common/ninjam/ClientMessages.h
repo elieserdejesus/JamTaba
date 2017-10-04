@@ -114,11 +114,24 @@ private:
 class ChatMessage : public ClientMessage
 {
 public:
-    explicit ChatMessage(const QString &text);
+
+    enum ChatMessageType
+    {
+        PublicMessage,  // MSG
+        PrivateMessage, // PRIVMSG
+        TopicMessage,   // TOPIC
+        AdminMessage    // ADMIN
+    };
+
+    ChatMessage(const QString &text, ChatMessageType type = ChatMessageType::PublicMessage);
 
 private:
     QString text;
     QString command;
+    ChatMessageType type;
+
+    static QString getTypeCommand(ChatMessageType type);
+    static QString satinizeText(const QString &msg, ChatMessageType type);
 
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;

@@ -587,7 +587,12 @@ void NinjamController::handleReceivedChatMessage(const Ninjam::User &user, const
 
 void NinjamController::sendChatMessage(const QString &msg)
 {
-    mainController->getNinjamService()->sendChatMessageToServer(msg);
+    auto service = mainController->getNinjamService();
+    bool isAdminCommand = Gui::Chat::isAdminCommand(msg);
+    if (isAdminCommand)
+        service->sendAdminCommand(msg);
+    else
+        service->sendChatMessage(msg);
 }
 
 long NinjamController::generateNewTrackID()

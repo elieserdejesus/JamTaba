@@ -46,7 +46,8 @@ public:
     ~Service();
     static bool isBotName(const QString &userName);
 
-    void sendChatMessageToServer(const QString &message);
+    void sendChatMessage(const QString &message);
+    void sendAdminCommand(const QString &message);
 
     void setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel);
 

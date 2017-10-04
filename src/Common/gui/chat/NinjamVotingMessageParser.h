@@ -11,6 +11,7 @@ namespace Gui
 
         extern const QRegularExpression SYSTEM_VOTING_REGEX;
         extern const QRegularExpression LOCAL_USER_VOTING_REGEX;
+        extern const QRegularExpression ADMIN_COMMAND_REGEX;
 
         class SystemVotingMessage
         {
@@ -40,6 +41,8 @@ namespace Gui
         bool isFirstSystemVotingMessage(const QString &userName, const QString &message);
 
         SystemVotingMessage parseSystemVotingMessage(const QString &message);
+
+        bool isAdminCommand(const QString &message);
 
     } // Chat namespace
 
