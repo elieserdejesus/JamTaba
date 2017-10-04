@@ -10,7 +10,7 @@
 
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
-ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *textEditorModifier) :
+ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier) :
     QWidget(nullptr),
     ui(new Ui::ChatPanel),
     botNames(botNames),
@@ -33,10 +33,12 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
         }
     });
 
-    if (textEditorModifier) {
+    if (chatInputModifier) {
         bool finishEditorPressingReturnKey = false;
-        textEditorModifier->modify(ui->chatText, finishEditorPressingReturnKey);
+        chatInputModifier->modify(ui->chatText, finishEditorPressingReturnKey);
     }
+
+    ui->topicLabel->setVisible(false);
 
     // this event is used to auto scroll down when new messages are added
     connect(ui->chatScroll->verticalScrollBar(), &QScrollBar::rangeChanged, this, &ChatPanel::autoScroll);
@@ -49,6 +51,13 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     previousVerticalScrollBarMaxValue = ui->chatScroll->verticalScrollBar()->value();
+}
+
+void ChatPanel::setTopicMessage(const QString &topic)
+{
+    ui->topicLabel->setText(topic);
+
+    ui->topicLabel->setVisible(!topic.isEmpty());
 }
 
 void ChatPanel::changeEvent(QEvent *e)

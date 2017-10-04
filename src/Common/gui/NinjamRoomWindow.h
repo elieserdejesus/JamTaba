@@ -159,7 +159,7 @@ private slots:
     void updateIntervalDownloadingProgressBar(long trackID);
     void hideIntervalDownloadingProgressBar(long trackID);
     void addChatMessage(const Ninjam::User &, const QString &message);
-    void addServerTopicMessage(const QString &topicMessage);
+    void setServerTopicMessage(const QString &topicMessage);
     void handleUserLeaving(const QString &userName);
     void handleUserEntering(const QString &userName);
     void handleBpiChanges();

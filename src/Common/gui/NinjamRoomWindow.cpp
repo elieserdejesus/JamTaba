@@ -92,6 +92,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
 
     connect(mainController, &Controller::MainController::themeChanged, this, &NinjamRoomWindow::updateStylesheet);
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow done";
+
+    showLastChordsInChat();
 }
 
 void NinjamRoomWindow::updateStylesheet()
@@ -344,11 +346,9 @@ void NinjamRoomWindow::handleUserEntering(const QString &userName)
         chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(userName));
 }
 
-void NinjamRoomWindow::addServerTopicMessage(const QString &topicMessage)
+void NinjamRoomWindow::setServerTopicMessage(const QString &topicMessage)
 {
-    addChatMessage(Ninjam::User(JAMTABA_CHAT_BOT_NAME), topicMessage);
-
-    showLastChordsInChat();
+    chatPanel->setTopicMessage(topicMessage);
 }
 
 void NinjamRoomWindow::showLastChordsInChat()
@@ -822,7 +822,7 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User, QString)), this, SLOT(addChatMessage(Ninjam::User, QString)));
 
-    connect(ninjamController, SIGNAL(topicMessageReceived(QString)), this, SLOT(addServerTopicMessage(QString)));
+    connect(ninjamController, SIGNAL(topicMessageReceived(QString)), this, SLOT(setServerTopicMessage(QString)));
 
     connect(ninjamController, SIGNAL(channelXmitChanged(long, bool)), this, SLOT(setChannelXmitStatus(long, bool)));
 

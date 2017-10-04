@@ -21,7 +21,7 @@ class ChatPanel : public QWidget
     Q_OBJECT
 
 public:
-    ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *textEditorModifier);
+    ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier);
     virtual ~ChatPanel();
     void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
     void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));
@@ -31,6 +31,7 @@ public:
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry(); // called when user switch from mini mode to full view
     void removeMessagesFrom(const QString &userName);
+    void setTopicMessage(const QString &topic);
 
 signals:
     void userSendingNewMessage(const QString &msg);

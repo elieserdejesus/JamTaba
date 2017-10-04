@@ -21,6 +21,10 @@ ChatPanel #chatText:focus                   /* text input field focused */
 }
 
 
+#topicLabel
+{
+    color: gray;
+}
 
 /* ChatMessagePanel is the widget used to show ONE chat message
 ----------------------------------------------------------------*/
