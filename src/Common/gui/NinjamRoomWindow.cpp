@@ -491,6 +491,9 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
         addTrack(trackGroupView);
         trackGroups.insert(user.getFullName(), trackGroupView);
         trackGroupView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
+
+        connect(trackGroupView, &NinjamTrackGroupView::createPrivateChat, mainWindow, &MainWindow::addPrivateChat);
+
     } else { // the second, or third channel from same user, group with other channels
         NinjamTrackGroupView *trackGroup = trackGroups[user.getFullName()];
         if (trackGroup) {

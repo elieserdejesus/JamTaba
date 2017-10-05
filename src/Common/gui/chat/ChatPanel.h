@@ -21,7 +21,7 @@ class ChatPanel : public QWidget
     Q_OBJECT
 
 public:
-    ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier);
+    ChatPanel(const QString &userFullName, const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier);
     virtual ~ChatPanel();
     void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
     void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));
@@ -31,6 +31,9 @@ public:
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry(); // called when user switch from mini mode to full view
     void removeMessagesFrom(const QString &userName);
+    void setInputsStatus(bool enabled);
+    bool inputsAreEnabled() const;
+    QString getUserFullName() const;
 
 public slots:
     void setTopicMessage(const QString &topic);
@@ -41,6 +44,7 @@ signals:
     void userConfirmingVoteToBpmChange(int newBpm);
     void userConfirmingChordProgression(const ChordProgression &chordProgression);
     void userBlockingChatMessagesFrom(const QString &blockedUserName);
+    void unreadedMessagesChanged(int unreadedMessages);
 
 private slots:
     void sendNewMessage();
@@ -56,6 +60,7 @@ private slots:
 
 protected:
     void changeEvent(QEvent *) override;
+    void showEvent(QShowEvent *) override;
 
 private:
     Ui::ChatPanel *ui;
@@ -77,7 +82,17 @@ private:
 
     UsersColorsPool *colorsPool;
 
+    QString userFullName; // username@ip
+
+    uint unreadedMessages; // messages added when this widget is not focused
+
+    void setUnreadedMessages(uint unreaded);
 };
+
+inline QString ChatPanel::getUserFullName() const
+{
+    return userFullName;
+}
 
 class NinjamVoteButton : public QPushButton
 {

@@ -14,7 +14,7 @@
 using namespace Login;
 
 const QString LoginService::LOGIN_SERVER_URL = "http://jamtaba2.appspot.com/vs";
-// const QString LoginService::SERVER = "http://localhost:8080/vs";
+//const QString LoginService::LOGIN_SERVER_URL = "http://localhost:8080/vs";
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

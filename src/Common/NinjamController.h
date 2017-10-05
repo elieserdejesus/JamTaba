@@ -99,7 +99,8 @@ signals:
     void userLeave(const QString &userName);
     void userEnter(const QString &userName);
 
-    void chatMsgReceived(const Ninjam::User &user, const QString &message );
+    void publicChatMessageReceived(const Ninjam::User &user, const QString &message );
+    void privateChatMessageReceived(const Ninjam::User &user, const QString &message );
     void topicMessageReceived(const QString &message);
 
     void encodedAudioAvailableToSend(const QByteArray &encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
@@ -185,7 +186,8 @@ private slots:
     void updateNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void handleNinjamUserExiting(const Ninjam::User &user);
     void handleNinjamUserEntering(const Ninjam::User &user);
-    void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
+    void handleReceivedPublicChatMessage(const Ninjam::User &user, const QString &message);
+    void handleReceivedPrivateChatMessage(const Ninjam::User &user, const QString &message);
 
 }; // end of class
 

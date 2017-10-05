@@ -148,9 +148,29 @@ void NinjamTrackGroupView::showChatBlockIcon(const QString &blockedUserName)
 void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
     QString userName = getGroupName();
-    bool userIsBlockedInChat = mainController->getNinjamController()->userIsBlockedInChat(userName);
+    auto ninjamController = mainController->getNinjamController();
+
+    bool userIsBlockedInChat = ninjamController->userIsBlockedInChat(userName);
+
+    QAction *privateChatAction = contextMenu.addAction(tr("Private chat with %1").arg(userName));
+    connect(privateChatAction, &QAction::triggered, this, [=]() {
+
+        emit createPrivateChat(userName, userIP);
+
+    });
+
+    QString localIP;
+    auto service = mainController->getNinjamService();
+    if (service) {
+        localIP = Ninjam::extractUserIP(service->getConnectedUserName());
+    }
+    privateChatAction->setEnabled(!userIP.isEmpty() && !localIP.isEmpty()); // admin IPs are empty
+
+    contextMenu.addSeparator();
+
     QAction *blockAction = contextMenu.addAction(tr("Block %1 in chat").arg(userName), this, SLOT(blockChatMessages()));
     QAction *unblockAction = contextMenu.addAction(tr("Unblock %1 in chat").arg(userName), this, SLOT(unblockChatMessages()));
+
     blockAction->setEnabled(!userIsBlockedInChat);
     unblockAction->setEnabled(userIsBlockedInChat);
 
@@ -352,7 +372,7 @@ QSize NinjamTrackGroupView::sizeHint() const
             height += trackView->minimumSizeHint().height();
         }
 
-        return QSize(1, qMax(height, 54));
+        return QSize(1, qMax(height, 58));
     }
 
     // grid layout

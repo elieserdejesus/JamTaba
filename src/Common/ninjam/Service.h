@@ -46,7 +46,8 @@ public:
     ~Service();
     static bool isBotName(const QString &userName);
 
-    void sendChatMessage(const QString &message);
+    void sendPublicChatMessage(const QString &message);
+    void sendPrivateChatMessage(const QString &message);
     void sendAdminCommand(const QString &message);
 
     void setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel);
@@ -88,9 +89,9 @@ signals:
     void audioIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int bytesDownloaded);
     void disconnectedFromServer(const Ninjam::Server &server);
     void connectedInServer(const Ninjam::Server &server);
-    void chatMessageReceived(const Ninjam::User &sender, const QString &message);
+    void publicChatMessageReceived(const Ninjam::User &sender, const QString &message);
+    void privateChatMessageReceived(const Ninjam::User &sender, const QString &message);
     void serverTopicMessageReceived(const QString &topic);
-    void privateMessageReceived(const Ninjam::User &sender, const QString &message); // TODO this works? I never see a private message in my life :)
     void userEntered(const Ninjam::User &newUser);
     void userExited(const Ninjam::User &user);
     void error(const QString &msg);

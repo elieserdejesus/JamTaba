@@ -101,7 +101,9 @@ public slots:
     void showFeedbackAboutBlockedUserInChat(const QString &userName);
     void showFeedbackAboutUnblockedUserInChat(const QString &userName);
 
-    void addChatMessage(const Ninjam::User &, const QString &message);
+    void addMainChatMessage(const Ninjam::User &, const QString &message);
+    void addPrivateChatMessage(const Ninjam::User &, const QString &message);
+    void addPrivateChat(const QString &remoteUserName, const QString &userIP);
 
 protected:
     Controller::MainController *mainController;
@@ -164,7 +166,8 @@ protected:
     QString preferredCameraName;
 
 protected slots:
-    void closeTab(int index);
+    void closeContentTab(int index);
+    void closeChatTab(int index);
     void changeTab(int index);
 
     // main menu
@@ -290,13 +293,20 @@ private:
     void hideBusyDialog();
     void centerBusyDialog();
 
+    void createPrivateChat(const QString &remoteUserName, const QString &userIP, bool focusNewChat);
+    void setPrivateChatInputstatus(const QString userName, bool enabled);
+
     void closeAllLooperWindows();
 
     void initializeWindowSize();
 
+    void removeTabCloseButton(QTabWidget *tabWidget, int buttonIndex);
+
     void initializeVotingExpirationTimers();
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
+
+    ChatPanel *getFocusedChatPanel() const;
 
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;
@@ -355,7 +365,8 @@ private:
 
     void restoreWindowPosition();
 
-    void updateMainChatTabTitle();
+    void updatePublicChatTabTitle(uint unreadedMessages = 0);
+    void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages);
     void setChatsVisibility(bool chatVisible);
     void addMainChatPanel();
     void showLastChordsInMainChat();

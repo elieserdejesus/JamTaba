@@ -615,22 +615,30 @@ void MainWindow::addChannelsGroup(const QString &name)
     updateLocalInputChannelsGeometry();
 }
 
-void MainWindow::initializeMainTabWidget()
+void MainWindow::removeTabCloseButton(QTabWidget *tabWidget, int buttonIndex)
 {
-    // the rooms list tab bar is not closable
+    if (!tabWidget)
+        return;
 
-    auto tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::RightSide); // try get the tabBar in right side (Windows)
+    auto tabBar = tabWidget->tabBar()->tabButton(buttonIndex, QTabBar::RightSide);
 
     if (!tabBar) // try get the tabBar in left side (MAC OSX)
-        tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::LeftSide);
+        tabBar = tabWidget->tabBar()->tabButton(buttonIndex, QTabBar::LeftSide);
 
     if (tabBar) {
         tabBar->resize(0, 0);
         tabBar->hide();
     }
+}
 
-    connect(ui.contentTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
-    connect(ui.contentTabWidget, SIGNAL(tabBarClicked(int)), this, SLOT(changeTab(int)));
+void MainWindow::initializeMainTabWidget()
+{
+    // the rooms list tab bar is not closable
+
+    removeTabCloseButton(ui.contentTabWidget, 0);
+
+    connect(ui.contentTabWidget, &CustomTabWidget::tabCloseRequested, this, &MainWindow::closeContentTab);
+    connect(ui.contentTabWidget, &CustomTabWidget::tabBarClicked, this, &MainWindow::changeTab);
 }
 
 void MainWindow::updateChannelsNames()
@@ -788,11 +796,22 @@ void MainWindow::initializeLoginService()
     connect(loginService, &LoginService::errorWhenConnectingToServer, this, &MainWindow::handleServerConnectionError);
 }
 
-void MainWindow::closeTab(int index)
+void MainWindow::closeChatTab(int index)
 {
-    if (index > 0) { // the first tab is not closable
+    if (index > 0) { // the first chat (main chat) is not closeable
+        ChatPanel *chatPanel = static_cast<ChatPanel*>(ui.chatTabWidget->widget(index));
+        if (chatPanel)
+            chatPanels.remove(chatPanel->getUserFullName());
+
+        ui.chatTabWidget->removeTab(index);
+    }
+}
+
+void MainWindow::closeContentTab(int index)
+{
+    if (index > 0) { // the first tab (rooms to play) is not closeable
         showBusyDialog(tr("disconnecting ..."));
-        if (mainController->getNinjamController()->isRunning())
+        if (mainController->isPlayingInNinjamRoom())
             mainController->stopNinjamController();
     }
 }
@@ -1047,21 +1066,42 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     connect(controller, &NinjamController::userBlockedInChat, this, &MainWindow::showFeedbackAboutBlockedUserInChat);
     connect(controller, &NinjamController::userUnblockedInChat, this, &MainWindow::showFeedbackAboutUnblockedUserInChat);
 
-    connect(controller, &NinjamController::chatMsgReceived, this, &MainWindow::addChatMessage);
+    connect(controller, &NinjamController::publicChatMessageReceived, this, &MainWindow::addMainChatMessage); // main chat
+    connect(controller, &NinjamController::privateChatMessageReceived, this, &MainWindow::addPrivateChatMessage);
 
-    if (chatPanels.isEmpty()) {
-        auto mainChatPanel = chatPanels.first().data();
-        connect(controller, &NinjamController::topicMessageReceived, mainChatPanel, &ChatPanel::setTopicMessage);
+    if (!chatPanels.isEmpty()) {
+        auto &mainChatPanel = chatPanels[JAMTABA_CHAT_BOT_NAME];
+        connect(controller, &NinjamController::topicMessageReceived, mainChatPanel.data(), &ChatPanel::setTopicMessage);
     }
 
     enableLooperButtonInLocalTracks(true); // looper buttons are enabled when entering in a server
 }
 
+ChatPanel *MainWindow::getFocusedChatPanel() const
+{
+    return static_cast<ChatPanel *>(ui.chatTabWidget->currentWidget());
+}
+
+void MainWindow::setPrivateChatInputstatus(const QString userName, bool enabled)
+{
+    if (userName == JAMTABA_CHAT_BOT_NAME)
+        return;
+
+    for (auto chat : chatPanels.values()) {
+        QString chatUserName = Ninjam::extractUserName(chat->getUserFullName());
+        if (chatUserName == userName) {
+            chat->setInputsStatus(enabled);
+        }
+    }
+}
+
 void MainWindow::handleUserLeaving(const QString &userName)
 {
-    if (chatPanels.isEmpty()) {
-        auto mainChatPanel = chatPanels.first().data();
-        mainChatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 has left the room.").arg(userName));
+    if (!chatPanels.isEmpty()) {
+        auto chatPanel = getFocusedChatPanel();
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 has left the room.").arg(userName));
+
+        setPrivateChatInputstatus(userName, false); // deactive the private chat when user leave
     }
 
     usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
@@ -1069,9 +1109,11 @@ void MainWindow::handleUserLeaving(const QString &userName)
 
 void MainWindow::handleUserEntering(const QString &userName)
 {
-    if (chatPanels.isEmpty()) {
-        auto mainChatPanel = chatPanels.first().data();
-        mainChatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(userName));
+    if (!chatPanels.isEmpty()) {
+        auto chatPanel = getFocusedChatPanel();
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(userName));
+
+        setPrivateChatInputstatus(userName, true); // activate the chat if user is entering again
     }
 }
 
@@ -1147,7 +1189,25 @@ bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
     return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
 }
 
-void MainWindow::addChatMessage(const Ninjam::User &user, const QString &message)
+void MainWindow::addPrivateChatMessage(const Ninjam::User &user, const QString &message)
+{
+    if (!chatPanels.contains(user.getFullName())) {
+        createPrivateChat(user.getName(), user.getIp(), false); // create new private chat, but not focused
+    }
+    else {
+        auto privateChat = chatPanels[user.getFullName()];
+        if (privateChat && !privateChat->inputsAreEnabled())
+            privateChat->setInputsStatus(true);
+    }
+    
+    if(!chatPanels.contains(user.getFullName()))
+        return;
+
+    auto &chatPanel = chatPanels[user.getFullName()];
+    chatPanel->addMessage(user.getName(), message, true, true);
+}
+
+void MainWindow::addMainChatMessage(const Ninjam::User &user, const QString &message)
 {
     if (chatPanels.isEmpty() || !ninjamWindow)
         return;
@@ -1165,7 +1225,7 @@ void MainWindow::addChatMessage(const Ninjam::User &user, const QString &message
     bool showBlockButton = canShowBlockButtonInChatMessage(userName);
     bool showTranslationButton = !isChordProgressionMessage;
 
-    auto mainChatPanel = chatPanels.first().data();
+    auto mainChatPanel = chatPanels[JAMTABA_CHAT_BOT_NAME];
     mainChatPanel->addMessage(userName, message, showTranslationButton, showBlockButton);
 
     static bool localUserWasVotingInLastMessage = false;
@@ -1208,13 +1268,20 @@ void MainWindow::addMainChatPanel()
 
     // add main chat panel
     auto botNames = MainController::getBotNames();
-    auto mainChatPanel = new ChatPanel(botNames, &usersColorsPool, createTextEditorModifier());
+    auto mainChatPanel = new ChatPanel(JAMTABA_CHAT_BOT_NAME, botNames, &usersColorsPool, createTextEditorModifier());
 
     chatPanels.insert(JAMTABA_CHAT_BOT_NAME, QSharedPointer<ChatPanel>(mainChatPanel));
 
     ui.chatTabWidget->addTab(mainChatPanel, "");
 
-    updateMainChatTabTitle(); // set and translate the chat tab title
+    connect(mainChatPanel, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
+
+        updatePublicChatTabTitle(unreaded);
+    });
+
+    removeTabCloseButton(ui.chatTabWidget, 0); // the main chat is not closable
+
+    updatePublicChatTabTitle(); // set and translate the chat tab title
 
     auto preferredLanguage = mainController->getSettings().getTranslation();
     mainChatPanel->setPreferredTranslationLanguage(preferredLanguage);
@@ -1233,6 +1300,54 @@ void MainWindow::addMainChatPanel()
 
     showLastChordsInMainChat();
 
+}
+
+void MainWindow::createPrivateChat(const QString &remoteUserName, const QString &userIP, bool focusNewChat)
+{
+    if (userIP.isEmpty())
+        return;
+
+    QString userFullName = remoteUserName + "@" + userIP;
+
+    if (chatPanels.contains(userFullName))
+        return;
+
+    auto botNames = mainController->getBotNames();
+    auto modifier = createTextEditorModifier();
+    auto chatPanel = new ChatPanel(userFullName, botNames, &usersColorsPool, modifier);
+
+    chatPanel->setTopicMessage(tr("Private chat with %1").arg(remoteUserName));
+
+    chatPanels.insert(userFullName, QSharedPointer<ChatPanel>(chatPanel));
+
+    int tabIndex = ui.chatTabWidget->addTab(chatPanel, remoteUserName);
+    if (focusNewChat)
+        ui.chatTabWidget->setCurrentIndex(tabIndex);
+
+    connect(chatPanel, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
+        updatePrivateChatTabTitle(tabIndex, unreaded);
+    });
+
+    connect(chatPanel, &ChatPanel::userSendingNewMessage, this, [=](const QString &message) {
+
+        auto ninjamController = mainController->getNinjamController();
+
+        QString text = QString("/msg %1 %2")
+                .arg(userFullName)
+                .arg(message);
+
+        ninjamController->sendChatMessage(text);
+
+        chatPanel->addMessage(mainController->getUserName(), message, false);
+
+    });
+
+    connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+}
+
+void MainWindow::addPrivateChat(const QString &remoteUserName, const QString &userIP)
+{
+    createPrivateChat(remoteUserName, userIP, true);
 }
 
 void MainWindow::blockUserInChat(const QString &userNameToBlock)
@@ -1273,17 +1388,18 @@ void MainWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
     if (chatPanels.isEmpty())
         return;
 
-    auto mainChatPanel = chatPanels.first().data();
-    mainChatPanel->removeMessagesFrom(userName);
-    mainChatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
+    auto chatPanel = getFocusedChatPanel();
+    chatPanel->removeMessagesFrom(userName);
+    chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
 }
 
 void MainWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
 {
-    if (!chatPanels.isEmpty()) {
-        auto mainChatPanel = chatPanels.first().data();
-        mainChatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is unblocked in the chat").arg(userName));
-    }
+    if (chatPanels.isEmpty())
+        return;
+
+     auto chatPanel = getFocusedChatPanel();
+     chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is unblocked in the chat").arg(userName));
 }
 
 void MainWindow::enableLooperButtonInLocalTracks(bool enable)
@@ -1322,10 +1438,30 @@ void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
     }
 }
 
-void MainWindow::updateMainChatTabTitle()
+void MainWindow::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages)
 {
-    int chatTabIndex = 0; // assuming chat is the first tab
-    ui.chatTabWidget->setTabText(chatTabIndex, tr("Chat"));
+    Q_ASSERT(chatIndex > 0);
+
+    if (chatIndex > 0) { // index ZERO is the public chat
+        auto chatPanel = static_cast<ChatPanel *>(ui.chatTabWidget->widget(chatIndex));
+        if (chatPanel) {
+            QString text = chatPanel->getUserFullName().replace(QRegularExpression("@.+"), "");
+            if (unreadedMessages > 0)
+                text = QString("(%1) %2").arg(unreadedMessages).arg(text);
+
+            ui.chatTabWidget->setTabText(chatIndex, text);
+        }
+    }
+}
+
+void MainWindow::updatePublicChatTabTitle(uint unreadedMessages)
+{
+    int chatTabIndex = 0; // assuming main chat is always the first tab
+    QString text = tr("Chat");
+    if (unreadedMessages > 0)
+        text = QString("(%1) %2").arg(unreadedMessages).arg(text);
+
+    ui.chatTabWidget->setTabText(chatTabIndex, text);
 }
 
 void MainWindow::showMetronomePreferencesDialog()
@@ -1518,7 +1654,7 @@ void MainWindow::changeEvent(QEvent *ev)
         updateUserNameLineEditToolTip(); // translate user name line edit tool tip
 
         if (ninjamWindow)
-            updateMainChatTabTitle(); // translate the chat tab title
+            updatePublicChatTabTitle(); // translate the chat tab title
     }
 
     QMainWindow::changeEvent(ev);
@@ -2068,7 +2204,10 @@ void MainWindow::setupSignals()
 
     connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::handleThemeChanged);
 
+    connect(ui.chatTabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::closeChatTab);
+
     ui.contentTabWidget->installEventFilter(this);
+
 }
 
 void MainWindow::updateUserName()

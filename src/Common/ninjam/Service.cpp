@@ -223,7 +223,12 @@ void Service::voteToChangeBPM(quint16 newBPM)
     sendMessageToServer(ChatMessage(text));
 }
 
-void Service::sendChatMessage(const QString &message)
+void Service::sendPrivateChatMessage(const QString &message)
+{
+    sendMessageToServer(ChatMessage(message, ChatMessage::PrivateMessage));
+}
+
+void Service::sendPublicChatMessage(const QString &message)
 {
     sendMessageToServer(ChatMessage(message));
 }
@@ -480,7 +485,7 @@ void Service::process(const ServerChatMessage &msg)
     {
         QString messageSender = msg.getArguments().at(0);
         QString messageText = msg.getArguments().at(1);
-        emit chatMessageReceived(User(messageSender), messageText);
+        emit publicChatMessageReceived(User(messageSender), messageText);
         break;
     }
     case ChatCommandType::PART:
@@ -495,7 +500,7 @@ void Service::process(const ServerChatMessage &msg)
     {
         QString messageSender = msg.getArguments().at(0);
         QString messageText = msg.getArguments().at(1);
-        emit privateMessageReceived(User(messageSender), messageText);
+        emit privateChatMessageReceived(User(messageSender), messageText);
         break;
     }
     case ChatCommandType::TOPIC:

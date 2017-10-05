@@ -406,7 +406,13 @@ QStringList MainController::getBotNames()
 
 Geo::Location MainController::getGeoLocation(const QString &ip)
 {
-    return ipToLocationResolver->resolve(ip, getTranslationLanguage());
+    static QString ipMask(".x");
+
+    QString sanitizedIp(ip);
+    if (sanitizedIp.endsWith(ipMask))
+        sanitizedIp.replace(ipMask, ".128"); // replace .x with .128 to generate a valid IP
+
+    return ipToLocationResolver->resolve(sanitizedIp, getTranslationLanguage());
 }
 
 void MainController::mixGroupedInputs(int groupIndex, Audio::SamplesBuffer &out)

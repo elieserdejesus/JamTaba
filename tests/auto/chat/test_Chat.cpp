@@ -1,6 +1,6 @@
 #include <QTest>
 #include "TestChatVotingMessages.h"
-#include "TestAdminCommands.h"
+#include "TestChatMessages.h"
 
 int main(int argc, char *argv[])
 {

@@ -49,6 +49,9 @@ public:
     static const uint MAX_WIDTH_IN_GRID_LAYOUT;
     static const uint MAX_HEIGHT_IN_GRID_LAYOUT;
 
+signals:
+    void createPrivateChat(const QString &userName, const QString &userIP);
+
 public slots:
     void updateVideoFrame(const QImage &frame);
 

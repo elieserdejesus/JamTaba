@@ -211,15 +211,20 @@ void ClientSetUserMask::printDebug(QDebug &dbg) const
 ChatMessage::ChatMessage(const QString &text, ChatMessageType type) :
     ClientMessage(0xc0, 0),
     text(ChatMessage::satinizeText(text, type)),
-    command(getTypeCommand(type))
+    command(getTypeCommand(type)),
+    type(type)
 {
     payload = this->text.toUtf8().size() + 1 + command.length() + 1;
 }
 
 QString ChatMessage::satinizeText(const QString &msg, ChatMessageType type)
 {
-    if (type == ChatMessageType::AdminMessage)
+    if (type == ChatMessageType::AdminMessage) {
         return msg.right(msg.size() - 1); // remove the first char (/)
+    }
+    else if (type == ChatMessageType::PrivateMessage) { // remove '/msg ' from string
+        return QString(msg).replace(QString("/msg "), "");
+    }
 
     return msg;
 }
@@ -242,7 +247,21 @@ void ChatMessage::serializeTo(QByteArray &buffer) const
     stream << msgType;
     stream << payload;
     ClientMessage::serializeString(command, stream);
-    ClientMessage::serializeString(text, stream);
+    if (type != ChatMessageType::PrivateMessage) {
+        ClientMessage::serializeString(text, stream);
+    }
+    else {
+        QChar whiteSpace(' ');
+        if (text.contains(whiteSpace)) {
+            int whiteSpaceIndex = text.indexOf(whiteSpace);
+            QString userFullName = text.left(whiteSpaceIndex);
+            QString message = text.mid(whiteSpaceIndex + 1);
+
+            ClientMessage::serializeString(userFullName, stream);
+            ClientMessage::serializeString(message, stream);
+        }
+    }
+
 }
 
 void ChatMessage::printDebug(QDebug &dbg) const
