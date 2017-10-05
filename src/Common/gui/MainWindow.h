@@ -9,6 +9,12 @@
 #include "TextEditorModifier.h"
 #include "performance/PerformanceMonitor.h"
 #include "LooperWindow.h"
+#include "UsersColorsPool.h"
+
+#include "chat/NinjamVotingMessageParser.h"
+
+#include "ninjam/User.h"
+#include "ninjam/Server.h"
 
 #include <QTranslator>
 #include <QMainWindow>
@@ -26,6 +32,7 @@ class NinjamRoomWindow;
 class JamRoomViewPanel;
 class ChordProgression;
 class ChordsPanel;
+class ChatPanel;
 
 namespace Login {
 class RoomInfo;
@@ -84,10 +91,17 @@ public:
 
     NinjamRoomWindow* getNinjamRomWindow() const;
 
+    UsersColorsPool *getUsersColorsPool() const;
+
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
     void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
+
+    void showFeedbackAboutBlockedUserInChat(const QString &userName);
+    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
+
+    void addChatMessage(const Ninjam::User &, const QString &message);
 
 protected:
     Controller::MainController *mainController;
@@ -242,13 +256,32 @@ private slots:
     void changeCameraStatus(bool activated);
 
     void selectNewCamera(int cameraIndex);
+
+    void handleUserLeaving(const QString &userName);
+    void handleUserEntering(const QString &userName);
+
+    void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
+    void sendNewChatMessage(const QString &msg);
+    void voteToChangeBpi(int newBpi);
+    void voteToChangeBpm(int newBpm);
+    void blockUserInChat(const QString &userNameToBlock);
+
 private:
+
+    static const QString JAMTABA_CHAT_BOT_NAME;
 
     BusyDialog busyDialog;
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
     QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
 
     QMap<uint, LooperWindow *> looperWindows;
+
+    QMap<QString, QSharedPointer<ChatPanel>> chatPanels;
+
+    QTimer *bpmVotingExpirationTimer;
+    QTimer *bpiVotingExpiratonTimer;
+
+    UsersColorsPool usersColorsPool;
 
     ScreensaverBlocker screensaverBlocker;
 
@@ -260,6 +293,8 @@ private:
     void closeAllLooperWindows();
 
     void initializeWindowSize();
+
+    void initializeVotingExpirationTimers();
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
@@ -320,13 +355,16 @@ private:
 
     void restoreWindowPosition();
 
-    void updateChatTabTitle();
+    void updateMainChatTabTitle();
+    void setChatsVisibility(bool chatVisible);
+    void addMainChatPanel();
+    void showLastChordsInMainChat();
+    void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
+    bool canShowBlockButtonInChatMessage(const QString &userName) const;
 
     void loadTranslationFile(const QString &locale);
 
     void setUserNameReadOnlyStatus(bool readOnly);
-
-    void setChatVisibility(bool chatVisible);
 
     void openUrlInUserBrowser(const QString &url);
 
@@ -347,6 +385,11 @@ private:
     static const QString NIGHT_MODE_SUFFIX;
 
 };
+
+inline UsersColorsPool *MainWindow::getUsersColorsPool() const
+{
+    return const_cast<UsersColorsPool *>(&usersColorsPool);
+}
 
 inline NinjamRoomWindow* MainWindow::getNinjamRomWindow() const
 {

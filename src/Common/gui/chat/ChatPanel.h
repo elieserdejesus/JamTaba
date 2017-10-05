@@ -31,6 +31,8 @@ public:
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry(); // called when user switch from mini mode to full view
     void removeMessagesFrom(const QString &userName);
+
+public slots:
     void setTopicMessage(const QString &topic);
 
 signals:

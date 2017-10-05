@@ -17,6 +17,7 @@
 #include "CrashReportDialog.h"
 
 #include "LooperWindow.h"
+#include "ChatChordsProgressionParser.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
@@ -43,6 +44,8 @@ const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
 const quint8 MainWindow::MAX_REFRESH_RATE = 60; // in Hertz
 
 const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200; //in miliseconds
+
+const QString MainWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
 
 MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent) :
     QMainWindow(parent),
@@ -294,7 +297,11 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     mainController->setTranslationLanguage(locale);
     updatePublicRoomsListLayout();
     if (mainController->isPlayingInNinjamRoom()) {
-        ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
+        if (!chatPanels.isEmpty()) {
+            auto mainChatPanel = chatPanels.first().data();
+            mainChatPanel->setPreferredTranslationLanguage(locale);
+        }
+
         ninjamWindow->updateGeoLocations();
     }
 }
@@ -1011,13 +1018,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     int index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabName);
     ui.contentTabWidget->setCurrentIndex(index);
 
-    // add the chat panel in main window
-    qCDebug(jtGUI) << "adding ninjam chat panel...";
-    ChatPanel *chatPanel = ninjamWindow->getChatPanel();
-    ui.chatTabWidget->addTab(chatPanel, "");
-    updateChatTabTitle(); // set and translate the chat tab title
-
-    connect(chatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
+    addMainChatPanel();
 
     // add the ninjam panel in main window (bottom panel)
     qCDebug(jtGUI) << "adding ninjam panel...";
@@ -1028,7 +1029,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     ninjamPanel->addMasterControls(ui.masterControlsPanel) ;
 
     // show chat area
-    setChatVisibility(true);
+    setChatsVisibility(true);
 
     ui.leftPanel->adjustSize();
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
@@ -1040,7 +1041,249 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     connect(controller, &NinjamController::currentBpmChanged, this, &MainWindow::updateBpm);
     connect(controller, &NinjamController::intervalBeatChanged, this, &MainWindow::updateCurrentIntervalBeat);
 
+    connect(controller, &NinjamController::userLeave, this, &MainWindow::handleUserLeaving);
+    connect(controller, &NinjamController::userEnter, this, &MainWindow::handleUserEntering);
+
+    connect(controller, &NinjamController::userBlockedInChat, this, &MainWindow::showFeedbackAboutBlockedUserInChat);
+    connect(controller, &NinjamController::userUnblockedInChat, this, &MainWindow::showFeedbackAboutUnblockedUserInChat);
+
+    connect(controller, &NinjamController::chatMsgReceived, this, &MainWindow::addChatMessage);
+
+    if (chatPanels.isEmpty()) {
+        auto mainChatPanel = chatPanels.first().data();
+        connect(controller, &NinjamController::topicMessageReceived, mainChatPanel, &ChatPanel::setTopicMessage);
+    }
+
     enableLooperButtonInLocalTracks(true); // looper buttons are enabled when entering in a server
+}
+
+void MainWindow::handleUserLeaving(const QString &userName)
+{
+    if (chatPanels.isEmpty()) {
+        auto mainChatPanel = chatPanels.first().data();
+        mainChatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 has left the room.").arg(userName));
+    }
+
+    usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
+}
+
+void MainWindow::handleUserEntering(const QString &userName)
+{
+    if (chatPanels.isEmpty()) {
+        auto mainChatPanel = chatPanels.first().data();
+        mainChatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(userName));
+    }
+}
+
+void MainWindow::showLastChordsInMainChat()
+{
+    if (chatPanels.isEmpty() || ninjamWindow)
+        return;
+
+    auto loginService = mainController->getLoginService();
+    auto roomInfo = ninjamWindow->getRoomInfo();
+
+    QString lastChordProgression = loginService->getChordProgressionFor(roomInfo);
+    ChatChordsProgressionParser parser;
+    if (parser.containsProgression(lastChordProgression)) {
+        ChordProgression progression = parser.parse(lastChordProgression);
+        QString title = tr("Last chords used");
+        auto mainChatPanel = chatPanels.first().data();
+        mainChatPanel->addLastChordsMessage(title, progression.toString());
+        mainChatPanel->addChordProgressionConfirmationMessage(progression);
+
+    }
+}
+
+void MainWindow::createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage)
+{
+    if (!votingMessage.isValidVotingMessage())
+        return;
+
+    if (chatPanels.isEmpty())
+        return;
+
+    auto mainChatPanel = chatPanels.first().data();
+
+    quint32 voteValue = votingMessage.getVoteValue();
+    quint32 expireTime = votingMessage.getExpirationTime();
+    if (votingMessage.isBpiVotingMessage())
+        mainChatPanel->addBpiVoteConfirmationMessage(voteValue, expireTime);
+    else
+        mainChatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
+}
+
+void MainWindow::handleChordProgressionMessage(const Ninjam::User &user, const QString &message)
+{
+    Q_UNUSED(user)
+
+    if (chatPanels.isEmpty())
+        return;
+
+    ChatChordsProgressionParser parser;
+    try{
+        ChordProgression chordProgression = parser.parse(message);
+        auto mainChatPanel = chatPanels.first().data();
+        mainChatPanel->addChordProgressionConfirmationMessage(chordProgression);
+    }
+    catch (const std::runtime_error &e) {
+        qCritical() << e.what();
+    }
+}
+
+bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
+{
+    /**
+        Avoid the block button for bot and current user messages. Is not a good idea allow user
+    to block yourself :).
+        In vote messages (to change BPI or BPM) user name is empty. The last logic test is
+    avoiding show block button in vote messages (fixing #389).
+
+    **/
+
+    auto ninjamController = mainController->getNinjamController();
+    bool userIsBot = ninjamController->userIsBot(userName) || userName == JAMTABA_CHAT_BOT_NAME;
+    bool currentUserIsPostingTheChatMessage = userName == mainController->getUserName(); // chat message author and the current user name are the same?
+    return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
+}
+
+void MainWindow::addChatMessage(const Ninjam::User &user, const QString &message)
+{
+    if (chatPanels.isEmpty() || !ninjamWindow)
+        return;
+
+    QString userName = user.getName();
+
+    bool isSystemVoteMessage = Gui::Chat::parseSystemVotingMessage(message).isValidVotingMessage();
+
+    bool isChordProgressionMessage = false;
+    if (!isSystemVoteMessage) {
+        ChatChordsProgressionParser chordsParser;
+        isChordProgressionMessage = chordsParser.containsProgression(message);
+    }
+
+    bool showBlockButton = canShowBlockButtonInChatMessage(userName);
+    bool showTranslationButton = !isChordProgressionMessage;
+
+    auto mainChatPanel = chatPanels.first().data();
+    mainChatPanel->addMessage(userName, message, showTranslationButton, showBlockButton);
+
+    static bool localUserWasVotingInLastMessage = false;
+
+    if (isSystemVoteMessage) {
+        Gui::Chat::SystemVotingMessage voteMessage = Gui::Chat::parseSystemVotingMessage(message);
+
+        QTimer *expirationTimer = voteMessage.isBpiVotingMessage() ? bpiVotingExpiratonTimer : bpmVotingExpirationTimer;
+
+        bool isFirstSystemVoteMessage = Gui::Chat::isFirstSystemVotingMessage(userName, message);
+        if (isFirstSystemVoteMessage) { //starting a new votation round
+            if (!localUserWasVotingInLastMessage) {  //don't create the vote button if local user is proposing BPI or BPM change
+                createVoteButton(voteMessage);
+            }
+            else { //if local user is proposing a bpi/bpm change the combos are disabled until the voting reach majority or expire
+                if (voteMessage.isBpiVotingMessage())
+                    ninjamWindow->setBpiComboPendingStatus(true);
+                else
+                    ninjamWindow->setBpmComboPendingStatus(true);
+                if (QApplication::focusWidget()) //clear comboboxes focus when disabling
+                    QApplication::focusWidget()->clearFocus();
+            }
+        }
+
+        //timer is restarted in every vote
+        expirationTimer->start(voteMessage.getExpirationTime() * 1000); //QTimer::start will cancel a previous voting expiration timer
+    }
+    else if (isChordProgressionMessage) {
+        handleChordProgressionMessage(user, message);
+    }
+
+    localUserWasVotingInLastMessage = Gui::Chat::isLocalUserVotingMessage(message) && user.getName() == mainController->getUserName();
+}
+
+void MainWindow::addMainChatPanel()
+{
+    qCDebug(jtGUI) << "adding ninjam chat panel...";
+
+    chatPanels.clear();
+
+    // add main chat panel
+    auto botNames = MainController::getBotNames();
+    auto mainChatPanel = new ChatPanel(botNames, &usersColorsPool, createTextEditorModifier());
+
+    chatPanels.insert(JAMTABA_CHAT_BOT_NAME, QSharedPointer<ChatPanel>(mainChatPanel));
+
+    ui.chatTabWidget->addTab(mainChatPanel, "");
+
+    updateMainChatTabTitle(); // set and translate the chat tab title
+
+    auto preferredLanguage = mainController->getSettings().getTranslation();
+    mainChatPanel->setPreferredTranslationLanguage(preferredLanguage);
+
+    connect(mainChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
+
+    connect(mainChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendNewChatMessage);
+
+    connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
+
+    connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
+
+    connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+
+    initializeVotingExpirationTimers();
+
+    showLastChordsInMainChat();
+
+}
+
+void MainWindow::blockUserInChat(const QString &userNameToBlock)
+{
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    Ninjam::User user = ninjamController->getUserByName(userNameToBlock);
+    if (user.getName() == userNameToBlock)
+        ninjamController->blockUserInChat(user);
+}
+
+void MainWindow::voteToChangeBpi(int newBpi)
+{
+    if (mainController->isPlayingInNinjamRoom()) {
+        Controller::NinjamController *controller = mainController->getNinjamController();
+        if (controller)
+            controller->voteBpi(newBpi);
+    }
+}
+
+void MainWindow::voteToChangeBpm(int newBpm)
+{
+    if (mainController->isPlayingInNinjamRoom()) {
+        Controller::NinjamController *controller = mainController->getNinjamController();
+        if (controller)
+            controller->voteBpm(newBpm);
+    }
+}
+
+void MainWindow::sendNewChatMessage(const QString &msg)
+{
+    auto ninjamController = mainController->getNinjamController();
+    if (ninjamController)
+        ninjamController->sendChatMessage(msg);
+}
+
+void MainWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
+{
+    if (chatPanels.isEmpty())
+        return;
+
+    auto mainChatPanel = chatPanels.first().data();
+    mainChatPanel->removeMessagesFrom(userName);
+    mainChatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
+}
+
+void MainWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
+{
+    if (!chatPanels.isEmpty()) {
+        auto mainChatPanel = chatPanels.first().data();
+        mainChatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is unblocked in the chat").arg(userName));
+    }
 }
 
 void MainWindow::enableLooperButtonInLocalTracks(bool enable)
@@ -1079,7 +1322,7 @@ void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
     }
 }
 
-void MainWindow::updateChatTabTitle()
+void MainWindow::updateMainChatTabTitle()
 {
     int chatTabIndex = 0; // assuming chat is the first tab
     ui.chatTabWidget->setTabText(chatTabIndex, tr("Chat"));
@@ -1116,10 +1359,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
         ui.contentTabWidget->removeTab(1);
     }
 
-    if (ui.chatTabWidget->count() > 0) {
-        ui.chatTabWidget->widget(0)->deleteLater();
-        ui.chatTabWidget->removeTab(0);
-    }
+    chatPanels.clear();
 
     // remove ninjam panel from main window
     if (ninjamWindow)
@@ -1131,7 +1371,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     ninjamWindow.reset();
 
-    setChatVisibility(false);
+    setChatsVisibility(false);
 
     setInputTracksPreparingStatus(false); /** reset the preparing status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
@@ -1176,7 +1416,7 @@ void MainWindow::closeAllLooperWindows()
     looperWindows.clear();
 }
 
-void MainWindow::setChatVisibility(bool chatVisible)
+void MainWindow::setChatsVisibility(bool chatVisible)
 {
     ui.chatTabWidget->setVisible(chatVisible);
 
@@ -1278,7 +1518,7 @@ void MainWindow::changeEvent(QEvent *ev)
         updateUserNameLineEditToolTip(); // translate user name line edit tool tip
 
         if (ninjamWindow)
-            updateChatTabTitle(); // translate the chat tab title
+            updateMainChatTabTitle(); // translate the chat tab title
     }
 
     QMainWindow::changeEvent(ev);
@@ -1594,11 +1834,6 @@ void MainWindow::initializeWindowSize()
             localTrackGroup->setToWide();
     }
 
-    if (ninjamWindow) {
-        ChatPanel *chatPanel = ninjamWindow->getChatPanel();
-        if (chatPanel)
-            chatPanel->updateMessagesGeometry();
-    }
 }
 
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
@@ -1783,7 +2018,7 @@ void MainWindow::setupWidgets()
 {
     ui.masterMeter->setOrientation(Qt::Horizontal);
 
-    setChatVisibility(false); // hide chat area until connect in a server to play
+    setChatsVisibility(false); // hide chat area until connect in a server to play
 
     if (ui.allRoomsContent->layout())
         delete ui.allRoomsContent->layout();
@@ -1861,4 +2096,18 @@ void MainWindow::closeAllFloatingWindows()
         ninjamWindow->closeMetronomeFloatingWindow();
 
     closeAllLooperWindows();
+}
+
+void MainWindow::initializeVotingExpirationTimers()
+{
+    if (!ninjamWindow)
+        return;
+
+    bpiVotingExpiratonTimer = new QTimer(this);
+    bpmVotingExpirationTimer = new QTimer(this);
+    bpiVotingExpiratonTimer->setSingleShot(true);
+    bpmVotingExpirationTimer->setSingleShot(true);
+
+    connect(bpiVotingExpiratonTimer, &QTimer::timeout, ninjamWindow.data(), &NinjamRoomWindow::resetBpiComboBox);
+    connect(bpmVotingExpirationTimer, &QTimer::timeout, ninjamWindow.data(), &NinjamRoomWindow::resetBpmComboBox);
 }

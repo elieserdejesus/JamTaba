@@ -4,15 +4,11 @@
 #include <QWidget>
 #include <QTimer>
 #include "ninjam/UserChannel.h"
-#include "ninjam/User.h"
-#include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
 #include "chat/ChatPanel.h"
-#include "chat/NinjamVotingMessageParser.h"
 #include "NinjamTrackGroupView.h"
 #include <QMessageBox>
 #include "NinjamPanel.h"
-#include "UsersColorsPool.h"
 
 class MainWindow;
 class NinjamTrackGroupView;
@@ -39,9 +35,6 @@ public:
     void updatePeaks();
     void updateGeoLocations();
 
-    // these two components are exposed to be showed in main window
-    ChatPanel *getChatPanel() const;
-
     NinjamPanel *getNinjamPanel() const;
 
     void setTracksLayout(TracksLayout newLayout);
@@ -61,10 +54,15 @@ public:
     bool metronomeFloatingWindowIsVisible() const;
     void closeMetronomeFloatingWindow();
 
+    void setBpiComboPendingStatus(bool status);
+    void setBpmComboPendingStatus(bool status);
+
     QList<NinjamTrackGroupView *> getTrackGroups() const;
 
 public slots:
     void setChannelXmitStatus(long channelID, bool transmiting);
+    void resetBpiComboBox();
+    void resetBpmComboBox();
 
 protected:
     Ui::NinjamRoomWindow *ui;
@@ -78,20 +76,14 @@ protected:
 
 private:
     QMap<QString, NinjamTrackGroupView *> trackGroups;
-    ChatPanel *chatPanel;
-
-    QTimer *bpmVotingExpirationTimer;
-    QTimer *bpiVotingExpiratonTimer;
 
     Login::RoomInfo roomInfo;
 
-    void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
 
     void setupSignals(Controller::NinjamController *ninjamController);
-    void disconnectFromNinjamControllerSignals(Controller::NinjamController *ninjamController);
 
     NinjamTrackView *getTrackViewByID(long trackID);
 
@@ -107,7 +99,7 @@ private:
     QToolButton *narrowButton;
     QToolButton *wideButton;
 
-    UsersColorsPool usersColorsPool;
+    UsersColorsPool *usersColorsPool;
 
     int calculateEstimatedChunksPerInterval() const;
 
@@ -117,21 +109,13 @@ private:
 
     void translate();
 
-    bool canShowBlockButtonInChatMessage(const QString &userName) const;
-
     void updateBpmBpiLabel();
-
-    void initializeVotingExpirationTimers();
-
-    void showLastChordsInChat();
 
     void addTrack(NinjamTrackGroupView *track);
 
     quint8 getGridLayoutMaxCollumns() const;
 
     void adjustTracksPanelSizePolicy();
-
-    static const QString JAMTABA_CHAT_BOT_NAME;
 
 private slots:
 
@@ -158,28 +142,14 @@ private slots:
     void changeChannelName(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
     void updateIntervalDownloadingProgressBar(long trackID);
     void hideIntervalDownloadingProgressBar(long trackID);
-    void addChatMessage(const Ninjam::User &, const QString &message);
-    void setServerTopicMessage(const QString &topicMessage);
-    void handleUserLeaving(const QString &userName);
-    void handleUserEntering(const QString &userName);
+
     void handleBpiChanges();
     void handleBpmChanges();
-    void sendNewChatMessage(const QString &msg);
 
     void showServerLicence();
 
-    // chat panel
-    void voteToChangeBpi(int newBpi);
-    void voteToChangeBpm(int newBpm);
-    void blockUserInChat(const QString &userNameToBlock);
-    void showFeedbackAboutBlockedUserInChat(const QString &userName);
-    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
-
     void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked); // horizontal or vertical
     void toggleTracksSize(QAbstractButton *buttonClicked); // narrow or wide
-
-    void resetBpiComboBox();
-    void resetBpmComboBox();
 
     void setEstimatatedChunksPerIntervalInAllTracks();
 
@@ -191,11 +161,6 @@ private slots:
 inline QList<NinjamTrackGroupView *> NinjamRoomWindow::getTrackGroups() const
 {
     return trackGroups.values();
-}
-
-inline ChatPanel *NinjamRoomWindow::getChatPanel() const
-{
-    return chatPanel;
 }
 
 inline NinjamPanel *NinjamRoomWindow::getNinjamPanel() const
