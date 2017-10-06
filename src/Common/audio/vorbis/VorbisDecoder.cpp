@@ -96,8 +96,14 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode)
     }
     internalBuffer.setFrameLenght(samplesDecoded);
     //internal buffer is always stereo
-    internalBuffer.add(0, outBuffer[0], samplesDecoded);//the left channel is always copyed
-    internalBuffer.add(1, outBuffer[ (vorbisFile.vi->channels >= 2) ? 1 : 0 ], samplesDecoded);
+    if (samplesDecoded > 0) {
+        internalBuffer.add(0, outBuffer[0], samplesDecoded);//the left channel is always copyed
+        internalBuffer.add(1, outBuffer[ (vorbisFile.vi->channels >= 2) ? 1 : 0 ], samplesDecoded);
+    }
+    else {
+        internalBuffer.zero();
+    }
+
     return internalBuffer;
 }
 
