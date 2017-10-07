@@ -5,10 +5,8 @@
 #include <QImage>
 #include <QSize>
 #include <QFile>
-#include <QMutex>
-#include <QThread>
 #include <QDebug>
-#include <QWaitCondition>
+#include <QThreadPool>
 
 #include "FFMpegCommon.h"
 
@@ -106,6 +104,7 @@ private:
     bool initialized;
     bool startNewIntervalRequested;
 
+    QThreadPool threadPool;
 };
 
 inline void FFMpegMuxer::setVideoQuality(VideoQuality quality)

@@ -89,6 +89,8 @@ FFMpegMuxer::FFMpegMuxer()
       startNewIntervalRequested(false)
 {
     av_register_all();
+
+    threadPool.setMaxThreadCount(1);
 }
 
 void FFMpegMuxer::initialize()
@@ -115,18 +117,19 @@ FFMpegMuxer::~FFMpegMuxer()
 void FFMpegMuxer::encodeImage(const QImage &image)
 {
     // encoding in a separated thread
-    QtConcurrent::run([=](){
+
+    auto lambda = [=](){
 
         if (startNewIntervalRequested) {
             if (prepareToEncodeNewInterval())
                 startNewIntervalRequested = false;
-            else
-                qCritical() << "Can't prepare for next interval!";
         }
 
         if (encodeVideo && !image.isNull())
             encodeVideo = !doEncodeVideoFrame(image.copy());
-    });
+    };
+
+    QtConcurrent::run(&threadPool, lambda);
 }
 
 void FFMpegMuxer::encodeAudioFrame()
@@ -180,6 +183,11 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
     // streaming to memory  https://trac.ffmpeg.org/ticket/984
     avioContext = avio_alloc_context(buffer, FFMPEG_BUFFER_SIZE, 1, this, nullptr, writeCallback, nullptr);
+    if (!avioContext)  {
+        qCritical() << "Can't create avio context!";
+        return false;
+    }
+
     avioContext->seekable = 0; // no seek
     formatContext->pb = avioContext;
 
@@ -203,7 +211,7 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
     ret = avformat_write_header(formatContext, nullptr); // Write the stream header, if any.
     if (ret < 0) {
-        qCritical() << "Error occurred when opening output file: " << av_err2str(ret);
+        qCritical() << "Error occurred when opening output file: " << ret;
         return false;
     }
 
@@ -685,6 +693,9 @@ void FFMpegMuxer::fillFrameWithImageData(const QImage &image)
  */
 bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
 {
+    if (!initialized)
+        return false;
+
     if (!videoStream)
         return false;
 
