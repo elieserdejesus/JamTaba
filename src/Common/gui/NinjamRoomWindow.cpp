@@ -393,6 +393,8 @@ void NinjamRoomWindow::removeChannel(const Ninjam::User &user, const Ninjam::Use
     }
 
     updateTracksSizeButtons();
+
+    reAddTrackGroups(); // update the gridlayout to avoid empty cells
 }
 
 NinjamTrackView *NinjamRoomWindow::getTrackViewByID(long trackID)
