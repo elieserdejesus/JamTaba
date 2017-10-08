@@ -12,6 +12,7 @@
 #include "MainController.h"
 #include "Utils.h"
 #include "audio/NinjamTrackNode.h"
+#include "BoostSpinBox.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
@@ -140,12 +141,12 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
         muteButton->click();
 
     if (initialValues.getBoost() < 1.0) {
-        buttonBoost->setState(1); // -12 dB
+        boostSpinBox->setToMin(); // -12 dB
     } else {
         if (initialValues.getBoost() > 1.0) // +12 dB
-            buttonBoost->setState(2);
+            boostSpinBox->setToMax();
         else
-            buttonBoost->setState(0);
+            boostSpinBox->setToOff();
     }
 
     quint8 lowCutState = initialValues.getLowCutState();
@@ -225,6 +226,7 @@ void NinjamTrackView::setupVerticalLayout()
     primaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
     secondaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
 
+    boostSpinBox->setOrientation(Qt::Vertical);
 }
 
 void NinjamTrackView::setupHorizontalLayout()
@@ -255,6 +257,8 @@ void NinjamTrackView::setupHorizontalLayout()
     metersLayout->setDirection(QBoxLayout::TopToBottom);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
+
+    boostSpinBox->setOrientation(Qt::Horizontal);
 }
 
 
@@ -336,9 +340,10 @@ void NinjamTrackView::toggleMuteStatus()
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-void NinjamTrackView::updateBoostValue()
+void NinjamTrackView::updateBoostValue(int index)
 {
-    BaseTrackView::updateBoostValue();
+    BaseTrackView::updateBoostValue(index);
+
     Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
     if (trackNode) {
         cacheEntry.setBoost(trackNode->getBoost());

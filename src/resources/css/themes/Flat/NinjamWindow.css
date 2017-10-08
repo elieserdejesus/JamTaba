@@ -3,15 +3,11 @@ NinjamTrackView[horizontal="true"] #panSlider
     max-width: 50px;
 }
 
-NinjamTrackView[horizontal="true"] #buttonBoost
+NinjamTrackView[horizontal="true"] BoostSpinBox
 {
-    padding: 1px;
-    border: 1px solid rgba(0, 0, 0, 30);
-    margin: 0px;
-    min-width: 12px;
+    max-height: 10px;
 }
 
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoost:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#receiveButton:hover:checked,
 NinjamTrackView QPushButton#lowCutButton:hover:checked,
@@ -42,15 +38,18 @@ NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
 /* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
 
-NinjamRoomWindow QToolButton:hover,
+QToolButton:hover,
 #licenceButton:hover
 {
     border: 1px solid rgba(0, 0, 0, 50);
     background-color: rgba(255, 255, 255, 80);
 }
 
-NinjamRoomWindow QToolButton,
-#licenceButton
+#buttonVerticalLayout,
+#buttonHorizontalLayout,
+#buttonGridLayout,
+#wide,
+#narrow
 {
     border: 1px solid rgb(150, 150, 150);
     background-color: rgba(255, 255, 255, 10);

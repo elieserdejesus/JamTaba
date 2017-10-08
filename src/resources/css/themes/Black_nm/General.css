@@ -2,7 +2,8 @@
 -------------------------------------*/
 
 /* Button ----------------------*/
-QPushButton
+QPushButton,
+BoostSpinBox
 {
     color: rgb(20, 20, 20);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));

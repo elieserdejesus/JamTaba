@@ -87,7 +87,8 @@ QPushButton#buttonStereoInversion:hover
 BaseTrackView[unlighted="true"] #buttonBoost,
 BaseTrackView[unlighted="true"] #soloButton,
 BaseTrackView[unlighted="true"] #muteButton,
-BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion,
+BaseTrackView[unlighted="true"] BoostSpinBox
 {
     background-color: rgba(0, 0, 0, 30);
     border: none;

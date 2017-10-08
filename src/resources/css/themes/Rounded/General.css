@@ -1,6 +1,7 @@
 /* buttons */
 
-QPushButton
+QPushButton,
+BoostSpinBox
 {
     border-radius: 2px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,

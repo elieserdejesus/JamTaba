@@ -1,5 +1,10 @@
 /* buttons */
 
+BoostSpinBox
+{
+    border: 1px outset #5F5F5F;
+}
+
 #soloButton,
 #muteButton,
 #preferencesButton
@@ -39,21 +44,8 @@
 }
 
 /* boost button */
-#buttonBoost
-{
-   padding: 0px;
-   padding-top: 2px;
-   padding-bottom: 2px;
 
-   border-radius: 0px;
-   border-bottom-left-radius: 3px;
-   border-bottom-right-radius: 3px;
 
-   border: 0px;
-   border-top: 1px solid rgba(0, 0, 0, 10);
-}
-
-#buttonBoost:checked,
 #lowCutButton:checked,
 QPushButton#buttonStereoInversion:checked
 {
@@ -148,7 +140,8 @@ BaseTrackView[unlighted="true"] QSlider::add-page:vertical
     background: rgb(255,255,255, 50);
 }
 
-BaseTrackView[unlighted="true"] .QPushButton
+BaseTrackView[unlighted="true"] .QPushButton,
+BaseTrackView[unlighted="true"] BoostSpinBox
 {
    border: none;
    background-color: rgb(100, 100, 100);

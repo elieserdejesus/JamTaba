@@ -5,10 +5,19 @@
 
 /* Basic boost (-12, 0, +12) button stylesheet:
 --------------------------------------*/
-#buttonBoost
+BoostSpinBox
 {
-   margin: 0px;
-   font-size: 8px;
+    padding: 0px;
+    margin: 0px;
+    max-height: 21px;
+}
+
+BoostSpinBox QToolButton
+{
+    border: none;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 1px;
 }
 
 #soloButton,

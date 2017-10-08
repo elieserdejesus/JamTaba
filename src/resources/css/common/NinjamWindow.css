@@ -14,7 +14,11 @@ NinjamRoomWindow #labelBpmBpi                                /* label used to sh
 /* Tool buttons in ninjam window
 ------------------------------------*/
 
-NinjamRoomWindow QToolButton
+#buttonVerticalLayout,
+#buttonHorizontalLayout,
+#buttonGridLayout,
+#wide,
+#narrow
 {
     min-width: 24px;
 }
@@ -183,10 +187,23 @@ NinjamTrackView
 NinjamTrackView #soloButton,
 NinjamTrackView #muteButton,
 NinjamTrackView #lowCutButton,
-NinjamTrackView #receiveButton
+NinjamTrackView #receiveButton,
+NinjamTrackView BoostSpinBox
 {
    border-color: rgb(95,95,95);
    color: rgb(40,40,40);
+}
+
+NinjamTrackView[horizontal="true"] BoostSpinBox
+{
+    max-height: 12px;
+    max-width: 25px;
+}
+
+NinjamTrackView[horizontal="true"] BoostSpinBox QToolButton
+{
+    padding: 0px;
+    padding-top: 2px;
 }
 
 NinjamTrackView #lowCutButton,

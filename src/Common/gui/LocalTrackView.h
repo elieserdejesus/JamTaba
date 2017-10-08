@@ -49,7 +49,7 @@ public:
 
     void mute(bool b);
     void solo(bool b);
-    void initializeBoostButton(Boost boostValue);
+    void initializeBoostSpinBox(Boost boostValue);
 
 signals:
     void openLooperEditor(uint trackIndex);

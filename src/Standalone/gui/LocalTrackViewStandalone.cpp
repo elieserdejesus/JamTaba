@@ -2,6 +2,7 @@
 #include "audio/core/LocalInputNode.h"
 #include "FxPanel.h"
 #include "FxPanelItem.h"
+#include "BoostSpinBox.h"
 #include <QGridLayout>
 #include <QStyle>
 #include <QSlider>
@@ -254,7 +255,7 @@ void LocalTrackViewStandalone::setAudioRelatedControlsStatus(bool enableControls
 {
 
     QWidget *controls[] = {
-        buttonBoost,
+        boostSpinBox,
         soloButton,
         muteButton,
         buttonStereoInversion,
