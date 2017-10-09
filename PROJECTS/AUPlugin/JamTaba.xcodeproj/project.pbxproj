@@ -352,6 +352,10 @@
 		2A4340361E91B06400FE3CB7 /* FileUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A4340321E91B00B00FE3CB7 /* FileUtils.h */; };
 		2A4340371E91B06B00FE3CB7 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4340331E91B00B00FE3CB7 /* FileUtils.cpp */; };
 		2A488F041E2C04C70097C505 /* PluginDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2C1E0AF46800BEF1FF /* PluginDescriptor.cpp */; };
+		2A586B431F8BE36200031DC7 /* CrashReportDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A586B401F8BE36200031DC7 /* CrashReportDialog.cpp */; };
+		2A586B441F8BE36200031DC7 /* CrashReportDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A586B411F8BE36200031DC7 /* CrashReportDialog.h */; };
+		2A586B451F8BE36200031DC7 /* CrashReportDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A586B421F8BE36200031DC7 /* CrashReportDialog.ui */; };
+		2A586B461F8BE39400031DC7 /* CrashReportDialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A586B411F8BE36200031DC7 /* CrashReportDialog.h */; };
 		2A67BD9F1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A67BD9B1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp */; };
 		2A67BDA01E410F3200A8FFF1 /* PerformanceMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A67BD9C1E410F3200A8FFF1 /* PerformanceMonitor.h */; };
 		2A67BDA81E410FE400A8FFF1 /* MacScreensaverBlocker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A67BDA41E410FE400A8FFF1 /* MacScreensaverBlocker.mm */; };
@@ -741,6 +745,9 @@
 		2A4340321E91B00B00FE3CB7 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
 		2A4340331E91B00B00FE3CB7 /* FileUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileUtils.cpp; sourceTree = "<group>"; };
 		2A4CE4181E13E50E009601F6 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		2A586B401F8BE36200031DC7 /* CrashReportDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CrashReportDialog.cpp; sourceTree = "<group>"; };
+		2A586B411F8BE36200031DC7 /* CrashReportDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportDialog.h; sourceTree = "<group>"; };
+		2A586B421F8BE36200031DC7 /* CrashReportDialog.ui */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = CrashReportDialog.ui; sourceTree = "<group>"; };
 		2A67BD9B1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MacPerformanceMonitor.cpp; sourceTree = "<group>"; };
 		2A67BD9C1E410F3200A8FFF1 /* PerformanceMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformanceMonitor.h; sourceTree = "<group>"; };
 		2A67BDA41E410FE400A8FFF1 /* MacScreensaverBlocker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MacScreensaverBlocker.mm; sourceTree = "<group>"; };
@@ -1157,6 +1164,9 @@
 		2A0DBB661E0AF46900BEF1FF /* gui */ = {
 			isa = PBXGroup;
 			children = (
+				2A586B401F8BE36200031DC7 /* CrashReportDialog.cpp */,
+				2A586B411F8BE36200031DC7 /* CrashReportDialog.h */,
+				2A586B421F8BE36200031DC7 /* CrashReportDialog.ui */,
 				2AF5A93F1E761ADF00D1150A /* LooperWindow.ui */,
 				2A67BDA21E410FE400A8FFF1 /* screensaver */,
 				2A0DBB671E0AF46900BEF1FF /* BaseTrackView.cpp */,
@@ -1674,6 +1684,7 @@
 				2A0DBE551E0AF46E00BEF1FF /* Settings.h in Headers */,
 				2A0DBD031E0AF46A00BEF1FF /* NinjamVotingMessageParser.h in Headers */,
 				2AF5A94C1E761BC500D1150A /* Looper.h in Headers */,
+				2A586B441F8BE36200031DC7 /* CrashReportDialog.h in Headers */,
 				2A0DBC5B1E0AF46900BEF1FF /* AudioNode.h in Headers */,
 				2A0DBD831E0AF46B00BEF1FF /* LocalTrackView.h in Headers */,
 				2A0DBE0D1E0AF46C00BEF1FF /* MetronomeUtils.h in Headers */,
@@ -1869,6 +1880,7 @@
 				2A0DBD971E0AF46B00BEF1FF /* NinjamRoomWindow.ui in Resources */,
 				2A0DBCE51E0AF46900BEF1FF /* BusyDialog.ui in Resources */,
 				2A0DBD8B1E0AF46B00BEF1FF /* MainWindow.ui in Resources */,
+				2A586B451F8BE36200031DC7 /* CrashReportDialog.ui in Resources */,
 				2A0DBD7B1E0AF46B00BEF1FF /* JamRoomViewPanel.ui in Resources */,
 				2A0DBD911E0AF46B00BEF1FF /* NinjamPanel.ui in Resources */,
 			);
@@ -1903,18 +1915,19 @@
 				2A2D725F1EABC06400979920 /* Slider.h in Sources */,
 				2AF5A9531E761BD900D1150A /* Looper.h in Sources */,
 				2A3AE1E01E80863800D391C5 /* BlinkableButton.h in Sources */,
+				2AF5A9411E761B9300D1150A /* LooperWindow.ui in Sources */,
 				2A0DBE961E0AF79300BEF1FF /* PrivateServerDialog.ui in Sources */,
 				2A0DBE981E0AF7D700BEF1FF /* ChatMessagePanel.ui in Sources */,
 				2A0DBE971E0AF7CB00BEF1FF /* BusyDialog.ui in Sources */,
 				2A0DBE991E0AF7D900BEF1FF /* ChatPanel.ui in Sources */,
 				2A0DBE9A1E0AF7E000BEF1FF /* ChordsPanel.ui in Sources */,
-				2AF5A9411E761B9300D1150A /* LooperWindow.ui in Sources */,
 				2A0DBE9B1E0AF7E300BEF1FF /* JamRoomViewPanel.ui in Sources */,
 				2A0DBE9C1E0AF7E700BEF1FF /* MainWindow.ui in Sources */,
 				2A0DBE9D1E0AF7EB00BEF1FF /* NinjamPanel.ui in Sources */,
 				2A0DBE9E1E0AF7EE00BEF1FF /* NinjamRoomWindow.ui in Sources */,
 				2A0DBEA01E0AF80600BEF1FF /* PreferencesDialog.ui in Sources */,
 				2A0DBEA11E0AF82700BEF1FF /* UserNameDialog.ui in Sources */,
+				2A586B461F8BE39400031DC7 /* CrashReportDialog.h in Sources */,
 				2A1362AC1F658865004953CF /* VideoWidget.h in Sources */,
 				2AF5A9581E761C4A00D1150A /* LooperWavePanel.h in Sources */,
 				2A67BDAB1E41112600A8FFF1 /* MainWindowPlugin.h in Sources */,
@@ -2090,6 +2103,7 @@
 				2A1C7A961E0B5F2C00C7984D /* AUEffectBase.cpp in Sources */,
 				2A1C7A971E0B5F2C00C7984D /* CAAudioChannelLayout.cpp in Sources */,
 				2A1C7A981E0B5F2C00C7984D /* CABufferList.cpp in Sources */,
+				2A586B431F8BE36200031DC7 /* CrashReportDialog.cpp in Sources */,
 				2A4340371E91B06B00FE3CB7 /* FileUtils.cpp in Sources */,
 				2A1C7A991E0B5F2C00C7984D /* CADebugger.cpp in Sources */,
 				2A1362931F6586A4004953CF /* FFMpegMuxer.cpp in Sources */,
