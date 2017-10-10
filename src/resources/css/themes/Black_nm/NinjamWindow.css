@@ -246,12 +246,7 @@ IntervalProgressWindow
 
 #panelCombos QComboBox:hover
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-        stop: 0.0 rgb(31, 31, 31),
-        stop: 0.1 rgb(63, 63, 63),
-        stop: 0.45 rgb(63, 63, 63),
-        stop: 0.6 rgb(31, 31, 31),
-        stop: 1.0 rgb(31, 31, 31))
+    background-color: rgb(31, 31, 31);
 }
 
 #comboBpi-topLevel
