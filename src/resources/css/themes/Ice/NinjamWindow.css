@@ -230,6 +230,16 @@ NinjamPanel QComboBox QAbstractItemView
     selection-color: white;
 }
 
+#panelCombos QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 rgb(112, 149, 174),
+        stop: 0.1 rgb(117, 171, 225),
+        stop: 0.45 rgb(117, 171, 225),
+        stop: 0.6 rgb(112, 149, 174),
+        stop: 1.0 rgb(112, 149, 174));
+}
+
 #comboBpi-topLevel
 {
     border: none;
