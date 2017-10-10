@@ -90,6 +90,12 @@ LocalTrackGroupView[unlighted="true"] #topPanel
     background: rgb(40, 40, 40);
 }
 
+LocalTrackView[unlighted="true"] #panSlider::handle:hover,
+LocalTrackView[unlighted="true"] #levelSlider::handle:hover
+{
+    background-color: rgb(120, 120, 120);
+}
+
 LocalTrackView #inputSelectionButton            /* Button used to open the input selection menu */
 {
     background-color: none;
