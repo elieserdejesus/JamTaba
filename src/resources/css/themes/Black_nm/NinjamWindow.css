@@ -244,6 +244,11 @@ IntervalProgressWindow
     selection-color: black;
 }
 
+#panelCombos QComboBox:hover
+{
+    background-color: rgb(31, 31, 31);
+}
+
 #comboBpi-topLevel
 {
     background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,

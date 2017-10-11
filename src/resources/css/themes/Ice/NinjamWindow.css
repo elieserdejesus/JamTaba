@@ -230,6 +230,11 @@ NinjamPanel QComboBox QAbstractItemView
     selection-color: white;
 }
 
+#panelCombos QComboBox:hover
+{
+    background-color: rgb(112, 149, 174);
+}
+
 #comboBpi-topLevel
 {
     border: none;

@@ -192,6 +192,11 @@ selection-background-color: rgba(0, 0, 0, 90);
 selection-color: rgb(254, 181, 102);
 }
 
+#panelCombos QComboBox:hover
+{
+    background-color: rgb(184, 149, 124);
+}
+
 #comboBpi-topLevel,
 #comboBpm-topLevel
 {
