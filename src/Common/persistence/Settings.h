@@ -165,6 +165,9 @@ public:
     {
         jamRecorderActivated[key] = value;
     }
+
+private:
+    static QString getDefaultRecordingPath();
 };
 
 class LooperSettings : public SettingsObject

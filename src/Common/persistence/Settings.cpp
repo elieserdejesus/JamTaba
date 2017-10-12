@@ -315,12 +315,10 @@ void MultiTrackRecordingSettings::read(const QJsonObject &in)
     } else {
         useDefaultRecordingPath = true;
     }
-    if (useDefaultRecordingPath) {
-        QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
-        QDir pathDir(QDir::homePath());
-        QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
-        recordingPath = QDir(documentsDir).absoluteFilePath("Jamtaba");
-    }
+
+    if (useDefaultRecordingPath)
+        recordingPath = MultiTrackRecordingSettings::getDefaultRecordingPath();
+
     saveMultiTracksActivated = getValueFromJson(in, "recordActivated", false);
 
     QJsonObject jamRecorders = getValueFromJson(in, "jamRecorders", QJsonObject());
@@ -328,6 +326,16 @@ void MultiTrackRecordingSettings::read(const QJsonObject &in)
         QJsonObject jamRecorder = jamRecorders[key].toObject();
         jamRecorderActivated[key] = getValueFromJson(jamRecorder, "activated", false);
     }
+}
+
+QString MultiTrackRecordingSettings::getDefaultRecordingPath()
+{
+    QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
+    QDir pathDir(QDir::homePath());
+    QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
+    QDir jamTabaDir = QDir(documentsDir).absoluteFilePath("Jamtaba");
+
+    return QDir(jamTabaDir).absoluteFilePath("Jams"); // using 'Jams' as default recording folder (issue #891)
 }
 
 // +++++++++++++++++++++++++++++
