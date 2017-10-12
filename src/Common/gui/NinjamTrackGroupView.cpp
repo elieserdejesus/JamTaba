@@ -55,7 +55,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
 
     updateGeoLocation();
 
-    topPanelLayout->addSpacing(6);
+    topPanelLayout->addSpacing(0); // fixing Skinny user names #914
     topPanelLayout->addWidget(countryFlag);
     topPanelLayout->addWidget(countryLabel);
     topPanelLayout->setAlignment(countryFlag, Qt::AlignCenter);
