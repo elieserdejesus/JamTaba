@@ -2202,8 +2202,6 @@ void MainWindow::setupSignals()
 
     connect(ui.masterFader, &Slider::valueChanged, this, &MainWindow::setMasterGain);
 
-    connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::close);
-
     connect(ui.menuLanguage, &QMenu::triggered, this, &MainWindow::setLanguage);
 
     connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);

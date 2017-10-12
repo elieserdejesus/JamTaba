@@ -61,6 +61,8 @@ private slots:
     void closePluginScanDialog();
     void restartAudioAndMidi();
 
+    void tryClose(); // called when ESC is pressed
+
 private:
     MainControllerStandalone *controller;
     QScopedPointer<PluginScanDialog> pluginScanDialog;
