@@ -67,6 +67,8 @@ public:
 
     void updateStyleSheet() override;
 
+    void setPaintingDbMarkers(bool paintDbMarkers);
+
     // these functions will affect all meters
     static void setPaintMaxPeakMarker(bool paintMaxPeak);
     static void paintRmsOnly();
@@ -121,6 +123,7 @@ private:
     bool stereo; // draw 2 meters?
 
     QPixmap dbMarkersPixmap;
+    bool paintingDbMarkers;
 
     static const float MAX_SMOOTHED_LINEAR_VALUE;
     static const float MIN_SMOOTHED_LINEAR_VALUE;

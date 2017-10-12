@@ -121,7 +121,8 @@ AudioMeter::AudioMeter(QWidget *parent) :
       peakEndColor(Qt::red),
       maxPeakColor(QColor(0, 0, 0, 80)),
       dBMarksColor(Qt::lightGray),
-      stereo(true)
+      stereo(true),
+      paintingDbMarkers(true)
 {
     setAutoFillBackground(false);
 
@@ -322,10 +323,19 @@ void AudioMeter::paintEvent(QPaintEvent *)
                 drawRect.translate(0.0, drawRect.height());
         }
 
-        painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
+        if (paintingDbMarkers)
+            painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
    }
 
     updateInternalValues(); // compute decay and max peak
+}
+
+void AudioMeter::setPaintingDbMarkers(bool paintDbMarkers)
+{
+    if (paintingDbMarkers != paintDbMarkers) {
+        paintingDbMarkers = paintDbMarkers;
+        update();
+    }
 }
 
 void AudioMeter::rebuildDbMarkersPixmap()

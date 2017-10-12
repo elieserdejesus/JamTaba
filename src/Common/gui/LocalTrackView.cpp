@@ -225,6 +225,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
 
         peakMeter->setVisible(true); // peak meter are always visible
 
+        peakMeter->setPaintingDbMarkers(!peakMetersOnly);
+
         QMargins margins = layout()->contentsMargins();
         margins.setLeft(spacing);
         margins.setRight(spacing);
