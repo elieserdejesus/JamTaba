@@ -483,6 +483,12 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
     }
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
+
+    if (cameraView) {
+        cameraView->setVisible(!showPeakMetersOnly);
+        cameraCombo->setVisible(cameraView->isVisible() && cameraCombo->count() > 0);
+    }
+
     updateLocalInputChannelsGeometry();
 
     ui.userNamePanel->setVisible(!showPeakMetersOnly);
