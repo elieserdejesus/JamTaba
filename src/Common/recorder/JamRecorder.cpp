@@ -236,6 +236,9 @@ void JamRecorder::addRemoteUserAudio(const QString &userName, const QByteArray &
 
 void JamRecorder::startRecording(const QString &localUser, const QDir &recordBaseDir, int bpm, int bpi, int sampleRate)
 {
+    if (running)
+        stopRecording();
+
     this->localUserName = localUser;
     this->recordBaseDir = recordBaseDir;
     this->jamMetadataWritter->setJamDir(getNewJamName(), recordBaseDir.absolutePath());

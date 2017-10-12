@@ -524,9 +524,20 @@ QMap<QString, QString> MainController::getJamRecoders() const
 void MainController::storeJamRecorderStatus(const QString &writerId, bool status)
 {
     if (settings.isSaveMultiTrackActivated()) { // recording is active and changing the jamRecorder status
-        for (Recorder::JamRecorder *jamRecorder : jamRecorders) {
-            if (jamRecorder->getWriterId() == writerId && !status) {
-                jamRecorder->stopRecording();
+        for (auto jamRecorder : jamRecorders) {
+            if (jamRecorder->getWriterId() == writerId) {
+                if (status) {
+                    if (isPlayingInNinjamRoom()) {
+                        QDir recordingPath = QDir(settings.getRecordingPath());
+                        auto ninjamController = getNinjamController();
+                        int bpi = ninjamController->getCurrentBpi();
+                        int bpm = ninjamController->getCurrentBpm();
+                        jamRecorder->startRecording(getUserName(), recordingPath, bpm, bpi, getSampleRate());
+                    }
+                }
+                else {
+                    jamRecorder->stopRecording();
+                }
             }
         }
     }

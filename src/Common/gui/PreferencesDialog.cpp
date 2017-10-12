@@ -95,11 +95,6 @@ void PreferencesDialog::setupSignals()
     connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectTab(int)));
 
     connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this, SLOT(toggleRecording(bool)));
-    for (QCheckBox *myCheckBox : jamRecorderCheckBoxes.keys()) {
-        connect(myCheckBox, &QCheckBox::toggled, [=](bool newStatus) {
-            emit jamRecorderStatusChanged(jamRecorderCheckBoxes[myCheckBox], newStatus);
-        });
-    }
 
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(openRecordingPathBrowser()));
 
@@ -151,6 +146,12 @@ void PreferencesDialog::accept()
     else {
         emit customMetronomeSelected(ui->textFieldPrimaryBeat->text(), ui->textFieldOffBeat->text(), ui->textFieldAccentBeat->text());
     }
+
+    for (auto checkBox : jamRecorderCheckBoxes.keys()) {
+        QString jamMetaDataWriterID = jamRecorderCheckBoxes[checkBox];
+        emit jamRecorderStatusChanged(jamMetaDataWriterID, checkBox->isChecked());
+    }
+
     QDialog::accept();
 }
 

@@ -152,22 +152,22 @@ public:
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
     bool saveMultiTracksActivated;
-    QMap <QString, bool> jamRecorderActivated;
     QString recordingPath;
 
-    inline bool isJamRecorderActivated(QString key) const
+    inline bool isJamRecorderActivated(const QString &key) const
     {
         if (jamRecorderActivated.contains(key))
             return jamRecorderActivated[key];
         return false;
     }
-    inline void setJamRecorderActivated(QString key, bool value)
+    inline void setJamRecorderActivated(const QString &key, bool value)
     {
         jamRecorderActivated[key] = value;
     }
 
 private:
     static QString getDefaultRecordingPath();
+    QMap <QString, bool> jamRecorderActivated;
 };
 
 class LooperSettings : public SettingsObject
@@ -403,8 +403,8 @@ public:
     MultiTrackRecordingSettings getMultiTrackRecordingSettings() const;
     bool isSaveMultiTrackActivated() const;
     void setSaveMultiTrack(bool saveMultiTracks);
-    bool isJamRecorderActivated(QString key) const;
-    void setJamRecorderActivated(QString key, bool value);
+    bool isJamRecorderActivated(const QString &key) const;
+    void setJamRecorderActivated(const QString &key, bool value);
     QString getRecordingPath() const;
     void setMultiTrackRecordingPath(const QString &newPath);
 
@@ -664,12 +664,12 @@ inline void Settings::setSaveMultiTrack(bool saveMultiTracks)
     recordingSettings.saveMultiTracksActivated = saveMultiTracks;
 }
 
-inline bool Settings::isJamRecorderActivated(QString key) const
+inline bool Settings::isJamRecorderActivated(const QString &key) const
 {
     return recordingSettings.isJamRecorderActivated(key);
 }
 
-inline void Settings::setJamRecorderActivated(QString key, bool value)
+inline void Settings::setJamRecorderActivated(const QString &key, bool value)
 {
     recordingSettings.setJamRecorderActivated(key, value);
 }
