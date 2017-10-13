@@ -543,6 +543,8 @@ void NinjamController::start(const Ninjam::Server& server)
         }
 
         this->running = true;
+
+        emit started();
     }
     qCDebug(jtNinjamCore) << "ninjam controller started!";
 }

@@ -2,7 +2,6 @@
 #include "ui_NinjamPanel.h"
 #include "log/Logging.h"
 #include "BpiUtils.h"
-#include "intervalProgress/IntervalProgressWindow.h"
 #include "TextEditorModifier.h"
 #include "MetronomeUtils.h"
 
@@ -12,9 +11,8 @@
 #include <QFormLayout>
 
 NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier,
-                         TextEditorModifier *accentBeatsModifier,
-                         QWidget *parent) :
-    QWidget(parent),
+                         TextEditorModifier *accentBeatsModifier, QWidget *parent) :
+    QFrame(parent),
     ui(new Ui::NinjamPanel),
     hostSyncButton(nullptr),
     metronomeFloatingWindow(nullptr)
@@ -22,12 +20,7 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
     qCDebug(jtNinjamGUI) << "NinjamPanel::NinjamPanel ctor";
     ui->setupUi(this);
 
-    ui->levelSlider->setSliderType(Slider::AudioSlider);
-    ui->panSlider->setSliderType(Slider::PanSlider);
-
     initializeCombos(bpiComboModifier, bpmComboModifier, accentBeatsModifier);
-
-    ui->peakMeter->setOrientation(Qt::Horizontal);
 
     maximizeControlsWidget(true);
 
@@ -37,9 +30,14 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
     qCDebug(jtNinjamGUI) << "NinjamPanel::NinjamPanel done";
 }
 
-void NinjamPanel::updateStyleSheet()
+void NinjamPanel::setMetronomeFloatingWindow(IntervalProgressWindow *floatingWindow)
 {
-    ui->peakMeter->updateStyleSheet();
+    metronomeFloatingWindow = floatingWindow;
+}
+
+void NinjamPanel::maximizeControlsWidget(bool maximize)
+{
+     ui->intervalPanel->setMaximumWidth(maximize ? 32767 : 300);
 }
 
 void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier,
@@ -69,11 +67,6 @@ void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorMo
     if (accentBeatsModifier)
         accentBeatsModifier->modify(ui->lineEditAccentBeats, true);
 
-}
-
-void NinjamPanel::maximizeControlsWidget(bool maximize)
-{
-     ui->intervalPanel->setMaximumWidth(maximize ? 32767 : 300);
 }
 
 void NinjamPanel::setBpiComboPendingStatus(bool enabled)
@@ -145,13 +138,6 @@ void NinjamPanel::setupSignals()
     connect(ui->comboBpi, SIGNAL(activated(QString)), this, SLOT(handleBpiComboActication(QString)));
     connect(ui->comboBpm, SIGNAL(activated(QString)), this, SLOT(handleBpmComboActication(QString)));
 
-    connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SIGNAL(gainSliderChanged(int)));
-    connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SIGNAL(panSliderChanged(int)));
-    connect(ui->muteButton, SIGNAL(clicked(bool)), this, SIGNAL(muteButtonClicked()));
-    connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
-
-    connect(ui->preferencesButton, SIGNAL(clicked(bool)), this, SIGNAL(preferencesButtonClicked()));
-    connect(ui->floatingWindowButton, SIGNAL(toggled(bool)), this, SLOT(setMetronomeFloatingWindowVisibility(bool)));
 }
 
 void NinjamPanel::handleBpiComboActication(const QString &newBpi)
@@ -166,56 +152,17 @@ void NinjamPanel::handleBpmComboActication(const QString &newBpm)
     emit bpmComboActivated(newBpm);
 }
 
-bool NinjamPanel::metronomeFloatingWindowIsVisible() const
-{
-    return metronomeFloatingWindow && metronomeFloatingWindow->isVisible();
-}
-
-void NinjamPanel::setMetronomeFloatingWindowVisibility(bool showFloatingWindow)
-{
-    if (showFloatingWindow){
-        if (!metronomeFloatingWindow) {
-            IntervalProgressDisplay::PaintShape paintMode = ui->intervalPanel->getPaintMode();
-            int beatsPerInterval = ui->intervalPanel->getBeatsPerInterval();
-            QList<int> accentBeats = ui->intervalPanel->getAccentBeats();
-            bool showingAccents = ui->intervalPanel->isShowingAccents();
-            metronomeFloatingWindow = new IntervalProgressWindow(nullptr, paintMode, beatsPerInterval, accentBeats, showingAccents);
-            connect(metronomeFloatingWindow, SIGNAL(windowClosed()), this, SLOT(deleteFloatWindow()));
-        }
-        
-        metronomeFloatingWindow->move(10, 10); // top left
-        metronomeFloatingWindow->setVisible(true);
-        metronomeFloatingWindow->raise();
-
-    }
-    else{
-        if (metronomeFloatingWindow) {
-            metronomeFloatingWindow->setVisible(false);
-            deleteFloatWindow();
-        }
-    }
-    ui->floatingWindowButton->setChecked(showFloatingWindow);
-}
-
-void NinjamPanel::deleteFloatWindow()
-{
-    if (metronomeFloatingWindow) {
-        metronomeFloatingWindow->deleteLater();
-        metronomeFloatingWindow = nullptr;
-        ui->floatingWindowButton->setChecked(false);
-    }
-}
-
 void NinjamPanel::setLowContrastPaintInIntervalPanel(bool useLowContrastColors)
 {
     ui->intervalPanel->setPaintUsingLowContrastColors(useLowContrastColors);
 }
 
-void NinjamPanel::addMasterControls(QWidget *masterControlsPanel)
+void NinjamPanel::setCollapseMode(bool collapsed)
 {
-    this->layout()->addWidget(masterControlsPanel);
-}
+    ui->intervalPanel->setPaintMode(IntervalProgressDisplay::LINEAR);
 
+    ui->panelCombos->setVisible(!collapsed);
+}
 
 // TODO this function and the hostSyncButton are used only in VST plugin. Create a NinjamPanelVST inheriting from NinjamPanel
 void NinjamPanel::createHostSyncButton(const QString &hostName)
@@ -261,11 +208,6 @@ void NinjamPanel::setBpmComboText(const QString &text)
     ui->comboBpm->blockSignals(false);
 }
 
-int NinjamPanel::getPanSliderMaximumValue() const
-{
-    return ui->panSlider->maximum();
-}
-
 int NinjamPanel::getAccentBeatsComboValue() const
 {
     return ui->comboAccentBeats->currentData().toInt();
@@ -291,31 +233,6 @@ void NinjamPanel::setAccentBeatsText(QString value)
     ui->lineEditAccentBeats->blockSignals(true);
     ui->lineEditAccentBeats->setText(value);
     ui->lineEditAccentBeats->blockSignals(false);
-}
-
-int NinjamPanel::getGainSliderMaximumValue() const
-{
-    return ui->levelSlider->maximum();
-}
-
-void NinjamPanel::setMuteButtonStatus(bool checked)
-{
-    ui->muteButton->setChecked(checked);
-}
-
-void NinjamPanel::setPanSliderValue(int value)
-{
-    ui->panSlider->setValue(value);
-}
-
-void NinjamPanel::setGainSliderValue(int value)
-{
-    ui->levelSlider->setValue(value);
-}
-
-void NinjamPanel::setMetronomePeaks(float left, float right, float rmsLeft, float rmsRight)
-{
-    ui->peakMeter->setPeak(left, right, rmsLeft, rmsRight);
 }
 
 void NinjamPanel::handleAccentBeatsIndexChanged(int index)
@@ -386,6 +303,9 @@ void NinjamPanel::updateIntervalProgressShape(int index)
     if (metronomeFloatingWindow) {
         metronomeFloatingWindow->setIntervalProgressShape(selectedShape);
     }
+
+    updateGeometry();
+
 
     emit intervalShapeChanged(selectedShape);
 }
@@ -495,6 +415,16 @@ void NinjamPanel::selectBeatsPerAccentInCombo(int beatsPerAccent)
     }
 }
 
+int NinjamPanel::getBpi() const
+{
+    return ui->comboBpi->currentData().toInt();
+}
+
+int NinjamPanel::getBpm() const
+{
+    return ui->comboBpm->currentData().toInt();
+}
+
 void NinjamPanel::setBpi(int bpi)
 {
     ui->comboBpi->blockSignals(true);
@@ -532,7 +462,15 @@ void NinjamPanel::setBpm(int bpm)
 
 NinjamPanel::~NinjamPanel()
 {
-    deleteFloatWindow();
-
     delete ui;
+}
+
+QList<int> NinjamPanel::getAccentBeats() const
+{
+    return ui->intervalPanel->getAccentBeats();
+}
+
+bool NinjamPanel::isShowingAccents() const
+{
+    return ui->intervalPanel->isShowingAccents();
 }

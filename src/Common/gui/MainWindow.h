@@ -205,8 +205,10 @@ protected slots:
     void playPublicRoomStream(const Login::RoomInfo &roomInfo);
     void stopPublicRoomStream(const Login::RoomInfo &roomInfo);
 
-    // collapse local controls
-    void toggleLocalInputsCollapseStatus();
+    // collapse areas
+    void toggleLocalTracksCollapseStatus();
+    void toggleBottomAreaCollapseStatus();
+    void collapseBottomArea(bool collapse);
 
     // channel name changed
     void updateChannelsNames();
@@ -239,6 +241,9 @@ private slots:
 
     void hideChordsPanel();
 
+    void setChatsVisibility(bool chatVisible);
+    void toggleChatVisibility();
+
     // preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
     void setJamRecorderStatus(const QString &writerId, bool status);
@@ -254,6 +259,8 @@ private slots:
     void translateThemeMenu();
 
     void handleThemeChanged();
+
+    void translateCollapseButtonsToolTips();
 
     void updateUserNameLineEditToolTip();
 
@@ -274,6 +281,9 @@ private:
 
     static const QString JAMTABA_CHAT_BOT_NAME;
 
+    bool bottomCollapsed;
+    bool chatCollapsed;
+
     BusyDialog busyDialog;
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
     QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
@@ -284,6 +294,12 @@ private:
 
     QTimer *bpmVotingExpirationTimer;
     QTimer *bpiVotingExpiratonTimer;
+
+    QPushButton *buttonCollapseLocalChannels;
+    QPushButton *buttonCollapseChat;
+    QPushButton *buttonCollapseBottomArea;
+
+    QLabel *performanceMonitorLabel;
 
     UsersColorsPool usersColorsPool;
 
@@ -305,9 +321,14 @@ private:
 
     void initializeVotingExpirationTimers();
 
+    void initializeCollapseButtons();
+    void updateCollapseButtons();
+
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
     ChatPanel *getFocusedChatPanel() const;
+
+    void wireNinjamControllerSignals();
 
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;
@@ -368,8 +389,10 @@ private:
 
     void updatePublicChatTabTitle(uint unreadedMessages = 0);
     void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages);
-    void setChatsVisibility(bool chatVisible);
+
     void addMainChatPanel();
+    void addNinjamPanelsInBottom();
+
     void showLastChordsInMainChat();
     void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
     bool canShowBlockButtonInChatMessage(const QString &userName) const;
@@ -389,6 +412,8 @@ private:
     static bool themeCanUseNightModeWorldMaps(const QString &themeName);
 
     static QString getStripedThemeName(const QString &fullThemeName);
+
+    void setupMainTabCornerWidgets();
 
     PerformanceMonitor performanceMonitor; // cpu and memmory usage
     qint64 lastPerformanceMonitorUpdate;

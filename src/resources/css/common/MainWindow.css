@@ -9,6 +9,30 @@
 }
 
 
+QPushButton#buttonCollapseBottom,
+QPushButton#buttonCollapseChat,
+QPushButton#buttonCollapseLocalTracks
+{
+    border: none;
+    padding: 1px;
+    margin: 0px;
+}
+
+QPushButton#buttonCollapseBottom:!checked,
+QPushButton#buttonCollapseChat:!checked,
+QPushButton#buttonCollapseLocalTracks:!checked
+{
+    background: none;
+}
+
+QLabel#labelPerformanceMonitor
+{
+    background-color: rgba(0, 0, 0, 30);
+    color: rgba(255, 255, 255, 140);
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
 /* Zoom buttons in main window right bottom corner */
 #zoomInButton,
 #zoomOutButton

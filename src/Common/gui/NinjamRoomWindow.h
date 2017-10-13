@@ -9,6 +9,8 @@
 #include "NinjamTrackGroupView.h"
 #include <QMessageBox>
 #include "NinjamPanel.h"
+#include "MetronomePanel.h"
+#include "intervalProgress/IntervalProgressWindow.h"
 
 class MainWindow;
 class NinjamTrackGroupView;
@@ -36,6 +38,7 @@ public:
     void updateGeoLocations();
 
     NinjamPanel *getNinjamPanel() const;
+    MetronomePanel *getMetronomePanel() const;
 
     void setTracksLayout(TracksLayout newLayout);
 
@@ -69,6 +72,7 @@ protected:
     MainWindow *mainWindow;
     Controller::MainController *mainController;
     NinjamPanel *ninjamPanel; // panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
+    MetronomePanel *metronomePanel;
 
     void changeEvent(QEvent *) override;
 
@@ -82,6 +86,7 @@ private:
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
+    MetronomePanel *createMetronomePanel();
 
     void setupSignals(Controller::NinjamController *ninjamController);
 
@@ -89,6 +94,8 @@ private:
 
     TracksLayout tracksLayout;
     TracksSize tracksSize;
+
+    IntervalProgressWindow *metronomeFloatingWindow;
 
     void createLayoutButtons(TracksLayout initialLayout);
     QToolButton *horizontalLayoutButton;
@@ -132,6 +139,8 @@ private slots:
     void toggleMetronomeMuteStatus();
     void toggleMetronomeSoloStatus();
     void showMetronomePreferences();
+    void showMetronomeFloatingWindow(bool show);
+    void deleteFloatingWindow();
 
     // video
     void setVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData);
@@ -161,6 +170,11 @@ private slots:
 inline QList<NinjamTrackGroupView *> NinjamRoomWindow::getTrackGroups() const
 {
     return trackGroups.values();
+}
+
+inline MetronomePanel *NinjamRoomWindow::getMetronomePanel() const
+{
+    return metronomePanel;
 }
 
 inline NinjamPanel *NinjamRoomWindow::getNinjamPanel() const

@@ -44,10 +44,12 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
     mainWindow(mainWindow),
     mainController(mainController),
     ninjamPanel(nullptr),
+    metronomePanel(nullptr),
     tracksLayout(TracksLayout::VerticalLayout),
     tracksSize(TracksSize::WIDE),
     roomInfo(roomInfo),
-    usersColorsPool(mainWindow->getUsersColorsPool())
+    usersColorsPool(mainWindow->getUsersColorsPool()),
+    metronomeFloatingWindow(nullptr)
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow ctor";
     ui->setupUi(this);
@@ -56,7 +58,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
 
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft); // tracks are left aligned
 
-    this->ninjamPanel = createNinjamPanel();
+    ninjamPanel = createNinjamPanel();
+    metronomePanel = createMetronomePanel();
 
     QString serverLicence = mainController->getNinjamService()->getCurrentServerLicence();
     ui->licenceButton->setVisible(!serverLicence.isEmpty());
@@ -99,8 +102,8 @@ void NinjamRoomWindow::setBpmComboPendingStatus(bool status)
 
 void NinjamRoomWindow::updateStylesheet()
 {
-    if (ninjamPanel)
-        ninjamPanel->updateStyleSheet();
+    if (metronomePanel)
+        metronomePanel->updateStyleSheet();
 
     auto ninjamTracks = ui->tracksPanel->findChildren<NinjamTrackView *>();
     for (auto ninjamTrack : ninjamTracks) {
@@ -250,12 +253,9 @@ void NinjamRoomWindow::toggleTracksSize(QAbstractButton *buttonClicked)
     setTracksSize(newTracksSize);
 }
 
-NinjamPanel *NinjamRoomWindow::createNinjamPanel()
+MetronomePanel *NinjamRoomWindow::createMetronomePanel()
 {
-    TextEditorModifier *bpiComboModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
-    TextEditorModifier *bpmComboModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
-    TextEditorModifier *accentBeatsModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
-    NinjamPanel *panel = new NinjamPanel(bpiComboModifier, bpmComboModifier, accentBeatsModifier);
+    auto panel = new MetronomePanel(this);
 
     float initialMetronomeGain = mainController->getSettings().getMetronomeGain();
     float initialMetronomePan = mainController->getSettings().getMetronomePan();
@@ -264,6 +264,24 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
     panel->setGainSliderValue(100 * initialMetronomeGain);
     panel->setPanSliderValue(4 * initialMetronomePan);
     panel->setMuteButtonStatus(initialMetronomeMuteStatus);
+
+    connect(panel, &MetronomePanel::gainSliderChanged, this, &NinjamRoomWindow::setMetronomeFaderPosition);
+    connect(panel, &MetronomePanel::panSliderChanged, this, &NinjamRoomWindow::setMetronomePanSliderPosition);
+    connect(panel, &MetronomePanel::muteButtonClicked, this, &NinjamRoomWindow::toggleMetronomeMuteStatus);
+    connect(panel, &MetronomePanel::soloButtonClicked, this, &NinjamRoomWindow::toggleMetronomeSoloStatus);
+    connect(panel, &MetronomePanel::preferencesButtonClicked, this, &NinjamRoomWindow::showMetronomePreferences);
+    connect(panel, &MetronomePanel::floatingWindowButtonToggled, this, &NinjamRoomWindow::showMetronomeFloatingWindow);
+
+    return panel;
+}
+
+NinjamPanel *NinjamRoomWindow::createNinjamPanel()
+{
+    TextEditorModifier *bpiComboModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
+    TextEditorModifier *bpmComboModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
+    TextEditorModifier *accentBeatsModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
+    NinjamPanel *panel = new NinjamPanel(bpiComboModifier, bpmComboModifier, accentBeatsModifier, this);
+
     panel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
     panel->setAccentBeatsReadOnly(true);
     panel->setAccentBeatsVisible(false);
@@ -273,13 +291,40 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
     connect(panel, &NinjamPanel::accentsComboChanged, this, &NinjamRoomWindow::handleAccentBeatsComboChange);
     connect(panel, &NinjamPanel::accentsBeatsChanged, this, &NinjamRoomWindow::handleCustomAccentBeatsChange);
 
-    connect(panel, &NinjamPanel::gainSliderChanged, this, &NinjamRoomWindow::setMetronomeFaderPosition);
-    connect(panel, &NinjamPanel::panSliderChanged, this, &NinjamRoomWindow::setMetronomePanSliderPosition);
-    connect(panel, &NinjamPanel::muteButtonClicked, this, &NinjamRoomWindow::toggleMetronomeMuteStatus);
-    connect(panel, &NinjamPanel::soloButtonClicked, this, &NinjamRoomWindow::toggleMetronomeSoloStatus);
-    connect(panel, &NinjamPanel::preferencesButtonClicked, this, &NinjamRoomWindow::showMetronomePreferences);
-
     return panel;
+}
+
+void NinjamRoomWindow::showMetronomeFloatingWindow(bool show)
+{
+    if (!ninjamPanel || !metronomePanel)
+        return;
+
+    if (show){
+        if (!metronomeFloatingWindow) {
+
+            auto paintShape = static_cast<IntervalProgressDisplay::PaintShape>(ninjamPanel->getIntervalShape());
+            int beatsPerInterval = ninjamPanel->getBpi();
+            QList<int> accentBeats = ninjamPanel->getAccentBeats();
+            bool showingAccents = ninjamPanel->isShowingAccents();
+            metronomeFloatingWindow = new IntervalProgressWindow(nullptr, paintShape , beatsPerInterval, accentBeats, showingAccents);
+            connect(metronomeFloatingWindow, &IntervalProgressWindow::windowClosed, this, &NinjamRoomWindow::deleteFloatingWindow);
+
+            ninjamPanel->setMetronomeFloatingWindow(metronomeFloatingWindow);
+        }
+
+        metronomeFloatingWindow->move(10, 10); // top left
+        metronomeFloatingWindow->setVisible(true);
+        metronomeFloatingWindow->raise();
+
+    }
+    else{
+        if (metronomeFloatingWindow) {
+            metronomeFloatingWindow->setVisible(false);
+            deleteFloatingWindow();
+        }
+    }
+
+    metronomePanel->setFloatingWindowButtonChecked(show);
 }
 
 void NinjamRoomWindow::showMetronomePreferences()
@@ -297,7 +342,10 @@ void NinjamRoomWindow::updateGeoLocations()
 
 void NinjamRoomWindow::setMetronomePanSliderPosition(int value)
 {
-    float sliderValue = value/(float)ninjamPanel->getPanSliderMaximumValue();
+    if (!metronomePanel)
+        return;
+
+    float sliderValue = value/(float)metronomePanel->getPanSliderMaximumValue();
     mainController->setTrackPan(Controller::NinjamController::METRONOME_TRACK_ID, sliderValue);
 }
 
@@ -334,14 +382,17 @@ void NinjamRoomWindow::resetBpmComboBox()
 
 void NinjamRoomWindow::updatePeaks()
 {
-    foreach (NinjamTrackGroupView *view, trackGroups) {
+    for (auto view : trackGroups) {
         if (view)
             view->updateGuiElements();
     }
-    Audio::AudioPeak metronomePeak = mainController->getTrackPeak(
-        Controller::NinjamController::METRONOME_TRACK_ID);
 
-    ninjamPanel->setMetronomePeaks(metronomePeak.getLeftPeak(),
+    if (!metronomePanel)
+        return;
+
+    auto metronomePeak = mainController->getTrackPeak(Controller::NinjamController::METRONOME_TRACK_ID);
+
+    metronomePanel->setMetronomePeaks(metronomePeak.getLeftPeak(),
                                    metronomePeak.getRightPeak(),
                                    metronomePeak.getLeftRMS(),
                                    metronomePeak.getRightRMS());
@@ -549,9 +600,18 @@ NinjamRoomWindow::~NinjamRoomWindow()
     }
 
     if (ninjamPanel) {
-        ninjamPanel->setParent(0);
         ninjamPanel->deleteLater();
         ninjamPanel = nullptr;
+    }
+
+    if (metronomePanel) {
+        metronomePanel->deleteLater();
+        metronomePanel = nullptr;
+    }
+
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->deleteLater();
+        metronomeFloatingWindow = nullptr;
     }
 
     delete ui;
@@ -769,12 +829,26 @@ void NinjamRoomWindow::updateTracksSizeButtons()
 
 bool NinjamRoomWindow::metronomeFloatingWindowIsVisible() const
 {
-    return ninjamPanel && ninjamPanel->metronomeFloatingWindowIsVisible();
+    return metronomeFloatingWindow && metronomeFloatingWindow->isVisible();
 }
 
 void NinjamRoomWindow::closeMetronomeFloatingWindow()
 {
     if (metronomeFloatingWindowIsVisible()) {
-        ninjamPanel->setMetronomeFloatingWindowVisibility(false);
+        metronomeFloatingWindow->setVisible(false);
+    }
+}
+
+void NinjamRoomWindow::deleteFloatingWindow()
+{
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->deleteLater();
+        metronomeFloatingWindow = nullptr;
+
+        if (metronomePanel)
+            metronomePanel->setFloatingWindowButtonChecked(false);
+
+        if (ninjamPanel)
+            ninjamPanel->setMetronomeFloatingWindow(nullptr);
     }
 }

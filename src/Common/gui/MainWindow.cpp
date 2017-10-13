@@ -59,7 +59,13 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     videoFrameGrabber(nullptr),
     cameraView(nullptr),
     cameraLayout(nullptr),
-    cameraCombo(nullptr)
+    cameraCombo(nullptr),
+    bottomCollapsed(false),
+    chatCollapsed(false),
+    buttonCollapseBottomArea(nullptr),
+    buttonCollapseChat(nullptr),
+    buttonCollapseLocalChannels(nullptr),
+    performanceMonitorLabel(nullptr)
 {
     qCDebug(jtGUI) << "Creating MainWindow...";
 
@@ -69,6 +75,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     initializeLoginService();
     initializeMainTabWidget();
+    setupMainTabCornerWidgets();
+    initializeCollapseButtons();
     initializeViewMenu();
     initializeMasterFader();
     initializeLanguageMenu();
@@ -80,6 +88,39 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     setupSignals();
 
     qCDebug(jtGUI) << "MainWindow created!";
+
+}
+
+void MainWindow::setupMainTabCornerWidgets()
+{
+    QWidget *frame = new QWidget();
+    QHBoxLayout *frameLayout = new QHBoxLayout();
+    frameLayout->setContentsMargins(0, 0, 0, 0);
+    frameLayout->setSpacing(2);
+    frame->setLayout(frameLayout);
+
+    buttonCollapseBottomArea = new QPushButton(QIcon(":/images/collapse_bottom.png"), "");
+    buttonCollapseChat = new QPushButton(QIcon(":/images/collapse_right.png"), "");
+    buttonCollapseLocalChannels = new QPushButton(QIcon(":/images/collapse_left.png"), "");
+
+    buttonCollapseBottomArea->setCheckable(true);
+    buttonCollapseChat->setCheckable(true);
+    buttonCollapseLocalChannels->setCheckable(true);
+
+    buttonCollapseBottomArea->setObjectName(QStringLiteral("buttonCollapseBottom"));
+    buttonCollapseChat->setObjectName(QStringLiteral("buttonCollapseChat"));
+    buttonCollapseLocalChannels->setObjectName(QStringLiteral("buttonCollapseLocalTracks"));
+
+    performanceMonitorLabel = new QLabel();
+    performanceMonitorLabel->setObjectName(QStringLiteral("labelPerformanceMonitor"));
+
+    frameLayout->addWidget(performanceMonitorLabel);
+    frameLayout->addSpacing(12);
+    frameLayout->addWidget(buttonCollapseLocalChannels);
+    frameLayout->addWidget(buttonCollapseBottomArea);
+    frameLayout->addWidget(buttonCollapseChat);
+
+    ui.contentTabWidget->setCornerWidget(frame);
 }
 
 void MainWindow::setCameraComboVisibility(bool show)
@@ -508,13 +549,70 @@ void MainWindow::updateLocalInputChannelsGeometry()
     ui.leftPanel->setMinimumWidth(minWidth);
 }
 
-void MainWindow::toggleLocalInputsCollapseStatus()
+void MainWindow::toggleBottomAreaCollapseStatus()
+{
+    bottomCollapsed = !bottomCollapsed; //toggle
+
+    collapseBottomArea(bottomCollapsed);
+
+    updateCollapseButtons();
+}
+
+void MainWindow::collapseBottomArea(bool collapse)
+{
+    Gui::setLayoutItemsVisibility(ui.masterControlsLayout, !collapse);
+
+    bool canHandleNinjamPanels = mainController->isPlayingInNinjamRoom() && ninjamWindow && ninjamWindow->getNinjamPanel() && ninjamWindow->getMetronomePanel();
+
+    if (canHandleNinjamPanels) {
+        auto ninjamPanel = ninjamWindow->getNinjamPanel();
+        ninjamPanel->setVisible(true);
+        ninjamPanel->setCollapseMode(collapse);
+    }
+
+    ui.masterTitleLabel->setVisible(canHandleNinjamPanels);
+
+    if (collapse) {
+        ui.bottomPanelLayout->removeWidget(ui.masterControlsPanel);
+        ui.masterControlsPanel->setVisible(false);
+
+        if (!canHandleNinjamPanels) {
+            ui.bottomPanelLayout->addWidget(ui.masterMeter, Qt::AlignCenter);
+            ui.masterMeter->setVisible(true);
+        }
+        else {
+            ui.bottomPanelLayout->removeWidget(ui.masterMeter);
+            ui.masterMeter->setVisible(false);
+
+            auto metronomePanel = ninjamWindow->getMetronomePanel();
+            ui.bottomPanelLayout->removeWidget(metronomePanel);
+            metronomePanel->setVisible(false);
+        }
+    }
+    else {
+        ui.bottomPanelLayout->removeWidget(ui.masterMeter);
+
+        ui.masterControlsLayout->addWidget(ui.masterMeter);
+        ui.masterMeter->setVisible(true);
+
+        if (canHandleNinjamPanels)
+            addNinjamPanelsInBottom();
+        else
+            ui.bottomPanelLayout->addWidget(ui.masterControlsPanel, Qt::AlignCenter);
+
+        ui.masterControlsPanel->setVisible(true);
+    }
+}
+
+void MainWindow::toggleLocalTracksCollapseStatus()
 {
     if (localGroupChannels.isEmpty())
         return;
 
     bool isShowingPeakMetersOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
     showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly); // toggle
+
+    updateCollapseButtons();
 }
 
 Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
@@ -643,8 +741,8 @@ void MainWindow::initializeMainTabWidget()
 
     removeTabCloseButton(ui.contentTabWidget, 0);
 
-    connect(ui.contentTabWidget, &CustomTabWidget::tabCloseRequested, this, &MainWindow::closeContentTab);
-    connect(ui.contentTabWidget, &CustomTabWidget::tabBarClicked, this, &MainWindow::changeTab);
+    connect(ui.contentTabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::closeContentTab);
+    connect(ui.contentTabWidget, &QTabWidget::tabBarClicked, this, &MainWindow::changeTab);
 }
 
 void MainWindow::updateChannelsNames()
@@ -1053,8 +1151,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
 
-    // lock the user name field, user name can't be changed when jamming
-    setUserNameReadOnlyStatus(true);
+    setUserNameReadOnlyStatus(true); // lock the user name field, user name can't be changed when jamming
 
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
@@ -1064,20 +1161,43 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 
     addMainChatPanel();
 
-    // add the ninjam panel in main window (bottom panel)
-    qCDebug(jtGUI) << "adding ninjam panel...";
-    NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
-    ui.bottomPanel->layout()->removeWidget(ui.masterControlsPanel);
-
-    dynamic_cast<QGridLayout *>(ui.bottomPanel->layout())->addWidget(ninjamPanel, 0, 0, 1, 1, Qt::AlignHCenter);
-    ninjamPanel->addMasterControls(ui.masterControlsPanel) ;
-
-    // show chat area
-    setChatsVisibility(true);
+    addNinjamPanelsInBottom();
 
     ui.leftPanel->adjustSize();
-    qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
 
+    wireNinjamControllerSignals();
+
+    enableLooperButtonInLocalTracks(true); // looper buttons are enabled when entering in a server
+
+    qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
+}
+
+void MainWindow::addNinjamPanelsInBottom()
+{
+    auto ninjamPanel = ninjamWindow->getNinjamPanel();
+    auto metronomePanel = ninjamWindow->getMetronomePanel();
+    if (!ninjamPanel || !metronomePanel || bottomCollapsed)
+        return;
+
+    qCDebug(jtGUI) << "adding ninjam panels...";
+
+    ui.bottomPanelLayout->removeWidget(ui.masterControlsPanel);
+
+    ui.bottomPanelLayout->addWidget(metronomePanel, Qt::AlignHCenter);
+    ui.bottomPanelLayout->addWidget(ninjamPanel, Qt::AlignCenter);
+    ui.bottomPanelLayout->addWidget(ui.masterControlsPanel, Qt::AlignHCenter);
+
+    ui.bottomPanelLayout->setAlignment(metronomePanel, Qt::AlignBottom);
+    ui.bottomPanelLayout->setAlignment(ui.masterControlsPanel, Qt::AlignBottom);
+
+    ui.masterTitleLabel->setVisible(true);
+    ninjamPanel->setVisible(true);
+    metronomePanel->setVisible(true);
+
+}
+
+void MainWindow::wireNinjamControllerSignals()
+{
     auto controller = mainController->getNinjamController();
     connect(controller, &NinjamController::preparedToTransmit, this, &MainWindow::startTransmission);
     connect(controller, &NinjamController::preparingTransmission, this, &MainWindow::prepareTransmission);
@@ -1097,9 +1217,10 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     if (!chatPanels.isEmpty()) {
         auto &mainChatPanel = chatPanels[JAMTABA_CHAT_BOT_NAME];
         connect(controller, &NinjamController::topicMessageReceived, mainChatPanel.data(), &ChatPanel::setTopicMessage);
+
     }
 
-    enableLooperButtonInLocalTracks(true); // looper buttons are enabled when entering in a server
+    connect(controller, &NinjamController::started, this, &MainWindow::updateCollapseButtons);
 }
 
 ChatPanel *MainWindow::getFocusedChatPanel() const
@@ -1325,6 +1446,9 @@ void MainWindow::addMainChatPanel()
 
     showLastChordsInMainChat();
 
+    setChatsVisibility(!chatCollapsed);
+
+    updateCollapseButtons();
 }
 
 void MainWindow::createPrivateChat(const QString &remoteUserName, const QString &userIP, bool focusNewChat)
@@ -1523,14 +1647,17 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     chatPanels.clear();
 
     // remove ninjam panel from main window
-    if (ninjamWindow)
-        ui.bottomPanel->layout()->removeWidget(ninjamWindow->getNinjamPanel());
+    if (ninjamWindow) {
+        ui.bottomPanelLayout->removeWidget(ninjamWindow->getNinjamPanel());
+        ui.bottomPanelLayout->removeWidget(ninjamWindow->getMetronomePanel());
+    }
 
-    dynamic_cast<QGridLayout *>(ui.bottomPanel->layout())->addWidget(ui.masterControlsPanel, 0, 0, 1, 1, Qt::AlignHCenter);
+    ui.bottomPanelLayout->addWidget(ui.masterControlsPanel, Qt::AlignCenter);
 
     hideChordsPanel();
 
-    ninjamWindow.reset();
+    ninjamWindow->deleteLater();
+    ninjamWindow.reset(nullptr);
 
     setChatsVisibility(false);
 
@@ -1577,9 +1704,27 @@ void MainWindow::closeAllLooperWindows()
     looperWindows.clear();
 }
 
+void MainWindow::toggleChatVisibility()
+{
+    if (!mainController->isPlayingInNinjamRoom())
+        return;
+
+    chatCollapsed = !chatCollapsed;
+
+    setChatsVisibility(!chatCollapsed);
+}
+
 void MainWindow::setChatsVisibility(bool chatVisible)
 {
+
+    if (chatVisible)
+        ui.gridLayout->addWidget(ui.chatTabWidget, 0, 2);
+    else
+        ui.gridLayout->removeWidget(ui.chatTabWidget);
+
     ui.chatTabWidget->setVisible(chatVisible);
+
+    updateCollapseButtons();
 
     // adjust bottom panel colspan
     int colSpan = chatVisible ? 2 : 1;
@@ -1612,7 +1757,10 @@ void MainWindow::timerEvent(QTimerEvent *)
     // update cpu and memmory usage
     qint64 now = QDateTime::currentMSecsSinceEpoch();
     if (now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME) {
-        ui.contentTabWidget->setResourcesUsage(performanceMonitor.getMemmoryUsed());
+
+        if (performanceMonitorLabel)
+            performanceMonitorLabel->setText(QString("MEM: %1%").arg(performanceMonitor.getMemmoryUsed()));
+
         lastPerformanceMonitorUpdate = now;
     }
 
@@ -1678,11 +1826,22 @@ void MainWindow::changeEvent(QEvent *ev)
 
         updateUserNameLineEditToolTip(); // translate user name line edit tool tip
 
+        translateCollapseButtonsToolTips();
+
         if (ninjamWindow)
             updatePublicChatTabTitle(); // translate the chat tab title
     }
 
     QMainWindow::changeEvent(ev);
+}
+
+void MainWindow::translateCollapseButtonsToolTips()
+{
+    if (buttonCollapseBottomArea) {
+        buttonCollapseBottomArea->setToolTip(tr("Collapse bottom area"));
+        buttonCollapseChat->setToolTip(tr("Collapse chat"));
+        buttonCollapseLocalChannels->setToolTip(tr("Collapse local channels"));
+    }
 }
 
 QPointF MainWindow::computeLocation() const
@@ -2193,6 +2352,8 @@ void MainWindow::setupWidgets()
 
     if (!lastUserName.isEmpty())
         ui.userNameLineEdit->setText(lastUserName);
+
+    ui.masterTitleLabel->setVisible(false);
 }
 
 void MainWindow::setupSignals()
@@ -2215,7 +2376,7 @@ void MainWindow::setupSignals()
 
     connect(ui.actionCurrentVersion, &QAction::triggered, this, &MainWindow::showJamtabaCurrentVersion);
 
-    connect(ui.localControlsCollapseButton, &QPushButton::clicked, this, &MainWindow::toggleLocalInputsCollapseStatus);
+    connect(ui.localControlsCollapseButton, &QPushButton::clicked, this, &MainWindow::toggleLocalTracksCollapseStatus);
 
     connect(mainController->getRoomStreamer(), &AbstractMp3Streamer::error, this, &MainWindow::handlePublicRoomStreamError);
 
@@ -2272,4 +2433,31 @@ void MainWindow::initializeVotingExpirationTimers()
 
     connect(bpiVotingExpiratonTimer, &QTimer::timeout, ninjamWindow.data(), &NinjamRoomWindow::resetBpiComboBox);
     connect(bpmVotingExpirationTimer, &QTimer::timeout, ninjamWindow.data(), &NinjamRoomWindow::resetBpmComboBox);
+}
+
+void MainWindow::initializeCollapseButtons()
+{
+
+    Q_ASSERT(buttonCollapseLocalChannels);
+
+    connect(buttonCollapseLocalChannels, &QPushButton::clicked, this, &MainWindow::toggleLocalTracksCollapseStatus);
+
+    connect(buttonCollapseBottomArea, &QPushButton::clicked, this, &MainWindow::toggleBottomAreaCollapseStatus);
+
+    connect(buttonCollapseChat, &QPushButton::clicked, this, &MainWindow::toggleChatVisibility);
+
+    updateCollapseButtons();
+}
+
+void MainWindow::updateCollapseButtons()
+{
+    Q_ASSERT(buttonCollapseBottomArea);
+
+    buttonCollapseBottomArea->setChecked(!bottomCollapsed);
+
+    buttonCollapseChat->setChecked(!chatCollapsed);
+    buttonCollapseChat->setEnabled(mainController->isPlayingInNinjamRoom());
+
+    buttonCollapseLocalChannels->setChecked(!ui.localControlsCollapseButton->isChecked());
+
 }

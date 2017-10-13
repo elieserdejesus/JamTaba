@@ -170,14 +170,14 @@ NinjamTrackView  #channelName               /* channel name for ninjamers XMIT O
 
 /* NinjamPanel is the widget where the ninjam controls are showed (in bottom when we are connected in a server)
 ----------------------------------------------------------------------------------------------------------------*/
-NinjamPanel #ninjamControlsPanel
+NinjamPanel
 {
     background-color: rgba(0, 0, 0, 30);
     border: 1px solid rgb(20, 20, 20);
 }
 
-NinjamPanel #soloButton,
-NinjamPanel #muteButton
+MetronomePanel #soloButton,
+MetronomePanel #muteButton
 {
     background-color: rgb(140, 140, 140);
 }

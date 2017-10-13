@@ -188,7 +188,7 @@ IntervalProgressWindow
 
 
 
-NinjamPanel #ninjamControlsPanel
+NinjamPanel
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop: 0     rgba(0, 0, 0, 10),
@@ -198,8 +198,8 @@ NinjamPanel #ninjamControlsPanel
     border: 1px inset rgb(120, 120, 120);
 }
 
-NinjamPanel #soloButton,            /* metronome solo and mute */
-NinjamPanel #muteButton
+MetronomePanel #soloButton,            /* metronome solo and mute */
+MetronomePanel #muteButton
 {
     border: 1px solid rgba(0, 0, 0, 60);
 }

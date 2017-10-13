@@ -145,6 +145,9 @@
         <file>delete_layer.png</file>
         <file>save.png</file>
         <file>load.png</file>
+        <file>collapse_bottom.png</file>
+        <file>collapse_right.png</file>
+        <file>collapse_left.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

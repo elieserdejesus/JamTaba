@@ -111,6 +111,8 @@ signals:
     void preparingTransmission(); // waiting for start transmission
     void preparedToTransmit(); // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
 
+    void started();
+
 protected:
     long intervalPosition;
     long samplesInInterval;

@@ -99,6 +99,7 @@ void IntervalProgressDisplay::setPaintMode(PaintShape mode)
     if (mode != this->paintMode) {
         this->paintMode = mode;
         paintStrategy.reset(createPaintStrategy(mode));
+
         updateGeometry();
         repaint();
     }
@@ -148,7 +149,7 @@ qreal IntervalProgressDisplay::getFontSize(PaintShape paintMode) const
 qreal IntervalProgressDisplay::getElementsSize(PaintShape paintMode) const
 {
     switch (paintMode) {
-        case PaintShape::LINEAR: return qMax(width() * 0.04, 22.5);
+        case PaintShape::LINEAR: return qMin(qMax(width() * 0.04, 22.5), static_cast<qreal>(height() - 1));
         case PaintShape::CIRCULAR:
         case PaintShape::ELLIPTICAL:
         {
@@ -178,21 +179,19 @@ QSize IntervalProgressDisplay::sizeHint() const
 
 QSize IntervalProgressDisplay::minimumSizeHint() const
 {
-    QSize size = QWidget::minimumSizeHint();
-    int h = baseSize.height() > 0 ? baseSize.height() : height();
     switch (paintMode) {
+
     case CIRCULAR:
     case PIE:
-        size.setWidth(h);
-        break;
+        return QSize(130, 100);
     case ELLIPTICAL:
-        size.setWidth(h * 2);
-        break;
+        return QSize(180, 100);
+
     case LINEAR:
-        size.setWidth(h * 5);
-        break;
+        return QSize(QWIDGETSIZE_MAX, 24);
     }
-    return size;
+
+    return QFrame::minimumSizeHint();
 }
 
 IntervalProgressDisplay::PaintContext::PaintContext(int width, int height, int beatsPerInterval, int currentBeat,

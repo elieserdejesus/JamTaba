@@ -347,7 +347,7 @@ AudioMeter#masterMeter
 }
 
 AudioMeter#masterMeter
-NinjamPanel #peakMeter
+MetronomePanel #peakMeter
 {
     qproperty-peakStartColor: rgb(190, 90, 29);
 }

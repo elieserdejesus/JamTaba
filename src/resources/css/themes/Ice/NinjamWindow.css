@@ -189,15 +189,15 @@ NinjamTrackGroupView[horizontal="true"] > #topPanel
 
 /* NinjamPanel is the widget where the ninjam controls are showed (in bottom when we are connected in a server)
 ----------------------------------------------------------------------------------------------------------------*/
-NinjamPanel #ninjamControlsPanel
+NinjamPanel
 {
     background-color: rgba(0, 0, 0, 20);
     border: 1px inset rgba(60, 60, 60, 90);
     border-radius: 6px;
 }
 
-NinjamPanel #soloButton,
-NinjamPanel #muteButton
+MetronomePanel #soloButton,
+MetronomePanel #muteButton
 {
     background-color: rgb(180,207,250);
 }

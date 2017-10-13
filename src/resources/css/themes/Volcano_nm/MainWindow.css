@@ -20,16 +20,9 @@
 }
 
 #masterTitleLabel,
-#labelMetronomeIControls
+#labelMetronome
 {
     color: rgb(40, 40, 40);
-}
-
-#masterMeter
-{
-    max-height: 4px;
-    height: 4px;
-    margin: 0px;
 }
 
 #userNameLineEdit
