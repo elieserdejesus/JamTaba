@@ -172,6 +172,13 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:vertical,    /* track fader
     background: rgb(80, 80, 80);
 }
 
+
+BaseTrackView[unlighted="true"] #panSlider::handle:hover,
+BaseTrackView[unlighted="true"] #levelSlider::handle:hover
+{
+    background-color: rgb(120, 120, 120);
+}
+
 BaseTrackView[unlighted="true"],                            /* the track */
 TrackGroupView[unlighted="true"] > #topPanel                /* the track group top panel: used to show user name */
 {
