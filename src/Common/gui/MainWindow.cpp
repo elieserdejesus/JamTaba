@@ -895,10 +895,29 @@ void MainWindow::handleServerConnectionError(const QString &errorMsg)
     close();
 }
 
-void MainWindow::showNewVersionAvailableMessage()
+QString MainWindow::sanitizeLatestVersionDetails(const QString &details)
+{
+    QString newDetails(details);
+
+    newDetails
+        .replace(QChar('\r'), "")
+        .replace(QChar('\n'), "<br>")
+        .replace(QString("["), QString("[<b>"))
+        .replace(QString("]"), QString("</b>]"));
+
+    return newDetails;
+}
+
+void MainWindow::showNewVersionAvailableMessage(const QString &latestVersionDetails)
 {
     hideBusyDialog();
     QString text = tr("A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!");
+
+    if (!latestVersionDetails.isEmpty()) {
+        text += "<br><br>";
+        text += MainWindow::sanitizeLatestVersionDetails(latestVersionDetails);
+    }
+
     QMessageBox::information(this, tr("New Jamtaba version available!"), text);
 }
 

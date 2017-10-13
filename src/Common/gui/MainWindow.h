@@ -196,7 +196,8 @@ protected slots:
     void connectInPrivateServer(const QString &server, int serverPort, const QString &userName, const QString &password);
 
     // login service
-    void showNewVersionAvailableMessage();
+    void showNewVersionAvailableMessage(const QString &latestVersionDetails);
+    static QString sanitizeLatestVersionDetails(const QString &details);
     void handleIncompatiblity();
     virtual void handleServerConnectionError(const QString &errorMsg);
 

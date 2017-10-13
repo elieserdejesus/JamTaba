@@ -173,7 +173,7 @@ public:
 signals:
     void roomsListAvailable(const QList<Login::RoomInfo> &publicRooms);
     void incompatibilityWithServerDetected();
-    void newVersionAvailableForDownload();
+    void newVersionAvailableForDownload(const QString &latestVersionDetails);
     void errorWhenConnectingToServer(const QString &error);
 
 private:

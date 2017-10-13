@@ -301,8 +301,8 @@ void LoginService::handleJson(const QString &json)
     QJsonDocument document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
     QJsonObject root = document.object();
     if (!connected) { // first time handling json?
-        bool clientIsServerCompatible = root["clientCompatibility"].toBool();
-        bool newVersionAvailable = root["newVersionAvailable"].toBool();
+        bool clientIsServerCompatible = root.contains("clientCompatibility") && root["clientCompatibility"].toBool();
+        bool newVersionAvailable = root.contains("newVersionAvailable") && root["newVersionAvailable"].toBool();
 
         if (!clientIsServerCompatible) {
             refreshTimer->stop();
@@ -311,9 +311,17 @@ void LoginService::handleJson(const QString &json)
             return;
         }
 
-        if (newVersionAvailable)
-            emit newVersionAvailableForDownload();
+        if (newVersionAvailable) {
+            QString latestVersionDetails("");
+            if (root.contains("latestVersionDetails"))
+                latestVersionDetails = root["latestVersionDetails"].toString();
+
+            emit newVersionAvailableForDownload(latestVersionDetails);
+        }
     }
+
+    if (!root.contains("rooms"))
+        return;
 
     QJsonArray allRooms = root["rooms"].toArray();
     QList<RoomInfo> publicRooms;
