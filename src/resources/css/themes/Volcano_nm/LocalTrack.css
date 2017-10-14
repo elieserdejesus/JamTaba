@@ -151,3 +151,8 @@ LocalTrackView[unlighted="true"] #buttonLooper
     background-color: rgba(0, 0, 0, 30);
     border: none;
 }
+
+LocalTrackGroupView #groupNameField
+{
+    font-size: 10px;
+}
