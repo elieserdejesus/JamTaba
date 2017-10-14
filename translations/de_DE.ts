@@ -1206,7 +1206,7 @@
     </message>
     <message>
         <source>Metronome Sound:</source>
-        <translation>eingebautes metronom:</translation>
+        <translation>Metronom Sound:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
