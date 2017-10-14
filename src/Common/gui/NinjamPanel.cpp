@@ -159,7 +159,11 @@ void NinjamPanel::setLowContrastPaintInIntervalPanel(bool useLowContrastColors)
 
 void NinjamPanel::setCollapseMode(bool collapsed)
 {
-    ui->intervalPanel->setPaintMode(IntervalProgressDisplay::LINEAR);
+    bool isCollapsed = !ui->panelCombos->isVisible();
+
+    if (collapsed != isCollapsed) {
+        setIntervalShape(IntervalProgressDisplay::LINEAR);
+    }
 
     ui->panelCombos->setVisible(!collapsed);
 }

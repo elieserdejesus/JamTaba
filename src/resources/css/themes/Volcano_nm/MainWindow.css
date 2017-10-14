@@ -72,14 +72,14 @@ QMainWindow
 }
 
 #contentTabWidget:pane,
-#chatTabWidget:pane
+#chatTabWidget
 {
     border: none;
     padding: 0px;
 }
 
 
-#chatTabWidget:pane,
+#chatTabWidget QStackedWidget,
 #chatTabWidget QTabBar::tab
 {
     background-color: #BD5A1D;

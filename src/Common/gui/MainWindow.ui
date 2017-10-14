@@ -14,7 +14,7 @@
    <string notr="true">Jamtaba</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0">
     <property name="sizeConstraint">
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>
@@ -33,110 +33,9 @@
     <property name="spacing">
      <number>6</number>
     </property>
-    <item row="0" column="1">
-     <widget class="QTabWidget" name="contentTabWidget">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>1</horstretch>
-        <verstretch>1</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="tabPosition">
-       <enum>QTabWidget::North</enum>
-      </property>
-      <property name="tabShape">
-       <enum>QTabWidget::Rounded</enum>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <property name="elideMode">
-       <enum>Qt::ElideLeft</enum>
-      </property>
-      <property name="documentMode">
-       <bool>false</bool>
-      </property>
-      <property name="tabsClosable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>Rooms to play</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="tabLayout">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QScrollArea" name="allRoomsScroll">
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAsNeeded</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAsNeeded</enum>
-          </property>
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="allRoomsContent">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>843</width>
-             <height>302</height>
-            </rect>
-           </property>
-          </widget>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QTabWidget" name="chatTabWidget">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="currentIndex">
-       <number>-1</number>
-      </property>
-      <property name="tabsClosable">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="1" colspan="2">
      <widget class="QWidget" name="bottomPanel" native="true">
-      <layout class="QHBoxLayout" name="bottomPanelLayout">
-       <property name="spacing">
-        <number>24</number>
-       </property>
+      <layout class="QGridLayout" name="bottomPanelLayout">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
@@ -152,7 +51,13 @@
        <property name="bottomMargin">
         <number>6</number>
        </property>
-       <item>
+       <property name="horizontalSpacing">
+        <number>24</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>12</number>
+       </property>
+       <item row="0" column="0">
         <widget class="QFrame" name="masterControlsPanel">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
@@ -429,6 +334,85 @@
         </widget>
        </item>
       </layout>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QTabWidget" name="contentTabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>1</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::ElideLeft</enum>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Rooms to play</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="tabLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QScrollArea" name="allRoomsScroll">
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAsNeeded</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAsNeeded</enum>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="allRoomsContent">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>970</width>
+             <height>302</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>

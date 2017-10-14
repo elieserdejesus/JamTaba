@@ -26,6 +26,8 @@
 #include "video/VideoFrameGrabber.h"
 #include "video/VideoWidget.h"
 
+#include "ChatTabWidget.h"
+
 class PreferencesDialog;
 class LocalTrackView;
 class NinjamRoomWindow;
@@ -167,7 +169,6 @@ protected:
 
 protected slots:
     void closeContentTab(int index);
-    void closeChatTab(int index);
     void changeTab(int index);
 
     // main menu
@@ -242,7 +243,7 @@ private slots:
     void hideChordsPanel();
 
     void setChatsVisibility(bool chatVisible);
-    void toggleChatVisibility();
+    void toggleChatCollapseStatus();
 
     // preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
@@ -282,15 +283,12 @@ private:
     static const QString JAMTABA_CHAT_BOT_NAME;
 
     bool bottomCollapsed;
-    bool chatCollapsed;
 
     BusyDialog busyDialog;
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
     QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
 
     QMap<uint, LooperWindow *> looperWindows;
-
-    QMap<QString, QSharedPointer<ChatPanel>> chatPanels;
 
     QTimer *bpmVotingExpirationTimer;
     QTimer *bpiVotingExpiratonTimer;
@@ -304,6 +302,8 @@ private:
     UsersColorsPool usersColorsPool;
 
     ScreensaverBlocker screensaverBlocker;
+
+    ChatTabWidget *chatTabWidget;
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();
@@ -325,8 +325,6 @@ private:
     void updateCollapseButtons();
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
-
-    ChatPanel *getFocusedChatPanel() const;
 
     void wireNinjamControllerSignals();
 
@@ -386,9 +384,6 @@ private:
     void setupWidgets();
 
     void restoreWindowPosition();
-
-    void updatePublicChatTabTitle(uint unreadedMessages = 0);
-    void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages);
 
     void addMainChatPanel();
     void addNinjamPanelsInBottom();

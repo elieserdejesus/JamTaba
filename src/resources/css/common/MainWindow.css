@@ -105,6 +105,19 @@ QTabWidget::tab-bar
     left: 0;
 }
 
+ChatTabWidget[collapsed="true"]
+{
+    background: rgba(0, 0, 0, 40);
+}
+
+ChatTabWidget[collapsed="true"] QTabBar:tab
+{
+    /*max-width: 26px;*/
+    padding: 6px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
 FakeCameraView
 {
     color: rgba(0, 0, 0, 180);
