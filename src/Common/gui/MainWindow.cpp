@@ -1910,6 +1910,8 @@ void MainWindow::openPreferencesDialog(QAction *action)
             initialTab = PreferencesDialog::TabMetronome;
         else if (action == ui.actionLooper)
             initialTab = PreferencesDialog::TabLooper;
+        else if (action == ui.actionRemember)
+            initialTab = PreferencesDialog::TabRemember;
 
         stopCurrentRoomStream();
 
@@ -1945,6 +1947,8 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
     connect(dialog, &PreferencesDialog::looperFolderChanged, mainController, &MainController::storeLooperFolder);
 
     connect(dialog, &PreferencesDialog::looperWaveFilesBitDepthChanged, mainController, &MainController::storeLooperBitDepth);
+
+    connect(dialog, &PreferencesDialog::rememberSettingsChanged, mainController, &MainController::storeRememberSettings);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)

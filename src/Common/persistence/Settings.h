@@ -320,6 +320,22 @@ public:
     quint8 waveDrawingMode;
 };
 
+
+class RememberUsersSettings : public SettingsObject
+{
+public:
+    RememberUsersSettings();
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+
+    bool rememberPan;
+    bool rememberBoost;
+    bool rememberLevel; // fader
+    bool rememberMute;
+    bool rememberLowCut;
+
+};
+
 // ++++++++++++++++++++++++
 
 class Settings
@@ -339,6 +355,7 @@ private:
     PrivateServerSettings privateServerSettings;
     MeteringSettings meteringSettings;
     LooperSettings looperSettings;
+    RememberUsersSettings rememberSettings;
 
     QString lastUserName; // the last nick name choosed by user
     QString translation; // the translation language (en, fr, jp, pt, etc.) being used in chat
@@ -495,7 +512,42 @@ public:
     void setLooperAudioEncodingFlag(bool encodeAudioWhenSaving);
     void setLooperFolder(const QString &folder);
     void setLooperBitDepth(quint8 bitDepth);
+
+    // Remembering settings
+    void setRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    bool isRememberingBoost() const;
+    bool isRememberingLevel() const;
+    bool isRememberingPan() const;
+    bool isRememberingMute() const;
+    bool isRememberingLowCut() const;
 };
+
+inline bool Settings::isRememberingMute() const
+{
+    return rememberSettings.rememberMute;
+}
+
+inline bool Settings::isRememberingLowCut() const
+{
+    return rememberSettings.rememberLowCut;
+}
+
+inline bool Settings::isRememberingBoost() const
+{
+    return rememberSettings.rememberBoost;
+}
+
+inline bool Settings::isRememberingLevel() const
+{
+    return rememberSettings.rememberLevel;
+}
+
+inline bool Settings::isRememberingPan() const
+{
+    return rememberSettings.rememberPan;
+}
+
+// -----------------------------------------------------
 
 inline void Settings::setLooperBitDepth(quint8 bitDepth)
 {

@@ -1047,6 +1047,7 @@ void Settings::load()
     sections.append(&privateServerSettings);
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
+    sections.append(&rememberSettings);
 
     readFile(sections);
 }
@@ -1079,6 +1080,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&privateServerSettings);
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
+    sections.append(&rememberSettings);
 
     writeFile(sections);
 }
@@ -1102,6 +1104,15 @@ void Settings::setTheme(const QString theme)
 QString Settings::getTranslation() const
 {
     return translation;
+}
+
+void Settings::setRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
+{
+    rememberSettings.rememberBoost   = boost;
+    rememberSettings.rememberLevel   = level;
+    rememberSettings.rememberPan     = pan;
+    rememberSettings.rememberLowCut  = lowCut;
+    rememberSettings.rememberMute    = mute;
 }
 
 //__________________________________________________________
@@ -1130,4 +1141,35 @@ void MeteringSettings::write(QJsonObject &out) const
     out["meterOption"]      = meterOption;
     out["refreshRate"]      = refreshRate;
     out["waveDrawingMode"]  = waveDrawingMode;
+}
+
+//________________________________________________________________
+
+RememberUsersSettings::RememberUsersSettings() :
+    SettingsObject(QStringLiteral("Remember")),
+    rememberBoost(true),
+    rememberLevel(true),
+    rememberPan(true),
+    rememberMute(true),
+    rememberLowCut(true)
+{
+
+}
+
+void RememberUsersSettings::write(QJsonObject &out) const
+{
+    out["boost"] = rememberBoost;
+    out["level"] = rememberLevel;
+    out["pan"] = rememberPan;
+    out["mute"] = rememberMute;
+    out["lowCut"] = rememberLowCut;
+}
+
+void RememberUsersSettings::read(const QJsonObject &in)
+{
+    rememberBoost = getValueFromJson(in, "boost", true);
+    rememberLevel = getValueFromJson(in, "level", true);
+    rememberPan = getValueFromJson(in, "pan", true);
+    rememberMute = getValueFromJson(in, "mute", true);
+    rememberLowCut = getValueFromJson(in, "lowCut", true);
 }

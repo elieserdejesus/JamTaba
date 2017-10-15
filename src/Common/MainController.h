@@ -241,6 +241,8 @@ public slots:
     void setEncodingQuality(float newEncodingQuality);
     void storeLooperBitDepth(quint8 bitDepth);
 
+    void storeRememberSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
+
     void processCapturedFrame(int frameID, const QImage &frame);
 
     virtual void connectInNinjamServer(const Ninjam::Server &server);
@@ -524,6 +526,11 @@ inline quint8 MainController::getLooperPreferedMode() const
 inline bool MainController::getLooperAudioEncodingFlag() const
 {
     return settings.getLooperAudioEncodingFlag();
+}
+
+inline void MainController::storeRememberSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
+{
+    settings.setRememberingSettings(boost, level, pan, mute, lowCut);
 }
 
 } // namespace

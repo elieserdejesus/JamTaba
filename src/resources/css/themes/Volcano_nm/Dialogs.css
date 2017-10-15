@@ -35,7 +35,13 @@ UserNameDialog #label
     color: black;
 }
 
-PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #tabLooper
+PreferencesDialog #tabAudio,
+PreferencesDialog #tabMidi,
+PreferencesDialog #tabVST,
+PreferencesDialog #tabRecording,
+PreferencesDialog #tabMetronome,
+PreferencesDialog #tabLooper,
+PreferencesDialog #tabRemember
 {
     border: none;
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,

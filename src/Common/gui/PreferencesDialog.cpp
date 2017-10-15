@@ -152,6 +152,13 @@ void PreferencesDialog::accept()
         emit jamRecorderStatusChanged(jamMetaDataWriterID, checkBox->isChecked());
     }
 
+    bool rememberingBoost = ui->checkBoxRememberBoost->isChecked();
+    bool rememberingLevel = ui->checkBoxRememberLevel->isChecked();
+    bool rememberingPan = ui->checkBoxRememberPan->isChecked();
+    bool rememberingMute = ui->checkBoxRememberMute->isChecked();
+    bool rememberingLowCut = ui->checkBoxRememberLowCut->isChecked();
+    emit rememberSettingsChanged(rememberingBoost, rememberingLevel, rememberingPan, rememberingMute, rememberingLowCut);
+
     QDialog::accept();
 }
 
@@ -203,6 +210,16 @@ void PreferencesDialog::populateAllTabs()
     populateMultiTrackRecordingTab();
     populateMetronomeTab();
     populateLooperTab();
+    populateRememberTab();
+}
+
+void PreferencesDialog::populateRememberTab()
+{
+    ui->checkBoxRememberBoost->setChecked(settings->isRememberingBoost());
+    ui->checkBoxRememberLevel->setChecked(settings->isRememberingLevel());
+    ui->checkBoxRememberPan->setChecked(settings->isRememberingPan());
+    ui->checkBoxRememberMute->setChecked(settings->isRememberingMute());
+    ui->checkBoxRememberLowCut->setChecked(settings->isRememberingLowCut());
 }
 
 void PreferencesDialog::populateLooperTab()

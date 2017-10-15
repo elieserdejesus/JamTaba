@@ -134,25 +134,34 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
 {
     cacheEntry = initialValues;
 
-    // remember last track values
-    levelSlider->setValue(initialValues.getGain() * 100);
-    panSlider->setValue(initialValues.getPan() * panSlider->maximum());
-    if (initialValues.isMuted())
+    auto settings = mainController->getSettings();
+
+    if (settings.isRememberingLevel())
+        levelSlider->setValue(initialValues.getGain() * 100);
+
+    if (settings.isRememberingPan())
+        panSlider->setValue(initialValues.getPan() * panSlider->maximum());
+
+    if (settings.isRememberingMute() && initialValues.isMuted())
         muteButton->click();
 
-    if (initialValues.getBoost() < 1.0) {
-        boostSpinBox->setToMin(); // -12 dB
-    } else {
-        if (initialValues.getBoost() > 1.0) // +12 dB
-            boostSpinBox->setToMax();
-        else
-            boostSpinBox->setToOff();
+    if (settings.isRememberingBoost()) {
+        if (initialValues.getBoost() < 1.0) {
+            boostSpinBox->setToMin(); // -12 dB
+        } else {
+            if (initialValues.getBoost() > 1.0) // +12 dB
+                boostSpinBox->setToMax();
+            else
+                boostSpinBox->setToOff();
+        }
     }
 
-    quint8 lowCutState = initialValues.getLowCutState();
-    if (lowCutState < 3) { // Check for invalid lowCut state value, Low cut is 3 states: OFF, NOrmal and Drastic
-        for (int var = 0; var < lowCutState; ++var) {
-            buttonLowCut->click(); // force button state change
+    if (settings.isRememberingLowCut()) {
+        quint8 lowCutState = initialValues.getLowCutState();
+        if (lowCutState < 3) { // Check for invalid lowCut state value, Low cut is 3 states: OFF, NOrmal and Drastic
+            for (int var = 0; var < lowCutState; ++var) {
+                buttonLowCut->click(); // force button state change
+            }
         }
     }
 }

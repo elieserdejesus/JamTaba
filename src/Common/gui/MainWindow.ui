@@ -439,6 +439,7 @@
     <addaction name="actionRecording"/>
     <addaction name="actionMetronome"/>
     <addaction name="actionLooper"/>
+    <addaction name="actionRemember"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -669,6 +670,11 @@
   <action name="actionLooper">
    <property name="text">
     <string>Looper ...</string>
+   </property>
+  </action>
+  <action name="actionRemember">
+   <property name="text">
+    <string>Remember ...</string>
    </property>
   </action>
  </widget>
