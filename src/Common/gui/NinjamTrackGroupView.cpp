@@ -38,13 +38,15 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     groupNameLayout->addWidget(groupNameLabel, 1);
     chatBlockIconLabel = new QLabel(this);
     chatBlockIconLabel->setPixmap(QPixmap(":/images/chat_blocked.png"));
-    chatBlockIconLabel->setVisible(false);
+
+    QString userName = initialValues.getUserName();
+    chatBlockIconLabel->setVisible(mainController->getNinjamController()->userIsBlockedInChat(userName));
 
     groupNameLayout->addWidget(chatBlockIconLabel);
     topPanelLayout->addLayout(groupNameLayout);
     topPanelLayout->setAlignment(groupNameLayout, Qt::AlignBottom);
 
-    setGroupName(initialValues.getUserName());
+    setGroupName(userName);
 
     // country flag and label
     countryLabel = new QLabel();
