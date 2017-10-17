@@ -526,7 +526,7 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 
     if (cameraView) {
         cameraView->setVisible(!showPeakMetersOnly);
-        cameraCombo->setVisible(cameraView->isVisible() && cameraCombo->count() > 0);
+        cameraCombo->setVisible(cameraView->isVisible() && cameraCombo->count() > 1);
     }
 
     updateLocalInputChannelsGeometry();
