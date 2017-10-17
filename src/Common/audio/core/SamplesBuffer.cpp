@@ -49,7 +49,6 @@ SamplesBuffer &SamplesBuffer::operator=(const SamplesBuffer &other)
 {
     this->channels = other.channels;
     this->frameLenght = other.frameLenght;
-    this->samples = other.samples;
     this->rmsRunningSum = other.rmsRunningSum;
     this->rmsWindowSize = other.rmsWindowSize;
     this->summedSamples = other.summedSamples;
@@ -59,6 +58,10 @@ SamplesBuffer &SamplesBuffer::operator=(const SamplesBuffer &other)
 
     lastRmsValues[0] = other.lastRmsValues[0];
     lastRmsValues[1] = other.lastRmsValues[1];
+
+    samples.clear();
+    for (unsigned int c = 0; c < channels; ++c)
+        samples.push_back(std::vector<float>(frameLenght));
 
     return *this;
 }

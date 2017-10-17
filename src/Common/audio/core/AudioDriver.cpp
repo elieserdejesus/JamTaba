@@ -55,16 +55,8 @@ AudioDriver::AudioDriver(Controller::MainController *mainController) :
 
 void AudioDriver::recreateBuffers()
 {
-    if (globalInputRange.isMono())
-        inputBuffer.setToMono();
-    else
-        inputBuffer.setToStereo();
-
-
-    if (globalOutputRange.isMono())
-        outputBuffer.setToMono();
-    else
-        outputBuffer.setToStereo();
+    inputBuffer = SamplesBuffer(globalInputRange.getChannels());
+    outputBuffer = SamplesBuffer(globalOutputRange.getChannels());
 }
 
 AudioDriver::~AudioDriver()
