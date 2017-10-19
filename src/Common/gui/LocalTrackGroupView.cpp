@@ -3,13 +3,16 @@
 #include "Highligther.h"
 #include "MainWindow.h"
 #include "log/Logging.h"
-#include <QInputDialog>
 #include "MainController.h"
+#include "BlinkableButton.h"
 
-LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame) :
-    TrackGroupView(mainFrame->createTextEditorModifier()),
+#include <QInputDialog>
+#include <QToolTip>
+
+LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindow) :
+    TrackGroupView(mainWindow->createTextEditorModifier()),
     index(channelIndex),
-    mainFrame(mainFrame),
+    mainFrame(mainWindow),
     peakMeterOnly(false),
     preparingToTransmit(false),
     usingSmallSpacingInLayouts(false)
@@ -86,14 +89,14 @@ void LocalTrackGroupView::toggleTransmitingStatus(bool checked)
     }
 }
 
-QPushButton *LocalTrackGroupView::createXmitButton()
+BlinkableButton *LocalTrackGroupView::createXmitButton()
 {
-    QPushButton *toolButton = new QPushButton();
-    toolButton->setObjectName(QStringLiteral("xmitButton"));
-    toolButton->setCheckable(true);
-    toolButton->setChecked(true);
-    toolButton->setIcon(QIcon(":/images/transmit.png"));
-    return toolButton;
+    auto *button = new BlinkableButton();
+    button->setObjectName(QStringLiteral("xmitButton"));
+    button->setCheckable(true);
+    button->setChecked(true);
+    button->setIcon(QIcon(":/images/transmit.png"));
+    return button;
 }
 
 QPushButton *LocalTrackGroupView::createToolButton()

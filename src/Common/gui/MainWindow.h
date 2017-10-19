@@ -35,6 +35,7 @@ class JamRoomViewPanel;
 class ChordProgression;
 class ChordsPanel;
 class ChatPanel;
+class InactivityDetector;
 
 namespace Login {
 class RoomInfo;
@@ -298,6 +299,8 @@ private:
     QPushButton *buttonCollapseBottomArea;
 
     QLabel *performanceMonitorLabel;
+
+    InactivityDetector *xmitInactivityDetector;
 
     UsersColorsPool usersColorsPool;
 

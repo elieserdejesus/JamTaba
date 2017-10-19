@@ -15,6 +15,7 @@
 #include "MapWidget.h"
 #include "BlinkableButton.h"
 #include "CrashReportDialog.h"
+#include "InactivityDetector.h"
 
 #include "LooperWindow.h"
 #include "ChatChordsProgressionParser.h"
@@ -65,8 +66,9 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     buttonCollapseChat(nullptr),
     buttonCollapseLocalChannels(nullptr),
     performanceMonitorLabel(nullptr),
-    chatTabWidget(nullptr)
-{
+    chatTabWidget(nullptr),
+    xmitInactivityDetector(nullptr)
+    {
     qCDebug(jtGUI) << "Creating MainWindow...";
 
     ui.setupUi(this);
@@ -508,6 +510,12 @@ void MainWindow::initialize()
     showBusyDialog(tr("Loading rooms list ..."));
 
     doWindowInitialization();
+
+    auto localChannels = getLocalChannels<LocalTrackGroupView *>();
+    Q_ASSERT(!localChannels.isEmpty());
+    auto firstChannelXmitButton = localChannels.first()->getXmitButton();
+    uint intervalsBeforeInactivityWarning = mainController->getSettings().getIntervalsBeforeInactivityWarning();
+    xmitInactivityDetector = new InactivityDetector(this, firstChannelXmitButton, intervalsBeforeInactivityWarning);
 }
 
 void MainWindow::doWindowInitialization()
@@ -1219,6 +1227,10 @@ void MainWindow::wireNinjamControllerSignals()
         updateCollapseButtons();
 
     });
+
+    Q_ASSERT(xmitInactivityDetector);
+    xmitInactivityDetector->initialize(controller);
+
 }
 
 void MainWindow::setPrivateChatInputstatus(const QString userName, bool enabled)
@@ -1624,6 +1636,9 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
             trackView->getInputNode()->stopLooper();
         }
     }
+
+    if (xmitInactivityDetector)
+        xmitInactivityDetector->deinitialize();
 }
 
 void MainWindow::closeAllLooperWindows()

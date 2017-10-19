@@ -6,6 +6,7 @@
 
 class MainWindow;
 class QPushButton;
+class BlinkableButton;
 
 class LocalTrackGroupView : public TrackGroupView
 {
@@ -37,6 +38,8 @@ public:
 
     int getSubchannelInternalIndex(uint subchannelTrackID) const;
 
+    BlinkableButton *getXmitButton() const;
+
 protected:
 
     LocalTrackView *createTrackView(long trackID) override;
@@ -53,7 +56,9 @@ protected:
 
 private:
     QPushButton *toolButton;
-    QPushButton *xmitButton;
+
+    BlinkableButton *xmitButton;
+
     bool preparingToTransmit;
     bool usingSmallSpacingInLayouts;
 
@@ -62,7 +67,7 @@ private:
     bool peakMeterOnly;
 
     QPushButton *createToolButton();
-    QPushButton *createXmitButton();
+    BlinkableButton *createXmitButton();
 
     QMenu* createPresetsLoadingSubMenu();
     QMenu* createPresetsDeletingSubMenu();
@@ -102,6 +107,10 @@ private slots:
     void toggleTransmitingStatus(bool checked);
 };
 
+inline BlinkableButton *LocalTrackGroupView::getXmitButton() const
+{
+    return xmitButton;
+}
 
 inline bool LocalTrackGroupView::isPreparingToTransmit() const
 {

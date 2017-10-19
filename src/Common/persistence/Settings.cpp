@@ -923,6 +923,12 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         for (SettingsObject *so : sections)
             so->read(root[so->getName()].toObject());
 
+        if(root.contains("intervalsBeforeInactivityWarning")) {
+            intervalsBeforeInactivityWarning = root["intervalsBeforeInactivityWarning"].toInt();
+            if (intervalsBeforeInactivityWarning < 1)
+                intervalsBeforeInactivityWarning = 1;
+        }
+
         return true;
     }
     else {
@@ -963,6 +969,7 @@ bool Settings::writeFile(const QList<SettingsObject *> &sections) // io ops ...
         root["tracksLayoutOrientation"] = tracksLayoutOrientation;
         root["usingNarrowTracks"] = usingNarrowedTracks;
         root["masterGain"] = masterFaderGain;
+        root["intervalsBeforeInactivityWarning"] = static_cast<int>(intervalsBeforeInactivityWarning);
 
         // write settings sections
         for (SettingsObject *so : sections) {
@@ -1058,7 +1065,8 @@ Settings::Settings() :
     translation("en"), // english as default language
     theme("Flat"), // flat as default theme,
     ninjamIntervalProgressShape(0),
-    usingNarrowedTracks(false)
+    usingNarrowedTracks(false),
+    intervalsBeforeInactivityWarning(5) // 5 intervals by default
 {
     // qDebug() << "Settings in " << fileDir;
 }

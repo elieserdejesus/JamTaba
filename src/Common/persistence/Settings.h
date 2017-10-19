@@ -365,6 +365,8 @@ private:
     quint8 tracksLayoutOrientation; // horizontal or vertical
     bool usingNarrowedTracks; // narrow or wide tracks?
 
+    uint intervalsBeforeInactivityWarning;
+
     bool readFile(const QList<SettingsObject *> &sections);
     bool writeFile(const QList<SettingsObject *> &sections);
 
@@ -520,7 +522,14 @@ public:
     bool isRememberingPan() const;
     bool isRememberingMute() const;
     bool isRememberingLowCut() const;
+
+    uint getIntervalsBeforeInactivityWarning() const;
 };
+
+inline uint Settings::getIntervalsBeforeInactivityWarning() const
+{
+    return intervalsBeforeInactivityWarning;
+}
 
 inline bool Settings::isRememberingMute() const
 {
