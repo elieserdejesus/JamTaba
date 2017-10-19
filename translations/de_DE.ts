@@ -202,7 +202,7 @@
 <context>
     <name>LocalTrackGroupView</name>
     <message>
-        <source>Enable/disable your audio transmission for others</source>
+        <source>Enable/disable your audio transmission to others</source>
         <translation>aktiviere/deaktiviere audio übertragung für andere</translation>
     </message>
     <message>

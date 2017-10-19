@@ -206,7 +206,7 @@
         <translation>Forbereder</translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission for others</source>
+        <source>Enable/disable your audio transmission to others</source>
         <translation>Aktivér / deaktiver din lydoverførsel til andre</translation>
     </message>
     <message>

@@ -209,7 +209,7 @@
         <translation>Preparando</translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission for others</source>
+        <source>Enable/disable your audio transmission to others</source>
         <translation>Ativa/desativa a transmissão do seu áudio para outros músicos</translation>
     </message>
     <message>
