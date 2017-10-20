@@ -206,7 +206,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission for others</source>
+        <source>Enable/disable your audio transmission to others</source>
         <translation></translation>
     </message>
     <message>

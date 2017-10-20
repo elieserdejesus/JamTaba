@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="ja_JP">
 <context>
@@ -219,7 +219,7 @@
         <translation>準備中</translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission for others</source>
+        <source>Enable/disable your audio transmission to others</source>
         <translation>相手へのオーディオ送信を有効/無効化</translation>
     </message>
     <message>
