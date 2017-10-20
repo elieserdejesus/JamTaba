@@ -100,6 +100,7 @@ QTabBar::tab
     color: black;
  }
 
+ChatTabWidget QTabBar::tab,
 QTabWidget::tab-bar
 {
     left: 0;
