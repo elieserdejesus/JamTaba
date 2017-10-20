@@ -63,11 +63,6 @@ NinjamRoomWindow #labelBpmBpi                                /* label used to sh
 /* NinjamPanel - Appears in bottom when connected in a server
 ---------------------------- */
 
-NinjamPanel{
-    border: 2px solid red;
-    background: red;
-}
-
 NinjamPanel #intervalPanel                  /* The widget used to show ninjam controls (bpi, bpm, accent and shape) and interval progress */
 {
     color: black;
