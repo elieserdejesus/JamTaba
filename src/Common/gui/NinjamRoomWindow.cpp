@@ -476,9 +476,9 @@ void NinjamRoomWindow::addTrack(NinjamTrackGroupView *track)
 
     if (tracksLayout == TracksLayout::VerticalLayout) {
         row = 0;
-        collumn = ui->tracksLayout->count();
+        collumn = ui->tracksLayout->columnCount();
     } else if (tracksLayout == TracksLayout::HorizontalLayout) {
-        row = ui->tracksLayout->count();
+        row = ui->tracksLayout->rowCount();
         collumn = 0;
     }
     else if (tracksLayout == TracksLayout::GridLayout) {
