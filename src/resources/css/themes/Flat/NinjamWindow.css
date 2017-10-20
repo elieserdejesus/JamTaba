@@ -49,7 +49,8 @@ QToolButton:hover,
 #buttonHorizontalLayout,
 #buttonGridLayout,
 #wide,
-#narrow
+#narrow,
+#licenceButton
 {
     border: 1px solid rgb(150, 150, 150);
     background-color: rgba(255, 255, 255, 10);

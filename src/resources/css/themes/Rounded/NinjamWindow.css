@@ -95,7 +95,8 @@ NinjamTrackView[horizontal="true"]
 #buttonHorizontalLayout,
 #buttonGridLayout,
 #wide,
-#narrow
+#narrow,
+#licenceButton
 {
     border: 1px solid rgba(0, 0, 0, 20);
     background-color: rgba(0, 0, 0, 8);

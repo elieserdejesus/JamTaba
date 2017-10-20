@@ -90,7 +90,8 @@ NinjamRoomWindow QToolButton:hover:!checked,
 #buttonHorizontalLayout,
 #buttonGridLayout,
 #wide,
-#narrow
+#narrow,
+#licenceButton
 {
     border: 1px solid black;
     height: 20px;

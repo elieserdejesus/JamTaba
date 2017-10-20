@@ -83,7 +83,8 @@ NinjamRoomWindow QToolButton:hover:checked
 #buttonHorizontalLayout,
 #buttonGridLayout,
 #wide,
-#narrow
+#narrow,
+#licenceButton
 {
     border: 1px solid rgba(0, 0, 0, 50);
     background-color: rgba(255, 255, 255, 10);

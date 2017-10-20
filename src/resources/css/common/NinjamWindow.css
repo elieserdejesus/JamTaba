@@ -18,7 +18,8 @@ NinjamRoomWindow #labelBpmBpi                                /* label used to sh
 #buttonHorizontalLayout,
 #buttonGridLayout,
 #wide,
-#narrow
+#narrow,
+#licenceButton
 {
     min-width: 24px;
 }
