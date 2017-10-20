@@ -2,10 +2,13 @@
 #include "geo/IpToLocationResolver.h"
 #include "MainController.h"
 #include "NinjamController.h"
+#include "video/FFMpegDemuxer.h"
+
 #include <QMenu>
 #include <QDateTime>
 #include <QLayout>
 #include <QStackedLayout>
+#include <QtConcurrent>
 
 using namespace Controller;
 using namespace Persistence;
@@ -19,7 +22,8 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     TrackGroupView(nullptr),
     mainController(mainController),
     userIP(initialValues.getUserIP()),
-    tracksLayoutEnum(TracksLayout::VerticalLayout)
+    tracksLayoutEnum(TracksLayout::VerticalLayout),
+    videoFrameRate(10)
 {
 
     // change the top panel layout to vertical (original is horizontal)
@@ -89,37 +93,38 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
         }
     });
 
-    connect(&demuxer, &FFMpegDemuxer::frameDecoded, this, &NinjamTrackGroupView::updateVideoFrame);
-
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
     // reacting to chat block/unblock events
     Controller::NinjamController *ninjamController = mainController->getNinjamController();
     connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
     connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
-    connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoIntervalDecoding()));
+    connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoStream()));
 
     setupVerticalLayout();
 }
 
 void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)
 {
-    videoIntervals << encodedVideoData;
+
+    FFMpegDemuxer *videoDecoder = new FFMpegDemuxer(this, encodedVideoData);
+    connect(videoDecoder, &FFMpegDemuxer::imagesDecoded, this, [=](QList<QImage> images, uint frameRate){
+        if (!images.isEmpty()) {
+            videoFrameRate = frameRate;
+            decodedImages << images;
+
+            videoDecoder->deleteLater();
+        }
+    });
+
+    QtConcurrent::run(videoDecoder, &FFMpegDemuxer::decode);
 }
 
-void NinjamTrackGroupView::startVideoIntervalDecoding()
+void NinjamTrackGroupView::startVideoStream()
 {
-    demuxer.close(); // close previous video interval decoder
-
-    if (!videoIntervals.isEmpty()) {
-        const QByteArray &videoData = videoIntervals.takeLast();
-
-        videoIntervals.clear(); // always take the last video interval and discard others (if downloaded but not played yet)
-
-        if (!demuxer.open(videoData)) {
-            qCritical() << "Demuxer can't open video interval data!";
-            demuxer.close();
-        }
+    if (!decodedImages.isEmpty()) {
+        while (decodedImages.size() > 1)
+            decodedImages.removeFirst(); // keep just the last decoded interval
     }
     else {
         videoWidget->setVisible(false); // hide the video widget when transmition is stopped
@@ -418,13 +423,17 @@ void NinjamTrackGroupView::updateGuiElements()
     groupNameLabel->updateMarquee();
 
     // video
-    if (demuxer.isOpened()) {
+    if (!decodedImages.isEmpty()) {
         quint64 now = QDateTime::currentMSecsSinceEpoch();
 
-        quint64 timePerFrame = 1000 / demuxer.getFrameRate();
-        if (now - lastVideoRender >= timePerFrame) { // time to show a new video frame?
-            lastVideoRender = now;
-            demuxer.decodeNextFrame(); // video frame decoding is running in a separated thread
+        quint64 timePerFrame = 1000 / videoFrameRate;
+        quint64 diff = now - lastVideoRender;
+        if (diff >= timePerFrame) { // time to show a new video frame?
+            lastVideoRender = now - (diff % timePerFrame);
+            auto &currentImages = decodedImages.first();
+            if (!currentImages.isEmpty()) {
+                updateVideoFrame(currentImages.takeFirst());
+            }
         }
     }
 }
