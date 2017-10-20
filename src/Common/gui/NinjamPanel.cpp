@@ -9,6 +9,7 @@
 #include <QtAlgorithms>
 #include <QtMath>
 #include <QFormLayout>
+#include <QPushButton>
 
 NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier,
                          TextEditorModifier *accentBeatsModifier, QWidget *parent) :

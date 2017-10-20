@@ -74,7 +74,6 @@
 		2A0DBDC11E0AF46B00BEF1FF /* UserNameDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE31E0AF46900BEF1FF /* UserNameDialog.h */; };
 		2A0DBDC31E0AF46B00BEF1FF /* UserNameDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE41E0AF46900BEF1FF /* UserNameDialog.ui */; };
 		2A0DBDC71E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE61E0AF46900BEF1FF /* UsersColorsPool.h */; };
-		2A0DBDCB1E0AF46C00BEF1FF /* CustomTabWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE91E0AF46900BEF1FF /* CustomTabWidget.h */; };
 		2A0DBDDD1E0AF46C00BEF1FF /* IntervalChunksDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF31E0AF46900BEF1FF /* IntervalChunksDisplay.h */; };
 		2A0DBDE11E0AF46C00BEF1FF /* MapMarker.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF51E0AF46900BEF1FF /* MapMarker.h */; };
 		2A0DBDE51E0AF46C00BEF1FF /* MapWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF71E0AF46900BEF1FF /* MapWidget.h */; };
@@ -250,7 +249,6 @@
 		2A1C7A661E0B5F2C00C7984D /* TrackGroupView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE01E0AF46900BEF1FF /* TrackGroupView.cpp */; };
 		2A1C7A671E0B5F2C00C7984D /* UserNameDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE21E0AF46900BEF1FF /* UserNameDialog.cpp */; };
 		2A1C7A681E0B5F2C00C7984D /* UsersColorsPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE51E0AF46900BEF1FF /* UsersColorsPool.cpp */; };
-		2A1C7A691E0B5F2C00C7984D /* CustomTabWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE81E0AF46900BEF1FF /* CustomTabWidget.cpp */; };
 		2A1C7A6A1E0B5F2C00C7984D /* IntervalChunksDisplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF21E0AF46900BEF1FF /* IntervalChunksDisplay.cpp */; };
 		2A1C7A6B1E0B5F2C00C7984D /* MapMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF41E0AF46900BEF1FF /* MapMarker.cpp */; };
 		2A1C7A6C1E0B5F2C00C7984D /* MapWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF61E0AF46900BEF1FF /* MapWidget.cpp */; };
@@ -352,6 +350,20 @@
 		2A4340361E91B06400FE3CB7 /* FileUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A4340321E91B00B00FE3CB7 /* FileUtils.h */; };
 		2A4340371E91B06B00FE3CB7 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4340331E91B00B00FE3CB7 /* FileUtils.cpp */; };
 		2A488F041E2C04C70097C505 /* PluginDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2C1E0AF46800BEF1FF /* PluginDescriptor.cpp */; };
+		2A4E3F9E1F99877300677E9C /* MetronomePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E3F9B1F99877300677E9C /* MetronomePanel.cpp */; };
+		2A4E3F9F1F99877300677E9C /* MetronomePanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A4E3F9C1F99877300677E9C /* MetronomePanel.h */; };
+		2A4E3FA01F99877300677E9C /* MetronomePanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A4E3F9D1F99877300677E9C /* MetronomePanel.ui */; };
+		2A4E3FA11F99879800677E9C /* MetronomePanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E3F9C1F99877300677E9C /* MetronomePanel.h */; };
+		2A4E3FA21F9987A500677E9C /* MetronomePanel.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E3F9D1F99877300677E9C /* MetronomePanel.ui */; };
+		2A4E3FA51F9987E900677E9C /* ChatTabWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E3FA31F9987E900677E9C /* ChatTabWidget.cpp */; };
+		2A4E3FA61F9987E900677E9C /* ChatTabWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A4E3FA41F9987E900677E9C /* ChatTabWidget.h */; };
+		2A4E3FA91F99881700677E9C /* BoostSpinBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E3FA71F99881700677E9C /* BoostSpinBox.cpp */; };
+		2A4E3FAA1F99881700677E9C /* BoostSpinBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A4E3FA81F99881700677E9C /* BoostSpinBox.h */; };
+		2A4E3FAD1F99882B00677E9C /* InactivityDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E3FAB1F99882B00677E9C /* InactivityDetector.cpp */; };
+		2A4E3FAE1F99882B00677E9C /* InactivityDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A4E3FAC1F99882B00677E9C /* InactivityDetector.h */; };
+		2A4E3FAF1F99885600677E9C /* InactivityDetector.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E3FAC1F99882B00677E9C /* InactivityDetector.h */; };
+		2A4E3FB01F99887900677E9C /* ChatTabWidget.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E3FA41F9987E900677E9C /* ChatTabWidget.h */; };
+		2A4E3FB11F99889200677E9C /* BoostSpinBox.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E3FA81F99881700677E9C /* BoostSpinBox.h */; };
 		2A586B431F8BE36200031DC7 /* CrashReportDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A586B401F8BE36200031DC7 /* CrashReportDialog.cpp */; };
 		2A586B441F8BE36200031DC7 /* CrashReportDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A586B411F8BE36200031DC7 /* CrashReportDialog.h */; };
 		2A586B451F8BE36200031DC7 /* CrashReportDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A586B421F8BE36200031DC7 /* CrashReportDialog.ui */; };
@@ -624,8 +636,6 @@
 		2A0DBBE41E0AF46900BEF1FF /* UserNameDialog.ui */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = UserNameDialog.ui; sourceTree = "<group>"; };
 		2A0DBBE51E0AF46900BEF1FF /* UsersColorsPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UsersColorsPool.cpp; sourceTree = "<group>"; };
 		2A0DBBE61E0AF46900BEF1FF /* UsersColorsPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsersColorsPool.h; sourceTree = "<group>"; };
-		2A0DBBE81E0AF46900BEF1FF /* CustomTabWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CustomTabWidget.cpp; sourceTree = "<group>"; };
-		2A0DBBE91E0AF46900BEF1FF /* CustomTabWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTabWidget.h; sourceTree = "<group>"; };
 		2A0DBBEB1E0AF46900BEF1FF /* moc_IntervalChunksDisplay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_IntervalChunksDisplay.cpp; sourceTree = "<group>"; };
 		2A0DBBEC1E0AF46900BEF1FF /* moc_MapWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_MapWidget.cpp; sourceTree = "<group>"; };
 		2A0DBBED1E0AF46900BEF1FF /* moc_MarqueeLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_MarqueeLabel.cpp; sourceTree = "<group>"; };
@@ -745,6 +755,15 @@
 		2A4340321E91B00B00FE3CB7 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
 		2A4340331E91B00B00FE3CB7 /* FileUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileUtils.cpp; sourceTree = "<group>"; };
 		2A4CE4181E13E50E009601F6 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		2A4E3F9B1F99877300677E9C /* MetronomePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetronomePanel.cpp; sourceTree = "<group>"; };
+		2A4E3F9C1F99877300677E9C /* MetronomePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetronomePanel.h; sourceTree = "<group>"; };
+		2A4E3F9D1F99877300677E9C /* MetronomePanel.ui */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = MetronomePanel.ui; sourceTree = "<group>"; };
+		2A4E3FA31F9987E900677E9C /* ChatTabWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChatTabWidget.cpp; sourceTree = "<group>"; };
+		2A4E3FA41F9987E900677E9C /* ChatTabWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTabWidget.h; sourceTree = "<group>"; };
+		2A4E3FA71F99881700677E9C /* BoostSpinBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoostSpinBox.cpp; sourceTree = "<group>"; };
+		2A4E3FA81F99881700677E9C /* BoostSpinBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoostSpinBox.h; sourceTree = "<group>"; };
+		2A4E3FAB1F99882B00677E9C /* InactivityDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InactivityDetector.cpp; sourceTree = "<group>"; };
+		2A4E3FAC1F99882B00677E9C /* InactivityDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InactivityDetector.h; sourceTree = "<group>"; };
 		2A586B401F8BE36200031DC7 /* CrashReportDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CrashReportDialog.cpp; sourceTree = "<group>"; };
 		2A586B411F8BE36200031DC7 /* CrashReportDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportDialog.h; sourceTree = "<group>"; };
 		2A586B421F8BE36200031DC7 /* CrashReportDialog.ui */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = CrashReportDialog.ui; sourceTree = "<group>"; };
@@ -1164,6 +1183,9 @@
 		2A0DBB661E0AF46900BEF1FF /* gui */ = {
 			isa = PBXGroup;
 			children = (
+				2A4E3F9B1F99877300677E9C /* MetronomePanel.cpp */,
+				2A4E3F9C1F99877300677E9C /* MetronomePanel.h */,
+				2A4E3F9D1F99877300677E9C /* MetronomePanel.ui */,
 				2A586B401F8BE36200031DC7 /* CrashReportDialog.cpp */,
 				2A586B411F8BE36200031DC7 /* CrashReportDialog.h */,
 				2A586B421F8BE36200031DC7 /* CrashReportDialog.ui */,
@@ -1223,6 +1245,8 @@
 				2A0DBBE31E0AF46900BEF1FF /* UserNameDialog.h */,
 				2A0DBBE41E0AF46900BEF1FF /* UserNameDialog.ui */,
 				2A0DBBE51E0AF46900BEF1FF /* UsersColorsPool.cpp */,
+				2A4E3FAB1F99882B00677E9C /* InactivityDetector.cpp */,
+				2A4E3FAC1F99882B00677E9C /* InactivityDetector.h */,
 				2A0DBBE61E0AF46900BEF1FF /* UsersColorsPool.h */,
 				2A0DBBE71E0AF46900BEF1FF /* widgets */,
 			);
@@ -1295,12 +1319,14 @@
 		2A0DBBE71E0AF46900BEF1FF /* widgets */ = {
 			isa = PBXGroup;
 			children = (
+				2A4E3FA71F99881700677E9C /* BoostSpinBox.cpp */,
+				2A4E3FA81F99881700677E9C /* BoostSpinBox.h */,
+				2A4E3FA31F9987E900677E9C /* ChatTabWidget.cpp */,
+				2A4E3FA41F9987E900677E9C /* ChatTabWidget.h */,
 				2A2D725B1EABC04E00979920 /* Slider.h */,
 				2A2D725C1EABC04E00979920 /* Slider.cpp */,
 				2A3AE1DC1E80863000D391C5 /* BlinkableButton.h */,
 				2A3AE1DD1E80863000D391C5 /* BlinkableButton.cpp */,
-				2A0DBBE81E0AF46900BEF1FF /* CustomTabWidget.cpp */,
-				2A0DBBE91E0AF46900BEF1FF /* CustomTabWidget.h */,
 				2A0DBBEA1E0AF46900BEF1FF /* GeneratedFiles */,
 				2A0DBBF21E0AF46900BEF1FF /* IntervalChunksDisplay.cpp */,
 				2A0DBBF31E0AF46900BEF1FF /* IntervalChunksDisplay.h */,
@@ -1664,6 +1690,7 @@
 				2A0DBE671E0AF46E00BEF1FF /* ReaperProjectGenerator.h in Headers */,
 				2AF5A9601E761D9900D1150A /* Encoder.h in Headers */,
 				2A0DBDC71E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */,
+				2A4E3F9F1F99877300677E9C /* MetronomePanel.h in Headers */,
 				2A0DBD951E0AF46B00BEF1FF /* NinjamRoomWindow.h in Headers */,
 				2A0DBE6B1E0AF46E00BEF1FF /* UploadIntervalData.h in Headers */,
 				2A0DBCDB1E0AF46900BEF1FF /* BaseTrackView.h in Headers */,
@@ -1678,6 +1705,7 @@
 				2A73C8141E44F84900DF124A /* TopLevelTextEditorModifier.h in Headers */,
 				2AC0D3E81E0AB913005A940A /* MainControllerPlugin.h in Headers */,
 				2A0DBE5F1E0AF46E00BEF1FF /* ClipSortLogGenerator.h in Headers */,
+				2A4E3FAE1F99882B00677E9C /* InactivityDetector.h in Headers */,
 				2A0DBC531E0AF46900BEF1FF /* AudioDriver.h in Headers */,
 				2A0DBE431E0AF46E00BEF1FF /* UserChannel.h in Headers */,
 				2A0DBC7D1E0AF46900BEF1FF /* Plugins.h in Headers */,
@@ -1706,6 +1734,7 @@
 				2A0DBE151E0AF46D00BEF1FF /* MidiMessage.h in Headers */,
 				2A0DBD9B1E0AF46B00BEF1FF /* NinjamTrackGroupView.h in Headers */,
 				2A0DBD131E0AF46A00BEF1FF /* ChordProgression.h in Headers */,
+				2A4E3FA61F9987E900677E9C /* ChatTabWidget.h in Headers */,
 				2AF5A9351E76192F00D1150A /* OggFileReader.h in Headers */,
 				2A0DBD071E0AF46A00BEF1FF /* ChatChordsProgressionParser.h in Headers */,
 				2AF5A94E1E761BC500D1150A /* LooperLayer.h in Headers */,
@@ -1747,7 +1776,6 @@
 				2A3AE1E31E80868500D391C5 /* Mp3FileReader.h in Headers */,
 				2A0DBC571E0AF46900BEF1FF /* AudioMixer.h in Headers */,
 				2AF5A9371E76192F00D1150A /* WaveFileReader.h in Headers */,
-				2A0DBDCB1E0AF46C00BEF1FF /* CustomTabWidget.h in Headers */,
 				2A0DBD0F1E0AF46A00BEF1FF /* ChordLabel.h in Headers */,
 				2A0DBE3F1E0AF46D00BEF1FF /* User.h in Headers */,
 				2A0DBDE91E0AF46C00BEF1FF /* MarqueeLabel.h in Headers */,
@@ -1771,6 +1799,7 @@
 				2A0DBDBD1E0AF46B00BEF1FF /* TrackGroupView.h in Headers */,
 				2A0DBD0B1E0AF46A00BEF1FF /* Chord.h in Headers */,
 				2A0DBCBF1E0AF46900BEF1FF /* VorbisEncoder.h in Headers */,
+				2A4E3FAA1F99881700677E9C /* BoostSpinBox.h in Headers */,
 				2A0DBCD71E0AF46900BEF1FF /* WebIpToLocationResolver.h in Headers */,
 				2A1362961F6586A4004953CF /* VideoFrameGrabber.h in Headers */,
 				2A0DBE111E0AF46D00BEF1FF /* MidiDriver.h in Headers */,
@@ -1881,6 +1910,7 @@
 				2A0DBCE51E0AF46900BEF1FF /* BusyDialog.ui in Resources */,
 				2A0DBD8B1E0AF46B00BEF1FF /* MainWindow.ui in Resources */,
 				2A586B451F8BE36200031DC7 /* CrashReportDialog.ui in Resources */,
+				2A4E3FA01F99877300677E9C /* MetronomePanel.ui in Resources */,
 				2A0DBD7B1E0AF46B00BEF1FF /* JamRoomViewPanel.ui in Resources */,
 				2A0DBD911E0AF46B00BEF1FF /* NinjamPanel.ui in Resources */,
 			);
@@ -1915,13 +1945,20 @@
 				2A2D725F1EABC06400979920 /* Slider.h in Sources */,
 				2AF5A9531E761BD900D1150A /* Looper.h in Sources */,
 				2A3AE1E01E80863800D391C5 /* BlinkableButton.h in Sources */,
+				2A4E3FA11F99879800677E9C /* MetronomePanel.h in Sources */,
+				2A4E3FAF1F99885600677E9C /* InactivityDetector.h in Sources */,
+				2A4E3FB11F99889200677E9C /* BoostSpinBox.h in Sources */,
 				2AF5A9411E761B9300D1150A /* LooperWindow.ui in Sources */,
 				2A0DBE961E0AF79300BEF1FF /* PrivateServerDialog.ui in Sources */,
 				2A0DBE981E0AF7D700BEF1FF /* ChatMessagePanel.ui in Sources */,
 				2A0DBE971E0AF7CB00BEF1FF /* BusyDialog.ui in Sources */,
 				2A0DBE991E0AF7D900BEF1FF /* ChatPanel.ui in Sources */,
 				2A0DBE9A1E0AF7E000BEF1FF /* ChordsPanel.ui in Sources */,
+				2A4E3FA91F99881700677E9C /* BoostSpinBox.cpp in Sources */,
+				2A4E3FA21F9987A500677E9C /* MetronomePanel.ui in Sources */,
 				2A0DBE9B1E0AF7E300BEF1FF /* JamRoomViewPanel.ui in Sources */,
+				2A4E3FB01F99887900677E9C /* ChatTabWidget.h in Sources */,
+				2A4E3FA51F9987E900677E9C /* ChatTabWidget.cpp in Sources */,
 				2A0DBE9C1E0AF7E700BEF1FF /* MainWindow.ui in Sources */,
 				2A0DBE9D1E0AF7EB00BEF1FF /* NinjamPanel.ui in Sources */,
 				2A0DBE9E1E0AF7EE00BEF1FF /* NinjamRoomWindow.ui in Sources */,
@@ -2046,11 +2083,11 @@
 				2A1C7A631E0B5F2C00C7984D /* PreferencesDialog.cpp in Sources */,
 				2A1C7A641E0B5F2C00C7984D /* PrivateServerDialog.cpp in Sources */,
 				2A67BD9F1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp in Sources */,
+				2A4E3FAD1F99882B00677E9C /* InactivityDetector.cpp in Sources */,
 				2A1C7A651E0B5F2C00C7984D /* ThemeLoader.cpp in Sources */,
 				2A1C7A661E0B5F2C00C7984D /* TrackGroupView.cpp in Sources */,
 				2A1C7A671E0B5F2C00C7984D /* UserNameDialog.cpp in Sources */,
 				2A1C7A681E0B5F2C00C7984D /* UsersColorsPool.cpp in Sources */,
-				2A1C7A691E0B5F2C00C7984D /* CustomTabWidget.cpp in Sources */,
 				2A1C7A6A1E0B5F2C00C7984D /* IntervalChunksDisplay.cpp in Sources */,
 				2A1C7A6B1E0B5F2C00C7984D /* MapMarker.cpp in Sources */,
 				2A67BDA81E410FE400A8FFF1 /* MacScreensaverBlocker.mm in Sources */,
@@ -2062,6 +2099,7 @@
 				2A1C7A711E0B5F2C00C7984D /* WavePeakPanel.cpp in Sources */,
 				2A1C7A721E0B5F2C00C7984D /* logging.cpp in Sources */,
 				2A1C7A731E0B5F2C00C7984D /* LoginService.cpp in Sources */,
+				2A4E3F9E1F99877300677E9C /* MetronomePanel.cpp in Sources */,
 				2A1C7A741E0B5F2C00C7984D /* MainController.cpp in Sources */,
 				2AF5A9321E76192F00D1150A /* FileReaderFactory.cpp in Sources */,
 				2AF5A9361E76192F00D1150A /* WaveFileReader.cpp in Sources */,
