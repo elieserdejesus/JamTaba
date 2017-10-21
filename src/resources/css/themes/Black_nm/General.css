@@ -290,6 +290,15 @@ QTabBar::tab:!selected:hover
     background-color: rgb(30, 30, 30);
 }
 
+QTabBar::close-button {
+    background: rgba(255, 255, 255, 40);
+}
+
+QTabBar::close-button:hover {
+    background: rgba(255, 255, 255, 60);
+}
+
+
 QMenuBar::item
 {
     color: rgb(140, 140, 140);

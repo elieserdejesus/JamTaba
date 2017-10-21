@@ -125,3 +125,11 @@ AudioMeter
     border-left: 1px solid rgba(0, 0, 0, 30);
     color: rgba(0, 0, 0, 120);
 }
+
+QTabBar::close-button {
+    image: url(':/images/discard.png');
+}
+
+QTabBar::close-button:hover {
+    background: rgba(255, 255, 255, 30);
+}
