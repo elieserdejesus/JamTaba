@@ -164,8 +164,12 @@ void MainWindow::initializeCamera(const QString &cameraDeviceName)
         QMessageBox::critical(this, tr("Error!"), camera->errorString());
     });
 
-    camera->load(); // loading Camera before ask supported resolutions to avoid an empty list.
+    if (videoFrameGrabber)
+        camera->setViewfinder(videoFrameGrabber);
 
+    camera->start();
+
+    // setting resolution after start to fix #944 - https://github.com/elieserdejesus/JamTaba/issues/944
     QList<QSize> resolutions = camera->supportedViewfinderResolutions();
     if (!resolutions.isEmpty()) {
         QCameraViewfinderSettings settings;
@@ -180,11 +184,6 @@ void MainWindow::initializeCamera(const QString &cameraDeviceName)
     else {
         qCritical() << "Camera resolutions list is empty!";
     }
-
-    if (videoFrameGrabber)
-        camera->setViewfinder(videoFrameGrabber);
-
-    camera->start();
 
     setCameraComboVisibility(camera->state() == QCamera::ActiveState);
 
