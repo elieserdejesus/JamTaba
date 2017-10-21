@@ -26,7 +26,7 @@ ChatTabWidget::ChatTabWidget(QWidget *parent, const QStringList &botNames, Users
     layout->addWidget(tabBar);
     layout->addWidget(stackWidget);
 
-    layout->setAlignment(tabBar, Qt::AlignTop);
+    layout->setAlignment(tabBar, Qt::AlignTop | Qt::AlignLeft);
 
     connect(tabBar, &QTabBar::tabBarClicked, this, [=](int index) {
 
