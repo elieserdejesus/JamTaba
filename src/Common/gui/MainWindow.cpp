@@ -116,6 +116,10 @@ void MainWindow::setupMainTabCornerWidgets()
     performanceMonitorLabel = new QLabel();
     performanceMonitorLabel->setObjectName(QStringLiteral("labelPerformanceMonitor"));
 
+#ifndef Q_OS_WIN
+   performanceMonitorLabel->setVisible(false); // showing RAM monitor in windows only
+#endif
+
     frameLayout->addWidget(performanceMonitorLabel);
     frameLayout->addSpacing(12);
     frameLayout->addWidget(buttonCollapseLocalChannels);
