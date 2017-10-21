@@ -138,6 +138,10 @@ qreal IntervalProgressDisplay::getFontSize(PaintShape paintMode) const
 {
     qreal baseFontSize = 8.0;
 
+#ifdef Q_OS_MAC
+    baseFontSize = 11;
+#endif
+
     int size = qMax(baseFontSize, width() * 0.015);
     if (paintMode == PaintShape::PIE)
         size = qMin(width(), height());
