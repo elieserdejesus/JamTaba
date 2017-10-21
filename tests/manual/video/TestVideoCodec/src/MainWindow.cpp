@@ -12,7 +12,9 @@
 #include <QFileInfo>
 
 
-MainWindow::MainWindow()
+MainWindow::MainWindow() :
+    demuxer(nullptr),
+    muxer(nullptr)
 {
     QGridLayout *mainLayout = createWidgets();
 
@@ -20,24 +22,35 @@ MainWindow::MainWindow()
 
     initializeEncodingStuff();
 
-    decodeTimer = new QTimer(this);
+    timer = new QTimer(this);
 
     QTimer *switchTimer = new QTimer(this);
-    switchTimer->setInterval(5000); // simulate new video interval encoding/decoding
+    switchTimer->setInterval(2000); // simulate new video interval encoding/decoding
     switchTimer->setSingleShot(false);
 
     QObject::connect(switchTimer, &QTimer::timeout, [=](){
-        muxer.startNewInterval();
+        muxer->startNewInterval();
     });
 
     switchTimer->start();
 
-    QObject::connect(&demuxer, &FFMpegDemuxer::opened, this, &MainWindow::startDecoding);
-
-    QObject::connect(&muxer, &FFMpegMuxer::dataEncoded, [=](const QByteArray &data, bool isFirstPacket){
+    connect(muxer, &FFMpegMuxer::dataEncoded, [=](const QByteArray &data, bool isFirstPacket){
 
         if (isFirstPacket && !encodedData.isEmpty()) {
-            demuxer.open(encodedData);
+            if (demuxer)
+                demuxer->deleteLater();
+
+            demuxer = new FFMpegDemuxer(nullptr, encodedData);
+
+            connect(demuxer, &FFMpegDemuxer::imagesDecoded, this, [=](const QList<QImage> &images, uint frameRate) {
+                qDebug() << "decoded images:" << images.size() << " rate:" << frameRate;
+                decodedImages << images;
+
+                timer->setInterval(1000/frameRate);
+                timer->start();
+            });
+
+            demuxer->decode();
 
             encodedData.clear();
         }
@@ -45,24 +58,29 @@ MainWindow::MainWindow()
         encodedData.append(data);
     });
 
-    connect(decodeTimer, &QTimer::timeout, [=](){
-        QImage image = demuxer.decodeNextFrame();
-        if (!image.isNull())
-            outputLabel->setPixmap(QPixmap::fromImage(image));
+    connect(timer, &QTimer::timeout, [=](){
+
+        if (decodedImages.isEmpty())
+            return;
+
+        QImage image = decodedImages.takeFirst();
+        if (!image.isNull()) {
+
+            //static uint index = 0;
+            //if(!image.save(QString("image%1.png").arg(index++)))
+            //    qDebug() << "ERROR saving the image";
+
+            QPixmap pixMap = QPixmap::fromImage(image);
+            outputLabel->setPixmap(pixMap);
+        }
         else
-            decodeTimer->stop();
+            timer->stop();
 
     });
 
 
-    muxer.startNewInterval();
+    muxer->startNewInterval();
 
-}
-
-void MainWindow::startDecoding(uint frameRate)
-{
-    decodeTimer->setInterval(1000/frameRate);
-    decodeTimer->start();
 }
 
 QGridLayout *MainWindow::createWidgets()
@@ -86,15 +104,14 @@ void MainWindow::initializeEncodingStuff()
 {
     qreal fps = 10;
     QTimer *timer = new QTimer(this);
-    QObject::connect(timer,  SIGNAL(timeout()), this, SLOT(takeCameraSnapshot()));
+    QObject::connect(timer,  &QTimer::timeout, this, &MainWindow::takeCameraSnapshot);
     timer->setInterval(1000/fps);
     timer->start();
 
-    muxer.setVideoResolution(camera->viewfinderSettings().resolution());
-    muxer.setVideoFrameRate(fps);
-    muxer.setVideoQuality(FFMpegMuxer::LOW_VIDEO_QUALITY);
-    muxer.setSaveToFile(false);
-
+    muxer = new FFMpegMuxer();
+    muxer->setVideoResolution(camera->viewfinderSettings().resolution());
+    muxer->setVideoFrameRate(fps);
+    muxer->setVideoQuality(FFMpegMuxer::LOW_VIDEO_QUALITY);
 }
 
 void MainWindow::initializeCamera(QGridLayout *layout)
@@ -119,5 +136,5 @@ void MainWindow::initializeCamera(QGridLayout *layout)
 
 void MainWindow::takeCameraSnapshot()
 {
-    muxer.encodeImage(viewFinder->grab().toImage());
+    muxer->encodeImage(viewFinder->grab().toImage());
 }

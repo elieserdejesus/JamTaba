@@ -245,5 +245,5 @@ void FFMpegDemuxer::decode()
         }
     }
 
-    emit imagesDecoded(decodedImages,getFrameRate());
+    emit imagesDecoded(decodedImages, getFrameRate());
 }
