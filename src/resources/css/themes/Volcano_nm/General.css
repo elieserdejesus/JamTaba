@@ -238,7 +238,7 @@ background-color: #FDE5A9;
 
 QSlider::handle:horizontal
 {
-    margin-top: -7px;
+    margin-top: -6px;
     margin-bottom: -7px;
     padding: 0px;
     width: 8px;

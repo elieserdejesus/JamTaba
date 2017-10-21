@@ -235,7 +235,7 @@ QSlider::handle:horizontal
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
     border: 1px outset rgb(10, 10, 10);
     border-radius: 2px;
-    margin-top: -8px;
+    margin-top: -7px;
     margin-bottom: -7px;
     padding: 0px;
     width: 8px;

@@ -28,6 +28,8 @@ int main(int argc, char* args[] ){
     QApplication application(argc, args);
 #endif
 
+    application.setStyle("fusion"); // same visual in all plataforms
+
     Controller::MainControllerStandalone mainController(settings, &application);
     mainController.start();
 
