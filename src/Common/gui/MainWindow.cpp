@@ -1187,12 +1187,12 @@ void MainWindow::addNinjamPanelsInBottom()
 
     ui.bottomPanelLayout->removeWidget(ui.masterControlsPanel);
 
-    ui.bottomPanelLayout->addWidget(metronomePanel, 1, 0, 1, 1, Qt::AlignHCenter);
+    ui.bottomPanelLayout->addWidget(metronomePanel, 1, 0, 1, 1);
     ui.bottomPanelLayout->addWidget(ninjamPanel, 1, 1, 1, 1, Qt::AlignCenter);
-    ui.bottomPanelLayout->addWidget(ui.masterControlsPanel, 1, 2, 1, 1, Qt::AlignHCenter);
+    ui.bottomPanelLayout->addWidget(ui.masterControlsPanel, 1, 2, 1, 1);
 
-    ui.bottomPanelLayout->setAlignment(metronomePanel, Qt::AlignBottom);
-    ui.bottomPanelLayout->setAlignment(ui.masterControlsPanel, Qt::AlignBottom);
+    ui.bottomPanelLayout->setAlignment(metronomePanel, Qt::AlignBottom | Qt::AlignCenter);
+    ui.bottomPanelLayout->setAlignment(ui.masterControlsPanel, Qt::AlignBottom | Qt::AlignCenter);
 
     ui.masterTitleLabel->setVisible(true);
     ninjamPanel->setVisible(true);
