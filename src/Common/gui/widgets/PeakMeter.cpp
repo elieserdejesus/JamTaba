@@ -57,7 +57,7 @@ void BaseMeter::resizeEvent(QResizeEvent * /*ev*/)
 }
 
 
-void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakPosition, const std::vector<QColor> &segmentsColors)
+void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakPosition, const std::vector<QColor> &segmentsColors, bool drawSegments)
 {
     const quint32 segmentsToPaint = (quint32)peakPosition/SEGMENTS_SIZE;
 
@@ -74,9 +74,9 @@ void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakP
     for (quint32 i = 0; i < segmentsToPaint; ++i) {
         painter.fillRect(x, y, w, h, segmentsColors[i]);
         if (isVerticalMeter)
-            y -= SEGMENTS_SIZE;
+            y -= drawSegments ? SEGMENTS_SIZE : (SEGMENTS_SIZE - 1);
         else
-            x += SEGMENTS_SIZE;
+            x += drawSegments ? SEGMENTS_SIZE : (SEGMENTS_SIZE - 1);
     }
 }
 
@@ -122,7 +122,8 @@ AudioMeter::AudioMeter(QWidget *parent) :
       maxPeakColor(QColor(0, 0, 0, 80)),
       dBMarksColor(Qt::lightGray),
       stereo(true),
-      paintingDbMarkers(true)
+      paintingDbMarkers(true),
+      drawSegments(true)
 {
     setAutoFillBackground(false);
 
@@ -132,6 +133,13 @@ AudioMeter::AudioMeter(QWidget *parent) :
         currentRms[i] = 0.0f;
         lastMaxPeakTime[i] = 0;
     }
+}
+
+void AudioMeter::setDrawSegments(bool drawSegments)
+{
+    this->drawSegments = drawSegments;
+
+    update();
 }
 
 void AudioMeter::updateStyleSheet()
@@ -301,7 +309,7 @@ void AudioMeter::paintEvent(QPaintEvent *)
         for (uint i = 0; i < channels; ++i) {
             if (paintingPeaks && currentPeak[i]) {
                 qreal peakPosition = getPeakPosition(currentPeak[i], rectSize, peakValuesOffset);
-                paintSegments(painter, drawRect, peakPosition, peakColors);
+                paintSegments(painter, drawRect, peakPosition, peakColors, drawSegments);
             }
 
             if (paintingMaxPeakMarker && maxPeak[i]) {
@@ -314,7 +322,7 @@ void AudioMeter::paintEvent(QPaintEvent *)
 
                 qreal rmsXOffset = (paintingPeaks && isVertical()) ? channels * drawRect.width() : 0;
                 qreal rmsYOffset = (paintingPeaks && !isVertical()) ? channels * drawRect.height() : 0;
-                paintSegments(painter, drawRect.translated(rmsXOffset, rmsYOffset), rmsPosition, rmsColors);
+                paintSegments(painter, drawRect.translated(rmsXOffset, rmsYOffset), rmsPosition, rmsColors, drawSegments);
             }
 
             if (isVertical())

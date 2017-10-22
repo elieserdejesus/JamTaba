@@ -22,7 +22,7 @@ protected:
 
     void resizeEvent(QResizeEvent *) override;
 
-    void paintSegments(QPainter &painter, const QRectF &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors);
+    void paintSegments(QPainter &painter, const QRectF &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors, bool drawSegments = true);
 
     bool isVertical() const;
 
@@ -58,6 +58,7 @@ class AudioMeter : public BaseMeter
     Q_PROPERTY(QColor peakStartColor MEMBER peakStartColor WRITE setPeaksStartColor)
     Q_PROPERTY(QColor peakEndColor MEMBER peakEndColor WRITE setPeaksEndColor)
     Q_PROPERTY(QColor dBMarksColor MEMBER dBMarksColor WRITE setDbMarksColor)
+    Q_PROPERTY(bool drawSegments MEMBER drawSegments WRITE setDrawSegments)
 
 public:
     explicit AudioMeter(QWidget *parent = nullptr);
@@ -87,6 +88,8 @@ public:
     void setPeaksEndColor(const QColor &newColor);
     void setDbMarksColor(const QColor &newColor);
 
+    void setDrawSegments(bool drawSegments);
+
 public slots:
     void setStereo(bool stereo);
 
@@ -105,6 +108,8 @@ private:
     QColor peakStartColor;  // start gradient color
     QColor peakEndColor;    // end gradient color
     QColor dBMarksColor;
+
+    bool drawSegments;
 
     std::vector<QColor> peakColors;
     std::vector<QColor> rmsColors;
