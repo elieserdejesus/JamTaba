@@ -191,10 +191,6 @@ LooperWindow QSlider:vertical
 }
 
 /* TabBar ----------------------*/
-QTabBar::tab
-{
-    max-height: 24px;
-}
 
 QTabBar::tab:selected
 {
