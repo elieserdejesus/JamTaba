@@ -52,7 +52,6 @@ IntervalProgressDisplay
     /* qproperty-secondaryBeatsColor: gray; */
     qproperty-disabledBeatsColor: rgba(0, 0, 0, 45);
     qproperty-linesColor: rgba(255, 255, 255, 50); /* #92ADC2;*/
-    qproperty-bordersColor: #92ADC2;
 
 }
 
