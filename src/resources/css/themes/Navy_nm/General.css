@@ -395,6 +395,8 @@ AudioMeter
     qproperty-peakStartColor: #5A728A;
     qproperty-peakEndColor: #FF4C00;
 
+    qproperty-drawSegments: false; /* Navy is drawing solid peak meter bars */
+
     /*
     Q_PROPERTY(QColor rmsColor MEMBER rmsColor WRITE setRmsColor)
     Q_PROPERTY(QColor maxPeakColor MEMBER maxPeakColor WRITE setMaxPeakColor)
