@@ -1,0 +1,116 @@
+
+NinjamPanel
+{
+
+    background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0,
+        stop:0.92 #3E4045,
+        stop:0.49 #292B31,
+        stop:0.47 #1D1D1D,
+        stop:0.0 #22252B);
+
+    border: 2px solid rgb(25, 25, 25);
+    border-radius: 4px;
+
+
+}
+
+NinjamPanel #panelCombos QLabel
+{
+    color: #92ADC2;
+}
+
+
+NinjamPanel #panelCombos QComboBox
+{
+
+    color: rgb(140, 140, 140);
+}
+
+NinjamPanel #panelCombos QLineEdit
+{
+    border: 1px solid rgba(255, 255, 255, 30);
+    color: #92ADC2;
+}
+
+NinjamPanel #intervalPanel,
+IntervalProgressWindow #intervalPanel
+{
+    color: #92ADC2;
+    font-weight: bold;
+}
+
+IntervalProgressWindow
+{
+    font-size: 24pt; /* not working */
+}
+
+IntervalProgressDisplay
+{
+    qproperty-currentBeatColor: #92ADC2;
+    qproperty-accentsColor: #6499C1;
+    qproperty-currentAccentColor: #2A81BF;
+    /* qproperty-secondaryBeatsColor: gray; */
+    qproperty-disabledBeatsColor: rgba(0, 0, 0, 45);
+    qproperty-linesColor: rgba(255, 255, 255, 50); /* #92ADC2;*/
+    qproperty-bordersColor: #92ADC2;
+
+}
+
+
+
+
+/* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
+------------------------------------------------------------------------------------*/
+#buttonVerticalLayout:!checked,
+#buttonHorizontalLayout:!checked,
+QToolButton#buttonGridLayout:!checked,
+QToolButton#wide:!checked,
+QToolButton#narrow:!checked,
+QPushButton#licenceButton,
+LooperWindow QPushButton:!checked
+{
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0.0 rgb(95, 95, 95), stop: 1.0 rgb(69, 69, 69));
+}
+
+#buttonVerticalLayout:hover,
+#buttonHorizontalLayout:hover,
+QToolButton#buttonGridLayout:hover,
+QToolButton#wide:hover,
+QToolButton#narrow:hover,
+QPushButton#licenceButton:hover,
+LooperWindow QPushButton:!checked:hover
+{
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                stop: 0.0 rgb(125, 125, 125), stop: 1.0 rgb(89, 89, 89));
+}
+
+QToolButton#buttonHorizontalLayout
+{
+    border-right-color: transparent;
+    border-left-color: transparent;
+}
+
+QToolButton#wide:!checked
+{
+    border-right-color: transparent;
+}
+
+QToolButton#narrow:!checked
+{
+    border-left-color: transparent;
+}
+
+NinjamTrackView #receiveButton:!checked
+{
+    background-color: transparent;
+}
+
+
+MetronomePanel #soloButton,
+MetronomePanel #muteButton
+{
+    width: 14px;
+}
+
+
