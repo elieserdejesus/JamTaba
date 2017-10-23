@@ -205,3 +205,8 @@ LooperWindow QGroupBox
 {
     background-color: white;
 }
+
+#widgetBottom QComboBox QAbstractItemView
+{
+    selection-color: black;
+}
