@@ -1,0 +1,32 @@
+/* ChordLabel is the widget used to show ONE chord
+-------------------------------------*/
+
+ChordLabel
+{
+    background-color: rgba(0, 0, 0, 30);
+    border-color: transparent;
+    padding: 6px;
+    padding-top: 0px;
+    color: rgb(200, 200, 200);
+    selection-background-color: rgb(120, 120, 120);
+    selection-color: rgb(40, 40, 40);
+}
+
+ChordLabel[current="true"]
+{
+    background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0,
+        stop:0.92 #3E4045,
+        stop:0.49 #292B31,
+        stop:0.47 #1D1D1D,
+        stop:0.0 #22252B);
+
+    border: 1px solid rgb(25, 25, 25);
+    border-radius: 1px;
+
+    color: white;
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(140, 140, 140);
+
+
+}
+

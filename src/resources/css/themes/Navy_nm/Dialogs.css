@@ -1,0 +1,11 @@
+
+QDialog QLabel,
+QDialog QGroupBox,
+QDialog QComboBox,
+QDialog QCheckBox,
+QDialog QGroupBox QCheckBox,
+QDialog QGroupBox QCheckBox,
+QDialog QRadioButton
+{
+    color: rgb(170, 170, 170);
+}
