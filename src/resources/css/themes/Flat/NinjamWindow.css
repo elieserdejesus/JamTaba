@@ -200,3 +200,8 @@ LooperWindow QGroupBox
 {
     border: 1px solid rgba(0, 0, 0, 30);
 }
+
+#widgetBottom QComboBox
+{
+    background-color: white;
+}
