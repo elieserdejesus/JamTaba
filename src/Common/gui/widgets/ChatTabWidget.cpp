@@ -28,15 +28,14 @@ ChatTabWidget::ChatTabWidget(QWidget *parent, const QStringList &botNames, Users
 
     layout->setAlignment(tabBar, Qt::AlignTop | Qt::AlignLeft);
 
-    connect(tabBar, &QTabBar::tabBarClicked, this, [=](int index) {
+    connect(tabBar, &QTabBar::currentChanged, this, [=](int index) {
 
-        stackWidget->setCurrentIndex(index);
         if (!stackWidget->isVisible())
             collapse(false);
 
-    });
+        stackWidget->setCurrentIndex(index);
 
-    connect(tabBar, &QTabBar::currentChanged, stackWidget, &QStackedWidget::setCurrentIndex);
+    });
 
     connect(tabBar, &QTabBar::tabCloseRequested, this, &ChatTabWidget::closeChatTab);
 
@@ -239,9 +238,4 @@ void ChatTabWidget::removeTabCloseButton(int buttonIndex)
         tabButton->resize(0, 0);
         tabButton->hide();
     }
-}
-
-void ChatTabWidget::setCurrentIndex(int index)
-{
-    tabBar->setCurrentIndex(index);
 }

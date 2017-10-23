@@ -35,8 +35,6 @@ public:
     ChatPanel *createPublicChat(const QString &jamTabaChatBotName, const QString &preferredLanguage, TextEditorModifier *textEditorModifier);
     ChatPanel *createPrivateChat(const QString &remoteUserName, const QString &userIP, TextEditorModifier *textModifider, bool focusNewChat);
 
-    void setCurrentIndex(int index);
-
     void updatePublicChatTabTitle(uint unreadedMessages = 0);
 
     bool isCollapsed() const;
