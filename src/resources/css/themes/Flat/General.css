@@ -269,6 +269,12 @@ AudioMeter#masterMeter
     qproperty-rmsColor: rgb(120, 120, 120);
 }
 
-QComboBox {
-    background-color: rgba(0, 0, 0, 30);
+QComboBox
+{
+    background-color: white;
+}
+
+QComboBox QAbstractItemView
+{
+    selection-color: black;
 }
