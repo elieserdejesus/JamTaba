@@ -126,7 +126,7 @@ void FFMpegMuxer::encodeImage(const QImage &image)
         }
 
         if (encodeVideo && !image.isNull())
-            encodeVideo = !doEncodeVideoFrame(image.copy());
+            encodeVideo = !doEncodeVideoFrame(image);
     };
 
     QtConcurrent::run(&threadPool, lambda);
@@ -724,6 +724,10 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
 
     /* encode the image */
     int ret = avcodec_encode_video2(codecContext, &packet, videoStream->frame, &gotPacket);
+
+    // releasing the allocated memory - fix https://github.com/elieserdejesus/JamTaba/issues/951
+    avpicture_free((AVPicture *)videoStream->frame);
+
     if (ret < 0) {
         qCritical() << "Error encoding video frame: " << av_err2str(ret);
         return false;
