@@ -39,3 +39,13 @@ BusyDialog
     margin: 0px;
     background-color: rgb(220, 220, 220);
 }
+
+PreferencesDialog QComboBox
+{
+    background-color: white;
+}
+
+PreferencesDialog QComboBox QAbstractItemView
+{
+    selection-color: black;
+}
