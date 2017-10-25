@@ -62,3 +62,8 @@ QTabWidget QPushButton:checked
 {
     color: rgb(120, 120, 120);
 }
+
+#userNameLineEdit:read-only
+{
+    color: rgba(255, 255, 255, 90);
+}

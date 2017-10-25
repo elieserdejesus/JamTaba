@@ -74,7 +74,8 @@ PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop dow
 PreferencesDialog QComboBox:disabled,
 PreferencesDialog QLabel:disabled,
 PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
-PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
+PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false],
+PreferencesDialog QGroupBox#groupBoxOutputs
 {
 color: rgba(0, 0, 0, 90);
 }
