@@ -359,6 +359,7 @@ QComboBox
     background-color: rgb(235, 164, 101);
     border-radius: 2px;
     color: rgb(10, 10, 10);
+    selection-background-color: #B35925;
 }
 
 QComboBox QAbstractItemView
@@ -366,8 +367,7 @@ QComboBox QAbstractItemView
     border: none;
     color: black;
     background-color: rgba(254, 181, 102, 150);
-    selection-background-color: rgb(179, 89, 37);
-    selection-color: rgb(254, 181, 102);
+    border: 1px solid transparent;
 }
 
 QComboBox:hover
