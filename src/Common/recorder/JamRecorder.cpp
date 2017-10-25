@@ -212,7 +212,9 @@ void JamRecorder::appendLocalUserVideo(const QByteArray &encodedVideo, bool isFi
             QString videoFileName = buildVideoFileName(localUserName, videoInterval.getIntervalIndex(), "avi");
             QString videoFilePath = jamMetadataWritter->getVideoAbsolutePath(videoFileName);
 
-            QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, videoFilePath);
+            if (!videoFilePath.isEmpty()) // some recorders (like ClipSort) can't save videos
+                QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, videoFilePath);
+
             videoInterval.clear();
         }
     }
