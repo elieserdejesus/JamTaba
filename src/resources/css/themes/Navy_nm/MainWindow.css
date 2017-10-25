@@ -23,6 +23,14 @@ QMainWindow
 
 }
 
+#chatTabWidget QStackedWidget
+{
+    border-bottom: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+            stop: 0.5 rgb(70, 70, 70), stop: 0.6 rgb(24, 24, 24));
+}
+
 QLabel#labelPerformanceMonitor
 {
     color: rgba(255, 255, 255, 50);
