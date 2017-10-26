@@ -66,17 +66,19 @@ void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakP
 
     const bool isVerticalMeter = isVertical();
 
+    const qreal pad = drawSegments ? 1.0 : 0;
+
     qreal x = rect.left();
     qreal y = isVerticalMeter ? (rect.height() - SEGMENTS_SIZE) : rect.top();
-    const qreal w = isVerticalMeter ? rect.width() - 1.0 : SEGMENTS_SIZE - 1.0;
-    const qreal h = isVerticalMeter ? (SEGMENTS_SIZE - 1.0) : rect.height() - 1.0;
+    const qreal w = isVerticalMeter ? rect.width() - pad : SEGMENTS_SIZE - pad;
+    const qreal h = isVerticalMeter ? (SEGMENTS_SIZE - pad) : rect.height() - pad;
 
     for (quint32 i = 0; i < segmentsToPaint; ++i) {
         painter.fillRect(x, y, w, h, segmentsColors[i]);
         if (isVerticalMeter)
-            y -= drawSegments ? SEGMENTS_SIZE : (SEGMENTS_SIZE - 1);
+            y -= SEGMENTS_SIZE;
         else
-            x += drawSegments ? SEGMENTS_SIZE : (SEGMENTS_SIZE - 1);
+            x += SEGMENTS_SIZE;
     }
 }
 
