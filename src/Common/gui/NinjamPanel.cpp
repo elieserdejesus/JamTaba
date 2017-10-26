@@ -422,12 +422,12 @@ void NinjamPanel::selectBeatsPerAccentInCombo(int beatsPerAccent)
 
 int NinjamPanel::getBpi() const
 {
-    return ui->comboBpi->currentData().toInt();
+    return ui->comboBpi->currentText().toInt();
 }
 
 int NinjamPanel::getBpm() const
 {
-    return ui->comboBpm->currentData().toInt();
+    return ui->comboBpm->currentText().toInt();
 }
 
 void NinjamPanel::setBpi(int bpi)
