@@ -487,11 +487,13 @@ void MainWindow::initializeGuiRefreshTimer()
 
 void MainWindow::initialize()
 {
+#ifdef Q_OS_WIN
     if (MainController::crashedInLastExecution()) {
         CrashReportDialog dialog(this);
         dialog.setLogDetails(Configurator::getInstance()->getPreviousLogContent());
         dialog.exec();
     }
+#endif
 
     // initialize text modifier here to avoid a pure virtual method call in constructor
     TextEditorModifier *textEditorModifier = createTextEditorModifier();
