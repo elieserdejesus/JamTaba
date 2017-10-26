@@ -272,9 +272,12 @@ AudioMeter#masterMeter
 QComboBox
 {
     background-color: white;
+    selection-color: black;
+    selection-background-color: #3399FF;
 }
 
 QComboBox QAbstractItemView
 {
-    selection-color: black;
+    border: 1px solid transparent;
+    background-color: white;
 }

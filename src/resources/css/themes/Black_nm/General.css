@@ -362,15 +362,17 @@ QComboBox
     background-color: rgb(140, 140, 140);
     border-radius: 2px;
     color: rgb(10, 10, 10);
+    selection-background-color: #323232;
+    selection-color: #8C8C8C;
 }
 
 QComboBox QAbstractItemView
 {
-    border: 1px solid black;
-    color: rgb(20, 20, 20);
+    border: 1px solid transparent;
     background-color: rgb(130, 130, 130);
-    selection-background-color: rgb(50, 50, 50);
-    selection-color: rgb(140, 140, 140);
+    selection-background-color: #323232;
+    selection-color: #8C8C8C;
+
 }
 
 QComboBox:hover
