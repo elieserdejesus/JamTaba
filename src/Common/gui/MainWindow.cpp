@@ -1603,7 +1603,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
         ui.bottomPanelLayout->removeWidget(ninjamWindow->getMetronomePanel());
     }
 
-    ui.bottomPanelLayout->addWidget(ui.masterControlsPanel, 1, 1, 1, 1, Qt::AlignCenter);
+    collapseBottomArea(bottomCollapsed); // update bottom area visibility honoring collapse status
 
     hideChordsPanel();
 
