@@ -182,6 +182,9 @@ public:
     QString loopsFolder; // where looper audio files will be saved
     bool encodingAudioWhenSaving;
     quint8 waveFilesBitDepth;
+
+private:
+    void setDefaultLooperFilesPath();
 };
 
 // +++++++++++++++++++++++++++++++++

@@ -94,7 +94,7 @@ LooperSettings::LooperSettings() :
     encodingAudioWhenSaving(false),
     waveFilesBitDepth(16) // 16 bits
 {
-
+    setDefaultLooperFilesPath();
 }
 
 void LooperSettings::read(const QJsonObject &in)
@@ -128,15 +128,20 @@ void LooperSettings::read(const QJsonObject &in)
     }
 
     if (useDefaultSavePath) {
-        QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
-        QDir pathDir(QDir::homePath());
-        QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
-        loopsFolder = QDir(documentsDir).absoluteFilePath("JamTaba/Looper");
-        QDir saveDir(loopsFolder);
-        if (!saveDir.exists()) {
-            saveDir.mkpath(".");
-            qDebug() << "Creating looper data folder " << saveDir;
-        }
+       setDefaultLooperFilesPath();
+    }
+}
+
+void LooperSettings::setDefaultLooperFilesPath()
+{
+    QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
+    QDir pathDir(QDir::homePath());
+    QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
+    loopsFolder = QDir(documentsDir).absoluteFilePath("JamTaba/Looper");
+    QDir saveDir(loopsFolder);
+    if (!saveDir.exists()) {
+        saveDir.mkpath(".");
+        qDebug() << "Creating looper data folder " << saveDir;
     }
 }
 
