@@ -12,7 +12,7 @@ class VideoWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit VideoWidget(QWidget *parent, bool activated = true);
+    explicit VideoWidget(QWidget *parent, const QIcon &icon, bool activated = true);
 
     void setCurrentFrame(const QImage &image);
 
@@ -22,6 +22,8 @@ public:
     {
         return activated;
     }
+
+    void setIcon(const QIcon &icon);
 
 signals:
     void statusChanged(bool activated);

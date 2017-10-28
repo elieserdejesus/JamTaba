@@ -88,6 +88,15 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
 
     connect(mainController, &Controller::MainController::themeChanged, this, &NinjamRoomWindow::updateStylesheet);
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow done";
+
+    setTintColor(mainWindow->getTintColor());
+}
+
+void NinjamRoomWindow::setTintColor(const QColor &color)
+{
+    if (metronomePanel)
+        metronomePanel->setTintColor(color);
+
 }
 
 void NinjamRoomWindow::setBpiComboPendingStatus(bool status)

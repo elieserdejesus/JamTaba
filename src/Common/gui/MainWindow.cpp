@@ -16,6 +16,7 @@
 #include "BlinkableButton.h"
 #include "CrashReportDialog.h"
 #include "InactivityDetector.h"
+#include "IconFactory.h"
 
 #include "LooperWindow.h"
 #include "ChatChordsProgressionParser.h"
@@ -96,6 +97,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 void MainWindow::setupMainTabCornerWidgets()
 {
     QWidget *frame = new QWidget();
+    frame->setObjectName(QStringLiteral("right-corner"));
     QHBoxLayout *frameLayout = new QHBoxLayout();
     frameLayout->setContentsMargins(0, 0, 0, 0);
     frameLayout->setSpacing(2);
@@ -264,7 +266,8 @@ void MainWindow::initializeCameraWidget()
     if (!cameras.isEmpty()) {
 
         if (!cameraView) {
-            cameraView = new VideoWidget(this, false);
+            QIcon webcamIcon = IconFactory::createWebcamIcon(tintColor);
+            cameraView = new VideoWidget(this, webcamIcon, false);
             cameraView->setMaximumHeight(90);
 
             connect(cameraView, &VideoWidget::statusChanged, this, &MainWindow::changeCameraStatus);
@@ -274,6 +277,7 @@ void MainWindow::initializeCameraWidget()
             cameraLayout = new QVBoxLayout();
 
             cameraCombo = new QComboBox();
+            cameraCombo->setObjectName(QStringLiteral("cameraCombo"));
             connect(cameraCombo, SIGNAL(activated(int)), this, SLOT(selectNewCamera(int)));
             cameraCombo->setVisible(false);
 
@@ -363,6 +367,8 @@ void MainWindow::handleThemeChanged()
             trackView->updateStyleSheet();
         }
     }
+
+
 }
 
 void MainWindow::setTheme(const QString &themeName)
@@ -390,6 +396,31 @@ QString MainWindow::getStripedThemeName(const QString &fullThemeName)
         return fullThemeName.left(fullThemeName.size() - 3); // remove the last 3 letters in theme name
 
     return fullThemeName;
+}
+
+void MainWindow::setTintColor(const QColor &color)
+{
+    this->tintColor = color;
+
+    ui.localControlsCollapseButton->setIcon(IconFactory::createLocalControlsIcon(color));
+
+    for(auto group : this->localGroupChannels) {
+        group->setTintColor(color);
+    }
+
+    if (cameraView)
+        cameraView->setIcon(IconFactory::createWebcamIcon(color));
+
+    if (ninjamWindow)
+        ninjamWindow->setTintColor(color);
+
+
+    for (auto looperWindow : looperWindows)
+        looperWindow->setTintColor(color);
+
+    // master
+    ui.speakerIconLeft->setPixmap(IconFactory::createLowLevelIcon(color));
+    ui.speakerIconRight->setPixmap(IconFactory::createHighLevelIcon(color));
 }
 
 void MainWindow::initializeThemeMenu()
@@ -797,6 +828,7 @@ void MainWindow::openLooperWindow(uint trackID)
         if (!looperWindow) {
             looperWindow = new LooperWindow(this, mainController);
             looperWindows.insert(trackID, looperWindow);
+            looperWindow->setTintColor(getTintColor());
         }
 
         looperWindow->setLooper(inputTrack->getLooper());
@@ -1607,8 +1639,10 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     hideChordsPanel();
 
-    ninjamWindow->deleteLater();
-    ninjamWindow.reset(nullptr);
+    if (ninjamWindow) {
+        ninjamWindow->deleteLater();
+        ninjamWindow.reset(nullptr);
+    }
 
     setChatsVisibility(false);
 

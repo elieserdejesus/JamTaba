@@ -66,6 +66,9 @@ public:
 
     bool isActivated() const;
 
+    virtual void setTintColor(const QColor &color);
+    QColor getTintColor() const;
+
     static const int NARROW_WIDTH;
     static const int WIDE_WIDTH;
 
@@ -127,6 +130,11 @@ private:
     static QMap<long, BaseTrackView *> trackViews;
     Audio::AudioPeak maxPeak;
 
+    QLabel *highLevelIcon;
+    QLabel *lowLevelIcon;
+
+    QColor tintColor;
+
 protected slots:
     virtual void toggleMuteStatus();
     virtual void toggleSoloStatus();
@@ -142,6 +150,11 @@ private slots:
     void setSoloStatus(bool newSoloStatus);
     void setBoostStatus(float newBoostValue);
 };
+
+inline QColor BaseTrackView::getTintColor() const
+{
+    return tintColor;
+}
 
 inline Controller::MainController* BaseTrackView::getMainController() const
 {

@@ -3,6 +3,7 @@
 #include "audio/core/LocalInputNode.h"
 #include "GuiUtils.h"
 #include "BoostSpinBox.h"
+#include "IconFactory.h"
 
 #include <QLayout>
 #include <QPushButton>
@@ -272,9 +273,18 @@ LocalTrackView::~LocalTrackView()
         mainController->removeInputTrackNode(getTrackID());
 }
 
+void LocalTrackView::setTintColor(const QColor &color)
+{
+    BaseTrackView::setTintColor(color);
+
+    buttonLooper->setIcon(IconFactory::createLooperButtonIcon(color));
+
+    buttonStereoInversion->setIcon(IconFactory::createStereoInversionIcon(color));
+}
+
 QPushButton *LocalTrackView::createLooperButton()
 {
-    QPushButton *button = new QPushButton(QIcon(":/images/loop.png"), "");
+    QPushButton *button = new QPushButton(IconFactory::createLooperButtonIcon(getTintColor()), "");
     button->setObjectName(QStringLiteral("buttonLooper"));
     button->setEnabled(false); // disaled by default
 
@@ -317,6 +327,8 @@ void LocalTrackView::setStereoInversion(bool stereoInverted)
 void LocalTrackView::updateStyleSheet()
 {
     BaseTrackView::updateStyleSheet();
+
+    buttonLooper->setIcon(IconFactory::createLooperButtonIcon(getTintColor()));
 
     style()->unpolish(buttonStereoInversion); // this is necessary to change the stereo inversion button colors when the transmit button is clicled
     style()->polish(buttonStereoInversion);

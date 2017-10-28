@@ -2,7 +2,6 @@
     This file contain common stylesheet to all tracks: local tracks, ninjam tracks and track groups.
 */
 
-
 /* Basic boost (-12, 0, +12) button stylesheet:
 --------------------------------------*/
 BoostSpinBox
@@ -49,17 +48,6 @@ QPushButton#buttonStereoInversion
 LocalTrackView[unlighted="true"] #buttonStereoInversion
 {
     background-color: rgba(0, 0, 0, 30);
-}
-
-
-QPushButton#buttonStereoInversion:!checked
-{
-    background-image: url(':/images/stereo_normal.png');
-}
-
-QPushButton#buttonStereoInversion:checked
-{
-    background-image: url(':/images/stereo_inverted.png');
 }
 
 

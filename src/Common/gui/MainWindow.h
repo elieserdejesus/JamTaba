@@ -49,6 +49,8 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    Q_PROPERTY(QColor tintColor MEMBER tintColor WRITE setTintColor)
+
 public:
     MainWindow(Controller::MainController *mainController, QWidget *parent = 0);
     virtual ~MainWindow();
@@ -95,6 +97,9 @@ public:
     NinjamRoomWindow* getNinjamRomWindow() const;
 
     UsersColorsPool *getUsersColorsPool() const;
+
+    void setTintColor(const QColor &color);
+    QColor getTintColor() const;
 
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
@@ -167,6 +172,8 @@ protected:
     QComboBox *cameraCombo;
     QVBoxLayout *cameraLayout;
     QString preferredCameraName;
+
+    QColor tintColor;
 
 protected slots:
     void closeContentTab(int index);
@@ -420,6 +427,11 @@ private:
     static const QString NIGHT_MODE_SUFFIX;
 
 };
+
+inline QColor MainWindow::getTintColor() const
+{
+    return tintColor;
+}
 
 inline UsersColorsPool *MainWindow::getUsersColorsPool() const
 {

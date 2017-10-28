@@ -4,13 +4,19 @@
 
 const int VideoWidget::MIN_SIZE = 32;
 
-VideoWidget::VideoWidget(QWidget *parent, bool activated) :
+VideoWidget::VideoWidget(QWidget *parent, const QIcon &icon, bool activated) :
     QWidget(parent),
     activated(activated),
-    targetRect(0, 0, VideoWidget::MIN_SIZE, VideoWidget::MIN_SIZE)
+    targetRect(0, 0, VideoWidget::MIN_SIZE, VideoWidget::MIN_SIZE),
+    webcamIcon(icon)
 {
 
-    webcamIcon = QIcon(":/images/webcam.png");
+}
+
+void VideoWidget::setIcon(const QIcon &icon)
+{
+    webcamIcon = icon;
+    update();
 }
 
 void VideoWidget::activate(bool status)

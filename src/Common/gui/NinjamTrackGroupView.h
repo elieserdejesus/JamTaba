@@ -45,6 +45,8 @@ public:
 
     void addVideoInterval(const QByteArray &encodedVideoData);
 
+    QColor getTintColor() const;
+
     static const uint MAX_WIDTH_IN_GRID_LAYOUT;
     static const uint MAX_HEIGHT_IN_GRID_LAYOUT;
 

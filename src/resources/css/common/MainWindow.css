@@ -2,6 +2,10 @@
     Stylesheet code for the Main window.
 */
 
+MainWindow
+{
+    qproperty-tintColor: black;
+}
 
 #bottomPanel                                    /* the widget in bottom, used to show master controls and NinjamPanel when connected in a ninjam server */
 {
@@ -66,25 +70,12 @@ MainWindow #localControlsCollapseButton                    /* not collapsed */
     width: 6px;
     background-repeat: none;
     background-position: right center;
-    background-image: url(:/images/mini arrow left.png);
-}
-
-MainWindow #localControlsCollapseButton::hover             /* hover effect when not collapsed */
-{
-   background-image: url(:/images/mini arrow left hover.png);
 }
 
 MainWindow #localControlsCollapseButton:checked            /* collapsed (arrow pointing to right side) */
 {
-   background-image: url(:/images/mini arrow right.png);
    background-position: center center;
 }
-
-MainWindow #localControlsCollapseButton::hover:checked     /* hover effect when collapsed */
-{
-   background-image: url(:/images/mini arrow right hover.png);
-}
-
 
 
 /* The tabBar used in center/content area

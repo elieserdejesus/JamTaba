@@ -6,6 +6,7 @@
 #include "MainController.h"
 #include "persistence/Settings.h"
 #include "file/FileUtils.h"
+#include "IconFactory.h"
 
 #include <QGridLayout>
 #include <QSpinBox>
@@ -68,6 +69,26 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
         float gain = Utils::linearGainToPower(value/100.0);
         looper->setMainGain(gain);
     });
+}
+
+void LooperWindow::setTintColor(const QColor &color)
+{
+    this->tintColor = color;
+
+    ui->labelSpeakerLow->setPixmap(IconFactory::createLowLevelIcon(color));
+    ui->labelSpeakerHigh->setPixmap(IconFactory::createHighLevelIcon(color));
+
+    for(auto view : layerViews.values()) {
+        view.controlsLayout->lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(color));
+        view.controlsLayout->highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(color));
+    }
+
+    ui->buttonRec->setIcon(IconFactory::createLooperRecordIcon(color));
+    ui->buttonPlay->setIcon(IconFactory::createLooperPlayIcon(color));
+
+    ui->saveButton->setIcon(IconFactory::createLooperSaveIcon(color));
+    ui->loadButton->setIcon(IconFactory::createLooperLoadIcon(color));
+    ui->resetButton->setIcon(IconFactory::createLooperResetIcon(color));
 }
 
 void LooperWindow::changeEvent(QEvent *ev)
@@ -162,6 +183,7 @@ void LooperWindow::paintEvent(QPaintEvent *ev)
 
             const uint waitBeats = ninjamController->getCurrentBpi() - currentBeat;
             QString text = tr("wait (%1)").arg(QString::number(waitBeats));
+            painter.setPen(tintColor);
             painter.drawText(QRectF(rectTopLeft, rectSize), text, QTextOption(Qt::AlignCenter));
         }
 
@@ -232,7 +254,7 @@ void LooperWindow::setLooper(Audio::Looper *looper)
         QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
         for (quint8 layerIndex = 0; layerIndex < MAX_LOOP_LAYERS; ++layerIndex) {
             auto layerWavePanel = new LooperWavePanel(looper, layerIndex);
-            auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex);
+            auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex, tintColor);
 
             layerWavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
 
@@ -367,7 +389,7 @@ void LooperWindow::LayerControlsLayout::setMuteButtonVisibility(bool show)
     }
 }
 
-LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 layerIndex)
+LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 layerIndex, const QColor &tintColor)
     : QHBoxLayout()
 {
     const int mainLayoutSpacing = 12;
@@ -392,10 +414,10 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
         looper->setLayerGain(layerIndex, gain);
     });
 
-    QLabel *highLevelIcon = new QLabel();
-    QLabel *lowLevelIcon = new QLabel();
-    highLevelIcon->setPixmap(QPixmap(":/images/level high.png"));
-    lowLevelIcon->setPixmap(QPixmap(":/images/level low.png"));
+    highLevelIcon = new QLabel();
+    lowLevelIcon = new QLabel();
+    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(tintColor));
+    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(tintColor));
     highLevelIcon->setAlignment(Qt::AlignCenter);
     lowLevelIcon->setAlignment(Qt::AlignCenter);
 

@@ -51,6 +51,8 @@ public:
     void solo(bool b);
     void initializeBoostSpinBox(Boost boostValue);
 
+    void setTintColor(const QColor &color) override;
+
 signals:
     void openLooperEditor(uint trackIndex);
 

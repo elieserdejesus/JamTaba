@@ -188,7 +188,7 @@ void LooperWavePanel::paintEvent(QPaintEvent *ev)
     const bool useHighlightPainting = canUseHighlightPainting();
 
     static const QColor redColor(255, 0, 0, 30);
-    static const QColor transparentColor(0, 0, 0, 80);
+    const QColor transparentColor(peaksColor.red(), peaksColor.green(), peaksColor.blue(), 80);
 
     QColor previousPeakColor(peaksColor);
     if (!useHighlightPainting) // not-current layers are painted with a transparent black color
