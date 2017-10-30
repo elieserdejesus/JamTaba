@@ -59,9 +59,7 @@ SamplesBuffer &SamplesBuffer::operator=(const SamplesBuffer &other)
     lastRmsValues[0] = other.lastRmsValues[0];
     lastRmsValues[1] = other.lastRmsValues[1];
 
-    samples.clear();
-    for (unsigned int c = 0; c < channels; ++c)
-        samples.push_back(std::vector<float>(frameLenght));
+    this->samples = other.samples;
 
     return *this;
 }
