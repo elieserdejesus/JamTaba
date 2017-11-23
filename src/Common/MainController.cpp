@@ -39,15 +39,14 @@ MainController::MainController(const Settings &settings) :
     mutex(QMutex::Recursive),
     started(false),
     ipToLocationResolver(nullptr),
-    loginService(new Login::LoginService(this)),
+    loginService(this),
     settings(settings),
     mainWindow(nullptr),
     masterGain(1),
     lastInputTrackID(0),
     usersDataCache(Configurator::getInstance()->getCacheDir()),
     lastFrameTimeStamp(0),
-    videoEncoder(nullptr),
-    videoIntervalToUpload(nullptr)
+    videoEncoder()
 {
 
     QDir cacheDir = Configurator::getInstance()->getCacheDir();
@@ -59,8 +58,7 @@ MainController::MainController(const Settings &settings) :
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ReaperProjectGenerator()));
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ClipSortLogGenerator()));
 
-    videoEncoder = new FFMpegMuxer();
-    connect(videoEncoder, &FFMpegMuxer::dataEncoded, this, &MainController::uploadEncodedVideoData);
+    connect(&videoEncoder, &FFMpegMuxer::dataEncoded, this, &MainController::uploadEncodedVideoData);
 }
 
 void MainController::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
@@ -72,13 +70,13 @@ void MainController::setChannelReceiveStatus(const QString &userFullName, quint8
 
 void MainController::setVideoProperties(const QSize &resolution)
 {
-    videoEncoder->setVideoResolution(resolution);
-    videoEncoder->setVideoFrameRate(CAMERA_FPS);
+    videoEncoder.setVideoResolution(resolution);
+    videoEncoder.setVideoFrameRate(CAMERA_FPS);
 }
 
 QSize MainController::getVideoResolution() const
 {
-    return videoEncoder->getVideoResolution();
+    return videoEncoder.getVideoResolution();
 }
 
 void MainController::blockUserInChat(const QString &userNameToBlock)
@@ -132,11 +130,12 @@ void MainController::setEncodingQuality(float newEncodingQuality)
 void MainController::finishUploads()
 {
     for (int channelIndex : audioIntervalsToUpload.keys()) {
-        ninjamService.sendIntervalPart(audioIntervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
+        auto &audioInterval = audioIntervalsToUpload[channelIndex];
+        ninjamService.sendIntervalPart(audioInterval.getGUID(), QByteArray(), true);
     }
 
-    if (videoIntervalToUpload)
-        ninjamService.sendIntervalPart(videoIntervalToUpload->getGUID(), QByteArray(), true);
+    if (!videoIntervalToUpload.isEmpty())
+        ninjamService.sendIntervalPart(videoIntervalToUpload.getGUID(), QByteArray(), true);
 }
 
 void MainController::quitFromNinjamServer(const QString &error)
@@ -236,18 +235,14 @@ void MainController::handleNewNinjamInterval()
         }
     }
 
-    videoEncoder->startNewInterval();
+    if (mainWindow->cameraIsActivated())
+        videoEncoder.startNewInterval();
 }
 
 void MainController::processCapturedFrame(int frameID, const QImage &frame)
 {
     Q_UNUSED(frameID);
-    if (videoEncoder) {
-        videoEncoder->encodeImage(frame); // video encoder will emit a signal when video frame is encoded
-    }
-    else {
-        qDebug() << "video encoder is null";
-    }
+    videoEncoder.encodeImage(frame); // video encoder will emit a signal when video frame is encoded
 }
 
 void MainController::requestCameraFrame(int intervalPosition)
@@ -310,33 +305,25 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, qui
 
     if (isFirstPart) {
 
-        if (audioIntervalsToUpload.contains(channelIndex)) {
+        auto &audioInterval = audioIntervalsToUpload[channelIndex];
 
-            // flush the end of previous interval
-            auto audioInterval = audioIntervalsToUpload[channelIndex];
-            ninjamService.sendIntervalPart(audioInterval->getGUID(), audioInterval->getData(), true); // is the last part of interval
+        // flush the end of previous interval
+        ninjamService.sendIntervalPart(audioInterval.getGUID(), audioInterval.getData(), true); // is the last part of interval
 
-            delete audioInterval;
-        }
-
-
-        auto newInterval = new UploadIntervalData(); // generate a new GUID
+        UploadIntervalData newInterval; // generate a new GUID
         audioIntervalsToUpload.insert(channelIndex, newInterval);
 
-        ninjamService.sendIntervalBegin(newInterval->getGUID(), channelIndex, true); // starting a new audio interval
+        ninjamService.sendIntervalBegin(newInterval.getGUID(), channelIndex, true); // starting a new audio interval
     }
 
-    auto interval = audioIntervalsToUpload[channelIndex];
-    if (!interval) {
-        return;
-    }
+    auto &interval = audioIntervalsToUpload[channelIndex];
 
-    interval->appendData(encodedData);
+    interval.appendData(encodedData);
 
-    bool canSend = interval->getTotalBytes() >= 4096;
+    bool canSend = interval.getTotalBytes() >= 4096;
     if (canSend) {
-        ninjamService.sendIntervalPart(interval->getGUID(), interval->getData(), false); // is not the last part of interval
-        interval->clear();
+        ninjamService.sendIntervalPart(interval.getGUID(), interval.getData(), false); // is not the last part of interval
+        interval.clear();
     }
 
     if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
@@ -353,29 +340,23 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, qui
 
         Q_ASSERT(encodedData.left(4) ==  "RIFF");
 
-        if (videoIntervalToUpload) {
+        if (!videoIntervalToUpload.isEmpty()) {
 
             // flush the end of previous interval
-            ninjamService.sendIntervalPart(videoIntervalToUpload->getGUID(), videoIntervalToUpload->getData(), true); // is the last part of interval
-
-            delete videoIntervalToUpload;
+            ninjamService.sendIntervalPart(videoIntervalToUpload.getGUID(), videoIntervalToUpload.getData(), true); // is the last part of interval
         }
 
-        videoIntervalToUpload = new UploadIntervalData(); // generate a new GUID
+        videoIntervalToUpload = UploadIntervalData(); // generate a new GUID
 
-        ninjamService.sendIntervalBegin(videoIntervalToUpload->getGUID(), channelIndex, false); // starting a new audio interval
+        ninjamService.sendIntervalBegin(videoIntervalToUpload.getGUID(), channelIndex, false); // starting a new audio interval
     }
 
-    if (!videoIntervalToUpload) {
-        return;
-    }
+    videoIntervalToUpload.appendData(encodedData);
 
-    videoIntervalToUpload->appendData(encodedData);
-
-    bool canSend = videoIntervalToUpload->getTotalBytes() >= 4096;
+    bool canSend = videoIntervalToUpload.getTotalBytes() >= 4096;
     if (canSend) {
-        ninjamService.sendIntervalPart(videoIntervalToUpload->getGUID(), videoIntervalToUpload->getData(), false); // is not the last part of interval
-        videoIntervalToUpload->clear();
+        ninjamService.sendIntervalPart(videoIntervalToUpload.getGUID(), videoIntervalToUpload.getData(), false); // is not the last part of interval
+        videoIntervalToUpload.clear();
     }
 
     if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
@@ -391,7 +372,6 @@ void MainController::enqueueDataToUpload(const QByteArray &encodedData, quint8 c
         We can't write in the socket from audio thread.*/
 
     bool isAudioData = encodedData.left(4) == "OggS"; // all ogg chunks are prefixed with 'OggS' string
-
     if (isAudioData)
         enqueueAudioDataToUpload(encodedData, channelIndex, isFirstPart);
     else
@@ -426,7 +406,13 @@ QStringList MainController::getBotNames()
 
 Geo::Location MainController::getGeoLocation(const QString &ip)
 {
-    return ipToLocationResolver->resolve(ip, getTranslationLanguage());
+    static QString ipMask(".x");
+
+    QString sanitizedIp(ip);
+    if (sanitizedIp.endsWith(ipMask))
+        sanitizedIp.replace(ipMask, ".128"); // replace .x with .128 to generate a valid IP
+
+    return ipToLocationResolver->resolve(sanitizedIp, getTranslationLanguage());
 }
 
 void MainController::mixGroupedInputs(int groupIndex, Audio::SamplesBuffer &out)
@@ -538,9 +524,20 @@ QMap<QString, QString> MainController::getJamRecoders() const
 void MainController::storeJamRecorderStatus(const QString &writerId, bool status)
 {
     if (settings.isSaveMultiTrackActivated()) { // recording is active and changing the jamRecorder status
-        for (Recorder::JamRecorder *jamRecorder : jamRecorders) {
-            if (jamRecorder->getWriterId() == writerId && !status) {
-                jamRecorder->stopRecording();
+        for (auto jamRecorder : jamRecorders) {
+            if (jamRecorder->getWriterId() == writerId) {
+                if (status) {
+                    if (isPlayingInNinjamRoom()) {
+                        QDir recordingPath = QDir(settings.getRecordingPath());
+                        auto ninjamController = getNinjamController();
+                        int bpi = ninjamController->getCurrentBpi();
+                        int bpm = ninjamController->getCurrentBpm();
+                        jamRecorder->startRecording(getUserName(), recordingPath, bpm, bpi, getSampleRate());
+                    }
+                }
+                else {
+                    jamRecorder->stopRecording();
+                }
             }
         }
     }
@@ -843,13 +840,6 @@ MainController::~MainController()
         delete jamRecorder;
     }
 
-    if (videoIntervalToUpload)
-        delete videoIntervalToUpload;
-
-    for (auto audioIntervalToUpload : audioIntervalsToUpload)
-        if (audioIntervalToUpload)
-            delete audioIntervalToUpload;
-
     audioIntervalsToUpload.clear();
 
     qCDebug(jtCore()) << "cleaning jamRecorders done!";
@@ -1076,9 +1066,6 @@ void MainController::stopNinjamController()
         ninjamController->stop(true);
     }
 
-    for (auto uploadInterval : audioIntervalsToUpload) {
-        delete uploadInterval;
-    }
     audioIntervalsToUpload.clear();
 }
 
@@ -1143,8 +1130,37 @@ QList<Recorder::JamRecorder *> MainController::getActiveRecorders() const
     return activeRecorders;
 }
 
+QString MainController::getVersionFromLogContent()
+{
+    auto configurator = Configurator::getInstance();
+    QStringList logContent = configurator->getPreviousLogContent();
+
+    static const QString START_LINE("Starting Jamtaba ");
+    for (const QString &logLine : logContent) {
+        if (logLine.contains(START_LINE)) {
+            return logLine.mid(logLine.indexOf(START_LINE) + START_LINE.length(), 6).trimmed();
+        }
+    }
+
+    return QString();
+}
+
 bool MainController::crashedInLastExecution()
 {
+
+    // crash in last execution is detected from version 2.1.1
+    QString version = getVersionFromLogContent();
+    QStringList versionParts = version.split(".");
+    if (versionParts.size() != 3) {
+        qWarning() << "Version string must have 3 elements " << version;
+        return false;
+    }
+
+    if (!(versionParts.at(1).toInt() >= 1 && versionParts.at(2).toInt() >= 1)) {
+        qWarning() << "Cant' detect crash in older versions " << version;
+        return false;
+    }
+
     auto configurator = Configurator::getInstance();
     QStringList logContent = configurator->getPreviousLogContent();
     if (!logContent.isEmpty()) {

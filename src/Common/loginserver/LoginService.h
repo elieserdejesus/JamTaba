@@ -173,7 +173,7 @@ public:
 signals:
     void roomsListAvailable(const QList<Login::RoomInfo> &publicRooms);
     void incompatibilityWithServerDetected();
-    void newVersionAvailableForDownload();
+    void newVersionAvailableForDownload(const QString &latestVersionDetails);
     void errorWhenConnectingToServer(const QString &error);
 
 private:
@@ -184,7 +184,7 @@ private:
         REFRESH_ROOMS_LIST
     };
 
-    QNetworkAccessManager *httpClient;
+    QNetworkAccessManager httpClient;
     QNetworkReply *pendingReply;
     static const QString LOGIN_SERVER_URL;
     bool connected;

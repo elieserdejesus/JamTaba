@@ -12,6 +12,7 @@
 #include "MainController.h"
 #include "Utils.h"
 #include "audio/NinjamTrackNode.h"
+#include "BoostSpinBox.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
@@ -133,25 +134,34 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
 {
     cacheEntry = initialValues;
 
-    // remember last track values
-    levelSlider->setValue(initialValues.getGain() * 100);
-    panSlider->setValue(initialValues.getPan() * panSlider->maximum());
-    if (initialValues.isMuted())
+    auto settings = mainController->getSettings();
+
+    if (settings.isRememberingLevel())
+        levelSlider->setValue(initialValues.getGain() * 100);
+
+    if (settings.isRememberingPan())
+        panSlider->setValue(initialValues.getPan() * panSlider->maximum());
+
+    if (settings.isRememberingMute() && initialValues.isMuted())
         muteButton->click();
 
-    if (initialValues.getBoost() < 1.0) {
-        buttonBoost->setState(1); // -12 dB
-    } else {
-        if (initialValues.getBoost() > 1.0) // +12 dB
-            buttonBoost->setState(2);
-        else
-            buttonBoost->setState(0);
+    if (settings.isRememberingBoost()) {
+        if (initialValues.getBoost() < 1.0) {
+            boostSpinBox->setToMin(); // -12 dB
+        } else {
+            if (initialValues.getBoost() > 1.0) // +12 dB
+                boostSpinBox->setToMax();
+            else
+                boostSpinBox->setToOff();
+        }
     }
 
-    quint8 lowCutState = initialValues.getLowCutState();
-    if (lowCutState < 3) { // Check for invalid lowCut state value, Low cut is 3 states: OFF, NOrmal and Drastic
-        for (int var = 0; var < lowCutState; ++var) {
-            buttonLowCut->click(); // force button state change
+    if (settings.isRememberingLowCut()) {
+        quint8 lowCutState = initialValues.getLowCutState();
+        if (lowCutState < 3) { // Check for invalid lowCut state value, Low cut is 3 states: OFF, NOrmal and Drastic
+            for (int var = 0; var < lowCutState; ++var) {
+                buttonLowCut->click(); // force button state change
+            }
         }
     }
 }
@@ -225,6 +235,7 @@ void NinjamTrackView::setupVerticalLayout()
     primaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
     secondaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
 
+    boostSpinBox->setOrientation(Qt::Vertical);
 }
 
 void NinjamTrackView::setupHorizontalLayout()
@@ -255,6 +266,8 @@ void NinjamTrackView::setupHorizontalLayout()
     metersLayout->setDirection(QBoxLayout::TopToBottom);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
+
+    boostSpinBox->setOrientation(Qt::Horizontal);
 }
 
 
@@ -336,9 +349,10 @@ void NinjamTrackView::toggleMuteStatus()
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-void NinjamTrackView::updateBoostValue()
+void NinjamTrackView::updateBoostValue(int index)
 {
-    BaseTrackView::updateBoostValue();
+    BaseTrackView::updateBoostValue(index);
+
     Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
     if (trackNode) {
         cacheEntry.setBoost(trackNode->getBoost());

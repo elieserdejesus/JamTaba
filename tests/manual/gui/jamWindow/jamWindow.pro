@@ -21,6 +21,7 @@ INCLUDEPATH += ../../../../libs/includes/ogg
 INCLUDEPATH += ../../../../libs/includes/portaudio
 INCLUDEPATH += ../../../../libs/includes/rtmidi
 INCLUDEPATH += ../../../../libs/includes/minimp3
+INCLUDEPATH += ../../../../libs/includes/stackwalker
 
 INCLUDEPATH += ../../../../VST_SDK/pluginterfaces/vst2.x
 
@@ -40,6 +41,7 @@ FORMS += Common/gui/PrivateServerDialog.ui
 FORMS += Common/gui/UserNameDialog.ui
 FORMS += Common/gui/MainWindow.ui
 FORMS += Common/gui/chords/ChordsPanel.ui
+FORMS += Common/gui/CrashReportDialog.ui
 
 RESOURCES += resources/jamtaba.qrc
 
@@ -67,6 +69,7 @@ HEADERS += Common/gui/NinjamTrackGroupView.h
 HEADERS += Common/gui/LooperWindow.h
 HEADERS += Common/gui/UserNameDialog.h
 HEADERS += Common/gui/PluginScanDialog.h
+HEADERS += Common/gui/CrashReportDialog.h
 
 HEADERS += Common/gui/widgets/MultiStateButton.h
 HEADERS += Common/gui/widgets/LooperWavePanel.h
@@ -79,6 +82,7 @@ HEADERS += Common/gui/widgets/BlinkableButton.h
 HEADERS += Common/gui/widgets/Slider.h
 HEADERS += Common/gui/widgets/UserNameLineEdit.h
 HEADERS += Common/gui/widgets/MapWidget.h
+HEADERS += Common/gui/widgets/BoostSpinBox.h
 
 HEADERS += Common/gui/chords/ChordProgression.h
 HEADERS += Common/gui/chords/ChatChordProgressionParser.h
@@ -216,6 +220,7 @@ SOURCES += Common/gui/widgets/UserNameLineEdit.cpp
 SOURCES += Common/gui/widgets/BlinkableButton.cpp
 SOURCES += Common/gui/widgets/LooperWavePanel.cpp
 SOURCES += Common/gui/widgets/MapWidget.cpp
+SOURCES += Common/gui/widgets/BoostSpinBox.cpp
 SOURCES += Common/gui/PreferencesDialog.cpp
 SOURCES += Common/gui/ThemeLoader.cpp
 SOURCES += Common/gui/Highligther.cpp
@@ -232,6 +237,8 @@ SOURCES += Common/gui/chat/ChatPanel.cpp
 SOURCES += Common/gui/chat/ChatTextEditor.cpp
 SOURCES += Common/gui/chat/ChatMessagePanel.cpp
 SOURCES += Common/gui/chat/NinjamVotingMessageParser.cpp
+SOURCES += Common/gui/CrashReportDialog.cpp
+
 
 SOURCES += Common/log/logging.cpp
 
@@ -276,10 +283,12 @@ SOURCES += Common/gui/intervalProgress/EllipticalPaintStrategy.cpp
 SOURCES += Common/gui/intervalProgress/PiePaintStrategy.cpp
 SOURCES += Common/gui/intervalProgress/CircularPaintStrategy.cpp
 
+win32:SOURCES += Common/log/stackwalker/WindowsStackWalker.cpp
+
 LIBS_PATH = "static/win64-msvc"
 
-CONFIG(release, debug|release):    LIBS += -L$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample
-else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd -lavcodecd -lavutild -lavformatd -lswscaled -lswresampled
+CONFIG(release, debug|release):    LIBS += -L$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -lstackwalker
+else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd -lavcodecd -lavutild -lavformatd -lswscaled -lswresampled -lstackwalkerd
 
 DEFINES += VST_FORCE_DEPRECATED=0 # enable VST 2.3 features
 

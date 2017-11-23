@@ -6,16 +6,9 @@
 }
 
 #masterTitleLabel,
-#labelMetronomeIControls
+#labelMetronome
 {
     color: rgb(110, 110,110);
-}
-
-#masterMeter
-{
-    max-height: 2px;
-    height: 2px;
-    margin: 0px;
 }
 
 /* text input fields */
@@ -68,18 +61,19 @@ QMainWindow #bottomPanel
 }
 
 #contentTabWidget:pane,
-#chatTabWidget:pane
+#chatTabWidget QStackedWidget
 {
     border: 1px solid rgba(0, 0, 0, 60);
     border-radius: 2px;
     padding: 0px;
 }
 
-#chatTabWidget:pane
+#chatTabWidget QStackedWidget
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0     rgba(255, 255, 255, 80),
         stop: 0.85   rgba(255, 255, 255, 90),
         stop: 1.0   rgba(255, 255, 255, 140));
+
 }
 

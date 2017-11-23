@@ -1,0 +1,145 @@
+
+
+/* FxPanelItem is the 'slot' for one vst plugin
+--------------------------------------------------*/
+FxPanelItem
+{
+    background: none;
+    border: none;
+    padding: 3px;
+    background-color: rgba(0, 0, 0, 35);
+}
+
+FxPanelItem[containPlugin="true"]
+{
+    background-color: rgba(0, 0, 0, 55);
+}
+
+FxPanelItem QLabel                                     /* plugin name label */
+{
+    color: rgb(120, 120, 120);
+    qproperty-alignment: AlignLeft;
+    font-size: 10px;
+}
+
+FxPanelItem QLabel:focus
+{
+    color: rgb(140, 140, 140);
+}
+
+FxPanelItem QPushButton                                 /* the small button used to bypass the plugin */
+{
+     max-width: 10px;
+     max-height: 10px;
+     margin: 0px;
+     padding: 0px;
+     border-width: 1px;
+}
+
+FxPanelItem QPushButton:checked
+{
+    background-color: rgb(160, 160, 160);
+}
+
+FxPanelItem QPushButton:!checked
+{
+    background-color: rgba(0, 0, 0, 100);
+    border: none;
+}
+
+FxPanelItem QPushButton:checked:hover
+{
+    background-color: rgb(200, 200, 200);
+}
+
+
+
+LocalTrackViewStandalone
+{
+    qproperty-midiRoutingArrowColor: rgba(255, 255, 255, 80);
+}
+
+
+#xmitButton
+{
+    margin-top: 3px;
+    border-radius: 2px;
+    border-width: 1px;
+}
+
+#xmitButton:!checked
+{
+    border: 1px solid black;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(128, 20, 20), stop:1 rgb(80, 0, 0));
+        border-color: rgb(128, 0, 0);
+        color: rgb(140, 140, 140);
+
+    border-radius: 2px;
+
+}
+
+#xmitButton:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 128, 20), stop:1 rgb(0, 80, 0));
+    border-color: rgb(20, 20, 20);
+    color: rgb(20, 20, 20);
+}
+
+#xmitButton[preparing="true"]
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 20), stop:1 rgb(80, 80, 0));
+    color: rgb(20, 20, 20);
+}
+
+#xmitButton[preparing="true"]:!checked
+{
+    color: rgb(90, 90, 90);
+}
+
+#xmitButton:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 180, 20), stop:1 rgb(0, 80, 0));
+}
+
+#xmitButton:hover:!checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 20, 20), stop:1 rgb(80, 0, 0));
+    border-color: rgba(0, 0, 0, 90);
+}
+
+
+
+LocalTrackView #inputSelectionButton            /* Button used to open the input selection menu */
+{
+    background-image: url(':/images/arrow-down.png');
+    background-repeat: none;
+    background-position: center right;
+    color: rgb(120, 120, 120);
+    font-size: 9px;
+    text-align: left;
+    margin: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+LocalTrackView #inputPanel
+{
+    background-color: rgba(0, 0, 0, 60);
+    border: none;
+}
+
+LocalTrackView[unlighted="false"] #inputPanel    /* input panel color when user is transmiting */
+{
+    border: none;
+}
+
+LocalTrackView #inputPanel:hover
+{
+    background-color: rgba(0, 0, 0, 30);
+}
+
+LocalTrackView[unlighted="false"] #inputPanel:hover    /* input panel color when user is transmiting */
+{
+    border: 1px solid rgb(50, 50, 50);
+}
+

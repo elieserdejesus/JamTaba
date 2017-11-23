@@ -2,6 +2,7 @@
 #include "MainController.h"
 #include "Utils.h"
 #include "PeakMeter.h"
+#include "BoostSpinBox.h"
 
 #include <QStyleOption>
 #include <QPainter>
@@ -21,6 +22,8 @@ const int BaseTrackView::WIDE_WIDTH = 120;
 
 QMap<long, BaseTrackView *> BaseTrackView::trackViews; // static map to quick lookup the views
 
+// -----------------------------------------------------------------------------------------
+
 BaseTrackView::BaseTrackView(Controller::MainController *mainController, long trackID) :
     mainController(mainController),
     trackID(trackID),
@@ -34,7 +37,7 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     connect(soloButton, &QPushButton::clicked, this, &BaseTrackView::toggleSoloStatus);
     connect(levelSlider, &QSlider::valueChanged, this, &BaseTrackView::setGain);
     connect(panSlider, &QSlider::valueChanged, this, &BaseTrackView::setPan);
-    connect(buttonBoost, &MultiStateButton::stateChanged, this, &BaseTrackView::updateBoostValue);
+    connect(boostSpinBox, &BoostSpinBox::boostChanged, this, &BaseTrackView::updateBoostValue);
 
     // add in static map
     BaseTrackView::trackViews.insert(trackID, this);
@@ -138,12 +141,7 @@ void BaseTrackView::createLayoutStructure()
     muteSoloLayout->addWidget(muteButton);
     muteSoloLayout->addWidget(soloButton);
 
-    buttonBoost = new MultiStateButton(3, this); // 3 states: OFF, -12 db and +12 db
-    buttonBoost->setObjectName(QStringLiteral("buttonBoost"));
-    buttonBoost->setCheckable(true);
-    buttonBoost->setText("OFF", 0);
-    buttonBoost->setText("-12", 1);
-    buttonBoost->setText("+12", 2);
+    boostSpinBox = new BoostSpinBox(this);
 
     primaryChildsLayout = new QVBoxLayout();
     primaryChildsLayout->setSpacing(12);
@@ -158,25 +156,12 @@ void BaseTrackView::createLayoutStructure()
 
     secondaryChildsLayout->addLayout(metersLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
-    secondaryChildsLayout->addWidget(buttonBoost);
+    secondaryChildsLayout->addWidget(boostSpinBox);
 
     mainLayout->addLayout(primaryChildsLayout, 0, 0);
     mainLayout->addLayout(secondaryChildsLayout, 0, 1);
 
-    updateBoostButtonToolTip();
-
     translateUI();
-}
-
-void BaseTrackView::updateBoostButtonToolTip()
-{
-    QString boostText = " OFF [0 dB]";
-    if (buttonBoost->getCurrentState() > 0) {
-        boostText = " (" + buttonBoost->text() + " dB)";
-    }
-
-    QString toolTipText = tr("Boost") + boostText;
-    buttonBoost->setToolTip(toolTipText);
 }
 
 void BaseTrackView::translateUI()
@@ -187,7 +172,7 @@ void BaseTrackView::translateUI()
     muteButton->setText(tr("M"));
     soloButton->setText(tr("S"));
 
-    updateBoostButtonToolTip();
+    boostSpinBox->updateToolTip();
 }
 
 void BaseTrackView::bindThisViewWithTrackNodeSignals()
@@ -215,11 +200,11 @@ methods (like midi messages).
 void BaseTrackView::setBoostStatus(float newBoostValue)
 {
     if (newBoostValue > 1.0) // boost value is a gain multiplier, 1.0 means 0 dB boost (boost OFF)
-        buttonBoost->setState(2); // +12 dB
+        boostSpinBox->setToMax();
     else if (newBoostValue < 1.0)
-        buttonBoost->setState(1); // -12 dB
+        boostSpinBox->setToMin();
     else
-        buttonBoost->setState(0); // 0 dB - OFF
+        boostSpinBox->setToOff(); // 0 dB - OFF
 }
 
 void BaseTrackView::setGainSliderPosition(float newGainValue)
@@ -244,17 +229,11 @@ void BaseTrackView::setSoloStatus(bool newSoloStatus)
     soloButton->setChecked(newSoloStatus);
 }
 
-void BaseTrackView::updateBoostValue()
+void BaseTrackView::updateBoostValue(int boostValue)
 {
-    float boostValue = 0;
-    if (buttonBoost->getCurrentState() == 1)
-        boostValue = -12;
-    else if (buttonBoost->getCurrentState() == 2)
-        boostValue = 12;
     if (mainController)
         mainController->setTrackBoost(getTrackID(), boostValue);
 
-    updateBoostButtonToolTip();
 }
 
 void BaseTrackView::updateGuiElements()
@@ -323,8 +302,7 @@ void BaseTrackView::updateStyleSheet()
     style()->unpolish(soloButton);
     style()->polish(soloButton);
 
-    style()->unpolish(buttonBoost);
-    style()->polish(buttonBoost);
+    boostSpinBox->updateStyleSheet();
 
     update();
 }

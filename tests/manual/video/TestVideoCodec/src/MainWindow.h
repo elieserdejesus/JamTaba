@@ -7,6 +7,7 @@
 #include <QCameraViewfinder>
 #include <QLabel>
 #include <QTimer>
+#include <QImage>
 
 #include "FFMpegMuxer.h"
 #include "FFMpegDemuxer.h"
@@ -26,19 +27,18 @@ private:
     QCameraViewfinder *viewFinder;
     QLabel *outputLabel;
 
-    QTimer *decodeTimer;
+    QTimer *timer;
 
     QGridLayout *createWidgets();
     void initializeEncodingStuff();
     void initializeCamera(QGridLayout *layout);
 
-    FFMpegMuxer muxer;
-    FFMpegDemuxer demuxer;
+    FFMpegMuxer *muxer;
+    FFMpegDemuxer *demuxer;
 
     QByteArray encodedData;
 
-private slots:
-    void startDecoding(uint frameRate);
+    QList<QImage> decodedImages;
 
 };
 

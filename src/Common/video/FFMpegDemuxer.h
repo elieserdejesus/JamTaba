@@ -3,7 +3,6 @@
 
 #include "FFMpegCommon.h"
 
-#include <QObject>
 #include <QByteArray>
 #include <QDataStream>
 #include <QBuffer>
@@ -15,18 +14,13 @@ class FFMpegDemuxer : public QObject
     Q_OBJECT
 
 public:
-    FFMpegDemuxer();
+    FFMpegDemuxer(QObject *parent, const QByteArray &encodedData);
     ~FFMpegDemuxer();
-    bool open(const QByteArray &encodedData);
-    void close();
-    void decodeNextFrame();
-    uint getFrameRate() const;
-    bool isOpened() const;
+
+    void decode();
 
 signals:
-    void opened(uint frameRate);
-    void frameDecoded(const QImage &decodedFrame);
-
+    void imagesDecoded(QList<QImage> images, uint frameRate);
 private:
     AVFormatContext *formatContext;
     AVIOContext *avioContext;
@@ -41,19 +35,14 @@ private:
     QByteArray encodedData;
     QBuffer encodedBuffer;
 
-    bool initialized;
-
     static int readCallback(void *stream, uint8_t *buffer, int bufferSize);
     static int64_t seekCallback(void *opaque, int64_t offset, int whence);
 
-    void decode();
-
     AVInputFormat *probeInputFormat();
-};
 
-inline bool FFMpegDemuxer::isOpened() const
-{
-    return initialized;
-}
+    void close();
+    bool open();
+    uint getFrameRate() const;
+};
 
 #endif // FFMPEGDEMUXER_H

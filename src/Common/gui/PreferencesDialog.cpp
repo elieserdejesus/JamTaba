@@ -95,11 +95,6 @@ void PreferencesDialog::setupSignals()
     connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectTab(int)));
 
     connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this, SLOT(toggleRecording(bool)));
-    for (QCheckBox *myCheckBox : jamRecorderCheckBoxes.keys()) {
-        connect(myCheckBox, &QCheckBox::toggled, [=](bool newStatus) {
-            emit jamRecorderStatusChanged(jamRecorderCheckBoxes[myCheckBox], newStatus);
-        });
-    }
 
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(openRecordingPathBrowser()));
 
@@ -151,6 +146,19 @@ void PreferencesDialog::accept()
     else {
         emit customMetronomeSelected(ui->textFieldPrimaryBeat->text(), ui->textFieldOffBeat->text(), ui->textFieldAccentBeat->text());
     }
+
+    for (auto checkBox : jamRecorderCheckBoxes.keys()) {
+        QString jamMetaDataWriterID = jamRecorderCheckBoxes[checkBox];
+        emit jamRecorderStatusChanged(jamMetaDataWriterID, checkBox->isChecked());
+    }
+
+    bool rememberingBoost = ui->checkBoxRememberBoost->isChecked();
+    bool rememberingLevel = ui->checkBoxRememberLevel->isChecked();
+    bool rememberingPan = ui->checkBoxRememberPan->isChecked();
+    bool rememberingMute = ui->checkBoxRememberMute->isChecked();
+    bool rememberingLowCut = ui->checkBoxRememberLowCut->isChecked();
+    emit rememberSettingsChanged(rememberingBoost, rememberingLevel, rememberingPan, rememberingMute, rememberingLowCut);
+
     QDialog::accept();
 }
 
@@ -202,6 +210,16 @@ void PreferencesDialog::populateAllTabs()
     populateMultiTrackRecordingTab();
     populateMetronomeTab();
     populateLooperTab();
+    populateRememberTab();
+}
+
+void PreferencesDialog::populateRememberTab()
+{
+    ui->checkBoxRememberBoost->setChecked(settings->isRememberingBoost());
+    ui->checkBoxRememberLevel->setChecked(settings->isRememberingLevel());
+    ui->checkBoxRememberPan->setChecked(settings->isRememberingPan());
+    ui->checkBoxRememberMute->setChecked(settings->isRememberingMute());
+    ui->checkBoxRememberLowCut->setChecked(settings->isRememberingLowCut());
 }
 
 void PreferencesDialog::populateLooperTab()

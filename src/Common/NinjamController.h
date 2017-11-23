@@ -99,7 +99,8 @@ signals:
     void userLeave(const QString &userName);
     void userEnter(const QString &userName);
 
-    void chatMsgReceived(const Ninjam::User &user, const QString &message );
+    void publicChatMessageReceived(const Ninjam::User &user, const QString &message );
+    void privateChatMessageReceived(const Ninjam::User &user, const QString &message );
     void topicMessageReceived(const QString &message);
 
     void encodedAudioAvailableToSend(const QByteArray &encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
@@ -109,6 +110,8 @@ signals:
 
     void preparingTransmission(); // waiting for start transmission
     void preparedToTransmit(); // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
+
+    void started();
 
 protected:
     long intervalPosition;
@@ -177,7 +180,7 @@ private:
 private slots:
     // ninjam events
     void scheduleBpmChangeEvent(quint16 newBpm);
-    void scheduleBpiChangeEvent(quint16 oldBpi, quint16 newBpi);
+    void scheduleBpiChangeEvent(quint16 newBpi, quint16 oldBpi);
     void handleIntervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
     void handleIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int downloadedBytes);
     void addNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
@@ -185,7 +188,8 @@ private slots:
     void updateNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void handleNinjamUserExiting(const Ninjam::User &user);
     void handleNinjamUserEntering(const Ninjam::User &user);
-    void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
+    void handleReceivedPublicChatMessage(const Ninjam::User &user, const QString &message);
+    void handleReceivedPrivateChatMessage(const Ninjam::User &user, const QString &message);
 
 }; // end of class
 

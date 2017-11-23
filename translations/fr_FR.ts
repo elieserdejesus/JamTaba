@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR">
 <context>
@@ -202,7 +202,7 @@
 <context>
     <name>LocalTrackGroupView</name>
     <message>
-        <source>Enable/disable your audio transmission for others</source>
+        <source>Enable/disable your audio transmission to others</source>
         <translation>Autoriser/bloquer la tranmission audio vers les autres</translation>
     </message>
     <message>
@@ -1073,15 +1073,15 @@
         <translation>scanner les plugins...</translation>
     </message>
     <message>
-        <source>Founded plugins:</source>
+        <source>Found plugins:</source>
         <translation>PLugins trouves:</translation>
     </message>
     <message>
-        <source>This is the plugin founded list box</source>
+        <source>This is the plugin found list box</source>
         <translation>Boite de plugins retrouves</translation>
     </message>
     <message>
-        <source>No plugins founded!</source>
+        <source>No plugins found!</source>
         <translation>Pas de plugins trouves!</translation>
     </message>
     <message>
@@ -1204,8 +1204,8 @@
         <translation>Métronome</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
-        <translation>Métronomes inclus :</translation>
+        <source>Metronome Sound:</source>
+        <translation>Son du Métronome:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>

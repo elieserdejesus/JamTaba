@@ -69,7 +69,7 @@ void RtMidiDriver::start(const QList<bool> &deviceStatuses){
                         stream->ignoreTypes();// ignoring sysex, miditime and midi sense messages
                         stream->openPort(deviceIndex);
                     }
-                    catch(RtMidiError e){
+                    catch(RtMidiError &e){
                         qCritical() << "Error opening midi port " << QString::fromStdString(e.getMessage());
                     }
                 }

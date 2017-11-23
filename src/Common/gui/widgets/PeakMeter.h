@@ -22,7 +22,7 @@ protected:
 
     void resizeEvent(QResizeEvent *) override;
 
-    void paintSegments(QPainter &painter, const QRectF &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors);
+    void paintSegments(QPainter &painter, const QRectF &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors, bool drawSegments = true);
 
     bool isVertical() const;
 
@@ -58,14 +58,17 @@ class AudioMeter : public BaseMeter
     Q_PROPERTY(QColor peakStartColor MEMBER peakStartColor WRITE setPeaksStartColor)
     Q_PROPERTY(QColor peakEndColor MEMBER peakEndColor WRITE setPeaksEndColor)
     Q_PROPERTY(QColor dBMarksColor MEMBER dBMarksColor WRITE setDbMarksColor)
+    Q_PROPERTY(bool drawSegments MEMBER drawSegments WRITE setDrawSegments)
 
 public:
-    AudioMeter(QWidget *parent);
+    explicit AudioMeter(QWidget *parent = nullptr);
 
     void setPeak(float peak, float rms);
     void setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms);
 
     void updateStyleSheet() override;
+
+    void setPaintingDbMarkers(bool paintDbMarkers);
 
     // these functions will affect all meters
     static void setPaintMaxPeakMarker(bool paintMaxPeak);
@@ -84,6 +87,8 @@ public:
     void setPeaksStartColor(const QColor &newColor);
     void setPeaksEndColor(const QColor &newColor);
     void setDbMarksColor(const QColor &newColor);
+
+    void setDrawSegments(bool drawSegments);
 
 public slots:
     void setStereo(bool stereo);
@@ -104,6 +109,8 @@ private:
     QColor peakEndColor;    // end gradient color
     QColor dBMarksColor;
 
+    bool drawSegments;
+
     std::vector<QColor> peakColors;
     std::vector<QColor> rmsColors;
 
@@ -121,6 +128,7 @@ private:
     bool stereo; // draw 2 meters?
 
     QPixmap dbMarkersPixmap;
+    bool paintingDbMarkers;
 
     static const float MAX_SMOOTHED_LINEAR_VALUE;
     static const float MIN_SMOOTHED_LINEAR_VALUE;
@@ -161,7 +169,7 @@ class MidiActivityMeter : public BaseMeter
 {
 
 public:
-    MidiActivityMeter(QWidget *parent);
+    explicit MidiActivityMeter(QWidget *parent);
     void setSolidColor(const QColor &color);
     void setActivityValue(float value);
 

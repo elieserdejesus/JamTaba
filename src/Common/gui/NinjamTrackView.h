@@ -79,7 +79,7 @@ protected slots:
     void toggleMuteStatus() override;
     void setGain(int value) override;
     void setPan(int value) override;
-    void updateBoostValue() override;
+    void updateBoostValue(int) override;
 
     void setLowCutToNextState();
 

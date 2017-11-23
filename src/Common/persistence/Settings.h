@@ -19,7 +19,7 @@ class SettingsObject // base class for the settings components
 {
 
 public:
-    SettingsObject(const QString &name);
+    explicit SettingsObject(const QString &name);
     virtual ~SettingsObject();
     virtual void write(QJsonObject &out) const = 0;
     virtual void read(const QJsonObject &in) = 0;
@@ -152,19 +152,22 @@ public:
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
     bool saveMultiTracksActivated;
-    QMap <QString, bool> jamRecorderActivated;
     QString recordingPath;
 
-    inline bool isJamRecorderActivated(QString key) const
+    inline bool isJamRecorderActivated(const QString &key) const
     {
         if (jamRecorderActivated.contains(key))
             return jamRecorderActivated[key];
         return false;
     }
-    inline void setJamRecorderActivated(QString key, bool value)
+    inline void setJamRecorderActivated(const QString &key, bool value)
     {
         jamRecorderActivated[key] = value;
     }
+
+private:
+    static QString getDefaultRecordingPath();
+    QMap <QString, bool> jamRecorderActivated;
 };
 
 class LooperSettings : public SettingsObject
@@ -179,6 +182,9 @@ public:
     QString loopsFolder; // where looper audio files will be saved
     bool encodingAudioWhenSaving;
     quint8 waveFilesBitDepth;
+
+private:
+    void setDefaultLooperFilesPath();
 };
 
 // +++++++++++++++++++++++++++++++++
@@ -260,7 +266,7 @@ private:
 class Channel
 {
 public:
-    Channel(const QString &name);
+    explicit Channel(const QString &name);
     QString name;
     QList<Subchannel> subChannels;
 };
@@ -270,7 +276,7 @@ public:
 class LocalInputTrackSettings : public SettingsObject
 {
 public:
-    LocalInputTrackSettings(bool createOneTrack = false);
+    explicit LocalInputTrackSettings(bool createOneTrack = false);
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
     void read(const QJsonObject &in, bool allowSubchannels);
@@ -317,6 +323,22 @@ public:
     quint8 waveDrawingMode;
 };
 
+
+class RememberUsersSettings : public SettingsObject
+{
+public:
+    RememberUsersSettings();
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+
+    bool rememberPan;
+    bool rememberBoost;
+    bool rememberLevel; // fader
+    bool rememberMute;
+    bool rememberLowCut;
+
+};
+
 // ++++++++++++++++++++++++
 
 class Settings
@@ -336,6 +358,7 @@ private:
     PrivateServerSettings privateServerSettings;
     MeteringSettings meteringSettings;
     LooperSettings looperSettings;
+    RememberUsersSettings rememberSettings;
 
     QString lastUserName; // the last nick name choosed by user
     QString translation; // the translation language (en, fr, jp, pt, etc.) being used in chat
@@ -344,6 +367,8 @@ private:
     float masterFaderGain; // last master fader gain
     quint8 tracksLayoutOrientation; // horizontal or vertical
     bool usingNarrowedTracks; // narrow or wide tracks?
+
+    uint intervalsBeforeInactivityWarning;
 
     bool readFile(const QList<SettingsObject *> &sections);
     bool writeFile(const QList<SettingsObject *> &sections);
@@ -400,8 +425,8 @@ public:
     MultiTrackRecordingSettings getMultiTrackRecordingSettings() const;
     bool isSaveMultiTrackActivated() const;
     void setSaveMultiTrack(bool saveMultiTracks);
-    bool isJamRecorderActivated(QString key) const;
-    void setJamRecorderActivated(QString key, bool value);
+    bool isJamRecorderActivated(const QString &key) const;
+    void setJamRecorderActivated(const QString &key, bool value);
     QString getRecordingPath() const;
     void setMultiTrackRecordingPath(const QString &newPath);
 
@@ -492,7 +517,49 @@ public:
     void setLooperAudioEncodingFlag(bool encodeAudioWhenSaving);
     void setLooperFolder(const QString &folder);
     void setLooperBitDepth(quint8 bitDepth);
+
+    // Remembering settings
+    void setRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    bool isRememberingBoost() const;
+    bool isRememberingLevel() const;
+    bool isRememberingPan() const;
+    bool isRememberingMute() const;
+    bool isRememberingLowCut() const;
+
+    uint getIntervalsBeforeInactivityWarning() const;
 };
+
+inline uint Settings::getIntervalsBeforeInactivityWarning() const
+{
+    return intervalsBeforeInactivityWarning;
+}
+
+inline bool Settings::isRememberingMute() const
+{
+    return rememberSettings.rememberMute;
+}
+
+inline bool Settings::isRememberingLowCut() const
+{
+    return rememberSettings.rememberLowCut;
+}
+
+inline bool Settings::isRememberingBoost() const
+{
+    return rememberSettings.rememberBoost;
+}
+
+inline bool Settings::isRememberingLevel() const
+{
+    return rememberSettings.rememberLevel;
+}
+
+inline bool Settings::isRememberingPan() const
+{
+    return rememberSettings.rememberPan;
+}
+
+// -----------------------------------------------------
 
 inline void Settings::setLooperBitDepth(quint8 bitDepth)
 {
@@ -661,12 +728,12 @@ inline void Settings::setSaveMultiTrack(bool saveMultiTracks)
     recordingSettings.saveMultiTracksActivated = saveMultiTracks;
 }
 
-inline bool Settings::isJamRecorderActivated(QString key) const
+inline bool Settings::isJamRecorderActivated(const QString &key) const
 {
     return recordingSettings.isJamRecorderActivated(key);
 }
 
-inline void Settings::setJamRecorderActivated(QString key, bool value)
+inline void Settings::setJamRecorderActivated(const QString &key, bool value)
 {
     recordingSettings.setJamRecorderActivated(key, value);
 }

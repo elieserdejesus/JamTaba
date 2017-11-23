@@ -2,8 +2,9 @@
 #define TRACKVIEW_H
 
 #include <QWidget>
+#include <QGridLayout>
+#include <QToolButton>
 #include "audio/core/AudioPeak.h"
-#include "MultiStateButton.h"
 #include "Slider.h"
 
 class AudioMeter;
@@ -15,6 +16,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QBoxLayout;
 class QGridLayout;
+class BoostSpinBox;
 
 namespace Controller {
 class MainController;
@@ -110,7 +112,7 @@ protected:
     QBoxLayout *muteSoloLayout;
 
     // boost
-    MultiStateButton *buttonBoost;
+    BoostSpinBox *boostSpinBox;
 
     // main layout buildind blocks
     QGridLayout *mainLayout;
@@ -125,14 +127,12 @@ private:
     static QMap<long, BaseTrackView *> trackViews;
     Audio::AudioPeak maxPeak;
 
-    void updateBoostButtonToolTip();
-
 protected slots:
     virtual void toggleMuteStatus();
     virtual void toggleSoloStatus();
     virtual void setGain(int value);
     virtual void setPan(int value);
-    virtual void updateBoostValue();
+    virtual void updateBoostValue(int boostValue);
 
 private slots:
     // signals emitted by AudioNode class when user activate the control with mouse, or midi CCs, or using joystick, etc.

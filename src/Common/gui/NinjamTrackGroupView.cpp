@@ -2,10 +2,13 @@
 #include "geo/IpToLocationResolver.h"
 #include "MainController.h"
 #include "NinjamController.h"
+#include "video/FFMpegDemuxer.h"
+
 #include <QMenu>
 #include <QDateTime>
 #include <QLayout>
 #include <QStackedLayout>
+#include <QtConcurrent>
 
 using namespace Controller;
 using namespace Persistence;
@@ -19,7 +22,8 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     TrackGroupView(nullptr),
     mainController(mainController),
     userIP(initialValues.getUserIP()),
-    tracksLayoutEnum(TracksLayout::VerticalLayout)
+    tracksLayoutEnum(TracksLayout::VerticalLayout),
+    videoFrameRate(10)
 {
 
     // change the top panel layout to vertical (original is horizontal)
@@ -38,25 +42,26 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     groupNameLayout->addWidget(groupNameLabel, 1);
     chatBlockIconLabel = new QLabel(this);
     chatBlockIconLabel->setPixmap(QPixmap(":/images/chat_blocked.png"));
-    chatBlockIconLabel->setVisible(false);
+
+    QString userName = initialValues.getUserName();
+    chatBlockIconLabel->setVisible(mainController->getNinjamController()->userIsBlockedInChat(userName));
 
     groupNameLayout->addWidget(chatBlockIconLabel);
     topPanelLayout->addLayout(groupNameLayout);
     topPanelLayout->setAlignment(groupNameLayout, Qt::AlignBottom);
 
-    topPanelLayout->setAlignment(countryLabel, Qt::AlignTop);
-
-    setGroupName(initialValues.getUserName());
+    setGroupName(userName);
 
     // country flag and label
     countryLabel = new QLabel();
     countryLabel->setObjectName("countryLabel");
+    topPanelLayout->setAlignment(countryLabel, Qt::AlignTop);
 
     countryFlag = new QLabel();
 
     updateGeoLocation();
 
-    topPanelLayout->addSpacing(6);
+    topPanelLayout->addSpacing(0); // fixing Skinny user names #914
     topPanelLayout->addWidget(countryFlag);
     topPanelLayout->addWidget(countryLabel);
     topPanelLayout->setAlignment(countryFlag, Qt::AlignCenter);
@@ -88,37 +93,38 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
         }
     });
 
-    connect(&demuxer, &FFMpegDemuxer::frameDecoded, this, &NinjamTrackGroupView::updateVideoFrame);
-
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
     // reacting to chat block/unblock events
     Controller::NinjamController *ninjamController = mainController->getNinjamController();
     connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
     connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
-    connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoIntervalDecoding()));
+    connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoStream()));
 
     setupVerticalLayout();
 }
 
 void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)
 {
-    videoIntervals << encodedVideoData;
+
+    FFMpegDemuxer *videoDecoder = new FFMpegDemuxer(this, encodedVideoData);
+    connect(videoDecoder, &FFMpegDemuxer::imagesDecoded, this, [=](QList<QImage> images, uint frameRate){
+        if (!images.isEmpty()) {
+            videoFrameRate = frameRate;
+            decodedImages << images;
+
+            videoDecoder->deleteLater();
+        }
+    });
+
+    QtConcurrent::run(videoDecoder, &FFMpegDemuxer::decode);
 }
 
-void NinjamTrackGroupView::startVideoIntervalDecoding()
+void NinjamTrackGroupView::startVideoStream()
 {
-    demuxer.close(); // close previous video interval decoder
-
-    if (!videoIntervals.isEmpty()) {
-        const QByteArray &videoData = videoIntervals.takeLast();
-
-        videoIntervals.clear(); // always take the last video interval and discard others (if downloaded but not played yet)
-
-        if (!demuxer.open(videoData)) {
-            qCritical() << "Demuxer can't open video interval data!";
-            demuxer.close();
-        }
+    if (!decodedImages.isEmpty()) {
+        while (decodedImages.size() > 1)
+            decodedImages.removeFirst(); // keep just the last decoded interval
     }
     else {
         videoWidget->setVisible(false); // hide the video widget when transmition is stopped
@@ -149,9 +155,29 @@ void NinjamTrackGroupView::showChatBlockIcon(const QString &blockedUserName)
 void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
     QString userName = getGroupName();
-    bool userIsBlockedInChat = mainController->getNinjamController()->userIsBlockedInChat(userName);
+    auto ninjamController = mainController->getNinjamController();
+
+    bool userIsBlockedInChat = ninjamController->userIsBlockedInChat(userName);
+
+    QAction *privateChatAction = contextMenu.addAction(tr("Private chat with %1").arg(userName));
+    connect(privateChatAction, &QAction::triggered, this, [=]() {
+
+        emit createPrivateChat(userName, userIP);
+
+    });
+
+    QString localIP;
+    auto service = mainController->getNinjamService();
+    if (service) {
+        localIP = Ninjam::extractUserIP(service->getConnectedUserName());
+    }
+    privateChatAction->setEnabled(!userIP.isEmpty() && !localIP.isEmpty()); // admin IPs are empty
+
+    contextMenu.addSeparator();
+
     QAction *blockAction = contextMenu.addAction(tr("Block %1 in chat").arg(userName), this, SLOT(blockChatMessages()));
     QAction *unblockAction = contextMenu.addAction(tr("Unblock %1 in chat").arg(userName), this, SLOT(unblockChatMessages()));
+
     blockAction->setEnabled(!userIsBlockedInChat);
     unblockAction->setEnabled(userIsBlockedInChat);
 
@@ -353,7 +379,7 @@ QSize NinjamTrackGroupView::sizeHint() const
             height += trackView->minimumSizeHint().height();
         }
 
-        return QSize(1, qMax(height, 54));
+        return QSize(1, qMax(height, 58));
     }
 
     // grid layout
@@ -397,13 +423,17 @@ void NinjamTrackGroupView::updateGuiElements()
     groupNameLabel->updateMarquee();
 
     // video
-    if (demuxer.isOpened()) {
+    if (!decodedImages.isEmpty()) {
         quint64 now = QDateTime::currentMSecsSinceEpoch();
 
-        quint64 timePerFrame = 1000 / demuxer.getFrameRate();
-        if (now - lastVideoRender >= timePerFrame) { // time to show a new video frame?
-            lastVideoRender = now;
-            demuxer.decodeNextFrame(); // video frame decoding is running in a separated thread
+        quint64 timePerFrame = 1000 / videoFrameRate;
+        quint64 diff = now - lastVideoRender;
+        if (diff >= timePerFrame) { // time to show a new video frame?
+            lastVideoRender = now - (diff % timePerFrame);
+            auto &currentImages = decodedImages.first();
+            if (!currentImages.isEmpty()) {
+                updateVideoFrame(currentImages.takeFirst());
+            }
         }
     }
 }

@@ -110,11 +110,10 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
 
 QString KeyboardHook::vkCodeToText(DWORD vkCode, DWORD scanCode)
 {
-    wchar_t buffer[10];
-
     BYTE keyState[256] = {0};
 
     if (GetKeyboardState(keyState)) {
+		wchar_t buffer[10];
         int result = ToUnicodeEx(vkCode, scanCode, keyState, buffer, _countof(buffer), 0, NULL);
         if (result)
             return QString::fromWCharArray(buffer);

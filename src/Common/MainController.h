@@ -32,7 +32,7 @@ class MainController : public QObject
     friend class Controller::NinjamController;
 
 protected:
-    MainController(const Persistence::Settings &settings);
+    explicit MainController(const Persistence::Settings &settings);
 
 public:
 
@@ -230,6 +230,7 @@ public:
     void setAllLoopersStatus(bool activated);
 
     static bool crashedInLastExecution();
+    static QString getVersionFromLogContent();
 
 signals:
     void ipResolved(const QString &ip);
@@ -239,6 +240,8 @@ public slots:
     virtual void setSampleRate(int newSampleRate);
     void setEncodingQuality(float newEncodingQuality);
     void storeLooperBitDepth(quint8 bitDepth);
+
+    void storeRememberSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
 
     void processCapturedFrame(int frameID, const QImage &frame);
 
@@ -265,8 +268,8 @@ protected:
     MainWindow *mainWindow;
 
     // map the input channel indexes to a GUID (used to upload audio to ninjam server)
-    QMap<quint8, UploadIntervalData *> audioIntervalsToUpload;
-    UploadIntervalData *videoIntervalToUpload;
+    QMap<quint8, UploadIntervalData> audioIntervalsToUpload;
+    UploadIntervalData videoIntervalToUpload;
 
     QMutex mutex;
 
@@ -281,7 +284,7 @@ protected:
 
     virtual void syncWithNinjamIntervalStart(uint intervalLenght);
 
-    FFMpegMuxer *videoEncoder;
+    FFMpegMuxer videoEncoder;
 
 private:
     void setAllTracksActivation(bool activated);
@@ -523,6 +526,11 @@ inline quint8 MainController::getLooperPreferedMode() const
 inline bool MainController::getLooperAudioEncodingFlag() const
 {
     return settings.getLooperAudioEncodingFlag();
+}
+
+inline void MainController::storeRememberSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
+{
+    settings.setRememberingSettings(boost, level, pan, mute, lowCut);
 }
 
 } // namespace

@@ -62,7 +62,7 @@ class NinjamRoomStreamerNode : public AbstractMp3Streamer
     Q_OBJECT
 
 public:
-    NinjamRoomStreamerNode(const QUrl &streamPath = QUrl(""));
+    explicit NinjamRoomStreamerNode(const QUrl &streamPath = QUrl(""));
     ~NinjamRoomStreamerNode();
 
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
@@ -76,7 +76,7 @@ protected:
     void initialize(const QString &streamPath);
 
 private:
-    QNetworkAccessManager *httpClient;
+    QNetworkAccessManager httpClient;
     bool buffering;
 
     static const int BUFFER_SIZE;

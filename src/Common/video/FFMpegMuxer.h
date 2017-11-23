@@ -5,12 +5,12 @@
 #include <QImage>
 #include <QSize>
 #include <QFile>
-#include <QMutex>
-#include <QThread>
 #include <QDebug>
-#include <QWaitCondition>
+#include <QThreadPool>
 
 #include "FFMpegCommon.h"
+
+#include <memory>
 
 // adapted from FFMpeg muxing.c example
 
@@ -29,8 +29,6 @@ public:
     QSize getVideoResolution() const;
 
     void setVideoFrameRate(qreal frameRate);
-
-    void setSaveToFile(bool save);
 
     enum VideoQuality
     {
@@ -54,9 +52,6 @@ signals:
 
 public slots:
     void startNewInterval();
-
-private slots:
-    void encodeInBackground();
 
 private:
 
@@ -88,16 +83,14 @@ private:
     bool encodeVideo;
     bool encodeAudio;
 
-    bool savingToFile;
-    QFile *file;
-
     int64_t videoPts; // pts (presentation time stamp) of the next frame that will be generated
 
     // internal streams
     class VideoOutputStream;
     class AudioOutputStream;
-    VideoOutputStream *videoStream;
-    AudioOutputStream *audioStream;
+
+    std::unique_ptr<VideoOutputStream> videoStream;
+    std::unique_ptr<AudioOutputStream> audioStream;
 
     AVFormatContext *formatContext;
     AVIOContext *avioContext;
@@ -108,20 +101,11 @@ private:
     qreal videoFrameRate;
     uint videoBitRate;
 
-    QMutex mutex;
-    QThread *encodingThread;
-    QWaitCondition waitingMoreDataToEncode;
-    QList<QImage> imagesToEncode;
-
     bool initialized;
     bool startNewIntervalRequested;
 
+    QThreadPool threadPool;
 };
-
-inline void FFMpegMuxer::setSaveToFile(bool save)
-{
-    this->savingToFile = save;
-}
 
 inline void FFMpegMuxer::setVideoQuality(VideoQuality quality)
 {

@@ -87,7 +87,8 @@ QPushButton#buttonStereoInversion:hover
 BaseTrackView[unlighted="true"] #buttonBoost,
 BaseTrackView[unlighted="true"] #soloButton,
 BaseTrackView[unlighted="true"] #muteButton,
-BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion,
+BaseTrackView[unlighted="true"] BoostSpinBox
 {
     background-color: rgba(0, 0, 0, 30);
     border: none;
@@ -169,6 +170,13 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:vertical,    /* track fader
 {
     border: 1px outset rgb(60, 60, 60);
     background: rgb(80, 80, 80);
+}
+
+
+BaseTrackView[unlighted="true"] #panSlider::handle:hover,
+BaseTrackView[unlighted="true"] #levelSlider::handle:hover
+{
+    background-color: rgb(120, 120, 120);
 }
 
 BaseTrackView[unlighted="true"],                            /* the track */

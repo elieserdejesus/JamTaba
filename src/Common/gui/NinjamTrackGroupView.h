@@ -6,7 +6,6 @@
 #include <QBoxLayout>
 #include "MarqueeLabel.h"
 #include "NinjamTrackView.h"
-#include "video/FFMpegDemuxer.h"
 #include "video/VideoWidget.h"
 
 namespace Controller {
@@ -49,6 +48,9 @@ public:
     static const uint MAX_WIDTH_IN_GRID_LAYOUT;
     static const uint MAX_HEIGHT_IN_GRID_LAYOUT;
 
+signals:
+    void createPrivateChat(const QString &userName, const QString &userIP);
+
 public slots:
     void updateVideoFrame(const QImage &frame);
 
@@ -68,9 +70,9 @@ private:
 
     VideoWidget *videoWidget;
     QByteArray encodedVideoData;
-    FFMpegDemuxer demuxer;
     quint64 lastVideoRender;
-    QList<QByteArray> videoIntervals; // downloaded video intervals
+    QList<QList<QImage>> decodedImages;
+    uint videoFrameRate;
 
     void setupHorizontalLayout();
     void setupVerticalLayout();
@@ -89,7 +91,7 @@ private slots:
     void hideChatBlockIcon(const QString &unblockedUserName);
     void showChatBlockIcon(const QString &blockedUserName);
 
-    void startVideoIntervalDecoding();
+    void startVideoStream();
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H

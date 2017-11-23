@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="pt_BR" sourcelanguage="en_US">
 <context>
@@ -209,7 +209,7 @@
         <translation>Preparando</translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission for others</source>
+        <source>Enable/disable your audio transmission to others</source>
         <translation>Ativa/desativa a transmissão do seu áudio para outros músicos</translation>
     </message>
     <message>
@@ -1076,15 +1076,15 @@
         <translation>Escanendo plugins ...</translation>
     </message>
     <message>
-        <source>Founded plugins:</source>
+        <source>Found plugins:</source>
         <translation>Plugins encontrados:</translation>
     </message>
     <message>
-        <source>This is the plugin founded list box</source>
+        <source>This is the plugin found list box</source>
         <translation>Este é a lista de plugins encontrados</translation>
     </message>
     <message>
-        <source>No plugins founded!</source>
+        <source>No plugins found!</source>
         <translation>Nenhum plugin foi encontrado!</translation>
     </message>
     <message>
@@ -1207,8 +1207,8 @@
         <translation>Metronomo</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
-        <translation>Metronomo padrão:</translation>
+        <source>Metronome Sound:</source>
+        <translation>Som do Metrônomo:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>

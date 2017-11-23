@@ -123,39 +123,35 @@ PortAudioDriver::~PortAudioDriver()
 // this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
 void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer)
 {
-    if (!inputBuffer || !outputBuffer) {
-        return;
-    }
-
     const uint bytesToProcess = framesPerBuffer * sizeof(float);
 
     // prepare buffers and expose then to application process
-    inputBuffer->setFrameLenght(framesPerBuffer);
-    outputBuffer->setFrameLenght(framesPerBuffer);
+    inputBuffer.setFrameLenght(framesPerBuffer);
+    outputBuffer.setFrameLenght(framesPerBuffer);
     if (!globalInputRange.isEmpty()) {
         float **inputs = (float**)in;
         int inputChannels = globalInputRange.getChannels();
         for (int c = 0; c < inputChannels; c++) {
-            std::memcpy(inputBuffer->getSamplesArray(c), inputs[c], bytesToProcess);
+            std::memcpy(inputBuffer.getSamplesArray(c), inputs[c], bytesToProcess);
         }
     }
     else {
-        inputBuffer->zero();
+        inputBuffer.zero();
     }
 
-    outputBuffer->zero();
+    outputBuffer.zero();
 
 
     // all application audio processing is computed here
     if (mainController) {
-        mainController->process(*inputBuffer, *outputBuffer, sampleRate);
+        mainController->process(inputBuffer, outputBuffer, sampleRate);
     }
 
     // convert application output buffers to portaudio format
     float **outputs = static_cast<float**>(out);
     int outputChannels = globalOutputRange.getChannels();
     for (int c = 0; c < outputChannels; c++){
-        std::memcpy(outputs[c], outputBuffer->getSamplesArray(c), bytesToProcess);
+        std::memcpy(outputs[c], outputBuffer.getSamplesArray(c), bytesToProcess);
     }
 }
 

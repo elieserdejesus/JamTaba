@@ -29,7 +29,13 @@ UserNameDialog #label
     color: rgb(160, 160, 160);
 }
 
-PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome, #tabLooper
+PreferencesDialog #tabAudio,
+PreferencesDialog #tabMidi,
+PreferencesDialog #tabVST,
+PreferencesDialog #tabRecording,
+PreferencesDialog #tabMetronome,
+PreferencesDialog #tabLooper,
+PreferencesDialog #tabRemember
 {
     border: 1px solid rgb(40, 40, 40);
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -106,7 +112,8 @@ PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop dow
 PreferencesDialog QComboBox:disabled,
 PreferencesDialog QLabel:disabled,
 PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
-PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
+PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false],
+PreferencesDialog QGroupBox#groupBoxOutputs
 {
 color: rgba(0, 0, 0, 90);
 }

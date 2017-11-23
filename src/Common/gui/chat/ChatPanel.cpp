@@ -10,12 +10,14 @@
 
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
-ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *textEditorModifier) :
+ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier) :
     QWidget(nullptr),
+    userFullName(userFullName),
     ui(new Ui::ChatPanel),
     botNames(botNames),
     autoTranslating(false),
-    colorsPool(colorsPool)
+    colorsPool(colorsPool),
+    unreadedMessages(0)
 {
     ui->setupUi(this);
     QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
@@ -33,10 +35,12 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
         }
     });
 
-    if (textEditorModifier) {
+    if (chatInputModifier) {
         bool finishEditorPressingReturnKey = false;
-        textEditorModifier->modify(ui->chatText, finishEditorPressingReturnKey);
+        chatInputModifier->modify(ui->chatText, finishEditorPressingReturnKey);
     }
+
+    ui->topicLabel->setVisible(false);
 
     // this event is used to auto scroll down when new messages are added
     connect(ui->chatScroll->verticalScrollBar(), &QScrollBar::rangeChanged, this, &ChatPanel::autoScroll);
@@ -51,12 +55,39 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, T
     previousVerticalScrollBarMaxValue = ui->chatScroll->verticalScrollBar()->value();
 }
 
+bool ChatPanel::inputsAreEnabled() const
+{
+    return ui->chatText->isEnabled();
+}
+
+void ChatPanel::setInputsStatus(bool enabled)
+{
+    ui->chatText->setEnabled(enabled);
+    ui->buttonAutoTranslate->setEnabled(enabled);
+    ui->buttonClear->setEnabled(enabled);
+}
+
+void ChatPanel::setTopicMessage(const QString &topic)
+{
+    ui->topicLabel->setText(topic);
+
+    ui->topicLabel->setVisible(!topic.isEmpty());
+}
+
 void ChatPanel::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
         ui->retranslateUi(this);
     }
+
     QWidget::changeEvent(e);
+}
+
+void ChatPanel::showEvent(QShowEvent *ev)
+{
+    Q_UNUSED(ev)
+
+    setUnreadedMessages(0);
 }
 
 void ChatPanel::createVoteButton(const QString &voteType, quint32 value, quint32 expireTime)
@@ -197,6 +228,18 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     if (autoTranslating)
         msgPanel->translate();// request the translation
 
+    if (!isVisible()) {
+        setUnreadedMessages(unreadedMessages + 1);
+    }
+}
+
+void ChatPanel::setUnreadedMessages(uint unreaded)
+{
+    if (unreaded != unreadedMessages) {
+        unreadedMessages = unreaded;
+
+        emit unreadedMessagesChanged(unreadedMessages);
+    }
 }
 
 void ChatPanel::addMessagePanelInLayout(ChatMessagePanel *msgPanel)

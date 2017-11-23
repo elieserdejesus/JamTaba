@@ -84,6 +84,12 @@ LocalTrackView[highlighted="true"]
     stop:1 rgb(40, 40, 40));
 }
 
+LocalTrackView[unlighted="true"],
+LocalTrackGroupView[unlighted="true"] #topPanel
+{
+    background: rgb(40, 40, 40);
+}
+
 LocalTrackView #inputSelectionButton            /* Button used to open the input selection menu */
 {
     background-color: none;

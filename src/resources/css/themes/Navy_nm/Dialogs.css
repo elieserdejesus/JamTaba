@@ -1,0 +1,20 @@
+
+QDialog QLabel,
+QDialog QGroupBox,
+QDialog QComboBox,
+QDialog QCheckBox,
+QDialog QGroupBox QCheckBox,
+QDialog QGroupBox QCheckBox,
+QDialog QRadioButton
+{
+    color: rgb(170, 170, 170);
+}
+
+PreferencesDialog QComboBox:disabled,
+PreferencesDialog QLabel:disabled,
+PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
+PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false],
+PreferencesDialog QGroupBox#groupBoxOutputs
+{
+    color: rgba(0, 0, 0, 90);
+}

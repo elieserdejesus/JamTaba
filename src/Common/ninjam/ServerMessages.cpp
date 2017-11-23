@@ -207,7 +207,8 @@ void UserInfoChangeNotifyMessage::printDebug(QDebug &dbg) const
 // +++++++++++++++++ SERVER CHAT MESSAGE +++++++++++++++++++++
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ServerChatMessage::ServerChatMessage(quint32 payload) :
-    ServerMessage(ServerMessageType::CHAT_MESSAGE, payload)
+    ServerMessage(ServerMessageType::CHAT_MESSAGE, payload),
+    commandType(ChatCommandType::MSG)
 {
 }
 

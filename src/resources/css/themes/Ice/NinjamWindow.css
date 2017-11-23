@@ -10,20 +10,16 @@ NinjamTrackView[horizontal="true"]
     border-top-right-radius: 6px;
 }
 
+NinjamTrackView[horizontal="true"] BoostSpinBox
+{
+    max-height: 10px;
+}
+
 NinjamTrackView[horizontal="true"] #panSlider
 {
     max-width: 50px;
 }
 
-NinjamTrackView[horizontal="true"] #buttonBoost
-{
-    padding: 1px;
-    border: 1px solid rgba(0, 0, 0, 30);
-    margin: 0px;
-    min-width: 12px;
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoost:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#receiveButton:hover:checked,
 NinjamTrackView QPushButton#lowCutButton:hover:checked,
@@ -71,7 +67,7 @@ NinjamTrackView QPushButton#receiveButton:hover:!checked
 /* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
 
-NinjamRoomWindow QToolButton:hover,
+QToolButton:hover,
 #licenceButton:hover
 {
     border: 1px solid rgba(0, 0, 0, 50);
@@ -83,7 +79,11 @@ NinjamRoomWindow QToolButton:hover:checked
     background-color: rgba(255, 255, 255, 40);
 }
 
-NinjamRoomWindow QToolButton,
+#buttonVerticalLayout,
+#buttonHorizontalLayout,
+#buttonGridLayout,
+#wide,
+#narrow,
 #licenceButton
 {
     border: 1px solid rgba(0, 0, 0, 50);
@@ -190,15 +190,15 @@ NinjamTrackGroupView[horizontal="true"] > #topPanel
 
 /* NinjamPanel is the widget where the ninjam controls are showed (in bottom when we are connected in a server)
 ----------------------------------------------------------------------------------------------------------------*/
-NinjamPanel #ninjamControlsPanel
+NinjamPanel
 {
     background-color: rgba(0, 0, 0, 20);
     border: 1px inset rgba(60, 60, 60, 90);
     border-radius: 6px;
 }
 
-NinjamPanel #soloButton,
-NinjamPanel #muteButton
+MetronomePanel #soloButton,
+MetronomePanel #muteButton
 {
     background-color: rgb(180,207,250);
 }
@@ -228,6 +228,11 @@ NinjamPanel QComboBox QAbstractItemView
     background-color: rgb(100, 143, 181);
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
+}
+
+#panelCombos QComboBox:hover
+{
+    background-color: rgb(112, 149, 174);
 }
 
 #comboBpi-topLevel

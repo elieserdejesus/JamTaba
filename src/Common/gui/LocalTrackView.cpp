@@ -2,6 +2,7 @@
 #include "MainController.h"
 #include "audio/core/LocalInputNode.h"
 #include "GuiUtils.h"
+#include "BoostSpinBox.h"
 
 #include <QLayout>
 #include <QPushButton>
@@ -16,7 +17,7 @@ class LocalTrackView::LooperIconFactory
 {
 public:
 
-    LooperIconFactory(const QString &originalIconPath)
+    explicit LooperIconFactory(const QString &originalIconPath)
         : originalIconPath(originalIconPath)
     {
         //
@@ -151,7 +152,7 @@ void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost bo
 {
     inputNode->setGain(initialGain);
     inputNode->setPan(initialPan);
-    initializeBoostButton(boostValue);
+    initializeBoostSpinBox(boostValue);
     if (muted)
         inputNode->setMute(muted);
 
@@ -180,18 +181,14 @@ void LocalTrackView::solo(bool b)
     soloButton->setChecked(b); // gui only
 }
 
-void LocalTrackView::initializeBoostButton(Boost boostValue)
+void LocalTrackView::initializeBoostSpinBox(Boost boostValue)
 {
-    switch (boostValue) {
-    case Boost::MINUS:
-        buttonBoost->setState(1);
-        break;
-    case Boost::PLUS:
-        buttonBoost->setState(2);
-        break;
-    default:
-        buttonBoost->setState(0);
-    }
+    if (boostValue == Boost::PLUS)
+        boostSpinBox->setToMax();
+    else if (boostValue == Boost::MINUS)
+        boostSpinBox->setToMin();
+    else
+        boostSpinBox->setToOff(); // 0 dB - OFF
 }
 
 QSize LocalTrackView::sizeHint() const
@@ -227,6 +224,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
         mainLayout->setHorizontalSpacing(spacing);
 
         peakMeter->setVisible(true); // peak meter are always visible
+
+        peakMeter->setPaintingDbMarkers(!peakMetersOnly);
 
         QMargins margins = layout()->contentsMargins();
         margins.setLeft(spacing);

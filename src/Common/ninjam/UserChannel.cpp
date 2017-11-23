@@ -23,12 +23,6 @@ UserChannel::UserChannel() :
     //
 }
 
-UserChannel::UserChannel(const UserChannel &c) :
-    UserChannel(c.getUserFullName(), c.getName(), c.getIndex(), c.isActive(), c.volume, c.pan, c.flags)
-{
-    //
-}
-
 UserChannel::~UserChannel()
 {
     //

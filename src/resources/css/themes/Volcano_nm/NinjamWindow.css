@@ -52,7 +52,7 @@ NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
 /* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
 
-NinjamRoomWindow QToolButton:hover,
+QToolButton:hover,
 #licenceButton:hover
 {
     border: 1px solid rgba(0, 0, 0, 50);
@@ -64,7 +64,11 @@ NinjamRoomWindow QToolButton:hover:checked
     background-color: rgba(255, 255, 255, 40);
 }
 
-NinjamRoomWindow QToolButton,
+#buttonVerticalLayout,
+#buttonHorizontalLayout,
+#buttonGridLayout,
+#wide,
+#narrow,
 #licenceButton
 {
     border: 1px solid rgba(0, 0, 0, 50);
@@ -152,14 +156,15 @@ NinjamTrackGroupView > #topPanel                /* the track group top panel: us
 
 /* NinjamPanel is the widget where the ninjam controls are showed (in bottom when we are connected in a server)
 ----------------------------------------------------------------------------------------------------------------*/
-NinjamPanel #ninjamControlsPanel
+NinjamPanel
 {
     background-color: rgba(0, 0, 0, 20);
     border: 1px inset rgba(60, 60, 60, 90);
+    border-radius: 3px;
 }
 
-NinjamPanel #soloButton,
-NinjamPanel #muteButton
+MetronomePanel #soloButton,
+MetronomePanel #muteButton
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop: 0.0 #FDE5A9,
@@ -190,6 +195,11 @@ color: black;
 background-color: rgb(184, 147, 121);
 selection-background-color: rgba(0, 0, 0, 90);
 selection-color: rgb(254, 181, 102);
+}
+
+#panelCombos QComboBox:hover
+{
+    background-color: rgb(184, 149, 124);
 }
 
 #comboBpi-topLevel,

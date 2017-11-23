@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QMap>
 
+#include <memory>
+
 namespace Recorder {
 
 
@@ -177,7 +179,7 @@ public:
 class LocalNinjamInterval
 {
 public:
-    LocalNinjamInterval(int intervalIndex) :
+    explicit LocalNinjamInterval(int intervalIndex) :
         intervalIndex(intervalIndex)
     {
     }
@@ -220,7 +222,7 @@ private:
 class JamRecorder
 {
 public:
-    JamRecorder(JamMetadataWriter *jamMetadataWritter);
+    explicit JamRecorder(JamMetadataWriter *jamMetadataWritter);
     ~JamRecorder();
     void appendLocalUserAudio(const QByteArray &encodedAudio, quint8 channelIndex,
                               bool isFirstPartOfInterval);
@@ -244,8 +246,8 @@ public:
 
 private:
     QString currentJamName;
-    Jam *jam;
-    JamMetadataWriter *jamMetadataWritter;
+    std::unique_ptr<Jam> jam;
+    std::unique_ptr<JamMetadataWriter> jamMetadataWritter;
     int globalIntervalIndex;
     QString localUserName;
     bool running;

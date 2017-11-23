@@ -140,8 +140,10 @@ bool TopLevelTextEditorModifier::isHackingComboBox() const
 
 bool TopLevelTextEditorModifier::isValidFocusInEvent(QEvent *ev) const
 {
-    if (!isHackingComboBox()) {
-        return ev->type() == QEvent::MouseButtonPress && !hackedLineEdit->isReadOnly(); // user name line edit can't be edited when playing in ninjam server
+    if (!isHackingComboBox()) { // hacking a QLineEdit?
+        return ev->type() == QEvent::MouseButtonPress
+                && !hackedLineEdit->isReadOnly()  // user name line edit can't be edited when playing in ninjam server
+                && hackedLineEdit->isEnabled();
     }
 
     // hacking a combo box
@@ -149,7 +151,7 @@ bool TopLevelTextEditorModifier::isValidFocusInEvent(QEvent *ev) const
         QFocusEvent *focusEvent = static_cast<QFocusEvent *>(ev);
         if (focusEvent->reason() == Qt::MouseFocusReason) { // we are interested only in focusIn when user is clicking
             QComboBox* combo = qobject_cast<QComboBox*>(hackedLineEdit->parentWidget());
-            if (combo) {
+            if (combo && hackedLineEdit->isEnabled()) {
                 QPoint mousePos = hackedLineEdit->mapFromGlobal(QCursor::pos());
                 return hackedLineEdit->rect().contains(mousePos); // check if click was in lineEdit, not in combo box drop down arrow
             }

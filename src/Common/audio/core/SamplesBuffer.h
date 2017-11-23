@@ -93,7 +93,7 @@ inline int SamplesBuffer::getChannels() const
 
 inline bool SamplesBuffer::isEmpty() const
 {
-    return frameLenght <= 0;
+    return frameLenght == 0;
 }
 
 inline void SamplesBuffer::add(const SamplesBuffer &buffer)

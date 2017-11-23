@@ -13,7 +13,7 @@ public:
     UserChannel(const QString &userFullName, const QString &channelName, quint8 channelIndex,
                 bool active=true, quint16 volume=0, quint8 pan=0, quint8 flags=0);
     UserChannel();
-    UserChannel(const UserChannel &c);
+
     ~UserChannel();
 
     inline bool operator<(const UserChannel &other)

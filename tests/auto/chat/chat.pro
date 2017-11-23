@@ -12,10 +12,12 @@ INCLUDEPATH += ../../../src/Common
 VPATH += ../../../src/Common
 
 HEADERS += log/logging.h
+HEADERS += TestChatMessages.h
 HEADERS += TestChatVotingMessages.h
 HEADERS += gui/chat/NinjamVotingMessageParser.h
 
 SOURCES += log/logging.cpp
+SOURCES += TestChatMessages.cpp
 SOURCES += gui/chords/ChatChordsProgressionParser.cpp
 SOURCES += gui/chords/Chord.cpp
 SOURCES += gui/chords/ChordProgressionMeasure.cpp

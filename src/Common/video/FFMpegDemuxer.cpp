@@ -4,21 +4,23 @@
 #include <QImage>
 #include <QFile>
 #include <QFileInfo>
-#include <QtConcurrent>
 
-FFMpegDemuxer::FFMpegDemuxer()
-    : formatContext(nullptr),
-      avioContext(nullptr),
-      frame(nullptr),
-      frameRGB(nullptr),
-      swsContext(nullptr),
-      codecContext(nullptr),
-      rgbBuffer(nullptr),
-      buffer(nullptr),
-      initialized(false)
+FFMpegDemuxer::FFMpegDemuxer(QObject *parent, const QByteArray &encodedData) :
+    QObject(parent),
+    formatContext(nullptr),
+    avioContext(nullptr),
+    frame(nullptr),
+    frameRGB(nullptr),
+    swsContext(nullptr),
+    codecContext(nullptr),
+    rgbBuffer(nullptr),
+    buffer(nullptr),
+    encodedData(encodedData)
 {
     av_register_all();
     avcodec_register_all();
+
+    qRegisterMetaType<QList<QImage>>();
 }
 
 FFMpegDemuxer::~FFMpegDemuxer()
@@ -56,7 +58,6 @@ void FFMpegDemuxer::close()
         buffer = nullptr;
     }
 
-    initialized = false;
 }
 
 //int64_t FFMpegDemuxer::seekCallback(void *opaque, int64_t offset, int whence)
@@ -93,13 +94,8 @@ AVInputFormat *FFMpegDemuxer::probeInputFormat()
     return av_probe_input_format(&probeData, 1);
 }
 
-bool FFMpegDemuxer::open(const QByteArray &encodedData)
+bool FFMpegDemuxer::open()
 {
-    initialized = false;
-
-    encodedBuffer.close();
-    this->encodedData.clear();
-    this->encodedData.append(encodedData);
     encodedBuffer.setBuffer(&(this->encodedData));
     if(!encodedBuffer.open(QIODevice::ReadOnly)) {
         qCritical() << "Error opening demuxer " << encodedBuffer.errorString();
@@ -178,23 +174,7 @@ bool FFMpegDemuxer::open(const QByteArray &encodedData)
         return false;
     }
 
-    /* allocate image where the decoded image will be put */
-//    int width = codecContext->width;
-//    int height = codecContext->height;
-//    AVPixelFormat pixelFormat = codecContext->pix_fmt;
-//    uint8_t *videoDestinationData[4] = {nullptr};
-//    int videoDestionationLineSize[4];
-//    ret = av_image_alloc(videoDestinationData, videoDestionationLineSize, width, height, pixelFormat, 1);
-//    if (ret < 0) {
-//        qCritical() << "Could not allocate raw video buffer " << av_err2str(ret);
-//        return false;
-//    }
-
-    initialized = true;
-
-    emit opened(getFrameRate());
-
-    return initialized;
+    return true;
 }
 
 uint FFMpegDemuxer::getFrameRate() const
@@ -205,16 +185,13 @@ uint FFMpegDemuxer::getFrameRate() const
     return 1;
 }
 
-void FFMpegDemuxer::decodeNextFrame()
-{
-    QtConcurrent::run(this, &FFMpegDemuxer::decode);
-}
-
 void FFMpegDemuxer::decode()
 {
+    QList<QImage> decodedImages;
 
-    if (!initialized) {
-        qWarning() << "Video demuxer not initialized!";
+    if (!open()) {
+        qCritical() << "Can't open the video decoder!";
+        emit imagesDecoded(decodedImages, getFrameRate());
         return;
     }
 
@@ -224,24 +201,18 @@ void FFMpegDemuxer::decode()
     packet.data = nullptr;
     packet.size = 0;
 
-    int gotFrame;
-    bool gotError = false;
+    int gotFrame = 0;
 
-    try {
-        /* read frames from the file */
-        while (av_read_frame(formatContext, &packet) >= 0) {
-            int ret = avcodec_decode_video2(codecContext, frame, &gotFrame, &packet);
-            av_free_packet(&packet);
-            gotError = ret < 0;
-            if (gotError || gotFrame) {
-                if (gotError)
-                    qCritical() << av_err2str(ret);
-                break;
-            }
-        }
+    /* read frames from the file */
+    while (av_read_frame(formatContext, &packet) == 0) {
 
-        if (gotError) {
-            qWarning() << "error decoding video frame";
+        int ret = avcodec_decode_video2(codecContext, frame, &gotFrame, &packet);
+
+        av_free_packet(&packet);
+
+        if (ret < 0) { // error
+            qCritical() << "error decoding video frame";
+            emit imagesDecoded(decodedImages, getFrameRate());
             return;
         }
 
@@ -253,12 +224,13 @@ void FFMpegDemuxer::decode()
             AVPixelFormat destinationPixelFormat = AV_PIX_FMT_RGB24;
 
             if (!frame->width || !frame->height) // 0 size images are skipped
-                return;
+                continue;
 
             swsContext = sws_getCachedContext(swsContext, width, height, sourcePixelFormat, width, height, destinationPixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
 
             if(!swsContext){
                 qCritical() << "Cannot initialize the conversion context!";
+                emit imagesDecoded(decodedImages, getFrameRate());
                 return;
             }
             sws_scale(swsContext, frame->data, frame->linesize, 0, height, frameRGB->data, frameRGB->linesize);
@@ -269,10 +241,9 @@ void FFMpegDemuxer::decode()
             for(int y=0; y < height; y++)
                 memcpy(img.scanLine(y), frameRGB->data[0] + y * frameRGB->linesize[0], width * 3);
 
-            emit frameDecoded(img);
+            decodedImages << img;
         }
     }
-    catch(...) {
-        qCritical() << "Exception in FFMpegDemuxer::decode gotError:" << gotError << " gotFrame:" << gotFrame << " width:" << codecContext->width << " height:"<< codecContext->height;
-    }
+
+    emit imagesDecoded(decodedImages, getFrameRate());
 }

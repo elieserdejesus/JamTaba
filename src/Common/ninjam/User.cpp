@@ -6,18 +6,32 @@
 
 using namespace Ninjam;
 
-User::User(const QString &fullName) :
-    fullName(fullName)
+QString Ninjam::extractUserName(const QString &fullName)
 {
-    QStringList fullNameParts = fullName.split("@");
-    this->name = fullNameParts.at(0);
-    if (fullNameParts.size() > 1) {
-        this->ip = fullNameParts.at(1);
-        if (this->ip.contains("x", Qt::CaseInsensitive))
-            this->ip = this->ip.replace(QRegularExpression("[xX]+"), "128"); // just use 128 as a default ip segment
-    } else {
-        this->ip = "";
-    }
+    QChar separator('@');
+    if (fullName.contains(separator))
+        return fullName.split(separator).at(0);
+
+    return fullName;
+}
+
+QString Ninjam::extractUserIP(const QString &fullName)
+{
+    QChar separator('@');
+    if (fullName.contains(separator))
+        return fullName.split(separator).at(1);
+
+    return QString();
+}
+
+
+User::User(const QString &fullName) :
+    fullName(fullName),
+    name(Ninjam::extractUserName(fullName)),
+    ip(Ninjam::extractUserIP(fullName))
+
+{
+
 }
 
 User::~User()

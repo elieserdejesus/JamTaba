@@ -61,7 +61,7 @@ class ServerAuthChallengeMessage : public ServerMessage
 {
 
 public:
-    ServerAuthChallengeMessage(quint32 payload);
+    explicit ServerAuthChallengeMessage(quint32 payload);
 
     inline QByteArray getChallenge() const
     {
@@ -105,7 +105,7 @@ class ServerAuthReplyMessage : public ServerMessage
 {
 
 public:
-    ServerAuthReplyMessage(quint32 payload);
+    explicit ServerAuthReplyMessage(quint32 payload);
 
     inline QString getErrorMessage() const
     {
@@ -144,7 +144,7 @@ private:
 class ServerKeepAliveMessage : public ServerMessage
 {
 public:
-    ServerKeepAliveMessage(quint32 payload);
+    explicit ServerKeepAliveMessage(quint32 payload);
 
 private:
     void printDebug(QDebug &dbg) const override;
@@ -160,7 +160,7 @@ private:
     quint16 bpi;
 
 public:
-    ServerConfigChangeNotifyMessage(quint32 payload);
+    explicit ServerConfigChangeNotifyMessage(quint32 payload);
 
     inline quint16 getBpi() const
     {
@@ -185,7 +185,7 @@ class UserChannel;
 class UserInfoChangeNotifyMessage : public ServerMessage
 {
 public:
-    UserInfoChangeNotifyMessage(quint32 payload);
+    explicit UserInfoChangeNotifyMessage(quint32 payload);
     ~UserInfoChangeNotifyMessage();
 
     inline QList<User> getUsers() const
@@ -228,7 +228,7 @@ class ServerChatMessage : public ServerMessage
 {
 
 public:
-    ServerChatMessage(quint32 payload);
+    explicit ServerChatMessage(quint32 payload);
 
     inline QStringList getArguments() const
     {
@@ -268,7 +268,7 @@ class DownloadIntervalBegin : public ServerMessage
 {
 
 public:
-    DownloadIntervalBegin(quint32 payload);
+    explicit DownloadIntervalBegin(quint32 payload);
 
     inline quint8  getChannelIndex() const
     {
@@ -327,7 +327,7 @@ class DownloadIntervalWrite : public ServerMessage
 {
 
 public:
-    DownloadIntervalWrite(quint32 payload);
+    explicit DownloadIntervalWrite(quint32 payload);
 
     inline QByteArray getGUID() const
     {

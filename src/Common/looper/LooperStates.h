@@ -14,7 +14,7 @@ class LooperState
 {
 
 public:
-    LooperState(Looper *looper);
+    explicit LooperState(Looper *looper);
     virtual ~LooperState() {}
 
     virtual void mixTo(SamplesBuffer &samples, uint samplesToProcess) = 0;
@@ -48,7 +48,7 @@ public:
 class PlayingState : public LooperState
 {
 public:
-    PlayingState(Looper *looper);
+    explicit PlayingState(Looper *looper);
     void handleNewCycle(uint samplesInCycle) override;
     void mixTo(SamplesBuffer &samples, uint samplesToProcess) override;
     void addBuffer(const SamplesBuffer &samples, uint samplesToProcess) override;
@@ -60,7 +60,7 @@ public:
 class WaitingToRecordState : public LooperState
 {
 public:
-    WaitingToRecordState(Looper *looper);
+    explicit WaitingToRecordState(Looper *looper);
     void handleNewCycle(uint samplesInCycle) override;
     inline bool isWaiting() const override { return true ;}
     void addBuffer(const SamplesBuffer &samples, uint samplesToProcess) override;

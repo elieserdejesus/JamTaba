@@ -8,7 +8,7 @@ class MainControllerVST;
 class MainWindowVST : public MainWindowPlugin
 {
 public:
-    MainWindowVST(MainControllerVST *controller);
+    explicit MainWindowVST(MainControllerVST *controller);
 
 protected:
     TextEditorModifier *createTextEditorModifier() override;

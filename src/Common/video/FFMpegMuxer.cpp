@@ -82,49 +82,15 @@ FFMpegMuxer::FFMpegMuxer()
       videoFrameRate(25),
       videoBitRate(static_cast<uint>(FFMpegMuxer::LOW_VIDEO_QUALITY)),
       videoPts(0),
-      file(nullptr),
-      savingToFile(false),
       formatContext(nullptr),
       avioContext(nullptr),
-      mutex(QMutex::NonRecursive),
       initialized(false),
-      encodingThread(nullptr),
       buffer(nullptr),
       startNewIntervalRequested(false)
 {
-    encodingThread = new QThread(this);
-    this->moveToThread(encodingThread);
-
-    connect(encodingThread, &QThread::started, this, &FFMpegMuxer::encodeInBackground);
-}
-
-void FFMpegMuxer::encodeInBackground()
-{
-
     av_register_all();
 
-    while (!QThread::currentThread()->isInterruptionRequested()) {
-
-        if (startNewIntervalRequested) {
-            if (prepareToEncodeNewInterval())
-                startNewIntervalRequested = false;
-            else
-                qCritical() << "Can't prepare for next interval!";
-        }
-
-        //wait until we have more images to encode
-        mutex.lock();
-        if (imagesToEncode.isEmpty()) {
-            waitingMoreDataToEncode.wait(&mutex);
-        }
-
-        QImage image = imagesToEncode.takeFirst();
-        mutex.unlock();
-
-        if (encodeVideo && !image.isNull())
-            encodeVideo = !doEncodeVideoFrame(image.copy());
-
-    }
+    threadPool.setMaxThreadCount(1);
 }
 
 void FFMpegMuxer::initialize()
@@ -140,70 +106,47 @@ void FFMpegMuxer::initialize()
     audioStream = nullptr;
     videoStream = nullptr;
 
-    if (savingToFile) {
-        if (file && file->isOpen()) {
-            file->deleteLater();
-        }
-
-        static int counter = 1;
-        file = new QFile("teste" + QString::number(counter++) + ".avi", this);
-        if(!file->open(QIODevice::WriteOnly))
-            qCritical() << "Can't open the file " << file << file->errorString();
-    }
-
     videoPts = 0;
 }
 
 FFMpegMuxer::~FFMpegMuxer()
 {
     finishCurrentInterval();
-
-    encodingThread->requestInterruption();
 }
 
 void FFMpegMuxer::encodeImage(const QImage &image)
 {
-    QMutexLocker locker(&mutex);
+    // encoding in a separated thread
 
-    if (encodeVideo)
-        imagesToEncode.append(image);
+    auto lambda = [=](){
 
-    waitingMoreDataToEncode.wakeAll(); // wakeup the encodig thread
+        if (startNewIntervalRequested) {
+            if (prepareToEncodeNewInterval())
+                startNewIntervalRequested = false;
+        }
 
+        if (encodeVideo && !image.isNull())
+            encodeVideo = !doEncodeVideoFrame(image);
+    };
 
-//    if (!initialized)
-//        return;
-
-
-//        bool canEncode = encodeVideo &&
-//                                (!encodeAudio || av_compare_ts(videoStream->frame->pts, videoStream->stream->codec->time_base,
-//                                                                audioStream->frame->pts, audioStream->stream->codec->time_base) <= 0);
-//        if (canEncode) {
-//            encodeVideo = !doEncodeVideoFrame(image);
-//        }
-
-
+    QtConcurrent::run(&threadPool, lambda);
 }
 
 void FFMpegMuxer::encodeAudioFrame()
 {
-    QMutexLocker locker(&mutex);
-    if (!initialized)
-        return;
+//    QMutexLocker locker(&mutex);
+//    if (!initialized)
+//        return;
 
-    if (encodeAudio)
-        encodeAudio = !doEncodeAudioFrame();
+//    if (encodeAudio)
+//        encodeAudio = !doEncodeAudioFrame();
 }
 
 int FFMpegMuxer::writeCallback(void *instancePointer, uint8_t *buffer, int bufferSize)
 {
-    FFMpegMuxer *instance = (FFMpegMuxer *)instancePointer;
+    FFMpegMuxer *instance = static_cast<FFMpegMuxer *>(instancePointer);
 
     QByteArray encodedBytes((const char*)buffer, bufferSize);
-
-    if (instance->savingToFile && instance->file) {
-        instance->file->write(encodedBytes);
-    }
 
     bool isFirstPacket = instance->videoPts == 0;
 
@@ -215,11 +158,6 @@ int FFMpegMuxer::writeCallback(void *instancePointer, uint8_t *buffer, int buffe
 void FFMpegMuxer::startNewInterval()
 {
     startNewIntervalRequested = true;
-
-    if (!encodingThread->isRunning()) {
-       encodingThread->start();
-    }
-
 }
 
 bool FFMpegMuxer::prepareToEncodeNewInterval()
@@ -245,6 +183,11 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
     // streaming to memory  https://trac.ffmpeg.org/ticket/984
     avioContext = avio_alloc_context(buffer, FFMPEG_BUFFER_SIZE, 1, this, nullptr, writeCallback, nullptr);
+    if (!avioContext)  {
+        qCritical() << "Can't create avio context!";
+        return false;
+    }
+
     avioContext->seekable = 0; // no seek
     formatContext->pb = avioContext;
 
@@ -268,7 +211,7 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
     ret = avformat_write_header(formatContext, nullptr); // Write the stream header, if any.
     if (ret < 0) {
-        qCritical() << "Error occurred when opening output file: " << av_err2str(ret);
+        qCritical() << "Error occurred when opening output file: " << ret;
         return false;
     }
 
@@ -312,24 +255,13 @@ void FFMpegMuxer::finishCurrentInterval()
     avio_flush(avioContext);
 
     // Close each codec.
-    if (videoStream) {
-        delete videoStream;
-        videoStream = nullptr;
-    }
+    videoStream.reset(nullptr);
 
-    if (audioStream) {
-        delete audioStream;
-        audioStream = nullptr;
-    }
+    audioStream.reset(nullptr);
 
     avformat_free_context(formatContext); // free the stream
 
     av_free(avioContext);
-
-    if (savingToFile && file && file->isOpen()) {
-        file->deleteLater();
-        file = nullptr;
-    }
 
     initialized = false;
 
@@ -351,7 +283,7 @@ void FFMpegMuxer::addAudioStream(AVCodecID codecID)
     if (audioStream)
         return;
 
-    audioStream = new AudioOutputStream();
+    audioStream.reset(new AudioOutputStream());
 
     // find the encoder
     AVCodec *codec = avcodec_find_encoder(codecID);
@@ -368,6 +300,7 @@ void FFMpegMuxer::addAudioStream(AVCodecID codecID)
     AVCodecContext *codecContext = avcodec_alloc_context3(codec);
     if (!codecContext) {
         qCritical() << "Could not alloc an encoding context";
+		return;
     }
     audioStream->stream->codec = codecContext;
 
@@ -406,7 +339,7 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID)
     if (videoStream)
         return false;
 
-    videoStream = new VideoOutputStream();
+    videoStream.reset(new VideoOutputStream());
 
     // find the encoder
     AVCodec *codec = avcodec_find_encoder(codecID);
@@ -550,7 +483,6 @@ bool FFMpegMuxer::doEncodeAudioFrame()
 {
     AVPacket packet = { 0 }; // data and size must be 0;
     AVFrame *frame;
-    int dst_nb_samples;
 
     av_init_packet(&packet);
     AVCodecContext *codecContext = audioStream->stream->codec;
@@ -560,7 +492,7 @@ bool FFMpegMuxer::doEncodeAudioFrame()
     if (frame) {
         /* convert samples from native format to destination codec format, using the resampler */
         /* compute destination number of samples */
-        dst_nb_samples = av_rescale_rnd(swr_get_delay(audioStream->swrContext, codecContext->sample_rate) + frame->nb_samples,
+        int dst_nb_samples = av_rescale_rnd(swr_get_delay(audioStream->swrContext, codecContext->sample_rate) + frame->nb_samples,
                                         codecContext->sample_rate, codecContext->sample_rate, AV_ROUND_UP);
         av_assert0(dst_nb_samples == frame->nb_samples);
 
@@ -607,9 +539,7 @@ bool FFMpegMuxer::doEncodeAudioFrame()
 
 AVFrame *FFMpegMuxer::allocPicture(enum AVPixelFormat pixelFormat, int width, int height)
 {
-    AVFrame *picture = nullptr;
-
-    picture = av_frame_alloc();
+    AVFrame *picture = av_frame_alloc();
     if (!picture)
         return NULL;
 
@@ -763,6 +693,9 @@ void FFMpegMuxer::fillFrameWithImageData(const QImage &image)
  */
 bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
 {
+    if (!initialized)
+        return false;
+
     if (!videoStream)
         return false;
 
@@ -791,6 +724,10 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
 
     /* encode the image */
     int ret = avcodec_encode_video2(codecContext, &packet, videoStream->frame, &gotPacket);
+
+    // releasing the allocated memory - fix https://github.com/elieserdejesus/JamTaba/issues/951
+    avpicture_free((AVPicture *)videoStream->frame);
+
     if (ret < 0) {
         qCritical() << "Error encoding video frame: " << av_err2str(ret);
         return false;

@@ -10,6 +10,21 @@ const QRegularExpression Gui::Chat::SYSTEM_VOTING_REGEX("\\[voting system\\] lea
 /** Local user voting format is: !vote bpi/bpm 120, always in lower case */
 const QRegularExpression Gui::Chat::LOCAL_USER_VOTING_REGEX("!vote (\\bbpi|\\bbpm) \\d{1,3}");
 
+const QRegularExpression Gui::Chat::ADMIN_COMMAND_REGEX("^/bpi|^/bpm|^/kick|^/topic");
+
+const QRegularExpression Gui::Chat::PRIVATE_MESSAGE_REGEX("^/msg");
+
+
+bool Gui::Chat::isPrivateMessage(const QString &message)
+{
+    return PRIVATE_MESSAGE_REGEX.match(message).hasMatch();
+}
+
+bool Gui::Chat::isAdminCommand(const QString &message)
+{
+    return ADMIN_COMMAND_REGEX.match(message).hasMatch();
+}
+
 bool Gui::Chat::isLocalUserVotingMessage(const QString &message)
 {
     return LOCAL_USER_VOTING_REGEX.match(message).hasMatch();

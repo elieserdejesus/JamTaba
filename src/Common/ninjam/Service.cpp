@@ -87,7 +87,8 @@ Service::Service() :
     lastSendTime(0),
     initialized(false),
     socket(nullptr),
-    messagesHandler(new ServerMessagesHandler(this))
+    messagesHandler(new ServerMessagesHandler(this)),
+    serverKeepAlivePeriod(30)
 {
 
 }
@@ -222,9 +223,19 @@ void Service::voteToChangeBPM(quint16 newBPM)
     sendMessageToServer(ChatMessage(text));
 }
 
-void Service::sendChatMessageToServer(const QString &message)
+void Service::sendPrivateChatMessage(const QString &message)
+{
+    sendMessageToServer(ChatMessage(message, ChatMessage::PrivateMessage));
+}
+
+void Service::sendPublicChatMessage(const QString &message)
 {
     sendMessageToServer(ChatMessage(message));
+}
+
+void Service::sendAdminCommand(const QString &message)
+{
+    sendMessageToServer(ChatMessage(message, ChatMessage::AdminMessage));
 }
 
 void Service::sendMessageToServer(const ClientMessage &message)
@@ -474,7 +485,7 @@ void Service::process(const ServerChatMessage &msg)
     {
         QString messageSender = msg.getArguments().at(0);
         QString messageText = msg.getArguments().at(1);
-        emit chatMessageReceived(User(messageSender), messageText);
+        emit publicChatMessageReceived(User(messageSender), messageText);
         break;
     }
     case ChatCommandType::PART:
@@ -489,19 +500,26 @@ void Service::process(const ServerChatMessage &msg)
     {
         QString messageSender = msg.getArguments().at(0);
         QString messageText = msg.getArguments().at(1);
-        emit privateMessageReceived(User(messageSender), messageText);
+        emit privateChatMessageReceived(User(messageSender), messageText);
         break;
     }
     case ChatCommandType::TOPIC:
     {
+        if (!currentServer)
+            return;
+
         QString topicText = msg.getArguments().at(1);
+        currentServer->setTopic(topicText);
+
         if (!initialized) {
             initialized = true;
 
             // server licence is received when the hand shake with server is started
             currentServer->setLicence(serverLicence);
-            currentServer->setTopic(topicText);
             emit connectedInServer(*currentServer);
+            emit serverTopicMessageReceived(topicText);
+        }
+        else {
             emit serverTopicMessageReceived(topicText);
         }
         break;

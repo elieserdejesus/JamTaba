@@ -13,7 +13,7 @@ namespace Geo{
 class IpToLocationLITEResolver : public IpToLocationResolver
 {
 public:
-    IpToLocationLITEResolver(QString binFilePath);
+    explicit IpToLocationLITEResolver(QString binFilePath);
     ~IpToLocationLITEResolver();
     Location resolve(QString ip);
 private:

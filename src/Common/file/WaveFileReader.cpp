@@ -13,7 +13,7 @@ class SampleExtractor
 {
 
 public:
-    SampleExtractor(QDataStream *stream) :
+    explicit SampleExtractor(QDataStream *stream) :
         stream(stream)
     {
     }
@@ -33,7 +33,7 @@ class SampleExtractor16Bits : public SampleExtractor
 {
     public:
 
-        SampleExtractor16Bits(QDataStream *stream)
+        explicit SampleExtractor16Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
 
@@ -50,7 +50,7 @@ class SampleExtractor16Bits : public SampleExtractor
 class SampleExtractor32Bits : public SampleExtractor
 {
     public:
-        SampleExtractor32Bits(QDataStream *stream)
+        explicit SampleExtractor32Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
 
@@ -70,7 +70,7 @@ class SampleExtractor32Bits : public SampleExtractor
 class SampleExtractor24Bits : public SampleExtractor
 {
     public:
-        SampleExtractor24Bits(QDataStream *stream)
+        explicit SampleExtractor24Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
 
@@ -87,7 +87,7 @@ class SampleExtractor24Bits : public SampleExtractor
 class SampleExtractor8Bits : public SampleExtractor
 {
     public:
-        SampleExtractor8Bits(QDataStream *stream)
+        explicit SampleExtractor8Bits(QDataStream *stream)
             :SampleExtractor(stream)
         {
 
@@ -155,7 +155,7 @@ bool WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuff
     quint16 bitsPerSampleXChannelsDivEightPointOne;
     quint16 bitsPerSample;
     char dataHeader[4];
-    quint32 dataSize;
+    quint32 dataSize = 0;
 
     // Create a data stream to analyze the data
     QDataStream stream(&wavFileContent, QIODevice::ReadOnly);

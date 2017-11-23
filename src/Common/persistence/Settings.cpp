@@ -94,7 +94,7 @@ LooperSettings::LooperSettings() :
     encodingAudioWhenSaving(false),
     waveFilesBitDepth(16) // 16 bits
 {
-
+    setDefaultLooperFilesPath();
 }
 
 void LooperSettings::read(const QJsonObject &in)
@@ -128,15 +128,20 @@ void LooperSettings::read(const QJsonObject &in)
     }
 
     if (useDefaultSavePath) {
-        QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
-        QDir pathDir(QDir::homePath());
-        QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
-        loopsFolder = QDir(documentsDir).absoluteFilePath("JamTaba/Looper");
-        QDir saveDir(loopsFolder);
-        if (!saveDir.exists()) {
-            saveDir.mkpath(".");
-            qDebug() << "Creating looper data folder " << saveDir;
-        }
+       setDefaultLooperFilesPath();
+    }
+}
+
+void LooperSettings::setDefaultLooperFilesPath()
+{
+    QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
+    QDir pathDir(QDir::homePath());
+    QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
+    loopsFolder = QDir(documentsDir).absoluteFilePath("JamTaba/Looper");
+    QDir saveDir(loopsFolder);
+    if (!saveDir.exists()) {
+        saveDir.mkpath(".");
+        qDebug() << "Creating looper data folder " << saveDir;
     }
 }
 
@@ -208,7 +213,12 @@ AudioSettings::AudioSettings() :
     SettingsObject("audio"),
     sampleRate(44100),
     bufferSize(128),
-    encodingQuality(VorbisEncoder::QUALITY_NORMAL)
+    encodingQuality(VorbisEncoder::QUALITY_NORMAL),
+    firstIn(-1),
+    firstOut(-1),
+    lastIn(-1),
+    lastOut(-1),
+    audioDevice(-1)
 {
 }
 
@@ -310,12 +320,10 @@ void MultiTrackRecordingSettings::read(const QJsonObject &in)
     } else {
         useDefaultRecordingPath = true;
     }
-    if (useDefaultRecordingPath) {
-        QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
-        QDir pathDir(QDir::homePath());
-        QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
-        recordingPath = QDir(documentsDir).absoluteFilePath("Jamtaba");
-    }
+
+    if (useDefaultRecordingPath)
+        recordingPath = MultiTrackRecordingSettings::getDefaultRecordingPath();
+
     saveMultiTracksActivated = getValueFromJson(in, "recordActivated", false);
 
     QJsonObject jamRecorders = getValueFromJson(in, "jamRecorders", QJsonObject());
@@ -323,6 +331,16 @@ void MultiTrackRecordingSettings::read(const QJsonObject &in)
         QJsonObject jamRecorder = jamRecorders[key].toObject();
         jamRecorderActivated[key] = getValueFromJson(jamRecorder, "activated", false);
     }
+}
+
+QString MultiTrackRecordingSettings::getDefaultRecordingPath()
+{
+    QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
+    QDir pathDir(QDir::homePath());
+    QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
+    QDir jamTabaDir = QDir(documentsDir).absoluteFilePath("Jamtaba");
+
+    return QDir(jamTabaDir).absoluteFilePath("Jams"); // using 'Jams' as default recording folder (issue #891)
 }
 
 // +++++++++++++++++++++++++++++
@@ -910,6 +928,12 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         for (SettingsObject *so : sections)
             so->read(root[so->getName()].toObject());
 
+        if(root.contains("intervalsBeforeInactivityWarning")) {
+            intervalsBeforeInactivityWarning = root["intervalsBeforeInactivityWarning"].toInt();
+            if (intervalsBeforeInactivityWarning < 1)
+                intervalsBeforeInactivityWarning = 1;
+        }
+
         return true;
     }
     else {
@@ -950,6 +974,7 @@ bool Settings::writeFile(const QList<SettingsObject *> &sections) // io ops ...
         root["tracksLayoutOrientation"] = tracksLayoutOrientation;
         root["usingNarrowTracks"] = usingNarrowedTracks;
         root["masterGain"] = masterFaderGain;
+        root["intervalsBeforeInactivityWarning"] = static_cast<int>(intervalsBeforeInactivityWarning);
 
         // write settings sections
         for (SettingsObject *so : sections) {
@@ -1034,6 +1059,7 @@ void Settings::load()
     sections.append(&privateServerSettings);
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
+    sections.append(&rememberSettings);
 
     readFile(sections);
 }
@@ -1042,7 +1068,10 @@ Settings::Settings() :
     tracksLayoutOrientation(Qt::Vertical),
     masterFaderGain(1.0),
     translation("en"), // english as default language
-    theme("Flat") // flat as default theme
+    theme("Flat"), // flat as default theme,
+    ninjamIntervalProgressShape(0),
+    usingNarrowedTracks(false),
+    intervalsBeforeInactivityWarning(5) // 5 intervals by default
 {
     // qDebug() << "Settings in " << fileDir;
 }
@@ -1064,6 +1093,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&privateServerSettings);
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
+    sections.append(&rememberSettings);
 
     writeFile(sections);
 }
@@ -1087,6 +1117,15 @@ void Settings::setTheme(const QString theme)
 QString Settings::getTranslation() const
 {
     return translation;
+}
+
+void Settings::setRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
+{
+    rememberSettings.rememberBoost   = boost;
+    rememberSettings.rememberLevel   = level;
+    rememberSettings.rememberPan     = pan;
+    rememberSettings.rememberLowCut  = lowCut;
+    rememberSettings.rememberMute    = mute;
 }
 
 //__________________________________________________________
@@ -1115,4 +1154,35 @@ void MeteringSettings::write(QJsonObject &out) const
     out["meterOption"]      = meterOption;
     out["refreshRate"]      = refreshRate;
     out["waveDrawingMode"]  = waveDrawingMode;
+}
+
+//________________________________________________________________
+
+RememberUsersSettings::RememberUsersSettings() :
+    SettingsObject(QStringLiteral("Remember")),
+    rememberBoost(true),
+    rememberLevel(true),
+    rememberPan(true),
+    rememberMute(true),
+    rememberLowCut(true)
+{
+
+}
+
+void RememberUsersSettings::write(QJsonObject &out) const
+{
+    out["boost"] = rememberBoost;
+    out["level"] = rememberLevel;
+    out["pan"] = rememberPan;
+    out["mute"] = rememberMute;
+    out["lowCut"] = rememberLowCut;
+}
+
+void RememberUsersSettings::read(const QJsonObject &in)
+{
+    rememberBoost = getValueFromJson(in, "boost", true);
+    rememberLevel = getValueFromJson(in, "level", true);
+    rememberPan = getValueFromJson(in, "pan", true);
+    rememberMute = getValueFromJson(in, "mute", true);
+    rememberLowCut = getValueFromJson(in, "lowCut", true);
 }

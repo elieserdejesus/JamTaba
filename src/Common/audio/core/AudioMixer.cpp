@@ -17,17 +17,13 @@ AudioMixer::AudioMixer(int sampleRate) :
 void AudioMixer::addNode(AudioNode *node)
 {
     nodes.append(node);
-    resamplers.insert(node, new SamplesBufferResampler());
+    resamplers.insert(node, SamplesBufferResampler());
 }
 
 void AudioMixer::removeNode(AudioNode *node)
 {
-    SamplesBufferResampler *resampler = resamplers[node];
     nodes.removeOne(node);
-    if (resampler) {
-        resamplers[node] = nullptr;
-        delete resampler;
-    }
+    resamplers.remove(node);
 }
 
 AudioMixer::~AudioMixer()

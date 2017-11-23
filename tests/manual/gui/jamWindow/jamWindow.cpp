@@ -34,14 +34,14 @@ int main(int argc, char *argv[])
     controller.setMainWindow(mainWindow);
 
     mainWindow->show();
-    mainWindow->setTheme("volcano_nm");
+    mainWindow->setTheme("Rounded");
     mainWindow->setMinimumSize(920, 700);
 
     int maxUsers = 5;
     Ninjam::Server server("localhost", 2496, 2, maxUsers);
 
     for (int i = 0; i < maxUsers; ++i) {
-        Ninjam::User user("teste" + QString::number(i));
+        Ninjam::User user("test" + QString::number(i));
         server.addUser(user);
         server.addUserChannel(Ninjam::UserChannel(user.getFullName(), "channel0", 0));
         if (rand() % 2 == 0) {

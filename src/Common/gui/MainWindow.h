@@ -9,6 +9,12 @@
 #include "TextEditorModifier.h"
 #include "performance/PerformanceMonitor.h"
 #include "LooperWindow.h"
+#include "UsersColorsPool.h"
+
+#include "chat/NinjamVotingMessageParser.h"
+
+#include "ninjam/User.h"
+#include "ninjam/Server.h"
 
 #include <QTranslator>
 #include <QMainWindow>
@@ -20,12 +26,16 @@
 #include "video/VideoFrameGrabber.h"
 #include "video/VideoWidget.h"
 
+#include "ChatTabWidget.h"
+
 class PreferencesDialog;
 class LocalTrackView;
 class NinjamRoomWindow;
 class JamRoomViewPanel;
 class ChordProgression;
 class ChordsPanel;
+class ChatPanel;
+class InactivityDetector;
 
 namespace Login {
 class RoomInfo;
@@ -84,10 +94,19 @@ public:
 
     NinjamRoomWindow* getNinjamRomWindow() const;
 
+    UsersColorsPool *getUsersColorsPool() const;
+
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
     void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
+
+    void showFeedbackAboutBlockedUserInChat(const QString &userName);
+    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
+
+    void addMainChatMessage(const Ninjam::User &, const QString &message);
+    void addPrivateChatMessage(const Ninjam::User &, const QString &message);
+    void addPrivateChat(const QString &remoteUserName, const QString &userIP);
 
 protected:
     Controller::MainController *mainController;
@@ -150,7 +169,7 @@ protected:
     QString preferredCameraName;
 
 protected slots:
-    void closeTab(int index);
+    void closeContentTab(int index);
     void changeTab(int index);
 
     // main menu
@@ -179,7 +198,8 @@ protected slots:
     void connectInPrivateServer(const QString &server, int serverPort, const QString &userName, const QString &password);
 
     // login service
-    void showNewVersionAvailableMessage();
+    void showNewVersionAvailableMessage(const QString &latestVersionDetails);
+    static QString sanitizeLatestVersionDetails(const QString &details);
     void handleIncompatiblity();
     virtual void handleServerConnectionError(const QString &errorMsg);
 
@@ -187,8 +207,10 @@ protected slots:
     void playPublicRoomStream(const Login::RoomInfo &roomInfo);
     void stopPublicRoomStream(const Login::RoomInfo &roomInfo);
 
-    // collapse local controls
-    void toggleLocalInputsCollapseStatus();
+    // collapse areas
+    void toggleLocalTracksCollapseStatus();
+    void toggleBottomAreaCollapseStatus();
+    void collapseBottomArea(bool collapse);
 
     // channel name changed
     void updateChannelsNames();
@@ -221,6 +243,9 @@ private slots:
 
     void hideChordsPanel();
 
+    void setChatsVisibility(bool chatVisible);
+    void toggleChatCollapseStatus();
+
     // preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
     void setJamRecorderStatus(const QString &writerId, bool status);
@@ -237,12 +262,28 @@ private slots:
 
     void handleThemeChanged();
 
+    void translateCollapseButtonsToolTips();
+
     void updateUserNameLineEditToolTip();
 
     void changeCameraStatus(bool activated);
 
     void selectNewCamera(int cameraIndex);
+
+    void handleUserLeaving(const QString &userName);
+    void handleUserEntering(const QString &userName);
+
+    void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
+    void sendNewChatMessage(const QString &msg);
+    void voteToChangeBpi(int newBpi);
+    void voteToChangeBpm(int newBpm);
+    void blockUserInChat(const QString &userNameToBlock);
+
 private:
+
+    static const QString JAMTABA_CHAT_BOT_NAME;
+
+    bool bottomCollapsed;
 
     BusyDialog busyDialog;
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
@@ -250,18 +291,45 @@ private:
 
     QMap<uint, LooperWindow *> looperWindows;
 
+    QTimer *bpmVotingExpirationTimer;
+    QTimer *bpiVotingExpiratonTimer;
+
+    QPushButton *buttonCollapseLocalChannels;
+    QPushButton *buttonCollapseChat;
+    QPushButton *buttonCollapseBottomArea;
+
+    QLabel *performanceMonitorLabel;
+
+    InactivityDetector *xmitInactivityDetector;
+
+    UsersColorsPool usersColorsPool;
+
     ScreensaverBlocker screensaverBlocker;
+
+    ChatTabWidget *chatTabWidget;
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();
     void hideBusyDialog();
     void centerBusyDialog();
 
+    void createPrivateChat(const QString &remoteUserName, const QString &userIP, bool focusNewChat);
+    void setPrivateChatInputstatus(const QString userName, bool enabled);
+
     void closeAllLooperWindows();
 
     void initializeWindowSize();
 
+    void removeTabCloseButton(QTabWidget *tabWidget, int buttonIndex);
+
+    void initializeVotingExpirationTimers();
+
+    void initializeCollapseButtons();
+    void updateCollapseButtons();
+
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
+
+    void wireNinjamControllerSignals();
 
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;
@@ -320,13 +388,16 @@ private:
 
     void restoreWindowPosition();
 
-    void updateChatTabTitle();
+    void addMainChatPanel();
+    void addNinjamPanelsInBottom();
+
+    void showLastChordsInMainChat();
+    void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
+    bool canShowBlockButtonInChatMessage(const QString &userName) const;
 
     void loadTranslationFile(const QString &locale);
 
     void setUserNameReadOnlyStatus(bool readOnly);
-
-    void setChatVisibility(bool chatVisible);
 
     void openUrlInUserBrowser(const QString &url);
 
@@ -340,6 +411,8 @@ private:
 
     static QString getStripedThemeName(const QString &fullThemeName);
 
+    void setupMainTabCornerWidgets();
+
     PerformanceMonitor performanceMonitor; // cpu and memmory usage
     qint64 lastPerformanceMonitorUpdate;
     static const int PERFORMANCE_MONITOR_REFRESH_TIME;
@@ -347,6 +420,11 @@ private:
     static const QString NIGHT_MODE_SUFFIX;
 
 };
+
+inline UsersColorsPool *MainWindow::getUsersColorsPool() const
+{
+    return const_cast<UsersColorsPool *>(&usersColorsPool);
+}
 
 inline NinjamRoomWindow* MainWindow::getNinjamRomWindow() const
 {

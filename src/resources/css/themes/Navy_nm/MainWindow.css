@@ -1,0 +1,69 @@
+QMainWindow
+{
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+            stop: 0.0 rgb(56, 56, 56), stop: 1.0 rgb(43, 43, 43));
+}
+
+#bottomPanel
+{
+    background-color: rgb(66, 66, 66);
+    border-width: 2px;
+}
+
+#contentTabWidget::pane
+{
+    background-color: rgb(66, 66, 66);
+    border-width: 2px;
+}
+
+#chatTabWidget QStackedWidget,
+#chatTabWidget QTabBar::tab
+{
+    background-color: rgb(76, 76, 76);
+
+}
+
+#chatTabWidget QStackedWidget
+{
+    border-bottom: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+            stop: 0.5 rgb(70, 70, 70), stop: 0.6 rgb(24, 24, 24));
+}
+
+QLabel#labelPerformanceMonitor
+{
+    color: rgba(255, 255, 255, 50);
+    background-color: transparent;
+}
+
+
+/* collapse buttons */
+QTabWidget QPushButton:checked
+{
+    background-color: rgba(255, 255, 255, 25);
+}
+
+#labelYourControls
+{
+    color: rgb(110, 110, 110);
+}
+
+/* these two elements need use the same NON-transparent color to work ok in AU and VSt plugin (using top level text editor) */
+#userNameLineEdit-topLevel,
+#userNamePanel
+{
+    border: none;
+    background-color: rgb(49, 49, 49);
+}
+
+#masterTitleLabel,
+#labelMetronome
+{
+    color: rgb(120, 120, 120);
+}
+
+#userNameLineEdit:read-only
+{
+    color: rgba(255, 255, 255, 90);
+}

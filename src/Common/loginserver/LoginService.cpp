@@ -14,7 +14,7 @@
 using namespace Login;
 
 const QString LoginService::LOGIN_SERVER_URL = "http://jamtaba2.appspot.com/vs";
-// const QString LoginService::SERVER = "http://localhost:8080/vs";
+//const QString LoginService::LOGIN_SERVER_URL = "http://localhost:8080/vs";
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -117,7 +117,7 @@ public:
 
 LoginService::LoginService(QObject *parent) :
     QObject(parent),
-    httpClient(new QNetworkAccessManager(this)),
+    httpClient(this),
     pendingReply(nullptr),
     connected(false),
     refreshTimer(new QTimer(this))
@@ -207,7 +207,7 @@ QNetworkReply *LoginService::sendCommandToServer(const QUrlQuery &query, bool sy
     QNetworkRequest request(url);
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork);// disable cache
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded; charset=utf-8"));
-    pendingReply = httpClient->post(request, postData);
+    pendingReply = httpClient.post(request, postData);
 
     if (synchronous && pendingReply) {
         QEventLoop loop;
@@ -301,8 +301,8 @@ void LoginService::handleJson(const QString &json)
     QJsonDocument document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
     QJsonObject root = document.object();
     if (!connected) { // first time handling json?
-        bool clientIsServerCompatible = root["clientCompatibility"].toBool();
-        bool newVersionAvailable = root["newVersionAvailable"].toBool();
+        bool clientIsServerCompatible = root.contains("clientCompatibility") && root["clientCompatibility"].toBool();
+        bool newVersionAvailable = root.contains("newVersionAvailable") && root["newVersionAvailable"].toBool();
 
         if (!clientIsServerCompatible) {
             refreshTimer->stop();
@@ -311,9 +311,17 @@ void LoginService::handleJson(const QString &json)
             return;
         }
 
-        if (newVersionAvailable)
-            emit newVersionAvailableForDownload();
+        if (newVersionAvailable) {
+            QString latestVersionDetails("");
+            if (root.contains("latestVersionDetails"))
+                latestVersionDetails = root["latestVersionDetails"].toString();
+
+            emit newVersionAvailableForDownload(latestVersionDetails);
+        }
     }
+
+    if (!root.contains("rooms"))
+        return;
 
     QJsonArray allRooms = root["rooms"].toArray();
     QList<RoomInfo> publicRooms;

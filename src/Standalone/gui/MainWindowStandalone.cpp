@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QDesktopWidget>
 #include <QSharedPointer>
+#include <QShortcut>
 
 using namespace Persistence;
 using namespace Controller;
@@ -44,8 +45,20 @@ void MainWindowStandalone::setupShortcuts()
     ui.actionPrivate_Server->setShortcut(QKeySequence(Qt::Key_F2));
     ui.actionShowRmsOnly->setShortcut(QKeySequence(Qt::Key_F3));
     ui.actionShowPeaksOnly->setShortcut(QKeySequence(Qt::Key_F4));
-    ui.actionQuit->setShortcut(QKeySequence(Qt::Key_Escape));
     ui.actionFullscreenMode->setShortcut(QKeySequence(Qt::Key_F11));
+
+    new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(tryClose()));
+}
+
+void MainWindowStandalone::tryClose() // this function is called when ESC is pressed
+{
+    if (!mainController)
+        return;
+
+    if (mainController->isPlayingInNinjamRoom())
+        mainController->stopNinjamController(); // exit from server if user is jamming
+    else
+        close(); // close JamTaba if user is not jamming
 }
 
 void MainWindowStandalone::setupSignals()

@@ -9,7 +9,7 @@ class BlinkableButton : public QPushButton
     Q_OBJECT
 
 public:
-    BlinkableButton(QWidget *parent = nullptr);
+    explicit BlinkableButton(QWidget *parent = nullptr);
     BlinkableButton(const QString &text, QWidget *parent = nullptr);
     ~BlinkableButton();
     void startBlink();

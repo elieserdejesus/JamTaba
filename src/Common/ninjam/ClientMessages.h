@@ -69,8 +69,8 @@ class ClientSetChannel : public ClientMessage
 {
 
 public:
-    ClientSetChannel(const QStringList &channels);
-    ClientSetChannel(const QString &channelNameToRemove);
+    explicit ClientSetChannel(const QStringList &channels);
+    explicit ClientSetChannel(const QString &channelNameToRemove);
 
 private:
     QStringList channelNames;
@@ -114,11 +114,24 @@ private:
 class ChatMessage : public ClientMessage
 {
 public:
-    explicit ChatMessage(const QString &text);
+
+    enum ChatMessageType
+    {
+        PublicMessage,  // MSG
+        PrivateMessage, // PRIVMSG
+        TopicMessage,   // TOPIC
+        AdminMessage    // ADMIN
+    };
+
+    ChatMessage(const QString &text, ChatMessageType type = ChatMessageType::PublicMessage);
 
 private:
     QString text;
     QString command;
+    ChatMessageType type;
+
+    static QString getTypeCommand(ChatMessageType type);
+    static QString satinizeText(const QString &msg, ChatMessageType type);
 
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;

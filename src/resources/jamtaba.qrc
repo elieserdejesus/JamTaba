@@ -10,6 +10,17 @@
         <file alias="Chords.css">css/common/Chords.css</file>
         <file alias="PublicRooms.css">css/common/PublicRooms.css</file>
     </qresource>
+    <qresource prefix="/css/themes/Navy_nm">
+        <file>css/themes/Navy_nm/BaseTrack.css</file>
+        <file>css/themes/Navy_nm/NinjamWindow.css</file>
+        <file>css/themes/Navy_nm/LocalTrack.css</file>
+        <file>css/themes/Navy_nm/Dialogs.css</file>
+        <file>css/themes/Navy_nm/General.css</file>
+        <file>css/themes/Navy_nm/MainWindow.css</file>
+        <file>css/themes/Navy_nm/PublicRooms.css</file>
+        <file>css/themes/Navy_nm/Chat.css</file>
+        <file>css/themes/Navy_nm/Chords.css</file>
+    </qresource>
     <qresource prefix="/css/themes/Flat">
         <file>css/themes/Flat/BaseTrack.css</file>
         <file>css/themes/Flat/NinjamWindow.css</file>
@@ -145,6 +156,9 @@
         <file>delete_layer.png</file>
         <file>save.png</file>
         <file>load.png</file>
+        <file>collapse_bottom.png</file>
+        <file>collapse_right.png</file>
+        <file>collapse_left.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

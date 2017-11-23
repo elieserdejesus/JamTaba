@@ -57,7 +57,7 @@ void BaseMeter::resizeEvent(QResizeEvent * /*ev*/)
 }
 
 
-void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakPosition, const std::vector<QColor> &segmentsColors)
+void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakPosition, const std::vector<QColor> &segmentsColors, bool drawSegments)
 {
     const quint32 segmentsToPaint = (quint32)peakPosition/SEGMENTS_SIZE;
 
@@ -66,10 +66,12 @@ void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakP
 
     const bool isVerticalMeter = isVertical();
 
+    const qreal pad = drawSegments ? 1.0 : 0;
+
     qreal x = rect.left();
     qreal y = isVerticalMeter ? (rect.height() - SEGMENTS_SIZE) : rect.top();
-    const qreal w = isVerticalMeter ? rect.width() - 1.0 : SEGMENTS_SIZE - 1.0;
-    const qreal h = isVerticalMeter ? (SEGMENTS_SIZE - 1.0) : rect.height() - 1.0;
+    const qreal w = isVerticalMeter ? rect.width() - pad : SEGMENTS_SIZE - pad;
+    const qreal h = isVerticalMeter ? (SEGMENTS_SIZE - pad) : rect.height() - pad;
 
     for (quint32 i = 0; i < segmentsToPaint; ++i) {
         painter.fillRect(x, y, w, h, segmentsColors[i]);
@@ -121,7 +123,9 @@ AudioMeter::AudioMeter(QWidget *parent) :
       peakEndColor(Qt::red),
       maxPeakColor(QColor(0, 0, 0, 80)),
       dBMarksColor(Qt::lightGray),
-      stereo(true)
+      stereo(true),
+      paintingDbMarkers(true),
+      drawSegments(true)
 {
     setAutoFillBackground(false);
 
@@ -131,6 +135,13 @@ AudioMeter::AudioMeter(QWidget *parent) :
         currentRms[i] = 0.0f;
         lastMaxPeakTime[i] = 0;
     }
+}
+
+void AudioMeter::setDrawSegments(bool drawSegments)
+{
+    this->drawSegments = drawSegments;
+
+    update();
 }
 
 void AudioMeter::updateStyleSheet()
@@ -300,7 +311,7 @@ void AudioMeter::paintEvent(QPaintEvent *)
         for (uint i = 0; i < channels; ++i) {
             if (paintingPeaks && currentPeak[i]) {
                 qreal peakPosition = getPeakPosition(currentPeak[i], rectSize, peakValuesOffset);
-                paintSegments(painter, drawRect, peakPosition, peakColors);
+                paintSegments(painter, drawRect, peakPosition, peakColors, drawSegments);
             }
 
             if (paintingMaxPeakMarker && maxPeak[i]) {
@@ -313,7 +324,7 @@ void AudioMeter::paintEvent(QPaintEvent *)
 
                 qreal rmsXOffset = (paintingPeaks && isVertical()) ? channels * drawRect.width() : 0;
                 qreal rmsYOffset = (paintingPeaks && !isVertical()) ? channels * drawRect.height() : 0;
-                paintSegments(painter, drawRect.translated(rmsXOffset, rmsYOffset), rmsPosition, rmsColors);
+                paintSegments(painter, drawRect.translated(rmsXOffset, rmsYOffset), rmsPosition, rmsColors, drawSegments);
             }
 
             if (isVertical())
@@ -322,10 +333,19 @@ void AudioMeter::paintEvent(QPaintEvent *)
                 drawRect.translate(0.0, drawRect.height());
         }
 
-        painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
+        if (paintingDbMarkers)
+            painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
    }
 
     updateInternalValues(); // compute decay and max peak
+}
+
+void AudioMeter::setPaintingDbMarkers(bool paintDbMarkers)
+{
+    if (paintingDbMarkers != paintDbMarkers) {
+        paintingDbMarkers = paintDbMarkers;
+        update();
+    }
 }
 
 void AudioMeter::rebuildDbMarkersPixmap()
@@ -367,7 +387,7 @@ void AudioMeter::drawDbMarkers(QPainter &painter)
             continue;
         }
 
-        QString text = QString::number(db);
+        QString text = QString::number(qAbs(db));
         int textWidth = metrics.width(text);
 
         qreal linearValue = getSmoothedLinearPeakValue(Utils::dbToLinear(db));
@@ -499,7 +519,8 @@ bool AudioMeter::isPaintingRmsOnly()
 
 MidiActivityMeter::MidiActivityMeter(QWidget *parent) :
     BaseMeter(parent),
-    midiActivityColor(Qt::red)
+    midiActivityColor(Qt::red),
+    activityValue(0)
 {
 
 }

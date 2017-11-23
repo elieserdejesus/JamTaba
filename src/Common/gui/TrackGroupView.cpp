@@ -80,7 +80,7 @@ void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
     }
 
     tracksLayout = new QHBoxLayout();
-    tracksLayout->setContentsMargins(0, 0, 0, 0);
+    tracksLayout->setContentsMargins(0, 3, 0, 0); // adding a small top margin to fix #861
     tracksLayout->setSpacing(1);
     tracksLayout->setObjectName(QStringLiteral("tracksLayout"));
 

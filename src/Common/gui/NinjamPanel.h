@@ -1,9 +1,9 @@
 #ifndef NINJAMPANEL_H
 #define NINJAMPANEL_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QStringList>
-#include "intervalProgress/IntervalProgressWindow.h"
+#include <intervalProgress/IntervalProgressWindow.h>
 
 class QComboBox;
 class QAbstractSlider;
@@ -16,21 +16,17 @@ namespace Ui {
 class NinjamPanel;
 }
 
-class NinjamPanel : public QWidget
+class NinjamPanel : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, TextEditorModifier *accentBeatsModifier, QWidget *parent = 0);
+    explicit NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, TextEditorModifier *accentBeatsModifier, QWidget *parent);
     ~NinjamPanel();
 
     void createHostSyncButton(const QString &hostName);
     void uncheckHostSyncButton(); // used to uncheck the button when the sync with host fail (different BPMs)
     bool hostSyncButtonIsChecked() const;
-
-    void setMuteButtonStatus(bool checked);
-    void setPanSliderValue(int value);
-    void setGainSliderValue(int value);
 
     void setBpiComboText(const QString &);
     void setBpmComboText(const QString &);
@@ -38,58 +34,49 @@ public:
     void setBpiComboPendingStatus(bool enabled);
     void setBpmComboPendingStatus(bool enabled);
 
-    int getPanSliderMaximumValue() const;
-    int getGainSliderMaximumValue() const;
-
     int getAccentBeatsComboValue() const;
 
     void setAccentBeatsText(QString accentBeats);
     QString getAccentBeatsText() const;
+    QList<int> getAccentBeats() const;
+
     void setAccentBeatsReadOnly(bool value);
     void setAccentBeatsVisible(bool value);
+
+    bool isShowingAccents() const;
 
     void setBpi(int bpi);
     void setBpm(int bpm);
     void setCurrentBeat(int currentBeat);
 
-    void setMetronomePeaks(float left, float right, float rmsLeft, float rmsRight);
+    int getBpi() const;
+    int getBpm() const;
 
     int getIntervalShape() const;
     void setIntervalShape(int shape);
 
-    void addMasterControls(QWidget *masterControlsPanel);
-
     void setLowContrastPaintInIntervalPanel(bool useLowContrastColors);
+
+    void setCollapseMode(bool collapsed);
 
     void maximizeControlsWidget(bool maximize);
 
-    bool metronomeFloatingWindowIsVisible() const;
-
-public slots:
-    void updateStyleSheet();
+    void setMetronomeFloatingWindow(IntervalProgressWindow *floatingWindow);
 
 signals:
     void bpiComboActivated(const QString &);
     void bpmComboActivated(const QString &);
     void accentsComboChanged(int index);
     void accentsBeatsChanged(const QList<int> &);
-    void gainSliderChanged(int value);
-    void panSliderChanged(int value);
-    void muteButtonClicked();
-    void soloButtonClicked();
-    void preferencesButtonClicked();
     void hostSyncStateChanged(bool syncWithHost);
     void intervalShapeChanged(int newShape);
-
-public slots:
-    void setMetronomeFloatingWindowVisibility(bool showFloatingWindow);
 
 protected:
     void changeEvent(QEvent *) override;
 
     Ui::NinjamPanel *ui;
     QPushButton *hostSyncButton; // created only when running as vst plugin
-    IntervalProgressWindow *metronomeFloatingWindow;
+
 
 private:
     void buildShapeModel();
@@ -105,11 +92,12 @@ private:
 
     QString hostName;
 
+    IntervalProgressWindow *metronomeFloatingWindow;
+
 private slots:
     void handleAccentBeatsIndexChanged(int index);
     void handleAccentBeatsTextEdited();
     void updateIntervalProgressShape(int index);
-    void deleteFloatWindow();
 
     void handleBpiComboActication(const QString &);
     void handleBpmComboActication(const QString &);

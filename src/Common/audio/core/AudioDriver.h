@@ -134,8 +134,8 @@ protected:
     int sampleRate;
     int bufferSize;
 
-    QScopedPointer<SamplesBuffer> inputBuffer;
-    QScopedPointer<SamplesBuffer> outputBuffer;
+    SamplesBuffer inputBuffer;
+    SamplesBuffer outputBuffer;
 
     void recreateBuffers();
 
@@ -145,7 +145,7 @@ protected:
 
 inline const SamplesBuffer &AudioDriver::getOutputBuffer() const
 {
-    return *outputBuffer;
+    return outputBuffer;
 }
 
 inline int AudioDriver::getInputsCount() const

@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.0" language="ja_JP">
 <context>
     <name>Audio::Looper</name>
     <message>
@@ -219,7 +219,7 @@
         <translation>準備中</translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission for others</source>
+        <source>Enable/disable your audio transmission to others</source>
         <translation>相手へのオーディオ送信を有効/無効化</translation>
     </message>
     <message>
@@ -1082,15 +1082,15 @@
         <translation>プラグイン走査中...</translation>
     </message>
     <message>
-        <source>Founded plugins:</source>
+        <source>Found plugins:</source>
         <translation>見つかったプラグイン:</translation>
     </message>
     <message>
-        <source>This is the plugin founded list box</source>
+        <source>This is the plugin found list box</source>
         <translation>見つかったプラグインのリスト</translation>
     </message>
     <message>
-        <source>No plugins founded!</source>
+        <source>No plugins found!</source>
         <translation>プラグインは見つかりませんでした!</translation>
     </message>
     <message>
@@ -1213,8 +1213,8 @@
         <translation>メトロノーム</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
-        <translation>組込のメトロノーム音:</translation>
+        <source>Metronome Sound:</source>
+        <translation type="unfinished">メトロノーム音:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>

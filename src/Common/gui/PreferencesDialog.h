@@ -16,7 +16,7 @@ class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    PreferencesDialog(QWidget *parent);
+    explicit PreferencesDialog(QWidget *parent);
     virtual ~PreferencesDialog();
 
     enum PreferencesTab {
@@ -25,7 +25,8 @@ public:
         TabVST,
         TabMultiTrackRecording,
         TabMetronome,
-        TabLooper
+        TabLooper,
+        TabRemember
 
     };
 
@@ -41,6 +42,7 @@ signals:
     void looperAudioEncodingFlagChanged(bool savingEncodedAudio);
     void looperWaveFilesBitDepthChanged(quint8 bitDepth);
     void looperFolderChanged(const QString &newLoopsFolder);
+    void rememberSettingsChanged(bool boost, bool level, bool pan, bool mute, bool lowCut);
 
 public slots:
     void accept() override;
@@ -82,6 +84,9 @@ protected:
 
     // looper
     void populateLooperTab();
+
+    // remember
+    void populateRememberTab();
 
     virtual void setupSignals();
     virtual void populateAllTabs();

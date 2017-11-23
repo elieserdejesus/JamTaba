@@ -34,7 +34,6 @@ private:
     OggVorbis_File vorbisFile;
     bool initialized;
     QByteArray vorbisInput;
-    float **outBuffer;
     static size_t readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoderInstance);
 
     size_t consumeTo(void *oggOutBuffer, size_t bytesToConsume);
