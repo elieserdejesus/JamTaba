@@ -1,0 +1,102 @@
+
+/* JamRoomViewPanel is the widget used to show ONE public room/server */
+JamRoomViewPanel #buttonEnter,
+JamRoomViewPanel #buttonListen
+{
+    font-family: "Neuropol X RG";
+    font-size: 7.5pt;
+}
+
+
+JamRoomViewPanel[empty="false"]
+{
+    background-color: transparent;
+
+    border-image: url('/images/border_public_rooms.png') 9px 4px 8px 8px;
+    border-top: 9px transparent;
+    border-right: 8px transparent;
+    border-bottom: 8px transparent;
+    border-left: 8px transparent;
+
+    padding: 0px;
+    padding-top: -8px;
+    padding-bottom: 0px;
+    padding-right: -1px;
+}
+
+JamRoomViewPanel[empty="true"]
+{
+    background-color: rgba(0, 0, 0, 25);
+}
+
+JamRoomViewPanel[empty="true"] QPushButton#buttonEnter:enabled
+{
+    background-color: transparent;
+
+    border-image: url('/images/button_no_border.png') 7px;
+    border: 7px transparent;
+
+    color: #147677;
+
+    height: 9px;
+    padding: 2px;
+}
+
+JamRoomViewPanel[empty="true"] #labelRoomStatus,
+JamRoomViewPanel QLabel#labelRoomStatus
+{
+    color: rgba(0, 255, 255, 80);
+
+    font-family: "video phreak";
+    font-size: 7.5pt;
+}
+
+/* where the user names and wave form are showed */
+JamRoomViewPanel #content,
+JamRoomViewPanel[empty="true"] #content
+{
+    background-color: transparent;
+}
+
+JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer.com, etc) */
+{
+    color: #58A9AA;
+
+}
+
+JamRoomViewPanel[empty="true"] #labelName
+{
+    color: #146566;
+    font-weight: bold;
+}
+
+
+WavePeakPanel
+{
+    /* color used to draw the wave form */
+    qproperty-peaksColor: #58A9AA;
+
+    /* color used to draw the loading circle */
+    qproperty-loadingColor: #58A9AA;
+}
+
+MapWidget
+{
+    qproperty-markerTextBackgroundColor: rgb(35, 54, 59, 150);
+    qproperty-markerColor: white;
+    qproperty-markerTextColor: #5FBABB;
+    qproperty-markerLineConnectorColor: rgb(45, 84, 88);
+}
+
+MapWidget QPushButton
+{
+    border: none;
+    margin-bottom: 1px;
+    background-color: rgba(0, 255, 255, 50);
+}
+
+MapWidget QPushButton:checked
+{
+    background-color: #58A9AA;
+}
+

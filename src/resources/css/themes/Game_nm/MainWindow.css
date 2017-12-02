@@ -1,0 +1,101 @@
+MainWindow
+{
+    border-image: url('/images/background.png') 0px 0px 0px 0px;
+    qproperty-tintColor: #58A9AA;
+}
+
+#bottomPanel
+{
+    background-color: transparent;
+}
+
+#leftPanel,
+NinjamTrackGroupView,
+#chatTabWidget QStackedWidget
+{
+    background-color: rgba(255, 255, 255, 5);
+
+    /*background-image: url('/images/grid.png');*/
+
+    border-image: url('/images/border_rect.png') 10px 8px 6px 7px;
+    border-top: 10px transparent;
+    border-right: 8px transparent;
+    border-bottom: 6px transparent;
+    border-left: 7px transparent;
+
+    margin: 0px;
+}
+
+#chatTabWidget QStackedWidget
+{
+    background-image: url('');
+}
+
+#contentTabWidget::pane
+{
+    background-color: transparent;
+    border-image: url('/images/borders.png') 48 53 48 48;
+    border-top: 48px transparent;
+    border-right: 53px transparent;
+    border-bottom: 48px transparent;
+    border-left: 48px transparent;
+
+    padding: -30px;
+}
+
+#contentTabWidget::right-corner
+{
+    right: 53px;
+}
+
+#contentTabWidget #right-corner
+{
+    border: none;
+}
+
+/* collapse buttons */
+#contentTabWidget #right-corner QPushButton:checked
+{
+    background-color: rgba(0, 255, 255, 55);
+}
+
+#contentTabWidget #right-corner QPushButton:enabled:!checked
+{
+    background-color: rgba(0, 255, 255, 30);
+}
+
+#contentTabWidget #right-corner QPushButton:!enabled
+{
+    background-color: rgb(35, 35, 35);
+}
+
+
+QLabel#labelPerformanceMonitor
+{
+    color: rgba(0, 255, 255, 80);
+    background-color: transparent;
+}
+
+
+#labelYourControls
+{
+    color: rgba(0, 255, 255, 80);
+}
+
+/* these two elements need use the same NON-transparent color to work ok in AU and VSt plugin (using top level text editor) */
+#userNameLineEdit-topLevel,
+#userNamePanel
+{
+    border: none;
+    background-color: none;
+}
+
+#userNameLineEdit
+{
+    color: #58A9AA;
+}
+
+#userNameLineEdit:read-only
+{
+    color: rgba(255, 255, 255, 90);
+}

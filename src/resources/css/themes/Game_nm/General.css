@@ -1,0 +1,524 @@
+* {
+    color: #58A9AA;
+
+    font-family: "Neuropol X RG";
+    font-size: 10px;
+}
+
+#muteButton:enabled:!checked,
+#soloButton:enabled:!checked,
+#buttonListen:enabled:!checked,
+#buttonEnter:enabled,
+#buttonStereoInversion:enabled:!checked,
+#buttonLooper:enabled,
+#lowCutButton:enabled:!checked,
+BoostSpinBox,
+MetronomePanel QPushButton:enabled
+{
+
+    background-color: transparent;
+
+    border-image: url('/images/button.png') 7px;
+    border: 7px transparent;
+
+    color: #58A9AA;
+
+    height: 9px;
+    padding: 1px;
+}
+
+#muteButton:disabled,
+#soloButton:disabled,
+#buttonStereoInversion:disabled:!checked,
+#buttonLooper:disabled:!checked,
+#lowCutButton:disabled,
+MetronomePanel QPushButton:disabled
+{
+    background-color: transparent;
+
+    border-image: url('/images/button_disabled.png') 6px 4px 5px 4px;
+    border: 7px transparent;
+
+    color: rgba(0, 255, 255, 50);
+
+    height: 9px;
+    padding: 1px;
+}
+
+#muteButton:enabled:!checked:hover,
+#soloButton:enabled:!checked:hover,
+#buttonListen:enabled:!checked:hover,
+#buttonEnter:enabled:!checked:hover,
+#buttonStereoInversion:enabled:!checked:hover,
+#lowCutButton:enabled:!checked:hover,
+#buttonLooper:enabled:hover
+MetronomePanel QPushButton:enabled:hover
+{
+    border-image: url('/images/button_hover.png') 7px;
+    border: 7px transparent;
+
+    height: 9px;
+    padding: 0px;
+
+    color: white;
+}
+
+#muteButton:checked,
+#soloButton:checked,
+#buttonListen:enabled:checked,
+#buttonLooper:enabled:checked,
+#buttonStereoInversion:enabled:checked,
+#receiveButton:checked,
+#lowCutButton:checked
+{
+
+    border-image: url('/images/button_checked.png') 7px 8px 7px 7px;
+    color: green;
+    background-color: none;
+
+    border: 7px transparent;
+    border-right: 8px transparent;
+
+    height: 9px;
+    padding: 0px;
+}
+
+#muteButton:checked:hover,
+#soloButton:checked:hover,
+#buttonListen:checked:hover
+{
+    color: green;
+    border-image: url('/images/button_checked.png') 7px 8px 7px 7px;
+    border: 7px transparent;
+    border-right: 8px transparent;
+
+    height: 9px;
+    padding: 0px;
+
+}
+
+#receiveButton:enabled:!checked
+{
+    background-color: rgba(255, 0, 0, 120);
+}
+
+QDialog QPushButton
+{
+    border: 1px solid rgba(0, 255, 255, 30);
+    background-color: rgba(0, 255, 255, 10);
+    color: #58A9AA;
+}
+
+QDialog QPushButton:hover
+{
+    border: 1px solid rgba(0, 255, 255, 50);
+    background-color: rgba(0, 255, 255, 25);
+}
+
+QSlider::groove,
+MetronomePanel QSlider::groove:horizontal
+{
+    background-color: #1E4346; /*rgb(20, 86, 110);*/
+    border: 1px solid rgba(20, 86, 110, 200);
+    border-radius: 0px;
+}
+
+QSlider::groove:vertical
+{
+    width: 2px;
+}
+
+QSlider::groove:horizontal
+{
+    height: 2px;
+}
+
+QSlider::handle:vertical,
+QSlider::handle:horizontal
+{
+    background: #519987;
+
+    padding: 0px;
+    border: none;
+}
+
+QSlider::handle:vertical:hover,
+QSlider::handle:horizontal:hover
+{
+    background: #58A996;
+    border: 1px solid #77E5E5;
+}
+
+QSlider::handle:vertical
+{
+    margin-top: -2px;
+    margin-bottom: -2px;
+    margin-left: -7px;
+    margin-right: -7px;
+    height: 8px;
+}
+
+QSlider::handle:horizontal
+{
+    margin-top: -6px;
+    margin-bottom: -6px;
+    width: 8px;
+}
+
+LooperWindow QSlider:vertical
+{
+    margin-left: 6px;
+    margin-right: 3px;
+}
+
+/* TabBar ----------------------*/
+
+QTabWidget#contentTabWidget::tab-bar
+{
+    left: 45px;
+}
+
+QTabBar:tab
+{
+
+    /*border-left: 1px solid #1B5771;*/
+    border-radius: 0px;
+    border-right: none;
+    margin: 0px;
+
+    margin-left: 6px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+
+    font-size: 7pt;
+
+}
+
+QTabBar::tab:selected
+{
+    color: #58A9AA;
+
+    background-color: transparent;
+    border-image: url('/images/border_tab.png') 10px 1px 0px 7px;
+    border-top: 10px transparent;
+    border-right: 1px transparent;
+    border-bottom: 0px transparent;
+    border-left: 7px transparent;
+
+    margin: 0px;
+    padding: 7px;
+    padding-top: -3px;
+    padding-bottom: 2px;
+
+}
+
+QTabBar::tab:only-one
+{
+    margin-right: -1px; /* trick to hide the right border */
+}
+
+QTabBar::tab:!selected
+{
+    margin-top: 2px; /* make non-selected tabs look smaller */
+    color: rgba(0, 255, 255, 60);
+    background-color: rgba(0, 0, 0, 20);
+}
+
+QTabBar::tab:!selected:hover
+{
+    color: #368788;
+}
+
+QTabBar::close-button {
+    background: rgba(255, 255, 255, 40);
+}
+
+QTabBar::close-button:hover {
+    background: rgba(255, 255, 255, 60);
+}
+
+
+
+/* Scroll bars ----------------------*/
+QScrollBar:vertical,
+QScrollBar:horizontal
+{
+    border: none;
+    background-color: rgba(255, 255, 255, 20);
+    margin: 0px;
+    border-radius: 0px;
+}
+
+QScrollBar::handle
+{
+    border: none;
+    background-color: #154B4C;
+    margin: 1px;
+}
+
+QScrollBar::handle:hover
+{
+   background-color: #58A9AA;
+}
+
+QScrollBar:vertical
+{
+    width: 12px;
+    margin-left: 6px;
+}
+
+QScrollBar:horizontal
+{
+    height: 12px;
+    margin-top: 6px;
+}
+
+/* removing scrollbar buttons */
+QScrollBar::add-line,
+QScrollBar::sub-line
+{
+  border: none;
+  height: 0px;
+  width: 0px;
+  background: none;
+}
+
+QScrollBar::add-page,
+QScrollBar::sub-page
+{
+    background: none;
+}
+
+QMenuBar
+{
+    background-color: transparent;
+    padding-top: 3px;
+}
+
+QMenu,
+QToolTip
+{
+    padding: 6px;
+    border-image: url('/images/background.png') 0px 0px 0px 0px;
+}
+
+QMenuBar::item
+{
+    color: rgba(0, 255, 255, 95);
+    background-color: transparent;
+    padding: 6px;
+    padding-top: 0px;
+    border: none;
+}
+
+QMenuBar::item:selected,
+QMenuBar::item:pressed
+{ /* hover effect for menu bar items */
+
+    color: #58A9AA;
+
+    border: none;
+    padding-top: 0px;
+
+    border-bottom: 1px solid #1B5771;
+
+    border-right: 1px solid #1B5771;
+}
+
+QMenuBar::item:pressed { /* 'button pressed' item style */
+
+    color: #58A9AA;
+}
+
+
+QComboBox QAbstractItemView,
+QMenu::item:enabled:selected
+{
+    border: 1px solid transparent;
+    background-color: rgba(255, 255, 255, 30);
+    selection-background-color: #323232;
+    selection-color: #8C8C8C;
+}
+
+
+QComboBox,
+QComboBox QAbstractItemView,
+QDialog QComboBox,
+QDialog QComboBox QAbstractItemView
+{
+
+    selection-background-color: rgba(255, 255, 255, 60);
+    selection-color: #58A9AA;
+    background-color: #0C2123;
+    border-color: transparent;
+}
+
+QMenu::item,
+QComboBox QAbstractItemView
+{
+    padding: 6px;
+    padding-left: 24px;
+}
+
+
+
+QMenu::item:disabled
+{
+    color: rgb(40, 40, 40);
+    background-color: rgba(0, 0, 0, 5);
+}
+
+QMenu::separator
+{
+    height: 1px;
+    background: rgba(0, 0, 0, 60);
+    margin-left: 16px;
+    margin-right: 16px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+QLineEdit
+{
+    background: transparent;
+    border: none;
+
+    margin: 0px;
+    color: #58A9AA;
+
+    font-size: 8pt;
+}
+
+QLineEdit:focus
+{
+    background: rgba(0, 0, 0, 50);
+}
+
+QDialog QLineEdit
+{
+    background-color: rgba(0, 0, 0, 20);
+}
+
+QToolTip
+{
+    padding: 3px;
+    border: none;
+}
+
+
+/* selection border */
+QComboBox
+{
+    selection-background-color: #5A728A;
+}
+
+QLineEdit#groupNameField-topLevel,
+QLineEdit#userNameLineEdit-topLevel,
+QLineEdit#chatText-topLevel,
+QLineEdit:focus
+{
+    border: 1px solid #5A728A;
+}
+
+QLineEdit#groupNameField-topLevel:focus,
+QLineEdit#chatText-topLevel:focus,
+QLineEdit#lineEditAccentBeats-topLevel:focus
+{
+    background-color: rgb(49, 49, 49);
+}
+
+/* -------------------- */
+
+
+QComboBox,
+#comboBpi-topLevel,
+#comboBpm-topLevel,
+LocalTrackView #inputSelectionButton
+{
+
+    background-color: #353535;
+
+    color: rgba(255, 255, 255, 100);
+}
+
+#cameraCombo
+{
+    background-color: rgb(0, 30, 30);
+    color: #58A9AA;
+}
+
+AudioMeter
+{
+
+    font-size: 5pt;
+
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: #58A9AA;
+    qproperty-maxPeakColor: #58A9AA;
+    qproperty-peakStartColor: #58A9AA;
+    qproperty-peakEndColor: white;
+    qproperty-dBMarksColor: black;
+
+    qproperty-drawSegments: false;
+
+    background-color: rgba(0, 255, 255, 20);
+}
+
+BaseTrackView[unlighted="true"]
+{
+    background-color: rgba(0, 0, 0, 100);
+}
+
+LooperWindow QComboBox
+{
+    color: rgba(0, 255, 255, 80);
+}
+
+LooperWindow QComboBox QAbstractItemView
+{
+    padding: 6px;
+}
+
+LooperWindow QGroupBox
+{
+    color: rgba(0, 255, 255, 50);
+    border: 1px solid rgb(0, 255, 255, 15);
+}
+
+PreferencesDialog QGroupBox::indicator,
+PreferencesDialog QCheckBox::indicator,
+LooperWindow QCheckBox::indicator
+{
+    width: 9px;
+    height: 9px;
+    margin-right: -4px;
+}
+
+PreferencesDialog QGroupBox::indicator:unchecked,
+PreferencesDialog QCheckBox::indicator:unchecked,
+LooperWindow QCheckBox::indicator:unchecked
+{
+    background-color: rgba(0, 255, 255, 20);
+}
+
+PreferencesDialog QGroupBox::indicator:unchecked:hover,
+PreferencesDialog QCheckBox::indicator:unchecked:hover,
+LooperWindow QCheckBox::indicator:unchecked:hover
+{
+    background-color: rgba(0, 255, 255, 30);
+}
+
+PreferencesDialog QGroupBox::indicator:checked,
+PreferencesDialog QCheckBox::indicator:checked,
+LooperWindow QCheckBox::indicator:checked
+{
+    background-color: #58A9AA;
+}
+
+PreferencesDialog QGroupBox::indicator:checked:hover,
+PreferencesDialog QCheckBox::indicator:checked:hover,
+LooperWindow QCheckBox::indicator:checked:hover
+{
+    background-color: #7ACBCC;
+}
+
