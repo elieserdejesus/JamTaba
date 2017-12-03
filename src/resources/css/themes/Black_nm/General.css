@@ -2,7 +2,8 @@
 -------------------------------------*/
 
 /* Button ----------------------*/
-QPushButton
+QPushButton,
+BoostSpinBox
 {
     color: rgb(20, 20, 20);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
@@ -234,7 +235,7 @@ QSlider::handle:horizontal
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
     border: 1px outset rgb(10, 10, 10);
     border-radius: 2px;
-    margin-top: -8px;
+    margin-top: -7px;
     margin-bottom: -7px;
     padding: 0px;
     width: 8px;
@@ -288,6 +289,15 @@ QTabBar::tab:!selected:hover
 {
     background-color: rgb(30, 30, 30);
 }
+
+QTabBar::close-button {
+    background: rgba(255, 255, 255, 40);
+}
+
+QTabBar::close-button:hover {
+    background: rgba(255, 255, 255, 60);
+}
+
 
 QMenuBar::item
 {
@@ -345,4 +355,39 @@ AudioMeter
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: rgb(110, 110, 110);
     qproperty-maxPeakColor: rgb(110, 110, 110);
+}
+
+QComboBox
+{
+    background-color: rgb(140, 140, 140);
+    border-radius: 2px;
+    color: rgb(10, 10, 10);
+    selection-background-color: #323232;
+    selection-color: #8C8C8C;
+}
+
+QComboBox QAbstractItemView
+{
+    border: 1px solid transparent;
+    background-color: rgb(130, 130, 130);
+    selection-background-color: #323232;
+    selection-color: #8C8C8C;
+
+}
+
+QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(140, 140, 140),
+    stop:1 rgba(180, 180, 180));
+}
+
+QComboBox::drop-down
+{
+    border: 0px;
+}
+
+QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
 }

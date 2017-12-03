@@ -2,6 +2,8 @@
 #include "MainController.h"
 #include "Utils.h"
 #include "PeakMeter.h"
+#include "BoostSpinBox.h"
+#include "IconFactory.h"
 
 #include <QStyleOption>
 #include <QPainter>
@@ -19,13 +21,16 @@ const int BaseTrackView::FADER_HEIGHT = 12;
 const int BaseTrackView::NARROW_WIDTH = 85;
 const int BaseTrackView::WIDE_WIDTH = 120;
 
-QMap<long, BaseTrackView *> BaseTrackView::trackViews;// static map to quick lookup the views
+QMap<long, BaseTrackView *> BaseTrackView::trackViews; // static map to quick lookup the views
+
+// -----------------------------------------------------------------------------------------
 
 BaseTrackView::BaseTrackView(Controller::MainController *mainController, long trackID) :
     mainController(mainController),
     trackID(trackID),
     activated(true),
-    narrowed(false)
+    narrowed(false),
+    tintColor(Qt::black)
 {
     createLayoutStructure();
     setupVerticalLayout();
@@ -34,12 +39,20 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     connect(soloButton, &QPushButton::clicked, this, &BaseTrackView::toggleSoloStatus);
     connect(levelSlider, &QSlider::valueChanged, this, &BaseTrackView::setGain);
     connect(panSlider, &QSlider::valueChanged, this, &BaseTrackView::setPan);
-    connect(buttonBoost, &MultiStateButton::stateChanged, this, &BaseTrackView::updateBoostValue);
+    connect(boostSpinBox, &BoostSpinBox::boostChanged, this, &BaseTrackView::updateBoostValue);
 
     // add in static map
     BaseTrackView::trackViews.insert(trackID, this);
 
     setAttribute(Qt::WA_NoBackground);
+}
+
+void BaseTrackView::setTintColor(const QColor &color)
+{
+    this->tintColor = color;
+
+    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(getTintColor()));
+    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(getTintColor()));
 }
 
 void BaseTrackView::setupVerticalLayout()
@@ -102,10 +115,10 @@ void BaseTrackView::createLayoutStructure()
     levelSliderLayout = new QVBoxLayout();
     levelSliderLayout->setSpacing(2);
     levelSliderLayout->setContentsMargins(0, 0, 0, 0);
-    QLabel *highLevelIcon = new QLabel();
-    QLabel *lowLevelIcon = new QLabel();
-    highLevelIcon->setPixmap(QPixmap(":/images/level high.png"));
-    lowLevelIcon->setPixmap(QPixmap(":/images/level low.png"));
+    highLevelIcon = new QLabel(this);
+    lowLevelIcon = new QLabel(this);
+    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(getTintColor()));
+    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(getTintColor()));
     highLevelIcon->setAlignment(Qt::AlignCenter);
     lowLevelIcon->setAlignment(Qt::AlignCenter);
 
@@ -138,12 +151,7 @@ void BaseTrackView::createLayoutStructure()
     muteSoloLayout->addWidget(muteButton);
     muteSoloLayout->addWidget(soloButton);
 
-    buttonBoost = new MultiStateButton(3, this); // 3 states: OFF, -12 db and +12 db
-    buttonBoost->setObjectName(QStringLiteral("buttonBoost"));
-    buttonBoost->setCheckable(true);
-    buttonBoost->setText("OFF", 0);
-    buttonBoost->setText("-12", 1);
-    buttonBoost->setText("+12", 2);
+    boostSpinBox = new BoostSpinBox(this);
 
     primaryChildsLayout = new QVBoxLayout();
     primaryChildsLayout->setSpacing(12);
@@ -158,25 +166,12 @@ void BaseTrackView::createLayoutStructure()
 
     secondaryChildsLayout->addLayout(metersLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
-    secondaryChildsLayout->addWidget(buttonBoost);
+    secondaryChildsLayout->addWidget(boostSpinBox, 0, Qt::AlignCenter);
 
     mainLayout->addLayout(primaryChildsLayout, 0, 0);
     mainLayout->addLayout(secondaryChildsLayout, 0, 1);
 
-    updateBoostButtonToolTip();
-
     translateUI();
-}
-
-void BaseTrackView::updateBoostButtonToolTip()
-{
-    QString boostText = " OFF [0 dB]";
-    if (buttonBoost->getCurrentState() > 0) {
-        boostText = " (" + buttonBoost->text() + " dB)";
-    }
-
-    QString toolTipText = tr("Boost") + boostText;
-    buttonBoost->setToolTip(toolTipText);
 }
 
 void BaseTrackView::translateUI()
@@ -187,7 +182,7 @@ void BaseTrackView::translateUI()
     muteButton->setText(tr("M"));
     soloButton->setText(tr("S"));
 
-    updateBoostButtonToolTip();
+    boostSpinBox->updateToolTip();
 }
 
 void BaseTrackView::bindThisViewWithTrackNodeSignals()
@@ -215,11 +210,11 @@ methods (like midi messages).
 void BaseTrackView::setBoostStatus(float newBoostValue)
 {
     if (newBoostValue > 1.0) // boost value is a gain multiplier, 1.0 means 0 dB boost (boost OFF)
-        buttonBoost->setState(2); // +12 dB
+        boostSpinBox->setToMax();
     else if (newBoostValue < 1.0)
-        buttonBoost->setState(1); // -12 dB
+        boostSpinBox->setToMin();
     else
-        buttonBoost->setState(0); // 0 dB - OFF
+        boostSpinBox->setToOff(); // 0 dB - OFF
 }
 
 void BaseTrackView::setGainSliderPosition(float newGainValue)
@@ -244,19 +239,11 @@ void BaseTrackView::setSoloStatus(bool newSoloStatus)
     soloButton->setChecked(newSoloStatus);
 }
 
-// +++++++++
-
-void BaseTrackView::updateBoostValue()
+void BaseTrackView::updateBoostValue(int boostValue)
 {
-    float boostValue = 0;
-    if (buttonBoost->getCurrentState() == 1)
-        boostValue = -12;
-    else if (buttonBoost->getCurrentState() == 2)
-        boostValue = 12;
     if (mainController)
         mainController->setTrackBoost(getTrackID(), boostValue);
 
-    updateBoostButtonToolTip();
 }
 
 void BaseTrackView::updateGuiElements()
@@ -268,6 +255,7 @@ void BaseTrackView::updateGuiElements()
     if (peak.getMaxPeak() > maxPeak.getMaxPeak()) {
         maxPeak.update(peak);
     }
+
     // update the track peaks
     setPeaks(peak.getLeftPeak(), peak.getRightPeak(), peak.getLeftRMS(), peak.getRightRMS());
 
@@ -324,8 +312,7 @@ void BaseTrackView::updateStyleSheet()
     style()->unpolish(soloButton);
     style()->polish(soloButton);
 
-    style()->unpolish(buttonBoost);
-    style()->polish(buttonBoost);
+    boostSpinBox->updateStyleSheet();
 
     update();
 }
@@ -356,8 +343,7 @@ void BaseTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, flo
 
 BaseTrackView::~BaseTrackView()
 {
-    // qDeleteAll(children());// delete ui;
-    trackViews.remove(this->getTrackID());// remove from static map
+    trackViews.remove(this->getTrackID()); // remove from static map
 }
 
 void BaseTrackView::setPan(int value)

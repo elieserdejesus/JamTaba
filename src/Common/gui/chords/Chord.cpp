@@ -6,7 +6,6 @@ const QString Chord::TABLE_SHARPS[]
 
 const QString Chord::TABLE_FLATS[]
     = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
-// ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Chord::Chord(const QString &chordText, int beat)
 {
@@ -32,6 +31,7 @@ void Chord::setText(const QString &chordText)
         endOfLetters++;
         hasLettersAfterChordRoot = true;
     }
+
     if (hasLettersAfterChordRoot)
         lettersAfterRoot = this->chordText.mid(lettersBegin, endOfLetters - lettersBegin);
 
@@ -63,14 +63,18 @@ Chord Chord::getTransposedVersion(int semitones) const
         return Chord(getChordText(), getBeat());
     QString newRootKey = getTransposedRoot(getRootKey(), semitones);
     QString newChordText = newRootKey;
+
     if (hasLettersAfterRoot())
         newChordText += getLettersAfterRoot();
+
     if (hasLastPart())
         newChordText += getLastPart();
+
     if (hasBassInversion()) {
         QString newBassInversionRoot = getTransposedRoot(getBassInversion(), semitones);
         newChordText += "/" + newBassInversionRoot;
     }
+
     return Chord(newChordText, getBeat());
 }
 
@@ -79,9 +83,11 @@ QString Chord::getTransposedRoot(const QString &rootKey, int semitones)
     QString newRootKey = "";
     int entryIndex = 0;
     const QString *table = getTable(rootKey, semitones);
+
     while (entryIndex < 12 && !(rootKey == table[entryIndex]))
         entryIndex++;
-    if (entryIndex < 12){//valid index?
+
+    if (entryIndex < 12){ // valid index?
         if (semitones > 0)
             newRootKey = table[(entryIndex + semitones) % 12];
         else
@@ -89,24 +95,28 @@ QString Chord::getTransposedRoot(const QString &rootKey, int semitones)
         return newRootKey;
     }
     qCritical() << "rootKey not founded in upTable: " << rootKey;
-    return rootKey;// fallback to the original rootKey
+
+    return rootKey; // fallback to the original rootKey
 }
 
 const QString *Chord::getTable(const QString &chordName, int semitones)
 {
     bool isSharp = chordName.length() > 1 && chordName.at(1) == '#';
     bool isFlat = chordName.length() > 1 && chordName.at(1) == 'b';
+
     if (semitones > 0)
         return (isFlat) ? TABLE_FLATS : TABLE_SHARPS;
+
     return (isSharp) ? TABLE_SHARPS : TABLE_FLATS;
 }
 
-// +++++++++++++++++++++++++++++++
 bool operator==(const Chord &c1, const Chord &c2)
 {
     if (c1.getChordText() != c2.getChordText())
         return false;
+
     if (c1.getBeat() != c2.getBeat())
         return false;
+
     return true;
 }

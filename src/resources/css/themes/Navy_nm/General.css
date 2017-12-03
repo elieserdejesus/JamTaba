@@ -1,0 +1,410 @@
+* {
+    color: rgb(144, 144, 144);
+}
+
+
+QPushButton:!checked:disabled,
+QToolButton:!checked:disabled,
+QPushButton#muteButton:disabled,
+QPushButton#soloButton:disabled,
+QPushButton#buttonStereoInversion:disabled,
+NinjamTrackView #lowCutButton:disabled,
+NinjamTrackView #receiveButton:disabled,
+QTabWidget QPushButton:disabled,
+QScrollBar::handle:disabled
+{
+    border: 1px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 20);
+    color: rgb(90, 90, 90);
+}
+
+
+/* cool borders */
+
+QPushButton,
+QToolButton,
+QMenu,
+QDialog,
+BoostSpinBox QToolButton,
+BoostSpinBox QToolButton:!checked:!enabled,
+QSlider::handle,
+QTabWidget::pane,
+QPushButton#muteButton,
+QPushButton#soloButton,
+QPushButton#buttonStereoInversion,
+NinjamTrackView #lowCutButton:!checked,
+NinjamTrackView #lowCutButton,
+NinjamTrackView #lowCutButton:hover,
+NinjamTrackView #receiveButton,
+#bottomPanel
+{
+
+    border-width: 2px;
+
+    border-style: solid;
+
+    border-top-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0.5 rgb(35, 35, 35), stop: 0.6 rgb(86, 86, 86));
+
+    border-bottom-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0.5 rgb(61, 61, 61), stop: 0.6 rgb(24, 24, 24));
+
+    border-left-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                        stop: 0.5 rgb(28, 28, 28), stop: 0.6 rgb(72, 72, 72));
+
+    border-right-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                    stop: 0.5 rgb(71, 71, 71), stop: 0.6 rgb(30, 30, 30));
+
+}
+
+
+QPushButton,
+QPushButton#muteButton,
+QPushButton#soloButton,
+QPushButton#buttonStereoInversion,
+NinjamTrackView #lowCutButton:!checked,
+NinjamTrackView #receiveButton:enabled:!checked,
+QToolButton,
+QScrollBar::handle,
+QToolTip,
+QMenu,
+QDialog
+{
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0.0 rgb(75, 75, 75), stop: 1.0 rgb(59, 59, 59));
+
+    border-top-right-radius: 1px;
+    border-bottom-left-radius: 1px;
+
+    color: rgb(198, 198, 198);
+}
+
+
+QPushButton:hover,
+QToolButton:hover,
+QPushButton#muteButton:hover,
+QPushButton#soloButton:hover,
+QPushButton#buttonStereoInversion:hover,
+NinjamTrackView #lowCutButton:hover,
+NinjamTrackView #receiveButton:enabled:hover,
+QTabWidget QPushButton:hover,
+QScrollBar::handle:hover
+{
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0.0 rgb(95, 95, 95), stop: 1.0 rgb(69, 69, 69));
+
+    color: rgb(218, 218, 218);
+}
+
+
+
+/* fixing a bug in low cut button */
+NinjamTrackView #lowCutButton:!checked
+{
+    border-top-width: 1px;
+    border-left-width: 1px;
+}
+
+
+/* blue buttons */
+
+#receiveButton:enabled:checked,
+#muteButton:checked,
+#soloButton:checked,
+QPushButton#buttonLooper:enabled:checked,
+BoostSpinBox QToolButton:!enabled,
+#lowCutButton:enabled:checked
+{
+    background-color: #5A728A;
+    border-width: 1px;
+}
+
+BoostSpinBox QToolButton:!enabled:!checked
+{
+    color: rgb(210, 210, 210);
+}
+
+#receiveButton:enabled:checked:hover,
+#muteButton:checked:hover,
+#soloButton:checked:hover,
+#lowCutButton:checked:hover
+{
+    background-color: #6B839B;
+}
+
+/* --------------------------- */
+
+
+
+
+QSlider::handle
+{
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                stop: 0.0 rgb(115, 115, 115), stop: 1.0 rgb(89, 89, 89));
+}
+
+QSlider::handle:hover
+{
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                stop: 0.0 rgb(155, 155, 155), stop: 1.0 rgb(119, 119, 119));
+}
+
+QSlider::groove,
+MetronomePanel QSlider::groove:horizontal
+{
+    background-color: rgb(38, 38, 38);
+    border: 1px solid rgb(30, 30, 30);
+    border-radius: 3px;
+}
+
+QSlider::groove:vertical
+{
+    width: 6px;
+}
+
+QSlider::groove:horizontal
+{
+    height: 5px;
+}
+
+QSlider::handle:vertical
+{
+    margin-left: -8px;
+    margin-right: -8px;
+    padding: 0px;
+    height: 8px;
+    width: 17px;
+}
+
+QSlider::handle:horizontal
+{
+    margin-top: -4px;
+    margin-bottom: -4px;
+    width: 9px;
+}
+
+LooperWindow QSlider:vertical
+{
+    margin-left: 6px;
+    margin-right: 3px;
+}
+
+/* TabBar ----------------------*/
+
+QTabBar::tab:selected
+{
+    color: rgb(150, 150, 150);
+    background-color: rgb(66, 66, 66);
+    border-left: 1px solid rgb(40, 40, 40);
+    border-right: 1px solid rgb(40, 40, 40);
+}
+
+QTabBar::tab:only-one
+{
+    border: none;
+}
+
+QTabBar::tab:!selected
+{
+    margin-top: 2px; /* make non-selected tabs look smaller */
+    color: rgb(100, 100, 100);
+    background-color: rgba(0, 0, 0, 30);
+}
+
+QTabBar::tab:!selected:hover
+{
+    background-color: rgb(30, 30, 30);
+}
+
+QTabBar::close-button {
+    background: rgba(255, 255, 255, 40);
+}
+
+QTabBar::close-button:hover {
+    background: rgba(255, 255, 255, 60);
+}
+
+
+
+/* Scroll bars ----------------------*/
+QScrollBar:vertical,
+QScrollBar:horizontal
+{
+    border: 1px solid rgb(32, 32, 32);
+    background-color: rgba(0, 0, 0, 60);
+    margin: 0px;
+    border-radius: 2px;
+}
+
+QScrollBar:vertical
+{
+    width: 14px;
+    margin-left: 6px;
+}
+
+QScrollBar:horizontal
+{
+    height: 14px;
+    margin-top: 6px;
+}
+
+/* removing scrollbar buttons */
+QScrollBar::add-line,
+QScrollBar::sub-line
+{
+  border: none;
+  height: 0px;
+  width: 0px;
+  background: none;
+}
+
+
+
+QMenu
+{
+    padding: 6px;
+}
+
+QMenuBar
+{
+    background-color: rgb(50, 50, 50);
+}
+
+QMenuBar::item
+{
+    color: rgb(115, 115, 115);
+    background-color: transparent;
+}
+
+QMenuBar::item:selected { /* hover effect for menu bar items */
+
+    color: rgb(200, 200, 200);
+    background-color: rgb(56, 56, 56);
+    border: none;
+}
+
+QMenuBar::item:pressed { /* 'button pressed' item style */
+
+    color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(70, 70, 70), stop:1 rgb(30, 30, 30));
+    border: 1px inset rgb(35, 35, 35);
+}
+
+QComboBox QAbstractItemView,
+QMenu::item:enabled:selected
+{
+    background-color: rgba(0, 0, 0, 60);
+    color: white;
+}
+
+QComboBox,
+QComboBox QAbstractItemView
+{
+    selection-background-color: #5A728A;
+    selection-color: white;
+    /*color: blue;*/
+    background-color: rgb(55, 55,55);
+}
+
+QMenu::item:disabled
+{
+    color: rgb(40, 40, 40);
+    background-color: rgba(0, 0, 0, 5);
+}
+
+QMenu::separator
+{
+    height: 1px;
+    background: rgba(0, 0, 0, 60);
+    margin-left: 16px;
+    margin-right: 16px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+QLineEdit
+{
+    background: transparent;
+    border: none;
+
+    margin: 0px;
+    color: rgb(180, 180, 180);
+}
+
+QLineEdit:focus
+{
+    background: rgba(0, 0, 0, 50);
+}
+
+QDialog QLineEdit
+{
+    background-color: rgba(0, 0, 0, 20);
+}
+
+QToolTip
+{
+    padding: 3px;
+}
+
+
+/* selection border */
+QComboBox
+{
+    selection-background-color: #5A728A;
+}
+
+QLineEdit#groupNameField-topLevel,
+QLineEdit#userNameLineEdit-topLevel,
+QLineEdit#chatText-topLevel,
+QLineEdit:focus
+{
+    border: 1px solid #5A728A;
+}
+
+QLineEdit#groupNameField-topLevel:focus,
+QLineEdit#chatText-topLevel:focus,
+QLineEdit#lineEditAccentBeats-topLevel:focus
+{
+    background-color: rgb(49, 49, 49);
+}
+
+/* -------------------- */
+
+
+QComboBox,
+#comboBpi-topLevel,
+#comboBpm-topLevel,
+LocalTrackView #inputSelectionButton
+{
+
+    background-color: #353535;
+
+    color: rgba(255, 255, 255, 100);
+}
+
+AudioMeter
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(110, 110, 110);
+    qproperty-maxPeakColor: rgb(110, 110, 110);
+    qproperty-peakStartColor: #5A728A;
+    qproperty-peakEndColor: #FF4C00;
+
+    qproperty-drawSegments: false; /* Navy is drawing solid peak meter bars */
+
+    /*
+    Q_PROPERTY(QColor rmsColor MEMBER rmsColor WRITE setRmsColor)
+    Q_PROPERTY(QColor maxPeakColor MEMBER maxPeakColor WRITE setMaxPeakColor)
+    Q_PROPERTY(QColor peakStartColor MEMBER peakStartColor WRITE setPeaksStartColor)
+    Q_PROPERTY(QColor peakEndColor MEMBER peakEndColor WRITE setPeaksEndColor)
+    Q_PROPERTY(QColor dBMarksColor MEMBER dBMarksColor WRITE setDbMarksColor)
+
+    */
+}
+
+BaseTrackView[unlighted="true"]
+{
+    background-color: rgba(0, 0, 0, 100);
+}
+

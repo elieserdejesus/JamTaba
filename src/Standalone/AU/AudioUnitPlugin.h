@@ -15,7 +15,8 @@
 
 namespace AU {
 
-    class AudioUnitPlugin : public Audio::Plugin {
+    class AudioUnitPlugin : public Audio::Plugin
+    {
 
     public:
         AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, AudioUnitHost *host);

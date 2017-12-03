@@ -192,11 +192,11 @@ QSlider::handle:hover
 
 QSlider::handle:horizontal
 {
-    margin-top: -7px;
+    margin-top: -6px;
     margin-bottom: -7px;
     padding: 0px;
     width: 8px;
-    height: 14px;
+    height: 15px;
 }
 
 QSlider::handle:vertical
@@ -267,4 +267,17 @@ AudioMeter#masterMeter
 {
     qproperty-maxPeakColor: rgb(120, 120, 120);
     qproperty-rmsColor: rgb(120, 120, 120);
+}
+
+QComboBox
+{
+    background-color: white;
+    selection-color: black;
+    selection-background-color: #3399FF;
+}
+
+QComboBox QAbstractItemView
+{
+    border: 1px solid transparent;
+    background-color: white;
 }

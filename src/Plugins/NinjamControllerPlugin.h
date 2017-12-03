@@ -7,6 +7,7 @@ class MainControllerPlugin;
 
 class NinjamControllerPlugin : public Controller::NinjamController
 {
+
 public:
     explicit NinjamControllerPlugin(MainControllerPlugin *controller);
 

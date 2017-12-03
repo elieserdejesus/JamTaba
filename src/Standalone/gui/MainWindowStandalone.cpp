@@ -8,12 +8,11 @@
 #include <QTimer>
 #include <QDesktopWidget>
 #include <QSharedPointer>
+#include <QShortcut>
 
 using namespace Persistence;
 using namespace Controller;
 using namespace audio;  // TODO rewrite namespaces using lower case
-
-// ------------------------
 
 MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainController) :
     MainWindow(mainController),
@@ -46,8 +45,20 @@ void MainWindowStandalone::setupShortcuts()
     ui.actionPrivate_Server->setShortcut(QKeySequence(Qt::Key_F2));
     ui.actionShowRmsOnly->setShortcut(QKeySequence(Qt::Key_F3));
     ui.actionShowPeaksOnly->setShortcut(QKeySequence(Qt::Key_F4));
-    ui.actionQuit->setShortcut(QKeySequence(Qt::Key_Escape));
     ui.actionFullscreenMode->setShortcut(QKeySequence(Qt::Key_F11));
+
+    new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(tryClose()));
+}
+
+void MainWindowStandalone::tryClose() // this function is called when ESC is pressed
+{
+    if (!mainController)
+        return;
+
+    if (mainController->isPlayingInNinjamRoom())
+        mainController->stopNinjamController(); // exit from server if user is jamming
+    else
+        close(); // close JamTaba if user is not jamming
 }
 
 void MainWindowStandalone::setupSignals()
@@ -55,7 +66,8 @@ void MainWindowStandalone::setupSignals()
     connect(ui.actionFullscreenMode, &QAction::triggered, this, &MainWindowStandalone::toggleFullScreen);
 
      audio::PluginFinder *pluginFinder = controller->getVstPluginFinder();
-    Q_ASSERT(pluginFinder);
+    if (!pluginFinder)
+        return;
 
     connect(pluginFinder, &VSTPluginFinder::scanStarted, this, &MainWindowStandalone::showPluginScanDialog);
 
@@ -75,7 +87,7 @@ void MainWindowStandalone::doWindowInitialization()
     Persistence::Settings settings = mainController->getSettings();
     if (settings.windowsWasFullScreenViewMode()) {
         setFullScreenStatus(true);
-    } else {// not full screen. Is maximized or normal?
+    } else { // not full screen. Is maximized or normal?
         if (settings.windowWasMaximized()) {
             qCDebug(jtGUI)<< "setting window state to maximized";
             showMaximized();
@@ -119,7 +131,7 @@ void MainWindowStandalone::showPluginScanDialog()
 void MainWindowStandalone::closePluginScanDialog()
 {
     controller->cancelPluginFinders();
-    pluginScanDialog.reset();// reset to null pointer
+    pluginScanDialog.reset(); // reset to null pointer
 }
 
 void MainWindowStandalone::hidePluginScanDialog(bool finishedWithoutError)
@@ -171,7 +183,7 @@ void MainWindowStandalone::setFullScreenStatus(bool fullScreen)
     mainController->setFullScreenView(fullScreenViewMode);
     ui.actionFullscreenMode->setChecked(fullScreen);
 
-    QApplication::processEvents(); //process the window resize pending events before call setFullViewStatus and resize the JTB window
+    QApplication::processEvents(); // process the window resize pending events before call setFullViewStatus and resize the JTB window
 
     //setFullViewStatus(isRunningInFullViewMode()); //update the window size
 
@@ -225,7 +237,7 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
         if (pluginSlotIndex >= 0) {
             Audio::Plugin *pluginInstance = controller->addPlugin(inputTrackIndex, pluginSlotIndex, descriptor);
             if (pluginInstance) {
-                try{
+                try {
                     pluginInstance->restoreFromSerializedData(plugin.data);
                 }
                 catch (...) {
@@ -284,7 +296,7 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
     Q_ASSERT(groups.size() == baseSettings.channels.size());
 
     int channelID = 0;
-    foreach (const Channel &channel, baseSettings.channels) {
+    for (const Channel &channel : baseSettings.channels) {
         LocalTrackGroupViewStandalone *trackGroupView = groups.at(channelID++);
         if (!trackGroupView)
             continue;
@@ -292,7 +304,7 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
         newChannel.subChannels.clear();
         int subChannelID = 0;
         QList<LocalTrackViewStandalone *> trackViews = trackGroupView->getTracks<LocalTrackViewStandalone *>();
-        foreach (Subchannel subchannel, channel.subChannels) {
+        for (Subchannel subchannel : channel.subChannels) {
             Subchannel newSubChannel = subchannel;
             LocalTrackViewStandalone *trackView = trackViews.at(subChannelID);
             if (trackView)
@@ -314,14 +326,12 @@ NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(const Login::RoomInfo
     return new NinjamRoomWindow(this, roomInfo, mainController);
 }
 
-// ++++++++++++++++++++++++++++
-
 void MainWindowStandalone::closeEvent(QCloseEvent *e)
 {
     MainWindow::closeEvent(e);
-    hide();// hide before stop main controller and disconnect from login server
+    hide(); // hide before stop main controller and disconnect from login server
 
-    foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
+    for (LocalTrackGroupView *trackGroup : localGroupChannels)
         trackGroup->closePluginsWindows();
 }
 
@@ -388,16 +398,13 @@ void MainWindowStandalone::restartAudioAndMidi()
     audioDriver->start();
 }
 
-// ++++++++++++++++++++++
-
 void MainWindowStandalone::initializePluginFinder()
 {
     const Persistence::Settings settings = controller->getSettings();
 
-
     controller->clearPluginsList();
 
-    controller->initializeVstPluginsList(settings.getVstPluginsPaths());// load the cached plugins. The cache can be empty.
+    controller->initializeVstPluginsList(settings.getVstPluginsPaths()); // load the cached plugins. The cache can be empty.
 
 #ifdef Q_OS_MAC
     controller->initializeAudioUnitPluginsList(settings.getAudioUnitsPaths());
@@ -407,7 +414,7 @@ void MainWindowStandalone::initializePluginFinder()
 #endif
 
     // checking for new plugins...
-    if (controller->vstScanIsNeeded()) {// no vsts in database cache or new plugins detected in scan folders?
+    if (controller->vstScanIsNeeded()) { // no vsts in database cache or new plugins detected in scan folders?
         if (settings.getVstScanFolders().isEmpty())
             controller->addDefaultPluginsScanPath();
         controller->scanOnlyNewVstPlugins();
@@ -436,15 +443,14 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
 
     controller->updateInputTracksRange();
 
-    foreach (LocalTrackGroupViewStandalone *channel,
-             getLocalChannels<LocalTrackGroupViewStandalone *>())
+    for (auto channel : getLocalChannels<LocalTrackGroupViewStandalone *>()) {
         channel->refreshInputSelectionNames();
+    }
 
     midiDriver->start(midiInputsStatus);
     if (!audioDriver->start()) {
         qCritical() << "Error starting audio device";
-        QMessageBox::warning(this, tr("Audio error!"),
-                             tr("The audio device can't be started! Please check your audio device and try restart Jamtaba!"));
+        QMessageBox::warning(this, tr("Audio error!"), tr("The audio device can't be started! Please check your audio device and try restart Jamtaba!"));
         controller->useNullAudioDriver();
     }
 }
@@ -452,8 +458,7 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
 // input selection changed by user or by system
 void MainWindowStandalone::refreshTrackInputSelection(int inputTrackIndex)
 {
-    foreach (LocalTrackGroupViewStandalone *channel,
-             getLocalChannels<LocalTrackGroupViewStandalone *>())
+    for (auto channel : getLocalChannels<LocalTrackGroupViewStandalone *>())
         channel->refreshInputSelectionName(inputTrackIndex);
 }
 

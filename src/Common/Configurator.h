@@ -6,13 +6,14 @@
 #include <QScopedPointer>
 
 // Define the preprocessor macro to get the app version in Jamtaba.
-#define VERSION "2.0.20"
+#define VERSION "2.1.3"
 #define APP_VERSION VERSION
 
 // ! Configurator class for Jamtaba !
 // ! Easy to use , it is intended to create the folders tree in the user local folder.
 // ! It will create on folder for the plugin version , where the log file and the config
 // ! file ( Jamtaba.Json )
+
 class Configurator
 {
 
@@ -34,9 +35,11 @@ public:
     QDir getThemesDir() const;
 
     // Presets
-    QString getPresetPath(const QString &JsonFile);// used by Settings
-    QStringList getPresetFilesNames(bool fullpath);// all the files names in a folder
+    QString getPresetPath(const QString &JsonFile); // used by Settings
+    QStringList getPresetFilesNames(bool fullpath); // all the files names in a folder
     void deletePreset(const QString &name);
+
+    QStringList getPreviousLogContent() const;
 
 protected:
     static QDir createPresetsDir(const QDir &baseDir);
@@ -48,7 +51,9 @@ private:
     static const QString THEMES_FOLDER_NAME;
     static const QString THEMES_FOLDER_IN_RESOURCES;
 
-    QString logConfigFileName;// the name of the json config file
+    static const QString LOG_FILE;
+
+    QString logConfigFileName; // the name of the json config file
 
     QDir cacheDir;
     QDir presetsDir;
@@ -57,24 +62,37 @@ private:
 
     bool logFileCreated;
 
-    static QScopedPointer<Configurator> instance;// using a QScopedPointer to auto delete the singleton instance and avoid leak
+    QStringList lastLogFileContent;
+
+    static QScopedPointer<Configurator> instance; // using a QScopedPointer to auto delete the singleton instance and avoid leak
 
     Configurator(); // private constructor for Singleton
 
     void createFoldersTree();
-    void initializeDirs(); //this function is implemented in ConfiguratorStandalone.cpp and in ConfiguratorVST.cpp. Only the correct .cpp file is included in .pro files.
+    void initializeDirs(); // this function is implemented in ConfiguratorStandalone.cpp and in ConfiguratorVST.cpp. Only the correct .cpp file is included in .pro files.
     void exportLogIniFile();
     void setupLogConfigFile();
 
     void exportThemes() const;
 
+    void exportThemeFile(const QString &themeName, const QFileInfo &source, const QFileInfo &destination) const;
+
     static QDir getApplicationDataDir();
 
     static void logHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
+    static void terminateHandler();
+    static void signalHandler(int signal);
+
     static QString getDebugColor(const QMessageLogContext &context);
+
+    QStringList loadPreviousLogContent() const;
 };
 
+inline QStringList Configurator::getPreviousLogContent() const
+{
+    return lastLogFileContent;
+}
 
 inline bool Configurator::logFileIsCreated() const
 {

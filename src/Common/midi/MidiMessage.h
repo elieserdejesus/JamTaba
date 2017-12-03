@@ -8,10 +8,10 @@ namespace Midi {
 
 class MidiMessage
 {
+
 public:
     MidiMessage(qint32 data, int sourceID);
     MidiMessage();
-    MidiMessage(const MidiMessage &other);
 
     static MidiMessage fromVector(std::vector<unsigned char> vector, qint32 sourceID);
     static MidiMessage fromArray(const char array[4], qint32 sourceID=-1);
@@ -38,7 +38,7 @@ public:
 
 private:
     qint32 data;
-    int sourceID; //the id of the midi device generating the message.
+    int sourceID; // the id of the midi device generating the message.
 };
 
 inline int MidiMessage::getChannel() const
@@ -71,6 +71,6 @@ inline bool MidiMessage::isControl() const
     return getStatus() == 0xB0;
 }
 
-}//namespace
+} // namespace
 
 #endif

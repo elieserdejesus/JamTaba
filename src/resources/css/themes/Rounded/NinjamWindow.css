@@ -79,34 +79,6 @@ NinjamTrackView QPushButton#receiveButton:hover:!checked
 /* buttons in ninjam track when using horizontal layout
 -------------------------------------------------------------*/
 
-NinjamTrackView[horizontal="true"] #buttonBoost
-{
-    padding: 1px;
-    border: 1px solid rgba(0, 0, 0, 30);
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoost
-{
-   border-radius: 0px;
-   border-bottom-right-radius: 3px;
-   border-top-right-radius: 3px;
-   border-left: 1px solid rgba(0, 0, 0, 10);
-   border-bottom-left-radius: 3px;
-   border-right: 1px solid rgba(0, 0, 0, 10);
-   margin: 0px;
-   min-width: 12px;
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoost:checked
-{
-    margin-top: -1px;
-    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
-        stop:0 rgba(255, 255, 255, 160),
-        stop:0.2 rgba(255, 255, 255, 120),
-        stop:0.7 rgba(255, 255, 255, 120),
-        stop:1 rgba(255,255, 255, 30));
-}
-
 NinjamTrackView[horizontal="true"]
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -117,15 +89,20 @@ NinjamTrackView[horizontal="true"]
 }
 
 
-/* Ninjam window tool buttons (horizontal/vertical layout, narrow/wide tracks) */
+/* Ninjam window tool buttons (horizontal/vertical/grid layout, narrow/wide tracks) */
 
-NinjamRoomWindow QToolButton
+#buttonVerticalLayout,
+#buttonHorizontalLayout,
+#buttonGridLayout,
+#wide,
+#narrow,
+#licenceButton
 {
     border: 1px solid rgba(0, 0, 0, 20);
     background-color: rgba(0, 0, 0, 8);
 }
 
-NinjamRoomWindow QToolButton:hover
+QToolButton:hover
 {
     border: 1px solid rgba(0, 0, 0, 50);
     background-color: rgba(255, 255, 255, 50);
@@ -144,7 +121,7 @@ NinjamRoomWindow QToolButton#buttonVerticalLayout
     border-bottom-left-radius: 3px;
 }
 
-NinjamRoomWindow QToolButton#buttonHorizontalLayout
+NinjamRoomWindow QToolButton#buttonGridLayout
 {
     border-radius: 0px;
     border-top-right-radius: 3px;
@@ -212,7 +189,7 @@ IntervalProgressWindow
 
 
 
-NinjamPanel #ninjamControlsPanel
+NinjamPanel
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop: 0     rgba(0, 0, 0, 10),
@@ -222,8 +199,8 @@ NinjamPanel #ninjamControlsPanel
     border: 1px inset rgb(120, 120, 120);
 }
 
-NinjamPanel #soloButton,            /* metronome solo and mute */
-NinjamPanel #muteButton
+MetronomePanel #soloButton,            /* metronome solo and mute */
+MetronomePanel #muteButton
 {
     border: 1px solid rgba(0, 0, 0, 60);
 }

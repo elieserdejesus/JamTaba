@@ -126,13 +126,13 @@ void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode)
             // chunks maxsize is 2048 bytes
             int bytesToProcess = std::min((int)(totalBytesToProcess - bytesProcessed),
                                           MAX_BYTES_PER_DECODING);
-            const Audio::SamplesBuffer *decodedBuffer = decoder->decode(in, bytesToProcess);
+            const Audio::SamplesBuffer decodedBuffer = decoder->decode(in, bytesToProcess);
 
             // prepare in for the next decoding
             in += bytesToProcess;
             bytesProcessed += bytesToProcess;
             // +++++++++++++++++  PROCESS DECODED SAMPLES ++++++++++++++++
-            bufferedSamples.append(*decodedBuffer);
+            bufferedSamples.append(decodedBuffer);
         }
 
         bytesToDecode = bytesToDecode.right(bytesToDecode.size() - bytesProcessed);
@@ -167,18 +167,18 @@ bool NinjamRoomStreamerNode::needResamplingFor(int targetSampleRate) const
 void NinjamRoomStreamerNode::initialize(const QString &streamPath)
 {
     AbstractMp3Streamer::initialize(streamPath);
+
     buffering = true;
     bufferedSamples.zero();
     bytesToDecode.clear();
+
     if (!streamPath.isEmpty()) {
+
         qCDebug(jtNinjamRoomStreamer) << "connecting in " << streamPath;
-        if (httpClient)
-            httpClient->deleteLater();
-        httpClient = new QNetworkAccessManager(this);
-        QNetworkReply *reply = httpClient->get(QNetworkRequest(QUrl(streamPath)));
+
+        QNetworkReply *reply = httpClient.get(QNetworkRequest(QUrl(streamPath)));
         QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(on_reply_read()));
-        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this,
-                         SLOT(on_reply_error(QNetworkReply::NetworkError)));
+        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(on_reply_error(QNetworkReply::NetworkError)));
         this->device = reply;
     }
 }

@@ -9,7 +9,6 @@
 
 using namespace Controller;
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainControllerVST::MainControllerVST(const Persistence::Settings &settings, JamTabaVSTPlugin *plugin) :
     MainControllerPlugin(settings, plugin),
     vstPlugin(plugin)
@@ -20,7 +19,7 @@ MainControllerVST::MainControllerVST(const Persistence::Settings &settings, JamT
 void MainControllerVST::resizePluginEditor(int newWidth, int newHeight)
 {
     if (vstPlugin) {
-        VstEditor *editor = (VstEditor *)vstPlugin->getEditor();
+        VstEditor *editor = static_cast<VstEditor *>(vstPlugin->getEditor());
         if (editor)
             editor->resize(newWidth, newHeight);
         vstPlugin->sizeWindow(newWidth, newHeight);

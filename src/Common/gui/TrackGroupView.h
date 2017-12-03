@@ -4,6 +4,7 @@
 #include <QFrame>
 #include <QLineEdit>
 #include <QBoxLayout>
+#include <QGridLayout>
 
 #include "TextEditorModifier.h"
 
@@ -29,20 +30,17 @@ public:
     void removeTrackView(BaseTrackView *trackView);
     void removeTrackView(int index);
 
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
 
     void updateGuiElements();
 
-    inline int getTracksCount() const
-    {
-        return trackViews.size();
-    }
+    int getTracksCount() const;
 
     void setUnlightStatus(bool unlighted);
     bool isUnlighted() const;
 
-    //is not possible return a covariant container, so I'm using template to return a container of a more specific (derived) type
+    // is not possible return a covariant container, so I'm using template to return a container of a more specific (derived) type
     template<class T>
     QList<T> getTracks() const
     {
@@ -53,8 +51,10 @@ public:
         return castedTracks;
     }
 
+    void setTintColor(const QColor &color);
+
 protected:
-    //void paintEvent(QPaintEvent *);
+
     void changeEvent(QEvent *) override;
 
     virtual void translateUi();
@@ -69,7 +69,7 @@ protected:
     QWidget *topPanel;
     QBoxLayout *tracksLayout;
     QBoxLayout *topPanelLayout;
-    QBoxLayout *mainLayout;
+    QGridLayout *mainLayout;
 
     virtual void refreshStyleSheet();
 
@@ -83,5 +83,11 @@ private slots:
 private:
     void setupUI(TextEditorModifier *textEditorFactory);
 };
+
+
+inline int TrackGroupView::getTracksCount() const
+{
+    return trackViews.size();
+}
 
 #endif // TRACKGROUPVIEW_H

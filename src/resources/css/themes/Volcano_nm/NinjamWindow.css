@@ -49,10 +49,10 @@ NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
  Border: none;
  }
 
-/* Tool buttons: track vertical/horizontal, wide/narrow and server licence buttons
+/* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
 
-NinjamRoomWindow QToolButton:hover,
+QToolButton:hover,
 #licenceButton:hover
 {
     border: 1px solid rgba(0, 0, 0, 50);
@@ -64,7 +64,11 @@ NinjamRoomWindow QToolButton:hover:checked
     background-color: rgba(255, 255, 255, 40);
 }
 
-NinjamRoomWindow QToolButton,
+#buttonVerticalLayout,
+#buttonHorizontalLayout,
+#buttonGridLayout,
+#wide,
+#narrow,
 #licenceButton
 {
     border: 1px solid rgba(0, 0, 0, 50);
@@ -80,11 +84,17 @@ NinjamRoomWindow QToolButton:checked
 }
 
 
-NinjamRoomWindow QToolButton#buttonVerticalLayout:!checked{
+NinjamRoomWindow QToolButton#buttonVerticalLayout:!checked {
     border-right-color: none;
 }
-NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked{
+
+NinjamRoomWindow QToolButton#buttonGridLayout:!checked {
     border-left-color: none;
+}
+
+NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked {
+    border-left-color: none;
+    border-right-color: none;
 }
 
 
@@ -140,20 +150,21 @@ NinjamTrackView  #channelName               /* channel name for ninjamers */
 
 NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
  {
-     background: rgba(255, 255, 255, 180);
+     background: rgba(255, 255, 255, 100);
  }
 
 
 /* NinjamPanel is the widget where the ninjam controls are showed (in bottom when we are connected in a server)
 ----------------------------------------------------------------------------------------------------------------*/
-NinjamPanel #ninjamControlsPanel
+NinjamPanel
 {
     background-color: rgba(0, 0, 0, 20);
     border: 1px inset rgba(60, 60, 60, 90);
+    border-radius: 3px;
 }
 
-NinjamPanel #soloButton,
-NinjamPanel #muteButton
+MetronomePanel #soloButton,
+MetronomePanel #muteButton
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop: 0.0 #FDE5A9,
@@ -186,6 +197,11 @@ selection-background-color: rgba(0, 0, 0, 90);
 selection-color: rgb(254, 181, 102);
 }
 
+#panelCombos QComboBox:hover
+{
+    background-color: rgb(184, 149, 124);
+}
+
 #comboBpi-topLevel,
 #comboBpm-topLevel
 {
@@ -196,11 +212,6 @@ selection-color: rgb(254, 181, 102);
         stop: 0.45 rgb(227, 183, 153),
         stop: 0.6 rgb(184, 149, 124),
         stop: 1.0 rgb(184, 149, 124));
-}
-
-NinjamTrackGroupView                        /* ninjam track group. If a ninjamer is using 2 channels they will appear grouped */
-{
-    border: 1px solid rgb(130, 130, 130);
 }
 
 NinjamTrackView  #channelName

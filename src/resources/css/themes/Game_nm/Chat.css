@@ -1,0 +1,89 @@
+
+/* ChatPanel is the widget used to layout all chat controls (messages in a
+scroll area, the text input field, but clear and auto translate buttons).
+----------------------------------------------*/
+
+ChatPanel QPushButton
+{
+    border: none;
+    background: #146566;
+    color: #58A9AA;
+}
+
+ChatPanel QPushButton#buttonAutoTranslate:checked
+{
+    border: none;
+    background-color: #146566;
+    border-radius: 0px;
+}
+
+ChatPanel QPushButton#buttonAutoTranslate:!checked
+{
+    border: none;
+    background-color: rgba(0, 255, 255, 30);
+    border-radius: 0px;
+}
+
+ChatPanel QPushButton#buttonAutoTranslate:hover,
+ChatPanel QPushButton:hover
+{
+    border: 1px solid #368788;
+    background-color: rgba(0, 255, 255, 50);
+    border-radius: 0px;
+}
+
+
+
+ChatPanel #chatText:!focus
+{                                           /* text input field used to send chat messages */
+    background-color: #1E4346;
+    border: none;
+    border-radius: 0px;
+}
+
+
+#topicLabel
+{
+    color: #58A9AA;
+    background: #1E4346;
+}
+
+/* ChatMessagePanel is the widget used to show ONE chat message
+----------------------------------------------------------------*/
+ChatMessagePanel
+{
+    border: 1px solid rgba(0, 0, 0, 50);
+    border-radius: 0px;
+}
+
+ChatMessagePanel #labelUserName             /* The name of chat message author */
+{
+    margin-bottom: 3px;
+    color: black;
+}
+
+
+ChatMessagePanel #translateButton,
+ChatMessagePanel #blockButton
+{
+    color: black;
+    border-radius: 0px;
+}
+
+ChatMessagePanel #translateButton:hover,     /* hover effect in chat message translate (T) button */
+ChatMessagePanel #blockButton:hover
+{
+    border-color: rgb(60, 60, 60);
+    border-style: outset;
+    color: rgb(60, 60, 60);
+    font-weight: bold;
+}
+
+ChatMessagePanel #labelMessage
+{
+    selection-background-color: rgb(120, 120, 120);
+    selection-color: rgb(40, 40, 40);
+    color: black;
+    font-family: "Noto Mono";
+    font-size: 9pt;
+}

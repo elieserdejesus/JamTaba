@@ -1,0 +1,88 @@
+
+/* JamRoomViewPanel is the widget used to show ONE public room/server */
+
+JamRoomViewPanel
+{
+    background-color: transparent;
+}
+
+
+JamRoomViewPanel[empty="false"] QPushButton#buttonEnter:disabled
+{
+    background-color: rgba(0, 0, 0, 50);
+    color: rgb(100, 100, 100);
+    border: 1px solid rgb(0, 0, 0, 30);
+}
+
+JamRoomViewPanel[empty="false"] QPushButton#buttonListen,
+JamRoomViewPanel[empty="false"] QPushButton#buttonEnter
+{
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                        stop: 0.0 #5A728A, stop: 0.5 #5A728A, stop: 1.0 #344A67);
+    border: 1px solid black;
+    border-radius: 1px;
+}
+
+JamRoomViewPanel[empty="false"] QPushButton#buttonListen:hover,
+JamRoomViewPanel[empty="false"] QPushButton#buttonEnter:hover
+{
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                        stop: 0.0 #6C839A, stop: 0.5 #6B839B, stop: 1.0 #455B78);
+}
+
+
+JamRoomViewPanel[empty="false"] QPushButton#buttonListen:checked
+{
+    border-style: inset;
+    background-color: rgb(120, 120, 120);
+}
+
+JamRoomViewPanel[empty="true"] QPushButton:enabled
+{
+    color: rgba(255, 255, 255, 80);
+}
+
+JamRoomViewPanel[empty="true"] #labelRoomStatus
+{
+    color: rgba(0, 0, 0, 120);
+}
+
+JamRoomViewPanel #labelRoomStatus
+{
+    color: rgba(255, 255, 255, 65);
+}
+
+/* where the user names and wave form are showed */
+JamRoomViewPanel #content,
+JamRoomViewPanel[empty="true"] #content
+{
+    background: transparent;
+}
+
+JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer.com, etc) */
+{
+    color: rgb(180, 180, 180);
+}
+
+JamRoomViewPanel[empty="true"] #labelName
+{
+    color: rgba(0, 0, 0, 180);
+}
+
+
+WavePeakPanel
+{
+    /* color used to draw the wave form */
+    qproperty-peaksColor: #5A728A;
+
+    /* color used to draw the loading circle */
+    qproperty-loadingColor: #5A728A;
+}
+
+MapWidget
+{
+    qproperty-markerTextBackgroundColor: rgba(255, 255, 255, 120);
+    qproperty-markerColor: white;
+    qproperty-markerTextColor: black;
+    qproperty-markerLineConnectorColor: rgba(255, 255, 255, 120);
+}

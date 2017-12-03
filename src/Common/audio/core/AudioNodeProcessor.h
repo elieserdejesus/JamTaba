@@ -11,11 +11,11 @@ class SamplesBuffer;
 
 class AudioNodeProcessor : public QObject  // TODO - this inheritance is really necessary?
 {
+
 public:
     AudioNodeProcessor();
-    virtual ~AudioNodeProcessor()
-    {
-    }
+
+    virtual ~AudioNodeProcessor();
 
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, std::vector<Midi::MidiMessage> &midiMessages) = 0;
     virtual void suspend() = 0;
@@ -23,29 +23,46 @@ public:
     virtual void updateGui() = 0;
     virtual void openEditor(const QPoint &centerOfScreen) = 0;
     virtual void closeEditor() = 0;
-    virtual void setSampleRate(int newSampleRate)
-    {
-        Q_UNUSED(newSampleRate);
-    }
+    virtual void setSampleRate(int newSampleRate);
 
     virtual void setBypass(bool state);
-    bool isBypassed() const
-    {
-        return bypassed;
-    }
+    bool isBypassed() const;
 
-    inline virtual bool isVirtualInstrument() const
-    {
-        return false;
-    }
+    virtual bool isVirtualInstrument() const;
 
-    inline virtual bool canGenerateMidiMessages() const{
-        return false;
-    }
+    virtual bool canGenerateMidiMessages() const;
 
 protected:
     bool bypassed;
+
 };
+
+
+inline bool AudioNodeProcessor::isBypassed() const
+{
+    return bypassed;
+}
+
+inline bool AudioNodeProcessor::isVirtualInstrument() const
+{
+    return false;
+}
+
+inline bool AudioNodeProcessor::canGenerateMidiMessages() const
+{
+    return false;
+}
+
+inline AudioNodeProcessor::~AudioNodeProcessor()
+{
+    //
+}
+
+inline void AudioNodeProcessor::setSampleRate(int newSampleRate)
+{
+    Q_UNUSED(newSampleRate);
+}
+
 
 }//namespace
 

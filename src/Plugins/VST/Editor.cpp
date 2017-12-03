@@ -7,19 +7,21 @@
 #include "log/Logging.h"
 #include <QTimer>
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++
 VstEditor::VstEditor(JamTabaVSTPlugin *jamtaba) :
     widget(NULL),
     jamtaba(jamtaba),
     mainWindow(nullptr)
 {
+    //
 }
 
 void VstEditor::deleteMainWindow()
 {
     if (mainWindow) {
+
         if (mainWindow->isVisible())
             QTimer::singleShot(0, mainWindow, &MainWindow::close);
+
         mainWindow->deleteLater();
         mainWindow = nullptr;
     }
@@ -87,6 +89,7 @@ bool VstEditor::open(void *ptr)
         rectangle.bottom = mainWindow->height();
         qCDebug(jtVstPlugin) << "Creating MainWindow done.";
     }
+
     mainWindow->setParent(widget);
     mainWindow->move(0, 0);
 

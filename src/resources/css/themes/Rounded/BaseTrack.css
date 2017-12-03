@@ -1,5 +1,10 @@
 /* buttons */
 
+BoostSpinBox
+{
+    border: 1px outset #5F5F5F;
+}
+
 #soloButton,
 #muteButton,
 #preferencesButton
@@ -39,21 +44,8 @@
 }
 
 /* boost button */
-#buttonBoost
-{
-   padding: 0px;
-   padding-top: 2px;
-   padding-bottom: 2px;
 
-   border-radius: 0px;
-   border-bottom-left-radius: 3px;
-   border-bottom-right-radius: 3px;
 
-   border: 0px;
-   border-top: 1px solid rgba(0, 0, 0, 10);
-}
-
-#buttonBoost:checked,
 #lowCutButton:checked,
 QPushButton#buttonStereoInversion:checked
 {
@@ -84,12 +76,12 @@ QPushButton#buttonStereoInversion:hover:checked
 
 BaseTrackView
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0 rgb(200, 200, 200),
-        stop:0.01 rgb(240, 240, 240),
-        stop:1 rgb(110, 110, 110)
-    );
-   border: none;
+   background: none;
+
+    border: none;
+    border-right: 1px solid rgba(0, 0, 0, 20);
+    border-left: 1px solid rgba(0, 0, 0, 20);
+
    border-radius: 0px;
    border-bottom-left-radius: 2px;
    border-bottom-right-radius: 2px;
@@ -148,7 +140,8 @@ BaseTrackView[unlighted="true"] QSlider::add-page:vertical
     background: rgb(255,255,255, 50);
 }
 
-BaseTrackView[unlighted="true"] .QPushButton
+BaseTrackView[unlighted="true"] .QPushButton,
+BaseTrackView[unlighted="true"] BoostSpinBox
 {
    border: none;
    background-color: rgb(100, 100, 100);
@@ -174,6 +167,12 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion:hover
 TrackGroupView
 {
     border-radius: 2px;
+
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+          stop:0 rgb(200, 200, 200),
+          stop:0.01 rgb(240, 240, 240),
+          stop:1 rgb(110, 110, 110)
+    );
 }
 
 TrackGroupView > #topPanel

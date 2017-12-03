@@ -7,6 +7,7 @@
 namespace Ninjam {
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class User
 {
 
@@ -70,6 +71,9 @@ private:
 };
 
 QDebug &operator<<(QDebug &out, const Ninjam::User &user);
+
+QString extractUserName(const QString &userFullName);
+QString extractUserIP(const QString &userFullName);
 
 }
 

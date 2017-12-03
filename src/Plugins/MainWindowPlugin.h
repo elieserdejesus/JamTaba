@@ -12,9 +12,9 @@ class MainWindowPlugin : public MainWindow
     Q_OBJECT
 
 public:
-    MainWindowPlugin(MainControllerPlugin *mainController);
+    explicit MainWindowPlugin(MainControllerPlugin *mainController);
 
-    inline MainControllerPlugin *getMainController() override
+    inline MainControllerPlugin *getMainController() const override
     {
         return dynamic_cast<MainControllerPlugin *>(mainController);
     }

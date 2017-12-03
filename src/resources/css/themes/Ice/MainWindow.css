@@ -20,16 +20,9 @@
 }
 
 #masterTitleLabel,
-#labelMetronomeIControls
+#labelMetronome
 {
     color: rgb(40, 40, 40);
-}
-
-#masterMeter
-{
-    max-height: 4px;
-    height: 4px;
-    margin: 0px;
 }
 
 #userNameLineEdit
@@ -84,14 +77,14 @@ QMainWindow
 }
 
 #contentTabWidget:pane,
-#chatTabWidget:pane
+#chatTabWidget
 {
     border: none;
     padding: 0px;
 }
 
 
-#chatTabWidget:pane
+#chatTabWidget QStackedWidget
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 rgb(180, 207, 250),

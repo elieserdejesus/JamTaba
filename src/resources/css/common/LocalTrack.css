@@ -135,6 +135,14 @@ LocalTrackView #buttonLooper
     color: rgb(0, 40, 0);
 }
 
+#xmitButton:!checked[blinking="true"]
+{
+    background-color: orange;
+    border-color: #B57200;
+    border-style: solid;
+    border-width: 1px;
+    color: white;
+}
 
 
 /* LocalTrackGroup (used as container to group tracks/subchannels)

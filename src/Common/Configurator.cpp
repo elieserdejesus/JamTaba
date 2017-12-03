@@ -1,3 +1,9 @@
+#include <QtGlobal>
+
+#ifdef Q_OS_WIN
+    #include "log/stackwalker/WindowsStackWalker.h"
+#endif
+
 #include "Configurator.h"
 #include <QFile>
 #include <QDebug>
@@ -6,9 +12,12 @@
 #include <QTime>
 #include <QRegularExpression>
 
+#include <csignal>
+
 #include "log/Logging.h"
 
 QScopedPointer<Configurator> Configurator::instance(nullptr);
+const QString Configurator::LOG_FILE = "log.txt";
 
 const QString Configurator::PRESETS_FOLDER_NAME = "Presets";
 const QString Configurator::CACHE_FOLDER_NAME = "Cache";
@@ -76,7 +85,7 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
 
     Configurator *configurator = Configurator::getInstance();
     QDir logDir = configurator->getBaseDir();
-    QString path = logDir.absoluteFilePath("log.txt");
+    QString path = logDir.absoluteFilePath(Configurator::LOG_FILE);
 
     QFile outFile(path);
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
@@ -95,6 +104,25 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
         abort();
 }
 
+QStringList Configurator::loadPreviousLogContent() const
+{
+    QStringList logContent;
+
+    QDir logDir = getBaseDir();
+    QFile inputFile(logDir.absoluteFilePath(Configurator::LOG_FILE));
+    if (inputFile.open(QIODevice::ReadOnly)) {
+
+        QTextStream stream(&inputFile);
+
+        while (!stream.atEnd())
+            logContent << stream.readLine();
+
+        inputFile.close();
+    }
+
+    return logContent;
+}
+
 Configurator::Configurator() :
     logConfigFileName(LOG_CONFIG_FILE_NAME),
     logFileCreated(false)
@@ -107,6 +135,7 @@ Configurator *Configurator::getInstance()
 {
     if (Configurator::instance.isNull())
         instance.reset(new Configurator());
+
     return instance.data();
 }
 
@@ -119,7 +148,7 @@ QStringList Configurator::getPresetFilesNames(bool fullpath)
     QFileInfoList fileInfos = presetsDir.entryInfoList(nameFilters, filters, sort);
 
     QStringList filesPaths;
-    foreach (const QFileInfo &item, fileInfos) {
+    for (const QFileInfo &item : fileInfos) {
         if (item.isFile()) {
             if (fullpath)
                 filesPaths.append(item.absoluteFilePath());
@@ -135,16 +164,49 @@ QDir Configurator::getApplicationDataDir()
     QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     if (!dir.exists())
         dir.mkpath(".");
+
     return dir;
+}
+
+void Configurator::signalHandler(int signal)
+{
+    qCritical() << "Configurator::signalHandler signal:" << signal;
+
+    terminateHandler();
+
+    exit(signal);
+}
+
+void Configurator::terminateHandler()
+{
+#ifdef Q_OS_WIN
+    WindowsStackWalker stackWalker;
+    stackWalker.ShowCallstack();
+#endif
 }
 
 bool Configurator::setUp()
 {
     initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
 
-    exportLogIniFile(); //copy log config file from resources to user hard disk
+    lastLogFileContent = loadPreviousLogContent();
+
+    exportLogIniFile(); // copy log config file from resources to user hard disk
 
     setupLogConfigFile();
+
+    std::set_terminate(Configurator::terminateHandler);
+
+    std::signal(SIGABRT, Configurator::signalHandler); // Abnormal termination of the program, such as a call to abort.
+    std::signal(SIGFPE, Configurator::signalHandler);  // An erroneous arithmetic operation, such as a divide by zero or an operation resulting in overflow.
+    std::signal(SIGILL, Configurator::signalHandler);  // Detection of an illegal instruction.
+    std::signal(SIGINT, Configurator::signalHandler);  // Receipt of an interactive attention signal.
+    std::signal(SIGSEGV, Configurator::signalHandler); // An invalid access to storage.
+    std::signal(SIGTERM, Configurator::signalHandler); // A termination request sent to the program.
+
+#ifdef Q_OS_WIN
+    SetUnhandledExceptionFilter(WindowsStackWalker::topLevelExceptionHandler);
+#endif
 
     // themes dir is the same for Standalone and Vst plugin
     themesDir = QDir(getApplicationDataDir().absoluteFilePath(THEMES_FOLDER_NAME));
@@ -168,16 +230,41 @@ QDir Configurator::createPresetsDir(const QDir &baseDir)
     return QDir(baseDir.absoluteFilePath(presetsFolder));
 }
 
+void Configurator::exportThemeFile(const QString &themeName, const QFileInfo &source, const QFileInfo &destination) const
+{
+    static QDate compilationDate = QLocale("en_US").toDate(QString(__DATE__).simplified(), "MMM d yyyy");
+    static QTime compilationTime = QTime::fromString(QString(__TIME__).simplified(), "hh:mm:ss");
+    static QDateTime jamTabaCompilationDate(compilationDate, compilationTime);
+
+    if (!destination.exists() || jamTabaCompilationDate > destination.lastModified()) {
+
+        // QFile::copy can't replace existing files, so is necessary delete existing file before call QFile::copy
+        if (destination.exists()) {
+            qDebug() << "Removing " << destination.fileName() << " before copy";
+            QFile(destination.absoluteFilePath()).remove();
+        }
+
+        if (QFile::copy(source.absoluteFilePath(), destination.absoluteFilePath())) {
+
+            qDebug() << "\tExporting " << themeName << source.fileName() << " to " << destination.absolutePath();
+
+            bool permissionSetted = QFile(destination.absoluteFilePath()).setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+            if (!permissionSetted)
+                qCritical() << "Can't set permission in file " << destination.absoluteFilePath();
+        }
+        else {
+            qCritical() << "Can't copy " << source.absoluteFilePath() << " to " << destination.absoluteFilePath();
+        }
+    }
+
+}
+
 void Configurator::exportThemes() const
 {
     // copy default themes from resources to user hard disk
     QDir resourceDir(THEMES_FOLDER_IN_RESOURCES);
     QDir themesDir = getThemesDir();
     QStringList themesInResources = resourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-
-    QDate compilationDate = QLocale("en_US").toDate(QString(__DATE__).simplified(), "MMM d yyyy");
-    QTime compilationTime = QTime::fromString(QString(__TIME__).simplified(), "hh:mm:ss");
-    QDateTime jamTabaCompilationDate(compilationDate, compilationTime);
 
     for (const QString &themeDir : themesInResources) {
 
@@ -189,31 +276,35 @@ void Configurator::exportThemes() const
 
         QString fullPath = themeFolderInResources.absolutePath() + "/css/themes/" + themeDir;
         QDir pathInResources(fullPath);
-        QStringList themeFiles = pathInResources.entryList(QDir::Files); // css files
+        QStringList themeFiles = pathInResources.entryList(); // files and folders
 
-        for (const QString &themeCSSFile : themeFiles) {
+        for (const QString &themeFile : themeFiles) {
 
-            QFileInfo sourceFileInfo(pathInResources.absoluteFilePath(themeCSSFile));
-            QFileInfo destinationFileInfo(destinationDir.absoluteFilePath(themeCSSFile));
+            QFileInfo sourceFileInfo(pathInResources.absoluteFilePath(themeFile));
+            QFileInfo destinationFileInfo(destinationDir.absoluteFilePath(themeFile));
 
-            if (!destinationFileInfo.exists() || jamTabaCompilationDate > destinationFileInfo.lastModified()) {
+            if (sourceFileInfo.isFile()) {
+                exportThemeFile(themeDir, sourceFileInfo, destinationFileInfo);
+            }
+            else { // a folder inside theme folder (images, fonts, etc.)
+                QString folderName = sourceFileInfo.baseName();
+                QDir sourceFolder(QDir(sourceFileInfo.absolutePath()).absoluteFilePath(folderName));
+                auto files = sourceFolder.entryInfoList(QDir::Files);
+                if (!files.isEmpty()) {
 
-                // QFile::copy can't replace existing files, so is necessary delete existing file before call QFile::copy
-                if (destinationFileInfo.exists())
-                    QFile(destinationFileInfo.absoluteFilePath()).remove();
+                    if (!destinationFileInfo.exists())
+                        destinationFileInfo.absoluteDir().mkdir(folderName);
 
-                if (QFile::copy(sourceFileInfo.absoluteFilePath(), destinationFileInfo.absoluteFilePath())) {
+                    QDir destDir(destinationFileInfo.absoluteDir().absoluteFilePath(folderName));
 
-                    qDebug() << "Exporting " << themeDir << "=>" << sourceFileInfo.fileName() << " to " << destinationDir.absolutePath();
+                    for (auto file : files) {
 
-                    bool permissionSetted = QFile(destinationFileInfo.absoluteFilePath()).setPermissions(QFile::ReadOwner | QFile::WriteOwner);
-                    if (!permissionSetted)
-                        qCritical() << "Can't set permission in file " << destinationFileInfo.absoluteFilePath();
-                }
-                else {
-                    qCritical() << "Can't copy " << sourceFileInfo.absoluteFilePath() << " to " << destinationFileInfo.absoluteFilePath();
+                        destinationFileInfo = QFileInfo(destDir.absoluteFilePath(file.fileName()));
+                        exportThemeFile(themeDir, file, destinationFileInfo);
+                    }
                 }
             }
+
         }
     }
 }
@@ -323,10 +414,7 @@ void Configurator::deletePreset(const QString &name)
         qDebug() << "!!! Could not delete Preset " << name;
 }
 
-// -------------------------------------------------------------------------------
-
 Configurator::~Configurator()
 {
+    //
 }
-
-// -------------------------------------------------------------------------------

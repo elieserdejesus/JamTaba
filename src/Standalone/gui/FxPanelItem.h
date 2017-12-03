@@ -37,8 +37,8 @@ public:
         return plugin;
     }
 
-    Q_PROPERTY(bool bypassed READ pluginIsBypassed())// to use in stylesheet
-    Q_PROPERTY(bool containPlugin READ containPlugin())// to use in stylesheet
+    Q_PROPERTY(bool bypassed READ pluginIsBypassed()) // to use in stylesheet
+    Q_PROPERTY(bool containPlugin READ containPlugin()) // to use in stylesheet
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -55,7 +55,7 @@ private:
     Audio::Plugin *plugin;
     QPushButton *bypassButton;
     QLabel *label;
-    Controller::MainControllerStandalone *mainController;// used to ask about plugins
+    Controller::MainControllerStandalone *mainController; // used to ask about plugins
 
     void showPluginGui(Audio::Plugin *plugin);
 

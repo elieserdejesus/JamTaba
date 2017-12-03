@@ -21,7 +21,7 @@ PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainContro
 
     buildComboBoxItems();
 
-    //setting initial values
+    // setting initial values
     const Persistence::Settings &settings = mainController->getSettings();
     ui->textFieldPassword->setText(settings.getLastPrivateServerPassword());
     ui->textFieldPort->setText(QString::number(settings.getLastPrivateServerPort()));

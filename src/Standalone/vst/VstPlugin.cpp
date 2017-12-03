@@ -1,3 +1,5 @@
+#include <QtGlobal>
+
 #include "VstPlugin.h"
 
 #ifdef Q_OS_WIN
@@ -31,17 +33,14 @@ using namespace Vst;
 
 QMap<QString, QDialog*> VstPlugin::editorsWindows;
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-VstPlugin::VstPlugin(Vst::VstHost* host, const QString &pluginPath)
-    :   Audio::Plugin(Vst::utils::createDescriptor(nullptr, pluginPath)),
-        effect(nullptr),
-        internalOutputBuffer(nullptr),
-        host(host),
-        loaded(false),
-        started(false),
-        turnedOn(false),
-        vstOutputArray(nullptr),
-        vstInputArray(nullptr)
+VstPlugin::VstPlugin(Vst::VstHost* host, const QString &pluginPath) :
+    Audio::Plugin(Vst::utils::createDescriptor(nullptr, pluginPath)),
+    effect(nullptr),
+    host(host),
+    loaded(false),
+    started(false),
+    turnedOn(false),
+    wantMidi(false)
 {
     vstMidiEvents.reserved = 0;
     vstMidiEvents.numEvents = 0;
@@ -54,12 +53,13 @@ VstPlugin::VstPlugin(Vst::VstHost* host, const QString &pluginPath)
 }
 
 bool VstPlugin::load(const QString &path){
-    if(!host){
+    if (!host) {
         return false;
     }
+
     loaded = false;
     this->effect = Vst::VstLoader::load(path, host);
-    if(!effect){
+    if (!effect) {
         unload();
         return false;
     }
@@ -68,7 +68,7 @@ bool VstPlugin::load(const QString &path){
 
     this->name = descriptor.getName();
 
-    long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
+    long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);
     qCDebug(jtVstPlugin) << "loading " << getName() << " version " << ver;
 
     this->path = path;
@@ -78,33 +78,36 @@ bool VstPlugin::load(const QString &path){
     return true;
 }
 
-bool VstPlugin::canGenerateMidiMessages() const{
-    //long canSendVstEvents = effect->dispatcher(effect, effCanDo, 0, 0, (void*)"sendVstEvents", 0);
+bool VstPlugin::canGenerateMidiMessages() const
+{
     long returnValue = effect->dispatcher(effect, effCanDo, 0, 0, (void*)"sendVstMidiEvent", 0);
     return returnValue >= 0;
 }
 
-bool VstPlugin::isVirtualInstrument() const{
-    if(!effect){
+bool VstPlugin::isVirtualInstrument() const
+{
+    if (!effect) {
         return false;
     }
     return effect->flags & effFlagsIsSynth;
 }
 
-QByteArray VstPlugin::getSerializedData() const{
-    if(effect->flags & effFlagsProgramChunks){//can serialize chunks?
+QByteArray VstPlugin::getSerializedData() const
+{
+    if (effect->flags & effFlagsProgramChunks) { // can serialize chunks?
         char* chunk = 0;
         long result = effect->dispatcher(effect, effGetChunk, false, 0, &chunk, 0 );
-        if(result){
+        if (result) {
             qCDebug(jtVstPlugin) << "saving " << getName() << " state";
             return QByteArray(chunk, result);
         }
     }
-    return QByteArray();//empty byte array
+    return QByteArray(); // empty byte array
 }
 
-void VstPlugin::restoreFromSerializedData(const QByteArray &dataToRestore){
-    if(!dataToRestore.isEmpty()){
+void VstPlugin::restoreFromSerializedData(const QByteArray &dataToRestore)
+{
+    if (!dataToRestore.isEmpty()) {
         qCInfo(jtVstPlugin) << "\t\trestoring plugin data to" << getName();
         const char* data = dataToRestore.data();
         effect->dispatcher(effect, effSetChunk, false, dataToRestore.size(), (void*)data, 0 );
@@ -112,16 +115,16 @@ void VstPlugin::restoreFromSerializedData(const QByteArray &dataToRestore){
     }
 }
 
-void VstPlugin::resume(){
-
+void VstPlugin::resume()
+{
     qCDebug(jtVstPlugin) << "Resuming " << getName() << "thread: " << QThread::currentThreadId();
     effect->dispatcher(effect, effMainsChanged, 0, 1, NULL, 0.0f);
 
     effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
-
 }
 
-void VstPlugin::suspend(){
+void VstPlugin::suspend()
+{
     qCDebug(jtVstPlugin) << "Suspending " << getName() << "Thread: " << QThread::currentThreadId();
 
     effect->dispatcher(effect, effStopProcess, 0, 1, NULL, 0.0f);
@@ -129,99 +132,86 @@ void VstPlugin::suspend(){
     effect->dispatcher(effect, effMainsChanged, 0, 0, NULL, 0.0f);
 }
 
-
-void VstPlugin::start(){
-    if(!effect){
+void VstPlugin::start()
+{
+    if (!effect) {
         qCritical() << "effect not set, returning!";
         return;
     }
 
     qCDebug(jtVstPlugin) << "starting plugin " << getName() << " thread: " << QThread::currentThreadId();
 
-    int outputs = effect->numOutputs;
-    int inputs = effect->numInputs;
-    qCDebug(jtVstPlugin) << "Criando internalBuffer com " << outputs << " canais e " << host->getBufferSize() << " samples";
-
-    //qWarning() << getName() << " ins:" << effect->numInputs << " outs:" << effect->numOutputs;
-    internalOutputBuffer = new Audio::SamplesBuffer(outputs, host->getBufferSize());
-    internalInputBuffer  = new Audio::SamplesBuffer(inputs, host->getBufferSize());
-
-    vstOutputArray = new float*[outputs];
-    vstInputArray = new float*[inputs];
+    int hostBufferSize = host->getBufferSize();
+    internalOutputBuffer.reset(new Audio::SamplesBuffer(effect->numOutputs, hostBufferSize));
+    internalInputBuffer.reset(new Audio::SamplesBuffer(effect->numInputs, hostBufferSize));
 
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     qCDebug(jtVstPlugin) << "Starting " << getName() << " version " << ver;
 
-    //setting buffer size and sample before open just to avoid problems (I see this trick in VstBoard source code)
+    // setting buffer size and sample before open just to avoid problems (I see this trick in VstBoard source code)
     qCDebug(jtVstPlugin) << "setting sample rate and block size " << QThread::currentThreadId();
     effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
-    effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
+    effect->dispatcher(effect, effSetBlockSize, 0, hostBufferSize, NULL, 0.0f);
 
-    //qCDebug(vst) << "opening" << getName();
     effect->dispatcher(effect, effOpen, 0, 0, NULL, 0.0f);
-    //qCDebug(vst) << getName() << "opened";
 
     qCDebug(jtVstPlugin) << "setting sample rate and block size " << QThread::currentThreadId();
     effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
     effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
-    //qCDebug(vst) << "sample rate and block size setted for " << getName();
 
-    //qCDebug(vst) << "checking for plugin midi capabilities";
     wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
-    //qCDebug(vst) << "plugin midi capabilities done: " << wantMidi;
 
     started = true;
     turnedOn = false;
 
-    //I see this in VstBoard sources, and this save my life solving a bug in EzDrummer. Some Vst Plugins
-    //do initialization in first resume?
+    // I see this in VstBoard sources, and this save my life solving a bug in EzDrummer. Some Vst Plugins
+    // do initialization in first resume?
     resume();
     suspend();
 }
 
-void VstPlugin::setSampleRate(int newSampleRate){
-    if(effect){
+void VstPlugin::setSampleRate(int newSampleRate)
+{
+    if (effect) {
         effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, newSampleRate);
     }
 }
 
-VstPlugin::~VstPlugin(){
+VstPlugin::~VstPlugin()
+{
     qCDebug(jtVstPlugin) << getName() << " VSt plugin destructor Thread:" << QThread::currentThreadId();
     unload();
-    if(editorWindow){
+
+    if (editorWindow) {
         editorWindow->deleteLater();
         editorWindow = nullptr;
     }
-    delete internalOutputBuffer;
 
     for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
         delete this->vstMidiEvents.events[i];
     }
 
-    if(vstOutputArray){
-        delete [] vstOutputArray;
-    }
-    if(vstInputArray){
-        delete [] vstInputArray;
-    }
 }
 
-void VstPlugin::unload(){
+void VstPlugin::unload()
+{
     qCDebug(jtVstPlugin) << "unloading VST plugin " << getName() << " Thread:" << QThread::currentThreadId();
-    if(effect){
+
+    if (effect) {
 
         closeEditor();
 
         suspend();
 
-        if(effect){
+        if (effect) {
             VstLoader::unload(effect);
             effect = nullptr;
         }
     }
 }
 
-void VstPlugin::fillVstEventsList(const std::vector<Midi::MidiMessage> &midiBuffer){
+void VstPlugin::fillVstEventsList(const std::vector<Midi::MidiMessage> &midiBuffer)
+{
     int midiMessages = qMin((int)midiBuffer.size(), (int)MAX_MIDI_EVENTS);
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
@@ -238,20 +228,21 @@ void VstPlugin::fillVstEventsList(const std::vector<Midi::MidiMessage> &midiBuff
     }
 }
 
-void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, std::vector<Midi::MidiMessage> &midiBuffer){
+void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, std::vector<Midi::MidiMessage> &midiBuffer)
+{
 
     Q_UNUSED(in)
-    if( isBypassed() || !effect || !loaded || !started){
+    if (isBypassed() || !effect || !loaded || !started) {
         return;
     }
 
-    if(!turnedOn){
+    if (!turnedOn) {
         resume();
         turnedOn = true;
     }
 
-    if(wantMidi){
-        fillVstEventsList(midiBuffer);//translate midiBuffer messages in VstEvents
+    if (wantMidi) {
+        fillVstEventsList(midiBuffer); // translate midiBuffer messages in VstEvents
         effect->dispatcher(effect, effProcessEvents, 0, 0, (void*)&vstMidiEvents, 0);
     }
 
@@ -261,64 +252,71 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     internalInputBuffer->set(in);
 
     int inChannels = internalInputBuffer->getChannels();
-    for (int c = 0; c < inChannels; ++c) {
-        vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
-    }
-
     int outChannels = internalOutputBuffer->getChannels();
-    for (int c = 0; c < outChannels; ++c) {
+
+    std::vector<float *> vstOutputArray(outChannels);
+    std::vector<float *> vstInputArray(inChannels);
+
+    for (int c = 0; c < inChannels; ++c)
+        vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
+
+    for (int c = 0; c < outChannels; ++c)
         vstOutputArray[c] = internalOutputBuffer->getSamplesArray(c);
-    }
 
     VstInt32 sampleFrames = outBuffer.getFrameLenght();
-    if(effect->flags & effFlagsCanReplacing){
-        effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
+    if (effect->flags & effFlagsCanReplacing) {
+        effect->processReplacing(effect, vstInputArray.data(), vstOutputArray.data(), sampleFrames);
     }
 
     /**
         VSTs are processing input samples and replacing the output buffer with these processed samples.
-    VSTis are generating output samples directly, without touch the input buffer, and this make sense.
-    In insert chain the input buffer is the output generated by the previous plugin. So, if VSTis are
-    ignoring this input (the samples generated by the previous plugin) they will generate a fresh output
-    and replacing the last generated samples. The result is just the last VTSi in the chain can be heard.
+        VSTis are generating output samples directly, without touch the input buffer, and this make sense.
+        In insert chain the input buffer is the output generated by the previous plugin. So, if VSTis are
+        ignoring this input (the samples generated by the previous plugin) they will generate a fresh output
+        and replacing the last generated samples. The result is just the last VTSi in the chain can be heard.
     */
 
-    if(isVirtualInstrument()){
-        outBuffer.add(*internalOutputBuffer);//VSTis add and preserve the last generated output samples
+    if (isVirtualInstrument()) {
+        outBuffer.add(*internalOutputBuffer); // VSTis add and preserve the last generated output samples
     }
-    else{
-        outBuffer.set(*internalOutputBuffer);//VSTs are replacing
+    else {
+        outBuffer.set(*internalOutputBuffer); // VSTs are replacing
     }
 }
 
-void VstPlugin::setBypass(bool state){
+void VstPlugin::setBypass(bool state)
+{
     Plugin::setBypass(state);
-    if(effect){
+    if (effect) {
         effect->dispatcher(effect, effSetBypass, 0, state, NULL, 0);
     }
 }
 
-void VstPlugin::closeEditor(){
+void VstPlugin::closeEditor()
+{
     qCDebug(jtVstPlugin) << "Closing " << getName() << " editor. Thread:" << QThread::currentThreadId();
-    if(effect && editorWindow){
+
+    if (effect && editorWindow) {
         effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);
     }
+
     Audio::Plugin::closeEditor();
     qCDebug(jtVstPlugin) << "Editor closed";
 
-    VstPlugin::editorsWindows.remove(getName());//remove the plugin editor reference from map
+    VstPlugin::editorsWindows.remove(getName()); // remove the plugin editor reference from map
 }
 
-void VstPlugin::openEditor(const QPoint &centerOfScreen){
-    if(!effect ){
+void VstPlugin::openEditor(const QPoint &centerOfScreen)
+{
+    if (!effect ) {
         return;
     }
 
-    if(!(effect->flags & effFlagsHasEditor)){
+    if (!(effect->flags & effFlagsHasEditor)) {
         return;
     }
 
-    if(editorWindow && editorWindow->isVisible()){
+    if (editorWindow && editorWindow->isVisible()) {
         editorWindow->raise();
         editorWindow->activateWindow();
         return;
@@ -326,14 +324,15 @@ void VstPlugin::openEditor(const QPoint &centerOfScreen){
 
     qCDebug(jtVstPlugin) << "opening " <<getName() << "editor thread: " << QThread::currentThreadId();
 
-    if(editorWindow){
+    if (editorWindow) {
         editorWindow->deleteLater();
     }
+
     this->editorWindow = new QDialog(0, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
     this->editorWindow->setWindowTitle(getName());
     QObject::connect( this->editorWindow, SIGNAL(finished(int)), this, SLOT(editorDialogFinished()));
 
-    //obtém o tamanho da janela do plugin
+    // get plugin window size
     ERect* rect;
     effect->dispatcher(effect, effEditGetRect, 0, 0, (void*)&rect, 0);
     if (!rect) {
@@ -349,7 +348,7 @@ void VstPlugin::openEditor(const QPoint &centerOfScreen){
 
     effect->dispatcher(effect, effEditOpen, 0, 0, (void*)(editorWindow->effectiveWinId()), 0);
 
-    //Some plugins don't return the real size until after effEditOpen
+    // Some plugins don't return the real size until after effEditOpen
     effect->dispatcher(effect, effEditGetRect, 0, 0, (void*)&rect, 0);
 	if (rect) {
         editorWindow->setFixedSize(rect->right - rect->left, rect->bottom - rect->top);
@@ -362,22 +361,24 @@ void VstPlugin::openEditor(const QPoint &centerOfScreen){
 
     qCDebug(jtVstPlugin) << getName() << " editor opened";
 
-    //save the editor in a map to use this reference when plugin request a window resize
+    // save the editor in a map to use this reference when plugin request a window resize
     VstPlugin::editorsWindows.insert(getName(), editorWindow);
-
 
     //resume();
 }
 
-QDialog* VstPlugin::getPluginEditorWindow(const QString &pluginName){
+QDialog* VstPlugin::getPluginEditorWindow(const QString &pluginName)
+{
     return VstPlugin::editorsWindows[pluginName];
 }
 
-void VstPlugin::updateGui(){
-    if(isBypassed() || !effect || !loaded || !started){
+void VstPlugin::updateGui()
+{
+    if (isBypassed() || !effect || !loaded || !started) {
         return;
     }
-    if(!editorWindow || !editorWindow->isVisible()){
+
+    if (!editorWindow || !editorWindow->isVisible()) {
         return;
     }
 

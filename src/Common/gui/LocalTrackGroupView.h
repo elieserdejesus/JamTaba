@@ -6,6 +6,7 @@
 
 class MainWindow;
 class QPushButton;
+class BlinkableButton;
 
 class LocalTrackGroupView : public TrackGroupView
 {
@@ -18,17 +19,11 @@ public:
 
     LocalTrackView *addTrackView(long trackID) override;
 
-    inline int getChannelIndex() const
-    {
-        return index;
-    }
+    int getChannelIndex() const;
 
     virtual void setPeakMeterMode(bool peakMeterOnly);
     virtual void togglePeakMeterOnlyMode();
-    bool isShowingPeakMeterOnly() const
-    {
-        return peakMeterOnly;
-    }
+    bool isShowingPeakMeterOnly() const;
 
     void detachMainControllerInSubchannels();
     void closePluginsWindows();
@@ -36,15 +31,14 @@ public:
     void setToNarrow();
     void setToWide();
 
-    void setPreparingStatus(bool preparing);// preparing to transmit
-    inline bool isPreparingToTransmit() const
-    {
-        return preparingToTransmit;
-    }
+    void setPreparingStatus(bool preparing); // preparing to transmit
+    bool isPreparingToTransmit() const;
 
     void resetTracks();
 
     int getSubchannelInternalIndex(uint subchannelTrackID) const;
+
+    BlinkableButton *getXmitButton() const;
 
 protected:
 
@@ -62,7 +56,9 @@ protected:
 
 private:
     QPushButton *toolButton;
-    QPushButton *xmitButton;
+
+    BlinkableButton *xmitButton;
+
     bool preparingToTransmit;
     bool usingSmallSpacingInLayouts;
 
@@ -71,7 +67,7 @@ private:
     bool peakMeterOnly;
 
     QPushButton *createToolButton();
-    QPushButton *createXmitButton();
+    BlinkableButton *createXmitButton();
 
     QMenu* createPresetsLoadingSubMenu();
     QMenu* createPresetsDeletingSubMenu();
@@ -110,5 +106,25 @@ private slots:
 
     void toggleTransmitingStatus(bool checked);
 };
+
+inline BlinkableButton *LocalTrackGroupView::getXmitButton() const
+{
+    return xmitButton;
+}
+
+inline bool LocalTrackGroupView::isPreparingToTransmit() const
+{
+    return preparingToTransmit;
+}
+
+inline bool LocalTrackGroupView::isShowingPeakMeterOnly() const
+{
+    return peakMeterOnly;
+}
+
+inline int LocalTrackGroupView::getChannelIndex() const
+{
+    return index;
+}
 
 #endif // LOCALTRACKGROUPVIEW_H

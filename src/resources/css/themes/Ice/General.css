@@ -333,3 +333,37 @@ AudioMeter
     qproperty-peakEndColor: red;
     qproperty-maxPeakColor: rgb(0, 90, 160);
 }
+
+QComboBox
+{
+    color: #C8C8C8;
+    border-radius: 6px;
+    border: 1px solid #33779E;
+    background-color: #3F92C1;
+
+    selection-color: black;
+    selection-background-color: #3F92C1;
+}
+
+QComboBox QAbstractItemView
+{
+    border: 1px solid transparent;
+    background-color: rgba(0, 0, 0, 30);
+}
+
+QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(0, 0, 255, 2),
+    stop:1 rgb(0, 0, 255, 30));
+}
+
+QComboBox::drop-down
+{
+    border: 0px;
+}
+
+QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}

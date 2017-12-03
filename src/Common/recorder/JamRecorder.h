@@ -4,13 +4,18 @@
 #include <QDir>
 #include <QMap>
 
+#include <memory>
+
 namespace Recorder {
-// ++++++++++++++++++++++++++++++++++++++++++++++
+
+
 class JamAudioFile
 {
+
 public:
     JamAudioFile(const QString &path, uint intervalIndex);
-    JamAudioFile();// default construtor to use this class in QMap and QList without pointers
+    JamAudioFile(); // default construtor to use this class in QMap and QList without pointers
+
     inline uint getIntervalIndex() const
     {
         return intervalIndex;
@@ -25,13 +30,17 @@ private:
     QString path;
     uint intervalIndex;
 };
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class JamTrack
 {
 public:
     JamTrack(const QString &userName, quint8 channelIndex);
-    JamTrack();// default construtor to use this class in QMap and QList without pointers
+    JamTrack(); // default construtor to use this class in QMap and QList without pointers
+
     void addAudioFile(const QString &path, int intervalIndex);
+
     inline QString getUserName() const
     {
         return userName;
@@ -54,8 +63,10 @@ private:
 };
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class JamInterval
 {
+
 public:
     JamInterval(const int intervalIndex, const int bpm, const int bpi, const QString &path, const QString &userName, const quint8 channelIndex);
     JamInterval();
@@ -98,9 +109,12 @@ private:
     QString userName;
     quint8 channelIndex;
 };
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class Jam
 {
+
 public:
     Jam(int bpm, int bpi, int sampleRate);
 
@@ -141,22 +155,31 @@ private:
     // the map key is intervalIndex.
     QMap<int, QList<JamInterval> > jamIntervals;
 };
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class JamMetadataWriter
 {
 public:
     virtual void write(const Jam &metadata) = 0;
     virtual ~JamMetadataWriter(){}
+
     virtual QString getWriterId() const = 0;
     virtual QString getWriterName() const = 0; // Localised
-    virtual void setJamDir(QString newJamName, QString recordBasePath) = 0;
-    virtual QString getAudioAbsolutePath(QString audioFileName) = 0;
+
+    virtual void setJamDir(const QString &newJamName, const QString &recordBasePath) = 0;
+
+    virtual QString getAudioAbsolutePath(const QString &audioFileName) = 0;
+
+    virtual QString getVideoAbsolutePath(const QString &videoFileName) = 0;
 };
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class LocalNinjamInterval
 {
 public:
-    LocalNinjamInterval(int intervalIndex) :
+    explicit LocalNinjamInterval(int intervalIndex) :
         intervalIndex(intervalIndex)
     {
     }
@@ -165,19 +188,19 @@ public:
     {
     }
 
-    void appendEncodedAudio(const QByteArray &data)
+    void appendEncodedData(const QByteArray &data)
     {
-        encodedAudio.append(data);
+        encodedData.append(data);
     }
 
     inline QByteArray getEncodedData() const
     {
-        return encodedAudio;
+        return encodedData;
     }
 
     void clear()
     {
-        encodedAudio.clear();
+        encodedData.clear();
         this->intervalIndex++;
     }
 
@@ -186,18 +209,26 @@ public:
         return intervalIndex;
     }
 
+    inline bool isEmpty() const
+    {
+        return encodedData.isEmpty();
+    }
+
 private:
-    QByteArray encodedAudio;
+    QByteArray encodedData;
     int intervalIndex;
 };
 
 class JamRecorder
 {
 public:
-    JamRecorder(JamMetadataWriter *jamMetadataWritter);
+    explicit JamRecorder(JamMetadataWriter *jamMetadataWritter);
     ~JamRecorder();
-    void appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex,
-                              bool isFirstPartOfInterval, bool isLastPastOfInterval);
+    void appendLocalUserAudio(const QByteArray &encodedAudio, quint8 channelIndex,
+                              bool isFirstPartOfInterval);
+
+    void appendLocalUserVideo(const QByteArray &encodedVideo, bool isFirstPartOfInterval);
+
     void addRemoteUserAudio(const QString &userName, const QByteArray &encodedAudio, quint8 channelIndex);
     void startRecording(const QString &localUser, const QDir &recordBasePath, int bpm, int bpi, int sampleRate);
 
@@ -215,21 +246,31 @@ public:
 
 private:
     QString currentJamName;
-    Jam *jam;
-    JamMetadataWriter *jamMetadataWritter;
+    std::unique_ptr<Jam> jam;
+    std::unique_ptr<JamMetadataWriter> jamMetadataWritter;
     int globalIntervalIndex;
     QString localUserName;
     bool running;
     QDir recordBaseDir;
 
-    QMap<quint8, LocalNinjamInterval> localUserIntervals;// use channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
+    /**
+        Audio Intervals: Using channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
+        Video Intervals: Using 255 as default channel index.
+     */
+    QMap<quint8, LocalNinjamInterval> localUserIntervals; // storing encoded data for audio and video intervals
+    static const quint8 VIDEO_CHANNEL_KEY;
 
     QString getNewJamName();
+
     void writeEncodedFile(const QByteArray &encodedData, const QString &path);
+
     static QString buildAudioFileName(const QString &userName, quint8 channelIndex, int currentInterval);
+    static QString buildVideoFileName(const QString &userName, int currentInterval, const QString &fileExtension);
+
     void writeProjectFile();
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++
 };
-}// namespace
+
+} // namespace
+
 #endif

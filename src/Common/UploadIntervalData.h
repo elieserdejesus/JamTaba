@@ -5,12 +5,19 @@
 
 class UploadIntervalData
 {
+
 public:
     UploadIntervalData();
+    ~UploadIntervalData();
 
     inline QByteArray getGUID() const
     {
         return GUID;
+    }
+
+    inline bool isEmpty() const
+    {
+        return dataToUpload.isEmpty();
     }
 
     void appendData(const QByteArray &encodedData);
@@ -20,7 +27,7 @@ public:
         return dataToUpload.size();
     }
 
-    inline QByteArray getStoredBytes() const
+    inline QByteArray getData() const
     {
         return dataToUpload;
     }
@@ -32,8 +39,9 @@ public:
 
 private:
     static QByteArray newGUID();
-    const QByteArray GUID;
+    QByteArray GUID;
     QByteArray dataToUpload;
+
 };
 
 #endif

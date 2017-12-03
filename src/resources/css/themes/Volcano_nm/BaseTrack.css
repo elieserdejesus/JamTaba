@@ -13,7 +13,6 @@
     color: rgb(50,50,50);
 }
 
-#buttonBoost,
 #soloButton,
 #muteButton,
 QPushButton#buttonStereoInversion
@@ -23,28 +22,11 @@ QPushButton#buttonStereoInversion
     stop: 1.0 #FFB301);
 }
 
-
-#buttonBoost
-{
-   padding: 1px;
-   padding-top: 3px;
-   padding-bottom: 3px;
-   border-radius: 2px;
-}
-
 QPushButton#buttonStereoInversion:checked
 {
     background-color: #B35925;
 }
 
-#buttonBoost:checked
-{
-    background-color: #B35925;
-    color: rgba(0, 0, 0, 160);
-    border-radius: 2px;
-}
-
-#buttonBoost:hover,
 #soloButton:hover,
 #muteButton:hover
 {
@@ -60,13 +42,6 @@ QPushButton#buttonStereoInversion:hover
     border-radius: 2px;
 }
 
-#buttonBoost:hover:checked
-{
-    background-color: #e56318;
-    border-radius: 2px;
-    border-color: rgb(20, 20, 20)
-}
-
 QPushButton#buttonStereoInversion:hover:checked
 {
     background-color: #e56318;
@@ -74,31 +49,23 @@ QPushButton#buttonStereoInversion:hover:checked
 }
 
 /* button colors when the track is NOT xmiting */
-BaseTrackView[unlighted="true"] #buttonBoost,
 BaseTrackView[unlighted="true"] #soloButton,
 BaseTrackView[unlighted="true"] #muteButton,
-BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion,
+BaseTrackView[unlighted="true"] BoostSpinBox
 {
     background-color: rgba(0, 0, 0, 30);
     border: none;
 }
 
 BaseTrackView[unlighted="true"] #muteButton:checked,
-BaseTrackView[unlighted="true"] #soloButton:checked,
-BaseTrackView[unlighted="true"] #buttonBoost:checked
+BaseTrackView[unlighted="true"] #soloButton:checked
 {
     color: rgb(220, 220, 220);
 }
 
-#buttonBoost:checked
-{
-    border-bottom: none;
-    border-top: none;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 60);
-}
-
-#soloButton, #muteButton
+#soloButton,
+#muteButton
 {
     border: 1px outset #68300F;
 }
@@ -129,21 +96,18 @@ BaseTrackView[unlighted="true"] #buttonBoost:checked
     border-color: rgb(45, 45, 45);
 }
 
-BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked,
-BaseTrackView[unlighted="true"] #buttonBoost:hover:checked
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
 {
     background-color: #e56318;
 }
 
 BaseTrackView
 {
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-stop: 0.0 #FFD470,
-stop: 0.15 #FDE09B,
-stop: 0.9 #FDE5A9,
-stop: 1.0 #EF820D);
+    background: none;
 
     border: none; /*1px solid rgb(61, 61, 61);*/
+    border-right: 1px solid rgba(0, 0, 0, 20);
+    border-left: 1px solid rgba(0, 0, 0, 20);
     font-size: 8px;
 }
 
@@ -190,6 +154,13 @@ AudioMeter
 TrackGroupView
 {
     border: none;
+    border-radius: 3px;
+
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop: 0.0 #FFD470,
+    stop: 0.15 #FDE09B,
+    stop: 0.9 #FDE5A9,
+    stop: 1.0 #EF820D);
 }
 
 TrackGroupView #topPanel                                /* topPanel is used to show channel name */

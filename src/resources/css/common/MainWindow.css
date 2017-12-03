@@ -2,12 +2,40 @@
     Stylesheet code for the Main window.
 */
 
+MainWindow
+{
+    qproperty-tintColor: black;
+}
 
 #bottomPanel                                    /* the widget in bottom, used to show master controls and NinjamPanel when connected in a ninjam server */
 {
     min-height: 60px;
 }
 
+
+QPushButton#buttonCollapseBottom,
+QPushButton#buttonCollapseChat,
+QPushButton#buttonCollapseLocalTracks
+{
+    border: none;
+    padding: 1px;
+    margin: 0px;
+}
+
+QPushButton#buttonCollapseBottom:!checked,
+QPushButton#buttonCollapseChat:!checked,
+QPushButton#buttonCollapseLocalTracks:!checked
+{
+    background: none;
+}
+
+QLabel#labelPerformanceMonitor
+{
+    background-color: rgba(0, 0, 0, 30);
+    color: rgba(255, 255, 255, 140);
+    padding-left: 3px;
+    padding-right: 3px;
+}
 
 /* Zoom buttons in main window right bottom corner */
 #zoomInButton,
@@ -42,25 +70,12 @@ MainWindow #localControlsCollapseButton                    /* not collapsed */
     width: 6px;
     background-repeat: none;
     background-position: right center;
-    background-image: url(:/images/mini arrow left.png);
-}
-
-MainWindow #localControlsCollapseButton::hover             /* hover effect when not collapsed */
-{
-   background-image: url(:/images/mini arrow left hover.png);
 }
 
 MainWindow #localControlsCollapseButton:checked            /* collapsed (arrow pointing to right side) */
 {
-   background-image: url(:/images/mini arrow right.png);
    background-position: center center;
 }
-
-MainWindow #localControlsCollapseButton::hover:checked     /* hover effect when collapsed */
-{
-   background-image: url(:/images/mini arrow right hover.png);
-}
-
 
 
 /* The tabBar used in center/content area
@@ -76,7 +91,30 @@ QTabBar::tab
     color: black;
  }
 
+ChatTabWidget QTabBar::tab,
 QTabWidget::tab-bar
 {
     left: 0;
+}
+
+ChatTabWidget[collapsed="true"]
+{
+    background: rgba(0, 0, 0, 40);
+}
+
+ChatTabWidget[collapsed="true"] QTabBar:tab
+{
+    /*max-width: 26px;*/
+    padding: 6px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+FakeCameraView
+{
+    color: rgba(0, 0, 0, 180);
+    background-color: rgba(0, 0, 0, 50);
+    font-weight: bold;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 16px;
 }

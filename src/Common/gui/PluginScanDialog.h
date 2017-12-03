@@ -17,6 +17,7 @@ public:
     void setCurrentScaning(const QString &pluginPath);
     void cleanFoundPluginsList();
     void addFoundedPlugin(const QString &pluginName);
+
 private:
     Ui::PluginScanDialog *ui;
 };

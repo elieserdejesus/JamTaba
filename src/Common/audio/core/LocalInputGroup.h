@@ -10,6 +10,7 @@ class SamplesBuffer;
 
 class LocalInputGroup
 {
+
 public:
     LocalInputGroup(int groupIndex, Audio::LocalInputNode *firstInput);
     ~LocalInputGroup();
@@ -53,6 +54,6 @@ inline bool LocalInputGroup::isEmpty() const
     return groupedInputs.empty();
 }
 
-}//namespace
+} //namespace
 
 #endif

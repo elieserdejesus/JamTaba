@@ -117,4 +117,26 @@ AudioMeter
     qproperty-peakStartColor: green;
     qproperty-peakEndColor: red;
     qproperty-maxPeakColor: rgb(90, 90, 90);
+
+    qproperty-drawSegments: true; /* By default all themes will draw segments in peak meters */
+}
+
+#chatTabWidget QTabBar::tab:!selected
+{
+    background-color: rgba(255, 255, 255, 20);
+    border-left: 1px solid rgba(0, 0, 0, 30);
+    color: rgba(0, 0, 0, 120);
+}
+
+QTabBar::close-button {
+    image: url(':/images/discard.png');
+}
+
+QTabBar::close-button:hover {
+    background: rgba(255, 255, 255, 30);
+}
+
+WavePeakPanel
+{
+    qproperty-peaksColor: red;
 }

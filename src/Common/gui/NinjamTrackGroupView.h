@@ -3,8 +3,10 @@
 
 #include "TrackGroupView.h"
 #include <QLabel>
+#include <QBoxLayout>
 #include "MarqueeLabel.h"
 #include "NinjamTrackView.h"
+#include "video/VideoWidget.h"
 
 namespace Controller {
 class MainController;
@@ -14,9 +16,16 @@ namespace Persistence {
 class CacheEntry;
 }
 
+enum class TracksLayout {
+    VerticalLayout,
+    HorizontalLayout,
+    GridLayout
+};
+
 class NinjamTrackGroupView : public TrackGroupView
 {
     Q_OBJECT
+
 public:
     NinjamTrackGroupView(Controller::MainController *mainController, long trackID,
                          const QString &channelName, const QColor &userColor, const Persistence::CacheEntry &initialValues);
@@ -30,9 +39,22 @@ public:
 
     NinjamTrackView *addTrackView(long trackID) override;
 
-    void setOrientation(Qt::Orientation orientation);
+    void setTracksLayout(TracksLayout newLayout);
 
     QSize sizeHint() const override;
+
+    void addVideoInterval(const QByteArray &encodedVideoData);
+
+    QColor getTintColor() const;
+
+    static const uint MAX_WIDTH_IN_GRID_LAYOUT;
+    static const uint MAX_HEIGHT_IN_GRID_LAYOUT;
+
+signals:
+    void createPrivateChat(const QString &userName, const QString &userIP);
+
+public slots:
+    void updateVideoFrame(const QImage &frame);
 
 protected:
     NinjamTrackView *createTrackView(long trackID) override;
@@ -42,15 +64,27 @@ protected:
 private:
     Controller::MainController *mainController;
     QLabel *countryLabel;
+    QLabel *countryFlag;
     MarqueeLabel *groupNameLabel;
     QLabel *chatBlockIconLabel;
     QString userIP;
-    Qt::Orientation orientation;
+    TracksLayout tracksLayoutEnum;
+
+    VideoWidget *videoWidget;
+    QByteArray encodedVideoData;
+    quint64 lastVideoRender;
+    QList<QList<QImage>> decodedImages;
+    uint videoFrameRate;
 
     void setupHorizontalLayout();
     void setupVerticalLayout();
+    void setupGridLayout();
 
     QString getRgbaColorString(const QColor &color, int alpha);
+
+    Qt::Orientation getTracksOrientation() const;
+
+    void resetMainLayoutStretch();
 
 private slots:
     void updateGeoLocation(const QString &resolvedIp);
@@ -58,6 +92,8 @@ private slots:
     void unblockChatMessages();
     void hideChatBlockIcon(const QString &unblockedUserName);
     void showChatBlockIcon(const QString &blockedUserName);
+
+    void startVideoStream();
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H

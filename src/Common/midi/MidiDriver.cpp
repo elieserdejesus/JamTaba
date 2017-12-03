@@ -31,5 +31,6 @@ bool MidiDriver::deviceIsGloballyEnabled(int deviceIndex) const
 {
     if (deviceIndex >= 0 && deviceIndex < inputDevicesEnabledStatuses.size())
         return inputDevicesEnabledStatuses.at(deviceIndex);
+
     return false;
 }

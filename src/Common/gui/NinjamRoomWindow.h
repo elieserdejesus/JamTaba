@@ -4,14 +4,13 @@
 #include <QWidget>
 #include <QTimer>
 #include "ninjam/UserChannel.h"
-#include "ninjam/User.h"
-#include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
 #include "chat/ChatPanel.h"
-#include "chat/NinjamVotingMessageParser.h"
+#include "NinjamTrackGroupView.h"
 #include <QMessageBox>
 #include "NinjamPanel.h"
-#include "UsersColorsPool.h"
+#include "MetronomePanel.h"
+#include "intervalProgress/IntervalProgressWindow.h"
 
 class MainWindow;
 class NinjamTrackGroupView;
@@ -38,97 +37,102 @@ public:
     void updatePeaks();
     void updateGeoLocations();
 
-    // these two components are exposed to be showed in main window
-    inline ChatPanel *getChatPanel() const
-    {
-        return chatPanel;
-    }
+    NinjamPanel *getNinjamPanel() const;
+    MetronomePanel *getMetronomePanel() const;
 
-    inline NinjamPanel *getNinjamPanel() const
-    {
-        return ninjamPanel;
-    }
+    void setTracksLayout(TracksLayout newLayout);
 
-    void setTracksOrientation(Qt::Orientation orientation);
+    void setTintColor(const QColor &color);
 
     enum TracksSize
     {
-        NARROW, WIDE
+        NARROW,
+        WIDE
     };
 
     void setTracksSize(TracksSize size);
 
-    inline QString getRoomName() const { return roomInfo.getName(); }
+    QString getRoomName() const;
 
-    Login::RoomInfo getRoomInfo() const { return roomInfo; }
+    Login::RoomInfo getRoomInfo() const;
 
     bool metronomeFloatingWindowIsVisible() const;
     void closeMetronomeFloatingWindow();
+
+    void setBpiComboPendingStatus(bool status);
+    void setBpmComboPendingStatus(bool status);
+
+    QList<NinjamTrackGroupView *> getTrackGroups() const;
+
+public slots:
+    void setChannelXmitStatus(long channelID, bool transmiting);
+    void resetBpiComboBox();
+    void resetBpmComboBox();
 
 protected:
     Ui::NinjamRoomWindow *ui;
     MainWindow *mainWindow;
     Controller::MainController *mainController;
-    NinjamPanel *ninjamPanel;// panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
+    NinjamPanel *ninjamPanel; // panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
+    MetronomePanel *metronomePanel;
 
     void changeEvent(QEvent *) override;
 
+    void resizeEvent(QResizeEvent *ev) override;
+
 private:
     QMap<QString, NinjamTrackGroupView *> trackGroups;
-    ChatPanel *chatPanel;
-
-    QTimer *bpmVotingExpirationTimer;
-    QTimer *bpiVotingExpiratonTimer;
 
     Login::RoomInfo roomInfo;
 
-    void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
+    MetronomePanel *createMetronomePanel();
 
     void setupSignals(Controller::NinjamController *ninjamController);
-    void disconnectFromNinjamControllerSignals(Controller::NinjamController *ninjamController);
 
     NinjamTrackView *getTrackViewByID(long trackID);
 
-    Qt::Orientation tracksOrientation;
+    TracksLayout tracksLayout;
     TracksSize tracksSize;
 
-    void createLayoutDirectionButtons(Qt::Orientation initialOrientation);
+    IntervalProgressWindow *metronomeFloatingWindow;
+
+    void createLayoutButtons(TracksLayout initialLayout);
     QToolButton *horizontalLayoutButton;
     QToolButton *verticalLayoutButton;
+    QToolButton *gridLayoutButton;
 
     void createTracksSizeButtons(TracksSize lastTracksSize);
     QToolButton *narrowButton;
     QToolButton *wideButton;
 
-    UsersColorsPool usersColorsPool;
+    UsersColorsPool *usersColorsPool;
 
     int calculateEstimatedChunksPerInterval() const;
 
-    void updateTracksSizeButtons();// enable or disable tracks size buttons
+    void updateTracksSizeButtons(); // enable or disable tracks size buttons
 
     void updateUserNameLabel();
 
     void translate();
 
-    bool canShowBlockButtonInChatMessage(const QString &userName) const;
-
     void updateBpmBpiLabel();
 
-    void initializeVotingExpirationTimers();
+    void addTrack(NinjamTrackGroupView *track);
 
-    void showLastChordsInChat();
+    quint8 getGridLayoutMaxCollumns() const;
 
-    static const QString JAMTABA_CHAT_BOT_NAME;
+    void adjustTracksPanelSizePolicy();
 
 private slots:
 
     // ninjam panel controls
     void setNewBpi(const QString &);
     void setNewBpm(const QString &);
-    void setNewBeatsPerAccent(int);
+    void handleAccentBeatsComboChange(int);
+    void handleCustomAccentBeatsChange(const QList<int> &);
     void setNewIntervalShape(int);
 
     // metronome events
@@ -137,40 +141,57 @@ private slots:
     void toggleMetronomeMuteStatus();
     void toggleMetronomeSoloStatus();
     void showMetronomePreferences();
+    void showMetronomeFloatingWindow(bool show);
+    void deleteFloatingWindow();
+
+    // video
+    void setVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData);
 
     // ninjam controller events
     void addChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
     void removeChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
     void changeChannelName(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
-    void setChannelXmitStatus(long channelID, bool transmiting);
     void updateIntervalDownloadingProgressBar(long trackID);
     void hideIntervalDownloadingProgressBar(long trackID);
-    void addChatMessage(const Ninjam::User &, const QString &message);
-    void addServerTopicMessage(const QString &topicMessage);
-    void handleUserLeaving(const QString &userName);
-    void handleUserEntering(const QString &userName);
+
     void handleBpiChanges();
     void handleBpmChanges();
-    void sendNewChatMessage(const QString &msg);
 
     void showServerLicence();
 
-    // chat panel
-    void voteToChangeBpi(int newBpi);
-    void voteToChangeBpm(int newBpm);
-    void blockUserInChat(const QString &userNameToBlock);
-    void showFeedbackAboutBlockedUserInChat(const QString &userName);
-    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
-
     void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked); // horizontal or vertical
-    void toggleTracksSize(QAbstractButton *buttonClicked);// narrow or wide
-
-    void resetBpiComboBox();
-    void resetBpmComboBox();
+    void toggleTracksSize(QAbstractButton *buttonClicked); // narrow or wide
 
     void setEstimatatedChunksPerIntervalInAllTracks();
 
+    void reAddTrackGroups();
+
     void updateStylesheet();
 };
+
+inline QList<NinjamTrackGroupView *> NinjamRoomWindow::getTrackGroups() const
+{
+    return trackGroups.values();
+}
+
+inline MetronomePanel *NinjamRoomWindow::getMetronomePanel() const
+{
+    return metronomePanel;
+}
+
+inline NinjamPanel *NinjamRoomWindow::getNinjamPanel() const
+{
+    return ninjamPanel;
+}
+
+inline QString NinjamRoomWindow::getRoomName() const
+{
+    return roomInfo.getName();
+}
+
+inline Login::RoomInfo NinjamRoomWindow::getRoomInfo() const
+{
+    return roomInfo;
+}
 
 #endif // NINJAMROOMWINDOW_H

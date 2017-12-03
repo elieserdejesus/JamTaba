@@ -32,10 +32,7 @@ public:
 
     void detachMainController();
 
-    inline int getInputIndex() const
-    {
-        return getTrackID();
-    }
+    int getInputIndex() const;
 
     Audio::LocalInputNode *getInputNode() const;
 
@@ -44,7 +41,7 @@ public:
     virtual void setPeakMetersOnlyMode(bool peakMetersOnly);
     void togglePeakMetersOnlyMode();
 
-    inline bool isShowingPeakMetersOnly() const { return peakMetersOnly; }
+    bool isShowingPeakMetersOnly() const;
 
     QSize sizeHint() const;
 
@@ -52,7 +49,9 @@ public:
 
     void mute(bool b);
     void solo(bool b);
-    void initializeBoostButton(Boost boostValue);
+    void initializeBoostSpinBox(Boost boostValue);
+
+    void setTintColor(const QColor &color) override;
 
 signals:
     void openLooperEditor(uint trackIndex);
@@ -86,5 +85,16 @@ private slots:
     void updateLooperButtonIcon();
 
 };
+
+
+inline bool LocalTrackView::isShowingPeakMetersOnly() const
+{
+    return peakMetersOnly;
+}
+
+inline int LocalTrackView::getInputIndex() const
+{
+    return getTrackID();
+}
 
 #endif

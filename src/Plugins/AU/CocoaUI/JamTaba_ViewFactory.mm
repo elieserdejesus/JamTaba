@@ -10,6 +10,7 @@
 
 #include <QtPlugin>
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
+Q_IMPORT_PLUGIN(AVFServicePlugin) // Camera
 
 #define APP_VERSION VERSION  // VERSION is defined in Configurator.h
 
@@ -45,7 +46,8 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     if (!QApplication::instance())
     {
         int argc = 0;
-        new QApplication(argc, 0);
+        QApplication *application = new QApplication(argc, 0);
+        application->setStyle("fusion"); // same visual in all plataforms
     }
 
     uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];

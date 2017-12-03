@@ -2,7 +2,8 @@
 -------------------------------------*/
 
 /* Button ----------------------*/
-QPushButton
+QPushButton,
+BoostSpinBox
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 #FDE5A9,
@@ -237,7 +238,7 @@ background-color: #FDE5A9;
 
 QSlider::handle:horizontal
 {
-    margin-top: -7px;
+    margin-top: -6px;
     margin-bottom: -7px;
     padding: 0px;
     width: 8px;
@@ -257,9 +258,10 @@ QSlider::handle:vertical
 
 
 /* TabBar ----------------------*/
+
 QTabBar::tab
 {
-    background-color: rgba(174, 83, 27, 180); /* rgb(200, 200, 200);*/
+    background-color: rgba(174, 83, 27, 180);
     color: lightgray;
 }
 
@@ -346,8 +348,41 @@ AudioMeter#masterMeter
 }
 
 AudioMeter#masterMeter
-NinjamPanel #peakMeter
+MetronomePanel #peakMeter
 {
     qproperty-peakStartColor: rgb(190, 90, 29);
 }
 
+
+QComboBox
+{
+    background-color: rgb(235, 164, 101);
+    border-radius: 2px;
+    color: rgb(10, 10, 10);
+    selection-background-color: #B35925;
+}
+
+QComboBox QAbstractItemView
+{
+    border: none;
+    color: black;
+    background-color: rgba(254, 181, 102, 150);
+    border: 1px solid transparent;
+}
+
+QComboBox:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(235, 164, 101),
+    stop:1 rgba(240, 186, 136));
+}
+
+QComboBox::drop-down
+{
+    border: 0px;
+}
+
+QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}

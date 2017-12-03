@@ -2,7 +2,7 @@
     error( "Couldn't find the common.pri file!" )
 }
 
-QT += core gui network widgets concurrent
+QT += core gui network widgets concurrent multimedia multimediawidgets
 
 TARGET = Jamtaba2
 TEMPLATE = app
@@ -12,6 +12,7 @@ INCLUDEPATH += $$ROOT_PATH/libs/includes/rtmidi
 INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
 INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
 INCLUDEPATH += $$ROOT_PATH/libs/includes/minimp3
+INCLUDEPATH += $$ROOT_PATH/libs/includes/ffmpeg
 
 INCLUDEPATH += $$SOURCE_PATH/Standalone
 INCLUDEPATH += $$SOURCE_PATH/Standalone/gui
@@ -119,8 +120,8 @@ win32{
             LIBS_PATH = "static/win64-msvc"
         }
 
-        CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg
-        else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd
+        CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -lstackwalker
+        else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd -lavcodecd -lavutild -lavformatd -lswscaled -lswresampled -lstackwalkerd
 
         CONFIG(release, debug|release) {
             #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
@@ -133,7 +134,7 @@ win32{
        message("MinGW x86 build")
        LIBS_PATH = "static/win32-mingw"
 
-       LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+       LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample
     }
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 -lPsapi
@@ -141,6 +142,8 @@ win32{
     QMAKE_CXXFLAGS += -DPSAPI_VERSION=1
 
     RC_FILE = ../Jamtaba2.rc #windows icon
+
+    QMAKE_LFLAGS += "/NODEFAULTLIB:libcmt"
 }
 
 macx{
@@ -157,7 +160,7 @@ macx{
         message("x86_64 build") ## mac 64bit specific build here
         LIBS_PATH = "static/mac64"
     }
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -liconv
     LIBS += -framework IOKit
     LIBS += -framework CoreAudio
     LIBS += -framework CoreMidi
@@ -181,7 +184,8 @@ linux{
 
     DEFINES += __LINUX_ALSA__
 
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg -lavformat -lavcodec -lswscale -lavutil -lswresample
     LIBS += -lasound
 }
 

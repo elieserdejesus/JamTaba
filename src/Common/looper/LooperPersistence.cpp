@@ -12,24 +12,20 @@
 
 using namespace Audio;
 
-LoopInfo::LoopInfo(quint32 bpm, quint16 bpi, const QString &name, bool audioIsEncoded, quint8 mode)
-        : bpm(bpm),
-          bpi(bpi),
-          name(name),
-          usingEncodedAudio(audioIsEncoded),
-          looperMode(mode)
+LoopInfo::LoopInfo(quint32 bpm, quint16 bpi, const QString &name, bool audioIsEncoded, quint8 mode) :
+    bpm(bpm),
+    bpi(bpi),
+    name(name),
+    usingEncodedAudio(audioIsEncoded),
+    looperMode(mode)
 {
     //
 }
 
 LoopInfo::LoopInfo()
-    : bpm(0),
-      bpi(0),
-      name(QString()),
-      usingEncodedAudio(false),
-      looperMode(0)
+    : LoopInfo(0, 0, QString(), false, 0) // calling overloaded constructor
 {
-
+    //
 }
 
 bool LoopInfo::isValid() const
@@ -41,11 +37,13 @@ QString LoopInfo::toString(bool showBpm) const
 {
     QString text = name;
     text += " (";
+
     if (showBpm)
         text += QString::number(bpm) + " BPM, ";
 
     text += QString::number(bpi) + " BPI, ";
     text += QString::number(layers.size()) + " layers";
+
     text += ")";
 
     return text;
@@ -62,9 +60,9 @@ void LoopInfo::addLayer(bool isLocked, float gain, float pan)
 
 // -------------------------------------------------------------------
 
-LoopSaver::LoopSaver(const QString &savePath, Looper *looper)
-    : savePath(savePath),
-      looper(looper)
+LoopSaver::LoopSaver(const QString &savePath, Looper *looper) :
+    savePath(savePath),
+    looper(looper)
 {
 
 }
@@ -83,7 +81,7 @@ void LoopSaver::save(const QString &loopFileName, uint bpm, uint bpi, bool encod
 {
     QDir loopDir(QDir(savePath).absoluteFilePath(loopFileName));
     if (!loopDir.exists()) {
-        if(!loopDir.mkpath(".")){
+        if (!loopDir.mkpath(".")) {
             qCritical() << "Error creating loop dir" << loopDir;
         }
     }
@@ -134,7 +132,7 @@ void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFi
     Q_ASSERT(layerIndex < MAX_LOOP_LAYERS);
     Q_ASSERT(!savePath.isEmpty());
 
-    if(!encodeInOggVorbis) {
+    if (!encodeInOggVorbis) {
         WaveFileWriter waveFileWriter;
         QString filePath = QDir(savePath).absoluteFilePath(loopFileName +"/layer_" + QString::number(layerIndex) + ".wav");
         waveFileWriter.write(filePath, buffer, sampleRate, bitDepth);
@@ -157,8 +155,8 @@ void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFi
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-LoopLoader::LoopLoader(const QString &loadPath)
-    : loadPath(loadPath)
+LoopLoader::LoopLoader(const QString &loadPath) :
+    loadPath(loadPath)
 {
 
 }
@@ -210,7 +208,7 @@ bool LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate, 
     bool needResample = audioFileSampleRate > 0 && currentSampleRate != audioFileSampleRate;
     if (needResample) {
         SamplesBufferResampler resampler;
-        uint desiredLenght = currentSampleRate/(float)audioFileSampleRate * out.getFrameLenght();
+        uint desiredLenght = currentSampleRate/static_cast<float>(audioFileSampleRate) * out.getFrameLenght();
         const SamplesBuffer resampledBuffer = resampler.resample(out, desiredLenght);
         out.setFrameLenght(desiredLenght);
         out.set(resampledBuffer);
@@ -222,7 +220,7 @@ bool LoopLoader::loadAudioFile(const QString &filePath, uint currentSampleRate, 
 bool LoopLoader::loadLoopLayerSamples(const QString &loadPath, const QString &loopName, quint8 layerIndex, bool audioIsEncoded, uint currentSampleRate, SamplesBuffer &out)
 {
     QDir audioDir(QDir(loadPath).absoluteFilePath(loopName));
-    if (!audioDir.exists()){
+    if (!audioDir.exists()) {
         qCritical() << "Error loading loop layer samples, " << audioDir.absolutePath() << " not exists!";
         out.setFrameLenght(0);
         return false;
@@ -241,19 +239,20 @@ QList<LoopInfo> LoopLoader::loadLoopsInfo(const QString &loadPath, quint32 bpmTo
     QDir loadDir(loadPath);
     QDir::Filters filters = QDir::NoDotAndDotDot | QDir::Files;
     QFileInfoList fileInfoList = loadDir.entryInfoList(QStringList("*.json"), filters);
-    for(const QFileInfo &fileInfo : fileInfoList) {
+    for (const QFileInfo &fileInfo : fileInfoList) {
         QString loopFilePath = fileInfo.absoluteFilePath();
         LoopInfo loopInfo = LoopLoader::loadLoopInfo(loopFilePath);
         if (loopInfo.isValid() && loopInfo.getBpm() == bpmToMatch)
             allInfos.append(loopInfo);
     }
+
     return allInfos;
 }
 
 LoopInfo LoopLoader::loadLoopInfo(const QString &loopFilePath)
 {
     QFile file(loopFilePath);
-    if(!file.open(QFile::ReadOnly)) {
+    if (!file.open(QFile::ReadOnly)) {
         qCritical() << "Error loading loop metada:" << file.errorString();
         return LoopInfo();
     }

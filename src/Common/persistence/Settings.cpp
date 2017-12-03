@@ -37,6 +37,7 @@ int SettingsObject::getValueFromJson(const QJsonObject &json, const QString &pro
 {
     if (json.contains(propertyName))
         return json[propertyName].toInt();
+
     return fallBackValue;
 }
 
@@ -45,6 +46,7 @@ bool SettingsObject::getValueFromJson(const QJsonObject &json, const QString &pr
 {
     if (json.contains(propertyName))
         return json[propertyName].toBool();
+
     return fallBackValue;
 }
 
@@ -53,6 +55,7 @@ QString SettingsObject::getValueFromJson(const QJsonObject &json, const QString 
 {
     if (json.contains(propertyName))
         return json[propertyName].toString();
+
     return fallBackValue;
 }
 
@@ -61,6 +64,7 @@ float SettingsObject::getValueFromJson(const QJsonObject &json, const QString &p
 {
     if (json.contains(propertyName))
         return (float)(json[propertyName].toDouble());
+
     return fallBackValue;
 }
 
@@ -68,6 +72,7 @@ QJsonArray SettingsObject::getValueFromJson(const QJsonObject &json, const QStri
                                            QJsonArray fallBackValue){
     if (json.contains(propertyName))
         return json[propertyName].toArray();
+
     return fallBackValue;
 }
 
@@ -75,19 +80,21 @@ QJsonObject SettingsObject::getValueFromJson(const QJsonObject &json, const QStr
                                            QJsonObject fallBackValue){
     if (json.contains(propertyName))
         return json[propertyName].toObject();
+
     return fallBackValue;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-LooperSettings::LooperSettings()
-    : SettingsObject("Looper"),
-      preferredLayersCount(4),
-      preferredMode(0),
-      loopsFolder(""),
-      encodingAudioWhenSaving(false),
-      waveFilesBitDepth(16) // 16 bits
-{
 
+LooperSettings::LooperSettings() :
+    SettingsObject("Looper"),
+    preferredLayersCount(4),
+    preferredMode(0),
+    loopsFolder(""),
+    encodingAudioWhenSaving(false),
+    waveFilesBitDepth(16) // 16 bits
+{
+    setDefaultLooperFilesPath();
 }
 
 void LooperSettings::read(const QJsonObject &in)
@@ -97,6 +104,7 @@ void LooperSettings::read(const QJsonObject &in)
     loopsFolder = getValueFromJson(in, "loopsFolder", QString());
     encodingAudioWhenSaving = getValueFromJson(in, "encodeAudio", false);
     waveFilesBitDepth = getValueFromJson(in, "bitDepth", quint8(16)); // 16 bit as default value
+
     if (!(waveFilesBitDepth == 16 || waveFilesBitDepth == 32)) {
         qWarning() << "Invalid bit depth " << waveFilesBitDepth << ", using 16 bits as default value";
         waveFilesBitDepth = 16;
@@ -120,15 +128,20 @@ void LooperSettings::read(const QJsonObject &in)
     }
 
     if (useDefaultSavePath) {
-        QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
-        QDir pathDir(QDir::homePath());
-        QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
-        loopsFolder = QDir(documentsDir).absoluteFilePath("JamTaba/Looper");
-        QDir saveDir(loopsFolder);
-        if (!saveDir.exists()) {
-            saveDir.mkpath(".");
-            qDebug() << "Creating looper data folder " << saveDir;
-        }
+       setDefaultLooperFilesPath();
+    }
+}
+
+void LooperSettings::setDefaultLooperFilesPath()
+{
+    QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
+    QDir pathDir(QDir::homePath());
+    QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
+    loopsFolder = QDir(documentsDir).absoluteFilePath("JamTaba/Looper");
+    QDir saveDir(loopsFolder);
+    if (!saveDir.exists()) {
+        saveDir.mkpath(".");
+        qDebug() << "Creating looper data folder " << saveDir;
     }
 }
 
@@ -195,11 +208,17 @@ void Settings::addPrivateServer(const QString &serverName, int serverPort, const
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 AudioSettings::AudioSettings() :
     SettingsObject("audio"),
     sampleRate(44100),
     bufferSize(128),
-    encodingQuality(VorbisEncoder::QUALITY_NORMAL)
+    encodingQuality(VorbisEncoder::QUALITY_NORMAL),
+    firstIn(-1),
+    firstOut(-1),
+    lastIn(-1),
+    lastOut(-1),
+    audioDevice(-1)
 {
 }
 
@@ -215,7 +234,7 @@ void AudioSettings::read(const QJsonObject &in)
 
     encodingQuality = getValueFromJson(in, "encodingQuality", VorbisEncoder::QUALITY_NORMAL); // using VorbisEncoder.QUALITY_NORMAL as fallback value.
 
-    //ensure vorbis quality is in accepted range
+    // ensure vorbis quality is in accepted range
     if (encodingQuality < VorbisEncoder::QUALITY_LOW)
         encodingQuality = VorbisEncoder::QUALITY_LOW;
     else if(encodingQuality > VorbisEncoder::QUALITY_HIGH)
@@ -235,6 +254,7 @@ void AudioSettings::write(QJsonObject &out) const
 }
 
 // +++++++++++++++++++++++++++++
+
 MidiSettings::MidiSettings() :
     SettingsObject("midi")
 {
@@ -243,8 +263,10 @@ MidiSettings::MidiSettings() :
 void MidiSettings::write(QJsonObject &out) const
 {
     QJsonArray midiArray;
-    foreach (bool state, inputDevicesStatus)
+
+    for (bool state : inputDevicesStatus)
         midiArray.append(state);
+
     out["inputsState"] = midiArray;
 }
 
@@ -259,6 +281,7 @@ void MidiSettings::read(const QJsonObject &in)
 }
 
 // ++++++++++++++++++++++++++++++
+
 MultiTrackRecordingSettings::MultiTrackRecordingSettings() :
     SettingsObject("recording"),
     saveMultiTracksActivated(false),
@@ -273,7 +296,7 @@ void MultiTrackRecordingSettings::write(QJsonObject &out) const
     out["recordingPath"] = QDir::toNativeSeparators(recordingPath);
     out["recordActivated"] = saveMultiTracksActivated;
     QJsonObject jamRecorders = QJsonObject();
-    foreach(QString key, jamRecorderActivated.keys()){
+    for (const QString &key : jamRecorderActivated.keys()){
         QJsonObject jamRecorder = QJsonObject();
         jamRecorder["activated"] = jamRecorderActivated[key];
         jamRecorders[key] = jamRecorder;
@@ -297,22 +320,31 @@ void MultiTrackRecordingSettings::read(const QJsonObject &in)
     } else {
         useDefaultRecordingPath = true;
     }
-    if (useDefaultRecordingPath) {
-        QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
-        QDir pathDir(QDir::homePath());
-        QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
-        recordingPath = QDir(documentsDir).absoluteFilePath("Jamtaba");
-    }
+
+    if (useDefaultRecordingPath)
+        recordingPath = MultiTrackRecordingSettings::getDefaultRecordingPath();
+
     saveMultiTracksActivated = getValueFromJson(in, "recordActivated", false);
 
     QJsonObject jamRecorders = getValueFromJson(in, "jamRecorders", QJsonObject());
-    foreach(QString key, jamRecorders.keys()) {
+    for(const QString &key : jamRecorders.keys()) {
         QJsonObject jamRecorder = jamRecorders[key].toObject();
         jamRecorderActivated[key] = getValueFromJson(jamRecorder, "activated", false);
     }
 }
 
+QString MultiTrackRecordingSettings::getDefaultRecordingPath()
+{
+    QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
+    QDir pathDir(QDir::homePath());
+    QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
+    QDir jamTabaDir = QDir(documentsDir).absoluteFilePath("Jamtaba");
+
+    return QDir(jamTabaDir).absoluteFilePath("Jams"); // using 'Jams' as default recording folder (issue #891)
+}
+
 // +++++++++++++++++++++++++++++
+
 MetronomeSettings::MetronomeSettings() :
     SettingsObject("metronome"),
     pan(0),
@@ -320,8 +352,10 @@ MetronomeSettings::MetronomeSettings() :
     muted(false),
     usingCustomSounds(false),
     customPrimaryBeatAudioFile(""),
-    customSecondaryBeatAudioFile("")
+    customOffBeatAudioFile(""),
+    customAccentBeatAudioFile("")
 {
+    //
 }
 
 void MetronomeSettings::read(const QJsonObject &in)
@@ -331,7 +365,8 @@ void MetronomeSettings::read(const QJsonObject &in)
     muted = getValueFromJson(in, "muted", false);
     usingCustomSounds = getValueFromJson(in, "usingCustomSounds", false);
     customPrimaryBeatAudioFile = getValueFromJson(in, "customPrimaryBeatAudioFile", QString(""));
-    customSecondaryBeatAudioFile = getValueFromJson(in, "customSecondaryBeatAudioFile", QString(""));
+    customOffBeatAudioFile = getValueFromJson(in, "customOffBeatAudioFile", getValueFromJson(in, "customSecondaryBeatAudioFile", QString(""))); // backward compatible
+    customAccentBeatAudioFile = getValueFromJson(in, "customAccentBeatAudioFile", QString(""));
     builtInMetronomeAlias = getValueFromJson(in, "builtInMetronome", QString("Default"));
 }
 
@@ -342,11 +377,13 @@ void MetronomeSettings::write(QJsonObject &out) const
     out["muted"] = muted;
     out["usingCustomSounds"] = usingCustomSounds;
     out["customPrimaryBeatAudioFile"] = customPrimaryBeatAudioFile;
-    out["customSecondaryBeatAudioFile"] = customSecondaryBeatAudioFile;
+    out["customOffBeatAudioFile"] = customOffBeatAudioFile;
+    out["customAccentBeatAudioFile"] = customAccentBeatAudioFile;
     out["builtInMetronome"] = builtInMetronomeAlias;
 }
 
 // +++++++++++++++++++++++++++
+
 WindowSettings::WindowSettings() :
     SettingsObject("window"),
     maximized(false),
@@ -356,7 +393,7 @@ WindowSettings::WindowSettings() :
 
 void WindowSettings::read(const QJsonObject &in)
 {
-    maximized = getValueFromJson(in, "maximized", false);// not maximized as default
+    maximized = getValueFromJson(in, "maximized", false); // not maximized as default
     fullScreenMode = getValueFromJson(in, "fullScreenView", false);// use normal mode as default;
     if (in.contains("location")) {
         QJsonObject locationObj = in["location"].toObject();
@@ -388,6 +425,7 @@ void WindowSettings::write(QJsonObject &out) const
 }
 
 // +++++++++++++++++++++++++++++++++++++++
+
 VstSettings::VstSettings() :
     SettingsObject("VST")
 {
@@ -397,18 +435,22 @@ VstSettings::VstSettings() :
 void VstSettings::write(QJsonObject &out) const
 {
     QJsonArray scanPathsArray;
-    foreach (const QString &scanPath, foldersToScan)
+
+    for (const QString &scanPath : foldersToScan)
         scanPathsArray.append(scanPath);
+
     out["scanPaths"] = scanPathsArray;
 
     QJsonArray cacheArray;
-    foreach (const QString &pluginPath, cachedPlugins)
+    for (const QString &pluginPath : cachedPlugins)
         cacheArray.append(pluginPath);
+
     out["cachedPlugins"] = cacheArray;
 
     QJsonArray BlackedArray;
-    foreach (const QString &blackVst, blackedPlugins)
+    for (const QString &blackVst: blackedPlugins)
         BlackedArray.append(blackVst);
+
     out["BlackListPlugins"] = BlackedArray;
 }
 
@@ -437,6 +479,7 @@ void VstSettings::read(const QJsonObject &in)
             blackedPlugins.append(cacheArray.at(x).toString());
     }
 }
+
 // +++++++++++++++++++++++++++++++++++++++
 
 AudioUnitSettings::AudioUnitSettings() :
@@ -448,8 +491,9 @@ AudioUnitSettings::AudioUnitSettings() :
 void AudioUnitSettings::write(QJsonObject &out) const
 {
     QJsonArray cacheArray;
-    foreach (const QString &pluginPath, cachedPlugins)
+    for (const QString &pluginPath : cachedPlugins)
         cacheArray.append(pluginPath);
+
     out["cachedPlugins"] = cacheArray;
 }
 
@@ -460,32 +504,32 @@ void AudioUnitSettings::read(const QJsonObject &in)
         QJsonArray cacheArray = in["cachedPlugins"].toArray();
         for (int x = 0; x < cacheArray.size(); ++x) {
             QString pluginFile = cacheArray.at(x).toString();
-
         }
     }
 }
 
 // +++++++++++++++++++++++++++++++++++++++
+
 Channel::Channel(const QString &name) :
     name(name)
 {
 }
 
-Plugin::Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data)
-    :   name(descriptor.getName()),
-        path(descriptor.getPath()),
-        manufacturer(descriptor.getManufacturer()),
-        bypassed(bypassed),
-        data(data),
-        category(descriptor.getCategory())
+Plugin::Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data) :
+    name(descriptor.getName()),
+    path(descriptor.getPath()),
+    manufacturer(descriptor.getManufacturer()),
+    bypassed(bypassed),
+    data(data),
+    category(descriptor.getCategory())
 {
 
 }
 
 Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel,
                        float gain, int boost, float pan, bool muted, bool stereoInverted,
-                       qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote, bool routingMidiToFirstSubchannel)
-    :firstInput(firstInput),
+                       qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote, bool routingMidiToFirstSubchannel) :
+    firstInput(firstInput),
     channelsCount(channelsCount),
     midiDevice(midiDevice),
     midiChannel(midiChannel),
@@ -530,12 +574,12 @@ LocalInputTrackSettings::LocalInputTrackSettings(bool createOneTrack) :
 void LocalInputTrackSettings::write(QJsonObject &out) const
 {
     QJsonArray channelsArray;
-    foreach (const Channel &channel, channels) {
+    for (const Channel &channel : channels) {
         QJsonObject channelObject;
         channelObject["name"] = channel.name;
         QJsonArray subchannelsArrays;
         int subchannelsCount = 0;
-        foreach (const Subchannel &sub, channel.subChannels) {
+        for (const Subchannel &sub : channel.subChannels) {
             QJsonObject subChannelObject;
             subChannelObject["firstInput"]       = sub.firstInput;
             subChannelObject["channelsCount"]    = sub.channelsCount;
@@ -554,7 +598,7 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
                 subChannelObject["routingMidiInput"] = sub.routingMidiToFirstSubchannel;
 
             QJsonArray pluginsArray;
-            foreach (const Persistence::Plugin &plugin, sub.getPlugins()) {
+            for (const Persistence::Plugin &plugin : sub.getPlugins()) {
                 QJsonObject pluginObject;
                 pluginObject["name"]     = plugin.name;
 
@@ -587,19 +631,19 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
 
 Plugin LocalInputTrackSettings::jsonObjectToPlugin(QJsonObject pluginObject)
 {
-    QString name = getValueFromJson(pluginObject, "name", QString(""));
+    QString name = getValueFromJson(pluginObject, "name", QString());
 
-    QString path = getValueFromJson(pluginObject, "path", QString(""));
+    QString path = getValueFromJson(pluginObject, "path", QString());
 
     bool bypassed = getValueFromJson(pluginObject, "bypassed", false);
 
-    QString dataString = getValueFromJson(pluginObject, "data", QString(""));
+    QString dataString = getValueFromJson(pluginObject, "data", QString());
 
     Audio::PluginDescriptor::Category category = static_cast<Audio::PluginDescriptor::Category>(getValueFromJson(pluginObject, "category", quint8(1))); // 1 is the VST enum value
 
     QByteArray rawByteArray(dataString.toStdString().c_str());
 
-    QString manufacturer = getValueFromJson(pluginObject, "manufacturer", QString(""));
+    QString manufacturer = getValueFromJson(pluginObject, "manufacturer", QString());
 
     Audio::PluginDescriptor descriptor(name, category, manufacturer, path);
 
@@ -611,12 +655,17 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
     if (in.contains("channels")) {
         QJsonArray channelsArray = in["channels"].toArray();
         for (int i = 0; i < channelsArray.size(); ++i) {
+
             QJsonObject channelObject = channelsArray.at(i).toObject();
             Persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
+
             if (channelObject.contains("subchannels")) {
+
                 QJsonArray subChannelsArray = channelObject["subchannels"].toArray();
                 int subChannelsLimit = allowSubchannels ? subChannelsArray.size() : 1;
+
                 for (int k = 0; k < subChannelsLimit; ++k) {
+
                     QJsonObject subChannelObject = subChannelsArray.at(k).toObject();
                     int firstInput = getValueFromJson(subChannelObject, "firstInput", 0);
                     int channelsCount = getValueFromJson(subChannelObject, "channelsCount", 0);
@@ -634,7 +683,9 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
 
                     QList<Plugin> plugins;
                     if (subChannelObject.contains("plugins")) {
+
                         QJsonArray pluginsArray = subChannelObject["plugins"].toArray();
+
                         for (int p = 0; p < pluginsArray.size(); ++p) {
                             QJsonObject pluginObject = pluginsArray.at(p).toObject();
                             Plugin plugin = jsonObjectToPlugin(pluginObject);
@@ -659,10 +710,11 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
 
 void LocalInputTrackSettings::read(const QJsonObject &in)
 {
-    read(in, true);// allowing multi subchannel by default
+    read(in, true); // allowing multi subchannel by default
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++
+
 void Settings::storeUserName(const QString &newUserName)
 {
     this->lastUserName = newUserName;
@@ -733,6 +785,7 @@ QStringList Settings::getBlackListedPlugins() const
 }
 
 // ++++++++++++++++++
+
 #ifdef Q_OS_MAC
 
 void Settings::addAudioUnitPlugin(const QString &pluginPath)
@@ -767,21 +820,24 @@ void Settings::setBuiltInMetronome(const QString &metronomeAlias)
     metronomeSettings.usingCustomSounds = false;
 }
 
-void Settings::setCustomMetronome(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile)
+void Settings::setCustomMetronome(const QString &primaryBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile)
 {
-    if (QFileInfo(primaryBeatAudioFile).exists() && QFileInfo(secondaryBeatAudioFile).exists()){
+    if (QFileInfo(primaryBeatAudioFile).exists() && QFileInfo(offBeatAudioFile).exists() && QFileInfo(accentBeatAudioFile).exists()) {
         metronomeSettings.customPrimaryBeatAudioFile = primaryBeatAudioFile;
-        metronomeSettings.customSecondaryBeatAudioFile = secondaryBeatAudioFile;
+        metronomeSettings.customOffBeatAudioFile = offBeatAudioFile;
+        metronomeSettings.customAccentBeatAudioFile = accentBeatAudioFile;
         metronomeSettings.usingCustomSounds = true;
     }
-    else{
+    else {
         metronomeSettings.customPrimaryBeatAudioFile = "";
-        metronomeSettings.customSecondaryBeatAudioFile = "";
+        metronomeSettings.customOffBeatAudioFile = "";
+        metronomeSettings.customAccentBeatAudioFile = "";
         metronomeSettings.usingCustomSounds = false;
     }
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 void Settings::setFullScreenView(bool v)
 {
     windowSettings.fullScreenMode = v;
@@ -833,15 +889,15 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         QJsonDocument doc = QJsonDocument::fromJson(configFile.readAll());
         QJsonObject root = doc.object();
 
-        if (root.contains("masterGain"))// read last master gain
+        if (root.contains("masterGain")) // read last master gain
             this->masterFaderGain = root["masterGain"].toDouble();
         else
-            this->masterFaderGain = 1;// unit gain as default
+            this->masterFaderGain = 1; // unit gain as default
 
-        if (root.contains("userName"))// read user name
+        if (root.contains("userName")) // read user name
             this->lastUserName = root["userName"].toString();
 
-        if (root.contains("translation"))// read Translation
+        if (root.contains("translation")) // read Translation
             this->translation = root["translation"].toString();
         if (this->translation.isEmpty())
             this->translation = QLocale().bcp47Name().left(2);
@@ -849,15 +905,15 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         if (root.contains("theme"))
             this->theme = root["theme"].toString();
         if (this->theme.isEmpty())
-            this->theme = "Flat";//using flat as the new default theme
+            this->theme = "Flat"; //using flat as the new default theme
 
-        if (root.contains("intervalProgressShape"))// read intervall progress shape
-            this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt(0);// zero as default value
+        if (root.contains("intervalProgressShape")) // read intervall progress shape
+            this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt(0); // zero as default value
         else
             this->ninjamIntervalProgressShape = 0;
 
         if (root.contains("tracksLayoutOrientation")) {
-            int value = root["tracksLayoutOrientation"].toInt(2);// 2 is the Qt::Vertical value
+            int value = root["tracksLayoutOrientation"].toInt(2); // 2 is the Qt::Vertical value
             this->tracksLayoutOrientation = value == 2 ? Qt::Vertical : Qt::Horizontal;
         } else {
             this->tracksLayoutOrientation = Qt::Vertical;
@@ -869,10 +925,18 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
             this->usingNarrowedTracks = false;
 
         // read settings sections (Audio settings, Midi settings, ninjam settings, etc...)
-        foreach (SettingsObject *so, sections)
+        for (SettingsObject *so : sections)
             so->read(root[so->getName()].toObject());
+
+        if(root.contains("intervalsBeforeInactivityWarning")) {
+            intervalsBeforeInactivityWarning = root["intervalsBeforeInactivityWarning"].toInt();
+            if (intervalsBeforeInactivityWarning < 1)
+                intervalsBeforeInactivityWarning = 1;
+        }
+
         return true;
-    } else {
+    }
+    else {
         qWarning(jtConfigurator) << "Settings : Can't load Jamtaba 2 config file:"
                                  << configFile.errorString();
     }
@@ -895,7 +959,7 @@ void Settings::setLooperPreferredMode(quint8 looperMode)
     looperSettings.preferredMode = looperMode;
 }
 
-bool Settings::writeFile(const QList<SettingsObject *> &sections)// io ops ...
+bool Settings::writeFile(const QList<SettingsObject *> &sections) // io ops ...
 {
     QDir configFileDir = Configurator::getInstance()->getBaseDir();
     QFile file(configFileDir.absoluteFilePath(fileName));
@@ -903,16 +967,17 @@ bool Settings::writeFile(const QList<SettingsObject *> &sections)// io ops ...
         QJsonObject root;
 
         // writing global settings
-        root["userName"] = lastUserName;// write user name
-        root["translation"] = translation;// write translate locale
+        root["userName"] = lastUserName; // write user name
+        root["translation"] = translation; // write translate locale
         root["theme"] = theme;
         root["intervalProgressShape"] = ninjamIntervalProgressShape;
         root["tracksLayoutOrientation"] = tracksLayoutOrientation;
         root["usingNarrowTracks"] = usingNarrowedTracks;
         root["masterGain"] = masterFaderGain;
+        root["intervalsBeforeInactivityWarning"] = static_cast<int>(intervalsBeforeInactivityWarning);
 
         // write settings sections
-        foreach (SettingsObject *so, sections) {
+        for (SettingsObject *so : sections) {
             QJsonObject sectionObject;
             so->write(sectionObject);
             root[so->getName()] = sectionObject;
@@ -933,7 +998,7 @@ bool Settings::writePresetToFile(const Preset &preset)
     QFile file(absolutePath);
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject inputTracksJsonObject;
-        preset.inputTrackSettings.write(inputTracksJsonObject);// write the channels and subchannels in the json object
+        preset.inputTrackSettings.write(inputTracksJsonObject); // write the channels and subchannels in the json object
 
         QJsonObject root;
         root[preset.name] = inputTracksJsonObject;
@@ -973,10 +1038,11 @@ Preset Settings::readPresetFromFile(const QString &presetFileName, bool allowMul
         qWarning(jtConfigurator) << "Settings : Can't load PRESET file:"
                                  << presetFile.errorString();
     }
-    return Preset();// returning an empty/invalid preset
+    return Preset(); // returning an empty/invalid preset
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 void Settings::load()
 {
     QList<Persistence::SettingsObject *> sections;
@@ -993,6 +1059,7 @@ void Settings::load()
     sections.append(&privateServerSettings);
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
+    sections.append(&rememberSettings);
 
     readFile(sections);
 }
@@ -1000,8 +1067,11 @@ void Settings::load()
 Settings::Settings() :
     tracksLayoutOrientation(Qt::Vertical),
     masterFaderGain(1.0),
-    translation("en"), //english as default language
-    theme("Flat") //flat as default theme
+    translation("en"), // english as default language
+    theme("Flat"), // flat as default theme,
+    ninjamIntervalProgressShape(0),
+    usingNarrowedTracks(false),
+    intervalsBeforeInactivityWarning(5) // 5 intervals by default
 {
     // qDebug() << "Settings in " << fileDir;
 }
@@ -1023,6 +1093,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&privateServerSettings);
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
+    sections.append(&rememberSettings);
 
     writeFile(sections);
 }
@@ -1048,15 +1119,23 @@ QString Settings::getTranslation() const
     return translation;
 }
 
+void Settings::setRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
+{
+    rememberSettings.rememberBoost   = boost;
+    rememberSettings.rememberLevel   = level;
+    rememberSettings.rememberPan     = pan;
+    rememberSettings.rememberLowCut  = lowCut;
+    rememberSettings.rememberMute    = mute;
+}
 
 //__________________________________________________________
 
-MeteringSettings::MeteringSettings()
-    : SettingsObject(QStringLiteral("Metering")),
-      showingMaxPeakMarkers(true),
-      meterOption(0), // showing RMS + Peaks
-      waveDrawingMode(3), // pixeled buildings
-      refreshRate(30)
+MeteringSettings::MeteringSettings() :
+    SettingsObject(QStringLiteral("Metering")),
+    showingMaxPeakMarkers(true),
+    meterOption(0), // showing RMS + Peaks
+    waveDrawingMode(3), // pixeled buildings
+    refreshRate(30)
 {
 
 }
@@ -1075,4 +1154,35 @@ void MeteringSettings::write(QJsonObject &out) const
     out["meterOption"]      = meterOption;
     out["refreshRate"]      = refreshRate;
     out["waveDrawingMode"]  = waveDrawingMode;
+}
+
+//________________________________________________________________
+
+RememberUsersSettings::RememberUsersSettings() :
+    SettingsObject(QStringLiteral("Remember")),
+    rememberBoost(true),
+    rememberLevel(true),
+    rememberPan(true),
+    rememberMute(true),
+    rememberLowCut(true)
+{
+
+}
+
+void RememberUsersSettings::write(QJsonObject &out) const
+{
+    out["boost"] = rememberBoost;
+    out["level"] = rememberLevel;
+    out["pan"] = rememberPan;
+    out["mute"] = rememberMute;
+    out["lowCut"] = rememberLowCut;
+}
+
+void RememberUsersSettings::read(const QJsonObject &in)
+{
+    rememberBoost = getValueFromJson(in, "boost", true);
+    rememberLevel = getValueFromJson(in, "level", true);
+    rememberPan = getValueFromJson(in, "pan", true);
+    rememberMute = getValueFromJson(in, "mute", true);
+    rememberLowCut = getValueFromJson(in, "lowCut", true);
 }

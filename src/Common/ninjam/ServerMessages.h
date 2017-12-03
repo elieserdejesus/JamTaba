@@ -26,7 +26,7 @@ enum class ServerMessageType : quint8 {
     USER_INFO_CHANGE_NOTIFY = 0x03,// received when user add/remove channels or rename a channel
     DOWNLOAD_INTERVAL_BEGIN = 0x04, // received when server is notifiyng about the start of a new audio interval stream
     DOWNLOAD_INTERVAL_WRITE = 0x05, // received for every audio interval chunk. We receive a lot of these messages while jamming.
-    KEEP_ALIVE = 0xfd,// server requesting a keepalive. If Jamtaba not respond the server will disconnect.
+    KEEP_ALIVE = 0xfd, // server requesting a keepalive. If Jamtaba not respond the server will disconnect.
     CHAT_MESSAGE = 0xc0 // received when users are sending chat messages
 };
 
@@ -61,7 +61,7 @@ class ServerAuthChallengeMessage : public ServerMessage
 {
 
 public:
-    ServerAuthChallengeMessage(quint32 payload);
+    explicit ServerAuthChallengeMessage(quint32 payload);
 
     inline QByteArray getChallenge() const
     {
@@ -92,18 +92,20 @@ private:
     QByteArray challenge;
     QString licenceAgreement;
     quint32 serverKeepAlivePeriod;
-    quint32 protocolVersion;// The Protocol Version field should contain 0x00020000.
+    quint32 protocolVersion; // The Protocol Version field should contain 0x00020000.
     void printDebug(QDebug &dbg) const override;
 
     void readFrom(QDataStream &stream) override;
 
 };
+
 // ++++++++++++++++++++++++++++++++
+
 class ServerAuthReplyMessage : public ServerMessage
 {
 
 public:
-    ServerAuthReplyMessage(quint32 payload);
+    explicit ServerAuthReplyMessage(quint32 payload);
 
     inline QString getErrorMessage() const
     {
@@ -114,6 +116,7 @@ public:
     {
         if (!userIsAuthenticated())
             qCritical("user is not authenticated!");
+
         return message;
     }
 
@@ -135,17 +138,21 @@ private:
     void printDebug(QDebug &debug) const override;
     void readFrom(QDataStream &stream) override;
 };
+
 // +++++++++++++++++++++++++++++++
+
 class ServerKeepAliveMessage : public ServerMessage
 {
 public:
-    ServerKeepAliveMessage(quint32 payload);
+    explicit ServerKeepAliveMessage(quint32 payload);
 
 private:
     void printDebug(QDebug &dbg) const override;
     void readFrom(QDataStream &stream) override;
 };
+
 // ++++++++++++++++++++++++=
+
 class ServerConfigChangeNotifyMessage : public ServerMessage
 {
 private:
@@ -153,7 +160,7 @@ private:
     quint16 bpi;
 
 public:
-    ServerConfigChangeNotifyMessage(quint32 payload);
+    explicit ServerConfigChangeNotifyMessage(quint32 payload);
 
     inline quint16 getBpi() const
     {
@@ -169,14 +176,16 @@ private:
     void readFrom(QDataStream &stream) override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // ++++++++++++++
+
 class User;
 class UserChannel;
 
 class UserInfoChangeNotifyMessage : public ServerMessage
 {
 public:
-    UserInfoChangeNotifyMessage(quint32 payload);
+    explicit UserInfoChangeNotifyMessage(quint32 payload);
     ~UserInfoChangeNotifyMessage();
 
     inline QList<User> getUsers() const
@@ -190,6 +199,7 @@ private:
     void readFrom(QDataStream &stream) override;
     void printDebug(QDebug &dbg) const override;
 };
+
 // ++++++++++++=
 
 /*
@@ -216,8 +226,9 @@ enum class  ChatCommandType : quint8 {
 
 class ServerChatMessage : public ServerMessage
 {
+
 public:
-    ServerChatMessage(quint32 payload);
+    explicit ServerChatMessage(quint32 payload);
 
     inline QStringList getArguments() const
     {
@@ -238,8 +249,7 @@ private:
     void printDebug(QDebug &dbg) const override;
     void readFrom(QDataStream &stream) override;
 };
-// ++++++++++++++++
-// ++++++++++++++++
+
 /*
 Offset Type        Field
 0x0    uint8_t[16] GUID (binary)
@@ -253,11 +263,12 @@ If the FourCC field is zero then the download is complete.
 
 If the FourCC field contains "OGGv" then this is a valid Ogg Vorbis encoded download.
 */
+
 class DownloadIntervalBegin : public ServerMessage
 {
 
 public:
-    DownloadIntervalBegin(quint32 payload);
+    explicit DownloadIntervalBegin(quint32 payload);
 
     inline quint8  getChannelIndex() const
     {
@@ -296,7 +307,7 @@ public:
 private:
     QByteArray GUID;
     quint32 estimatedSize;
-    quint8 fourCC[4];// = new byte[4];
+    quint8 fourCC[4]; // = new byte[4];
     quint8 channelIndex;
     QString userName;
 
@@ -305,7 +316,6 @@ private:
 };
 
 
-// ++++++++++++++++++
 /*
   Offset Type        Field
   0x0    uint8_t[16] GUID (binary)
@@ -317,7 +327,7 @@ class DownloadIntervalWrite : public ServerMessage
 {
 
 public:
-    DownloadIntervalWrite(quint32 payload);
+    explicit DownloadIntervalWrite(quint32 payload);
 
     inline QByteArray getGUID() const
     {
@@ -326,7 +336,7 @@ public:
 
     inline QByteArray getEncodedData() const
     {
-        return encodedAudioData;
+        return encodedData;
     }
 
     inline bool downloadIsComplete() const
@@ -337,7 +347,7 @@ public:
 private:
     QByteArray GUID;
     quint8 flags;
-    QByteArray encodedAudioData;
+    QByteArray encodedData;
 
     void readFrom(QDataStream &stream) override;
     void printDebug(QDebug &dbg) const override;

@@ -30,22 +30,15 @@ public:
     virtual ~NinjamController();
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
     void start(const Ninjam::Server &server);
-    void stop(bool emitDisconnectedingSignal);
-    bool inline isRunning() const
-    {
-        return running;
-    }
+    void stop(bool emitDisconnectedSignal);
+    bool isRunning() const;
 
-    void setMetronomeBeatsPerAccent(int beatsPerAccent);
-    inline int getCurrentBpi() const
-    {
-        return currentBpi;
-    }
+    void setMetronomeBeatsPerAccent(int beatsPerAccent, int currentBpi);
+    void setMetronomeAccentBeats(QList<int> accentBeats);
+    QList<int> getMetronomeAccentBeats();
 
-    inline int getCurrentBpm() const
-    {
-        return currentBpm;
-    }
+    int getCurrentBpi() const;
+    int getCurrentBpm() const;
 
     void voteBpi(int newBpi);
     void voteBpm(int newBpm);
@@ -64,16 +57,13 @@ public:
     void scheduleEncoderChangeForChannel(int channelIndex);
     void removeEncoder(int groupChannelIndex);
 
-    void scheduleXmitChange(int channelID, bool transmiting);// schedule the change for the next interval
+    void scheduleXmitChange(int channelID, bool transmiting); // schedule the change for the next interval
 
     void setSampleRate(int newSampleRate);
 
-    void reset(bool keepRecentIntervals);// discard downloaded intervals and reset intervalPosition
+    void reset(bool keepRecentIntervals); // discard downloaded intervals and reset intervalPosition
 
-    inline bool isPreparedForTransmit() const
-    {
-        return preparedForTransmit;
-    }
+    bool isPreparedForTransmit() const;
 
     void recreateMetronome(int newSampleRate);
 
@@ -91,8 +81,10 @@ public:
 
     uint getSamplesPerInterval() const;
 
+    QList<NinjamTrackNode *> getTrackNodes() const;
+
 signals:
-    void currentBpiChanged(int newBpi); //emitted when a scheduled bpi change is processed in interval start (first beat).
+    void currentBpiChanged(int newBpi); // emitted when a scheduled bpi change is processed in interval start (first beat).
     void currentBpmChanged(int newBpm);
 
     void intervalBeatChanged(int intervalBeat);
@@ -107,7 +99,8 @@ signals:
     void userLeave(const QString &userName);
     void userEnter(const QString &userName);
 
-    void chatMsgReceived(const Ninjam::User &user, const QString &message );
+    void publicChatMessageReceived(const Ninjam::User &user, const QString &message );
+    void privateChatMessageReceived(const Ninjam::User &user, const QString &message );
     void topicMessageReceived(const QString &message);
 
     void encodedAudioAvailableToSend(const QByteArray &encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
@@ -115,14 +108,16 @@ signals:
     void userBlockedInChat(const QString &userName);
     void userUnblockedInChat(const QString &userName);
 
-    void preparingTransmission();// waiting for start transmission
+    void preparingTransmission(); // waiting for start transmission
     void preparedToTransmit(); // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
+
+    void started();
 
 protected:
     long intervalPosition;
     long samplesInInterval;
 
-    QMap<QString, NinjamTrackNode *> trackNodes;// the other users channels
+    QMap<QString, NinjamTrackNode *> trackNodes; // the other users channels
 
     Controller::MainController *mainController;
 
@@ -146,17 +141,13 @@ private:
     int currentBpm;
 
     QMutex mutex;
-
     QMutex encodersMutex;
 
     long computeTotalSamplesInInterval();
     long getSamplesPerBeat();
 
     void processScheduledChanges();
-    inline bool hasScheduledChanges() const
-    {
-        return !scheduledEvents.isEmpty();
-    }
+    bool hasScheduledChanges() const;
 
     static long generateNewTrackID();
 
@@ -171,7 +162,8 @@ private:
     void setXmitStatus(int channelID, bool transmiting);
 
     // ++++++++++++++++++++ nested classes to handle scheduled events +++++++++++++++++
-    class SchedulableEvent;// the interface for all events
+
+    class SchedulableEvent; // the interface for all events
     class BpiChangeEvent;
     class BpmChangeEvent;
     class InputChannelChangedEvent;// user change the channel input selection from mono to stereo or vice-versa, or user added a new channel, both cases requires a new encoder in next interval
@@ -183,22 +175,53 @@ private:
 
     bool preparedForTransmit;
     int waitingIntervals;
-    static const int TOTAL_PREPARED_INTERVALS = 2;// how many intervals Jamtaba will wait to start trasmiting?
+    static const int TOTAL_PREPARED_INTERVALS = 2; // how many intervals Jamtaba will wait to start trasmiting?
 
 private slots:
     // ninjam events
-    void on_ninjamServerBpmChanged(quint16 newBpm);
-    void on_ninjamServerBpiChanged(quint16 oldBpi, quint16 newBpi);
-    void on_ninjamAudiointervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
-    void on_ninjamAudioIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int downloadedBytes);
-    void on_ninjamUserChannelCreated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void on_ninjamUserChannelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void on_ninjamUserChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void on_ninjamUserExited(const Ninjam::User &user);
-    void on_ninjamUserEntered(const Ninjam::User &user);
-    void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
+    void scheduleBpmChangeEvent(quint16 newBpm);
+    void scheduleBpiChangeEvent(quint16 newBpi, quint16 oldBpi);
+    void handleIntervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
+    void handleIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int downloadedBytes);
+    void addNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void removeNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void updateNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void handleNinjamUserExiting(const Ninjam::User &user);
+    void handleNinjamUserEntering(const Ninjam::User &user);
+    void handleReceivedPublicChatMessage(const Ninjam::User &user, const QString &message);
+    void handleReceivedPrivateChatMessage(const Ninjam::User &user, const QString &message);
 
 }; // end of class
+
+inline QList<NinjamTrackNode *> NinjamController::getTrackNodes() const
+{
+    return trackNodes.values();
+}
+
+inline bool NinjamController::hasScheduledChanges() const
+{
+    return !scheduledEvents.isEmpty();
+}
+
+inline bool NinjamController::isPreparedForTransmit() const
+{
+    return preparedForTransmit;
+}
+
+inline int NinjamController::getCurrentBpi() const
+{
+    return currentBpi;
+}
+
+inline int NinjamController::getCurrentBpm() const
+{
+    return currentBpm;
+}
+
+inline bool NinjamController::isRunning() const
+{
+    return running;
+}
 
 inline uint NinjamController::getSamplesPerInterval() const
 {

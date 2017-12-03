@@ -24,6 +24,7 @@ QDataStream &operator >>(QDataStream &stream, CacheHeader &cacheHeader)
     stream >> cacheHeader.signature;
     stream >> cacheHeader.revision;
     stream >> cacheHeader.size;
+
     return stream;
 }
 
@@ -32,5 +33,6 @@ QDataStream &operator <<(QDataStream &stream, const CacheHeader &cacheHeader)
     stream << cacheHeader.signature;
     stream << cacheHeader.revision;
     stream << cacheHeader.size;
+
     return stream;
 }

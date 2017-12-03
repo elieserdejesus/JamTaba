@@ -12,9 +12,12 @@ class SamplesBuffer;
 
 class LoopSaver
 {
+
 public:
+
     LoopSaver(const QString &savePath, Looper *looper);
     void save(const QString &loopFileName, uint bpm, uint bpi, bool encodeInOggVorbis, float vorbisQuality, uint sampleRate, quint8 bitDepth);
+
 private:
     QString savePath;
     Looper *looper;
@@ -110,7 +113,7 @@ class LoopLoader
 {
 
 public:
-    LoopLoader(const QString &loadPath);
+    explicit LoopLoader(const QString &loadPath);
     void load(LoopInfo loopInfo, Looper *looper, uint currentSampleRate, quint32 samplesPerInterval);
 
     static LoopInfo loadLoopInfo(const QString &loopFilePath);
@@ -121,7 +124,6 @@ public:
 
 private:
     QString loadPath;
-
 
 };
 

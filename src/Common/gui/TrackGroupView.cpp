@@ -14,20 +14,27 @@ TrackGroupView::TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *
 {
     setupUI(TextEditorModifier);
 
-    //context menu
+    // context menu
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &TrackGroupView::customContextMenuRequested, this, &TrackGroupView::showContextMenu);
+}
+
+void TrackGroupView::setTintColor(const QColor &color)
+{
+    for(auto trackGroup : trackViews) {
+        trackGroup->setTintColor(color);
+    }
 }
 
 void TrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
     Q_UNUSED(contextMenu);
-    //no common actions at moment
+    // no common actions at moment
 }
 
 void TrackGroupView::showContextMenu(const QPoint &pos){
     QMenu contextMenu(this);
-    populateContextMenu(contextMenu); //populate is overrided in subclasses to add more menu actions
+    populateContextMenu(contextMenu); // populate is overrided in subclasses to add more menu actions
     contextMenu.exec(mapToGlobal(pos));
 }
 
@@ -56,33 +63,40 @@ void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
     setObjectName(QStringLiteral("TrackGroupView"));
     setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
 
-    mainLayout = new QVBoxLayout(this);
+    mainLayout = new QGridLayout(this);
     mainLayout->setSpacing(0);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setContentsMargins(3, 3, 3, 3);
 
     topPanel = new QWidget(this);
     topPanel->setObjectName(QStringLiteral("topPanel"));
 
     groupNameField = new QLineEdit(topPanel);
     groupNameField->setObjectName(QStringLiteral("groupNameField"));
-    groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0);// disable blue border when QLineEdit has focus in mac
+    groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0); // disable blue border when QLineEdit has focus in mac
+
+    topPanelLayout = new QHBoxLayout();
+    topPanelLayout->setObjectName(QStringLiteral("topPanelLayout"));
+    topPanelLayout->setSpacing(3);
+    topPanelLayout->setContentsMargins(6, 12, 6, 12);
+
+    topPanelLayout->addWidget(groupNameField);
 
     if (textEditorModifier) {
         bool finishEditorPressingReturnKey = true;
         textEditorModifier->modify(groupNameField, finishEditorPressingReturnKey);
     }
 
-    topPanelLayout = new QHBoxLayout(topPanel);
-    topPanelLayout->setSpacing(3);
-    topPanelLayout->setContentsMargins(6, 12, 6, 12);
-    topPanelLayout->addWidget(groupNameField);
-
     tracksLayout = new QHBoxLayout();
-    tracksLayout->setContentsMargins(0, 0, 0, 0);
+    tracksLayout->setContentsMargins(0, 3, 0, 0); // adding a small top margin to fix #861
     tracksLayout->setSpacing(1);
+    tracksLayout->setObjectName(QStringLiteral("tracksLayout"));
 
-    mainLayout->addWidget(topPanel);
-    mainLayout->addLayout(tracksLayout, 1);
+    topPanel->setLayout(topPanelLayout);
+
+    mainLayout->addWidget(topPanel, 0, 0, 1, 1);
+    mainLayout->addLayout(tracksLayout, 1, 0, 1, 1);
+
+    mainLayout->setRowStretch(1, 1);
 
     translateUi();
 }
@@ -97,7 +111,7 @@ void TrackGroupView::changeEvent(QEvent *e)
 
 void TrackGroupView::translateUi()
 {
-    //overrided in subclasses
+    // overrided in subclasses
 }
 
 bool TrackGroupView::isUnlighted() const
@@ -126,26 +140,27 @@ void TrackGroupView::setUnlightStatus(bool unlighted)
 
 void TrackGroupView::updateGuiElements()
 {
-    foreach (BaseTrackView *trackView, trackViews)
+    for (BaseTrackView *trackView : trackViews)
         trackView->updateGuiElements();
 }
 
 TrackGroupView::~TrackGroupView()
 {
-
+    //
 }
 
 
 BaseTrackView *TrackGroupView::addTrackView(long trackID)
 {
-    BaseTrackView* newTrackView = createTrackView(trackID);//this is a factory method and is overrided in some places
+    BaseTrackView* newTrackView = createTrackView(trackID); // this is a factory method and is overrided in some places
     if (tracksLayout) {
         tracksLayout->addWidget(newTrackView);
         trackViews.append(newTrackView);
 
         if (trackViews.size() > 1) {
-            foreach (BaseTrackView *trackView, trackViews)
+            for (BaseTrackView *trackView : trackViews)
                 trackView->setToNarrow();
+
             updateGeometry();
             newTrackView->setActivatedStatus(isUnlighted());
         }
@@ -163,14 +178,15 @@ QString TrackGroupView::getGroupName() const
     return groupNameField->text();
 }
 
-// +++++++++++++++++++++++++++++++++++++++++
 void TrackGroupView::removeTrackView(BaseTrackView *trackView)
 {
     tracksLayout->removeWidget(trackView);
     trackViews.removeOne(trackView);
     trackView->deleteLater();
+
     if (trackViews.size() == 1)
         trackViews.at(0)->setToWide();
+
     updateGeometry();
 }
 
@@ -182,8 +198,6 @@ void TrackGroupView::removeTrackView(int trackIndex)
         qCritical() << "Invalid index " << trackIndex;
 }
 
-// +++++++++++++++++++++++++++++++++++++++++
-
 QSize TrackGroupView::minimumSizeHint() const
 {
     return sizeHint();
@@ -192,7 +206,9 @@ QSize TrackGroupView::minimumSizeHint() const
 QSize TrackGroupView::sizeHint() const
 {
     int width = 0;
-    foreach (BaseTrackView *trackView, trackViews)
+
+    for (BaseTrackView *trackView : trackViews)
         width += trackView->minimumSizeHint().width();
+
     return QSize(width, 10);
 }

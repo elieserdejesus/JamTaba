@@ -3,12 +3,10 @@
 
 #include <QList>
 
-class BpiUtils
+namespace BpiUtils
 {
-public:
-    BpiUtils();
 
-    static QList<int> getBpiDividers(int targetBpi);
-};
+    QList<uint> getBpiDividers(uint targetBpi);
+}
 
 #endif // BPIUTILS_H

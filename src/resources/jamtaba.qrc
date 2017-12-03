@@ -10,6 +10,47 @@
         <file alias="Chords.css">css/common/Chords.css</file>
         <file alias="PublicRooms.css">css/common/PublicRooms.css</file>
     </qresource>
+    <qresource prefix="/css/themes/Navy_nm">
+        <file>css/themes/Navy_nm/BaseTrack.css</file>
+        <file>css/themes/Navy_nm/NinjamWindow.css</file>
+        <file>css/themes/Navy_nm/LocalTrack.css</file>
+        <file>css/themes/Navy_nm/Dialogs.css</file>
+        <file>css/themes/Navy_nm/General.css</file>
+        <file>css/themes/Navy_nm/MainWindow.css</file>
+        <file>css/themes/Navy_nm/PublicRooms.css</file>
+        <file>css/themes/Navy_nm/Chat.css</file>
+        <file>css/themes/Navy_nm/Chords.css</file>
+    </qresource>
+    <qresource prefix="/css/themes/Game_nm">
+        <file>css/themes/Game_nm/BaseTrack.css</file>
+        <file>css/themes/Game_nm/NinjamWindow.css</file>
+        <file>css/themes/Game_nm/LocalTrack.css</file>
+        <file>css/themes/Game_nm/Dialogs.css</file>
+        <file>css/themes/Game_nm/General.css</file>
+        <file>css/themes/Game_nm/MainWindow.css</file>
+        <file>css/themes/Game_nm/PublicRooms.css</file>
+        <file>css/themes/Game_nm/Chat.css</file>
+        <file>css/themes/Game_nm/Chords.css</file>
+
+        <file>css/themes/Game_nm/fonts/neuropol x rg.ttf</file>
+        <file>css/themes/Game_nm/fonts/NotoMono-Regular.ttf</file>
+        <file>css/themes/Game_nm/fonts/VIDEOPHREAK.ttf</file>
+
+        <file>css/themes/Game_nm/images/background.png</file>
+        <file>css/themes/Game_nm/images/border_public_rooms.png</file>
+        <file>css/themes/Game_nm/images/border_rect.png</file>
+        <file>css/themes/Game_nm/images/border_right_corner.png</file>
+        <file>css/themes/Game_nm/images/border_tab.png</file>
+        <file>css/themes/Game_nm/images/borders.png</file>
+        <file>css/themes/Game_nm/images/button_no_border.png</file>
+        <file>css/themes/Game_nm/images/button.png</file>
+        <file>css/themes/Game_nm/images/button_checked.png</file>
+        <file>css/themes/Game_nm/images/button_disabled.png</file>
+        <file>css/themes/Game_nm/images/button_hover.png</file>
+        <file>css/themes/Game_nm/images/button_no_border.png</file>
+        <file>css/themes/Game_nm/images/grid.png</file>
+        <file>css/themes/Game_nm/images/horizontal_strip.png</file>
+    </qresource>
     <qresource prefix="/css/themes/Flat">
         <file>css/themes/Flat/BaseTrack.css</file>
         <file>css/themes/Flat/NinjamWindow.css</file>
@@ -86,6 +127,7 @@
         <file alias="qtbase_da.qm">../../translations/Qt/qtbase_da.qm</file>
     </qresource>
     <qresource prefix="/images">
+        <file>webcam.png</file>
         <file>logo.png</file>
         <file>loop.png</file>
         <file>rec.png</file>
@@ -118,8 +160,6 @@
         <file>off.png</file>
         <file>mini arrow left.png</file>
         <file>mini arrow right.png</file>
-        <file>mini arrow left hover.png</file>
-        <file>mini arrow right hover.png</file>
         <file>translate.png</file>
         <file>warning.png</file>
         <file>chat_small.png</file>
@@ -131,6 +171,7 @@
         <file>level low.png</file>
         <file>horizontal_layout.png</file>
         <file>vertical_layout.png</file>
+        <file>grid_layout.png</file>
         <file>narrow.png</file>
         <file>wide.png</file>
         <file>windows.png</file>
@@ -143,6 +184,9 @@
         <file>delete_layer.png</file>
         <file>save.png</file>
         <file>load.png</file>
+        <file>collapse_bottom.png</file>
+        <file>collapse_right.png</file>
+        <file>collapse_left.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>
@@ -360,7 +404,6 @@
         <file>flags/tf.png</file>
         <file>flags/tg.png</file>
         <file>flags/th.png</file>
-        <file>flags/Thumbs.db</file>
         <file>flags/tj.png</file>
         <file>flags/tk.png</file>
         <file>flags/tl.png</file>
@@ -400,15 +443,20 @@
         <file>loading.gif</file>
         <file>logging.ini</file>
         <file>metronome/Clave_1st.ogg</file>
-        <file>metronome/Clave_2nd.ogg</file>
         <file>metronome/Snap_1st.ogg</file>
-        <file>metronome/Snap_2nd.ogg</file>
         <file>metronome/Ninjam_1st.ogg</file>
-        <file>metronome/Ninjam_2nd.ogg</file>
         <file>metronome/TicToc_1st.ogg</file>
-        <file>metronome/TicToc_2nd.ogg</file>
         <file>metronome/Default_1st.ogg</file>
-        <file>metronome/Default_2nd.ogg</file>
+        <file>metronome/Clave_accent.ogg</file>
+        <file>metronome/Clave_off.ogg</file>
+        <file>metronome/Default_accent.ogg</file>
+        <file>metronome/Default_off.ogg</file>
+        <file>metronome/Ninjam_accent.ogg</file>
+        <file>metronome/Ninjam_off.ogg</file>
+        <file>metronome/Snap_accent.ogg</file>
+        <file>metronome/Snap_off.ogg</file>
+        <file>metronome/TicToc_accent.ogg</file>
+        <file>metronome/TicToc_off.ogg</file>
     </qresource>
     <qresource prefix="/tiles">
         <file>map/0/0/0.png</file>

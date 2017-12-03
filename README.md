@@ -71,3 +71,54 @@ The library **portaudio** was **pre compiled** in windows using **only the ASIO 
 - To compile JamTaba **Vst Plugin** you need run all steps described in the section **Compiling JamTaba Standalone**, except the 2 last steps.
 - In the last steps you need open the file **VstPlugin.pro** in **QtCreator**. If you try to compile this project you will got some errors, because the Vst Plugin can't be compiled using **official Qt releases** downloaded in Qt official site. These Qt releases are compiled/using shared libraries. You need a **static compiled Qt** to compile the Vst Plugin, and you need compile this special Qt version for your self. Check the [Qt docs](http://doc.qt.io/qt-5/build-sources.html) to see how compile Qt in a "static flavor". 
 - Inside the folder **PROJECTS/VstPlugin** you have a file **Qt static compile flags.txt** with some flags to configure Qt before compile and reduce the size of Qt static libs. These flags will speed up the compilation process too. In my machine (a common laptop with 4 cores) the compilation process lasted 15 minutes using these flags. 
+
+***
+Detailed instructions on how to build a **static compiled Qt** to compile the Vst Plugin:
+
+**1.-** Download Qt Sources, but only submodules used by JamTaba. This will speed up the compilation. The sources are in http://download.qt.io/archive/qt/5.5/5.5.1/submodules/
+
+	Download the files:
+
+	1 - qt5-opensource-src-5.5.1.zip
+	2 - qtbase-opensource-src-5.5.1.zip
+	3 - qtmultimedia-opensource-src-5.5.1.zip
+	4 - qttools-opensource-src-5.5.1.zip
+
+**2** - Extract the dowloaded files in your preferred Qt folder, for example C:/MyQt. All files will be extracted inside 4 subfolders.
+
+**3** - Rename the extracted subfolders removing the suffix -opensource-src-5.5.1. The renamed folders will be qtbase, qtmultimedia and qttools. It's not necessary rename the folder qt-everywhere-opensource-src-5.5.1 (see the next step).
+
+**4** - Move all files inside the folder qt-everywhere-opensource-src-5.5.1 the your Qt folder and delete the folder qt-everywhere-opensource-src-5.5.1. The final folders/files layout will be:
+
+![root_dir_qt_static](https://user-images.githubusercontent.com/1012741/30293084-b94d9818-970e-11e7-8103-51c0179d16d6.png)
+
+**5** - In your Qt folder create a file named qt5vars.cmd using a text editor (notepad). Paste these script lines in this file, but REMEMBER to change the _ROOT from "C:/MyQt" to your real "Qt folder" path:
+
+	CALL "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+	SET _ROOT=C:/MyQt
+
+	SET PATH=%_ROOT%\qtbase\bin;%_ROOT%\gnuwin32\bin;%PATH%
+
+	SET QMAKESPEC=win32-msvc2013
+	SET _ROOT=
+
+**6** - Open the windows prompt (cmd) and navigate to your Qt folder. The command to navigate is cd C:/QtMyQt
+
+**7** - Run the script file created in the step 5 to setup MSVC. In the command prompt type qt5vars.cmd and press ENTER. After some seconds you will see 2 lines in the prompt, and the prompt will be waiting for new commands. IMPORTANT: This script is setuping MSVC to compile in 64 bits.
+
+**8** - Now, copy and paste these scripts line in your prompt and press ENTER to execute (this script will configure Qt just with the modules used in JamTaba):
+
+	configure -debug-and-release -opensource -confirm-license -static -no-sql-psql -no-sql-mysql -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests
+
+* After some seconds you will see **2 messages**:
+
+`Qt is now configured for building. Just run nmake.
+To reconfigure, run nmake confclean and configure.`
+
+**9** - Just follow the message, type the command nmake in your prompt and press ENTER. Drink a coffee, the compilation lasted 90 minutes here.
+
+**10** - After 90 min the job is done, check your Qt folder, inside the qtbase folder you have all Qt static libs compiled.
+
+**11** - Now configure QT to compile with the static version.
+
+

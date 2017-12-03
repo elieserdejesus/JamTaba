@@ -7,8 +7,8 @@ class WavePeakPanel : public QWidget
 {
     Q_OBJECT
 
-    //custom properties defined in stylesheet files
-    Q_PROPERTY(QColor peaksColor MEMBER peaksColor)
+    // custom properties defined in stylesheet files
+    Q_PROPERTY(QColor peaksColor MEMBER peaksColor WRITE setPeaksColor)
     Q_PROPERTY(QColor loadingColor MEMBER loadingColor)
 
 public:
@@ -32,6 +32,8 @@ public:
     void setShowBuffering(bool setShowBuffering);
     void setDrawingMode(WavePeakPanel::WaveDrawingMode mode);
 
+    virtual void setPeaksColor(const QColor &color);
+
 protected:
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
@@ -46,12 +48,12 @@ protected:
     QColor peaksColor;
 
 private:
-    QColor loadingColor; //color for the loading circle
+    QColor loadingColor; // color for the loading circle
 
     bool showingBuffering;
     int bufferingPercentage;
 
-    uint maxPeaks;// change when widget resize
+    uint maxPeaks; // change when widget resize
 
     int computeMaxPeaks();
     void recreatePeaksArray();

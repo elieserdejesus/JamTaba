@@ -16,7 +16,7 @@ class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    PreferencesDialog(QWidget *parent);
+    explicit PreferencesDialog(QWidget *parent);
     virtual ~PreferencesDialog();
 
     enum PreferencesTab {
@@ -25,14 +25,15 @@ public:
         TabVST,
         TabMultiTrackRecording,
         TabMetronome,
-        TabLooper
+        TabLooper,
+        TabRemember
 
     };
 
     virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders);
 
 signals:
-    void customMetronomeSelected(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile);
+    void customMetronomeSelected(const QString &primaryBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile);
     void builtInMetronomeSelected(const QString &metronomeAlias);
     void multiTrackRecordingStatusChanged(bool recording);
     void jamRecorderStatusChanged(const QString &writerId, bool status);
@@ -41,6 +42,7 @@ signals:
     void looperAudioEncodingFlagChanged(bool savingEncodedAudio);
     void looperWaveFilesBitDepthChanged(quint8 bitDepth);
     void looperFolderChanged(const QString &newLoopsFolder);
+    void rememberSettingsChanged(bool boost, bool level, bool pan, bool mute, bool lowCut);
 
 public slots:
     void accept() override;
@@ -51,7 +53,8 @@ protected slots:
 private slots:
     void openRecordingPathBrowser();
     void openPrimaryBeatAudioFileBrowser();
-    void openSecondaryBeatAudioFileBrowser();
+    void openOffBeatAudioFileBrowser();
+    void openAccentBeatAudioFileBrowser();
 
     void emitEncodingQualityChanged();
 
@@ -76,11 +79,14 @@ protected:
     void populateMultiTrackRecordingTab();
     void selectRecordingTab();
 
-    //metronome
+    // metronome
     void populateMetronomeTab();
 
     // looper
     void populateLooperTab();
+
+    // remember
+    void populateRememberTab();
 
     virtual void setupSignals();
     virtual void populateAllTabs();

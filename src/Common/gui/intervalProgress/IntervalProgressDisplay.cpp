@@ -1,4 +1,5 @@
 #include "IntervalProgressDisplay.h"
+#include "log/Logging.h"
 
 #include <QPaintEvent>
 #include <QPainter>
@@ -14,8 +15,8 @@ const QColor IntervalProgressDisplay::DEFAULT_SECONDARY_BEATS_COLOR = Qt::gray;
 const QColor IntervalProgressDisplay::DEFAULT_DISABLED_BEATS_COLOR = QColor(0, 0, 0, 15);
 const QColor IntervalProgressDisplay::DEFAULT_LINES_COLOR = Qt::gray;
 
-IntervalProgressDisplay::PaintStrategy::PaintStrategy()
-    :font("Verdana")
+IntervalProgressDisplay::PaintStrategy::PaintStrategy() :
+    font("Verdana")
 {
     font.setStretch(QFont::SemiCondensed);
 }
@@ -24,13 +25,13 @@ IntervalProgressDisplay::PaintStrategy::~PaintStrategy()
 {
 
 }
-// ++++++++++++++++++++++++++++++++++++++++++++++++++
+
 IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     QFrame(parent),
     paintMode(PaintShape::LINEAR),
     showAccents(false),
     currentBeat(0),
-    beatsPerAccent(0),
+    accentBeats(QList<int>()),
     usingLowContrastColors(false),
     accentsColor(DEFAULT_ACCENTS_COLOR),
     currentAccentColor(DEFAULT_CURRENT_ACCENT_COLOR),
@@ -39,8 +40,6 @@ IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     currentBeatColor(DEFAULT_CURRENT_BEAT_COLOR)
 
 {
-    //setAttribute(Qt::WA_NoBackground);
-
     setBeatsPerInterval(32);
 
     setShowAccents(false);
@@ -73,20 +72,25 @@ void IntervalProgressDisplay::setCurrentBeat(int beat)
     }
 }
 
-void IntervalProgressDisplay::setBeatsPerAccent(int beats)
+void IntervalProgressDisplay::setAccentBeats(QList<int> accents)
 {
-    beatsPerAccent = beats;
-    if (!isShowingAccents() && beatsPerAccent > 1)
+    accentBeats = accents;
+
+    if (!isShowingAccents() && !accentBeats.isEmpty())
         this->showAccents = true;
+
     update();
+}
+
+QList<int> IntervalProgressDisplay::getAccentBeats() const
+{
+    return accentBeats;
 }
 
 void IntervalProgressDisplay::setBeatsPerInterval(int beats)
 {
     if (beats > 0 && beats <= 64) {
         this->beatsPerInterval = beats;
-        if (beatsPerAccent <= 0)
-            beatsPerAccent = beats / 2;
     }
 }
 
@@ -95,6 +99,7 @@ void IntervalProgressDisplay::setPaintMode(PaintShape mode)
     if (mode != this->paintMode) {
         this->paintMode = mode;
         paintStrategy.reset(createPaintStrategy(mode));
+
         updateGeometry();
         repaint();
     }
@@ -121,7 +126,7 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
         p.setRenderHint(QPainter::Antialiasing, true);
         qreal elementsSize = getElementsSize(paintMode);
         qreal fontSize = getFontSize(paintMode);
-        PaintContext paintContext(width(), height(), beatsPerInterval, currentBeat, isShowingAccents(), beatsPerAccent, elementsSize, fontSize);
+        PaintContext paintContext(width(), height(), beatsPerInterval, currentBeat, isShowingAccents(), accentBeats, elementsSize, fontSize);
         QColor currentBeatColor = usingLowContrastColors ? Qt::lightGray : this->currentBeatColor;
         QBrush textBrush = palette().text(); //using the color defined in loaded stylesheet theme
         PaintColors paintColors(currentBeatColor, secondaryBeatsColor, accentsColor, currentAccentColor, disabledBeatsColor, textBrush, linesColor);
@@ -132,6 +137,10 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
 qreal IntervalProgressDisplay::getFontSize(PaintShape paintMode) const
 {
     qreal baseFontSize = 8.0;
+
+#ifdef Q_OS_MAC
+    baseFontSize = 11;
+#endif
 
     int size = qMax(baseFontSize, width() * 0.015);
     if (paintMode == PaintShape::PIE)
@@ -144,25 +153,25 @@ qreal IntervalProgressDisplay::getFontSize(PaintShape paintMode) const
 qreal IntervalProgressDisplay::getElementsSize(PaintShape paintMode) const
 {
     switch (paintMode) {
-    case PaintShape::LINEAR: return qMax(width() * 0.04, 22.5);
-    case PaintShape::CIRCULAR:
-    case PaintShape::ELLIPTICAL:
-    {
-        int minSize = qMin(width(), height());
-        return qMax(minSize * 0.035, 7.0);
-    }
-    case PaintShape::PIE:
-    {
-        int minSize = qMin(width(), height());
-        return qMax(minSize * 0.1, 8.0);
-    }
+        case PaintShape::LINEAR: return qMin(qMax(width() * 0.04, 22.5), static_cast<qreal>(height() - 1));
+        case PaintShape::CIRCULAR:
+        case PaintShape::ELLIPTICAL:
+        {
+            int minSize = qMin(width(), height());
+            return qMax(minSize * 0.035, 7.0);
+        }
+        case PaintShape::PIE:
+        {
+            int minSize = qMin(width(), height());
+            return qMax(minSize * 0.1, 8.0);
+        }
     }
     return 0;
 }
 
 void IntervalProgressDisplay::resizeEvent(QResizeEvent *e)
 {
-    if (baseSize.isEmpty()){
+    if (baseSize.isEmpty()) {
         baseSize = e->size();
     }
 }
@@ -174,31 +183,29 @@ QSize IntervalProgressDisplay::sizeHint() const
 
 QSize IntervalProgressDisplay::minimumSizeHint() const
 {
-    QSize size = QWidget::minimumSizeHint();
-    int h = baseSize.height() > 0 ? baseSize.height() : height();
     switch (paintMode) {
+
     case CIRCULAR:
     case PIE:
-        size.setWidth(h);
-        break;
+        return QSize(130, 100);
     case ELLIPTICAL:
-        size.setWidth(h * 2);
-        break;
+        return QSize(180, 100);
+
     case LINEAR:
-        size.setWidth(h * 5);
-        break;
+        return QSize(QWIDGETSIZE_MAX, 24);
     }
-    return size;
+
+    return QFrame::minimumSizeHint();
 }
 
 IntervalProgressDisplay::PaintContext::PaintContext(int width, int height, int beatsPerInterval, int currentBeat,
-                                                    bool drawAccents, int beatsPerAccent, qreal elementsSize, qreal fontSize)
-    : width(width),
+                                                    bool drawAccents, QList<int> accentBeats, qreal elementsSize, qreal fontSize) :
+      width(width),
       height(height),
       beatsPerInterval(beatsPerInterval),
       currentBeat(currentBeat),
       showingAccents(drawAccents),
-      beatsPerAccent(beatsPerAccent),
+      accentBeats(accentBeats),
       elementsSize(elementsSize),
       fontSize(fontSize)
 {
@@ -207,9 +214,9 @@ IntervalProgressDisplay::PaintContext::PaintContext(int width, int height, int b
 
 IntervalProgressDisplay::PaintColors::PaintColors(const QColor &currentBeat,
             const QColor &secondaryBeat, const QColor &accentBeat, const QColor &currentAccentBeat, const QColor &disabledBeats,
-                                                              const QBrush &textColor, QColor linesColor)
+                                                              const QBrush &textColor, QColor linesColor) :
 
-    : currentBeat(currentBeat),
+      currentBeat(currentBeat),
       secondaryBeat(secondaryBeat),
       accentBeat(accentBeat),
       currentAccentBeat(currentAccentBeat),

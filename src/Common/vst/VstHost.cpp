@@ -90,19 +90,18 @@ void VstHost::setPositionInSamples(int intervalPosition)
 
     int currentBar = std::floor(vstTimeInfo.ppqPos/barLengthq);
     vstTimeInfo.barStartPos = barLengthq*currentBar;
-    // +++++++
 
     vstTimeInfo.flags = 0;
-    vstTimeInfo.flags |= kVstTransportChanged;// = 1,		///< indicates that play, cycle or record state has changed
-    vstTimeInfo.flags |= kVstTransportPlaying;// = 1 << 1,	///< set if Host sequencer is currently playing
+    vstTimeInfo.flags |= kVstTransportChanged;  /// indicates that play, cycle or record state has changed
+    vstTimeInfo.flags |= kVstTransportPlaying;  /// set if Host sequencer is currently playing
     // vstTimeInfo.flags |= kVstTransportCycleActive;// = 1 << 2,	///< set if Host sequencer is in cycle mode
     // vstTimeInfo.flags |= kVstAutomationReading;//    = 1 << 7,	///< set if automation read mode active (play parameter changes)
-    vstTimeInfo.flags |= kVstNanosValid;// = 1 << 8,	///< VstTimeInfo::nanoSeconds valid
-    vstTimeInfo.flags |= kVstPpqPosValid;// = 1 << 9,	///< VstTimeInfo::ppqPos valid
-    vstTimeInfo.flags |= kVstTempoValid;// = 1 << 10,	///< VstTimeInfo::tempo valid
-    vstTimeInfo.flags |= kVstBarsValid;// = 1 << 11,	///< VstTimeInfo::barStartPos valid
+    vstTimeInfo.flags |= kVstNanosValid;        /// VstTimeInfo::nanoSeconds valid
+    vstTimeInfo.flags |= kVstPpqPosValid;       /// VstTimeInfo::ppqPos valid
+    vstTimeInfo.flags |= kVstTempoValid;        /// VstTimeInfo::tempo valid
+    vstTimeInfo.flags |= kVstBarsValid;     	/// VstTimeInfo::barStartPos valid
     // vstTimeInfo.flags |= kVstCyclePosValid;//        = 1 << 12,	///< VstTimeInfo::cycleStartPos and VstTimeInfo::cycleEndPos valid
-    vstTimeInfo.flags |= kVstTimeSigValid;// = 1 << 13,	///< VstTimeInfo::timeSigNumerator and VstTimeInfo::timeSigDenominator valid
+    vstTimeInfo.flags |= kVstTimeSigValid;      /// VstTimeInfo::timeSigNumerator and VstTimeInfo::timeSigDenominator valid
     // vstTimeInfo.flags |= kVstSmpteValid;//           = 1 << 14,	///< VstTimeInfo::smpteOffset and VstTimeInfo::smpteFrameRate valid
     vstTimeInfo.flags |= kVstClockValid;
 }
@@ -137,8 +136,7 @@ bool VstHost::tempoIsValid() const
     return this->vstTimeInfo.flags & kVstTempoValid;
 }
 
-long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index, long value, void *ptr,
-                                    float opt)
+long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt)
 {
     Q_UNUSED(effect)
     Q_UNUSED(index)

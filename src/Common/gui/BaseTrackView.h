@@ -2,8 +2,9 @@
 #define TRACKVIEW_H
 
 #include <QWidget>
+#include <QGridLayout>
+#include <QToolButton>
 #include "audio/core/AudioPeak.h"
-#include "MultiStateButton.h"
 #include "Slider.h"
 
 class AudioMeter;
@@ -15,6 +16,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QBoxLayout;
 class QGridLayout;
+class BoostSpinBox;
 
 namespace Controller {
 class MainController;
@@ -64,8 +66,12 @@ public:
 
     bool isActivated() const;
 
+    virtual void setTintColor(const QColor &color);
+    QColor getTintColor() const;
+
     static const int NARROW_WIDTH;
     static const int WIDE_WIDTH;
+
 protected:
 
     Controller::MainController *mainController;
@@ -89,13 +95,13 @@ protected:
 
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 
-    //meters
+    // meters
     AudioMeter *peakMeter;
-    QBoxLayout *metersLayout;// used to group midi and audio meters
+    QBoxLayout *metersLayout; // used to group midi and audio meters
 
-    //level slider
+    // level slider
     Slider *levelSlider;
-    QBoxLayout *levelSliderLayout;// used to group the level slider and the two 'speaker' icons
+    QBoxLayout *levelSliderLayout; // used to group the level slider and the two 'speaker' icons
 
     // pan slider
     Slider *panSlider;
@@ -109,28 +115,32 @@ protected:
     QBoxLayout *muteSoloLayout;
 
     // boost
-    MultiStateButton *buttonBoost;
+    BoostSpinBox *boostSpinBox;
 
     // main layout buildind blocks
     QGridLayout *mainLayout;
     QBoxLayout *secondaryChildsLayout; // right side widgets in vertical layout, bottom widgets (2nd row) in horizontal layout
-    QBoxLayout *primaryChildsLayout; // left side widgets in vertical layout, top widgets (2nd row) in horizontal layout
+    QBoxLayout *primaryChildsLayout;   // left side widgets in vertical layout, top widgets (2nd row) in horizontal layout
 
     virtual void setupVerticalLayout();
 
     static const int FADER_HEIGHT;
+
 private:
     static QMap<long, BaseTrackView *> trackViews;
     Audio::AudioPeak maxPeak;
 
-    void updateBoostButtonToolTip();
+    QLabel *highLevelIcon;
+    QLabel *lowLevelIcon;
+
+    QColor tintColor;
 
 protected slots:
     virtual void toggleMuteStatus();
     virtual void toggleSoloStatus();
     virtual void setGain(int value);
     virtual void setPan(int value);
-    virtual void updateBoostValue();
+    virtual void updateBoostValue(int boostValue);
 
 private slots:
     // signals emitted by AudioNode class when user activate the control with mouse, or midi CCs, or using joystick, etc.
@@ -140,6 +150,11 @@ private slots:
     void setSoloStatus(bool newSoloStatus);
     void setBoostStatus(float newBoostValue);
 };
+
+inline QColor BaseTrackView::getTintColor() const
+{
+    return tintColor;
+}
 
 inline Controller::MainController* BaseTrackView::getMainController() const
 {

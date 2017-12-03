@@ -2,42 +2,47 @@
 #include "ui_NinjamPanel.h"
 #include "log/Logging.h"
 #include "BpiUtils.h"
-#include "intervalProgress/IntervalProgressWindow.h"
 #include "TextEditorModifier.h"
+#include "MetronomeUtils.h"
 
 #include <QDebug>
 #include <QtAlgorithms>
 #include <QtMath>
 #include <QFormLayout>
+#include <QPushButton>
 
-NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier, QWidget *parent)
-    :   QWidget(parent),
-        ui(new Ui::NinjamPanel),
-        hostSyncButton(nullptr),
-        metronomeFloatingWindow(nullptr)
+NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier,
+                         TextEditorModifier *accentBeatsModifier, QWidget *parent) :
+    QFrame(parent),
+    ui(new Ui::NinjamPanel),
+    hostSyncButton(nullptr),
+    metronomeFloatingWindow(nullptr)
 {
+    qCDebug(jtNinjamGUI) << "NinjamPanel::NinjamPanel ctor";
     ui->setupUi(this);
 
-    ui->levelSlider->setSliderType(Slider::AudioSlider);
-    ui->panSlider->setSliderType(Slider::PanSlider);
-
-    initializeCombos(bpiComboModifier, bpmComboModifier);
-
-    ui->peakMeter->setOrientation(Qt::Horizontal);
+    initializeCombos(bpiComboModifier, bpmComboModifier, accentBeatsModifier);
 
     maximizeControlsWidget(true);
 
     setupSignals();
 
     translate();
+    qCDebug(jtNinjamGUI) << "NinjamPanel::NinjamPanel done";
 }
 
-void NinjamPanel::updateStyleSheet()
+void NinjamPanel::setMetronomeFloatingWindow(IntervalProgressWindow *floatingWindow)
 {
-    ui->peakMeter->updateStyleSheet();
+    metronomeFloatingWindow = floatingWindow;
 }
 
-void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier)
+void NinjamPanel::maximizeControlsWidget(bool maximize)
+{
+     ui->intervalPanel->setMaximumWidth(maximize ? 32767 : 300);
+}
+
+void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorModifier *bpmModifier,
+                                   TextEditorModifier *accentBeatsModifier)
 {
     // initialize combos
     const quint16 MIN_BPM = 40;
@@ -51,8 +56,8 @@ void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorMo
     ui->comboBpm->setValidator(new QIntValidator(MIN_BPM, 400, ui->comboBpm));
     ui->comboBpi->setValidator(new QIntValidator(2, 64, ui->comboBpi));
 
-    ui->comboBpi->setCompleter(0);// disabling completer
-    ui->comboBpm->setCompleter(0);// disabling completer
+    ui->comboBpi->setCompleter(nullptr); // disabling completer
+    ui->comboBpm->setCompleter(nullptr); // disabling completer
 
     if (bpiModifier) // just to be sure
         bpiModifier->modify(ui->comboBpi); // modify the comboBox QLineEdit to work in plugins (AU/VST)
@@ -60,11 +65,9 @@ void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorMo
     if (bpmModifier)
         bpmModifier->modify(ui->comboBpm);
 
-}
+    if (accentBeatsModifier)
+        accentBeatsModifier->modify(ui->lineEditAccentBeats, true);
 
-void NinjamPanel::maximizeControlsWidget(bool maximize)
-{
-     ui->intervalPanel->setMaximumWidth(maximize ? 32767 : 300);
 }
 
 void NinjamPanel::setBpiComboPendingStatus(bool enabled)
@@ -85,22 +88,22 @@ void NinjamPanel::translate()
 {
     ui->retranslateUi(this);
 
-    //rebuild the accents and shape combos to show translated strings. The signals are blocked to avoid reset the combos and loose the user selections.
+    // rebuild the accents and shape combos to show translated strings. The signals are blocked to avoid reset the combos and loose the user selections.
     QSignalBlocker comboShapeBlocker(ui->comboShape);
-    QSignalBlocker comboAccentsBlocker(ui->comboBeatsPerAccent);
+    QSignalBlocker comboAccentsBlocker(ui->comboAccentBeats);
 
-    //save the current indexes before rebuild the combos
+    // save the current indexes before rebuild the combos
     int currentShape = ui->comboShape->currentIndex();
-    int currentAccent = ui->comboBeatsPerAccent->currentIndex();
+    int currentAccent = ui->comboAccentBeats->currentIndex();
 
     buildAccentsdModel(ui->intervalPanel->getBeatsPerInterval());
     buildShapeModel();
 
-    //restore the selected indexes
+    // restore the selected indexes
     ui->comboShape->setCurrentIndex(currentShape);
-    ui->comboBeatsPerAccent->setCurrentIndex(currentAccent);
+    ui->comboAccentBeats->setCurrentIndex(currentAccent);
 
-    //compute the max width string in combo and set the combobox list items width to match
+    // compute the max width string in combo and set the combobox list items width to match
     int items = ui->comboShape->count();
     QFontMetrics fontMetrics = ui->comboShape->fontMetrics();
     int maxComboItemWidth = 0;
@@ -128,23 +131,15 @@ void NinjamPanel::changeEvent(QEvent *e)
 
 void NinjamPanel::setupSignals()
 {
-    connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAccentsStatus(int)));
+    connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), this, SLOT(handleAccentBeatsIndexChanged(int)));
+    connect(ui->comboAccentBeats, SIGNAL(currentIndexChanged(int)), SIGNAL(accentsComboChanged(int)));
+    connect(ui->lineEditAccentBeats, SIGNAL(editingFinished()), this, SLOT(handleAccentBeatsTextEdited()));
     connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this, SLOT(updateIntervalProgressShape(int)));
 
     connect(ui->comboBpi, SIGNAL(activated(QString)), this, SLOT(handleBpiComboActication(QString)));
     connect(ui->comboBpm, SIGNAL(activated(QString)), this, SLOT(handleBpmComboActication(QString)));
-    connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), SIGNAL(accentsComboChanged(int)));
-    connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SIGNAL(gainSliderChanged(
-                                                                                  int)));
-    connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SIGNAL(panSliderChanged(int)));
-    connect(ui->muteButton, SIGNAL(clicked(bool)), this, SIGNAL(muteButtonClicked()));
-    connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
-    connect(ui->preferencesButton, SIGNAL(clicked(bool)), this, SIGNAL(preferencesButtonClicked()));
 
-    connect(ui->floatingWindowButton, SIGNAL(toggled(bool)), this, SLOT(setMetronomeFloatingWindowVisibility(bool)));
 }
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++
 
 void NinjamPanel::handleBpiComboActication(const QString &newBpi)
 {
@@ -158,61 +153,22 @@ void NinjamPanel::handleBpmComboActication(const QString &newBpm)
     emit bpmComboActivated(newBpm);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++
-
-bool NinjamPanel::metronomeFloatingWindowIsVisible() const
-{
-    return metronomeFloatingWindow && metronomeFloatingWindow->isVisible();
-}
-
-void NinjamPanel::setMetronomeFloatingWindowVisibility(bool showFloatingWindow)
-{
-    if (showFloatingWindow){
-        if (!metronomeFloatingWindow) {
-            IntervalProgressDisplay::PaintShape paintMode = ui->intervalPanel->getPaintMode();
-            int beatsPerInterval = ui->intervalPanel->getBeatsPerInterval();
-            int beatsPerAccent = ui->intervalPanel->getBeatsPerAccent();
-            bool showingAccents = ui->intervalPanel->isShowingAccents();
-            metronomeFloatingWindow = new IntervalProgressWindow(nullptr, paintMode, beatsPerInterval, beatsPerAccent, showingAccents);
-            connect(metronomeFloatingWindow, SIGNAL(windowClosed()), this, SLOT(deleteFloatWindow()));
-        }
-        
-        metronomeFloatingWindow->move(10, 10); // top left
-        metronomeFloatingWindow->setVisible(true);
-        metronomeFloatingWindow->raise();
-
-    }
-    else{
-        if (metronomeFloatingWindow) {
-            metronomeFloatingWindow->setVisible(false);
-            deleteFloatWindow();
-        }
-    }
-    ui->floatingWindowButton->setChecked(showFloatingWindow);
-}
-
-void NinjamPanel::deleteFloatWindow()
-{
-    if (metronomeFloatingWindow) {
-        metronomeFloatingWindow->deleteLater();
-        metronomeFloatingWindow = nullptr;
-        ui->floatingWindowButton->setChecked(false);
-    }
-}
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::setLowContrastPaintInIntervalPanel(bool useLowContrastColors)
 {
     ui->intervalPanel->setPaintUsingLowContrastColors(useLowContrastColors);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamPanel::addMasterControls(QWidget *masterControlsPanel)
+void NinjamPanel::setCollapseMode(bool collapsed)
 {
-    this->layout()->addWidget(masterControlsPanel);
+    bool isCollapsed = !ui->panelCombos->isVisible();
+
+    if (collapsed != isCollapsed) {
+        setIntervalShape(IntervalProgressDisplay::LINEAR);
+    }
+
+    ui->panelCombos->setVisible(!collapsed);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++
 // TODO this function and the hostSyncButton are used only in VST plugin. Create a NinjamPanelVST inheriting from NinjamPanel
 void NinjamPanel::createHostSyncButton(const QString &hostName)
 {
@@ -257,79 +213,117 @@ void NinjamPanel::setBpmComboText(const QString &text)
     ui->comboBpm->blockSignals(false);
 }
 
-int NinjamPanel::getPanSliderMaximumValue() const
+int NinjamPanel::getAccentBeatsComboValue() const
 {
-    return ui->panSlider->maximum();
+    return ui->comboAccentBeats->currentData().toInt();
 }
 
-int NinjamPanel::getCurrentBeatsPerAccent() const
+void NinjamPanel::setAccentBeatsReadOnly(bool value)
 {
-    return ui->comboBeatsPerAccent->currentData().toInt();
+    ui->lineEditAccentBeats->setReadOnly(value);
 }
 
-int NinjamPanel::getGainSliderMaximumValue() const
+void NinjamPanel::setAccentBeatsVisible(bool value)
 {
-    return ui->levelSlider->maximum();
+    ui->lineEditAccentBeats->setVisible(value);
 }
 
-void NinjamPanel::setMuteButtonStatus(bool checked)
+QString NinjamPanel::getAccentBeatsText() const
 {
-    ui->muteButton->setChecked(checked);
+    return ui->lineEditAccentBeats->text();
 }
 
-void NinjamPanel::setPanSliderValue(int value)
+void NinjamPanel::setAccentBeatsText(QString value)
 {
-    ui->panSlider->setValue(value);
+    ui->lineEditAccentBeats->blockSignals(true);
+    ui->lineEditAccentBeats->setText(value);
+    ui->lineEditAccentBeats->blockSignals(false);
 }
 
-void NinjamPanel::setGainSliderValue(int value)
+void NinjamPanel::handleAccentBeatsIndexChanged(int index)
 {
-    ui->levelSlider->setValue(value);
+    Q_UNUSED(index);
+    NinjamPanel::updateAccentsStatus();
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamPanel::setMetronomePeaks(float left, float right, float rmsLeft, float rmsRight)
-{
-    ui->peakMeter->setPeak(left, right, rmsLeft, rmsRight);
-}
+void NinjamPanel::handleAccentBeatsTextEdited() {
+    int accentBeatsCb = ui->comboAccentBeats->currentData().toInt();
+    if (accentBeatsCb >= 0) // nothing to do here
+        return;
 
-// ++++++++++++++++++++++++++++++++++++
-void NinjamPanel::updateAccentsStatus(int index)
-{
-    bool showingAccents = index > 0;
-    ui->intervalPanel->setShowAccents(showingAccents);
+    QList<int> accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
+    ui->intervalPanel->setAccentBeats(accentBeats);
     if (metronomeFloatingWindow) {
-        metronomeFloatingWindow->setShowAccents(showingAccents);
+        metronomeFloatingWindow->setAccentBeats(accentBeats);
     }
 
-    if (showingAccents){
-        int beatsPerAccent = ui->comboBeatsPerAccent->currentData().toInt();
-        ui->intervalPanel->setBeatsPerAccent(beatsPerAccent);
-        if (metronomeFloatingWindow) {
-            metronomeFloatingWindow->setBeatsPerAccent(beatsPerAccent);
+    ui->intervalPanel->setShowAccents(!accentBeats.isEmpty());
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->setShowAccents(!accentBeats.isEmpty());
+    }
+
+    // We are resposible for forcing this:
+    emit accentsBeatsChanged(accentBeats);
+}
+
+void NinjamPanel::updateAccentsStatus()
+{
+    int accentBeatsCb = ui->comboAccentBeats->currentData().toInt();
+
+    QList<int> accentBeats;
+    if (accentBeatsCb != 0) {
+        if (accentBeatsCb > 0) {
+            int bpi = ui->intervalPanel->getBeatsPerInterval();
+            accentBeats = Audio::MetronomeUtils::getAccentBeats(accentBeatsCb, bpi);
+        } else {
+            if (getAccentBeatsText().isEmpty()) {
+                QList<QString> strs;
+                foreach (int b, ui->intervalPanel->getAccentBeats()) {
+                    strs.append(QString::number(b + 1));
+                }
+                // OK, now we're happy the accent beats text is correct
+                setAccentBeatsText(strs.join(" "));
+            }
+            accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
+            // We are resposible for forcing this:
+            emit accentsBeatsChanged(accentBeats);
         }
+        ui->intervalPanel->setAccentBeats(accentBeats);
+        if (metronomeFloatingWindow) {
+            metronomeFloatingWindow->setAccentBeats(accentBeats);
+        }
+    }
+
+    ui->intervalPanel->setShowAccents(!accentBeats.isEmpty());
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->setShowAccents(!accentBeats.isEmpty());
     }
 }
 
 void NinjamPanel::updateIntervalProgressShape(int index)
 {
     Q_UNUSED(index);
-    IntervalProgressDisplay::PaintShape selectedShape = (IntervalProgressDisplay::PaintShape)ui->comboShape->currentData().toInt();
+    auto selectedShape = (IntervalProgressDisplay::PaintShape)ui->comboShape->currentData().toInt();
     ui->intervalPanel->setPaintMode(selectedShape);
     if (metronomeFloatingWindow) {
         metronomeFloatingWindow->setIntervalProgressShape(selectedShape);
     }
+
+    updateGeometry();
+
+
     emit intervalShapeChanged(selectedShape);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++
 QStringList NinjamPanel::getBpiDividers(int bpi)
 {
     QStringList foundedDividers;
-    QList<int> intDividers = BpiUtils::getBpiDividers(bpi);
-    foreach (int divider, intDividers)
+    QList<uint> intDividers = BpiUtils::getBpiDividers(bpi);
+    for (uint divider : intDividers)
         foundedDividers.append(QString::number(divider));
+
     qSort(foundedDividers.begin(), foundedDividers.end(), compareBpis);
+
     return foundedDividers;
 }
 
@@ -366,25 +360,29 @@ void NinjamPanel::setIntervalShape(int shape)
 
 void NinjamPanel::buildShapeModel()
 {
+    ui->comboShape->blockSignals(true);
     ui->comboShape->clear();
     ui->comboShape->addItem(tr("Circle"), IntervalProgressDisplay::PaintShape::CIRCULAR);
     ui->comboShape->addItem(tr("Ellipse"), IntervalProgressDisplay::PaintShape::ELLIPTICAL);
     ui->comboShape->addItem(tr("Line"), IntervalProgressDisplay::PaintShape::LINEAR);
     ui->comboShape->addItem(tr("Pie"), IntervalProgressDisplay::PaintShape::PIE);
+    ui->comboShape->blockSignals(false);
 }
 
 void NinjamPanel::buildAccentsdModel(int bpi)
 {
-    ui->comboBeatsPerAccent->clear();
-    ui->comboBeatsPerAccent->addItem(tr("off"), 0);
+    ui->comboAccentBeats->blockSignals(true);
+    ui->comboAccentBeats->clear();
+    ui->comboAccentBeats->addItem(tr("off"), 0);
     QStringList bpiDividers = getBpiDividers(bpi);
     for (int d = 0; d < bpiDividers.size(); ++d) {
         QString divider = bpiDividers.at(d);
-        ui->comboBeatsPerAccent->addItem(tr("%1 beats").arg(divider), divider);
+        ui->comboAccentBeats->addItem(tr("%1 beats").arg(divider), divider);
     }
+    ui->comboAccentBeats->addItem(tr("Custom..."), -1);
+    ui->comboAccentBeats->blockSignals(false);
 }
 
-// ++++++++++++++++++++++
 void NinjamPanel::setCurrentBeat(int currentBeat)
 {
     ui->intervalPanel->setCurrentBeat(currentBeat);
@@ -397,9 +395,9 @@ void NinjamPanel::selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent)
 {
     int minorDifference = INT_MAX;
     int closestIndex = -1;
-    for (int i = 1; i < ui->comboBeatsPerAccent->count(); ++i) {
+    for (int i = 1; i < ui->comboAccentBeats->count(); ++i) {
         int difference
-            = qFabs(currentBeatsPerAccent - ui->comboBeatsPerAccent->itemData(i).toInt());
+            = qFabs(currentBeatsPerAccent - ui->comboAccentBeats->itemData(i).toInt());
         if (difference < minorDifference) {
             minorDifference = difference;
             closestIndex = i;
@@ -408,18 +406,28 @@ void NinjamPanel::selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent)
         }
     }
     if (closestIndex >= 0)
-        ui->comboBeatsPerAccent->setCurrentIndex(closestIndex);
+        ui->comboAccentBeats->setCurrentIndex(closestIndex);
 }
 
 // auto select the last beatsPerAccentValue in combo
 void NinjamPanel::selectBeatsPerAccentInCombo(int beatsPerAccent)
 {
-    for (int i = 0; i < ui->comboBeatsPerAccent->count(); ++i) {
-        if (beatsPerAccent == ui->comboBeatsPerAccent->itemData(i).toInt()) {
-            ui->comboBeatsPerAccent->setCurrentIndex(i);
+    for (int i = 0; i < ui->comboAccentBeats->count(); ++i) {
+        if (beatsPerAccent == ui->comboAccentBeats->itemData(i).toInt()) {
+            ui->comboAccentBeats->setCurrentIndex(i);
             break;
         }
     }
+}
+
+int NinjamPanel::getBpi() const
+{
+    return ui->comboBpi->currentText().toInt();
+}
+
+int NinjamPanel::getBpm() const
+{
+    return ui->comboBpm->currentText().toInt();
 }
 
 void NinjamPanel::setBpi(int bpi)
@@ -433,15 +441,16 @@ void NinjamPanel::setBpi(int bpi)
     }
     bool showingAccents = ui->intervalPanel->isShowingAccents();
     buildAccentsdModel(bpi);
-    if (showingAccents) {
+    int accentBeatsCb = getAccentBeatsComboValue();
+    if (showingAccents && accentBeatsCb > 0) {
         // find the closest possible accent value for the new bpi
-        int currentBeatsPerAccent = ui->intervalPanel->getBeatsPerAccent();
-        if (bpi % currentBeatsPerAccent == 0)  // new bpi is compatible with last bpi value?
-            selectBeatsPerAccentInCombo(currentBeatsPerAccent);
-        else // new bpi is incompatible with last bpi value. For example, bpi change from 16 to 13
-            selectClosestBeatsPerAccentInCombo(currentBeatsPerAccent);
+        if (bpi % accentBeatsCb == 0)  {// new bpi is compatible with last bpi value?
+            selectBeatsPerAccentInCombo(accentBeatsCb);
+        } else {// new bpi is incompatible with last bpi value. For example, bpi change from 16 to 13
+            selectClosestBeatsPerAccentInCombo(accentBeatsCb);
+        }
     } else {
-        ui->comboBeatsPerAccent->setCurrentIndex(0);// off
+        ui->comboAccentBeats->setCurrentIndex(0);// off
         ui->intervalPanel->setShowAccents(false);
         if (metronomeFloatingWindow) {
             metronomeFloatingWindow->setShowAccents(false);
@@ -458,7 +467,15 @@ void NinjamPanel::setBpm(int bpm)
 
 NinjamPanel::~NinjamPanel()
 {
-    deleteFloatWindow();
-
     delete ui;
+}
+
+QList<int> NinjamPanel::getAccentBeats() const
+{
+    return ui->intervalPanel->getAccentBeats();
+}
+
+bool NinjamPanel::isShowingAccents() const
+{
+    return ui->intervalPanel->isShowingAccents();
 }

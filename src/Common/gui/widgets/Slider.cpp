@@ -6,9 +6,9 @@
 #include <QStyleOptionSlider>
 #include <QToolTip>
 
-Slider::Slider(QWidget *parent)
-    : QSlider(parent),
-      sliderType(Slider::AudioSlider)
+Slider::Slider(QWidget *parent) :
+    QSlider(parent),
+    sliderType(Slider::AudioSlider)
 {
     setMaximum(120);
 

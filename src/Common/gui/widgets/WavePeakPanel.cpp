@@ -26,6 +26,13 @@ WavePeakPanel::~WavePeakPanel()
 
 }
 
+void WavePeakPanel::setPeaksColor(const QColor &color)
+{
+    this->peaksColor = color;
+
+    update();
+}
+
 void WavePeakPanel::setDrawingMode(WaveDrawingMode mode)
 {
     this->drawingMode = mode;
@@ -37,6 +44,7 @@ void WavePeakPanel::setBufferingPercentage(uint percentage)
 {
     if (percentage > 100)
         percentage = 100;
+
     bufferingPercentage = percentage;
     update();
 }
@@ -84,6 +92,7 @@ QSize WavePeakPanel::minimumSizeHint()  const
 {
     if (isEnabled())
         return QSize(0, 80);
+
     return QWidget::minimumSizeHint();
 }
 
@@ -99,19 +108,19 @@ void WavePeakPanel::addPeak(float peak)
 
     peaksArray.push_back(peak);
 
-    update();// repaint
+    update(); // repaint
 }
 
 void WavePeakPanel::paintSoundWave(QPainter &painter, bool useAlpha)
 {
     size_t size = peaksArray.size();
-    if (size <= 0) // avoid divide by zero
+    if (size == 0) // avoid divide by zero
         return;
 
     qreal maxPeakHeight = height()/2.0;
 
     for (uint i = 0; i < size; i++) {
-        QColor color(peaksColor); //using the color defined in stylesheet
+        QColor color(peaksColor); // using the color defined in stylesheet
         if (useAlpha) {
             float alpha = (float)i/size;
             color.setAlpha(std::pow(alpha, 2) * 255);
@@ -140,7 +149,7 @@ void WavePeakPanel::paintSoundWave(QPainter &painter, bool useAlpha)
 void WavePeakPanel::paintBuildings(QPainter &painter, bool pixeled, bool useAlpha)
 {
     size_t size = peaksArray.size();
-    if (size <= 0) // avoid divide by zero
+    if (size == 0) // avoid divide by zero
         return;
 
     int peaksRectWidth = getPeaksWidth();
@@ -148,7 +157,7 @@ void WavePeakPanel::paintBuildings(QPainter &painter, bool pixeled, bool useAlph
     int maxPeakHeight = (int)(height() * 0.75);
 
     for (uint i = 0; i < size; i++) {
-        QColor color(peaksColor); //using the color defined in stylesheet
+        QColor color(peaksColor); // using the color defined in stylesheet
         if (useAlpha) {
             float alpha = (float)i/size;
             color.setAlpha(std::pow(alpha, 3) * 255);
@@ -167,7 +176,7 @@ void WavePeakPanel::paintBuildings(QPainter &painter, bool pixeled, bool useAlph
         // draw the build
         painter.fillRect(xPos, yPos, peaksRectWidth, peakHeight, color);
 
-        //pixelize the build
+        // pixelize the build
         if (pixeled) {
             painter.setPen(QPen(color.darker(), 1));
             int linesToDraw = peakHeight / peaksRectWidth;
@@ -186,15 +195,15 @@ void WavePeakPanel::paintBuildings(QPainter &painter, bool pixeled, bool useAlph
         qreal mirrorAngle = 0.4;
         qreal xPosMirrored = xPos + std::cos(mirrorAngle) * mirroredHeight;
         QPointF points[] = {
-            QPointF(xPos, maxPeakHeight), //top left
+            QPointF(xPos, maxPeakHeight), // top left
             QPointF(xPos + peaksRectWidth, maxPeakHeight), // top right
-            QPointF(xPosMirrored + peaksRectWidth, maxPeakHeight + mirroredHeight), //bottom right
+            QPointF(xPosMirrored + peaksRectWidth, maxPeakHeight + mirroredHeight), // bottom right
             QPointF(xPosMirrored, maxPeakHeight + mirroredHeight)
         };
         painter.setBrush(color);
         painter.drawPolygon(points, 4);
 
-        //pixelize the mirrored build
+        // pixelize the mirrored build
         if (pixeled) {
             painter.setPen(QPen(color.darker(), 1));
             int linesToDraw = mirroredHeight / peaksRectWidth;
@@ -227,7 +236,7 @@ int WavePeakPanel::getPeaksWidth() const
 void WavePeakPanel::paintPixeledSoundWave(QPainter &painter)
 {
     size_t size = peaksArray.size();
-    if (size <= 0) // avoid divide by zero
+    if (size == 0) // avoid divide by zero
         return;
 
     qreal maxPeakHeight = height()/2.0;
@@ -236,7 +245,7 @@ void WavePeakPanel::paintPixeledSoundWave(QPainter &painter)
     for (uint i = 0; i < size; i++) {
         float alpha = (float)i/size;
 
-        QColor color(peaksColor); //using the color defined in stylesheet
+        QColor color(peaksColor); // using the color defined in stylesheet
         color.setAlpha(std::pow(alpha, 2) * 255);
 
         int peaksRectWidth = getPeaksWidth();
@@ -251,7 +260,7 @@ void WavePeakPanel::paintPixeledSoundWave(QPainter &painter)
         int yPos = maxPeakHeight - peakHeight;
         painter.fillRect(xPos, yPos, peaksRectWidth, peakHeight * 2, color);
 
-        //draw pixelizing horizontal lines
+        // draw pixelizing horizontal lines
         painter.setPen(QPen(color.dark(), 1));
         int linesToDraw = peakHeight / peaksRectWidth;
         for (int i = 0; i < linesToDraw; ++i) {
@@ -287,7 +296,7 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
                 break;
             }
         }
-        else{ //showing buffering
+        else{ // showing buffering
             QPen pen;
             pen.setWidth(3);
             pen.setColor(loadingColor);
@@ -295,10 +304,10 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
 
             float progress = bufferingPercentage/100.0;
 
-            int rectSize = qMin(height(), width()) * 0.7;// 70% of width or height
+            int rectSize = qMin(height(), width()) * 0.7; // 70% of width or height
             QRectF rectangle(width()/2 - rectSize/2, height()/2 - rectSize/2, rectSize, rectSize);
 
-            //to understand these magic numbers, look drawArc method in Qt doc
+            // to understand these magic numbers, look drawArc method in Qt doc
             int startAngle = 0;
             int spanAngle = -progress * 360 * 16;
             painter.drawArc(rectangle, startAngle, spanAngle);

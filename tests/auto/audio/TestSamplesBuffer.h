@@ -31,6 +31,9 @@ private slots:
     void setFrameLenghtIsPreservingSamples();
     void setFrameLenghtIsPreservingSamples_data();
 
+    void copy();
+    void copy_data();
+
 private:
     Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
     void checkExpectedValues(QString comaSeparatedExpectedValues, const Audio::SamplesBuffer &buffer);

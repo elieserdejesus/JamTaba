@@ -13,7 +13,7 @@ class MainWindowStandalone : public MainWindow
 {
     Q_OBJECT
 public:
-    MainWindowStandalone(MainControllerStandalone *controller);
+    explicit MainWindowStandalone(MainControllerStandalone *controller);
 
     Persistence::LocalInputTrackSettings getInputsSettings() const override;
 
@@ -21,7 +21,7 @@ public:
 
     void refreshTrackInputSelection(int inputTrackIndex);
 
-    MainControllerStandalone * getMainController() override
+    MainControllerStandalone * getMainController() const override
     {
         return controller;
     }
@@ -41,7 +41,7 @@ protected:
 
     PreferencesDialog *createPreferencesDialog() override;
 
-protected slots: //TODO change to private slots?
+protected slots: // TODO change to private slots?
     void handleServerConnectionError(const QString &msg);
 
     void setGlobalPreferences(const QList<bool> &, int audioDevice, int firstIn, int lastIn, int firstOut,
@@ -60,6 +60,8 @@ private slots:
     void toggleFullScreen();
     void closePluginScanDialog();
     void restartAudioAndMidi();
+
+    void tryClose(); // called when ESC is pressed
 
 private:
     MainControllerStandalone *controller;

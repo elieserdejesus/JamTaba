@@ -13,7 +13,7 @@ class UserNameLineEdit : public QLineEdit
     Q_OBJECT
 
 public:
-    UserNameLineEdit(QWidget *parent=0);
+    explicit UserNameLineEdit(QWidget *parent=0);
 
     void forceCenterAlignment(bool forceCenter);
 

@@ -18,12 +18,12 @@ class ViewContainer : public QMacCocoaViewContainer
 {
 public:
 
-    ViewContainer(NSView *cocoaView)
-        : QMacCocoaViewContainer(cocoaView)
+    ViewContainer(NSView *cocoaView) :
+        QMacCocoaViewContainer(cocoaView)
     {
         setAttribute(Qt::WA_DeleteOnClose);
 
-        //add a listener for NSView resize
+        // add a listener for NSView resize
         CFNotificationCenterAddObserver
             (
                 CFNotificationCenterGetLocalCenter(),
@@ -77,7 +77,7 @@ NSView *createAudioUnitView(AudioUnit audioUnit)
     AudioUnitCocoaViewInfo cocoaViewInfo;
     UInt32 dataSize = sizeof(cocoaViewInfo);
 
-    //request the cocoa view
+    // request the cocoa view
     OSStatus status  = AudioUnitGetProperty(audioUnit, kAudioUnitProperty_CocoaUI,
                                    kAudioUnitScope_Global, 0, &cocoaViewInfo, &dataSize);
 
@@ -135,18 +135,18 @@ Audio::PluginDescriptor AU::createPluginDescriptor(const QString &name, const QS
     return Audio::PluginDescriptor(pluginName, category, manufacturer, path);
 }
 
-AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, AudioUnitHost *host)
-    : Audio::Plugin(AU::createPluginDescriptor(name, path)),
-      audioUnit(au),
-      path(path),
-      bufferList(nullptr),
-      currentInputBuffer(nullptr),
-      internalOutBuffer(2, 4096),
-      viewContainer(nullptr),
-      wantsMidiMessages(AudioUnitPlugin::audioUnitWantsMidi(au)),
-      hasInputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Input) > 0),
-      hasOutputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Output) > 0),
-      host(host)
+AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, AudioUnitHost *host) :
+    Audio::Plugin(AU::createPluginDescriptor(name, path)),
+    audioUnit(au),
+    path(path),
+    bufferList(nullptr),
+    currentInputBuffer(nullptr),
+    internalOutBuffer(2, 4096),
+    viewContainer(nullptr),
+    wantsMidiMessages(AudioUnitPlugin::audioUnitWantsMidi(au)),
+    hasInputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Input) > 0),
+    hasOutputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Output) > 0),
+    host(host)
 {
 
     Q_ASSERT(host);
@@ -233,7 +233,7 @@ void AudioUnitPlugin::initializeCallbacks()
         renderCallbackInfo.inputProc = inputCallback;
 
         status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input,
-                          0, //assuming we have just one input bus
+                          0, // assuming we have just one input bus
                           &renderCallbackInfo,
                           sizeof(renderCallbackInfo));
 
@@ -428,8 +428,7 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
         bufferList->mBuffers[i].mData = internalOutBuffer.getSamplesArray(i);
     }
 
-    if (wantsMidiMessages && !midiBuffer.empty())
-    {
+    if (wantsMidiMessages && !midiBuffer.empty()) {
         UInt32 midiEventPosition = 0; // in jamtaba all MIDI messages are real time
         for (const Midi::MidiMessage &message : midiBuffer) {
             MusicDeviceMIDIEvent(audioUnit, message.getStatus(), message.getData1(),
@@ -437,7 +436,7 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
         }
     }
 
-    UInt32 bus = 0; //using just one out bus
+    UInt32 bus = 0; // using just one out bus
     OSStatus status = AudioUnitRender(audioUnit, &flags, &timeStamp, bus, frames, bufferList);
 
     if (status != noErr) {
@@ -455,10 +454,10 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
     */
 
     if(isVirtualInstrument()){
-        outBuffer.add(internalOutBuffer);// AUi add and preserve the last generated output samples
+        outBuffer.add(internalOutBuffer); // AUi add and preserve the last generated output samples
     }
     else{
-        outBuffer.set(internalOutBuffer);// AUs are replacing
+        outBuffer.set(internalOutBuffer); // AUs are replacing
     }
 
     timeStamp.mSampleTime += frames;
@@ -474,7 +473,7 @@ void AudioUnitPlugin::copyBufferContent(const Audio::SamplesBuffer *input, Audio
 {
     const quint8 channels = qMin((int)abl->mNumberBuffers, input->getChannels());
     const size_t bytesToCopy = sizeof(float) * frames;
-    for(quint8 c = 0; c < channels; ++c) {
+    for (quint8 c = 0; c < channels; ++c) {
         std::memcpy(abl->mBuffers[c].mData, input->getSamplesArray(c), bytesToCopy);
     }
 }
@@ -566,7 +565,7 @@ AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path)
 
 }
 
-//this piece of code was stoled from JUCE :) https://searchcode.com/codesearch/view/12071132/
+// this piece of code was stoled from JUCE :) https://searchcode.com/codesearch/view/12071132/
 OSType AU::stringToOSType (const QString& string)
 {
     if (string.size() < 4)

@@ -19,18 +19,18 @@ VstPluginScanner::VstPluginScanner()
 Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &pluginFile)
 {
     try{
-        //PluginChecker is implemented in WindowsVstPluginChecker and MacVstPluginChecker files. Only the correct file is include in VstScanner.pro
+        // PluginChecker is implemented in WindowsVstPluginChecker and MacVstPluginChecker files. Only the correct file is include in VstScanner.pro
         if (!Vst::PluginChecker::isValidPluginFile(pluginFile.absoluteFilePath()))
-            return Audio::PluginDescriptor();// invalid descriptor
+            return Audio::PluginDescriptor(); // invalid descriptor
 
         Vst::VstHost *host = Vst::VstHost::getInstance();
         AEffect *effect = Vst::VstLoader::load(pluginFile.absoluteFilePath(), host);
         if (effect) {
             QString name = Audio::PluginDescriptor::getVstPluginNameFromPath(pluginFile.absoluteFilePath());
             QString manufacturer = Vst::utils::getPluginVendor(effect);
-            Vst::VstLoader::unload(effect);// delete the AEffect instance
+            Vst::VstLoader::unload(effect); // delete the AEffect instance
             QLibrary lib(pluginFile.absoluteFilePath());
-            lib.unload();// try unload the shared lib
+            lib.unload(); // try unload the shared lib
 
             return Audio::PluginDescriptor(name, Audio::PluginDescriptor::VST_Plugin, manufacturer, pluginFile.absoluteFilePath());
         }
@@ -38,7 +38,7 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &p
     catch (...) {
         qCritical() << "Error loading " << pluginFile.absoluteFilePath();
     }
-    return Audio::PluginDescriptor();// invalid descriptor
+    return Audio::PluginDescriptor(); // invalid descriptor
 }
 
 void VstPluginScanner::scan()
@@ -51,12 +51,12 @@ void VstPluginScanner::scan()
     }
 
     writeToProcessOutput("JT-Scanner-Starting");
-    foreach (const QString &scanFolder, foldersToScan)
+    for (const QString &scanFolder : foldersToScan)
     {
         QDirIterator folderIterator(scanFolder, QDir::AllEntries | QDir::NoDotAndDotDot | QDir::NoSymLinks, QDirIterator::Subdirectories);
         while (folderIterator.hasNext())
         {
-            folderIterator.next();// point to next file inside current folder
+            folderIterator.next(); // point to next file inside current folder
             QFileInfo pluginFileInfo(folderIterator.filePath());
 
             if (!skipList.contains(pluginFileInfo.absoluteFilePath()))
@@ -100,7 +100,7 @@ void VstPluginScanner::initialize(int argc, char *argv[])
     if (!foldersString.isEmpty())
         this->foldersToScan = foldersString.split(";"); // the folders are separated using ';'
 
-    if (argc > 2) {// we have a black list string?
+    if (argc > 2) { // we have a black list string?
         QString skipListString = QString::fromUtf8(argv[2]);
         if (!skipListString.isEmpty())
             this->skipList = skipListString.split(";");

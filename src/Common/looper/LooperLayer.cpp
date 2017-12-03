@@ -76,7 +76,7 @@ void LooperLayer::setSamples(const SamplesBuffer &samples)
     availableSamples = samplesToCopy;
 
 
-    //rebuild peaks cache
+    // rebuild peaks cache
     lastCacheComputationSample = 0;
     peaksCache.clear();
 

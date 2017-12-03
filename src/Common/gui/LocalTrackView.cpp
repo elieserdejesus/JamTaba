@@ -2,6 +2,8 @@
 #include "MainController.h"
 #include "audio/core/LocalInputNode.h"
 #include "GuiUtils.h"
+#include "BoostSpinBox.h"
+#include "IconFactory.h"
 
 #include <QLayout>
 #include <QPushButton>
@@ -16,7 +18,7 @@ class LocalTrackView::LooperIconFactory
 {
 public:
 
-    LooperIconFactory(const QString &originalIconPath)
+    explicit LooperIconFactory(const QString &originalIconPath)
         : originalIconPath(originalIconPath)
     {
         //
@@ -151,7 +153,7 @@ void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost bo
 {
     inputNode->setGain(initialGain);
     inputNode->setPan(initialPan);
-    initializeBoostButton(boostValue);
+    initializeBoostSpinBox(boostValue);
     if (muted)
         inputNode->setMute(muted);
 
@@ -165,33 +167,29 @@ void LocalTrackView::detachMainController()
 
 void LocalTrackView::closeAllPlugins()
 {
-    inputNode->closeProcessorsWindows();// close vst editors
+    inputNode->closeProcessorsWindows(); // close vst editors
 }
 
 void LocalTrackView::mute(bool b)
 {
-    getInputNode()->setMute(b);// audio only
-    muteButton->setChecked(b);// gui only
+    getInputNode()->setMute(b); // audio only
+    muteButton->setChecked(b); // gui only
 }
 
 void LocalTrackView::solo(bool b)
 {
-    getInputNode()->setSolo(b);// audio only
-    soloButton->setChecked(b);// gui only
+    getInputNode()->setSolo(b); // audio only
+    soloButton->setChecked(b); // gui only
 }
 
-void LocalTrackView::initializeBoostButton(Boost boostValue)
+void LocalTrackView::initializeBoostSpinBox(Boost boostValue)
 {
-    switch (boostValue) {
-    case Boost::MINUS:
-        buttonBoost->setState(1);
-        break;
-    case Boost::PLUS:
-        buttonBoost->setState(2);
-        break;
-    default:
-        buttonBoost->setState(0);
-    }
+    if (boostValue == Boost::PLUS)
+        boostSpinBox->setToMax();
+    else if (boostValue == Boost::MINUS)
+        boostSpinBox->setToMin();
+    else
+        boostSpinBox->setToOff(); // 0 dB - OFF
 }
 
 QSize LocalTrackView::sizeHint() const
@@ -215,10 +213,10 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
         Gui::setLayoutItemsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
         Gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
 
-        if(peakMetersOnly){//add the peak meters directly in main layout, so these meters are horizontally centered
+        if (peakMetersOnly) { // add the peak meters directly in main layout, so these meters are horizontally centered
             mainLayout->addWidget(peakMeter, 0, 0);
         }
-        else{// put the meter in the original layout
+        else { // put the meter in the original layout
             setupMetersLayout();
         }
 
@@ -227,6 +225,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
         mainLayout->setHorizontalSpacing(spacing);
 
         peakMeter->setVisible(true); // peak meter are always visible
+
+        peakMeter->setPaintingDbMarkers(!peakMetersOnly);
 
         QMargins margins = layout()->contentsMargins();
         margins.setLeft(spacing);
@@ -273,9 +273,18 @@ LocalTrackView::~LocalTrackView()
         mainController->removeInputTrackNode(getTrackID());
 }
 
+void LocalTrackView::setTintColor(const QColor &color)
+{
+    BaseTrackView::setTintColor(color);
+
+    buttonLooper->setIcon(IconFactory::createLooperButtonIcon(color));
+
+    buttonStereoInversion->setIcon(IconFactory::createStereoInversionIcon(color));
+}
+
 QPushButton *LocalTrackView::createLooperButton()
 {
-    QPushButton *button = new QPushButton(QIcon(":/images/loop.png"), "");
+    QPushButton *button = new QPushButton(IconFactory::createLooperButtonIcon(getTintColor()), "");
     button->setObjectName(QStringLiteral("buttonLooper"));
     button->setEnabled(false); // disaled by default
 
@@ -318,6 +327,8 @@ void LocalTrackView::setStereoInversion(bool stereoInverted)
 void LocalTrackView::updateStyleSheet()
 {
     BaseTrackView::updateStyleSheet();
+
+    buttonLooper->setIcon(IconFactory::createLooperButtonIcon(getTintColor()));
 
     style()->unpolish(buttonStereoInversion); // this is necessary to change the stereo inversion button colors when the transmit button is clicled
     style()->polish(buttonStereoInversion);

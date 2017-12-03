@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>NinjamPanel</class>
- <widget class="QWidget" name="NinjamPanel">
+ <widget class="QFrame" name="NinjamPanel">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>735</width>
-    <height>134</height>
+    <width>320</width>
+    <height>129</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string notr="true"/>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="leftMargin">
-    <number>0</number>
+    <number>3</number>
    </property>
    <property name="topMargin">
-    <number>6</number>
+    <number>3</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>3</number>
    </property>
    <property name="bottomMargin">
-    <number>6</number>
+    <number>3</number>
    </property>
    <item>
-    <widget class="QFrame" name="metronomeControls">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
+    <widget class="QWidget" name="panelCombos" native="true">
+     <layout class="QGridLayout" name="gridLayout_3">
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -47,447 +47,135 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <property name="horizontalSpacing">
+      <property name="spacing">
        <number>6</number>
       </property>
       <item row="2" column="1">
-       <layout class="QHBoxLayout" name="soloMuteLayout">
-        <property name="spacing">
-         <number>1</number>
+       <widget class="QComboBox" name="comboAccentBeats">
+        <property name="accessibleDescription">
+         <string>Change the accent here</string>
         </property>
-        <item alignment="Qt::AlignBottom">
-         <widget class="QPushButton" name="soloButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="toolTip">
-           <string>Solo metronome</string>
-          </property>
-          <property name="accessibleDescription">
-           <string>Button to soloing the metronome</string>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string notr="true">S</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item alignment="Qt::AlignBottom">
-         <widget class="QPushButton" name="muteButton">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="toolTip">
-           <string>mute metronome</string>
-          </property>
-          <property name="accessibleDescription">
-           <string>Button to mute the metronome</string>
-          </property>
-          <property name="text">
-           <string notr="true">M</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="preferencesButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="toolTip">
-           <string>open metronome preferences</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="floatingWindowButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="toolTip">
-           <string>open a metronome floating window</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="AudioMeter" name="peakMeter" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-          <horstretch>2</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+      <item row="1" column="0" alignment="Qt::AlignRight">
+       <widget class="QLabel" name="labelBPM">
+        <property name="toolTip">
+         <string>Beats per minute</string>
+        </property>
+        <property name="text">
+         <string>BPM</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" alignment="Qt::AlignRight">
+       <widget class="QLabel" name="labelShape">
+        <property name="text">
+         <string>Shape</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="comboShape">
+        <property name="accessibleDescription">
+         <string>Change the shape here</string>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" alignment="Qt::AlignRight">
+       <widget class="QLabel" name="labelBPI">
+        <property name="toolTip">
+         <string>Beats per interval</string>
+        </property>
+        <property name="text">
+         <string>BPI</string>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" alignment="Qt::AlignRight">
+       <widget class="QLabel" name="labelAccent">
+        <property name="text">
+         <string>Accent</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBpi">
+        <property name="toolTip">
+         <string>Beats per interval</string>
+        </property>
+        <property name="accessibleDescription">
+         <string>Change the BPI here</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <layout class="QHBoxLayout" name="panLayout">
-        <property name="spacing">
-         <number>1</number>
+       <widget class="QComboBox" name="comboBpm">
+        <property name="toolTip">
+         <string>Beats per minute</string>
         </property>
-        <item alignment="Qt::AlignVCenter">
-         <widget class="QLabel" name="labelPanL">
-          <property name="text">
-           <string>L</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="Slider" name="panSlider">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>60</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="minimum">
-           <number>-4</number>
-          </property>
-          <property name="maximum">
-           <number>4</number>
-          </property>
-          <property name="pageStep">
-           <number>1</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item alignment="Qt::AlignVCenter">
-         <widget class="QLabel" name="labelPanR">
-          <property name="text">
-           <string>R</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="QLabel" name="labelMetronomeIControls">
-        <property name="text">
-         <string>metronome</string>
+        <property name="accessibleDescription">
+         <string>Change the BPM here</string>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <property name="currentText">
+         <string notr="true"/>
+        </property>
+        <property name="maxVisibleItems">
+         <number>40</number>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <layout class="QHBoxLayout" name="sliderLevelLayout" stretch="0,0,0">
-        <property name="spacing">
-         <number>2</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="Slider" name="levelSlider">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="accessibleDescription">
-           <string>Slider to change the BPM of the metronome</string>
-          </property>
-          <property name="maximum">
-           <number>160</number>
-          </property>
-          <property name="value">
-           <number>100</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>30</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-    <widget class="QWidget" name="ninjamControlsPanel" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0">
-      <property name="spacing">
-       <number>6</number>
-      </property>
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item alignment="Qt::AlignLeft|Qt::AlignVCenter">
-       <widget class="QWidget" name="panelCombos" native="true">
+      <item row="3" column="0" colspan="2">
+       <widget class="QLineEdit" name="lineEditAccentBeats">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <layout class="QGridLayout" name="gridLayout_3">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>6</number>
-         </property>
-         <item row="3" column="1">
-          <widget class="QComboBox" name="comboShape">
-           <property name="accessibleDescription">
-            <string>Change the shape here</string>
-           </property>
-           <property name="sizeAdjustPolicy">
-            <enum>QComboBox::AdjustToContents</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="labelShape">
-           <property name="text">
-            <string>Shape</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QComboBox" name="comboBeatsPerAccent">
-           <property name="accessibleDescription">
-            <string>Change the accent here</string>
-           </property>
-           <property name="sizeAdjustPolicy">
-            <enum>QComboBox::AdjustToContents</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="labelBPM">
-           <property name="toolTip">
-            <string>Beats per minute</string>
-           </property>
-           <property name="text">
-            <string>BPM</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="labelBPI">
-           <property name="toolTip">
-            <string>Beats per interval</string>
-           </property>
-           <property name="text">
-            <string>BPI</string>
-           </property>
-           <property name="margin">
-            <number>0</number>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QComboBox" name="comboBpi">
-           <property name="toolTip">
-            <string>Beats per interval</string>
-           </property>
-           <property name="accessibleDescription">
-            <string>Change the BPI here</string>
-           </property>
-           <property name="editable">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="labelAccent">
-           <property name="text">
-            <string>Accent</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QComboBox" name="comboBpm">
-           <property name="toolTip">
-            <string>Beats per minute</string>
-           </property>
-           <property name="accessibleDescription">
-            <string>Change the BPM here</string>
-           </property>
-           <property name="editable">
-            <bool>true</bool>
-           </property>
-           <property name="currentText">
-            <string notr="true"/>
-           </property>
-           <property name="maxVisibleItems">
-            <number>40</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item alignment="Qt::AlignRight|Qt::AlignVCenter">
-       <widget class="IntervalProgressDisplay" name="intervalPanel" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>150</width>
-          <height>110</height>
-         </size>
+        <property name="toolTip">
+         <string extracomment="Enter accent beats separated by space"/>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2"/>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
    <item>
-    <spacer name="horizontalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+    <widget class="IntervalProgressDisplay" name="intervalPanel" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>30</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
+     <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+    </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>AudioMeter</class>
-   <extends>QWidget</extends>
-   <header>PeakMeter.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>IntervalProgressDisplay</class>
    <extends>QWidget</extends>
    <header>intervalProgress/IntervalProgressDisplay.h</header>
    <container>1</container>
   </customwidget>
-  <customwidget>
-   <class>Slider</class>
-   <extends>QSlider</extends>
-   <header>Slider.h</header>
-  </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../resources/jamtaba.qrc"/>
-  <include location="../../resources/jamtaba.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

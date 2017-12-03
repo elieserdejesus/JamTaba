@@ -12,10 +12,12 @@
 #include "MainController.h"
 #include "Utils.h"
 #include "audio/NinjamTrackNode.h"
+#include "BoostSpinBox.h"
+#include "IconFactory.h"
 
-const int NinjamTrackView::WIDE_HEIGHT = 70; //height used in horizontal layout for wide tracks
+const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
-// +++++++++++++++++++++++++
+
 NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID) :
     BaseTrackView(mainController, trackID),
     orientation(Qt::Vertical),
@@ -39,6 +41,14 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     setActivatedStatus(true); // disabled/grayed until receive the first bytes.
 }
 
+void NinjamTrackView::setTintColor(const QColor &color)
+{
+    BaseTrackView::setTintColor(color);
+
+    buttonReceive->setIcon(IconFactory::createReceiveIcon(color));
+    buttonLowCut->setIcons(IconFactory::createLowCutIcons(color));
+}
+
 void NinjamTrackView::setNinjamChannelData(const QString &userFullName, quint8 channelIndex)
 {
     this->userFullName = userFullName;
@@ -49,7 +59,7 @@ void NinjamTrackView::setReceiveState(bool receive)
 {
     setActivatedStatus(!receive);
 
-    //send a message to ninjam server disabling channel receive status
+    // send a message to ninjam server disabling channel receive status
     mainController->setChannelReceiveStatus(userFullName, channelIndex, receive);
 
     // stop rendering downloaded audio
@@ -60,10 +70,11 @@ void NinjamTrackView::setReceiveState(bool receive)
 QPushButton *NinjamTrackView::createReceiveButton() const
 {
     QPushButton *button = new QPushButton();
+    button->setIcon(IconFactory::createReceiveIcon(getTintColor()));
     button->setToolTip(tr("Receive"));
     button->setObjectName(QStringLiteral("receiveButton"));
     button->setCheckable(true);
-    secondaryChildsLayout->addWidget(button);
+    secondaryChildsLayout->addWidget(button, 0, Qt::AlignCenter);
     return button;
 }
 
@@ -80,10 +91,11 @@ MarqueeLabel *NinjamTrackView::createChannelNameLabel() const
 
 MultiStateButton *NinjamTrackView::createLowCutButton(bool checked)
 {
-    MultiStateButton *button = new MultiStateButton(3, this); // 3 states: Low cut OFF, NORMAL, and DRASTIC
+    auto icons = IconFactory::createLowCutIcons(getTintColor());
+    MultiStateButton *button = new MultiStateButton(this, icons); // 3 states: Low cut OFF, NORMAL, and DRASTIC
     button->setCheckable(true);
     button->setChecked(checked);
-    secondaryChildsLayout->addWidget(button);
+    secondaryChildsLayout->addWidget(button, 0, Qt::AlignCenter);
     button->setObjectName("lowCutButton");
     connect(button, &QPushButton::clicked, this, &NinjamTrackView::setLowCutToNextState);
     return button;
@@ -133,30 +145,38 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
 {
     cacheEntry = initialValues;
 
-    // remember last track values
-    levelSlider->setValue(initialValues.getGain() * 100);
-    panSlider->setValue(initialValues.getPan() * panSlider->maximum());
-    if (initialValues.isMuted())
+    auto settings = mainController->getSettings();
+
+    if (settings.isRememberingLevel())
+        levelSlider->setValue(initialValues.getGain() * 100);
+
+    if (settings.isRememberingPan())
+        panSlider->setValue(initialValues.getPan() * panSlider->maximum());
+
+    if (settings.isRememberingMute() && initialValues.isMuted())
         muteButton->click();
 
-    if (initialValues.getBoost() < 1.0) {
-        buttonBoost->setState(1); // -12 dB
-    } else {
-        if (initialValues.getBoost() > 1.0) // +12 dB
-            buttonBoost->setState(2);
-        else
-            buttonBoost->setState(0);
+    if (settings.isRememberingBoost()) {
+        if (initialValues.getBoost() < 1.0) {
+            boostSpinBox->setToMin(); // -12 dB
+        } else {
+            if (initialValues.getBoost() > 1.0) // +12 dB
+                boostSpinBox->setToMax();
+            else
+                boostSpinBox->setToOff();
+        }
     }
 
-    quint8 lowCutState = initialValues.getLowCutState();
-    if (lowCutState < 3) { // Check for invalid lowCut state value, Low cut is 3 states: OFF, NOrmal and Drastic
-        for (int var = 0; var < lowCutState; ++var) {
-            buttonLowCut->click(); // force button state change
+    if (settings.isRememberingLowCut()) {
+        quint8 lowCutState = initialValues.getLowCutState();
+        if (lowCutState < 3) { // Check for invalid lowCut state value, Low cut is 3 states: OFF, NOrmal and Drastic
+            for (int var = 0; var < lowCutState; ++var) {
+                buttonLowCut->click(); // force button state change
+            }
         }
     }
 }
 
-// +++++++++++++++
 void NinjamTrackView::updateGuiElements()
 {
     if (!isActivated())
@@ -173,12 +193,12 @@ void NinjamTrackView::setActivatedStatus(bool deactivated)
 {
     BaseTrackView::setActivatedStatus(deactivated);
 
-    if (deactivated) {// remote user stop xmiting and the track is greyed/unlighted?
+    if (deactivated) { // remote user stop xmiting and the track is greyed/unlighted?
         Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
         if (trackNode)
             trackNode->resetLastPeak(); // reset the internal node last peak to avoid getting the last peak calculated when the remote user was transmiting.
 
-        downloadingFirstInterval = true; //waiting for the first interval
+        downloadingFirstInterval = true; // waiting for the first interval
         chunksDisplay->reset();
     }
 }
@@ -226,6 +246,7 @@ void NinjamTrackView::setupVerticalLayout()
     primaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
     secondaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
 
+    boostSpinBox->setOrientation(Qt::Vertical);
 }
 
 void NinjamTrackView::setupHorizontalLayout()
@@ -256,6 +277,8 @@ void NinjamTrackView::setupHorizontalLayout()
     metersLayout->setDirection(QBoxLayout::TopToBottom);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
+
+    boostSpinBox->setOrientation(Qt::Horizontal);
 }
 
 
@@ -337,9 +360,10 @@ void NinjamTrackView::toggleMuteStatus()
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-void NinjamTrackView::updateBoostValue()
+void NinjamTrackView::updateBoostValue(int index)
 {
-    BaseTrackView::updateBoostValue();
+    BaseTrackView::updateBoostValue(index);
+
     Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
     if (trackNode) {
         cacheEntry.setBoost(trackNode->getBoost());

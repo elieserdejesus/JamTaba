@@ -14,7 +14,12 @@ NinjamRoomWindow #labelBpmBpi                                /* label used to sh
 /* Tool buttons in ninjam window
 ------------------------------------*/
 
-NinjamRoomWindow QToolButton
+#buttonVerticalLayout,
+#buttonHorizontalLayout,
+#buttonGridLayout,
+#wide,
+#narrow,
+#licenceButton
 {
     min-width: 24px;
 }
@@ -110,27 +115,30 @@ NinjamPanel #intervalPanel                  /* The widget used to show ninjam co
 
 /* ------------------------------------------------------------------ */
 
-NinjamPanel #metronomeControls,             /* Making the metronome and comboboxes area transparent */
+
+/* Making the comboboxes area transparent */
 NinjamPanel #panelCombos
 {
     background: transparent;
 }
 
 /* Changing the metronome level and pan sliders */
-NinjamPanel QSlider::groove:vertical{
+MetronomePanel QSlider::groove:vertical
+{
     width: 5px;
     margin: 0px;
     background: rgba(0, 0, 0, 40);
 }
 
-NinjamPanel QSlider::groove:horizontal{
+MetronomePanel QSlider::groove:horizontal
+{
     background-color: rgba(0,0, 0, 40);
 }
 /* ---------------------------------------------------------------*/
 
 
-NinjamPanel #preferencesButton,             /* Button used to open metronome preferences */
-NinjamPanel #floatingWindowButton           /* The button used to open the metronome floating window */
+MetronomePanel #preferencesButton,             /* Button used to open metronome preferences */
+MetronomePanel #floatingWindowButton           /* The button used to open the metronome floating window */
 {
     background-repeat: none;
     background-position: center center;
@@ -138,10 +146,10 @@ NinjamPanel #floatingWindowButton           /* The button used to open the metro
     padding-right: 0px;
 }
 
-NinjamPanel #preferencesButton,
-NinjamPanel #floatingWindowButton,
-NinjamPanel #soloButton,
-NinjamPanel #muteButton
+MetronomePanel #preferencesButton,
+MetronomePanel #floatingWindowButton,
+MetronomePanel #soloButton,
+MetronomePanel #muteButton
 {
     max-width: 20px;
     max-height: 16px;
@@ -150,23 +158,15 @@ NinjamPanel #muteButton
     padding-bottom: 1px;
 }
 
-NinjamPanel #preferencesButton
-{
-   background-image: url(':/images/gear-hover.png');
-}
-
-NinjamPanel #floatingWindowButton
-{
-    background-image: url(':/images/windows.png');
-}
-
-NinjamPanel QLabel                          /* metronome, pan (L & R) labels, BPI and BPM labels */
+/* metronome, pan (L & R) labels, BPI and BPM labels */
+NinjamPanel QLabel,
+MetronomePanel QLabel
 {
     color: rgba(0, 0, 0, 150);
     font-size: 11px;
 }
 
-#labelMetronomeIControls                    /* the label used to show the word 'metronome' */
+#labelMetronome                    /* the label used to show the word 'metronome' */
 {
     margin-top: 6px;
 }
@@ -183,10 +183,23 @@ NinjamTrackView
 NinjamTrackView #soloButton,
 NinjamTrackView #muteButton,
 NinjamTrackView #lowCutButton,
-NinjamTrackView #receiveButton
+NinjamTrackView #receiveButton,
+NinjamTrackView BoostSpinBox
 {
    border-color: rgb(95,95,95);
    color: rgb(40,40,40);
+}
+
+NinjamTrackView[horizontal="true"] BoostSpinBox
+{
+    max-height: 12px;
+    max-width: 25px;
+}
+
+NinjamTrackView[horizontal="true"] BoostSpinBox QToolButton
+{
+    padding: 0px;
+    padding-top: 2px;
 }
 
 NinjamTrackView #lowCutButton,
@@ -204,6 +217,7 @@ NinjamTrackView #receiveButton::hover
     border-style: solid;
 }
 
+/*
 NinjamTrackView #lowCutButton[state="0"]
 {
    background-image: url(':/images/low_cut_off.png');
@@ -218,6 +232,7 @@ NinjamTrackView #lowCutButton[state="2"]
 {
    background-image: url(':/images/low_cut_drastic.png');
 }
+*/
 
 NinjamTrackView #lowCutButton::hover
 {
@@ -247,10 +262,12 @@ NinjamTrackView QPushButton#receiveButton:!checked
     background-color:red;
 }
 
+/*
 NinjamTrackView QPushButton#receiveButton
 {
     background-image: url(':/images/receive.png');
 }
+*/
 
 
 NinjamTrackView QProgressBar                /* The progress bar in bottom of ninjam tracks showing downloaded interval */

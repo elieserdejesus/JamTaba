@@ -16,27 +16,24 @@ class VstHost;
 }
 
 namespace Audio {
-// ++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class Plugin : public Audio::AudioNodeProcessor
 {
     Q_OBJECT
+
 public:
     explicit Plugin(const PluginDescriptor &pluginDescriptor);
-    virtual inline QString getName() const
-    {
-        return name;
-    }
-
     virtual ~Plugin();
 
-    // virtual void openEditor(QPoint centerOfScreen);
+    virtual QString getName() const;
+
     virtual void closeEditor();
     virtual void start() = 0;
     virtual QString getPath() const = 0;
     virtual QByteArray getSerializedData() const = 0;
     virtual void restoreFromSerializedData(const QByteArray &data) = 0;
 
-    inline PluginDescriptor getDescriptor() const { return descriptor; }
+    PluginDescriptor getDescriptor() const;
 
 protected:
     QString name;
@@ -47,6 +44,16 @@ private slots:
     void editorDialogFinished();
 };
 
+inline PluginDescriptor Plugin::getDescriptor() const
+{
+    return descriptor;
+}
+
+inline QString Plugin::getName() const
+{
+    return name;
+}
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class JamtabaDelay : public Plugin
@@ -54,47 +61,29 @@ class JamtabaDelay : public Plugin
 public:
     explicit JamtabaDelay(int sampleRate);
     ~JamtabaDelay();
-    virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, std::vector<Midi::MidiMessage> &midiBuffer);
+    void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, std::vector<Midi::MidiMessage> &midiBuffer) override;
     void setDelayTime(int delayTimeInMs);
     void setFeedback(float feedback);
     void setLevel(float level);
 
-    inline float getDelayTime() const
-    {
-        return delayTimeInMs;
-    }
+    float getDelayTime() const;
 
-    inline float getFeedback() const
-    {
-        return feedbackGain;
-    }
+    float getFeedback() const;
 
-    inline float getLevel() const
-    {
-        return level;
-    }
+    float getLevel() const;
 
     void openEditor(const QPoint &centerOfScreen) override;
-    void updateGui() override
-    {
-    }
+    void updateGui() override;
 
-    virtual void start();
-    inline QString getPath() const
-    {
-        return "";
-    }
+    void start() override;
+    QString getPath() const;
 
     QByteArray getSerializedData() const override;
     void restoreFromSerializedData(const QByteArray &data) override;
 
-    void suspend()
-    {
-    }
+    void suspend() override;
 
-    void resume()
-    {
-    }
+    void resume() override;
 
 private:
     void setSampleRate(int newSampleRate);
@@ -108,6 +97,42 @@ private:
     int sampleRate;
     Audio::SamplesBuffer *internalBuffer;
 };
+
+inline void JamtabaDelay::suspend()
+{
+
 }
+
+inline void JamtabaDelay::resume()
+{
+
+}
+
+inline QString JamtabaDelay::getPath() const
+{
+    return "";
+}
+
+inline void JamtabaDelay::updateGui()
+{
+
+}
+
+inline float JamtabaDelay::getDelayTime() const
+{
+    return delayTimeInMs;
+}
+
+inline float JamtabaDelay::getFeedback() const
+{
+    return feedbackGain;
+}
+
+inline float JamtabaDelay::getLevel() const
+{
+    return level;
+}
+
+} // namespace
 
 #endif

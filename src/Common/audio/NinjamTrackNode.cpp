@@ -15,7 +15,7 @@ const double NinjamTrackNode::LOW_CUT_NORMAL_FREQUENCY = 120.0; // in Hertz
 class NinjamTrackNode::LowCutFilter
 {
 public:
-    LowCutFilter(double sampleRate);
+    explicit LowCutFilter(double sampleRate);
     void process(Audio::SamplesBuffer &buffer);
     //inline bool isActivated() const { return activated; }
     inline NinjamTrackNode::LowCutState getState(){ return this->state; }
@@ -63,7 +63,7 @@ void NinjamTrackNode::LowCutFilter::process(Audio::SamplesBuffer &buffer)
 class NinjamTrackNode::IntervalDecoder
 {
 public:
-    IntervalDecoder(const QByteArray &vorbisData);
+    explicit IntervalDecoder(const QByteArray &vorbisData);
     void decode(quint32 maxSamplesToDecode);
     quint32 getDecodedSamples(Audio::SamplesBuffer &outBuffer, uint samplesToDecode);
     inline int getSampleRate() const { return vorbisDecoder.getSampleRate(); }

@@ -9,7 +9,7 @@ class PreferencesDialogPlugin : public PreferencesDialog
     Q_OBJECT
 
 public:
-    PreferencesDialogPlugin(QWidget *parent);
+    explicit PreferencesDialogPlugin(QWidget *parent);
     void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders) override;
 
 protected slots:

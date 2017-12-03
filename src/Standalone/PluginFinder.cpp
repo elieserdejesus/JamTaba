@@ -4,7 +4,6 @@
 
 using namespace audio;
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void PluginFinder::finishScan()
 {
     QProcess::ExitStatus exitStatus = scanProcess.exitStatus();
@@ -16,9 +15,9 @@ void PluginFinder::finishScan()
     emit scanFinished(exitingWithoutError);
     QString lastScanned(lastScannedPlugin);
     lastScannedPlugin.clear();
+
     if (!exitingWithoutError)
         handleProcessError(lastScanned);
-
 }
 
 void PluginFinder::handleScanError(QProcess::ProcessError error)
@@ -60,7 +59,7 @@ void PluginFinder::scan(const QStringList &scanFolders, const QStringList &skipL
 
     QString scannerExePath = getScannerExecutablePath();
     if (scannerExePath.isEmpty())
-        return;// scanner executable not found!
+        return; // scanner executable not found!
 
     emit scanStarted();
     // execute the scanner in another process to avoid crash Jamtaba process
@@ -74,8 +73,11 @@ void PluginFinder::scan(const QStringList &scanFolders, const QStringList &skipL
                      SLOT(handleScanError(QProcess::ProcessError)));
 
     scanProcess.start(scannerExePath, parameters);
-    qCDebug(jtStandalonePluginFinder) << "Scan process started with " << scannerExePath
-                                          << " (PID: " << scanProcess.processId() << ")";
+
+    qCDebug(jtStandalonePluginFinder)
+            << "Scan process started with "
+            << scannerExePath
+            << " (PID: " << scanProcess.processId() << ")";
 }
 
 void PluginFinder::cancel()

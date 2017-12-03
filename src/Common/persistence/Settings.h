@@ -19,7 +19,7 @@ class SettingsObject // base class for the settings components
 {
 
 public:
-    SettingsObject(const QString &name);
+    explicit SettingsObject(const QString &name);
     virtual ~SettingsObject();
     virtual void write(QJsonObject &out) const = 0;
     virtual void read(const QJsonObject &in) = 0;
@@ -40,7 +40,9 @@ protected:
     static QJsonArray getValueFromJson(const QJsonObject &json, const QString &propertyName, QJsonArray fallBackValue);
     static QJsonObject getValueFromJson(const QJsonObject &json, const QString &propertyName, QJsonObject fallBackValue);
 };
+
 // +++++++++++++++++++++++++++++++++++++++++++
+
 class AudioSettings : public SettingsObject
 {
 public:
@@ -56,7 +58,9 @@ public:
     int audioDevice;
     float encodingQuality;
 };
+
 // +++++++++++++++++++++++++++++++++++++
+
 class MidiSettings : public SettingsObject
 {
 public:
@@ -67,6 +71,7 @@ public:
 };
 
 // +++++++++++++++++++++++++++++++++++
+
 class PrivateServerSettings : public SettingsObject
 {
 
@@ -85,6 +90,7 @@ private:
 };
 
 // +++++++++++++++++++++++++++++++++++
+
 class MetronomeSettings : public SettingsObject
 {
 public:
@@ -96,11 +102,13 @@ public:
     bool muted;
     bool usingCustomSounds;
     QString customPrimaryBeatAudioFile;
-    QString customSecondaryBeatAudioFile;
+    QString customOffBeatAudioFile;
+    QString customAccentBeatAudioFile;
     QString builtInMetronomeAlias;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++
+
 class WindowSettings : public SettingsObject
 {
 public:
@@ -114,6 +122,7 @@ public:
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++
+
 class VstSettings : public SettingsObject
 {
 public:
@@ -122,7 +131,7 @@ public:
     void read(const QJsonObject &in) override;
     QStringList cachedPlugins;
     QStringList foldersToScan;
-    QStringList blackedPlugins;// vst in blackbox....
+    QStringList blackedPlugins; // vst in blackbox....
 };
 
 class AudioUnitSettings  : public SettingsObject
@@ -135,6 +144,7 @@ public:
 };
 
 // ++++++++++++++++++++++++
+
 class MultiTrackRecordingSettings : public SettingsObject
 {
 public:
@@ -142,19 +152,22 @@ public:
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
     bool saveMultiTracksActivated;
-    QMap <QString, bool> jamRecorderActivated;
     QString recordingPath;
 
-    inline bool isJamRecorderActivated(QString key) const
+    inline bool isJamRecorderActivated(const QString &key) const
     {
         if (jamRecorderActivated.contains(key))
             return jamRecorderActivated[key];
         return false;
     }
-    inline void setJamRecorderActivated(QString key, bool value)
+    inline void setJamRecorderActivated(const QString &key, bool value)
     {
         jamRecorderActivated[key] = value;
     }
+
+private:
+    static QString getDefaultRecordingPath();
+    QMap <QString, bool> jamRecorderActivated;
 };
 
 class LooperSettings : public SettingsObject
@@ -165,13 +178,17 @@ public:
     void read(const QJsonObject &in) override;
 
     quint8 preferredLayersCount; // how many layers in each looper?
-    quint8 preferredMode;// store the last used looper mode
+    quint8 preferredMode; // store the last used looper mode
     QString loopsFolder; // where looper audio files will be saved
     bool encodingAudioWhenSaving;
     quint8 waveFilesBitDepth;
+
+private:
+    void setDefaultLooperFilesPath();
 };
 
 // +++++++++++++++++++++++++++++++++
+
 class Plugin
 {
 public:
@@ -181,10 +198,11 @@ public:
     QString name;
     QString manufacturer;
     bool bypassed;
-    QByteArray data;// saved data to restore in next jam session
+    QByteArray data; // saved data to restore in next jam session
     Audio::PluginDescriptor::Category category; // VST, AU, NATIVE plugin
 };
 // +++++++++++++++++++++++++++++++++
+
 class Subchannel
 {
 public:
@@ -195,12 +213,12 @@ public:
     int midiDevice;
     int midiChannel;
     float gain;
-    int boost;// [-1, 0, +1]
+    int boost; // [-1, 0, +1]
     float pan;
     bool muted;
     bool stereoInverted;
-    qint8 transpose; //midi transpose
-    quint8 lowerMidiNote; //midi rey range
+    qint8 transpose; // midi transpose
+    quint8 lowerMidiNote; // midi rey range
     quint8 higherMidiNote;
     bool routingMidiToFirstSubchannel;
 
@@ -242,19 +260,23 @@ public:
 private:
     QList<Persistence::Plugin> plugins;
 };
+
 // +++++++++++++++++++++++++++++++++
+
 class Channel
 {
 public:
-    Channel(const QString &name);
+    explicit Channel(const QString &name);
     QString name;
     QList<Subchannel> subChannels;
 };
+
 // +++++++++++++++++++++++++++++++++
+
 class LocalInputTrackSettings : public SettingsObject
 {
 public:
-    LocalInputTrackSettings(bool createOneTrack = false);
+    explicit LocalInputTrackSettings(bool createOneTrack = false);
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
     void read(const QJsonObject &in, bool allowSubchannels);
@@ -267,7 +289,9 @@ public:
         return !channels.isEmpty();
     }
 };
+
 // +++++++++PRESETS+++++++++++++++
+
 class Preset
 {
 public:
@@ -285,6 +309,7 @@ public:
     QString name;
 };
 
+
 class MeteringSettings : public SettingsObject
 {
 public:
@@ -298,7 +323,24 @@ public:
     quint8 waveDrawingMode;
 };
 
+
+class RememberUsersSettings : public SettingsObject
+{
+public:
+    RememberUsersSettings();
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+
+    bool rememberPan;
+    bool rememberBoost;
+    bool rememberLevel; // fader
+    bool rememberMute;
+    bool rememberLowCut;
+
+};
+
 // ++++++++++++++++++++++++
+
 class Settings
 {
 private:
@@ -316,14 +358,17 @@ private:
     PrivateServerSettings privateServerSettings;
     MeteringSettings meteringSettings;
     LooperSettings looperSettings;
+    RememberUsersSettings rememberSettings;
 
-    QString lastUserName;// the last nick name choosed by user
-    QString translation;// the translation language (en, fr, jp, pt, etc.) being used in chat
-    QString theme; //the style sheet used
-    int ninjamIntervalProgressShape;// Circle, Ellipe or Line
-    float masterFaderGain;// last master fader gain
-    Qt::Orientation tracksLayoutOrientation; //horizontal or vertical
-    bool usingNarrowedTracks; //narrow or wide tracks?
+    QString lastUserName; // the last nick name choosed by user
+    QString translation; // the translation language (en, fr, jp, pt, etc.) being used in chat
+    QString theme; // the style sheet used
+    int ninjamIntervalProgressShape; // Circle, Ellipe or Line
+    float masterFaderGain; // last master fader gain
+    quint8 tracksLayoutOrientation; // horizontal or vertical
+    bool usingNarrowedTracks; // narrow or wide tracks?
+
+    uint intervalsBeforeInactivityWarning;
 
     bool readFile(const QList<SettingsObject *> &sections);
     bool writeFile(const QList<SettingsObject *> &sections);
@@ -340,10 +385,11 @@ public:
 
     void setBuiltInMetronome(const QString &metronomeAlias);
     QString getBuiltInMetronome() const;
-    void setCustomMetronome(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile);
+    void setCustomMetronome(const QString &primaryBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile);
     bool isUsingCustomMetronomeSounds() const;
     QString getMetronomeFirstBeatFile() const;
-    QString getMetronomeSecondaryBeatFile() const;
+    QString getMetronomeOffBeatFile() const;
+    QString getMetronomeAccentBeatFile() const;
 
     void setTheme(const QString theme);
     QString getTheme() const;
@@ -359,8 +405,8 @@ public:
     float getLastMasterGain() const;
     void storeMasterGain(float newMasterFaderGain);
 
-    Qt::Orientation getLastTracksLayoutOrientation() const;
-    void storeTracksLayoutOrientation(Qt::Orientation newOrientation);
+    quint8 getLastTracksLayoutOrientation() const;
+    void storeTracksLayoutOrientation(quint8 newOrientation);
 
     bool writePresetToFile(const Preset &preset);
     void deletePreset(const QString &name);
@@ -379,8 +425,8 @@ public:
     MultiTrackRecordingSettings getMultiTrackRecordingSettings() const;
     bool isSaveMultiTrackActivated() const;
     void setSaveMultiTrack(bool saveMultiTracks);
-    bool isJamRecorderActivated(QString key) const;
-    void setJamRecorderActivated(QString key, bool value);
+    bool isJamRecorderActivated(const QString &key) const;
+    void setJamRecorderActivated(const QString &key, bool value);
     QString getRecordingPath() const;
     void setMultiTrackRecordingPath(const QString &newPath);
 
@@ -471,7 +517,49 @@ public:
     void setLooperAudioEncodingFlag(bool encodeAudioWhenSaving);
     void setLooperFolder(const QString &folder);
     void setLooperBitDepth(quint8 bitDepth);
+
+    // Remembering settings
+    void setRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    bool isRememberingBoost() const;
+    bool isRememberingLevel() const;
+    bool isRememberingPan() const;
+    bool isRememberingMute() const;
+    bool isRememberingLowCut() const;
+
+    uint getIntervalsBeforeInactivityWarning() const;
 };
+
+inline uint Settings::getIntervalsBeforeInactivityWarning() const
+{
+    return intervalsBeforeInactivityWarning;
+}
+
+inline bool Settings::isRememberingMute() const
+{
+    return rememberSettings.rememberMute;
+}
+
+inline bool Settings::isRememberingLowCut() const
+{
+    return rememberSettings.rememberLowCut;
+}
+
+inline bool Settings::isRememberingBoost() const
+{
+    return rememberSettings.rememberBoost;
+}
+
+inline bool Settings::isRememberingLevel() const
+{
+    return rememberSettings.rememberLevel;
+}
+
+inline bool Settings::isRememberingPan() const
+{
+    return rememberSettings.rememberPan;
+}
+
+// -----------------------------------------------------
 
 inline void Settings::setLooperBitDepth(quint8 bitDepth)
 {
@@ -640,12 +728,12 @@ inline void Settings::setSaveMultiTrack(bool saveMultiTracks)
     recordingSettings.saveMultiTracksActivated = saveMultiTracks;
 }
 
-inline bool Settings::isJamRecorderActivated(QString key) const
+inline bool Settings::isJamRecorderActivated(const QString &key) const
 {
     return recordingSettings.isJamRecorderActivated(key);
 }
 
-inline void Settings::setJamRecorderActivated(QString key, bool value)
+inline void Settings::setJamRecorderActivated(const QString &key, bool value)
 {
     recordingSettings.setJamRecorderActivated(key, value);
 }
@@ -701,12 +789,12 @@ inline void Settings::storeMasterGain(float newMasterFaderGain)
     masterFaderGain = newMasterFaderGain;
 }
 
-inline Qt::Orientation Settings::getLastTracksLayoutOrientation() const
+inline quint8 Settings::getLastTracksLayoutOrientation() const
 {
     return tracksLayoutOrientation;
 }
 
-inline void Settings::storeTracksLayoutOrientation(Qt::Orientation newOrientation)
+inline void Settings::storeTracksLayoutOrientation(quint8 newOrientation)
 {
     tracksLayoutOrientation = newOrientation;
 }
@@ -721,9 +809,14 @@ inline QString Settings::getBuiltInMetronome() const
     return metronomeSettings.builtInMetronomeAlias;
 }
 
-inline QString Settings::getMetronomeSecondaryBeatFile() const
+inline QString Settings::getMetronomeOffBeatFile() const
 {
-    return metronomeSettings.customSecondaryBeatAudioFile;
+    return metronomeSettings.customOffBeatAudioFile;
+}
+
+inline QString Settings::getMetronomeAccentBeatFile() const
+{
+    return metronomeSettings.customAccentBeatAudioFile;
 }
 
 inline void Settings::storeTracksSize(bool narrowedTracks)

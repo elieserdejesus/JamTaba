@@ -9,54 +9,80 @@
 #include <vorbis/vorbisfile.h>
 #include <QThread>
 #include "log/Logging.h"
-//+++++++++++++++++++++++++++++++++++++++++++
-VorbisDecoder::VorbisDecoder()
-    : internalBuffer(2, 4096),
+
+VorbisDecoder::VorbisDecoder() :
+      internalBuffer(2, 4096),
       initialized(false),
       vorbisInput()
 {
-    outBuffer = new float*[2];
-    outBuffer[0] = new float[2048];
-    outBuffer[1] = new float[2048];
     vorbisFile.vi = nullptr;
 }
-//+++++++++++++++++++++++++++++++++++++++++++
-VorbisDecoder::~VorbisDecoder(){
+
+VorbisDecoder::~VorbisDecoder()
+{
     qCDebug(jtNinjamVorbisDecoder) << "Destrutor Vorbis Decoder";
-    //TODO this destructor is crashing when a track is removed
-    //delete [] outBuffer[0];
-    //delete [] outBuffer[1];
-    //delete [] outBuffer;
 
     if(initialized)
         ov_clear(&vorbisFile);
 }
+
+bool VorbisDecoder::isMono() const
+{
+    if (vorbisFile.vi)
+        return vorbisFile.vi->channels == 1;
+
+    return true;
+}
+
+int VorbisDecoder::getChannels() const
+{
+    if (vorbisFile.vi)
+        return vorbisFile.vi->channels;
+
+    return 1;
+}
+
+int VorbisDecoder::getSampleRate() const
+{
+    if (vorbisFile.vi)
+        return vorbisFile.vi->rate;
+
+    return 44100;
+}
+
+
 //+++++++++++++++++++++++++++++++++++++++++++
 size_t VorbisDecoder::consumeTo(void *oggOutBuffer, size_t bytesToConsume){
     size_t len = qMin( bytesToConsume, (size_t)vorbisInput.size());
-    if(len > 0){
+    if (len > 0) {
         memcpy(oggOutBuffer, vorbisInput.data(), len);
         vorbisInput.remove(0, (uint)len);
     }
+
     return len;
 }
 
 //vorbisfile read callback
-size_t VorbisDecoder::readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoder){
+size_t VorbisDecoder::readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoder)
+{
     VorbisDecoder* decoderInstance = reinterpret_cast<VorbisDecoder*>(decoder);
     return decoderInstance->consumeTo(oggOutBuffer, size * nmemb);
 }
-//+++++++++++++++++++++++++++++++++++++++++++
-const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
-    if(!initialized){
+
+const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode)
+{
+    if (!initialized) {
         initialize();
     }
-    if(!initialized){
+
+    if (!initialized) {
         return Audio::SamplesBuffer::ZERO_BUFFER;
     }
-    //static float decoderOutBuffer[vorbisFile.vi->channels]
+
+    float **outBuffer;
+
     long samplesDecoded = ov_read_float(&vorbisFile, &outBuffer, maxSamplesToDecode, NULL);//currentSection is not used
-    if(samplesDecoded < 0){//error
+    if (samplesDecoded < 0) { //error
         QString message;
         switch (samplesDecoded) {
             case OV_HOLE: message = "VORBIS ERROR: there was an interruption in the data. (one of: garbage between pages, loss of sync followed by recapture, or a corrupt page)";
@@ -70,25 +96,32 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
     }
     internalBuffer.setFrameLenght(samplesDecoded);
     //internal buffer is always stereo
-    internalBuffer.add(0, outBuffer[0], samplesDecoded);//the left channel is always copyed
-    internalBuffer.add(1, outBuffer[ (vorbisFile.vi->channels >= 2) ? 1 : 0 ], samplesDecoded);
+    if (samplesDecoded > 0) {
+        internalBuffer.add(0, outBuffer[0], samplesDecoded);//the left channel is always copyed
+        internalBuffer.add(1, outBuffer[ (vorbisFile.vi->channels >= 2) ? 1 : 0 ], samplesDecoded);
+    }
+    else {
+        internalBuffer.zero();
+    }
+
     return internalBuffer;
 }
-//+++++++++++++++++++++++++++++++++++++++++++
-void VorbisDecoder::setInputData(const QByteArray &vorbisData){
+
+void VorbisDecoder::setInputData(const QByteArray &vorbisData)
+{
     vorbisInput.clear();
     vorbisInput.append(vorbisData);
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++
-bool VorbisDecoder::initialize(){
+bool VorbisDecoder::initialize()
+{
     ov_callbacks callbacks;
     callbacks.read_func = readOgg;
     callbacks.seek_func = NULL;
     callbacks.close_func = NULL;
     callbacks.tell_func = NULL;
 
-    if(initialized){
+    if (initialized) {
         ov_clear(&vorbisFile);
     }
 
@@ -96,7 +129,7 @@ bool VorbisDecoder::initialize(){
     
 	initialized = result == 0;
 
-    if(!initialized){
+    if (!initialized) {
         QString message;
         switch (result) {
         case OV_EREAD: message = "VORBIS DECODER INIT ERROR:  A read from media returned an error.";

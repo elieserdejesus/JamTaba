@@ -2,9 +2,9 @@ VST_SDK_PATH = "$$PWD/../VST_SDK"
 
 message("VST PATH: " $$VST_SDK_PATH)
 
-TEMPLATE = lib
+#TEMPLATE = lib
 
-mac:LIBS+= -dead_strip
+mac:LIBS += -dead_strip
 
 ROOT_PATH = "../.."
 SOURCE_PATH = "$$ROOT_PATH/src"
@@ -15,6 +15,8 @@ INCLUDEPATH += $$SOURCE_PATH/Common/gui/widgets
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chords
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chat
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/screensaver
+
+win32:INCLUDEPATH += $$ROOT_PATH/libs/includes/stackwalker
 
 VPATH       += $$SOURCE_PATH/Common
 VPATH       += $$SOURCE_PATH
@@ -31,13 +33,15 @@ macx{
     LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
 }
 
+win32 {
+    QMAKE_LFLAGS_RELEASE += /DEBUG # releasing with debug symbols
+}
+
 CONFIG += c++11
 
 
 PRECOMPILED_HEADER += PreCompiledHeaders.h
 
-HEADERS += video/Camera.h
-HEADERS += video/VideoCodec.h
 HEADERS += midi/MidiDriver.h
 HEADERS += midi/MidiMessage.h
 HEADERS += looper/Looper.h
@@ -65,6 +69,10 @@ HEADERS += audio/SamplesBufferResampler.h
 HEADERS += audio/SamplesBufferRecorder.h
 HEADERS += audio/Mp3Decoder.h
 HEADERS += audio/Resampler.h
+HEADERS += video/FFMpegMuxer.h
+HEADERS += video/FFMpegDemuxer.h
+HEADERS += video/VideoFrameGrabber.h
+HEADERS += video/VideoWidget.h
 HEADERS += file/FileReader.h
 HEADERS += file/FileReaderFactory.h
 HEADERS += file/WaveFileReader.h
@@ -96,6 +104,7 @@ HEADERS += gui/BaseTrackView.h
 HEADERS += gui/NinjamTrackView.h
 HEADERS += gui/NinjamTrackGroupView.h
 HEADERS += gui/NinjamPanel.h
+HEADERS += gui/MetronomePanel.h
 HEADERS += gui/BusyDialog.h
 HEADERS += gui/chat/ChatPanel.h
 HEADERS += gui/chat/ChatMessagePanel.h
@@ -103,14 +112,16 @@ HEADERS += gui/chat/NinjamVotingMessageParser.h
 HEADERS += gui/chat/ChatTextEditor.h
 HEADERS += gui/screensaver/ScreensaverBlocker.h
 HEADERS += gui/Highligther.h
+HEADERS += gui/InactivityDetector.h
 HEADERS += gui/TrackGroupView.h
 HEADERS += gui/LocalTrackGroupView.h
 HEADERS += gui/intervalProgress/IntervalProgressDisplay.h
 HEADERS += gui/intervalProgress/IntervalProgressWindow.h
 HEADERS += gui/PrivateServerDialog.h
 HEADERS += gui/UserNameDialog.h
+HEADERS += gui/CrashReportDialog.h
 HEADERS += gui/MainWindow.h
-HEADERS += gui/widgets/CustomTabWidget.h
+HEADERS += gui/IconFactory.h
 HEADERS += gui/widgets/IntervalChunksDisplay.h
 HEADERS += gui/widgets/MarqueeLabel.h
 HEADERS += gui/widgets/PeakMeter.h
@@ -121,6 +132,8 @@ HEADERS += gui/widgets/MapMarker.h
 HEADERS += gui/widgets/MultiStateButton.h
 HEADERS += gui/widgets/BlinkableButton.h
 HEADERS += gui/widgets/Slider.h
+HEADERS += gui/widgets/BoostSpinBox.h
+HEADERS += gui/widgets/ChatTabWidget.h
 HEADERS += gui/BpiUtils.h
 HEADERS += gui/chords/ChordLabel.h
 HEADERS += gui/chords/ChordsPanel.h
@@ -175,6 +188,10 @@ SOURCES += audio/vorbis/VorbisDecoder.cpp
 SOURCES += audio/vorbis/VorbisEncoder.cpp
 SOURCES += audio/core/AudioPeak.cpp
 SOURCES += audio/Resampler.cpp
+SOURCES += video/FFMpegMuxer.cpp
+SOURCES += video/FFMpegDemuxer.cpp
+SOURCES += video/VideoFrameGrabber.cpp
+SOURCES += video/VideoWidget.cpp
 SOURCES += file/FileReaderFactory.cpp
 SOURCES += file/WaveFileReader.cpp
 SOURCES += file/OggFileReader.cpp
@@ -192,6 +209,7 @@ SOURCES += ninjam/ServerMessagesHandler.cpp
 SOURCES += ninjam/UserChannel.cpp
 SOURCES += gui/widgets/PeakMeter.cpp
 SOURCES += gui/widgets/WavePeakPanel.cpp
+SOURCES += gui/widgets/ChatTabWidget.cpp
 SOURCES += gui/LocalTrackView.cpp
 SOURCES += gui/plugins/Guis.cpp
 SOURCES += gui/JamRoomViewPanel.cpp
@@ -202,7 +220,10 @@ SOURCES += gui/BaseTrackView.cpp
 SOURCES += gui/NinjamTrackView.cpp
 SOURCES += gui/NinjamTrackGroupView.cpp
 SOURCES += gui/NinjamPanel.cpp
+SOURCES += gui/MetronomePanel.cpp
 SOURCES += gui/BusyDialog.cpp
+SOURCES += gui/IconFactory.cpp
+SOURCES += gui/InactivityDetector.cpp
 SOURCES += gui/LooperWindow.cpp
 SOURCES += gui/widgets/LooperWavePanel.cpp
 SOURCES += gui/chat/ChatPanel.cpp
@@ -212,6 +233,7 @@ SOURCES += gui/chat/NinjamVotingMessageParser.cpp
 win32:SOURCES += gui/screensaver/WindowsScreensaverBlocker.cpp
 linux:SOURCES += gui/screensaver/LinuxScreensaverBlocker.cpp
 OBJECTIVE_SOURCES += gui/screensaver/MacScreensaverBlocker.mm
+win32:SOURCES += log/stackwalker/WindowsStackWalker.cpp
 
 SOURCES += gui/Highligther.cpp
 SOURCES += gui/TrackGroupView.cpp
@@ -224,8 +246,8 @@ SOURCES += gui/intervalProgress/CircularPaintStrategy.cpp
 SOURCES += gui/intervalProgress/PiePaintStrategy.cpp
 SOURCES += gui/PrivateServerDialog.cpp
 SOURCES += gui/UserNameDialog.cpp
+SOURCES += gui/CrashReportDialog.cpp
 SOURCES += gui/MainWindow.cpp
-SOURCES += gui/widgets/CustomTabWidget.cpp
 SOURCES += gui/widgets/UserNameLineEdit.cpp
 SOURCES += gui/widgets/IntervalChunksDisplay.cpp
 SOURCES += gui/widgets/MarqueeLabel.cpp
@@ -233,6 +255,7 @@ SOURCES += gui/widgets/MapMarker.cpp
 SOURCES += gui/widgets/MapWidget.cpp
 SOURCES += gui/widgets/MultiStateButton.cpp
 SOURCES += gui/widgets/BlinkableButton.cpp
+SOURCES += gui/widgets/BoostSpinBox.cpp
 SOURCES += gui/widgets/Slider.cpp
 SOURCES += gui/BpiUtils.cpp
 SOURCES += gui/chords/ChordsPanel.cpp
@@ -264,6 +287,7 @@ FORMS += gui/LooperWindow.ui
 FORMS += gui/PluginScanDialog.ui
 FORMS += gui/NinjamRoomWindow.ui
 FORMS += gui/NinjamPanel.ui
+FORMS += gui/MetronomePanel.ui
 FORMS += gui/BusyDialog.ui
 FORMS += gui/chat/ChatPanel.ui
 FORMS += gui/chat/ChatMessagePanel.ui
@@ -272,6 +296,7 @@ FORMS += gui/PrivateServerDialog.ui
 FORMS += gui/UserNameDialog.ui
 FORMS += gui/MainWindow.ui
 FORMS += gui/chords/ChordsPanel.ui
+FORMS += gui/CrashReportDialog.ui
 
 RESOURCES += ../resources/jamtaba.qrc
 

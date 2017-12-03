@@ -10,119 +10,149 @@ class NatMap;
 class QTimer;
 
 namespace Login {
+
 class UserInfo
 {
+
 public:
     UserInfo(long long id, const QString &name, const QString &ip);
-
-    inline QString getIp() const
-    {
-        return ip;
-    }
-
-    inline QString getName() const
-    {
-        return name;
-    }
+    inline QString getIp() const { return ip; }
+    inline QString getName() const { return name; }
 
 private:
     long long id;
     QString name;
     QString ip;
 };
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++
+
 enum class RoomTYPE {
     NINJAM, REALTIME
 };
 
+
 class RoomInfo
 {
+
 public:
     RoomInfo(long long id, const QString &roomName, int roomPort, RoomTYPE roomType, int maxUsers,
              const QList<UserInfo> &users, int maxChannels, int bpi, int bpm, const QString &streamUrl);
 
     RoomInfo(const QString &roomName, int roomPort, RoomTYPE roomType, int maxUsers, int maxChannels = 0);
 
-    ~RoomInfo()
-    {
-    }
+    ~RoomInfo();
 
-    inline QString getName() const
-    {
-        return name;
-    }
+    QString getName() const;
+    long long getID() const;
 
-    inline RoomTYPE getType() const
-    {
-        return type;
-    }
+    RoomTYPE getType() const;
 
     bool isEmpty() const;
-    inline bool isFull() const
-    {
-        return users.size() >= maxUsers;
-    }
+    bool isFull() const;
 
-    inline int getPort() const
-    {
-        return port;
-    }
+    int getPort() const;
 
-    inline QList<UserInfo> getUsers() const
-    {
-        return users;
-    }
+    QList<UserInfo> getUsers() const;
 
-    inline bool hasStream() const
-    {
-        return !streamUrl.isEmpty();
-    }
+    bool hasStream() const;
+    QString getStreamUrl() const;
 
-    inline long long getID() const
-    {
-        return id;
-    }
-
-    inline QString getStreamUrl() const
-    {
-        return streamUrl;
-    }
-
-    inline int getMaxChannels() const
-    {
-        return maxChannels;
-    }
+    int getMaxChannels() const;
 
     int getNonBotUsersCount() const;
-    inline int getMaxUsers() const
-    {
-        return maxUsers;
-    }
+    int getMaxUsers() const;
 
-    inline int getBpm() const
-    {
-        return bpm;
-    }
-
-    inline int getBpi() const
-    {
-        return bpi;
-    }
+    int getBpm() const;
+    int getBpi() const;
 
 protected:
     long long id;
+
     QString name;
+
     int port;
+
     RoomTYPE type;
+
     int maxUsers;
     int maxChannels;
+
     QList<UserInfo> users;
+
     QString streamUrl;
+
     int bpi;
     int bpm;
 };
 
+inline RoomInfo::~RoomInfo()
+{
+    //
+}
+
+inline bool RoomInfo::isFull() const
+{
+    return users.size() >= maxUsers;
+}
+
+inline int RoomInfo::getPort() const
+{
+    return port;
+}
+
+inline QList<UserInfo> RoomInfo::getUsers() const
+{
+    return users;
+}
+
+inline bool RoomInfo::hasStream() const
+{
+    return !streamUrl.isEmpty();
+}
+
+inline long long RoomInfo::getID() const
+{
+    return id;
+}
+
+inline QString RoomInfo::getStreamUrl() const
+{
+    return streamUrl;
+}
+
+inline int RoomInfo::getMaxChannels() const
+{
+    return maxChannels;
+}
+
+inline int RoomInfo::getMaxUsers() const
+{
+    return maxUsers;
+}
+
+inline int RoomInfo::getBpm() const
+{
+    return bpm;
+}
+
+inline int RoomInfo::getBpi() const
+{
+    return bpi;
+}
+
+inline QString RoomInfo::getName() const
+{
+    return name;
+}
+
+inline RoomTYPE RoomInfo::getType() const
+{
+    return type;
+}
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class LoginService : public QObject
 {
     Q_OBJECT
@@ -132,44 +162,45 @@ public:
     explicit LoginService(QObject *parent = 0);
     virtual ~LoginService();
     virtual void connectInServer(const QString &userName, int instrumentID, const QString &channelName,
-                                 const NatMap &localPeerMap, const QString &version, const QString &environment,
-                                 int sampleRate);
+                                    const NatMap &localPeerMap, const QString &version, const QString &environment, int sampleRate);
+
     virtual void disconnectFromServer();
-    inline bool isConnected() const
-    {
-        return connected;
-    }
+    bool isConnected() const;
 
     QString getChordProgressionFor(const Login::RoomInfo &roomInfo) const;
-    void sendChordProgressionToServer(const QString &userName,
-                                      const QString serverName,
-                                      quint32 serverPort,
-                                      const QString &chordProgression);
+    void sendChordProgressionToServer(const QString &userName, const QString &serverName, quint32 serverPort, const QString &chordProgression);
 
 signals:
     void roomsListAvailable(const QList<Login::RoomInfo> &publicRooms);
     void incompatibilityWithServerDetected();
-    void newVersionAvailableForDownload();
+    void newVersionAvailableForDownload(const QString &latestVersionDetails);
     void errorWhenConnectingToServer(const QString &error);
+
 private:
 
     enum Command {
-        CONNECT, DISCONNECT, REFRESH_ROOMS_LIST
+        CONNECT,
+        DISCONNECT,
+        REFRESH_ROOMS_LIST
     };
 
-    QNetworkAccessManager *httpClient;
+    QNetworkAccessManager httpClient;
     QNetworkReply *pendingReply;
-    QNetworkReply *sendCommandToServer(const QUrlQuery &, bool synchronous = false);
-    static const QString SERVER;
+    static const QString LOGIN_SERVER_URL;
     bool connected;
-    void handleJson(const QString &json);
-
-    RoomInfo buildRoomInfoFromJson(const QJsonObject &json);
 
     static const int REFRESH_PERIOD = 30000;
     QTimer *refreshTimer;
 
     QMap<QString, QString> lastChordProgressions;
+
+
+    void handleJson(const QString &json);
+
+    QNetworkReply *sendCommandToServer(const QUrlQuery &, bool synchronous = false);
+
+    RoomInfo buildRoomInfoFromJson(const QJsonObject &json);
+
     static QString getRoomInfoUniqueName(const Login::RoomInfo &roomInfo);
 
 private slots:
@@ -181,6 +212,12 @@ private slots:
 
     void refreshTimerSlot();
 };
+
+inline bool LoginService::isConnected() const
+{
+    return connected;
 }
+
+} // namespace
 
 #endif

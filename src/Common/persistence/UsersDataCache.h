@@ -6,21 +6,22 @@
 #include <QRegExp>
 #include <QDir>
 
-/***
+/**
+
   This class is used to store/remember the users level, pan, mute and boost. When a user enter in the jam
   the data is recovered/remembered from this cache.
+
  */
 
 namespace Persistence {
-/**
- * @brief The CacheEntryHeader struct
- */
+
 struct UsersDataCacheHeader {
     static const quint32 REVISION;
 };
 
 class CacheEntry // cache entries are per channel, not per user.
 {
+
 public:
     CacheEntry(const QString &userIp, const QString &userName, quint8 channelID);
     CacheEntry()
@@ -90,17 +91,18 @@ private:
     QString userName;
     quint8 channelID;
     bool muted;
-    float gain;// fader level
+    float gain; // fader level
     float pan;
     float boost;
     quint8 lowCutState;
 };
 
 // ++++++++++++++++++++++++++++++++
+
 class UsersDataCache
 {
 public:
-    UsersDataCache(const QDir &cacheDir);
+    explicit UsersDataCache(const QDir &cacheDir);
     ~UsersDataCache();
 
     // return default values for pan, gain and mute if user is not cached yet
@@ -120,6 +122,7 @@ private:
 
     const QString CACHE_FILE_NAME;
 };
+
 }// namespace
 
 #endif // USERSDATACACHE_H

@@ -7,15 +7,18 @@
 #include "Service.h"
 
 namespace Ninjam {
+
 class Service;
 
-struct MessageHeader {
+struct MessageHeader
+{
     quint8 messageTypeCode;
     quint32 payload;
 };
 
 class ServerMessagesHandler
 {
+
 public:
     explicit ServerMessagesHandler(Service *service);
     virtual ~ServerMessagesHandler();
@@ -26,7 +29,7 @@ protected:
     QDataStream stream;
     QIODevice *device;
     Service *service;
-    QScopedPointer<MessageHeader> currentHeader;// the last messageHeader readed from socket
+    QScopedPointer<MessageHeader> currentHeader; // the last messageHeader readed from socket
 
     bool executeMessageHandler(MessageHeader *header);
 
@@ -39,15 +42,17 @@ protected:
             MessageClazz message(payload);
             stream >> message;
             if (service)
-                service->process(message);// calling overload versions of 'process'
+                service->process(message); // calling overload versions of 'process'
             return true; // the message was handled
         }
-        return false;// the message was not handled
+        return false; // the message was not handled
     }
 
     MessageHeader *extractNextMessageHeader();
 };
 
 QDataStream &operator >>(QDataStream &stream, MessageHeader *header);
-}// namespace
+
+} // namespace
+
 #endif // SERVERMESSAGEPROCESSOR_H

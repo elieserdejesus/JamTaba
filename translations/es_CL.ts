@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="es_CL" sourcelanguage="en_US">
 <context>
@@ -135,7 +135,7 @@
     </message>
     <message>
         <source>Level:</source>
-        <translation>Volúmen:</translation>
+        <translation>Volumen:</translation>
     </message>
 </context>
 <context>
@@ -206,7 +206,7 @@
         <translation>Preparando</translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission for others</source>
+        <source>Enable/disable your audio transmission to others</source>
         <translation>Activar/desactivar la transmisión hacia otros</translation>
     </message>
     <message>
@@ -478,7 +478,7 @@
     </message>
     <message>
         <source>master</source>
-        <translation>volúmen general</translation>
+        <translation>volumen general</translation>
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
@@ -1073,15 +1073,15 @@
         <translation>buscando plugins...</translation>
     </message>
     <message>
-        <source>Founded plugins:</source>
+        <source>Found plugins:</source>
         <translation>Plugins encontrados:</translation>
     </message>
     <message>
-        <source>This is the plugin founded list box</source>
+        <source>This is the plugin found list box</source>
         <translation>Éste es el recuadro referente a la lista de plugins encontrados</translation>
     </message>
     <message>
-        <source>No plugins founded!</source>
+        <source>No plugins found!</source>
         <translation>¡No se encontró ningún plug-in!</translation>
     </message>
     <message>
@@ -1204,8 +1204,8 @@
         <translation>Metrónomo</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
-        <translation>Metrónomos incorporados:</translation>
+        <source>Metronome Sound:</source>
+        <translation>Sonido del Metrónomo:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>

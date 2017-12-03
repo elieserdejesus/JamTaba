@@ -107,7 +107,7 @@ void TestServerMessages::downloadIntervalWrite(){
     stream.setByteOrder(QDataStream::LittleEndian);
     stream >> msg; //populate the message
 
-    QCOMPARE(msg.getEncodedAudioData(), QByteArray(encodedAudioData));
+    QCOMPARE(msg.getEncodedData(), QByteArray(encodedAudioData));
     QCOMPARE(msg.downloadIsComplete(), flags == 1);
     QCOMPARE(msg.getGUID(), GUID);
 }

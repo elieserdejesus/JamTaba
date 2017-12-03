@@ -7,37 +7,22 @@
 
 class VorbisDecoder
 {
+
 public:
+
     VorbisDecoder();
     ~VorbisDecoder();
     const Audio::SamplesBuffer &decode(int maxSamplesToDecode);
 
-    inline bool isStereo() const
-    {
-        return getChannels() == 2;
-    }
+    bool isStereo() const;
 
-    inline bool isMono() const
-    {
-        return vorbisFile.vi->channels == 1;
-    }
+    bool isMono() const;
 
-    inline int getChannels() const
-    {
-        return vorbisFile.vi->channels;
-    }
+    int getChannels() const;
 
-    inline int getSampleRate() const
-    {
-        if (vorbisFile.vi)
-            return vorbisFile.vi->rate;
-        return 44100;
-    }
+    int getSampleRate() const;
 
-    inline bool isInitialized() const
-    {
-        return initialized;
-    }
+    bool isInitialized() const;
 
     void setInputData(const QByteArray &vorbisData);
 
@@ -49,10 +34,19 @@ private:
     OggVorbis_File vorbisFile;
     bool initialized;
     QByteArray vorbisInput;
-    float **outBuffer;
     static size_t readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoderInstance);
 
     size_t consumeTo(void *oggOutBuffer, size_t bytesToConsume);
 };
+
+inline bool VorbisDecoder::isStereo() const
+{
+    return getChannels() == 2;
+}
+
+inline bool VorbisDecoder::isInitialized() const
+{
+    return initialized;
+}
 
 #endif
