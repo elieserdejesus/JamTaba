@@ -1,0 +1,46 @@
+BaseTrackView QPushButton
+{
+
+    max-width: 10px;
+    min-height: 8px;
+}
+
+TrackGroupView
+{
+    background-color: none;
+}
+
+BoostSpinBox,
+NinjamTrackView[horizontal="false"] BoostSpinBox
+{
+
+    min-height: 16px;
+    min-width: 12px;
+    margin-bottom: 0px;
+    padding: -2px;
+}
+
+NinjamTrackView[horizontal="true"] QPushButton,
+NinjamTrackView[horizontal="true"] BoostSpinBox
+{
+    margin-bottom: 3px;
+}
+
+BoostSpinBox QToolButton:enabled:hover
+{
+    background-color: rgba(0, 255, 255, 40);
+}
+
+/* disabled is used as checked, this need be improved */
+BoostSpinBox QToolButton:disabled
+{
+    background-color: rgba(0, 255, 255, 90);
+}
+
+QLabel#labelPanL,
+QLabel#labelPanR
+{
+    color: rgb(55, 89, 89);
+}
+
+

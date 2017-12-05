@@ -230,16 +230,41 @@ QDir Configurator::createPresetsDir(const QDir &baseDir)
     return QDir(baseDir.absoluteFilePath(presetsFolder));
 }
 
+void Configurator::exportThemeFile(const QString &themeName, const QFileInfo &source, const QFileInfo &destination) const
+{
+    static QDate compilationDate = QLocale("en_US").toDate(QString(__DATE__).simplified(), "MMM d yyyy");
+    static QTime compilationTime = QTime::fromString(QString(__TIME__).simplified(), "hh:mm:ss");
+    static QDateTime jamTabaCompilationDate(compilationDate, compilationTime);
+
+    if (!destination.exists() || jamTabaCompilationDate > destination.lastModified()) {
+
+        // QFile::copy can't replace existing files, so is necessary delete existing file before call QFile::copy
+        if (destination.exists()) {
+            qDebug() << "Removing " << destination.fileName() << " before copy";
+            QFile(destination.absoluteFilePath()).remove();
+        }
+
+        if (QFile::copy(source.absoluteFilePath(), destination.absoluteFilePath())) {
+
+            qDebug() << "\tExporting " << themeName << source.fileName() << " to " << destination.absolutePath();
+
+            bool permissionSetted = QFile(destination.absoluteFilePath()).setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+            if (!permissionSetted)
+                qCritical() << "Can't set permission in file " << destination.absoluteFilePath();
+        }
+        else {
+            qCritical() << "Can't copy " << source.absoluteFilePath() << " to " << destination.absoluteFilePath();
+        }
+    }
+
+}
+
 void Configurator::exportThemes() const
 {
     // copy default themes from resources to user hard disk
     QDir resourceDir(THEMES_FOLDER_IN_RESOURCES);
     QDir themesDir = getThemesDir();
     QStringList themesInResources = resourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-
-    QDate compilationDate = QLocale("en_US").toDate(QString(__DATE__).simplified(), "MMM d yyyy");
-    QTime compilationTime = QTime::fromString(QString(__TIME__).simplified(), "hh:mm:ss");
-    QDateTime jamTabaCompilationDate(compilationDate, compilationTime);
 
     for (const QString &themeDir : themesInResources) {
 
@@ -251,31 +276,35 @@ void Configurator::exportThemes() const
 
         QString fullPath = themeFolderInResources.absolutePath() + "/css/themes/" + themeDir;
         QDir pathInResources(fullPath);
-        QStringList themeFiles = pathInResources.entryList(QDir::Files); // css files
+        QStringList themeFiles = pathInResources.entryList(); // files and folders
 
-        for (const QString &themeCSSFile : themeFiles) {
+        for (const QString &themeFile : themeFiles) {
 
-            QFileInfo sourceFileInfo(pathInResources.absoluteFilePath(themeCSSFile));
-            QFileInfo destinationFileInfo(destinationDir.absoluteFilePath(themeCSSFile));
+            QFileInfo sourceFileInfo(pathInResources.absoluteFilePath(themeFile));
+            QFileInfo destinationFileInfo(destinationDir.absoluteFilePath(themeFile));
 
-            if (!destinationFileInfo.exists() || jamTabaCompilationDate > destinationFileInfo.lastModified()) {
+            if (sourceFileInfo.isFile()) {
+                exportThemeFile(themeDir, sourceFileInfo, destinationFileInfo);
+            }
+            else { // a folder inside theme folder (images, fonts, etc.)
+                QString folderName = sourceFileInfo.baseName();
+                QDir sourceFolder(QDir(sourceFileInfo.absolutePath()).absoluteFilePath(folderName));
+                auto files = sourceFolder.entryInfoList(QDir::Files);
+                if (!files.isEmpty()) {
 
-                // QFile::copy can't replace existing files, so is necessary delete existing file before call QFile::copy
-                if (destinationFileInfo.exists())
-                    QFile(destinationFileInfo.absoluteFilePath()).remove();
+                    if (!destinationFileInfo.exists())
+                        destinationFileInfo.absoluteDir().mkdir(folderName);
 
-                if (QFile::copy(sourceFileInfo.absoluteFilePath(), destinationFileInfo.absoluteFilePath())) {
+                    QDir destDir(destinationFileInfo.absoluteDir().absoluteFilePath(folderName));
 
-                    qDebug() << "Exporting " << themeDir << "=>" << sourceFileInfo.fileName() << " to " << destinationDir.absolutePath();
+                    for (auto file : files) {
 
-                    bool permissionSetted = QFile(destinationFileInfo.absoluteFilePath()).setPermissions(QFile::ReadOwner | QFile::WriteOwner);
-                    if (!permissionSetted)
-                        qCritical() << "Can't set permission in file " << destinationFileInfo.absoluteFilePath();
-                }
-                else {
-                    qCritical() << "Can't copy " << sourceFileInfo.absoluteFilePath() << " to " << destinationFileInfo.absoluteFilePath();
+                        destinationFileInfo = QFileInfo(destDir.absoluteFilePath(file.fileName()));
+                        exportThemeFile(themeDir, file, destinationFileInfo);
+                    }
                 }
             }
+
         }
     }
 }

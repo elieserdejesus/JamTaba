@@ -1,0 +1,44 @@
+
+
+ChordsPanel QPushButton
+{
+    border: none;
+    background: #146566;
+    color: rgb(2, 9, 9);
+}
+
+ChordsPanel QPushButton:hover
+{
+    border: 1px solid #368788;
+    background-color: rgba(0, 255, 255, 50);
+    border-radius: 0px;
+}
+
+/* ChordLabel is the widget used to show ONE chord
+-------------------------------------*/
+
+ChordLabel
+{
+    background-color: rgba(255, 255, 255, 20);
+    border-color: transparent;
+    padding: 2px;
+    padding-top: 0px;
+    color: #58A9AA;
+    selection-background-color: rgb(120, 120, 120);
+    selection-color: rgb(40, 40, 40);
+}
+
+ChordLabel[current="true"]
+{
+    background-color: #1E4346;
+
+    border: none;
+    border-radius: 0px;
+
+    color: white;
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: #1E4346;
+
+
+}
+

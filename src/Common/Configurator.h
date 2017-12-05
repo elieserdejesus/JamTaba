@@ -75,6 +75,8 @@ private:
 
     void exportThemes() const;
 
+    void exportThemeFile(const QString &themeName, const QFileInfo &source, const QFileInfo &destination) const;
+
     static QDir getApplicationDataDir();
 
     static void logHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);

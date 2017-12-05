@@ -1,0 +1,160 @@
+QLabel#labelBpmBpi
+{
+    color: rgba(0, 255, 255, 80);
+}
+
+NinjamPanel #panelCombos QLabel
+{
+  /*  color: #92ADC2;*/
+}
+
+
+NinjamPanel #panelCombos QComboBox
+{
+
+    background-color: #0C2123;
+    color: #368788;
+}
+
+NinjamPanel #panelCombos QLineEdit
+{
+    border: 1px solid rgba(255, 255, 255, 30);
+    color: #92ADC2;
+}
+
+NinjamPanel #intervalPanel,
+IntervalProgressWindow #intervalPanel
+{
+    color: #58A9AA;
+    font-weight: bold;
+}
+
+IntervalProgressWindow
+{
+    font-size: 24pt; /* not working */
+}
+
+IntervalProgressDisplay
+{
+    qproperty-currentBeatColor: #69BABB;
+    qproperty-accentsColor: rgba(255, 255, 255, 80);
+    qproperty-currentAccentColor: rgb(0, 120, 0);
+    qproperty-secondaryBeatsColor: #1E4346;
+    qproperty-disabledBeatsColor: rgba(0, 0, 0, 45);
+    qproperty-linesColor: #368788;
+
+}
+
+
+
+
+/* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
+------------------------------------------------------------------------------------*/
+#buttonVerticalLayout:enabled:!checked,
+#buttonHorizontalLayout:enabled:!checked,
+#buttonGridLayout:enabled:!checked,
+#wide:enabled:!checked,
+#narrow:enabled:!checked,
+#licenceButton:enabled
+{
+    border: none;
+    background: #0C3532;
+}
+
+#buttonVerticalLayout:enabled:checked,
+#buttonHorizontalLayout:enabled:checked,
+#buttonGridLayout:enabled:checked,
+#wide:enabled:checked,
+#narrow:enabled:checked
+{
+    border: none;
+    background: #0B4B49;
+    border-radius: 0px;
+}
+
+#buttonVerticalLayout:enabled:hover,
+#buttonHorizontalLayout:enabled:hover,
+#buttonGridLayout:enabled:hover,
+#wide:enabled:hover,
+#narrow:enabled:hover,
+#licenceButton:hover
+{
+    border: 1px solid #368788;
+    background-color: #0B4B49;
+    border-radius: 0px;
+}
+
+#wide:!enabled,
+#narrow:!enabled
+{
+    background-color: rgb(0, 40, 40);
+    border: 1px solid rgb(0, 30, 30);
+}
+
+NinjamTrackView #receiveButton:!checked
+{
+    background-color: transparent;
+}
+
+
+NinjamTrackView #lowCutButton,
+NinjamTrackView #receiveButton
+{
+    height: 20px;
+    min-width: 13px;
+    margin: 0px;
+    border-image: none;
+    border: none;
+    background-color: none;
+}
+
+NinjamTrackGroupView
+{
+    padding: -6px;
+}
+
+NinjamTrackGroupView QLabel#countryLabel
+{
+    color: rgb(55, 89, 89);
+}
+
+MetronomePanel #peakMeter
+{
+    max-height: 12px;
+}
+
+NinjamPanel #panelCombos QLabel,
+MetronomePanel QLabel
+{
+    color: #58A9AA;
+
+    font-family: "Neuropol X RG";
+    font-size: 10px;
+}
+
+NinjamPanel
+{
+    background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0,
+        stop:0.92 rgba(88, 170, 170, 20),
+        stop:0.49 rgba(88, 170, 170, 40),
+        stop:0.47 rgba(88, 170, 170, 10),
+        stop:0.0 rgba(88, 170, 170, 6));
+
+    border: 1px solid rgba(88, 170, 170, 60);
+    border-radius: 1px;
+
+    padding: 12px;
+}
+
+NinjamPanel QComboBox QAbstractItemView
+{
+    padding: 6px;
+    padding-left: 6px;
+}
+
+MetronomePanel QPushButton
+{
+    margin: 0px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
