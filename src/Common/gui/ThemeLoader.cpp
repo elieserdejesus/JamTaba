@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QFontDatabase>
+#include <QRegularExpression>
 
 using namespace Theme;
 
