@@ -15,6 +15,7 @@ INCLUDEPATH += $$SOURCE_PATH/Common/gui/widgets
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chords
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chat
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/screensaver
+INCLUDEPATH += $$SOURCE_PATH/Libs/RtMidi
 
 win32:INCLUDEPATH += $$ROOT_PATH/libs/includes/stackwalker
 
@@ -24,17 +25,19 @@ VPATH       += $$SOURCE_PATH
 DEFINES += VST_FORCE_DEPRECATED=0#enable VST 2.3 features
 DEFINES += OV_EXCLUDE_STATIC_CALLBACKS  #avoid ogg static callback warnings
 
-linux{ #avoid erros in VST SDK when compiling in Linux
+linux{ #avoid errors in VST SDK when compiling in Linux
     DEFINES += __cdecl=""
+    QMAKE_CXXFLAGS += -D__LINUX_ALSA__
 }
 
 macx{
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++ -D__MACOSX_CORE__
     LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
 }
 
 win32 {
     QMAKE_LFLAGS_RELEASE += /DEBUG # releasing with debug symbols
+    QMAKE_CXXFLAGS += -D__WINDOWS_MM__
 }
 
 CONFIG += c++11
