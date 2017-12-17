@@ -3,6 +3,7 @@
 #include "MainController.h"
 #include "NinjamController.h"
 #include "video/FFMpegDemuxer.h"
+#include "IconFactory.h"
 
 #include <QMenu>
 #include <QDateTime>
@@ -78,7 +79,8 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
     groupNameLabel->setStyleSheet(styleSheet);
 
-    videoWidget = new VideoWidget(this);
+    QIcon webcamIcon = IconFactory::createWebcamIcon(getTintColor());
+    videoWidget = new VideoWidget(this, webcamIcon);
     videoWidget->setVisible(false); // video preview will be visible when the first received frame is decoded
 
     connect(videoWidget, &VideoWidget::visibilityChanged, [=](bool visible) {
@@ -102,6 +104,14 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoStream()));
 
     setupVerticalLayout();
+}
+
+QColor NinjamTrackGroupView::getTintColor() const
+{
+    if (trackViews.empty())
+        return Qt::black;
+
+    return trackViews.first()->getTintColor();
 }
 
 void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)

@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include "PeakMeter.h"
 #include "BoostSpinBox.h"
+#include "IconFactory.h"
 
 #include <QStyleOption>
 #include <QPainter>
@@ -28,7 +29,8 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     mainController(mainController),
     trackID(trackID),
     activated(true),
-    narrowed(false)
+    narrowed(false),
+    tintColor(Qt::black)
 {
     createLayoutStructure();
     setupVerticalLayout();
@@ -43,6 +45,14 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     BaseTrackView::trackViews.insert(trackID, this);
 
     setAttribute(Qt::WA_NoBackground);
+}
+
+void BaseTrackView::setTintColor(const QColor &color)
+{
+    this->tintColor = color;
+
+    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(getTintColor()));
+    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(getTintColor()));
 }
 
 void BaseTrackView::setupVerticalLayout()
@@ -105,10 +115,10 @@ void BaseTrackView::createLayoutStructure()
     levelSliderLayout = new QVBoxLayout();
     levelSliderLayout->setSpacing(2);
     levelSliderLayout->setContentsMargins(0, 0, 0, 0);
-    QLabel *highLevelIcon = new QLabel();
-    QLabel *lowLevelIcon = new QLabel();
-    highLevelIcon->setPixmap(QPixmap(":/images/level high.png"));
-    lowLevelIcon->setPixmap(QPixmap(":/images/level low.png"));
+    highLevelIcon = new QLabel(this);
+    lowLevelIcon = new QLabel(this);
+    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(getTintColor()));
+    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(getTintColor()));
     highLevelIcon->setAlignment(Qt::AlignCenter);
     lowLevelIcon->setAlignment(Qt::AlignCenter);
 
@@ -156,7 +166,7 @@ void BaseTrackView::createLayoutStructure()
 
     secondaryChildsLayout->addLayout(metersLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
-    secondaryChildsLayout->addWidget(boostSpinBox);
+    secondaryChildsLayout->addWidget(boostSpinBox, 0, Qt::AlignCenter);
 
     mainLayout->addLayout(primaryChildsLayout, 0, 0);
     mainLayout->addLayout(secondaryChildsLayout, 0, 1);

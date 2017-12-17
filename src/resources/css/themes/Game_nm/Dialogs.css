@@ -1,0 +1,54 @@
+QDialog
+{
+    border-image: url('/images/background.png') 0px 0px 0px 0px;
+}
+
+QDialog QTabWidget::pane
+{
+    background-color: rgba(255, 255, 255, 30);
+    border: 1px solid rgba(0, 0, 0, 80);
+}
+
+
+QDialog QTabBar::tab
+{
+    padding: 6px;
+}
+
+QDialog QLineEdit
+{
+    background-color: rgba(255, 255, 255, 10);
+}
+
+PreferencesDialog QComboBox:disabled,
+PreferencesDialog QLabel:disabled,
+PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
+PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false],
+PreferencesDialog QGroupBox#groupBoxOutputs
+{
+    color: rgba(0, 0, 0, 90);
+}
+
+PreferencesDialog #vstListWidget,
+PreferencesDialog #blackListWidget,
+PluginScanDialog #plainTextEdit
+{
+    background-color: rgba(0, 255, 255, 10);
+}
+
+BusyDialog
+{
+    border-image: none;
+    border: 1px solid #234544;
+    padding: 0px;
+    margin: 0px;
+    border-radius: 3px;
+
+    background-color: #1C2D2D;
+}
+
+BusyDialog > QLabel /* the text appearing in Busy dialog, like "connecting in ninbot.com" */
+{
+    font-weight: bold;
+    color: #58A9AA;
+}

@@ -14,7 +14,10 @@ public:
 
 private:
     static QStringList getThemeSectionNames();
-    static QString loadThemeCSSFiles(QString themeDir, QString themeName);
+    static QString loadThemeCSSFiles(QString themeDir, const QString &themeName);
+
+    static void resolveRelativeImagePaths(QString &styleSheet, const QString &imagesPath);
+    static void loadFonts(QString themesDir, const QString &themeName);
 };
 
 }//namespace

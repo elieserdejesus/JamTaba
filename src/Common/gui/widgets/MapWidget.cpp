@@ -52,13 +52,44 @@ qreal getDistance(const QPointF &p1, const QPointF &p2)
 
 MapWidget::MapWidget(QWidget *parent) :
     QWidget(parent),
-    blurActivated(false)
+    blurActivated(false),
+    markerTextBackgroundColor(QColor(0, 0, 0, 120)),
+    markerColor(Qt::red),
+    markerTextColor(Qt::white),
+    markerLineConnectorColor(QColor(0, 0, 0, 180))
 {
-
     loadTiles();
     setCenter(QPointF(0, 0));
     installEventFilter(this);
-    initializeFonts();
+    initializeCountryFont();
+}
+
+void MapWidget::setMarkerTextBackgroundColor(const QColor &color)
+{
+    markerTextBackgroundColor = color;
+
+    update();
+}
+
+void MapWidget::setMarkerLineConnectorColor(const QColor &color)
+{
+    markerLineConnectorColor = color;
+
+    update();
+}
+
+void MapWidget::setMarkerTextColor(const QColor &color)
+{
+    markerTextColor = color;
+
+    update();
+}
+
+void MapWidget::setMarkerColor(const QColor &color)
+{
+    markerColor = color;
+
+    update();
 }
 
 void MapWidget::setBlurMode(bool blurEnabled)
@@ -66,15 +97,16 @@ void MapWidget::setBlurMode(bool blurEnabled)
     this->blurActivated = blurEnabled;
 }
 
-void MapWidget::initializeFonts()
+void MapWidget::initializeCountryFont()
 {
-    QFont widgetFont = font();
-    userFont.setFamily(widgetFont.family());
-    userFont.setPointSize(widgetFont.pointSize());
-    userFont.setBold(true);
+    countryFont.setFamily(font().family());
+    int pointSize = font().pointSize();
+    if (pointSize >= 1)
+        countryFont.setPointSize(pointSize - 1);
+    else
+        countryFont.setPixelSize(font().pixelSize() - 1);
 
-    countryFont.setFamily(userFont.family());
-    countryFont.setPointSize(userFont.pointSize());
+    countryFont.setBold(false);
 }
 
 void MapWidget::setTilesDir(const QString &newDir)
@@ -307,8 +339,8 @@ void MapWidget::drawMapTiles(QPainter &p, const QRect &rect)
 
 void MapWidget::paintEvent(QPaintEvent *event)
 {
-    QPainter p;
-    p.begin(this);
+    QPainter p(this);
+    p.setFont(font());
     p.setRenderHint(QPainter::Antialiasing, true);
 
     drawMapTiles(p, event->rect());
@@ -318,9 +350,6 @@ void MapWidget::paintEvent(QPaintEvent *event)
     if (blurActivated) {
         p.fillRect(rect(), QColor(0, 0, 0, 140)); // draw a transparent black layer and create more contrast to show the sound wave
     }
-
-    p.end();
-
 }
 
 void MapWidget::setNightMode(bool useNightMode)
@@ -492,39 +521,14 @@ struct MapMarkerComparator
     }
 };
 
-QColor MapWidget::getMarkerTextBackgroundColor()
-{
-    if (!MapWidget::usingNightMode)
-        return QColor(0, 0, 0, 120);
-
-    return QColor(255, 255, 255, 120);
-}
-
-QColor MapWidget::getMarkerColor()
-{
-    if (!MapWidget::usingNightMode)
-        return Qt::red;
-
-    return Qt::white;
-}
-
-QColor MapWidget::getMarkerTextColor()
-{
-    if (!MapWidget::usingNightMode)
-        return Qt::white;
-
-    return Qt::black;
-}
-
 void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition)
 {
     QRectF markerRect(rectPosition, getMarkerSize(marker));
 
-    QColor bgColor = getMarkerTextBackgroundColor();
-    painter.setBrush(QBrush(bgColor));
+    painter.setBrush(QBrush(markerTextBackgroundColor));
 
     // drawing the line connector
-    painter.setPen(bgColor);
+    painter.setPen(markerLineConnectorColor);
     painter.setClipping(true);
     painter.setClipRegion(QRegion(rect()).subtracted(markerRect.toRect()));
     painter.drawLine(markerRect.center(), markerPosition);
@@ -536,18 +540,18 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
 
     // drawing the player marker (the small circle)
     const static qreal markerSize = 1.6;
-    painter.setBrush(getMarkerColor());
+    painter.setBrush(markerColor);
     painter.drawEllipse(markerPosition, markerSize, markerSize);
 
     qreal hOffset = rectPosition.x() + TEXT_MARGIM; // left margin
 
     // draw the player name text
     QString playerName = marker.getPlayerName();
-    painter.setFont(userFont);
+    painter.setFont(font());
 
     QFontMetrics metrics = painter.fontMetrics();
     qreal playerNameWidth = metrics.width(playerName);
-    painter.setPen(getMarkerTextColor());
+    painter.setPen(markerTextColor);
     qreal textY = markerRect.center().y() + TEXT_MARGIM + metrics.descent()/2.0;
     painter.drawText(hOffset, textY, playerName);
     hOffset += playerNameWidth + TEXT_MARGIM * 3;
@@ -556,7 +560,7 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.setFont(countryFont);
     metrics = painter.fontMetrics();
 
-    QColor countryNameColor(getMarkerTextColor());
+    QColor countryNameColor(markerTextColor);
     countryNameColor.setAlpha(180); // country name is drawed using some alpha
     painter.setPen(countryNameColor);
     QString countryName = marker.getCountryName();
@@ -564,7 +568,7 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
 
     hOffset += metrics.width(countryName);
 
-    painter.setFont(userFont); // restore the normal font
+    painter.setFont(font()); // restore the normal font
     metrics = painter.fontMetrics();
 
     // draw the player country flag
@@ -574,13 +578,25 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.drawImage(QPointF(imageX, imageY), image);
 }
 
+void MapWidget::changeEvent(QEvent *ev)
+{
+    if (ev->type() == QEvent::FontChange) {
+        invalidate();
+        initializeCountryFont();
+        updateMapPositionsCache();
+        update();
+    }
+
+    QWidget::changeEvent(ev);
+}
+
 QSizeF MapWidget::getMarkerSize(const MapMarker &marker) const
 {
     const QImage &flag = marker.getFlag();
 
     qreal markerWidth = TEXT_MARGIM; // left margin
 
-    QFontMetrics metrics(userFont);
+    QFontMetrics metrics(font());
     markerWidth += metrics.width(marker.getPlayerName());
     markerWidth += TEXT_MARGIM  * 3; // space between player and country name
 

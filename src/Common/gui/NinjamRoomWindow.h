@@ -42,6 +42,8 @@ public:
 
     void setTracksLayout(TracksLayout newLayout);
 
+    void setTintColor(const QColor &color);
+
     enum TracksSize
     {
         NARROW,

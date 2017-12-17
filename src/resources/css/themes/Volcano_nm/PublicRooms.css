@@ -82,3 +82,11 @@ WavePeakPanel
     /* color used to draw the loading circle */
     qproperty-loadingColor: rgb(239, 114, 24);
 }
+
+MapWidget
+{
+    qproperty-markerTextBackgroundColor: rgba(255, 255, 255, 120);
+    qproperty-markerColor: white;
+    qproperty-markerTextColor: black;
+    qproperty-markerLineConnectorColor: rgba(255, 255, 255, 120);
+}

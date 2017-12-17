@@ -21,6 +21,36 @@
         <file>css/themes/Navy_nm/Chat.css</file>
         <file>css/themes/Navy_nm/Chords.css</file>
     </qresource>
+    <qresource prefix="/css/themes/Game_nm">
+        <file>css/themes/Game_nm/BaseTrack.css</file>
+        <file>css/themes/Game_nm/NinjamWindow.css</file>
+        <file>css/themes/Game_nm/LocalTrack.css</file>
+        <file>css/themes/Game_nm/Dialogs.css</file>
+        <file>css/themes/Game_nm/General.css</file>
+        <file>css/themes/Game_nm/MainWindow.css</file>
+        <file>css/themes/Game_nm/PublicRooms.css</file>
+        <file>css/themes/Game_nm/Chat.css</file>
+        <file>css/themes/Game_nm/Chords.css</file>
+
+        <file>css/themes/Game_nm/fonts/neuropol x rg.ttf</file>
+        <file>css/themes/Game_nm/fonts/NotoMono-Regular.ttf</file>
+        <file>css/themes/Game_nm/fonts/VIDEOPHREAK.ttf</file>
+
+        <file>css/themes/Game_nm/images/background.png</file>
+        <file>css/themes/Game_nm/images/border_public_rooms.png</file>
+        <file>css/themes/Game_nm/images/border_rect.png</file>
+        <file>css/themes/Game_nm/images/border_right_corner.png</file>
+        <file>css/themes/Game_nm/images/border_tab.png</file>
+        <file>css/themes/Game_nm/images/borders.png</file>
+        <file>css/themes/Game_nm/images/button_no_border.png</file>
+        <file>css/themes/Game_nm/images/button.png</file>
+        <file>css/themes/Game_nm/images/button_checked.png</file>
+        <file>css/themes/Game_nm/images/button_disabled.png</file>
+        <file>css/themes/Game_nm/images/button_hover.png</file>
+        <file>css/themes/Game_nm/images/button_no_border.png</file>
+        <file>css/themes/Game_nm/images/grid.png</file>
+        <file>css/themes/Game_nm/images/horizontal_strip.png</file>
+    </qresource>
     <qresource prefix="/css/themes/Flat">
         <file>css/themes/Flat/BaseTrack.css</file>
         <file>css/themes/Flat/NinjamWindow.css</file>
@@ -130,8 +160,6 @@
         <file>off.png</file>
         <file>mini arrow left.png</file>
         <file>mini arrow right.png</file>
-        <file>mini arrow left hover.png</file>
-        <file>mini arrow right hover.png</file>
         <file>translate.png</file>
         <file>warning.png</file>
         <file>chat_small.png</file>

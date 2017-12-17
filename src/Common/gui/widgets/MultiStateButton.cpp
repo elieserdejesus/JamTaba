@@ -2,30 +2,47 @@
 #include <QtGlobal>
 #include <QStyle>
 
-MultiStateButton::MultiStateButton(quint8 states, QWidget *parent) :
+MultiStateButton::MultiStateButton(QWidget *parent, QList<QImage> icons) :
     QPushButton(parent),
-    states(qMax(states, (quint8)2)),
-    currentState(0)
+    states(icons.size()),
+    currentState(0),
+    icons(icons)
 {
-
+    setState(0);
 }
 
 void MultiStateButton::setState(quint8 newState)
 {
-    if (newState < states && newState != currentState) {
+    if (newState < states) {
         currentState = newState;
         if (texts.contains(currentState)) {
             QPushButton::setText(texts[currentState]);
         }
 
+        setChecked(currentState > 0);
+
         style()->unpolish(this);
         style()->polish(this);
 
-        setChecked(currentState > 0);
+        updateIcon();
+
         repaint();
 
         emit stateChanged();
     }
+}
+
+void MultiStateButton::updateIcon()
+{
+    if (!icons.empty() && currentState < icons.size())
+        setIcon(QIcon(QPixmap::fromImage(icons.at(currentState))));
+}
+
+void MultiStateButton::setIcons(QList<QImage> icons)
+{
+    this->icons = icons;
+
+    updateIcon();
 }
 
 void MultiStateButton::nextCheckState()

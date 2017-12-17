@@ -217,6 +217,7 @@ NinjamTrackView #receiveButton::hover
     border-style: solid;
 }
 
+/*
 NinjamTrackView #lowCutButton[state="0"]
 {
    background-image: url(':/images/low_cut_off.png');
@@ -231,6 +232,7 @@ NinjamTrackView #lowCutButton[state="2"]
 {
    background-image: url(':/images/low_cut_drastic.png');
 }
+*/
 
 NinjamTrackView #lowCutButton::hover
 {
@@ -260,10 +262,12 @@ NinjamTrackView QPushButton#receiveButton:!checked
     background-color:red;
 }
 
+/*
 NinjamTrackView QPushButton#receiveButton
 {
     background-image: url(':/images/receive.png');
 }
+*/
 
 
 NinjamTrackView QProgressBar                /* The progress bar in bottom of ninjam tracks showing downloaded interval */

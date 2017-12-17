@@ -19,6 +19,13 @@ TrackGroupView::TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *
     connect(this, &TrackGroupView::customContextMenuRequested, this, &TrackGroupView::showContextMenu);
 }
 
+void TrackGroupView::setTintColor(const QColor &color)
+{
+    for(auto trackGroup : trackViews) {
+        trackGroup->setTintColor(color);
+    }
+}
+
 void TrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
     Q_UNUSED(contextMenu);

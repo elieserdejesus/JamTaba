@@ -2,6 +2,8 @@
 #include <QFile>
 #include <QDir>
 #include <QDebug>
+#include <QFontDatabase>
+#include <QRegularExpression>
 
 using namespace Theme;
 
@@ -51,10 +53,43 @@ QString Loader::loadCSS(QString themeDir, QString themeName)
     if (themeCss.isEmpty())
         return ""; // can't load the theme CSS
 
+
+    resolveRelativeImagePaths(themeCss, QDir(themeDir).absoluteFilePath(themeName));
+
+    loadFonts(themeDir, themeName);
+
     return commonCss + themeCss;
 }
 
-QString Loader::loadThemeCSSFiles(QString themesBaseDir, QString themeName)
+void Loader::loadFonts(QString themesDir, const QString &themeName)
+{
+    QDir themeDir(QDir(themesDir).absoluteFilePath(themeName));
+    if (!themeDir.exists()) {
+        qCritical() << "Theme dir not exists! " << themeDir.absolutePath();
+        return;
+    }
+
+    QDir fontsDir(themeDir.absoluteFilePath("fonts"));
+    if (!fontsDir.exists()) {
+        return;
+    }
+
+    auto fonts = fontsDir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+    for(auto fontFile : fonts) {
+        int fontID = QFontDatabase::addApplicationFont(fontsDir.absoluteFilePath(fontFile));
+        if (fontID < 0)
+            qCritical() << "Can't load the font" << fontFile;
+    }
+}
+
+void Loader::resolveRelativeImagePaths(QString &styleSheet, const QString &imagesPath)
+{
+    QRegularExpression regex("(url[ ]?\\(['\"]?)([^:^'].+)(\\))");
+
+    styleSheet.replace(regex, "\\1" + imagesPath + "\\2\\3");
+}
+
+QString Loader::loadThemeCSSFiles(QString themesBaseDir, const QString &themeName)
 {
     QDir baseDir(themesBaseDir);
     if (!baseDir.exists()) {

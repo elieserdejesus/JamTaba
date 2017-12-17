@@ -15,6 +15,7 @@ INCLUDEPATH += $$SOURCE_PATH/Common/gui/widgets
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chords
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chat
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/screensaver
+INCLUDEPATH += $$SOURCE_PATH/Libs/RtMidi
 
 win32:INCLUDEPATH += $$ROOT_PATH/libs/includes/stackwalker
 
@@ -24,17 +25,19 @@ VPATH       += $$SOURCE_PATH
 DEFINES += VST_FORCE_DEPRECATED=0#enable VST 2.3 features
 DEFINES += OV_EXCLUDE_STATIC_CALLBACKS  #avoid ogg static callback warnings
 
-linux{ #avoid erros in VST SDK when compiling in Linux
+linux{ #avoid errors in VST SDK when compiling in Linux
     DEFINES += __cdecl=""
+    QMAKE_CXXFLAGS += -D__LINUX_ALSA__
 }
 
 macx{
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++ -D__MACOSX_CORE__
     LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
 }
 
 win32 {
     QMAKE_LFLAGS_RELEASE += /DEBUG # releasing with debug symbols
+    QMAKE_CXXFLAGS += -D__WINDOWS_MM__
 }
 
 CONFIG += c++11
@@ -121,6 +124,7 @@ HEADERS += gui/PrivateServerDialog.h
 HEADERS += gui/UserNameDialog.h
 HEADERS += gui/CrashReportDialog.h
 HEADERS += gui/MainWindow.h
+HEADERS += gui/IconFactory.h
 HEADERS += gui/widgets/IntervalChunksDisplay.h
 HEADERS += gui/widgets/MarqueeLabel.h
 HEADERS += gui/widgets/PeakMeter.h
@@ -221,6 +225,7 @@ SOURCES += gui/NinjamTrackGroupView.cpp
 SOURCES += gui/NinjamPanel.cpp
 SOURCES += gui/MetronomePanel.cpp
 SOURCES += gui/BusyDialog.cpp
+SOURCES += gui/IconFactory.cpp
 SOURCES += gui/InactivityDetector.cpp
 SOURCES += gui/LooperWindow.cpp
 SOURCES += gui/widgets/LooperWavePanel.cpp

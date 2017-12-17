@@ -39,6 +39,7 @@ public:
     void setLooper(Looper *looper);
     void detachCurrentLooper();
     void updateDrawings();
+    void setTintColor(const QColor &color);
 
 protected:
     void paintEvent(QPaintEvent *ev) override;
@@ -69,7 +70,7 @@ private:
     class LayerControlsLayout : public QHBoxLayout
     {
     public:
-        LayerControlsLayout(Looper *looper, quint8 layerIndex);
+        LayerControlsLayout(Looper *looper, quint8 layerIndex, const QColor &tintColor);
         void setMuteButtonVisibility(bool show);
         void enableMuteButton(bool enabled);
 
@@ -77,6 +78,8 @@ private:
         Slider *gainSlider;
         QLabel *labelPanL;
         QLabel *labelPanR;
+        QLabel *highLevelIcon;
+        QLabel *lowLevelIcon;
         BlinkableButton *muteButton;
     };
 
@@ -198,6 +201,8 @@ private:
     void disconnectLooperSignals();
 
     int currentBeat;
+
+    QColor tintColor;
 };
 
 Q_DECLARE_METATYPE(Audio::Looper::RecordingOption)

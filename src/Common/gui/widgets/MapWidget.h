@@ -12,6 +12,11 @@ class MapWidget: public QWidget
 {
     Q_OBJECT
 
+    Q_PROPERTY(QColor markerTextBackgroundColor MEMBER markerTextBackgroundColor WRITE setMarkerTextBackgroundColor)
+    Q_PROPERTY(QColor markerColor MEMBER markerColor WRITE setMarkerColor)
+    Q_PROPERTY(QColor markerTextColor MEMBER markerTextColor WRITE setMarkerTextColor)
+    Q_PROPERTY(QColor markerLineConnectorColor MEMBER markerLineConnectorColor  WRITE setMarkerLineConnectorColor)
+
     friend struct MapMarkerComparator;
 
 public:
@@ -21,12 +26,18 @@ public:
     static void setNightMode(bool useNightMode);
     void setBlurMode(bool blurEnabled);
 
+    void setMarkerTextBackgroundColor(const QColor &color);
+    void setMarkerTextColor(const QColor &color);
+    void setMarkerColor(const QColor &color);
+    void setMarkerLineConnectorColor(const QColor &color);
+
 protected:
     void resizeEvent(QResizeEvent *) override;
     void paintEvent(QPaintEvent *event) override;
     QSize minimumSizeHint() const override;
     bool eventFilter(QObject *, QEvent *) override;
 
+    void changeEvent(QEvent *) override;
 private slots:
     void loadTiles();
 
@@ -50,11 +61,12 @@ private:
     void drawPlayersMarkers(QPainter &p);
     void drawMarker(const MapMarker &marker, QPainter &p, const QPointF &markerPosition, const QPointF &rectPosition);
 
-    static QColor getMarkerTextBackgroundColor();
-    static QColor getMarkerColor();
-    static QColor getMarkerTextColor();
+    QColor markerTextBackgroundColor;
+    QColor markerColor;
+    QColor markerTextColor;
+    QColor markerLineConnectorColor;
 
-    void initializeFonts();
+    void initializeCountryFont();
 
     QSizeF getMarkerSize(const MapMarker &marker) const;
 
@@ -88,7 +100,6 @@ private:
 
     int getMaximumMarkerWidth();
 
-    QFont userFont;
     QFont countryFont;
 
     bool blurActivated;

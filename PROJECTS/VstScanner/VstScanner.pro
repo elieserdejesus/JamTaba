@@ -80,6 +80,7 @@ macx{
 
     QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
     LIBS+= -dead_strip
+    LIBS += -framework Cocoa
 
     #mac osx doc icon
     ICON = Jamtaba.icns

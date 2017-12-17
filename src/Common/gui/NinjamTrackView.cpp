@@ -13,6 +13,7 @@
 #include "Utils.h"
 #include "audio/NinjamTrackNode.h"
 #include "BoostSpinBox.h"
+#include "IconFactory.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
@@ -40,6 +41,14 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     setActivatedStatus(true); // disabled/grayed until receive the first bytes.
 }
 
+void NinjamTrackView::setTintColor(const QColor &color)
+{
+    BaseTrackView::setTintColor(color);
+
+    buttonReceive->setIcon(IconFactory::createReceiveIcon(color));
+    buttonLowCut->setIcons(IconFactory::createLowCutIcons(color));
+}
+
 void NinjamTrackView::setNinjamChannelData(const QString &userFullName, quint8 channelIndex)
 {
     this->userFullName = userFullName;
@@ -61,10 +70,11 @@ void NinjamTrackView::setReceiveState(bool receive)
 QPushButton *NinjamTrackView::createReceiveButton() const
 {
     QPushButton *button = new QPushButton();
+    button->setIcon(IconFactory::createReceiveIcon(getTintColor()));
     button->setToolTip(tr("Receive"));
     button->setObjectName(QStringLiteral("receiveButton"));
     button->setCheckable(true);
-    secondaryChildsLayout->addWidget(button);
+    secondaryChildsLayout->addWidget(button, 0, Qt::AlignCenter);
     return button;
 }
 
@@ -81,10 +91,11 @@ MarqueeLabel *NinjamTrackView::createChannelNameLabel() const
 
 MultiStateButton *NinjamTrackView::createLowCutButton(bool checked)
 {
-    MultiStateButton *button = new MultiStateButton(3, this); // 3 states: Low cut OFF, NORMAL, and DRASTIC
+    auto icons = IconFactory::createLowCutIcons(getTintColor());
+    MultiStateButton *button = new MultiStateButton(this, icons); // 3 states: Low cut OFF, NORMAL, and DRASTIC
     button->setCheckable(true);
     button->setChecked(checked);
-    secondaryChildsLayout->addWidget(button);
+    secondaryChildsLayout->addWidget(button, 0, Qt::AlignCenter);
     button->setObjectName("lowCutButton");
     connect(button, &QPushButton::clicked, this, &NinjamTrackView::setLowCutToNextState);
     return button;

@@ -26,6 +26,13 @@ WavePeakPanel::~WavePeakPanel()
 
 }
 
+void WavePeakPanel::setPeaksColor(const QColor &color)
+{
+    this->peaksColor = color;
+
+    update();
+}
+
 void WavePeakPanel::setDrawingMode(WaveDrawingMode mode)
 {
     this->drawingMode = mode;

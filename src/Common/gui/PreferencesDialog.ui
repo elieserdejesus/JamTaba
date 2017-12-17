@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>6</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -461,7 +461,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>98</width>
+               <width>484</width>
                <height>45</height>
               </rect>
              </property>

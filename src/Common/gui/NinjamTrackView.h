@@ -40,6 +40,8 @@ public:
 
     void updateStyleSheet() override;
 
+    void setTintColor(const QColor &color) override;
+
 protected:
 
     QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const override;

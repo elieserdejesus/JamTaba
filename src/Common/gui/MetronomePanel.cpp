@@ -1,5 +1,6 @@
 #include "MetronomePanel.h"
 #include "ui_MetronomePanel.h"
+#include "IconFactory.h"
 
 MetronomePanel::MetronomePanel(QWidget *parent) :
     QWidget(parent),
@@ -18,6 +19,12 @@ MetronomePanel::MetronomePanel(QWidget *parent) :
 MetronomePanel::~MetronomePanel()
 {
     delete ui;
+}
+
+void MetronomePanel::setTintColor(const QColor &color)
+{
+    ui->labelHighVolume->setPixmap(IconFactory::createHighLevelIcon(color));
+    ui->labelLowVolume->setPixmap(IconFactory::createLowLevelIcon(color));
 }
 
 void MetronomePanel::updateStyleSheet()

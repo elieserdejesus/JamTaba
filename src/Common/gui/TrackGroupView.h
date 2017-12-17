@@ -51,6 +51,8 @@ public:
         return castedTracks;
     }
 
+    void setTintColor(const QColor &color);
+
 protected:
 
     void changeEvent(QEvent *) override;
