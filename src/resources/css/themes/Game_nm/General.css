@@ -332,7 +332,8 @@ QMenuBar::item:pressed { /* 'button pressed' item style */
 
 
 QComboBox QAbstractItemView,
-QMenu::item:enabled:selected
+QMenu::item:enabled:selected,
+QSpinBox
 {
     border: 1px solid transparent;
     background-color: rgba(255, 255, 255, 30);

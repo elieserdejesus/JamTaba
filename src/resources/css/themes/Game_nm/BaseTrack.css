@@ -1,8 +1,21 @@
-BaseTrackView QPushButton
+#muteButton,
+#soloButton,
+#buttonStereoInversion,
+#buttonLooper,
+#lowCutButton,
+BoostSpinBox
 {
 
     max-width: 10px;
     min-height: 8px;
+}
+
+
+#midiToolsButton
+{
+    background-color: #29715F;
+    border: 1px outset #1F5446;
+    color: #001E00;
 }
 
 TrackGroupView
