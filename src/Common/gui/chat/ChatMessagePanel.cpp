@@ -7,6 +7,7 @@
 #include <QMetaMethod>
 #include "log/Logging.h"
 #include <QTime>
+#include "EmojiManager.h"
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
     QFrame(parent),
@@ -18,12 +19,18 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
 ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg,
                                    const QColor &userNameBackgroundColor,
                                    const QColor &textColor,
-                                   bool showTranslationButton, bool showBlockButton) :
+                                   bool showTranslationButton, bool showBlockButton, EmojiManager *emojiManager) :
     QFrame(parent),
     ui(new Ui::ChatMessagePanel),
-    userName(userName)
+    userName(userName),
+    emojiManager(emojiManager)
 {
     ui->setupUi(this);
+
+    if (emojiManager)
+        emojifiedText = emojiManager->emojify(msg);
+    else
+        emojifiedText = msg;
 
     initialize(userName, msg, userNameBackgroundColor, textColor, showTranslationButton, showBlockButton);
 
@@ -58,13 +65,13 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
 
     setStyleSheet(buildCssString(msgBackgroundColor, textColor));
 
-    setMessageLabelText(msg);
+    setMessageLabelText(emojifiedText);
 
     ui->translateButton->setVisible(showTranslationButton);
 
     ui->blockButton->setVisible(showBlockButton);
 
-    this->originalText = msg;
+    originalText = msg;
 }
 
 void ChatMessagePanel::setMessageLabelText(const QString &msg)
@@ -133,7 +140,7 @@ void ChatMessagePanel::on_translateButton_clicked()
         }
     }
     else {
-        setMessageLabelText(originalText);
+        setMessageLabelText(emojifiedText);
     }
 }
 
@@ -154,7 +161,7 @@ void ChatMessagePanel::on_networkReplyError(QNetworkReply::NetworkError)
 
     emit translationFinished();
 
-    setMessageLabelText(originalText); // restore the original text
+    setMessageLabelText(emojifiedText); // restore the original text
 }
 
 void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply)
@@ -167,6 +174,7 @@ void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply)
     QString translatedText = data.mid(startSlash+1, endSlash - startSlash - 1);
     if (translatedText.isEmpty())
         translatedText = "translation error!";
+
     messagePanel->setTranslatedMessage(translatedText);
 
     reply->manager()->deleteLater();
@@ -178,6 +186,6 @@ void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply)
 void ChatMessagePanel::setTranslatedMessage(const QString &translatedMessage)
 {
     ui->translateButton->setChecked(true);
-    translatedText = translatedMessage;
-    setMessageLabelText("<i>" + translatedMessage + "</i>");
+    translatedText = emojiManager ? emojiManager->emojify(translatedMessage) : translatedMessage;
+    setMessageLabelText("<i>" + translatedText + "</i>");
 }

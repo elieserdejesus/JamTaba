@@ -113,6 +113,8 @@ HEADERS += gui/chat/ChatPanel.h
 HEADERS += gui/chat/ChatMessagePanel.h
 HEADERS += gui/chat/NinjamVotingMessageParser.h
 HEADERS += gui/chat/ChatTextEditor.h
+HEADERS += gui/chat/EmojiWidget.h
+HEADERS += gui/chat/EmojiManager.h
 HEADERS += gui/screensaver/ScreensaverBlocker.h
 HEADERS += gui/Highligther.h
 HEADERS += gui/InactivityDetector.h
@@ -232,6 +234,8 @@ SOURCES += gui/widgets/LooperWavePanel.cpp
 SOURCES += gui/chat/ChatPanel.cpp
 SOURCES += gui/chat/ChatMessagePanel.cpp
 SOURCES += gui/chat/ChatTextEditor.cpp
+SOURCES += gui/chat/EmojiWidget.cpp
+SOURCES += gui/chat/EmojiManager.cpp
 SOURCES += gui/chat/NinjamVotingMessageParser.cpp
 win32:SOURCES += gui/screensaver/WindowsScreensaverBlocker.cpp
 linux:SOURCES += gui/screensaver/LinuxScreensaverBlocker.cpp
@@ -304,4 +308,5 @@ FORMS += gui/CrashReportDialog.ui
 RESOURCES += ../resources/jamtaba.qrc
 
 #this is the file used by the Beautifier QtCreator plugin (using the Uncrustify tool)
-DISTFILES += $$PWD/uncrustify.cfg
+DISTFILES += $$PWD/uncrustify.cfg \
+    $$PWD/../src/resources/emoji/smile.png

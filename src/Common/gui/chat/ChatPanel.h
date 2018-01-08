@@ -9,12 +9,14 @@
 #include "chords/ChordProgression.h"
 #include "UsersColorsPool.h"
 #include "TextEditorModifier.h"
+#include "EmojiManager.h"
 
 namespace Ui {
 class ChatPanel;
 }
 
 class ChatMessagePanel;
+class EmojiWidget;
 
 class ChatPanel : public QWidget
 {
@@ -67,6 +69,9 @@ private:
     QColor getUserColor(const QString &userName);
     QStringList botNames;
     static const QColor BOT_COLOR;
+
+    EmojiManager emojiManager;
+    EmojiWidget *emojiWidget;
 
     static const int MAX_MESSAGES = 50;
 

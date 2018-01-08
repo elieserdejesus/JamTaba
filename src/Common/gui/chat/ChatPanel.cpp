@@ -1,6 +1,8 @@
 #include "ChatPanel.h"
 #include "ui_ChatPanel.h"
 #include "ChatMessagePanel.h"
+#include "EmojiWidget.h"
+
 #include <QWidget>
 #include <QScrollBar>
 #include <QDebug>
@@ -17,7 +19,8 @@ ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, U
     botNames(botNames),
     autoTranslating(false),
     colorsPool(colorsPool),
-    unreadedMessages(0)
+    unreadedMessages(0),
+    emojiManager(":/emoji/emoji.json", ":/emoji/icons")
 {
     ui->setupUi(this);
     QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
@@ -53,6 +56,26 @@ ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, U
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     previousVerticalScrollBarMaxValue = ui->chatScroll->verticalScrollBar()->value();
+
+    emojiWidget = new EmojiWidget(&emojiManager, this);
+    emojiWidget->setVisible(false);
+    ui->gridLayout->addWidget(emojiWidget, ui->gridLayout->rowCount(), 0, 1, ui->gridLayout->columnCount());
+    emojiWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
+
+    QAction *action = ui->chatText->addAction(QIcon(":/emoji/smile.png"), QLineEdit::LeadingPosition);
+
+    connect(action, &QAction::triggered, [=](){
+        emojiWidget->setVisible(!emojiWidget->isVisible());
+    });
+
+    connect(emojiWidget, &EmojiWidget::emojiSelected, [=](const QString &emojiCode){
+
+        QString newText = ui->chatText->text();
+        newText.insert(ui->chatText->cursorPosition(), EmojiManager::emojiCodeToUtf8(emojiCode));
+        ui->chatText->setText(newText);
+        ui->chatText->setFocus();
+    });
+
 }
 
 bool ChatPanel::inputsAreEnabled() const
@@ -214,7 +237,7 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     QColor textColor = isBot ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = backgroundColor;
     ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, userMessage,
-                                                      userNameBackgroundColor, textColor, showTranslationButton, showBlockButton);
+                                                      userNameBackgroundColor, textColor, showTranslationButton, showBlockButton, &emojiManager);
 
     connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
     connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
