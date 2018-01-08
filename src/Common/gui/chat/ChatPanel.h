@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <QList>
 #include <QTimer>
+#include <QAction>
+
 #include "chords/ChordProgression.h"
 #include "UsersColorsPool.h"
 #include "TextEditorModifier.h"
@@ -43,6 +45,8 @@ public:
     bool inputsAreEnabled() const;
     QString getUserFullName() const;
 
+    void setTintColor(const QColor &color);
+
 public slots:
     void setTopicMessage(const QString &topic);
 
@@ -79,6 +83,9 @@ private:
     EmojiManager emojiManager;
     EmojiWidget *emojiWidget;
     Controller::MainController *mainController;
+
+    QAction *emojiAction;
+    QColor tintColor;
 
     static const int MAX_MESSAGES = 50;
 

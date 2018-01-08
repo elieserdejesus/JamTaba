@@ -7,6 +7,7 @@
 class IconFactory {
 
 public:
+    static QIcon createChatEmojiIcon(const QColor &tintColor);
     static QIcon createLooperButtonIcon(const QColor &tintColor);
     static QIcon createStereoInversionIcon(const QColor &tintColor);
     static QIcon createReceiveIcon(const QColor &tintColor);

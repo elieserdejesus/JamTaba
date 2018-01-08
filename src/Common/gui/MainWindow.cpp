@@ -421,6 +421,10 @@ void MainWindow::setTintColor(const QColor &color)
     // master
     ui.speakerIconLeft->setPixmap(IconFactory::createLowLevelIcon(color));
     ui.speakerIconRight->setPixmap(IconFactory::createHighLevelIcon(color));
+
+    auto chats = chatTabWidget->getChats();
+    for (auto chatPanel : chats)
+        chatPanel->setTintColor(color);
 }
 
 void MainWindow::initializeThemeMenu()
@@ -1460,6 +1464,8 @@ void MainWindow::addMainChatPanel()
 
     auto mainChatPanel = chatTabWidget->createPublicChat(JAMTABA_CHAT_BOT_NAME, createTextEditorModifier());
 
+    mainChatPanel->setTintColor(tintColor);
+
     connect(mainChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
     connect(mainChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendNewChatMessage);
     connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
@@ -1484,6 +1490,8 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
 
     auto chatPanel = chatTabWidget->createPrivateChat(remoteUserName, userIP, createTextEditorModifier(), focusNewChat);
     Q_ASSERT(chatPanel);
+
+    chatPanel->setTintColor(tintColor);
 
     chatPanel->setTopicMessage(tr("Private chat with %1").arg(remoteUserName));
 

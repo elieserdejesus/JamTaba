@@ -10,6 +10,7 @@
 #include <QWidget>
 #include <QGridLayout>
 #include "MainController.h"
+#include "IconFactory.h"
 
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
@@ -23,7 +24,8 @@ ChatPanel::ChatPanel(const QString &userFullName, Controller::MainController *ma
     colorsPool(colorsPool),
     unreadedMessages(0),
     emojiManager(":/emoji/emoji.json", ":/emoji/icons"),
-    mainController(mainController)
+    mainController(mainController),
+    tintColor(Qt::black)
 {
     ui->setupUi(this);
     QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
@@ -68,9 +70,10 @@ ChatPanel::ChatPanel(const QString &userFullName, Controller::MainController *ma
     ui->gridLayout->addWidget(emojiWidget, ui->gridLayout->rowCount(), 0, 1, ui->gridLayout->columnCount());
     emojiWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
-    QAction *action = ui->chatText->addAction(QIcon(":/emoji/smile.png"), QLineEdit::LeadingPosition);
+    auto emojiIcon = IconFactory::createChatEmojiIcon(tintColor);
+    emojiAction = ui->chatText->addAction(emojiIcon, QLineEdit::LeadingPosition);
 
-    connect(action, &QAction::triggered, [=](){
+    connect(emojiAction, &QAction::triggered, [=](){
         emojiWidget->setVisible(!emojiWidget->isVisible());
     });
 
@@ -82,6 +85,11 @@ ChatPanel::ChatPanel(const QString &userFullName, Controller::MainController *ma
         ui->chatText->setFocus();
     });
 
+}
+
+void ChatPanel::setTintColor(const QColor &color)
+{
+    emojiAction->setIcon(IconFactory::createChatEmojiIcon(color));
 }
 
 bool ChatPanel::inputsAreEnabled() const
