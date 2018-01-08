@@ -58,7 +58,7 @@ EmojiWidget::EmojiWidget(EmojiManager *emojiManager, QWidget *parent) :
     scrollArea->setMaximumHeight(preferredHeight);
     scrollArea->setMinimumHeight(preferredHeight);
     scrollArea->setFrameStyle(QFrame::NoFrame);
-    scrollArea->widget()->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    scrollArea->widget()->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
 
     mainLayout->addWidget(scrollArea, 1, Qt::AlignTop);
 
