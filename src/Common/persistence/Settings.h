@@ -360,6 +360,8 @@ private:
     LooperSettings looperSettings;
     RememberUsersSettings rememberSettings;
 
+    QStringList recentEmojis;
+
     QString lastUserName; // the last nick name choosed by user
     QString translation; // the translation language (en, fr, jp, pt, etc.) being used in chat
     QString theme; // the style sheet used
@@ -452,6 +454,9 @@ public:
     void removeVstScanPath(const QString &path);
     QStringList getVstScanFolders() const;
 
+    QStringList getRecentEmojis() const;
+    void setRecentEmojis(const QStringList &emojis);
+
     // AU plugins
 #ifdef Q_OS_MAC
     void addAudioUnitPlugin(const QString &pluginPath);
@@ -528,6 +533,16 @@ public:
 
     uint getIntervalsBeforeInactivityWarning() const;
 };
+
+inline QStringList Settings::getRecentEmojis() const
+{
+    return recentEmojis;
+}
+
+inline void Settings::setRecentEmojis(const QStringList &emojis)
+{
+    recentEmojis = emojis;
+}
 
 inline uint Settings::getIntervalsBeforeInactivityWarning() const
 {

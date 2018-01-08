@@ -183,6 +183,9 @@ public:
     QString getMetronomeOffBeatFile() const;
     QString getMetronomeAccentBeatFile() const;
 
+    QStringList getRecentEmojis() const;
+    void setRecentEmojis(const QStringList &recentEmojis);
+
     void saveEncodedAudio(const QString &userName, quint8 channelIndex, const QByteArray &encodedAudio);
 
     Audio::AbstractMp3Streamer *getRoomStreamer() const;
@@ -352,6 +355,15 @@ protected slots:
 
 };
 
+inline QStringList MainController::getRecentEmojis() const
+{
+    return settings.getRecentEmojis();
+}
+
+inline void MainController::setRecentEmojis(const QStringList &recentEmojis)
+{
+    settings.setRecentEmojis(recentEmojis);
+}
 
 inline Persistence::UsersDataCache *MainController::getUsersDataCache()
 {

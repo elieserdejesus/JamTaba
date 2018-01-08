@@ -9,18 +9,21 @@
 #include <QKeyEvent>
 #include <QWidget>
 #include <QGridLayout>
+#include "MainController.h"
 
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
-ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier) :
+ChatPanel::ChatPanel(const QString &userFullName, Controller::MainController *mainController, UsersColorsPool *colorsPool,
+                        TextEditorModifier *chatInputModifier) :
     QWidget(nullptr),
     userFullName(userFullName),
     ui(new Ui::ChatPanel),
-    botNames(botNames),
+    botNames(mainController->getBotNames()),
     autoTranslating(false),
     colorsPool(colorsPool),
     unreadedMessages(0),
-    emojiManager(":/emoji/emoji.json", ":/emoji/icons")
+    emojiManager(":/emoji/emoji.json", ":/emoji/icons"),
+    mainController(mainController)
 {
     ui->setupUi(this);
     QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
@@ -56,6 +59,9 @@ ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, U
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     previousVerticalScrollBarMaxValue = ui->chatScroll->verticalScrollBar()->value();
+
+    for (auto emojiCode : mainController->getRecentEmojis())
+        emojiManager.addRecent(emojiCode);
 
     emojiWidget = new EmojiWidget(&emojiManager, this);
     emojiWidget->setVisible(false);
@@ -291,6 +297,7 @@ QColor ChatPanel::getUserColor(const QString &userName)
 
 ChatPanel::~ChatPanel()
 {
+    mainController->setRecentEmojis(emojiManager.getRecents());
     delete ui;
 }
 

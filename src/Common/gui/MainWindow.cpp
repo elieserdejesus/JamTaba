@@ -1458,7 +1458,7 @@ void MainWindow::addMainChatPanel()
 {
     qCDebug(jtGUI) << "adding ninjam chat panel...";
 
-    auto mainChatPanel = chatTabWidget->createPublicChat(JAMTABA_CHAT_BOT_NAME, mainController->getTranslationLanguage(), createTextEditorModifier());
+    auto mainChatPanel = chatTabWidget->createPublicChat(JAMTABA_CHAT_BOT_NAME, createTextEditorModifier());
 
     connect(mainChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
     connect(mainChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendNewChatMessage);
@@ -1678,6 +1678,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     if (xmitInactivityDetector)
         xmitInactivityDetector->deinitialize();
+
 }
 
 void MainWindow::closeAllLooperWindows()
@@ -2348,7 +2349,7 @@ void MainWindow::setupWidgets()
 
     ui.masterTitleLabel->setVisible(false);
 
-    chatTabWidget = new ChatTabWidget(this, mainController->getBotNames(), &usersColorsPool);
+    chatTabWidget = new ChatTabWidget(this, mainController, &usersColorsPool);
     setChatsVisibility(false);
 
     connect(chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::updateCollapseButtons);

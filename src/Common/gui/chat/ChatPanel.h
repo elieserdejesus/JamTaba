@@ -18,13 +18,19 @@ class ChatPanel;
 class ChatMessagePanel;
 class EmojiWidget;
 
+namespace Controller {
+class MainController;
+}
+
 class ChatPanel : public QWidget
 {
     Q_OBJECT
 
 public:
-    ChatPanel(const QString &userFullName, const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier);
+    ChatPanel(const QString &userFullName, Controller::MainController *mainController, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier);
+
     virtual ~ChatPanel();
+
     void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
     void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));
     void addBpmVoteConfirmationMessage(quint32 newBpmValue, quint32 expireTime);
@@ -72,6 +78,7 @@ private:
 
     EmojiManager emojiManager;
     EmojiWidget *emojiWidget;
+    Controller::MainController *mainController;
 
     static const int MAX_MESSAGES = 50;
 
