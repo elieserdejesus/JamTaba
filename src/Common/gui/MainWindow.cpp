@@ -421,6 +421,10 @@ void MainWindow::setTintColor(const QColor &color)
     // master
     ui.speakerIconLeft->setPixmap(IconFactory::createLowLevelIcon(color));
     ui.speakerIconRight->setPixmap(IconFactory::createHighLevelIcon(color));
+
+    auto chats = chatTabWidget->getChats();
+    for (auto chatPanel : chats)
+        chatPanel->setTintColor(color);
 }
 
 void MainWindow::initializeThemeMenu()
@@ -1458,7 +1462,9 @@ void MainWindow::addMainChatPanel()
 {
     qCDebug(jtGUI) << "adding ninjam chat panel...";
 
-    auto mainChatPanel = chatTabWidget->createPublicChat(JAMTABA_CHAT_BOT_NAME, mainController->getTranslationLanguage(), createTextEditorModifier());
+    auto mainChatPanel = chatTabWidget->createPublicChat(JAMTABA_CHAT_BOT_NAME, createTextEditorModifier());
+
+    mainChatPanel->setTintColor(tintColor);
 
     connect(mainChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
     connect(mainChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendNewChatMessage);
@@ -1484,6 +1490,8 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
 
     auto chatPanel = chatTabWidget->createPrivateChat(remoteUserName, userIP, createTextEditorModifier(), focusNewChat);
     Q_ASSERT(chatPanel);
+
+    chatPanel->setTintColor(tintColor);
 
     chatPanel->setTopicMessage(tr("Private chat with %1").arg(remoteUserName));
 
@@ -1678,6 +1686,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     if (xmitInactivityDetector)
         xmitInactivityDetector->deinitialize();
+
 }
 
 void MainWindow::closeAllLooperWindows()
@@ -2348,7 +2357,7 @@ void MainWindow::setupWidgets()
 
     ui.masterTitleLabel->setVisible(false);
 
-    chatTabWidget = new ChatTabWidget(this, mainController->getBotNames(), &usersColorsPool);
+    chatTabWidget = new ChatTabWidget(this, mainController, &usersColorsPool);
     setChatsVisibility(false);
 
     connect(chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::updateCollapseButtons);

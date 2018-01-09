@@ -73,3 +73,20 @@ ChatMessagePanel #labelMessage
     margin: 0px;
     margin-top: -6px;
 }
+
+/* emoji buttons */
+EmojiWidget QToolButton
+{
+    background-color: rgba(255, 255, 255, 45);
+    border: none;
+    margin: 1px;
+}
+
+/* category buttons */
+EmojiWidget > QToolButton
+{
+    background-color: rgba(255, 255, 255, 30);
+    border: none;
+}
+
+

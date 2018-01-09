@@ -4,6 +4,15 @@
 #include <QImage>
 #include <QPushButton>
 
+QIcon IconFactory::createChatEmojiIcon(const QColor &tintColor)
+{
+    QImage image(":/emoji/smile.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QIcon(QPixmap::fromImage(image));
+}
+
 QIcon IconFactory::createLooperResetIcon(const QColor &tintColor)
 {
     QImage image(":/images/delete_layer.png");

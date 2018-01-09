@@ -934,6 +934,14 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
                 intervalsBeforeInactivityWarning = 1;
         }
 
+        if (root.contains("recentEmojis")) {
+            QJsonArray array = root["recentEmojis"].toArray();
+            for (int i = 0; i < array.count(); ++i) {
+                recentEmojis << array.at(i).toString();
+            }
+
+        }
+
         return true;
     }
     else {
@@ -975,6 +983,10 @@ bool Settings::writeFile(const QList<SettingsObject *> &sections) // io ops ...
         root["usingNarrowTracks"] = usingNarrowedTracks;
         root["masterGain"] = masterFaderGain;
         root["intervalsBeforeInactivityWarning"] = static_cast<int>(intervalsBeforeInactivityWarning);
+
+        if (!recentEmojis.isEmpty()) {
+            root["recentEmojis"] = QJsonArray::fromStringList(recentEmojis);
+        }
 
         // write settings sections
         for (SettingsObject *so : sections) {

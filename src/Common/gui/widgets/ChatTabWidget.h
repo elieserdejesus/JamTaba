@@ -9,12 +9,16 @@ class UsersColorsPool;
 class ChatPanel;
 class TextEditorModifier;
 
+namespace Controller {
+    class MainController;
+}
+
 class ChatTabWidget : public QFrame
 {
     Q_OBJECT
 
 public:
-    ChatTabWidget(QWidget *parent, const QStringList &botNames, UsersColorsPool *colorsPool);
+    ChatTabWidget(QWidget *parent, Controller::MainController *mainController, UsersColorsPool *colorsPool);
 
     void collapse(bool collapse);
 
@@ -32,7 +36,7 @@ public:
 
     ChatPanel *getPrivateChat(const QString &userFullName);
 
-    ChatPanel *createPublicChat(const QString &jamTabaChatBotName, const QString &preferredLanguage, TextEditorModifier *textEditorModifier);
+    ChatPanel *createPublicChat(const QString &jamTabaChatBotName, TextEditorModifier *textEditorModifier);
     ChatPanel *createPrivateChat(const QString &remoteUserName, const QString &userIP, TextEditorModifier *textModifider, bool focusNewChat);
 
     void updatePublicChatTabTitle(uint unreadedMessages = 0);
@@ -55,6 +59,8 @@ private:
     UsersColorsPool *colorsPool;
 
     ChatPanel *mainChat;
+
+    Controller::MainController *mainController;
 
     void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages);
 

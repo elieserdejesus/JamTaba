@@ -3,14 +3,16 @@
 #include <QBoxLayout>
 
 #include "ChatPanel.h"
+#include "MainController.h"
 
-ChatTabWidget::ChatTabWidget(QWidget *parent, const QStringList &botNames, UsersColorsPool *colorsPool) :
+ChatTabWidget::ChatTabWidget(QWidget *parent, Controller::MainController *mainController, UsersColorsPool *colorsPool) :
     QFrame(parent),
-    botNames(botNames),
+    botNames(mainController->getBotNames()),
     colorsPool(colorsPool),
     mainChat(nullptr),
     tabBar(new QTabBar(this)),
-    stackWidget(new QStackedWidget(this))
+    stackWidget(new QStackedWidget(this)),
+    mainController(mainController)
 {
 
     QBoxLayout *layout = new QVBoxLayout();
@@ -60,7 +62,7 @@ void ChatTabWidget::clear()
     mainChat = nullptr;
 }
 
-ChatPanel *ChatTabWidget::createPublicChat(const QString &jamTabaChatBotName, const QString &preferredLanguage, TextEditorModifier *textEditorModifier)
+ChatPanel *ChatTabWidget::createPublicChat(const QString &jamTabaChatBotName, TextEditorModifier *textEditorModifier)
 {
     if (mainChat)
         return mainChat;
@@ -68,7 +70,7 @@ ChatPanel *ChatTabWidget::createPublicChat(const QString &jamTabaChatBotName, co
     //add main chat
     tabBar->addTab(tr("Chat")); // main tab
 
-    mainChat = new ChatPanel(jamTabaChatBotName, botNames, colorsPool, textEditorModifier);
+    mainChat = new ChatPanel(jamTabaChatBotName, mainController, colorsPool, textEditorModifier);
     stackWidget->addWidget(mainChat);
 
     connect(mainChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
@@ -80,7 +82,7 @@ ChatPanel *ChatTabWidget::createPublicChat(const QString &jamTabaChatBotName, co
 
     updatePublicChatTabTitle(); // set and translate the chat tab title
 
-    mainChat->setPreferredTranslationLanguage(preferredLanguage);
+    mainChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
 
     return mainChat;
 
@@ -159,7 +161,7 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
     auto chatPanel = getPrivateChat(userFullName);
 
     if (!chatPanel) {     // create new chat
-        chatPanel = new ChatPanel(userFullName, botNames, colorsPool, textModifider);
+        chatPanel = new ChatPanel(userFullName, mainController, colorsPool, textModifider);
         int tabIndex = tabBar->addTab(remoteUserName);
         stackWidget->addWidget(chatPanel);
 

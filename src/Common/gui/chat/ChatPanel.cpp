@@ -1,23 +1,31 @@
 #include "ChatPanel.h"
 #include "ui_ChatPanel.h"
 #include "ChatMessagePanel.h"
+#include "EmojiWidget.h"
+
 #include <QWidget>
 #include <QScrollBar>
 #include <QDebug>
 #include <QKeyEvent>
 #include <QWidget>
 #include <QGridLayout>
+#include "MainController.h"
+#include "IconFactory.h"
 
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
-ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier) :
+ChatPanel::ChatPanel(const QString &userFullName, Controller::MainController *mainController, UsersColorsPool *colorsPool,
+                        TextEditorModifier *chatInputModifier) :
     QWidget(nullptr),
     userFullName(userFullName),
     ui(new Ui::ChatPanel),
-    botNames(botNames),
+    botNames(mainController->getBotNames()),
     autoTranslating(false),
     colorsPool(colorsPool),
-    unreadedMessages(0)
+    unreadedMessages(0),
+    emojiManager(":/emoji/emoji.json", ":/emoji/icons"),
+    mainController(mainController),
+    tintColor(Qt::black)
 {
     ui->setupUi(this);
     QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
@@ -53,6 +61,35 @@ ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, U
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     previousVerticalScrollBarMaxValue = ui->chatScroll->verticalScrollBar()->value();
+
+    for (auto emojiCode : mainController->getRecentEmojis())
+        emojiManager.addRecent(emojiCode);
+
+    emojiWidget = new EmojiWidget(&emojiManager, this);
+    emojiWidget->setVisible(false);
+    ui->gridLayout->addWidget(emojiWidget, ui->gridLayout->rowCount(), 0, 1, ui->gridLayout->columnCount());
+    emojiWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
+
+    auto emojiIcon = IconFactory::createChatEmojiIcon(tintColor);
+    emojiAction = ui->chatText->addAction(emojiIcon, QLineEdit::LeadingPosition);
+
+    connect(emojiAction, &QAction::triggered, [=](){
+        emojiWidget->setVisible(!emojiWidget->isVisible());
+    });
+
+    connect(emojiWidget, &EmojiWidget::emojiSelected, [=](const QString &emojiCode){
+
+        QString newText = ui->chatText->text();
+        newText.insert(ui->chatText->cursorPosition(), EmojiManager::emojiCodeToUtf8(emojiCode));
+        ui->chatText->setText(newText);
+        ui->chatText->setFocus();
+    });
+
+}
+
+void ChatPanel::setTintColor(const QColor &color)
+{
+    emojiAction->setIcon(IconFactory::createChatEmojiIcon(color));
 }
 
 bool ChatPanel::inputsAreEnabled() const
@@ -214,7 +251,7 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     QColor textColor = isBot ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = backgroundColor;
     ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, userMessage,
-                                                      userNameBackgroundColor, textColor, showTranslationButton, showBlockButton);
+                                                      userNameBackgroundColor, textColor, showTranslationButton, showBlockButton, &emojiManager);
 
     connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
     connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
@@ -268,6 +305,7 @@ QColor ChatPanel::getUserColor(const QString &userName)
 
 ChatPanel::~ChatPanel()
 {
+    mainController->setRecentEmojis(emojiManager.getRecents());
     delete ui;
 }
 
