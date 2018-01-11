@@ -1,19 +1,14 @@
 TEMPLATE = subdirs
 
-SUBDIRS += VstScanner
-
-mac {
-    SUBDIRS += AUScanner
-}
-
-SUBDIRS += Standalone
-
 include(../translations/translations.pri)
 
-win32{
-    SUBDIRS += VstPlugin  #VstPlugin need Qt static build
-}
+      SUBDIRS += Common # compile the commonlib used by Standalone and VST plugin
+      SUBDIRS += VstScanner
+      SUBDIRS += Standalone
+  mac:SUBDIRS += AUScanner
+win32:SUBDIRS += VstPlugin  #VstPlugin need Qt static build
 
-CONFIG += ordered #without 'ordered' QtCreator is freezing during compiling. Possibily something realted with multicore compiling.
+win32:VstPlugin.depends = Common
+Standalone.depends = Common
 
 #SUBDIRS += ThemeEditor

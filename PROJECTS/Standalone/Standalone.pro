@@ -1,18 +1,10 @@
-!include( ../Jamtaba-common.pri ) {
-    error( "Couldn't find the common.pri file!" )
-}
-
-QT += core gui network widgets concurrent multimedia multimediawidgets
-
 TARGET = Jamtaba2
 TEMPLATE = app
 
+include(../Jamtaba-common.pri)
+
 INCLUDEPATH += $$ROOT_PATH/libs/includes/portaudio
 INCLUDEPATH += $$ROOT_PATH/libs/includes/rtmidi
-INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
-INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
-INCLUDEPATH += $$ROOT_PATH/libs/includes/minimp3
-INCLUDEPATH += $$ROOT_PATH/libs/includes/ffmpeg
 
 INCLUDEPATH += $$SOURCE_PATH/Standalone
 INCLUDEPATH += $$SOURCE_PATH/Standalone/gui
@@ -21,9 +13,6 @@ INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x
 
 DEPENDPATH +=  $$ROOT_PATH/libs/includes/portaudio
 DEPENDPATH +=  $$ROOT_PATH/libs/includes/rtmidi
-DEPENDPATH +=  $$ROOT_PATH/libs/includes/ogg
-DEPENDPATH +=  $$ROOT_PATH/libs/includes/vorbis
-DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
 
 VPATH += $$SOURCE_PATH/Standalone
 
@@ -112,13 +101,13 @@ win32{
         QMAKE_LFLAGS += /ignore:4099
 
         !contains(QMAKE_TARGET.arch, x86_64) {
-            message("msvc x86 build") ## Windows x86 (32bit) specific build here
+            #message("msvc x86 build") ## Windows x86 (32bit) specific build here
             LIBS_PATH = "static/win32-msvc"
 
             #after a lot or research Ezee found this userfull link explaining how compile to be compatible with Windows XP: http://www.tripleboot.org/?p=423
             QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
         } else {
-            message("msvc x86_64 build") ## Windows x64 (64bit) specific build here
+            #message("msvc x86_64 build") ## Windows x64 (64bit) specific build here
             LIBS_PATH = "static/win64-msvc"
         }
 

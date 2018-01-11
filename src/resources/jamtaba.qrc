@@ -45,7 +45,6 @@
         <file>css/themes/Game_nm/images/button_checked.png</file>
         <file>css/themes/Game_nm/images/button_disabled.png</file>
         <file>css/themes/Game_nm/images/button_hover.png</file>
-        <file>css/themes/Game_nm/images/button_no_border.png</file>
         <file>css/themes/Game_nm/images/grid.png</file>
         <file>css/themes/Game_nm/images/horizontal_strip.png</file>
     </qresource>
