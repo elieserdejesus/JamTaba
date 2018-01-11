@@ -95,37 +95,27 @@ linux{
 
 win32{
 
-    win32-msvc*{#all msvc compilers
+    #supressing warning about missing .pdb files
+    QMAKE_LFLAGS += /ignore:4099
 
-        #supressing warning about missing .pdb files
-        QMAKE_LFLAGS += /ignore:4099
+    !contains(QMAKE_TARGET.arch, x86_64) {
+        #message("msvc x86 build") ## Windows x86 (32bit) specific build here
+        LIBS_PATH = "static/win32-msvc"
 
-        !contains(QMAKE_TARGET.arch, x86_64) {
-            #message("msvc x86 build") ## Windows x86 (32bit) specific build here
-            LIBS_PATH = "static/win32-msvc"
-
-            #after a lot or research Ezee found this userfull link explaining how compile to be compatible with Windows XP: http://www.tripleboot.org/?p=423
-            QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
-        } else {
-            #message("msvc x86_64 build") ## Windows x64 (64bit) specific build here
-            LIBS_PATH = "static/win64-msvc"
-        }
-
-        CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -lstackwalker
-        else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lvorbisfiled -lvorbisd -loggd -lavcodecd -lavutild -lavformatd -lswscaled -lswresampled -lstackwalkerd
-
-        CONFIG(release, debug|release) {
-            #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
-            QMAKE_CXXFLAGS_RELEASE +=  -GL -Gy -Gw
-            QMAKE_LFLAGS_RELEASE += /LTCG
-        }
+        #after a lot or research Ezee found this userfull link explaining how compile to be compatible with Windows XP: http://www.tripleboot.org/?p=423
+        QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
+    } else {
+        #message("msvc x86_64 build") ## Windows x64 (64bit) specific build here
+        LIBS_PATH = "static/win64-msvc"
     }
 
-    win32-g++{#MinGW compiler
-       message("MinGW x86 build")
-       LIBS_PATH = "static/win32-mingw"
+    CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -lstackwalker
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lvorbisfiled -lvorbisd -loggd -lavcodecd -lavutild -lavformatd -lswscaled -lswresampled -lstackwalkerd
 
-       LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample
+    CONFIG(release, debug|release) {
+        #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
+        QMAKE_CXXFLAGS_RELEASE +=  -GL -Gy -Gw
+        QMAKE_LFLAGS_RELEASE += /LTCG
     }
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 -lPsapi
@@ -138,19 +128,9 @@ win32{
 }
 
 macx{
-    message("Mac build")
+    #message("Mac x86_64 build")
+    LIBS_PATH = "static/mac64"
 
-    #supressing some warnings
-    #QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
-    #QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
-
-    macx-clang-32 {
-        message("i386 build") ## mac 32bit specific build here
-        LIBS_PATH = "static/mac32"
-    } else {
-        message("x86_64 build") ## mac 64bit specific build here
-        LIBS_PATH = "static/mac64"
-    }
     LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -liconv
     LIBS += -framework IOKit
     LIBS += -framework CoreAudio
@@ -178,10 +158,4 @@ linux{
 
     LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavformat -lavcodec -lswscale -lavutil -lswresample
     LIBS += -lasound
-}
-
-!*-msvc*{ #non microsoft compilers
-    #supressing some g++ annoying warnings
-    QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
-    QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
 }

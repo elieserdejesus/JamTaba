@@ -1,11 +1,7 @@
-!include( ../Jamtaba-common.pri ) {
-    error( "Couldn't find the Jamtaba-common.pri file!" )
-}
+include(../Jamtaba-common.pri)
 
 #CONFIG += qtwinmigrate-uselib
-!include(../qtwinmigrate/src/qtwinmigrate.pri) {
-    error( "Couldn't find the qtwinmigrate common.pri file!" )
-}
+include(../qtwinmigrate/src/qtwinmigrate.pri)
 
 QTPLUGIN += dsengine # necessary to use QCamera inside VST plugin
 
@@ -13,17 +9,15 @@ TARGET = "JamtabaVST2"  #using this name (with a '2' suffix) to match the previo
 TEMPLATE = lib
 CONFIG += shared
 
-win32-msvc* {
-    DEFINES += _CRT_SECURE_NO_WARNINGS
-
-    QMAKE_LFLAGS += /ignore:4099 #supressing warning about missing .pdb files
-}
-
 INCLUDEPATH += $$SOURCE_PATH/Common
 INCLUDEPATH += $$SOURCE_PATH/Plugins
 INCLUDEPATH += $$SOURCE_PATH/Plugins/VST
 
 win32{
+    DEFINES += _CRT_SECURE_NO_WARNINGS
+
+    QMAKE_LFLAGS += /ignore:4099 #supressing warning about missing .pdb files
+
     INCLUDEPATH += "$$VST_SDK_PATH/"
     INCLUDEPATH += "$$VST_SDK_PATH/pluginterfaces/vst2.x/"
     INCLUDEPATH += "$$VST_SDK_PATH/public.sdk/source/vst2.x"
