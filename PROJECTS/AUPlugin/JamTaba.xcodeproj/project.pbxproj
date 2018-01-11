@@ -196,6 +196,13 @@
 		2A1362B11F659589004953CF /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362B01F659589004953CF /* CoreMedia.framework */; };
 		2A1362B31F6595D2004953CF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362B21F6595D2004953CF /* AVFoundation.framework */; };
 		2A1362B51F659642004953CF /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362B41F659642004953CF /* CoreVideo.framework */; };
+		2A14FF6A2007A68800ADAEB0 /* EmojiManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A14FF662007A68800ADAEB0 /* EmojiManager.cpp */; };
+		2A14FF6B2007A68800ADAEB0 /* EmojiManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A14FF672007A68800ADAEB0 /* EmojiManager.h */; };
+		2A14FF6C2007A68800ADAEB0 /* EmojiWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A14FF682007A68800ADAEB0 /* EmojiWidget.cpp */; };
+		2A14FF6D2007A68800ADAEB0 /* EmojiWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A14FF692007A68800ADAEB0 /* EmojiWidget.h */; };
+		2A14FF702007A6DA00ADAEB0 /* IconFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A14FF6E2007A6DA00ADAEB0 /* IconFactory.cpp */; };
+		2A14FF712007A6DA00ADAEB0 /* IconFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A14FF6F2007A6DA00ADAEB0 /* IconFactory.h */; };
+		2A14FF722007A6FC00ADAEB0 /* EmojiWidget.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A14FF692007A68800ADAEB0 /* EmojiWidget.h */; };
 		2A1C7A301E0B5F2C00C7984D /* AudioMixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1A1E0AF46800BEF1FF /* AudioMixer.cpp */; };
 		2A1C7A311E0B5F2C00C7984D /* AudioNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1C1E0AF46800BEF1FF /* AudioNode.cpp */; };
 		2A1C7A321E0B5F2C00C7984D /* AudioNodeProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1E1E0AF46800BEF1FF /* AudioNodeProcessor.cpp */; };
@@ -738,6 +745,12 @@
 		2A1362B01F659589004953CF /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		2A1362B21F6595D2004953CF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2A1362B41F659642004953CF /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		2A14FF662007A68800ADAEB0 /* EmojiManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EmojiManager.cpp; sourceTree = "<group>"; };
+		2A14FF672007A68800ADAEB0 /* EmojiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiManager.h; sourceTree = "<group>"; };
+		2A14FF682007A68800ADAEB0 /* EmojiWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EmojiWidget.cpp; sourceTree = "<group>"; };
+		2A14FF692007A68800ADAEB0 /* EmojiWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiWidget.h; sourceTree = "<group>"; };
+		2A14FF6E2007A6DA00ADAEB0 /* IconFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IconFactory.cpp; sourceTree = "<group>"; };
+		2A14FF6F2007A6DA00ADAEB0 /* IconFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconFactory.h; sourceTree = "<group>"; };
 		2A1C7AB21E0B66AC00C7984D /* JamTaba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamTaba.h; sourceTree = "<group>"; };
 		2A2D725B1EABC04E00979920 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Slider.h; sourceTree = "<group>"; };
 		2A2D725C1EABC04E00979920 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Slider.cpp; sourceTree = "<group>"; };
@@ -1183,6 +1196,8 @@
 		2A0DBB661E0AF46900BEF1FF /* gui */ = {
 			isa = PBXGroup;
 			children = (
+				2A14FF6E2007A6DA00ADAEB0 /* IconFactory.cpp */,
+				2A14FF6F2007A6DA00ADAEB0 /* IconFactory.h */,
 				2A4E3F9B1F99877300677E9C /* MetronomePanel.cpp */,
 				2A4E3F9C1F99877300677E9C /* MetronomePanel.h */,
 				2A4E3F9D1F99877300677E9C /* MetronomePanel.ui */,
@@ -1256,6 +1271,10 @@
 		2A0DBB6E1E0AF46900BEF1FF /* chat */ = {
 			isa = PBXGroup;
 			children = (
+				2A14FF662007A68800ADAEB0 /* EmojiManager.cpp */,
+				2A14FF672007A68800ADAEB0 /* EmojiManager.h */,
+				2A14FF682007A68800ADAEB0 /* EmojiWidget.cpp */,
+				2A14FF692007A68800ADAEB0 /* EmojiWidget.h */,
 				2A0DBB6F1E0AF46900BEF1FF /* ChatMessagePanel.cpp */,
 				2A0DBB701E0AF46900BEF1FF /* ChatMessagePanel.h */,
 				2A0DBB711E0AF46900BEF1FF /* ChatMessagePanel.ui */,
@@ -1688,6 +1707,7 @@
 				2A67BDA01E410F3200A8FFF1 /* PerformanceMonitor.h in Headers */,
 				2A1362901F6586A4004953CF /* FFMpegCommon.h in Headers */,
 				2A0DBE671E0AF46E00BEF1FF /* ReaperProjectGenerator.h in Headers */,
+				2A14FF712007A6DA00ADAEB0 /* IconFactory.h in Headers */,
 				2AF5A9601E761D9900D1150A /* Encoder.h in Headers */,
 				2A0DBDC71E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */,
 				2A4E3F9F1F99877300677E9C /* MetronomePanel.h in Headers */,
@@ -1761,6 +1781,7 @@
 				2A0DBE1D1E0AF46D00BEF1FF /* RtMidiDriver.h in Headers */,
 				2A0DBDE51E0AF46C00BEF1FF /* MapWidget.h in Headers */,
 				2A4340361E91B06400FE3CB7 /* FileUtils.h in Headers */,
+				2A14FF6B2007A68800ADAEB0 /* EmojiManager.h in Headers */,
 				2A0DBCAF1E0AF46900BEF1FF /* RoomStreamerNode.h in Headers */,
 				2A0DBC711E0AF46900BEF1FF /* LocalInputGroup.h in Headers */,
 				2AF5A9391E76192F00D1150A /* WaveFileWriter.h in Headers */,
@@ -1771,6 +1792,7 @@
 				2A0DBD1B1E0AF46A00BEF1FF /* ChordsPanel.h in Headers */,
 				2A0DBDB91E0AF46B00BEF1FF /* ThemeLoader.h in Headers */,
 				2A0DBE3B1E0AF46D00BEF1FF /* Service.h in Headers */,
+				2A14FF6D2007A68800ADAEB0 /* EmojiWidget.h in Headers */,
 				2A0DBE091E0AF46C00BEF1FF /* MainController.h in Headers */,
 				2A0DBDC11E0AF46B00BEF1FF /* UserNameDialog.h in Headers */,
 				2A3AE1E31E80868500D391C5 /* Mp3FileReader.h in Headers */,
@@ -1948,6 +1970,7 @@
 				2A4E3FA11F99879800677E9C /* MetronomePanel.h in Sources */,
 				2A4E3FAF1F99885600677E9C /* InactivityDetector.h in Sources */,
 				2A4E3FB11F99889200677E9C /* BoostSpinBox.h in Sources */,
+				2A14FF722007A6FC00ADAEB0 /* EmojiWidget.h in Sources */,
 				2AF5A9411E761B9300D1150A /* LooperWindow.ui in Sources */,
 				2A0DBE961E0AF79300BEF1FF /* PrivateServerDialog.ui in Sources */,
 				2A0DBE981E0AF7D700BEF1FF /* ChatMessagePanel.ui in Sources */,
@@ -1979,8 +2002,10 @@
 				2A1362AB1F658842004953CF /* VideoFrameGrabber.h in Sources */,
 				2A120A6E1E0BF01800E0E596 /* Configurator.cpp in Sources */,
 				2AF5A93E1E761A3000D1150A /* LooperWindow.h in Sources */,
+				2A14FF6C2007A68800ADAEB0 /* EmojiWidget.cpp in Sources */,
 				2A120A5F1E0BEF4F00E0E596 /* IntervalProgressDisplay.h in Sources */,
 				2A120A691E0BEF8000E0E596 /* PreferencesDialog.h in Sources */,
+				2A14FF6A2007A68800ADAEB0 /* EmojiManager.cpp in Sources */,
 				2A120A6D1E0BEFA500E0E596 /* NinjamController.h in Sources */,
 				2AF5A9341E76192F00D1150A /* OggFileReader.cpp in Sources */,
 				2A3669141E0DBFA9006CD583 /* JamTabaAUPlugin.mm in Sources */,
@@ -2084,6 +2109,7 @@
 				2A1C7A641E0B5F2C00C7984D /* PrivateServerDialog.cpp in Sources */,
 				2A67BD9F1E410F3200A8FFF1 /* MacPerformanceMonitor.cpp in Sources */,
 				2A4E3FAD1F99882B00677E9C /* InactivityDetector.cpp in Sources */,
+				2A14FF702007A6DA00ADAEB0 /* IconFactory.cpp in Sources */,
 				2A1C7A651E0B5F2C00C7984D /* ThemeLoader.cpp in Sources */,
 				2A1C7A661E0B5F2C00C7984D /* TrackGroupView.cpp in Sources */,
 				2A1C7A671E0B5F2C00C7984D /* UserNameDialog.cpp in Sources */,
