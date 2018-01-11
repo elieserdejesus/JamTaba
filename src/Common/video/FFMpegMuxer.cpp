@@ -1,11 +1,12 @@
 #include "FFMpegMuxer.h"
 
+#include <cstring>
+
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QtConcurrent/QtConcurrent>
 #include <QMutex>
-#include <cstring> // to use std:memset in mingw
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class BaseOutputStream
@@ -73,19 +74,19 @@ public:
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-FFMpegMuxer::FFMpegMuxer()
-    : encodeAudio(false),
+FFMpegMuxer::FFMpegMuxer() :
       encodeVideo(false),
+      encodeAudio(false),
+      videoPts(0),
       videoStream(nullptr),
       audioStream(nullptr),
+      formatContext(nullptr),
+      avioContext(nullptr),
+      buffer(nullptr),
       videoResolution(QSize(352, 288)),
       videoFrameRate(25),
       videoBitRate(static_cast<uint>(FFMpegMuxer::LOW_VIDEO_QUALITY)),
-      videoPts(0),
-      formatContext(nullptr),
-      avioContext(nullptr),
       initialized(false),
-      buffer(nullptr),
       startNewIntervalRequested(false)
 {
     av_register_all();
@@ -177,7 +178,7 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
     int ret = avformat_alloc_output_context2(&formatContext, format, nullptr, nullptr); // allocate the output media context
     if (ret < 0) {
-        qCritical() << "Error allocing output format context " << av_err2str(ret);
+        qCritical() << "Error allocing output format context " << av_error_to_qt_string(ret);
         return false;
     }
 
@@ -249,7 +250,7 @@ void FFMpegMuxer::finishCurrentInterval()
 
     int ret = av_write_trailer(formatContext);
     if(ret != 0)
-        qCritical() << "Decoder Error while writing trailer:" << av_err2str(ret) << ret;
+        qCritical() << "Decoder Error while writing trailer:" << av_error_to_qt_string(ret) << ret;
 
 
     avio_flush(avioContext);
@@ -481,7 +482,7 @@ void FFMpegMuxer::openAudioCodec(AVCodec *codec)
  */
 bool FFMpegMuxer::doEncodeAudioFrame()
 {
-    AVPacket packet = { 0 }; // data and size must be 0;
+    AVPacket packet = AVPacket(); // avoiding initializing with {0} because GCC is emiting a warning -> data and size must be 0;
     AVFrame *frame;
 
     av_init_packet(&packet);
@@ -519,14 +520,14 @@ bool FFMpegMuxer::doEncodeAudioFrame()
     int gotPacket;
     int ret = avcodec_encode_audio2(codecContext, &packet, frame, &gotPacket);
     if (ret < 0) {
-        qCritical() << "Error encoding audio frame: " << av_err2str(ret);
+        qCritical() << "Error encoding audio frame: " << av_error_to_qt_string(ret);
         exit(1);
     }
 
     if (gotPacket) {
         ret = writeFrame(&codecContext->time_base, audioStream->stream, &packet);
         if (ret < 0) {
-            qCritical() << "Error while writing audio frame: " << av_err2str(ret);
+            qCritical() << "Error while writing audio frame: " << av_error_to_qt_string(ret);
             exit(1);
         }
     }
@@ -565,7 +566,7 @@ bool FFMpegMuxer::openVideoCodec(AVCodec *codec)
 
     int ret = avcodec_open2(codecContext, codec, nullptr); /* open the codec */
     if (ret < 0) {
-        qCritical() << "Could not open video codec: " << av_err2str(ret);
+        qCritical() << "Could not open video codec: " << av_error_to_qt_string(ret);
         return false;
     }
 
@@ -716,7 +717,7 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
     }
 
     int gotPacket = 0;
-    AVPacket packet = { 0 };
+    AVPacket packet = AVPacket();// avoiding {0} initializer because GCC is emitting warning;
 
     fillFrameWithImageData(image);
 
@@ -729,7 +730,7 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
     avpicture_free((AVPicture *)videoStream->frame);
 
     if (ret < 0) {
-        qCritical() << "Error encoding video frame: " << av_err2str(ret);
+        qCritical() << "Error encoding video frame: " << av_error_to_qt_string(ret);
         return false;
     }
 
@@ -739,7 +740,7 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
         ret = 0;
 
     if (ret < 0) {
-        qCritical() << "Error while writing video frame: " << av_err2str(ret);
+        qCritical() << "Error while writing video frame: " << av_error_to_qt_string(ret);
         return false;
     }
 
