@@ -77,14 +77,14 @@ AudioNode::AudioNode() :
     internalInputBuffer(2),
     internalOutputBuffer(2),
     lastPeak(),
+    pan(0),
+    leftGain(1.0),
+    rightGain(1.0),
     muted(false),
     soloed(false),
     activated(true),
     gain(1),
     boost(1),
-    pan(0),
-    leftGain(1.0),
-    rightGain(1.0),
     resamplingCorrection(0)
 {
 

@@ -236,11 +236,11 @@ class NinjamController::InputChannelChangedEvent : public SchedulableEvent
 QList<QString> NinjamController::chatBlockedUsers; // initializing the static member
 
 NinjamController::NinjamController(Controller::MainController* mainController) :
+    intervalPosition(0),
+    samplesInInterval(0),
     mainController(mainController),
     metronomeTrackNode(createMetronomeTrackNode( mainController->getSampleRate())),
-    intervalPosition(0),
     lastBeat(0),
-    samplesInInterval(0),
     currentBpi(0),
     currentBpm(0),
     mutex(QMutex::Recursive),

@@ -9,9 +9,9 @@
 using namespace Audio;
 
 Plugin::Plugin(const PluginDescriptor &pluginDescriptor) :
-    descriptor(pluginDescriptor),
     name(pluginDescriptor.getName()),
-    editorWindow(nullptr)
+    editorWindow(nullptr),
+    descriptor(pluginDescriptor)
 {
     //
 }

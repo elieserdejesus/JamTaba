@@ -9,13 +9,13 @@
 using namespace Audio;
 
 LocalInputNode::MidiInput::MidiInput() :
-      lastMidiActivity(0),
-      channel(-1),
-      device(-1),
-      lowerNote(0),
-      higherNote(127),
-      transpose(0),
-      learning(false)
+    device(-1),
+    channel(-1),
+    lastMidiActivity(0),
+    lowerNote(0),
+    higherNote(127),
+    transpose(0),
+    learning(false)
 {
     //
 }
@@ -80,10 +80,10 @@ bool LocalInputNode::MidiInput::accept(const Midi::MidiMessage &message) const
 
 LocalInputNode::LocalInputNode(Controller::MainController *controller, int parentChannelIndex, bool isMono) :
     channelGroupIndex(parentChannelIndex),
-    mainController(controller),
     stereoInverted(false),
     receivingRoutedMidiInput(false),
     routingMidiInput(false),
+    mainController(controller),
     looper(LocalInputNode::createLooper(controller))
 {
     Q_UNUSED(isMono)

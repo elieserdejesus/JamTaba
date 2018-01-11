@@ -47,9 +47,9 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const Login::RoomInfo
     metronomePanel(nullptr),
     tracksLayout(TracksLayout::VerticalLayout),
     tracksSize(TracksSize::WIDE),
+    metronomeFloatingWindow(nullptr),
     roomInfo(roomInfo),
-    usersColorsPool(mainWindow->getUsersColorsPool()),
-    metronomeFloatingWindow(nullptr)
+    usersColorsPool(mainWindow->getUsersColorsPool())
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow ctor";
     ui->setupUi(this);

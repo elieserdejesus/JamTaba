@@ -34,19 +34,19 @@ const QString MainController::CRASH_FLAG_STRING = "JamTaba closed without crash 
 // ++++++++++++++++++++++++++++++++++++++++++++++
 
 MainController::MainController(const Settings &settings) :
-    audioMixer(44100),
-    currentStreamingRoomID(-1000),
-    mutex(QMutex::Recursive),
-    started(false),
-    ipToLocationResolver(nullptr),
     loginService(this),
+    audioMixer(44100),
     settings(settings),
     mainWindow(nullptr),
+    mutex(QMutex::Recursive),
+    videoEncoder(),
+    currentStreamingRoomID(-1000),
+    started(false),
+    ipToLocationResolver(nullptr),
     masterGain(1),
-    lastInputTrackID(0),
     usersDataCache(Configurator::getInstance()->getCacheDir()),
-    lastFrameTimeStamp(0),
-    videoEncoder()
+    lastInputTrackID(0),
+    lastFrameTimeStamp(0)
 {
 
     QDir cacheDir = Configurator::getInstance()->getCacheDir();

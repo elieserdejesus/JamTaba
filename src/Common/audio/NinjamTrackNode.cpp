@@ -122,10 +122,10 @@ quint32 NinjamTrackNode::IntervalDecoder::getDecodedSamples(Audio::SamplesBuffer
 
 NinjamTrackNode::NinjamTrackNode(int ID) :
     ID(ID),
+    lowCut(new NinjamTrackNode::LowCutFilter(44100)),
     processingLastPartOfInterval(false),
     currentDecoder(nullptr),
-    decodersMutex(QMutex::NonRecursive),
-    lowCut(new NinjamTrackNode::LowCutFilter(44100))
+    decodersMutex(QMutex::NonRecursive)
 {
 
 }

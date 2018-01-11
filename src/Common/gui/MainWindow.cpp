@@ -51,25 +51,27 @@ const QString MainWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
 
 MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent) :
     QMainWindow(parent),
-    busyDialog(0),
     mainController(mainController),
-    ninjamWindow(nullptr),
-    roomToJump(nullptr),
-    chordsPanel(nullptr),
-    lastPerformanceMonitorUpdate(0),
     camera(nullptr),
     videoFrameGrabber(nullptr),
     cameraView(nullptr),
-    cameraLayout(nullptr),
     cameraCombo(nullptr),
+    cameraLayout(nullptr),
     bottomCollapsed(false),
-    buttonCollapseBottomArea(nullptr),
-    buttonCollapseChat(nullptr),
+    busyDialog(nullptr),
+    bpmVotingExpirationTimer(nullptr),
+    bpiVotingExpiratonTimer(nullptr),
     buttonCollapseLocalChannels(nullptr),
+    buttonCollapseChat(nullptr),
+    buttonCollapseBottomArea(nullptr),
     performanceMonitorLabel(nullptr),
+    xmitInactivityDetector(nullptr),
     chatTabWidget(nullptr),
-    xmitInactivityDetector(nullptr)
-    {
+    ninjamWindow(nullptr),
+    roomToJump(nullptr),
+    chordsPanel(nullptr),
+    lastPerformanceMonitorUpdate(0)
+{
     qCDebug(jtGUI) << "Creating MainWindow...";
 
     ui.setupUi(this);

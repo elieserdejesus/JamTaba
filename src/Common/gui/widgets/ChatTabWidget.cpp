@@ -7,11 +7,11 @@
 
 ChatTabWidget::ChatTabWidget(QWidget *parent, Controller::MainController *mainController, UsersColorsPool *colorsPool) :
     QFrame(parent),
+    tabBar(new QTabBar(this)),
+    stackWidget(new QStackedWidget(this)),
     botNames(mainController->getBotNames()),
     colorsPool(colorsPool),
     mainChat(nullptr),
-    tabBar(new QTabBar(this)),
-    stackWidget(new QStackedWidget(this)),
     mainController(mainController)
 {
 

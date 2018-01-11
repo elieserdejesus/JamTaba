@@ -13,14 +13,14 @@ using namespace Audio;
 
 Filter::Filter (FilterType type, double samplerate, double frequency, double Q, double gain) :
     sampleRate(samplerate),
-    type(type),
     z1(0.0),
     z2(0.0),
     a1(0.0),
     a2(0.0),
     b0(1.0),
     b1(0.0),
-    b2(0.0)
+    b2(0.0),
+    type(type)
 {
     initialize(type, frequency, Q, gain);
 }

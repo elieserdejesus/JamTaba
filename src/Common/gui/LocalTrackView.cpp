@@ -112,9 +112,9 @@ LocalTrackView::LooperIconFactory LocalTrackView::looperIconFactory(":/images/lo
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),
     inputNode(nullptr),
-    peakMetersOnly(false),
     buttonStereoInversion(createStereoInversionButton()),
-    buttonLooper(createLooperButton())
+    buttonLooper(createLooperButton()),
+    peakMetersOnly(false)
 {
     Q_ASSERT(mainController);
 
