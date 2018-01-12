@@ -45,11 +45,6 @@ ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, U
         }
     });
 
-    if (chatInputModifier) {
-        bool finishEditorPressingReturnKey = false;
-        chatInputModifier->modify(ui->chatText, finishEditorPressingReturnKey);
-    }
-
     ui->topicLabel->setVisible(false);
 
     // this event is used to auto scroll down when new messages are added
@@ -83,6 +78,11 @@ ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, U
         ui->chatText->setText(newText);
         ui->chatText->setFocus();
     });
+
+    if (chatInputModifier) {
+        bool finishEditorPressingReturnKey = false;
+        chatInputModifier->modify(ui->chatText, finishEditorPressingReturnKey);
+    }
 
 }
 
