@@ -19,16 +19,16 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
 ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg,
                                    const QColor &userNameBackgroundColor,
                                    const QColor &textColor,
-                                   bool showTranslationButton, bool showBlockButton, EmojiManager *emojiManager) :
+                                   bool showTranslationButton, bool showBlockButton, Emojifier *emojifier) :
     QFrame(parent),
     ui(new Ui::ChatMessagePanel),
     userName(userName),
-    emojiManager(emojiManager)
+    emojifier(emojifier)
 {
     ui->setupUi(this);
 
-    if (emojiManager)
-        emojifiedText = emojiManager->emojify(msg);
+    if (emojifier)
+        emojifiedText = emojifier->emojify(msg);
     else
         emojifiedText = msg;
 
@@ -186,6 +186,6 @@ void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply)
 void ChatMessagePanel::setTranslatedMessage(const QString &translatedMessage)
 {
     ui->translateButton->setChecked(true);
-    translatedText = emojiManager ? emojiManager->emojify(translatedMessage) : translatedMessage;
+    translatedText = emojifier ? emojifier->emojify(translatedMessage) : translatedMessage;
     setMessageLabelText("<i>" + translatedText + "</i>");
 }

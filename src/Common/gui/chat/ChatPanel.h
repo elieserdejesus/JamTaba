@@ -9,9 +9,6 @@
 #include <QAction>
 
 #include "chords/ChordProgression.h"
-#include "UsersColorsPool.h"
-#include "TextEditorModifier.h"
-#include "EmojiManager.h"
 
 namespace Ui {
 class ChatPanel;
@@ -19,6 +16,9 @@ class ChatPanel;
 
 class ChatMessagePanel;
 class EmojiWidget;
+class EmojiManager;
+class TextEditorModifier;
+class UsersColorsPool;
 
 namespace Controller {
 class MainController;
@@ -29,7 +29,7 @@ class ChatPanel : public QWidget
     Q_OBJECT
 
 public:
-    ChatPanel(const QString &userFullName, Controller::MainController *mainController, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier);
+    ChatPanel(const QString &userFullName, const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier, EmojiManager *emojiManager);
 
     virtual ~ChatPanel();
 
@@ -80,9 +80,8 @@ private:
     QStringList botNames;
     static const QColor BOT_COLOR;
 
-    EmojiManager emojiManager;
     EmojiWidget *emojiWidget;
-    Controller::MainController *mainController;
+    EmojiManager *emojiManager;
 
     QAction *emojiAction;
     QColor tintColor;

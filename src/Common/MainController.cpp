@@ -46,7 +46,8 @@ MainController::MainController(const Settings &settings) :
     masterGain(1),
     usersDataCache(Configurator::getInstance()->getCacheDir()),
     lastInputTrackID(0),
-    lastFrameTimeStamp(0)
+    lastFrameTimeStamp(0),
+    emojiManager(":/emoji/emoji.json", ":/emoji/icons")
 {
 
     QDir cacheDir = Configurator::getInstance()->getCacheDir();
@@ -59,6 +60,9 @@ MainController::MainController(const Settings &settings) :
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ClipSortLogGenerator()));
 
     connect(&videoEncoder, &FFMpegMuxer::dataEncoded, this, &MainController::uploadEncodedVideoData);
+
+    for (auto emojiCode: settings.getRecentEmojis())
+        emojiManager.addRecent(emojiCode);
 }
 
 void MainController::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
@@ -852,6 +856,7 @@ MainController::~MainController()
 void MainController::saveLastUserSettings(const Persistence::LocalInputTrackSettings &inputsSettings)
 {
     if (inputsSettings.isValid()) { // avoid save empty settings
+        settings.setRecentEmojis(emojiManager.getRecents());
         settings.storeMasterGain(Utils::poweredGainToLinear(getMasterGain()));
         settings.save(inputsSettings);
     }

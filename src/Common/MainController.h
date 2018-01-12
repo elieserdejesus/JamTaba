@@ -17,6 +17,7 @@
 #include "UploadIntervalData.h"
 #include "audio/core/LocalInputGroup.h"
 #include "video/FFMpegMuxer.h"
+#include "EmojiManager.h"
 
 class MainWindow;
 
@@ -183,9 +184,6 @@ public:
     QString getMetronomeOffBeatFile() const;
     QString getMetronomeAccentBeatFile() const;
 
-    QStringList getRecentEmojis() const;
-    void setRecentEmojis(const QStringList &recentEmojis);
-
     void saveEncodedAudio(const QString &userName, quint8 channelIndex, const QByteArray &encodedAudio);
 
     Audio::AbstractMp3Streamer *getRoomStreamer() const;
@@ -234,6 +232,8 @@ public:
 
     static bool crashedInLastExecution();
     static QString getVersionFromLogContent();
+
+    EmojiManager *getEmojiManager() const;
 
 signals:
     void ipResolved(const QString &ip);
@@ -335,6 +335,8 @@ private:
     void enqueueAudioDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
     void enqueueVideoDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
 
+    EmojiManager emojiManager;
+
 protected slots:
 
     // ninjam
@@ -355,14 +357,9 @@ protected slots:
 
 };
 
-inline QStringList MainController::getRecentEmojis() const
+inline EmojiManager *MainController::getEmojiManager() const
 {
-    return settings.getRecentEmojis();
-}
-
-inline void MainController::setRecentEmojis(const QStringList &recentEmojis)
-{
-    settings.setRecentEmojis(recentEmojis);
+    return const_cast<EmojiManager *>(&emojiManager);
 }
 
 inline Persistence::UsersDataCache *MainController::getUsersDataCache()

@@ -9,7 +9,7 @@ namespace Ui {
 class ChatMessagePanel;
 }
 
-class EmojiManager;
+class Emojifier;
 
 class ChatMessagePanel : public QFrame
 {
@@ -17,7 +17,8 @@ class ChatMessagePanel : public QFrame
 
 public:
     explicit ChatMessagePanel(QWidget *parent);
-    ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg, const QColor &userNameBackgroundColor, const QColor &textColor, bool showTranslationButton, bool showBlockButton, EmojiManager *emojiManager = nullptr);
+    ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg, const QColor &userNameBackgroundColor,
+                     const QColor &textColor, bool showTranslationButton, bool showBlockButton, Emojifier *emojifier = nullptr);
     ~ChatMessagePanel();
     void setPrefferedTranslationLanguage(const QString &targetLanguage);
     void translate();
@@ -47,7 +48,7 @@ private:
 
     QString userName;
 
-    EmojiManager *emojiManager;
+    Emojifier *emojifier;
 
     static QString replaceLinksInString(const QString &string);
 

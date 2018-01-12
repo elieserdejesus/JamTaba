@@ -98,7 +98,7 @@ bool emojiLessThan(const Emoji &e1, const Emoji &e2)
     return e1.sortOrder < e2.sortOrder;
 }
 
- bool EmojiManager::codeIsEmoji(uint code)
+ bool EmojiManager::codeIsEmoji(uint code) const
  {
      return generalMap.contains(code);
  }
@@ -135,7 +135,7 @@ QStringList EmojiManager::getCategories() const
     return EmojiManager::categories;
 }
 
-QList<Emoji> EmojiManager::getByCategory(const QString &category)
+QList<Emoji> EmojiManager::getByCategory(const QString &category) const
 {
     return categorizedMap[category];
 }
@@ -195,7 +195,7 @@ void EmojiManager::loadData(const QString &jsonPath)
     }
 }
 
-Emoji EmojiManager::getByCode(uint emojiCode)
+Emoji EmojiManager::getByCode(uint emojiCode) const
 {
     return generalMap[emojiCode];
 }

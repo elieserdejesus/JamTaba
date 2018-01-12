@@ -9,22 +9,24 @@
 #include <QKeyEvent>
 #include <QWidget>
 #include <QGridLayout>
-#include "MainController.h"
 #include "IconFactory.h"
+
+#include "TextEditorModifier.h"
+#include "UsersColorsPool.h"
+#include "EmojiManager.h"
 
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
-ChatPanel::ChatPanel(const QString &userFullName, Controller::MainController *mainController, UsersColorsPool *colorsPool,
-                        TextEditorModifier *chatInputModifier) :
+ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, UsersColorsPool *colorsPool,
+                        TextEditorModifier *chatInputModifier, EmojiManager *emojiManager) :
     QWidget(nullptr),
     userFullName(userFullName),
     ui(new Ui::ChatPanel),
-    botNames(mainController->getBotNames()),
+    emojiManager(emojiManager),
+    botNames(botNames),
     autoTranslating(false),
     colorsPool(colorsPool),
     unreadedMessages(0),
-    emojiManager(":/emoji/emoji.json", ":/emoji/icons"),
-    mainController(mainController),
     tintColor(Qt::black)
 {
     ui->setupUi(this);
@@ -62,10 +64,7 @@ ChatPanel::ChatPanel(const QString &userFullName, Controller::MainController *ma
 
     previousVerticalScrollBarMaxValue = ui->chatScroll->verticalScrollBar()->value();
 
-    for (auto emojiCode : mainController->getRecentEmojis())
-        emojiManager.addRecent(emojiCode);
-
-    emojiWidget = new EmojiWidget(&emojiManager, this);
+    emojiWidget = new EmojiWidget(emojiManager, this);
     emojiWidget->setVisible(false);
     ui->gridLayout->addWidget(emojiWidget, ui->gridLayout->rowCount(), 0, 1, ui->gridLayout->columnCount());
     emojiWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
@@ -251,7 +250,7 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     QColor textColor = isBot ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = backgroundColor;
     ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, userMessage,
-                                                      userNameBackgroundColor, textColor, showTranslationButton, showBlockButton, &emojiManager);
+                                                      userNameBackgroundColor, textColor, showTranslationButton, showBlockButton, emojiManager);
 
     connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
     connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
@@ -305,7 +304,6 @@ QColor ChatPanel::getUserColor(const QString &userName)
 
 ChatPanel::~ChatPanel()
 {
-    mainController->setRecentEmojis(emojiManager.getRecents());
     delete ui;
 }
 

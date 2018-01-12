@@ -24,7 +24,13 @@ public:
     bool isMusical;
 };
 
-class EmojiManager
+class Emojifier
+{
+public:
+    virtual QString emojify(const QString &string) = 0;
+};
+
+class EmojiManager : public Emojifier
 {
 public:
 
@@ -32,12 +38,12 @@ public:
 
     EmojiManager(const QString &emojisJsonPath, const QString &emojiIconsPath);
 
-    QList<Emoji> getByCategory(const QString  &category);
-    Emoji getByCode(uint emojiCode);
+    QList<Emoji> getByCategory(const QString  &category) const;
+    Emoji getByCode(uint emojiCode) const;
     QStringList getCategories() const;
 
-    bool codeIsEmoji(uint code);
-    QString emojify(const QString &string);
+    bool codeIsEmoji(uint code) const;
+    QString emojify(const QString &string) override;
 
     QAbstractItemModel *getDataModel(int completeRole);
 

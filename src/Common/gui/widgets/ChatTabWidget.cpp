@@ -3,6 +3,7 @@
 #include <QBoxLayout>
 
 #include "ChatPanel.h"
+#include "UsersColorsPool.h"
 #include "MainController.h"
 
 ChatTabWidget::ChatTabWidget(QWidget *parent, Controller::MainController *mainController, UsersColorsPool *colorsPool) :
@@ -70,7 +71,9 @@ ChatPanel *ChatTabWidget::createPublicChat(const QString &jamTabaChatBotName, Te
     //add main chat
     tabBar->addTab(tr("Chat")); // main tab
 
-    mainChat = new ChatPanel(jamTabaChatBotName, mainController, colorsPool, textEditorModifier);
+    auto botNames = mainController->getBotNames();
+    auto emojiManager = mainController->getEmojiManager();
+    mainChat = new ChatPanel(jamTabaChatBotName, botNames, colorsPool, textEditorModifier, emojiManager);
     stackWidget->addWidget(mainChat);
 
     connect(mainChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
@@ -161,7 +164,8 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
     auto chatPanel = getPrivateChat(userFullName);
 
     if (!chatPanel) {     // create new chat
-        chatPanel = new ChatPanel(userFullName, mainController, colorsPool, textModifider);
+        auto botNames = mainController->getBotNames();
+        chatPanel = new ChatPanel(userFullName, botNames, colorsPool, textModifider, emojiManager);
         int tabIndex = tabBar->addTab(remoteUserName);
         stackWidget->addWidget(chatPanel);
 

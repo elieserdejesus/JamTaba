@@ -40,6 +40,7 @@ private slots:
     void showCategory(const QString &category);
 
 private:
+
     EmojiManager *emojiManager;
 
     QLayout *createCategoriesLayout();
