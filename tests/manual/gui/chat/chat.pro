@@ -11,6 +11,7 @@ VPATH += ../../../../src/Common
 HEADERS += log/logging.h
 HEADERS += gui/chat/ChatMessagePanel.h
 HEADERS += gui/chat/ChatPanel.h
+HEADERS += gui/chat/EmojiWidget.h
 HEADERS += gui/chat/ChatTextEditor.h
 HEADERS += gui/UsersColorsPool.h
 
@@ -18,6 +19,9 @@ SOURCES += log/logging.cpp
 SOURCES += gui/chat/ChatMessagePanel.cpp
 SOURCES += gui/chat/ChatPanel.cpp
 SOURCES += gui/chat/ChatTextEditor.cpp
+SOURCES += gui/chat/EmojiWidget.cpp
+SOURCES += gui/chat/EmojiManager.cpp
+SOURCES += gui/IconFactory.cpp
 SOURCES += gui/UsersColorsPool.cpp
 
 SOURCES += test_Chat.cpp

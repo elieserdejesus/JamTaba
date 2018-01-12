@@ -1,5 +1,7 @@
 #include <QApplication>
 #include "ChatMessagePanel.h"
+#include "UsersColorsPool.h"
+#include "EmojiManager.h"
 #include "ChatPanel.h"
 #include <QDebug>
 #include <QDir>
@@ -16,7 +18,9 @@ int main(int argc, char *argv[])
     UsersColorsPool colorsPool;
     QStringList botNames("ninjamers.servebeer.com");
 
-    ChatPanel chatPanel(botNames, &colorsPool, nullptr);
+    EmojiManager emojiManager("", "");
+
+    ChatPanel chatPanel("Tester", botNames, &colorsPool, nullptr, &emojiManager);
     chatPanel.setObjectName(QStringLiteral("ChatPanel"));
 
     chatPanel.addMessage("UserName", "message", true);
