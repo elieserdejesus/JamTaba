@@ -11,16 +11,6 @@ namespace Ninjam {
 
 // some functions used only in the Ninjam namespace...
 
-int getRawStringSize(char *data, int maxLenght)
-{
-    int p = 0;
-    for (; p < maxLenght-1; ++p) {
-        if (data[p] == '\0')
-            break;
-    }
-    return p + 1;
-}
-
 QString extractString(QDataStream &stream)
 {
     quint8 byte;
@@ -231,24 +221,16 @@ void ServerChatMessage::readFrom(QDataStream &stream)
      USERCOUNT <users> <maxusers> -- server status
      */
 
-    static char data[4096];
-    stream.readRawData(data, qMin((int)payload, 4096));
-    quint32 consumedBytes = 0;
+    const static uint BUFFER_SIZE = 4096;
+    static char data[BUFFER_SIZE];
 
-    int commandStringSize = Ninjam::getRawStringSize(data, payload);
-    QString commandString = QString::fromUtf8(data, commandStringSize-1);// remove the NULL terminator
-    commandType = commandTypeFromString(commandString);
+    int readed = stream.readRawData(data, qMin(static_cast<uint>(payload), BUFFER_SIZE));
 
-    consumedBytes += commandStringSize;
+    auto strings = QString::fromUtf8(data, readed).split(QChar('\0'));
 
-    int parsedArgs = 0;
-    while (consumedBytes < payload && parsedArgs < 4) {
-        int argStringSize = Ninjam::getRawStringSize(data + consumedBytes, payload - consumedBytes);
-        QString arg = QString::fromUtf8(data + consumedBytes, argStringSize-1);
-        arguments.append(arg);
-        consumedBytes += argStringSize;
-        parsedArgs++;
-    }
+    commandType = commandTypeFromString(strings.takeFirst()); // the first string is the msg command
+
+    arguments = strings; // the 4 last strings are the arguments
 }
 
 ChatCommandType ServerChatMessage::commandTypeFromString(const QString &string)

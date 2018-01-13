@@ -24,8 +24,10 @@ void TestServerMessages::chatMessage_data(){
      PART <username> -- user leaves server
      USERCOUNT <users> <maxusers> -- server status
      */
-    QTest::newRow("Broadcast message") << QString("MSG") << QString("message sender name") <<  QString("message content") << QString("") << QString("");
+    QTest::newRow("Broadcast message") << QString("MSG") << QString("message sender name") <<  QString("message content 😀") << QString("") << QString("");
     QTest::newRow("Topic message") << QString("TOPIC") << QString("message sender name") <<  QString("Topic message content") << QString("") << QString("");
+    QTest::newRow("Topic including special symbols") << QString("TOPIC") << QString() <<  QString("😀") << QString() << QString();
+    //TOPIC\u0000\u0000Local server \u00E9\u00E3\u00E7\u00F3\u0000\u0000
     QTest::newRow("Joint message") << QString("JOIN") << QString("user name") <<  QString("") << QString("") << QString("");
     QTest::newRow("Part message") << QString("PART") << QString("user name") <<  QString("") << QString("") << QString("");
     QTest::newRow("User count message") << QString("USERCOUNT") << QString("4") <<  QString("8") << QString("") << QString("");
@@ -39,7 +41,7 @@ void TestServerMessages::chatMessage()
     QFETCH(QString, arg3);
     QFETCH(QString, arg4);
 
-    quint32 payload = command.size() + arg1.size() + arg2.size() + arg3.size() + arg4.size();
+    quint32 payload = command.size() + arg1.toUtf8().size() + arg2.toUtf8().size() + arg3.toUtf8().size() + arg4.toUtf8().size();
     payload += 5; //add a NUL byte for each string
 
     QStringList args;
@@ -53,11 +55,12 @@ void TestServerMessages::chatMessage()
         QDataStream stream(&device, QIODevice::WriteOnly);
         stream.setByteOrder(QDataStream::LittleEndian);
 
-        stream.writeRawData(command.toStdString().c_str(), command.size());
+        stream.writeRawData(command.toUtf8().data(), command.size());
         stream << quint8('\0');
 
-        foreach (const QString &arg, args) {
-            stream.writeRawData(arg.toStdString().c_str(), arg.size());
+        for (const QString &arg : args) {
+            QByteArray byteArray = arg.toUtf8();
+            stream.writeRawData(byteArray.data(), byteArray.size());
             stream << quint8('\0');
         }
         QCOMPARE(device.size(), (int)payload);
