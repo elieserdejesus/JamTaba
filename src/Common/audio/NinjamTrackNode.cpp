@@ -1,5 +1,5 @@
 #include "NinjamTrackNode.h"
-#include "audio/core/AudioDriver.h"
+
 #include <QDataStream>
 #include <QDebug>
 #include <QList>
@@ -7,7 +7,10 @@
 #include <QMutexLocker>
 #include <QDateTime>
 #include <QtConcurrent/QtConcurrent>
+
 #include "audio/core/Filters.h"
+#include "audio/core/AudioDriver.h"
+#include "audio/vorbis/VorbisDecoder.h"
 
 const double NinjamTrackNode::LOW_CUT_DRASTIC_FREQUENCY = 220.0; // in Hertz
 const double NinjamTrackNode::LOW_CUT_NORMAL_FREQUENCY = 120.0; // in Hertz

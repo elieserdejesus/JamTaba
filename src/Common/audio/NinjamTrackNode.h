@@ -3,7 +3,6 @@
 
 #include "core/AudioNode.h"
 #include <QByteArray>
-#include "vorbis/VorbisDecoder.h"
 #include "SamplesBufferResampler.h"
 
 namespace Audio {
