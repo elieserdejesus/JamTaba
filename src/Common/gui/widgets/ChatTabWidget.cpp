@@ -1,6 +1,8 @@
 #include "ChatTabWidget.h"
 
 #include <QBoxLayout>
+#include <QStyle>
+#include <QRegularExpression>
 
 #include "ChatPanel.h"
 #include "UsersColorsPool.h"

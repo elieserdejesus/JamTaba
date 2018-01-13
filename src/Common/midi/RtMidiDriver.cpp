@@ -43,7 +43,6 @@ void RtMidiDriver::setInputDevicesStatus(const QList<bool> &statuses){
     }
 
     MidiDriver::setInputDevicesStatus(validStatuses);
-
     for (int s = 0; s < validStatuses.size(); ++s) {
         midiStreams.append(new RtMidiIn());
     }
