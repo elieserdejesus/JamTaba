@@ -19,7 +19,11 @@ win32 {
 }
 
 LIBS += -L$${COMMON_PATH} -lCommon
+unix:TARGETDEPS += $${COMMON_PATH}/Common.a
+win32:TARGETDEPS += $${COMMON_PATH}/Common.lib
+
 INCLUDEPATH += $$shadowed($$PWD)/Common #including ui_xxx generated files by common lib
+DEPENDPATH += $$shadowed($$PWD)/Common
 
 INCLUDEPATH += $$SOURCE_PATH/Common
 INCLUDEPATH += $$SOURCE_PATH/Common/gui
@@ -27,6 +31,14 @@ INCLUDEPATH += $$SOURCE_PATH/Common/gui/widgets
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chords
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/chat
 INCLUDEPATH += $$SOURCE_PATH/Common/gui/screensaver
+
+DEPENDPATH += $$SOURCE_PATH/Common
+DEPENDPATH += $$SOURCE_PATH/Common/gui
+DEPENDPATH += $$SOURCE_PATH/Common/gui/widgets
+DEPENDPATH += $$SOURCE_PATH/Common/gui/chords
+DEPENDPATH += $$SOURCE_PATH/Common/gui/chat
+DEPENDPATH += $$SOURCE_PATH/Common/gui/screensaver
+
 
 INCLUDEPATH += $$SOURCE_PATH/Libs/RtMidi
 
