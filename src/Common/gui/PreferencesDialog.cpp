@@ -6,7 +6,7 @@
 #include <QFileDialog>
 #include "persistence/Settings.h"
 #include "MetronomeUtils.h"
-#include "audio/vorbis/VorbisEncoder.h"
+#include "audio/vorbis/Vorbis.h"
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
@@ -165,9 +165,9 @@ void PreferencesDialog::accept()
 void PreferencesDialog::populateEncoderQualityComboBox()
 {
     ui->comboBoxEncoderQuality->clear();
-    ui->comboBoxEncoderQuality->addItem(tr("Low (good for slow internet connections)"), VorbisEncoder::QUALITY_LOW);
-    ui->comboBoxEncoderQuality->addItem(tr("Normal (default)"), VorbisEncoder::QUALITY_NORMAL);
-    ui->comboBoxEncoderQuality->addItem(tr("High (for good internet connections only)"), VorbisEncoder::QUALITY_HIGH);
+    ui->comboBoxEncoderQuality->addItem(tr("Low (good for slow internet connections)"), vorbis::EncoderQualityLow);
+    ui->comboBoxEncoderQuality->addItem(tr("Normal (default)"), vorbis::EncoderQualityNormal);
+    ui->comboBoxEncoderQuality->addItem(tr("High (for good internet connections only)"), vorbis::EncoderQualityHigh);
 
     bool usingCustomQuality = usingCustomEncodingQuality();
     if (usingCustomQuality)
@@ -176,11 +176,11 @@ void PreferencesDialog::populateEncoderQualityComboBox()
     //select the correct item in combobox
     if (!usingCustomQuality) {
         float quality = settings->getEncodingQuality();
-        if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_LOW))
+        if (qFuzzyCompare(quality, vorbis::EncoderQualityLow))
             ui->comboBoxEncoderQuality->setCurrentIndex(0);
-        else if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_NORMAL))
+        else if (qFuzzyCompare(quality, vorbis::EncoderQualityNormal))
             ui->comboBoxEncoderQuality->setCurrentIndex(1);
-        else if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_HIGH))
+        else if (qFuzzyCompare(quality, vorbis::EncoderQualityHigh))
                     ui->comboBoxEncoderQuality->setCurrentIndex(2);
     }
     else {
@@ -192,13 +192,13 @@ bool PreferencesDialog::usingCustomEncodingQuality()
 {
     float currentQuality = settings->getEncodingQuality();
 
-    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_LOW))
+    if (qFuzzyCompare(currentQuality, vorbis::EncoderQualityLow))
         return false;
 
-    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_NORMAL))
+    if (qFuzzyCompare(currentQuality, vorbis::EncoderQualityNormal))
         return false;
 
-    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_HIGH))
+    if (qFuzzyCompare(currentQuality, vorbis::EncoderQualityHigh))
         return false;
 
     return true;

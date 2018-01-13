@@ -1,17 +1,20 @@
+#ifndef VORBIS_DECODER_H
+#define VORBIS_DECODER_H
+
 #include <vorbis/vorbisfile.h>
 #include "audio/core/SamplesBuffer.h"
 #include <QByteArray>
 
-#ifndef VORBIS_DECODER_H
-#define VORBIS_DECODER_H
+namespace vorbis {
 
-class VorbisDecoder
+
+class Decoder
 {
 
 public:
 
-    VorbisDecoder();
-    ~VorbisDecoder();
+    Decoder();
+    ~Decoder();
     const Audio::SamplesBuffer &decode(int maxSamplesToDecode);
 
     bool isStereo() const;
@@ -39,14 +42,16 @@ private:
     size_t consumeTo(void *oggOutBuffer, size_t bytesToConsume);
 };
 
-inline bool VorbisDecoder::isStereo() const
+inline bool Decoder::isStereo() const
 {
     return getChannels() == 2;
 }
 
-inline bool VorbisDecoder::isInitialized() const
+inline bool Decoder::isInitialized() const
 {
     return initialized;
 }
+
+} // namespace
 
 #endif

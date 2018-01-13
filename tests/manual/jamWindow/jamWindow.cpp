@@ -1,6 +1,9 @@
 #include <QApplication>
 #include <QDebug>
 
+//#include "Configurator.h"
+#include "persistence/Settings.h"
+
 //#include "../Standalone/MainControllerStandalone.h"
 //#include "../Standalone/gui/MainWindowStandalone.h"
 //#include "NinjamRoomWindow.h"
@@ -13,26 +16,20 @@
 //using namespace Controller;
 
 
-#include <Libs/RtMidi/RtMidi.h>
 int main(int argc, char *argv[])
 {
 
-    RtMidiIn in;
-    in.getPortCount();
+    QApplication::setApplicationName("JamTaba 2");
+    QApplication::setApplicationVersion(APP_VERSION);
 
-    return 0;
-
-//    QApplication::setApplicationName("JamTaba 2");
-//    QApplication::setApplicationVersion(APP_VERSION);
-
-//    QApplication app(argc, argv);
+    QApplication app(argc, argv);
 
 //    Configurator* configurator = Configurator::getInstance();
 //    if (!configurator->setUp())
 //        qCritical() << "JTBConfig->setUp() FAILED !" ;
 
-//    Persistence::Settings settings;
-//    settings.load();
+    Persistence::Settings settings;
+    settings.load();
 //    MainControllerStandalone controller(settings, &app);
 
 //    MainWindowStandalone *mainWindow = new MainWindowStandalone(&controller);

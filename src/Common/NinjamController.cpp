@@ -904,7 +904,7 @@ void NinjamController::recreateEncoderForChannel(int channelIndex)
         int sampleRate = mainController->getSampleRate();
         float encodingQuality = mainController->getEncodingQuality();
 
-        encoders[channelIndex] = new VorbisEncoder(maxChannelsForEncoding, sampleRate, encodingQuality);
+        encoders[channelIndex] = new vorbis::Encoder(maxChannelsForEncoding, sampleRate, encodingQuality);
     }
 }
 

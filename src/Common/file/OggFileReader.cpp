@@ -15,7 +15,7 @@ bool OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffe
         return false;
     }
 
-    VorbisDecoder decoder;
+    vorbis::Decoder decoder;
     decoder.setInputData(oggFile.readAll());
     decoder.initialize(); // read the ogg headers from file
     sampleRate = decoder.getSampleRate();

@@ -1,28 +1,24 @@
 #include "VorbisEncoder.h"
 #include <QDebug>
-//#include <ctime>
 #include <QThread>
 #include "log/Logging.h"
+#include "Vorbis.h"
 
+using namespace vorbis;
 
-// these vorbis quality values are discussed here: https://github.com/elieserdejesus/JamTaba/issues/456#issuecomment-226920734
-const float VorbisEncoder::QUALITY_LOW    = -0.1f;  // ~48 – ~64 kbps
-const float VorbisEncoder::QUALITY_NORMAL =  0;     // ~64 – ~80 kbps.
-const float VorbisEncoder::QUALITY_HIGH   =  0.3f;  // ~112 – ~128 kbps. In ogg vorbis 112 Kbps is better than 128 kbps mp3
-
-VorbisEncoder::VorbisEncoder()
+Encoder::Encoder()
     :initialized(false)
 {
-    init(1, 44100, QUALITY_NORMAL);
+    init(1, 44100, vorbis::EncoderQualityNormal);
 }
 
-VorbisEncoder::VorbisEncoder(uint channels, uint sampleRate, float quality):
+Encoder::Encoder(uint channels, uint sampleRate, float quality):
     initialized(false)
 {
     init(channels, sampleRate, quality);
 }
 
-void VorbisEncoder::init(uint channels, uint sampleRate, float quality)
+void Encoder::init(uint channels, uint sampleRate, float quality)
 {
     vorbis_info_init(&info);
 
@@ -32,7 +28,7 @@ void VorbisEncoder::init(uint channels, uint sampleRate, float quality)
     vorbis_comment_init(&comment);
     vorbis_comment_add_tag(&comment, "Encoder", "Jamtaba");
 
-    qCDebug(jtNinjamVorbisEncoder) << "Initializing VorbisEncoder sampleRate:" << sampleRate << " channels: " << channels << " quality: " << quality;
+    qCDebug(jtNinjamVorbisEncoder) << "Initializing Encoder sampleRate:" << sampleRate << " channels: " << channels << " quality: " << quality;
 
     streamID = 0;
     isFirstEncoding = true;
@@ -40,7 +36,7 @@ void VorbisEncoder::init(uint channels, uint sampleRate, float quality)
     totalEncoded = 0;
 }
 
-void VorbisEncoder::clearState()
+void Encoder::clearState()
 {
     ogg_stream_clear(&streamState);
     vorbis_block_clear(&block);
@@ -48,7 +44,7 @@ void VorbisEncoder::clearState()
     outBuffer.clear();
 }
 
-VorbisEncoder::~VorbisEncoder()
+Encoder::~Encoder()
 {
     qCDebug(jtNinjamVorbisEncoder) << "ENCODER DESTRUCTOR! Thread:" <<  QThread::currentThreadId();
     if (initialized) {
@@ -58,7 +54,7 @@ VorbisEncoder::~VorbisEncoder()
     vorbis_info_clear(&info);
 }
 
-void VorbisEncoder::encodeFirstVorbisHeaders()
+void Encoder::encodeFirstVorbisHeaders()
 {
     vorbis_analysis_init(&dspState, &info);
     vorbis_block_init(&dspState, &block);
@@ -85,13 +81,13 @@ void VorbisEncoder::encodeFirstVorbisHeaders()
 }
 
 /**
- * @brief VorbisEncoder::encode
+ * @brief Encoder::encode
  * @param data array
  * @param dataLenght Data Lenght in bytes
  * @param channels number of channels
  * @return
  */
-QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer &audioBuffer)
+QByteArray Encoder::encode(const Audio::SamplesBuffer &audioBuffer)
 {
     if (!initialized) {
         if (!isFirstEncoding) {
@@ -146,7 +142,7 @@ QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer &audioBuffer)
     return outBuffer;
 }
 
-QByteArray VorbisEncoder::finishIntervalEncoding()
+QByteArray Encoder::finishIntervalEncoding()
 {
     QByteArray data = encode(Audio::SamplesBuffer::ZERO_BUFFER);//pass zero samples to vorbis and finalize the encoding process
     initialized = false;

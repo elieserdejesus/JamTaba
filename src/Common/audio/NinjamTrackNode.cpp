@@ -70,7 +70,7 @@ public:
     inline bool isStereo() const { return vorbisDecoder.isStereo(); }
     void stopDecoding();
 private:
-    VorbisDecoder vorbisDecoder;
+    vorbis::Decoder vorbisDecoder;
     Audio::SamplesBuffer decodedBuffer;
     QMutex mutex;
 };

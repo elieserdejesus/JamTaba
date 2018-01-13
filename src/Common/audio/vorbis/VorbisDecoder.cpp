@@ -10,7 +10,9 @@
 #include <QThread>
 #include "log/Logging.h"
 
-VorbisDecoder::VorbisDecoder() :
+using namespace vorbis;
+
+Decoder::Decoder() :
       internalBuffer(2, 4096),
       initialized(false),
       vorbisInput()
@@ -18,7 +20,7 @@ VorbisDecoder::VorbisDecoder() :
     vorbisFile.vi = nullptr;
 }
 
-VorbisDecoder::~VorbisDecoder()
+Decoder::~Decoder()
 {
     qCDebug(jtNinjamVorbisDecoder) << "Destrutor Vorbis Decoder";
 
@@ -26,7 +28,7 @@ VorbisDecoder::~VorbisDecoder()
         ov_clear(&vorbisFile);
 }
 
-bool VorbisDecoder::isMono() const
+bool Decoder::isMono() const
 {
     if (vorbisFile.vi)
         return vorbisFile.vi->channels == 1;
@@ -34,7 +36,7 @@ bool VorbisDecoder::isMono() const
     return true;
 }
 
-int VorbisDecoder::getChannels() const
+int Decoder::getChannels() const
 {
     if (vorbisFile.vi)
         return vorbisFile.vi->channels;
@@ -42,7 +44,7 @@ int VorbisDecoder::getChannels() const
     return 1;
 }
 
-int VorbisDecoder::getSampleRate() const
+int Decoder::getSampleRate() const
 {
     if (vorbisFile.vi)
         return vorbisFile.vi->rate;
@@ -52,7 +54,7 @@ int VorbisDecoder::getSampleRate() const
 
 
 //+++++++++++++++++++++++++++++++++++++++++++
-size_t VorbisDecoder::consumeTo(void *oggOutBuffer, size_t bytesToConsume){
+size_t Decoder::consumeTo(void *oggOutBuffer, size_t bytesToConsume){
     size_t len = qMin( bytesToConsume, (size_t)vorbisInput.size());
     if (len > 0) {
         memcpy(oggOutBuffer, vorbisInput.data(), len);
@@ -63,13 +65,13 @@ size_t VorbisDecoder::consumeTo(void *oggOutBuffer, size_t bytesToConsume){
 }
 
 //vorbisfile read callback
-size_t VorbisDecoder::readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoder)
+size_t Decoder::readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoder)
 {
-    VorbisDecoder* decoderInstance = reinterpret_cast<VorbisDecoder*>(decoder);
+    vorbis::Decoder* decoderInstance = reinterpret_cast<vorbis::Decoder*>(decoder);
     return decoderInstance->consumeTo(oggOutBuffer, size * nmemb);
 }
 
-const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode)
+const Audio::SamplesBuffer &Decoder::decode(int maxSamplesToDecode)
 {
     if (!initialized) {
         initialize();
@@ -107,13 +109,13 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode)
     return internalBuffer;
 }
 
-void VorbisDecoder::setInputData(const QByteArray &vorbisData)
+void Decoder::setInputData(const QByteArray &vorbisData)
 {
     vorbisInput.clear();
     vorbisInput.append(vorbisData);
 }
 
-bool VorbisDecoder::initialize()
+bool Decoder::initialize()
 {
     ov_callbacks callbacks;
     callbacks.read_func = readOgg;
