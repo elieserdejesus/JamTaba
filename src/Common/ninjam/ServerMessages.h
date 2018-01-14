@@ -307,7 +307,7 @@ public:
 private:
     QByteArray GUID;
     quint32 estimatedSize;
-    quint8 fourCC[4]; // = new byte[4];
+    char fourCC[4];
     quint8 channelIndex;
     QString userName;
 

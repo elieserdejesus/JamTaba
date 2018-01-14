@@ -23,6 +23,12 @@ QString extractString(QDataStream &stream)
     }
     return QString::fromUtf8(byteArray.data(), byteArray.size());
 }
+
+QString extractString(QDataStream &stream, quint32 size)
+{
+    return QString::fromUtf8(stream.device()->read(size));
+}
+
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
@@ -89,7 +95,10 @@ ServerAuthReplyMessage::ServerAuthReplyMessage(quint32 payload) :
 void ServerAuthReplyMessage::readFrom(QDataStream &stream)
 {
     stream >> flag;
-    message = Ninjam::extractString(stream);
+
+    quint32 stringSize = payload - sizeof(flag) - sizeof(maxChannels);
+    message = Ninjam::extractString(stream, stringSize);
+
     stream >> maxChannels;
 }
 
@@ -235,13 +244,22 @@ void ServerChatMessage::readFrom(QDataStream &stream)
 
 ChatCommandType ServerChatMessage::commandTypeFromString(const QString &string)
 {
-    // "MSG", "PRIVMSG", "TOPIC", "JOIN", "PART", "USERCOUNT"
-    if (string == "MSG") return ChatCommandType::MSG;
-    if (string == "PRIVMSG") return ChatCommandType::PRIVMSG;
-    if (string == "TOPIC") return ChatCommandType::TOPIC;
-    if (string == "JOIN") return ChatCommandType::JOIN;
-    if (string == "PART") return ChatCommandType::PART;
-    /*if(string == "USERCOUNT")*/ return ChatCommandType::USERCOUNT;
+    if (string == "MSG")
+        return ChatCommandType::MSG;
+
+    if (string == "PRIVMSG")
+        return ChatCommandType::PRIVMSG;
+
+    if (string == "TOPIC")
+        return ChatCommandType::TOPIC;
+
+    if (string == "JOIN")
+        return ChatCommandType::JOIN;
+
+    if (string == "PART")
+        return ChatCommandType::PART;
+
+    return ChatCommandType::USERCOUNT; /*if(string == "USERCOUNT")*/
 }
 
 void ServerChatMessage::printDebug(QDebug &dbg) const
@@ -253,27 +271,24 @@ void ServerChatMessage::printDebug(QDebug &dbg) const
 
 // ++++++++++++++++++++++++++++++++++++++++++++++
 DownloadIntervalBegin::DownloadIntervalBegin(quint32 payload) :
-    ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_BEGIN, payload)
+    ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_BEGIN, payload),
+    GUID(16, Qt::Uninitialized)
 {
     //
 }
 
 void DownloadIntervalBegin::readFrom(QDataStream &stream)
 {
-    // TODO the code to read GUID bytes is duplicated in DownloadIntervalWrite
-    quint8 byte;
-    for (int i = 0; i < 16; ++i) {
-        stream >> byte;
-        GUID.append(byte);
-    }
+    stream.readRawData(GUID.data(), GUID.size()); // 16 bytes
 
     stream >> estimatedSize;
 
-    for (int i = 0; i < 4; ++i)
-        stream >> fourCC[i];
+    stream.readRawData(&fourCC[0], 4); // 4 bytes
 
     stream >> channelIndex;
-    userName = Ninjam::extractString(stream);
+
+    quint32 stringSize = payload - 16 - sizeof(estimatedSize) - 4 - sizeof(channelIndex);
+    userName = Ninjam::extractString(stream, stringSize);
 }
 
 bool DownloadIntervalBegin::isAudio() const
@@ -310,27 +325,22 @@ void DownloadIntervalWrite::printDebug(QDebug &dbg) const
 }
 
 DownloadIntervalWrite::DownloadIntervalWrite(quint32 payload) :
-    ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_WRITE, payload)
+    ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_WRITE, payload),
+    GUID(16, Qt::Uninitialized),
+    encodedData(payload - 17, Qt::Uninitialized)
 {
+
 }
 
 void DownloadIntervalWrite::readFrom(QDataStream &stream)
 {
-    quint8 byte;
-    for (int i = 0; i < 16; ++i) {
-        stream >> byte;
-        GUID.append(byte);
-    }
+    stream.readRawData(GUID.data(), 16); // 16 bytes
 
     stream >> flags;
 
-    quint32 lenght = payload - 17;
-    if (lenght >= 0) {
-        encodedData.resize(lenght);
-        int bytesReaded = stream.readRawData(encodedData.data(), lenght);
-        if (bytesReaded < 0)
-            qWarning() << "Error reading encoded data!  return:" << bytesReaded << " payload:" << payload << " encodedData.size:" << encodedData.size();
-    }
+    int bytesReaded = stream.readRawData(encodedData.data(), encodedData.size());
+    if (bytesReaded < 0)
+        qWarning() << "Error reading encoded data!  return:" << bytesReaded << " payload:" << payload << " encodedData.size:" << encodedData.size();
 }
 
 // ++++++++++++++++++
