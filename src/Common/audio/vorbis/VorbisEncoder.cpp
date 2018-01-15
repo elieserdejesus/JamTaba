@@ -38,7 +38,10 @@ void Encoder::init(uint channels, uint sampleRate, float quality)
 
 void Encoder::clearState()
 {
-    ogg_stream_clear(&streamState);
+    for (int i = 0; i < 2; ++i) {
+        ogg_stream_clear(&streamState);
+    }
+
     vorbis_block_clear(&block);
     vorbis_dsp_clear(&dspState);
     outBuffer.clear();
@@ -58,6 +61,7 @@ void Encoder::encodeFirstVorbisHeaders()
 {
     vorbis_analysis_init(&dspState, &info);
     vorbis_block_init(&dspState, &block);
+
     ogg_stream_init(&streamState, streamID++);
 
     // writing headers

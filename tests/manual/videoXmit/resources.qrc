@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>audio_and_video.ogv</file>
+        <file>audio_only.ogg</file>
+    </qresource>
+</RCC>
