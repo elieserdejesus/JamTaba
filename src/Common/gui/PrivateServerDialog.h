@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
 
@@ -16,7 +16,7 @@ class PrivateServerDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PrivateServerDialog(QWidget *parent, Controller::MainController *mainController);
+    explicit PrivateServerDialog(QWidget *parent, controller::MainController *mainController);
     ~PrivateServerDialog();
     QString getServer() const;
     QString getPassword() const;
@@ -30,7 +30,7 @@ signals:
 
 private:
     Ui::PrivateServerDialog *ui;
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
 
     void buildComboBoxItems();
 };

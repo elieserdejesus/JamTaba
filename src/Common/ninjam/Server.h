@@ -5,7 +5,7 @@
 
 class QString;
 
-namespace Ninjam {
+namespace ninjam {
 class User;
 class UserChannel;
 

@@ -6,7 +6,7 @@
 
 #include <QtGlobal>
 
-namespace Audio {
+namespace audio {
 
 class SamplesBuffer
 {
@@ -61,7 +61,7 @@ public:
 
     void invertStereo();
 
-    Audio::AudioPeak computePeak();
+    audio::AudioPeak computePeak();
 
     void add(const SamplesBuffer &buffer);
 

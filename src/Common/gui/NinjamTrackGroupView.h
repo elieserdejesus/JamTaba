@@ -8,11 +8,11 @@
 #include "NinjamTrackView.h"
 #include "video/VideoWidget.h"
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
 
-namespace Persistence {
+namespace persistence {
 class CacheEntry;
 }
 
@@ -27,8 +27,8 @@ class NinjamTrackGroupView : public TrackGroupView
     Q_OBJECT
 
 public:
-    NinjamTrackGroupView(Controller::MainController *mainController, long trackID,
-                         const QString &channelName, const QColor &userColor, const Persistence::CacheEntry &initialValues);
+    NinjamTrackGroupView(controller::MainController *mainController, long trackID,
+                         const QString &channelName, const QColor &userColor, const persistence::CacheEntry &initialValues);
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
@@ -62,7 +62,7 @@ protected:
     void populateContextMenu(QMenu &contextMenu) override;
 
 private:
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
     QLabel *countryLabel;
     QLabel *countryFlag;
     MarqueeLabel *groupNameLabel;

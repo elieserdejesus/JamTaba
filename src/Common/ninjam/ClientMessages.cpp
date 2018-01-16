@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QDataStream>
 
-using namespace Ninjam;
+using namespace ninjam;
 
 ClientMessage::ClientMessage(quint8 msgCode, quint32 payload) :
     msgType(msgCode),
@@ -371,13 +371,13 @@ void ClientIntervalUploadWrite::printDebug(QDebug &dbg) const
 
 //+++++++++++++++++++++++++++
 
-QDebug& Ninjam::operator<<(QDebug &dbg, const ClientMessage &message)
+QDebug& ninjam::operator<<(QDebug &dbg, const ClientMessage &message)
 {
     message.printDebug(dbg);
     return dbg;
 }
 
-QByteArray &Ninjam::operator <<(QByteArray &byteArray, const ClientMessage &message)
+QByteArray &ninjam::operator <<(QByteArray &byteArray, const ClientMessage &message)
 {
     message.serializeTo(byteArray);
     return byteArray;

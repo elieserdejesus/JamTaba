@@ -8,7 +8,7 @@
 #include "UsersColorsPool.h"
 #include "MainController.h"
 
-ChatTabWidget::ChatTabWidget(QWidget *parent, Controller::MainController *mainController, UsersColorsPool *colorsPool) :
+ChatTabWidget::ChatTabWidget(QWidget *parent, controller::MainController *mainController, UsersColorsPool *colorsPool) :
     QFrame(parent),
     tabBar(new QTabBar(this)),
     stackWidget(new QStackedWidget(this)),

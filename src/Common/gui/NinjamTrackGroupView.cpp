@@ -11,8 +11,8 @@
 #include <QStackedLayout>
 #include <QtConcurrent>
 
-using namespace Controller;
-using namespace Persistence;
+using namespace controller;
+using namespace persistence;
 
 const uint NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT = 350;
 const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.64;
@@ -98,7 +98,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
     // reacting to chat block/unblock events
-    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    auto ninjamController = mainController->getNinjamController();
     connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
     connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
     connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoStream()));
@@ -179,7 +179,7 @@ void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
     QString localIP;
     auto service = mainController->getNinjamService();
     if (service) {
-        localIP = Ninjam::extractUserIP(service->getConnectedUserName());
+        localIP = ninjam::extractUserIP(service->getConnectedUserName());
     }
     privateChatAction->setEnabled(!userIP.isEmpty() && !localIP.isEmpty()); // admin IPs are empty
 
@@ -211,7 +211,7 @@ void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
     if (ip != this->userIP)
         return;
 
-    Geo::Location location = mainController->getGeoLocation(ip);
+    auto location = mainController->getGeoLocation(ip);
     QString countryCode = location.getCountryCode().toLower();
     QString flagImage = ":/flags/flags/" + countryCode +".png";
     countryFlag->setPixmap(QPixmap(flagImage));

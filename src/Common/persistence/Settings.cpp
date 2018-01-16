@@ -13,7 +13,7 @@
 #include "log/Logging.h"
 #include "audio/vorbis/Vorbis.h"
 
-using namespace Persistence;
+using namespace persistence;
 
 #if defined(Q_OS_WIN64) || defined(Q_OS_MAC64)
 QString Settings::fileName = "Jamtaba64.json";
@@ -515,7 +515,7 @@ Channel::Channel(const QString &name) :
 {
 }
 
-Plugin::Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data) :
+Plugin::Plugin(const audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data) :
     name(descriptor.getName()),
     path(descriptor.getPath()),
     manufacturer(descriptor.getManufacturer()),
@@ -598,7 +598,7 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
                 subChannelObject["routingMidiInput"] = sub.routingMidiToFirstSubchannel;
 
             QJsonArray pluginsArray;
-            for (const Persistence::Plugin &plugin : sub.getPlugins()) {
+            for (const auto &plugin : sub.getPlugins()) {
                 QJsonObject pluginObject;
                 pluginObject["name"]     = plugin.name;
 
@@ -639,15 +639,15 @@ Plugin LocalInputTrackSettings::jsonObjectToPlugin(QJsonObject pluginObject)
 
     QString dataString = getValueFromJson(pluginObject, "data", QString());
 
-    Audio::PluginDescriptor::Category category = static_cast<Audio::PluginDescriptor::Category>(getValueFromJson(pluginObject, "category", quint8(1))); // 1 is the VST enum value
+    auto category = static_cast<audio::PluginDescriptor::Category>(getValueFromJson(pluginObject, "category", quint8(1))); // 1 is the VST enum value
 
     QByteArray rawByteArray(dataString.toStdString().c_str());
 
     QString manufacturer = getValueFromJson(pluginObject, "manufacturer", QString());
 
-    Audio::PluginDescriptor descriptor(name, category, manufacturer, path);
+    audio::PluginDescriptor descriptor(name, category, manufacturer, path);
 
-    return Persistence::Plugin(descriptor, bypassed, QByteArray::fromBase64(rawByteArray));
+    return persistence::Plugin(descriptor, bypassed, QByteArray::fromBase64(rawByteArray));
 }
 
 void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
@@ -657,7 +657,7 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
         for (int i = 0; i < channelsArray.size(); ++i) {
 
             QJsonObject channelObject = channelsArray.at(i).toObject();
-            Persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
+            persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
 
             if (channelObject.contains("subchannels")) {
 
@@ -690,14 +690,14 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
                             QJsonObject pluginObject = pluginsArray.at(p).toObject();
                             Plugin plugin = jsonObjectToPlugin(pluginObject);
                             bool pathIsValid = !plugin.path.isEmpty();
-                            if (plugin.category == Audio::PluginDescriptor::VST_Plugin)
+                            if (plugin.category == audio::PluginDescriptor::VST_Plugin)
                                 pathIsValid = QFile(plugin.path).exists();
 
                             if (pathIsValid)
                                 plugins.append(plugin);
                         }
                     }
-                    Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,
+                    persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,
                                                        midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote, routingMidi);
                     subChannel.setPlugins(plugins);
                     channel.subChannels.append(subChannel);
@@ -1057,7 +1057,7 @@ Preset Settings::readPresetFromFile(const QString &presetFileName, bool allowMul
 
 void Settings::load()
 {
-    QList<Persistence::SettingsObject *> sections;
+    QList<persistence::SettingsObject *> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
     sections.append(&windowSettings);
@@ -1091,7 +1091,7 @@ Settings::Settings() :
 void Settings::save(const LocalInputTrackSettings &localInputsSettings)
 {
     this->inputsSettings = localInputsSettings;
-    QList<Persistence::SettingsObject *> sections;
+    QList<persistence::SettingsObject *> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
     sections.append(&windowSettings);

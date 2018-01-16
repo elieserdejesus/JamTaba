@@ -3,7 +3,7 @@
 
 #include <QList>
 
-namespace BpiUtils
+namespace bpiUtils
 {
 
     QList<uint> getBpiDividers(uint targetBpi);

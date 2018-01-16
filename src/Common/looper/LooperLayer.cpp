@@ -7,7 +7,7 @@
 
 #include <QDebug>
 
-using namespace Audio;
+using namespace audio;
 using namespace std;
 
 LooperLayer::LooperLayer() :

@@ -251,7 +251,7 @@ void NinjamPanel::handleAccentBeatsTextEdited() {
     if (accentBeatsCb >= 0) // nothing to do here
         return;
 
-    QList<int> accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
+    auto accentBeats = audio::metronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
     ui->intervalPanel->setAccentBeats(accentBeats);
     if (metronomeFloatingWindow) {
         metronomeFloatingWindow->setAccentBeats(accentBeats);
@@ -274,7 +274,7 @@ void NinjamPanel::updateAccentsStatus()
     if (accentBeatsCb != 0) {
         if (accentBeatsCb > 0) {
             int bpi = ui->intervalPanel->getBeatsPerInterval();
-            accentBeats = Audio::MetronomeUtils::getAccentBeats(accentBeatsCb, bpi);
+            accentBeats = audio::metronomeUtils::getAccentBeats(accentBeatsCb, bpi);
         } else {
             if (getAccentBeatsText().isEmpty()) {
                 QList<QString> strs;
@@ -284,7 +284,7 @@ void NinjamPanel::updateAccentsStatus()
                 // OK, now we're happy the accent beats text is correct
                 setAccentBeatsText(strs.join(" "));
             }
-            accentBeats = Audio::MetronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
+            accentBeats = audio::metronomeUtils::getAccentBeatsFromString(getAccentBeatsText());
             // We are resposible for forcing this:
             emit accentsBeatsChanged(accentBeats);
         }
@@ -318,7 +318,7 @@ void NinjamPanel::updateIntervalProgressShape(int index)
 QStringList NinjamPanel::getBpiDividers(int bpi)
 {
     QStringList foundedDividers;
-    QList<uint> intDividers = BpiUtils::getBpiDividers(bpi);
+    auto intDividers = bpiUtils::getBpiDividers(bpi);
     for (uint divider : intDividers)
         foundedDividers.append(QString::number(divider));
 

@@ -18,7 +18,7 @@ class QBoxLayout;
 class QGridLayout;
 class BoostSpinBox;
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
 
@@ -27,7 +27,7 @@ class BaseTrackView : public QWidget
     Q_OBJECT
 
 public:
-    BaseTrackView(Controller::MainController *mainController, long trackID);
+    BaseTrackView(controller::MainController *mainController, long trackID);
     virtual ~BaseTrackView();
 
     enum Boost {
@@ -60,7 +60,7 @@ public:
 
     virtual void updateGuiElements();
 
-    Controller::MainController *getMainController() const;
+    controller::MainController *getMainController() const;
 
     virtual void setActivatedStatus(bool deactivated);
 
@@ -74,7 +74,7 @@ public:
 
 protected:
 
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
 
     void paintEvent(QPaintEvent *) override;
     void changeEvent(QEvent *e) override;
@@ -128,7 +128,7 @@ protected:
 
 private:
     static QMap<long, BaseTrackView *> trackViews;
-    Audio::AudioPeak maxPeak;
+    audio::AudioPeak maxPeak;
 
     QLabel *highLevelIcon;
     QLabel *lowLevelIcon;
@@ -156,7 +156,7 @@ inline QColor BaseTrackView::getTintColor() const
     return tintColor;
 }
 
-inline Controller::MainController* BaseTrackView::getMainController() const
+inline controller::MainController* BaseTrackView::getMainController() const
 {
     return mainController;
 }

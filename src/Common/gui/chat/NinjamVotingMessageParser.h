@@ -3,10 +3,10 @@
 
 #include <QString>
 
-namespace Gui
+namespace gui
 {
 
-    namespace Chat
+    namespace chat
     {
 
         extern const QRegularExpression SYSTEM_VOTING_REGEX;

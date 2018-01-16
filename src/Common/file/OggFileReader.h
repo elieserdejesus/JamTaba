@@ -3,13 +3,13 @@
 
 #include "FileReader.h"
 
-namespace Audio {
+namespace audio {
 
 class OggFileReader : public FileReader
 {
 
 public:
-    bool read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate) override;
+    bool read(const QString &filePath, audio::SamplesBuffer &outBuffer, quint32 &sampleRate) override;
 
 };
 

@@ -8,7 +8,7 @@
 
 #include <vector>
 
-namespace Midi {
+namespace midi {
 
 
 class MidiDriver

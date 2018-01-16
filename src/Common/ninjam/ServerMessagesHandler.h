@@ -6,7 +6,7 @@
 #include "log/Logging.h"
 #include "Service.h"
 
-namespace Ninjam {
+namespace ninjam {
 
 class Service;
 

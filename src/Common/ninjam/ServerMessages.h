@@ -11,7 +11,7 @@ class QStringList;
  * All details about ninjam protocol are based on the Stefanha documentation work in wahjam.
  */
 
-namespace Ninjam {
+namespace ninjam {
 
 
 class Service;

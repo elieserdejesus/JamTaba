@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-using namespace Midi;
+using namespace midi;
 
 MidiMessage::MidiMessage(qint32 data, int sourceID) :
     data(data),
@@ -23,7 +23,7 @@ MidiMessage MidiMessage::fromVector(std::vector<unsigned char> vector, qint32 de
     msgData |= vector.at(0);
     msgData |= vector.at(1) << 8;
     msgData |= vector.at(2) << 16;
-    return Midi::MidiMessage(msgData, deviceIndex);
+    return MidiMessage(msgData, deviceIndex);
 }
 
 MidiMessage MidiMessage::fromArray(const char array[4], qint32 deviceIndex)

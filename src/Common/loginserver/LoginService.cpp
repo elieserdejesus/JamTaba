@@ -11,7 +11,7 @@
 #include "ninjam/Service.h"
 #include "log/Logging.h"
 
-using namespace Login;
+using namespace login;
 
 const QString LoginService::LOGIN_SERVER_URL = "http://jamtaba2.appspot.com/vs";
 //const QString LoginService::LOGIN_SERVER_URL = "http://localhost:8080/vs";
@@ -43,7 +43,7 @@ RoomInfo::RoomInfo(long long id, const QString &roomName, int roomPort, RoomTYPE
 }
 
 RoomInfo::RoomInfo(const QString &roomName, int roomPort, RoomTYPE roomType, int maxUsers, int maxChannels) :
-    RoomInfo(-1000, roomName, roomPort, roomType, maxUsers, QList<Login::UserInfo>(), maxChannels, 0, 0, "")
+    RoomInfo(-1000, roomName, roomPort, roomType, maxUsers, QList<login::UserInfo>(), maxChannels, 0, 0, "")
 {
         //
 }
@@ -52,7 +52,7 @@ int RoomInfo::getNonBotUsersCount() const
 {
     int nonBots = 0;
     for (const UserInfo &userInfo : users) {
-        if (!Ninjam::Service::isBotName(userInfo.getName()))
+        if (!ninjam::Service::isBotName(userInfo.getName()))
             nonBots++;
     }
     return nonBots;
@@ -327,7 +327,7 @@ void LoginService::handleJson(const QString &json)
     QList<RoomInfo> publicRooms;
     for (int i = 0; i < allRooms.size(); ++i) {
         QJsonObject jsonObject = allRooms[i].toObject();
-        Login::RoomInfo roomInfo = buildRoomInfoFromJson(jsonObject);
+        auto roomInfo = buildRoomInfoFromJson(jsonObject);
         publicRooms.append(roomInfo);
 
         QString lastChordProgression = "" ; //store an empty chord progression by default
@@ -355,7 +355,7 @@ void LoginService::sendChordProgressionToServer(const QString &userName, const Q
     sendCommandToServer(query);
 }
 
-QString LoginService::getRoomInfoUniqueName(const Login::RoomInfo &roomInfo)
+QString LoginService::getRoomInfoUniqueName(const login::RoomInfo &roomInfo)
 {
     return roomInfo.getName() + ":" + roomInfo.getPort();
 }
@@ -365,7 +365,7 @@ RoomInfo LoginService::buildRoomInfoFromJson(const QJsonObject &jsonObject)
     long long id = jsonObject.value("id").toVariant().toLongLong();
     QString typeString = jsonObject["type"].toString();// ninjam OR realtime
 
-    Login::RoomTYPE type = (typeString == "ninjam") ? Login::RoomTYPE::NINJAM : Login::RoomTYPE::REALTIME;
+    login::RoomTYPE type = (typeString == "ninjam") ? login::RoomTYPE::NINJAM : login::RoomTYPE::REALTIME;
     QString name = jsonObject["name"].toString();
     int port = jsonObject["port"].toInt();
     int maxUsers = jsonObject["maxUsers"].toInt();
@@ -380,7 +380,7 @@ RoomInfo LoginService::buildRoomInfoFromJson(const QJsonObject &jsonObject)
         long long userID = userObject.value("id").toVariant().toLongLong();
         QString userName = userObject.value("name").toString();
         QString userIp = userObject.value("ip").toString();
-        users.append(Login::UserInfo(userID, userName, userIp));
+        users.append(login::UserInfo(userID, userName, userIp));
     }
-    return Login::RoomInfo(id, name, port, type, maxUsers, users, 0, bpi, bpm, streamLink);
+    return login::RoomInfo(id, name, port, type, maxUsers, users, 0, bpi, bpm, streamLink);
 }

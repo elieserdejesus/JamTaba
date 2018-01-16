@@ -4,7 +4,7 @@
 #include <vector>
 #include <QtGlobal>
 
-namespace Audio {
+namespace audio {
 
 class SamplesBuffer;
 

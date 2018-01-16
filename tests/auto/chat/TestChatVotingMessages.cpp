@@ -2,7 +2,7 @@
 #include "gui/chat/NinjamVotingMessageParser.h"
 #include <QTest>
 
-using namespace Gui::Chat;
+using namespace gui::chat;
 
 void TestChatVotingMessages::invalidLocalUserVotingMessage_data()
 {
@@ -121,7 +121,7 @@ QString TestChatVotingMessages::buildLocalUserVotingMessage(const QString &voteT
 void TestChatVotingMessages::validFirstSystemVotingMessage()
 {
     QFETCH(QString, chatMessage);
-    SystemVotingMessage msg = Gui::Chat::parseSystemVotingMessage(chatMessage);
+    SystemVotingMessage msg = gui::chat::parseSystemVotingMessage(chatMessage);
     QVERIFY(msg.isFirstVotingMessage());
 }
 
@@ -139,7 +139,7 @@ void TestChatVotingMessages::validFirstSystemVotingMessage_data()
 void TestChatVotingMessages::invalidFirstSystemVotingMessage()
 {
     QFETCH(QString, chatMessage);
-    SystemVotingMessage msg = Gui::Chat::parseSystemVotingMessage(chatMessage);
+    SystemVotingMessage msg = gui::chat::parseSystemVotingMessage(chatMessage);
     QVERIFY(!msg.isFirstVotingMessage());
 }
 
@@ -157,7 +157,7 @@ void TestChatVotingMessages::invalidFirstSystemVotingMessage_data()
 void TestChatVotingMessages::validSystemVotingMessage()
 {
     QFETCH(QString, chatMessage);
-    QVERIFY(Gui::Chat::parseSystemVotingMessage(chatMessage).isValidVotingMessage());
+    QVERIFY(gui::chat::parseSystemVotingMessage(chatMessage).isValidVotingMessage());
 }
 
 void TestChatVotingMessages::validSystemVotingMessage_data()
@@ -178,7 +178,7 @@ void TestChatVotingMessages::invalidSystemVotingMessage()
 {
     QFETCH(QString, chatMessage);
     QFETCH(QString, userName);
-    QVERIFY(!userName.isEmpty() || !Gui::Chat::parseSystemVotingMessage(chatMessage).isValidVotingMessage());
+    QVERIFY(!userName.isEmpty() || !gui::chat::parseSystemVotingMessage(chatMessage).isValidVotingMessage());
 }
 
 void TestChatVotingMessages::invalidSystemVotingMessage_data()

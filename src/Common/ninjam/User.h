@@ -4,7 +4,7 @@
 #include <QMap>
 #include "UserChannel.h"
 
-namespace Ninjam {
+namespace ninjam {
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -70,7 +70,7 @@ private:
     QMap<int, UserChannel> channels;
 };
 
-QDebug &operator<<(QDebug &out, const Ninjam::User &user);
+QDebug &operator<<(QDebug &out, const ninjam::User &user);
 
 QString extractUserName(const QString &userFullName);
 QString extractUserIP(const QString &userFullName);

@@ -11,13 +11,13 @@
 
 #include "audio/Resampler.h"
 
-using namespace Audio;
+using namespace audio;
 
 const double AudioNode::ROOT_2_OVER_2 = 1.414213562373095 *0.5;
 const double AudioNode::PI_OVER_2 = 3.141592653589793238463 * 0.5;
 
 
-void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer)
+void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<midi::MidiMessage> &midiBuffer)
 {
     Q_UNUSED(in);
 
@@ -93,9 +93,9 @@ AudioNode::AudioNode() :
     }
 }
 
-std::vector<Midi::MidiMessage> AudioNode::pullMidiMessagesGeneratedByPlugins() const
+std::vector<midi::MidiMessage> AudioNode::pullMidiMessagesGeneratedByPlugins() const
 {
-    return std::vector<Midi::MidiMessage>(); // returning empty vector by default, is overrided in LocalInputNode
+    return std::vector<midi::MidiMessage>(); // returning empty vector by default, is overrided in LocalInputNode
 }
 
 int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght)
@@ -114,7 +114,7 @@ int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRa
     return intValue;
 }
 
-Audio::AudioPeak AudioNode::getLastPeak() const
+AudioPeak AudioNode::getLastPeak() const
 {
     return this->lastPeak;
 }

@@ -18,10 +18,10 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-using namespace Controller;
-using namespace Audio;
+using namespace controller;
+using namespace audio;
 
-LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainController) :
+LooperWindow::LooperWindow(QWidget *parent, controller::MainController *mainController) :
     QDialog(parent),
     ui(new Ui::LooperWindow),
     mainController(mainController),
@@ -225,7 +225,7 @@ void LooperWindow::detachCurrentLooper()
     }
 }
 
-void LooperWindow::setLooper(Audio::Looper *looper)
+void LooperWindow::setLooper(audio::Looper *looper)
 {
     Q_ASSERT(looper);
     Q_ASSERT(mainController);
@@ -245,13 +245,13 @@ void LooperWindow::setLooper(Audio::Looper *looper)
 
         this->looper = looper;
 
-        QMenu *resetMenu = new QMenu();
+        auto resetMenu = new QMenu();
         connect(resetMenu, &QMenu::aboutToShow, this, &LooperWindow::showResetMenu);
         ui->resetButton->setMenu(resetMenu);
 
         // create wave panels and layer controls (layers view)
         quint8 currentLayers = looper->getLayers();
-        QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
+        auto gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
         for (quint8 layerIndex = 0; layerIndex < MAX_LOOP_LAYERS; ++layerIndex) {
             auto layerWavePanel = new LooperWavePanel(looper, layerIndex);
             auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex, tintColor);
@@ -491,10 +491,10 @@ void LooperWindow::resetLayersControls()
 void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
 {
     for (quint8 layerIndex = 0; layerIndex < MAX_LOOP_LAYERS; ++layerIndex) {
-        LooperWavePanel *wavePanel = layerViews[layerIndex].wavePanel;
+        auto wavePanel = layerViews[layerIndex].wavePanel;
         bool layerIsVisible = layerIndex < newMaxLayers;
         wavePanel->setVisible(layerIsVisible);
-        Gui::setLayoutItemsVisibility(layerViews[layerIndex].controlsLayout, layerIsVisible);
+        gui::setLayoutItemsVisibility(layerViews[layerIndex].controlsLayout, layerIsVisible);
     }
 }
 
@@ -829,7 +829,7 @@ QString LooperWindow::getOptionName(Looper::PlayingOption option)
     return "Error!";
 }
 
-QString LooperWindow::getOptionToolTip(Audio::Looper::RecordingOption option)
+QString LooperWindow::getOptionToolTip(audio::Looper::RecordingOption option)
 {
     switch (option) {
     case Looper::HearAllLayers:   return tr("Hear all layers while recording");
@@ -839,7 +839,7 @@ QString LooperWindow::getOptionToolTip(Audio::Looper::RecordingOption option)
     return QString();
 }
 
-QString LooperWindow::getOptionToolTip(Audio::Looper::PlayingOption option)
+QString LooperWindow::getOptionToolTip(audio::Looper::PlayingOption option)
 {
     switch (option) {
     case Looper::RandomizeLayers:   return tr("Randomize layers while playing");
@@ -859,18 +859,18 @@ void LooperWindow::createPlayingOptionsCheckBoxes()
     createOptionsCheckBoxes(ui->playingPropertiesLayout, getAllPlayingOptions(), playingCheckBoxes);
 }
 
-QList<Audio::Looper::RecordingOption> LooperWindow::getAllRecordingOptions()
+QList<audio::Looper::RecordingOption> LooperWindow::getAllRecordingOptions()
 {
-    QList<Audio::Looper::RecordingOption> options;
+    QList<audio::Looper::RecordingOption> options;
     options << Looper::Overdub;
     options << Looper::HearAllLayers;
 
     return options;
 }
 
-QList<Audio::Looper::PlayingOption> LooperWindow::getAllPlayingOptions()
+QList<audio::Looper::PlayingOption> LooperWindow::getAllPlayingOptions()
 {
-    QList<Audio::Looper::PlayingOption> options;
+    QList<audio::Looper::PlayingOption> options;
     options << Looper::RandomizeLayers;
     options << Looper::PlayLockedLayers;
     // options << Looper::PlayNonEmptyLayers; // no implemented yet

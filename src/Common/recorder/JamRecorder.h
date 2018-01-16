@@ -6,7 +6,7 @@
 
 #include <memory>
 
-namespace Recorder {
+namespace recorder {
 
 
 class JamAudioFile

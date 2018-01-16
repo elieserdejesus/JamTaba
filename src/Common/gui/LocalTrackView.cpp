@@ -14,6 +14,8 @@
 #include <QIcon>
 #include <QFontMetrics>
 
+using namespace controller;
+
 class LocalTrackView::LooperIconFactory
 {
 public:
@@ -78,7 +80,7 @@ public:
         return layerIcon;
     }
 
-    QIcon getIcon(Audio::Looper *looper, const QFontMetricsF &fontMetrics)
+    QIcon getIcon(audio::Looper *looper, const QFontMetricsF &fontMetrics)
     {
         if (originalIcon.isNull()) {
             this->originalIcon = QIcon(originalIconPath);
@@ -109,7 +111,7 @@ private:
 
 LocalTrackView::LooperIconFactory LocalTrackView::looperIconFactory(":/images/loop.png");
 
-LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
+LocalTrackView::LocalTrackView(controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),
     inputNode(nullptr),
     buttonStereoInversion(createStereoInversionButton()),
@@ -119,7 +121,7 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     Q_ASSERT(mainController);
 
     // insert a input node in controller
-    inputNode = new Audio::LocalInputNode(mainController, channelIndex);
+    inputNode = new audio::LocalInputNode(mainController, channelIndex);
     trackID = mainController->addInputTrackNode(this->inputNode);
     bindThisViewWithTrackNodeSignals();// now is secure bind this LocalTrackView with the respective TrackNode model
 
@@ -130,8 +132,8 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     secondaryChildsLayout->addWidget(buttonLooper);
     secondaryChildsLayout->addWidget(buttonStereoInversion);
 
-    connect(inputNode->getLooper(), &Audio::Looper::stateChanged, this, &LocalTrackView::updateLooperButtonIcon);
-    connect(inputNode->getLooper(), &Audio::Looper::currentLayerChanged, this, &LocalTrackView::updateLooperButtonIcon);
+    connect(inputNode->getLooper(), &audio::Looper::stateChanged, this, &LocalTrackView::updateLooperButtonIcon);
+    connect(inputNode->getLooper(), &audio::Looper::currentLayerChanged, this, &LocalTrackView::updateLooperButtonIcon);
 }
 
 void LocalTrackView::updateLooperButtonIcon()
@@ -145,7 +147,7 @@ void LocalTrackView::bindThisViewWithTrackNodeSignals()
 {
     BaseTrackView::bindThisViewWithTrackNodeSignals();
 
-    connect(inputNode, &Audio::LocalInputNode::stereoInversionChanged, this, &LocalTrackView::setStereoInversion);
+    connect(inputNode, &audio::LocalInputNode::stereoInversionChanged, this, &LocalTrackView::setStereoInversion);
 }
 
 void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost boostValue,
@@ -210,8 +212,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
     if (this->peakMetersOnly != peakMetersOnly) {
         this->peakMetersOnly = peakMetersOnly;
 
-        Gui::setLayoutItemsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
-        Gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
+        gui::setLayoutItemsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
+        gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
 
         if (peakMetersOnly) { // add the peak meters directly in main layout, so these meters are horizontally centered
             mainLayout->addWidget(peakMeter, 0, 0);
@@ -257,7 +259,7 @@ void LocalTrackView::setActivatedStatus(bool unlighted)
     update();
 }
 
-Audio::LocalInputNode *LocalTrackView::getInputNode() const
+audio::LocalInputNode *LocalTrackView::getInputNode() const
 {
     return inputNode;
 }

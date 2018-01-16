@@ -5,7 +5,7 @@
 #include "midi/MidiMessage.h"
 
 
-namespace Audio {
+namespace audio {
 
 class SamplesBuffer;
 
@@ -17,7 +17,7 @@ public:
 
     virtual ~AudioNodeProcessor();
 
-    virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, std::vector<Midi::MidiMessage> &midiMessages) = 0;
+    virtual void process(const SamplesBuffer &in, SamplesBuffer &out, std::vector<midi::MidiMessage> &midiMessages) = 0;
     virtual void suspend() = 0;
     virtual void resume() = 0;
     virtual void updateGui() = 0;

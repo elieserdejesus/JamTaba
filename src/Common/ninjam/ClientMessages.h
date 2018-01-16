@@ -7,7 +7,8 @@
 #include <QStringList>
 #include <QDebug>
 
-namespace Ninjam {
+namespace ninjam {
+
 class User;
 
 // +++++++++++++++++++++++++++
@@ -191,9 +192,9 @@ private:
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-QDebug &operator<<(QDebug &dbg, const Ninjam::ClientMessage &message);
+QDebug &operator<<(QDebug &dbg, const ninjam::ClientMessage &message);
 
-QByteArray &operator <<(QByteArray &byteArray, const Ninjam::ClientMessage &message);
+QByteArray &operator <<(QByteArray &byteArray, const ninjam::ClientMessage &message);
 
 } // namespace
 

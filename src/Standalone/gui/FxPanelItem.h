@@ -9,11 +9,11 @@ class QMenu;
 class QPushButton;
 class QLabel;
 
-namespace Audio {
+namespace audio {
 class Plugin;
 }
 
-namespace Controller {
+namespace controller {
 class MainControllerStandalone;
 }
 
@@ -22,9 +22,9 @@ class FxPanelItem : public QFrame
     Q_OBJECT
 
 public:
-    FxPanelItem(LocalTrackViewStandalone *parent, Controller::MainControllerStandalone *mainController);
+    FxPanelItem(LocalTrackViewStandalone *parent, controller::MainControllerStandalone *mainController);
     virtual ~FxPanelItem();
-    void setPlugin(Audio::Plugin *plugin);
+    void setPlugin(audio::Plugin *plugin);
     void unsetPlugin();
     inline bool containPlugin() const
     {
@@ -32,7 +32,7 @@ public:
     }
 
     bool pluginIsBypassed();
-    const Audio::Plugin *getAudioPlugin() const
+    const audio::Plugin *getAudioPlugin() const
     {
         return plugin;
     }
@@ -52,12 +52,12 @@ private slots:
     void loadSelectedPlugin();
 
 private:
-    Audio::Plugin *plugin;
+    audio::Plugin *plugin;
     QPushButton *bypassButton;
     QLabel *label;
-    Controller::MainControllerStandalone *mainController; // used to ask about plugins
+    controller::MainControllerStandalone *mainController; // used to ask about plugins
 
-    void showPluginGui(Audio::Plugin *plugin);
+    void showPluginGui(audio::Plugin *plugin);
 
     void showPluginsListMenu(const QPoint &p);
 

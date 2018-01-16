@@ -10,7 +10,7 @@ class ChatPanel;
 class TextEditorModifier;
 class EmojiManager;
 
-namespace Controller {
+namespace controller {
     class MainController;
 }
 
@@ -19,7 +19,7 @@ class ChatTabWidget : public QFrame
     Q_OBJECT
 
 public:
-    ChatTabWidget(QWidget *parent, Controller::MainController *mainController, UsersColorsPool *colorsPool);
+    ChatTabWidget(QWidget *parent, controller::MainController *mainController, UsersColorsPool *colorsPool);
 
     void collapse(bool collapse);
 
@@ -61,7 +61,7 @@ private:
 
     ChatPanel *mainChat;
 
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
 
     EmojiManager *emojiManager;
 

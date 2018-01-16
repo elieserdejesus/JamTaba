@@ -1,4 +1,5 @@
 #include <QTest>
+#include <QApplication>
 #include "TestChatVotingMessages.h"
 #include "TestChatMessages.h"
 

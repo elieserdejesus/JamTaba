@@ -4,9 +4,9 @@
 #include "persistence/Settings.h"
 #include <QDebug>
 
-using namespace Persistence;
+using namespace persistence;
 
-PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainController *mainController) :
+PrivateServerDialog::PrivateServerDialog(QWidget *parent, controller::MainController *mainController) :
     QDialog(parent),
     ui(new Ui::PrivateServerDialog),
     mainController(mainController)
@@ -22,7 +22,7 @@ PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainContro
     buildComboBoxItems();
 
     // setting initial values
-    const Persistence::Settings &settings = mainController->getSettings();
+    const auto &settings = mainController->getSettings();
     ui->textFieldPassword->setText(settings.getLastPrivateServerPassword());
     ui->textFieldPort->setText(QString::number(settings.getLastPrivateServerPort()));
     ui->textFieldUserName->setText(mainController->getUserName());

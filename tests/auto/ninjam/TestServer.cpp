@@ -3,8 +3,7 @@
 #include "ninjam/User.h"
 #include <QTest>
 
-
-using namespace Ninjam;
+using namespace ninjam;
 
 void TestServer::addUser()
 {

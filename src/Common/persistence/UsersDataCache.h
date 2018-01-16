@@ -13,7 +13,7 @@
 
  */
 
-namespace Persistence {
+namespace persistence {
 
 struct UsersDataCacheHeader {
     static const quint32 REVISION;

@@ -4,7 +4,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Ninjam {
+namespace ninjam {
 
 class UserChannel
 {
@@ -61,7 +61,7 @@ private:
     quint8 flags; // received from server. Possible values: 0 - ninjam interval based channel, 2 - voice chat channel, 4 - session mode
 };
 
-QDebug &operator<<(QDebug &out, const Ninjam::UserChannel &user);
+QDebug &operator<<(QDebug &out, const ninjam::UserChannel &user);
 
 } // namespace
 

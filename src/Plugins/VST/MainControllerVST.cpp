@@ -7,9 +7,9 @@
 #include "log/Logging.h"
 #include "Editor.h"
 
-using namespace Controller;
+using namespace controller;
 
-MainControllerVST::MainControllerVST(const Persistence::Settings &settings, JamTabaVSTPlugin *plugin) :
+MainControllerVST::MainControllerVST(const persistence::Settings &settings, JamTabaVSTPlugin *plugin) :
     MainControllerPlugin(settings, plugin),
     vstPlugin(plugin)
 {
@@ -19,7 +19,7 @@ MainControllerVST::MainControllerVST(const Persistence::Settings &settings, JamT
 void MainControllerVST::resizePluginEditor(int newWidth, int newHeight)
 {
     if (vstPlugin) {
-        VstEditor *editor = static_cast<VstEditor *>(vstPlugin->getEditor());
+        auto editor = static_cast<VstEditor *>(vstPlugin->getEditor());
         if (editor)
             editor->resize(newWidth, newHeight);
         vstPlugin->sizeWindow(newWidth, newHeight);

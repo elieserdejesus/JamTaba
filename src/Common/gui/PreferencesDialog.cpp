@@ -68,14 +68,14 @@ void PreferencesDialog::refreshMetronomeControlsStyleSheet()
     style()->polish(ui->browseAccentBeatButton);
 }
 
-void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
+void PreferencesDialog::initialize(PreferencesTab initialTab, const persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
 {
     Q_UNUSED(initialTab);
     this->settings = settings;
     this->jamRecorders = jamRecorders;
     this->jamRecorderCheckBoxes = QMap<QCheckBox *, QString>();
 
-    for (const QString &jamRecorder : jamRecorders.keys()) {
+    for (const auto &jamRecorder : jamRecorders.keys()) {
         QCheckBox *myCheckBox = new QCheckBox(this);
         myCheckBox->setObjectName(jamRecorder);
         myCheckBox->setText(jamRecorders.value(jamRecorder));
@@ -259,9 +259,9 @@ void PreferencesDialog::populateMetronomeTab()
     ui->textFieldOffBeat->setText(settings->getMetronomeOffBeatFile());
 
     // combo embedded metronome sounds
-    QList<QString> metronomeAliases = Audio::MetronomeUtils::getBuiltInMetronomeAliases();
+    auto metronomeAliases = audio::metronomeUtils::getBuiltInMetronomeAliases();
     ui->comboBuiltInMetronomes->clear();
-    foreach (QString alias, metronomeAliases) {
+    for (QString alias : metronomeAliases) {
         ui->comboBuiltInMetronomes->addItem(alias, alias);
     }
 
@@ -274,10 +274,10 @@ void PreferencesDialog::populateMetronomeTab()
 void PreferencesDialog::populateMultiTrackRecordingTab()
 {
     Q_ASSERT(settings);
-    Persistence::MultiTrackRecordingSettings recordingSettings = settings->getMultiTrackRecordingSettings();
+    auto recordingSettings = settings->getMultiTrackRecordingSettings();
     ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
 
-    for (QCheckBox *myCheckBox : jamRecorderCheckBoxes.keys()) {
+    for (auto myCheckBox : jamRecorderCheckBoxes.keys()) {
         myCheckBox->setChecked(recordingSettings.isJamRecorderActivated(jamRecorderCheckBoxes[myCheckBox]));
     }
 

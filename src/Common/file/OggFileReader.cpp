@@ -4,9 +4,9 @@
 #include <QFileInfo>
 #include "audio/vorbis/VorbisDecoder.h"
 
-using namespace Audio;
+using namespace audio;
 
-bool OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate)
+bool OggFileReader::read(const QString &filePath, audio::SamplesBuffer &outBuffer, quint32 &sampleRate)
 {
     // Open the ogg file
     QFile oggFile(filePath);
@@ -29,7 +29,7 @@ bool OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffe
     const int MAX_SAMPLES_PER_DECODE = 1024;
     do
     {
-        const Audio::SamplesBuffer &decodedBuffer = decoder.decode(MAX_SAMPLES_PER_DECODE);
+        const auto &decodedBuffer = decoder.decode(MAX_SAMPLES_PER_DECODE);
         decodedFrames = decodedBuffer.getFrameLenght();
         if (!decodedBuffer.isEmpty()) {
             outBuffer.append(decodedBuffer);

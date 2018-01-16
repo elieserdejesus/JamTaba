@@ -6,9 +6,9 @@
 #include "log/Logging.h"
 //#include "Editor.h"
 
-using namespace Controller;
+using namespace controller;
 
-MainControllerPlugin::MainControllerPlugin(const Persistence::Settings &settings, JamTabaPlugin *plugin) :
+MainControllerPlugin::MainControllerPlugin(const persistence::Settings &settings, JamTabaPlugin *plugin) :
     MainController(settings),
     plugin(plugin)
 {
@@ -21,13 +21,13 @@ MainControllerPlugin::~MainControllerPlugin()
         saveLastUserSettings(mainWindow->getInputsSettings());
 }
 
-Persistence::Preset MainControllerPlugin::loadPreset(const QString &name)
+persistence::Preset MainControllerPlugin::loadPreset(const QString &name)
 {
     return settings.readPresetFromFile(name, false); // don't allow multi subchannels in vst plugin and avoid hacking in json file to create subchannels in VSt plugin.
 }
 
 
-int MainControllerPlugin::addInputTrackNode(Audio::LocalInputNode *inputTrackNode)
+int MainControllerPlugin::addInputTrackNode(audio::LocalInputNode *inputTrackNode)
 {
     int inputTrackID = MainController::addInputTrackNode(inputTrackNode);
 
@@ -75,9 +75,9 @@ NinjamControllerPlugin *MainControllerPlugin::createNinjamController()
     return new NinjamControllerPlugin(const_cast<MainControllerPlugin*>(this));
 }
 
-Midi::MidiDriver *MainControllerPlugin::createMidiDriver()
+midi::MidiDriver *MainControllerPlugin::createMidiDriver()
 {
-    return new Midi::NullMidiDriver();
+    return new midi::NullMidiDriver();
 }
 
 void MainControllerPlugin::setCSS(const QString &css)

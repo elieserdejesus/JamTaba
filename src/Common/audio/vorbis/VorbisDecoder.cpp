@@ -71,14 +71,14 @@ size_t Decoder::readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *dec
     return decoderInstance->consumeTo(oggOutBuffer, size * nmemb);
 }
 
-const Audio::SamplesBuffer &Decoder::decode(int maxSamplesToDecode)
+const audio::SamplesBuffer &Decoder::decode(int maxSamplesToDecode)
 {
     if (!initialized) {
         initialize();
     }
 
     if (!initialized) {
-        return Audio::SamplesBuffer::ZERO_BUFFER;
+        return audio::SamplesBuffer::ZERO_BUFFER;
     }
 
     float **outBuffer;
@@ -94,7 +94,7 @@ const Audio::SamplesBuffer &Decoder::decode(int maxSamplesToDecode)
             case OV_EINVAL: message = "VORBIS ERROR: the initial file headers couldn't be read or are corrupt, or that the initial open call for vf failed.";
         }
         qCWarning(jtNinjamVorbisDecoder) << message;
-        return Audio::SamplesBuffer::ZERO_BUFFER;
+        return audio::SamplesBuffer::ZERO_BUFFER;
     }
     internalBuffer.setFrameLenght(samplesDecoded);
     //internal buffer is always stereo

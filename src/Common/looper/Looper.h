@@ -14,7 +14,7 @@
 
 #define MAX_LOOP_LAYERS 8
 
-namespace Audio {
+namespace audio {
 
 class LooperState;
 class PlayingState;
@@ -334,7 +334,7 @@ inline quint8 Looper::getFocusedLayerIndex() const
 
 
 // declaring structs to use in signal/slots
-Q_DECLARE_METATYPE(Audio::Looper::Mode)
-Q_DECLARE_METATYPE(Audio::LooperLayer::MuteState)
+Q_DECLARE_METATYPE(audio::Looper::Mode)
+Q_DECLARE_METATYPE(audio::LooperLayer::MuteState)
 
 #endif

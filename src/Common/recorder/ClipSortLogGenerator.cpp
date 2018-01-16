@@ -2,7 +2,7 @@
 #include <QUuid>
 #include "../log/Logging.h"
 
-using namespace Recorder;
+using namespace recorder;
 
 void ClipSortLogGenerator::write(const Jam &jam)
 {

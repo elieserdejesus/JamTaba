@@ -2,6 +2,7 @@
 #include "MainController.h"
 #include "Utils.h"
 #include "PeakMeter.h"
+#include "audio/core/AudioPeak.h"
 #include "BoostSpinBox.h"
 #include "IconFactory.h"
 
@@ -25,7 +26,7 @@ QMap<long, BaseTrackView *> BaseTrackView::trackViews; // static map to quick lo
 
 // -----------------------------------------------------------------------------------------
 
-BaseTrackView::BaseTrackView(Controller::MainController *mainController, long trackID) :
+BaseTrackView::BaseTrackView(controller::MainController *mainController, long trackID) :
     mainController(mainController),
     trackID(trackID),
     activated(true),
@@ -187,13 +188,13 @@ void BaseTrackView::translateUI()
 
 void BaseTrackView::bindThisViewWithTrackNodeSignals()
 {
-    Audio::AudioNode *trackNode = mainController->getTrackNode(trackID);
+    auto trackNode = mainController->getTrackNode(trackID);
     Q_ASSERT(trackNode);
-    connect(trackNode, &Audio::AudioNode::gainChanged, this, &BaseTrackView::setGainSliderPosition);
-    connect(trackNode, &Audio::AudioNode::panChanged, this, &BaseTrackView::setPanKnobPosition);
-    connect(trackNode, &Audio::AudioNode::muteChanged, this, &BaseTrackView::setMuteStatus);
-    connect(trackNode, &Audio::AudioNode::soloChanged, this, &BaseTrackView::setSoloStatus);
-    connect(trackNode, &Audio::AudioNode::boostChanged, this, &BaseTrackView::setBoostStatus);
+    connect(trackNode, &audio::AudioNode::gainChanged, this, &BaseTrackView::setGainSliderPosition);
+    connect(trackNode, &audio::AudioNode::panChanged, this, &BaseTrackView::setPanKnobPosition);
+    connect(trackNode, &audio::AudioNode::muteChanged, this, &BaseTrackView::setMuteStatus);
+    connect(trackNode, &audio::AudioNode::soloChanged, this, &BaseTrackView::setSoloStatus);
+    connect(trackNode, &audio::AudioNode::boostChanged, this, &BaseTrackView::setBoostStatus);
 }
 
 // ++++++  signals emitted by Audio Node +++++++
@@ -251,7 +252,7 @@ void BaseTrackView::updateGuiElements()
     if (!mainController)
         return;
 
-    Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
+    auto peak = mainController->getTrackPeak(getTrackID());
     if (peak.getMaxPeak() > maxPeak.getMaxPeak()) {
         maxPeak.update(peak);
     }
@@ -260,7 +261,7 @@ void BaseTrackView::updateGuiElements()
     setPeaks(peak.getLeftPeak(), peak.getRightPeak(), peak.getLeftRMS(), peak.getRightRMS());
 
     // update the track processors. In this moment the VST plugins GUI are updated. Some plugins need this to run your animations (see Ez Drummer, for example);
-    Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
+    auto trackNode = mainController->getTrackNode(getTrackID());
     if (trackNode)
         trackNode->updateProcessorsGui();  // call idle in VST plugins
 }

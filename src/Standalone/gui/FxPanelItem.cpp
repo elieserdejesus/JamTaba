@@ -17,9 +17,9 @@
 #include <QDesktopWidget>
 #include <QStyle>
 
-using namespace Audio;
+using namespace audio;
 
-FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, Controller::MainControllerStandalone *mainController) :
+FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, controller::MainControllerStandalone *mainController) :
     QFrame(parent),
     plugin(nullptr),
     bypassButton(new QPushButton(this)),
@@ -68,7 +68,7 @@ void FxPanelItem::updateStyleSheet()
     update();
 }
 
-void FxPanelItem::setPlugin(Audio::Plugin *plugin)
+void FxPanelItem::setPlugin(audio::Plugin *plugin)
 {
     this->plugin = plugin;
     this->label->setText(plugin->getName());
@@ -138,12 +138,12 @@ void FxPanelItem::showPluginsListMenu(const QPoint &p)
 
         QMenu *categoryMenu = &menu;
         if (categories.size() > 1) {
-            QString categoryName = Audio::PluginDescriptor::categoryToString(category);
+            QString categoryName = audio::PluginDescriptor::categoryToString(category);
             categoryMenu = new QMenu(categoryName);
             menu.addMenu(categoryMenu);
         }
 
-        QMap<QString, QList<Audio::PluginDescriptor>> plugins = mainController->getPluginsDescriptors(category);
+        auto plugins = mainController->getPluginsDescriptors(category);
 
         for (const QString &manufacturer : plugins.keys()) {
             bool canCreateManufacturerMenu = !manufacturer.isEmpty() && plugins[manufacturer].size() > 1; // when the manufacturer has only one plugin this plugin is showed in the Root menu
@@ -158,7 +158,6 @@ void FxPanelItem::showPluginsListMenu(const QPoint &p)
                 action->setData(pluginDescriptor.toString());
             }
         }
-
     }
 
     menu.move(mapToGlobal(p));
@@ -182,7 +181,7 @@ void FxPanelItem::on_contextMenu(QPoint p)
 
 void FxPanelItem::loadSelectedPlugin()
 {
-    QAction *action = qobject_cast<QAction *>(QObject::sender());
+    auto action = qobject_cast<QAction *>(QObject::sender());
 
     if (!action || action->data().toString().isEmpty())
         return;
@@ -191,11 +190,11 @@ void FxPanelItem::loadSelectedPlugin()
     QApplication::processEvents(); // force the cursor change
 
     // add a new plugin
-    Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString(action->data().toString());
+    auto descriptor = audio::PluginDescriptor::fromString(action->data().toString());
     qint32 pluginSlotIndex = localTrackView->getPluginFreeSlotIndex();
     if (pluginSlotIndex >= 0) { // valid plugin slot (-1 will be returned when no free plugin slots are available)
         quint32 trackIndex = localTrackView->getInputIndex();
-        Audio::Plugin *plugin = mainController->addPlugin(trackIndex, pluginSlotIndex, descriptor);
+        auto plugin = mainController->addPlugin(trackIndex, pluginSlotIndex, descriptor);
         if (plugin) {
             localTrackView->addPlugin(plugin, pluginSlotIndex);
             showPluginGui(plugin);
@@ -224,7 +223,7 @@ void FxPanelItem::on_actionMenuTriggered(QAction *a)
     }
 }
 
-void FxPanelItem::showPluginGui(Audio::Plugin *plugin)
+void FxPanelItem::showPluginGui(audio::Plugin *plugin)
 {
     if (plugin) {
         QDesktopWidget desktop;

@@ -6,7 +6,7 @@
 #include <QPainterPath>
 #include <QDropEvent>
 
-namespace Audio {
+namespace audio {
 class Looper;
 }
 
@@ -15,7 +15,7 @@ class LooperWavePanel : public WavePeakPanel
     Q_OBJECT
 
 public:
-    LooperWavePanel(Audio::Looper *looper, quint8 layerIndex);
+    LooperWavePanel(audio::Looper *looper, quint8 layerIndex);
     ~LooperWavePanel();
     void setBeatsPerInteval(uint bpi, uint samplesPerInterval);
     void setCurrentBeat(quint8 currentIntervalBeat);
@@ -51,7 +51,7 @@ private:
     float lastMaxPeak;
     uint accumulatedSamples;
 
-    Audio::Looper *looper;
+    audio::Looper *looper;
 
     QPainterPath miniLockIcon;  // used to draw mini lock icon in top right corner
     QPainterPath bigLockIcon;   // used to draw big lock icon in center when layer is locked

@@ -6,7 +6,7 @@
 #include <QDialog>
 #include <QMutexLocker>
 
-using namespace Audio;
+using namespace audio;
 
 Plugin::Plugin(const PluginDescriptor &pluginDescriptor) :
     name(pluginDescriptor.getName()),
@@ -42,7 +42,7 @@ const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 JamtabaDelay::JamtabaDelay(int sampleRate) :
     Plugin(PluginDescriptor("Delay", PluginDescriptor::Native_Plugin, "JamTaba")),
     delayTimeInMs(0),
-    internalBuffer(new Audio::SamplesBuffer(2)) // 2 channels, 3 seconds delay
+    internalBuffer(new SamplesBuffer(2)) // 2 channels, 3 seconds delay
 {
     internalIndex = 0;
     feedbackGain = 0.3f;// feedback start in this gain
@@ -78,7 +78,7 @@ void JamtabaDelay::start()
     //
 }
 
-void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out, std::vector<Midi::MidiMessage> &midiBuffer)
+void JamtabaDelay::process(const SamplesBuffer &in, SamplesBuffer &out, std::vector<midi::MidiMessage> &midiBuffer)
 {
     Q_UNUSED(midiBuffer)
     Q_UNUSED(in)

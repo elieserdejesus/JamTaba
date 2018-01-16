@@ -4,7 +4,7 @@
 #include <QString>
 #include <QLayout>
 
-namespace Gui {
+namespace gui {
 
     QString capitalize(const QString &string);
 

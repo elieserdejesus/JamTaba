@@ -11,14 +11,14 @@
  This file contains the common/shared implementation for the Jamtaba plataforms (Win, Mac and Linux) in Standalone. In the Vst Plugin some details are different and implemented in the file VstPreferencesDialog.cpp.
  */
 
-using namespace Audio;
-using namespace Midi;
-using namespace Controller;
+using namespace audio;
+using namespace midi;
+using namespace controller;
 
 PreferencesDialogStandalone::PreferencesDialogStandalone(QWidget *parent,
                                                          bool showAudioControlPanelButton,
-                                                         Audio::AudioDriver *audioDriver,
-                                                         Midi::MidiDriver *midiDriver) :
+                                                         audio::AudioDriver *audioDriver,
+                                                         midi::MidiDriver *midiDriver) :
     PreferencesDialog(parent),
     audioDriver(audioDriver),
     midiDriver(midiDriver),
@@ -47,7 +47,7 @@ void PreferencesDialogStandalone::notifySampleRateChanged()
     emit sampleRateChanged(newSampleRate);
 }
 
-void PreferencesDialogStandalone::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
+void PreferencesDialogStandalone::initialize(PreferencesTab initialTab, const persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
 {
     PreferencesDialog::initialize(initialTab, settings, jamRecorders);
     int tabIndex = static_cast<int>(initialTab);

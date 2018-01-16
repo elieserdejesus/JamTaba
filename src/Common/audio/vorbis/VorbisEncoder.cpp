@@ -91,7 +91,7 @@ void Encoder::encodeFirstVorbisHeaders()
  * @param channels number of channels
  * @return
  */
-QByteArray Encoder::encode(const Audio::SamplesBuffer &audioBuffer)
+QByteArray Encoder::encode(const audio::SamplesBuffer &audioBuffer)
 {
     if (!initialized) {
         if (!isFirstEncoding) {
@@ -148,7 +148,7 @@ QByteArray Encoder::encode(const Audio::SamplesBuffer &audioBuffer)
 
 QByteArray Encoder::finishIntervalEncoding()
 {
-    QByteArray data = encode(Audio::SamplesBuffer::ZERO_BUFFER);//pass zero samples to vorbis and finalize the encoding process
+    QByteArray data = encode(audio::SamplesBuffer::ZERO_BUFFER);//pass zero samples to vorbis and finalize the encoding process
     initialized = false;
 
     return data;

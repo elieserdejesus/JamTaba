@@ -8,18 +8,18 @@
 
 class JamTabaPlugin;
 
-class MainControllerPlugin : public Controller::MainController
+class MainControllerPlugin : public controller::MainController
 {
 
     friend class NinjamControllerPlugin;
 
 public:
-    MainControllerPlugin(const Persistence::Settings &settings, JamTabaPlugin *plugin);
+    MainControllerPlugin(const persistence::Settings &settings, JamTabaPlugin *plugin);
     virtual ~MainControllerPlugin();
 
     QString getUserEnvironmentString() const;
 
-    Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
+    audio::AudioDriver *createAudioDriver(const persistence::Settings &settings);
 
     NinjamControllerPlugin *createNinjamController() override;
 
@@ -30,13 +30,13 @@ public:
 
     void setCSS(const QString &css) override;
 
-    int addInputTrackNode(Audio::LocalInputNode *inputTrackNode) override;
+    int addInputTrackNode(audio::LocalInputNode *inputTrackNode) override;
 
     void setSampleRate(int newSampleRate) override;
 
     float getSampleRate() const override;
 
-    Midi::MidiDriver *createMidiDriver();
+    midi::MidiDriver *createMidiDriver();
 
     inline void exit() // TODO remove this ??
     {
@@ -48,17 +48,17 @@ public:
 
     virtual void resizePluginEditor(int newWidth, int newHeight) = 0;
 
-    Persistence::Preset loadPreset(const QString &name) override;
+    persistence::Preset loadPreset(const QString &name) override;
 
-    inline std::vector<Midi::MidiMessage> pullMidiMessagesFromPlugins() override
+    inline std::vector<midi::MidiMessage> pullMidiMessagesFromPlugins() override
     {
-        return std::vector<Midi::MidiMessage>(); // empty buffer
+        return std::vector<midi::MidiMessage>(); // empty buffer
     }
 
 protected:
-    inline std::vector<Midi::MidiMessage> pullMidiMessagesFromDevices() override
+    inline std::vector<midi::MidiMessage> pullMidiMessagesFromDevices() override
     {
-        return std::vector<Midi::MidiMessage>(); // empty buffer
+        return std::vector<midi::MidiMessage>(); // empty buffer
     }
 
     JamTabaPlugin *plugin;

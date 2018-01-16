@@ -12,7 +12,8 @@
 #include "Configurator.h"
 #include "audio/core/PluginDescriptor.h"
 
-namespace Persistence {
+namespace persistence {
+
 class Settings;
 
 class SettingsObject // base class for the settings components
@@ -193,14 +194,15 @@ class Plugin
 {
 public:
 
-    Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data = QByteArray());
+    Plugin(const audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data = QByteArray());
     QString path;
     QString name;
     QString manufacturer;
     bool bypassed;
     QByteArray data; // saved data to restore in next jam session
-    Audio::PluginDescriptor::Category category; // VST, AU, NATIVE plugin
+    audio::PluginDescriptor::Category category; // VST, AU, NATIVE plugin
 };
+
 // +++++++++++++++++++++++++++++++++
 
 class Subchannel
@@ -222,7 +224,7 @@ public:
     quint8 higherMidiNote;
     bool routingMidiToFirstSubchannel;
 
-    inline QList<Persistence::Plugin> getPlugins() const
+    inline QList<persistence::Plugin> getPlugins() const
     {
         return plugins;
     }
@@ -258,7 +260,7 @@ public:
     }
 
 private:
-    QList<Persistence::Plugin> plugins;
+    QList<persistence::Plugin> plugins;
 };
 
 // +++++++++++++++++++++++++++++++++

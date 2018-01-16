@@ -5,7 +5,7 @@
 #include <QSet>
 #include <QList>
 
-namespace Audio {
+namespace audio {
 
 class Looper;
 class SamplesBuffer;

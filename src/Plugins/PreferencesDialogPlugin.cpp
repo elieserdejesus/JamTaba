@@ -10,7 +10,7 @@ PreferencesDialogPlugin::PreferencesDialogPlugin(QWidget *parent) :
     ui->prefsTab->removeTab(0);
 }
 
-void PreferencesDialogPlugin::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
+void PreferencesDialogPlugin::initialize(PreferencesTab initialTab, const persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
 {
     PreferencesDialog::initialize(initialTab, settings, jamRecorders);
     int tabIndex = static_cast<int>(initialTab) - 3; // the 3 first tabs are removed in plugins

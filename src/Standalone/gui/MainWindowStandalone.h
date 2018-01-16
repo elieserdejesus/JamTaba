@@ -7,7 +7,7 @@
 #include "MainControllerStandalone.h"
 #include "PluginScanDialog.h"
 
-using namespace Controller;
+using namespace controller;
 
 class MainWindowStandalone : public MainWindow
 {
@@ -15,7 +15,7 @@ class MainWindowStandalone : public MainWindow
 public:
     explicit MainWindowStandalone(MainControllerStandalone *controller);
 
-    Persistence::LocalInputTrackSettings getInputsSettings() const override;
+    persistence::LocalInputTrackSettings getInputsSettings() const override;
 
     void addChannelsGroup(const QString &groupName) override;
 
@@ -31,21 +31,20 @@ protected:
 
     TextEditorModifier *createTextEditorModifier() override;
 
-    NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, MainController *) override;
+    NinjamRoomWindow *createNinjamWindow(const login::RoomInfo &, MainController *) override;
 
     LocalTrackGroupViewStandalone *createLocalTrackGroupView(int channelGroupIndex) override;
 
-    void initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel) override;
+    void initializeLocalSubChannel(LocalTrackView *subChannelView, const persistence::Subchannel &subChannel) override;
 
-    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const Persistence::Subchannel &subChannel);
+    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const persistence::Subchannel &subChannel);
 
     PreferencesDialog *createPreferencesDialog() override;
 
 protected slots: // TODO change to private slots?
     void handleServerConnectionError(const QString &msg);
 
-    void setGlobalPreferences(const QList<bool> &, int audioDevice, int firstIn, int lastIn, int firstOut,
-                              int lastOut);
+    void setGlobalPreferences(const QList<bool> &, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut);
 
     // plugin finder
     void showPluginScanDialog();
@@ -73,7 +72,7 @@ private:
 
     bool midiDeviceIsValid(int deviceIndex) const;
 
-    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel);
+    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, const persistence::Subchannel &subChannel);
 
     bool fullScreenViewMode;
 

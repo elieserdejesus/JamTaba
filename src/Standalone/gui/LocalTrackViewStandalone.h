@@ -20,7 +20,7 @@ class LocalTrackViewStandalone : public LocalTrackView
 
 public:
 
-    LocalTrackViewStandalone(Controller::MainControllerStandalone* mainController, int channelID);
+    LocalTrackViewStandalone(controller::MainControllerStandalone* mainController, int channelID);
 
     void setPeakMetersOnlyMode(bool peakMetersOnly) override;
     void setActivatedStatus(bool unlighted) override;
@@ -36,9 +36,9 @@ public:
 
     void reset() override;
 
-    void addPlugin(Audio::Plugin *plugin, quint32 slotIndex, bool bypassed = false);
+    void addPlugin(audio::Plugin *plugin, quint32 slotIndex, bool bypassed = false);
 
-    QList<const Audio::Plugin *> getInsertedPlugins() const;
+    QList<const audio::Plugin *> getInsertedPlugins() const;
 
     void refreshInputSelectionName();
 
@@ -79,7 +79,7 @@ private slots:
     void useLearnedMidiNote(quint8 midiNote);
 
 private:
-    Controller::MainControllerStandalone* controller; //a 'casted' pointer just for convenience
+    controller::MainControllerStandalone* controller; //a 'casted' pointer just for convenience
 
     QMenu *createMonoInputsMenu(QMenu *parentMenu);
     QMenu *createStereoInputsMenu(QMenu *parentMenu);

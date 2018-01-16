@@ -6,7 +6,7 @@
 
 #include <QToolTip>
 
-using namespace Controller;
+using namespace controller;
 
 InactivityDetector::InactivityDetector(QWidget *parent, BlinkableButton *button, uint intervalsBeforeWarning) :
     QObject(parent),

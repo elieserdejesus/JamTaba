@@ -30,7 +30,7 @@ public:
 
     };
 
-    virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders);
+    virtual void initialize(PreferencesTab initialTab, const persistence::Settings *settings, const QMap<QString, QString> &jamRecorders);
 
 signals:
     void customMetronomeSelected(const QString &primaryBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile);
@@ -91,7 +91,7 @@ protected:
     virtual void setupSignals();
     virtual void populateAllTabs();
 
-    const Persistence::Settings *settings;
+    const persistence::Settings *settings;
     QMap<QString, QString> jamRecorders;
 
 };

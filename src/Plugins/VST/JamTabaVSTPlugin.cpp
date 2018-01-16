@@ -211,7 +211,7 @@ void JamTabaVSTPlugin::processReplacing(float **inputs, float **outputs, VstInt3
     hostWasPlayingInLastAudioCallBack = hostIsPlaying();
 }
 
-MainControllerPlugin *JamTabaVSTPlugin::createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const
+MainControllerPlugin *JamTabaVSTPlugin::createPluginMainController(const persistence::Settings &settings, JamTabaPlugin *plugin) const
 {
     return new MainControllerVST(settings, dynamic_cast<JamTabaVSTPlugin*>(plugin));
 }

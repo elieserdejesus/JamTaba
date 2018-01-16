@@ -15,7 +15,8 @@ class QString;
 class QObject;
 class QStringList;
 
-namespace Ninjam {
+namespace ninjam {
+
 class Server;
 class ClientMessage;
 class Service;
@@ -32,7 +33,6 @@ class DownloadIntervalBegin;
 class DownloadIntervalWrite;
 class User;
 class UserChannel;
-
 
 class Service : public QObject
 {
@@ -70,7 +70,7 @@ public:
     void voteToChangeBPM(quint16 newBPM);
     void voteToChangeBPI(quint16 newBPI);
 
-    inline Ninjam::Server *getCurrentServer() const { return currentServer.data(); }
+    inline ninjam::Server *getCurrentServer() const { return currentServer.data(); }
 
     static inline QStringList getBotNamesList()
     {
@@ -78,22 +78,22 @@ public:
     }
 
 signals:
-    void userChannelCreated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void userChannelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void userChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void userChannelCreated(const ninjam::User &user, const ninjam::UserChannel &channel);
+    void userChannelRemoved(const ninjam::User &user, const ninjam::UserChannel &channel);
+    void userChannelUpdated(const ninjam::User &user, const ninjam::UserChannel &channel);
     void userCountMessageReceived(quint32 users, quint32 maxUsers);
     void serverBpiChanged(quint16 currentBpi, quint16 lastBpi);
     void serverBpmChanged(quint16 currentBpm);
-    void audioIntervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
-    void videoIntervalCompleted(const Ninjam::User &user, const QByteArray &encodedVideoData);
-    void audioIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int bytesDownloaded);
-    void disconnectedFromServer(const Ninjam::Server &server);
-    void connectedInServer(const Ninjam::Server &server);
-    void publicChatMessageReceived(const Ninjam::User &sender, const QString &message);
-    void privateChatMessageReceived(const Ninjam::User &sender, const QString &message);
+    void audioIntervalCompleted(const ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
+    void videoIntervalCompleted(const ninjam::User &user, const QByteArray &encodedVideoData);
+    void audioIntervalDownloading(const ninjam::User &user, quint8 channelIndex, int bytesDownloaded);
+    void disconnectedFromServer(const ninjam::Server &server);
+    void connectedInServer(const ninjam::Server &server);
+    void publicChatMessageReceived(const ninjam::User &sender, const QString &message);
+    void privateChatMessageReceived(const ninjam::User &sender, const QString &message);
     void serverTopicMessageReceived(const QString &topic);
-    void userEntered(const Ninjam::User &newUser);
-    void userExited(const Ninjam::User &user);
+    void userEntered(const ninjam::User &newUser);
+    void userExited(const ninjam::User &user);
     void error(const QString &msg);
 
 protected:

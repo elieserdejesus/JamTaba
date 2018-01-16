@@ -17,7 +17,7 @@
  * code are in WindowsPortAudioDriver.cpp, MacPortAudioDriver.cpp and in future LinuxPortAudioDriver.cpp.
 */
 
-namespace Audio
+namespace audio
 {
 
 bool PortAudioDriver::canBeStarted() const

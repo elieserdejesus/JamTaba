@@ -4,13 +4,13 @@
 #include "audio/core/SamplesBuffer.h"
 #include <QString>
 
-namespace Audio {
+namespace audio {
 
 class FileReader
 {
 
 public:
-    virtual bool read(const QString &filePath, Audio::SamplesBuffer& outBuffer, quint32 &sampleRate) = 0;
+    virtual bool read(const QString &filePath, SamplesBuffer& outBuffer, quint32 &sampleRate) = 0;
     virtual ~FileReader(){}
 };
 

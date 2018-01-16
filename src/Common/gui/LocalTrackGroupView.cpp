@@ -315,9 +315,9 @@ void LocalTrackGroupView::removeChannel()
 // PRESETS
 void LocalTrackGroupView::loadPreset(QAction *action)
 {
-    Controller::MainController *mainController = mainFrame->getMainController();
+    auto mainController = mainFrame->getMainController();
     QString presetFileName = action->data().toString();
-    Persistence::Preset preset = mainController->loadPreset(presetFileName);
+    auto preset = mainController->loadPreset(presetFileName);
     if (preset.isValid()) {
         mainFrame->loadPreset(preset);
 

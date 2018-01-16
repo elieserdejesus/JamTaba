@@ -5,12 +5,12 @@
 #include <QByteArray>
 #include "SamplesBufferResampler.h"
 
-namespace Audio {
+namespace audio {
 class SamplesBuffer;
 class StreamBuffer;
 }
 
-class NinjamTrackNode : public Audio::AudioNode
+class NinjamTrackNode : public audio::AudioNode
 {
 
 public:
@@ -23,8 +23,8 @@ public:
     explicit NinjamTrackNode(int ID);
     virtual ~NinjamTrackNode();
     void addVorbisEncodedInterval(const QByteArray &encodedBytes);
-    void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate,
-                          std::vector<Midi::MidiMessage> &midiBuffer) override;
+    void processReplacing(const audio::SamplesBuffer &in, audio::SamplesBuffer &out, int sampleRate,
+                          std::vector<midi::MidiMessage> &midiBuffer) override;
 
     void setLowCutState(LowCutState newState);
     LowCutState setLowCutToNextState();

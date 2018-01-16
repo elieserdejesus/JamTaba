@@ -5,7 +5,7 @@
 #include <QFontDatabase>
 #include <QRegularExpression>
 
-using namespace Theme;
+using namespace theme;
 
 QStringList Loader::getAvailableThemes(QString themesDir)
 {

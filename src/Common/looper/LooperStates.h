@@ -6,7 +6,7 @@
 
 #include "Looper.h"
 
-namespace Audio {
+namespace audio {
 
 class SamplesBuffer;
 

@@ -10,7 +10,7 @@
 #include <QTcpSocket>
 #include "ServerMessagesHandler.h"
 
-using namespace Ninjam;
+using namespace ninjam;
 
 const QStringList Service::botNames = buildBotNamesList();
 

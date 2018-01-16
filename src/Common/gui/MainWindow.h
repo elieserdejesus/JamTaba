@@ -37,11 +37,11 @@ class ChordsPanel;
 class ChatPanel;
 class InactivityDetector;
 
-namespace Login {
+namespace login {
 class RoomInfo;
 }
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
 
@@ -52,14 +52,14 @@ class MainWindow : public QMainWindow
     Q_PROPERTY(QColor tintColor MEMBER tintColor WRITE setTintColor)
 
 public:
-    MainWindow(Controller::MainController *mainController, QWidget *parent = 0);
+    MainWindow(controller::MainController *mainController, QWidget *parent = 0);
     virtual ~MainWindow();
 
     void initialize();
 
     void detachMainController();
 
-    virtual Persistence::LocalInputTrackSettings getInputsSettings() const;
+    virtual persistence::LocalInputTrackSettings getInputsSettings() const;
 
     int getChannelGroupsCount() const;
 
@@ -72,9 +72,9 @@ public:
 
     void exitFromRoom(bool normalDisconnection, QString disconnectionMessage = "");
 
-    virtual Controller::MainController *getMainController() const;
+    virtual controller::MainController *getMainController() const;
 
-    virtual void loadPreset(const Persistence::Preset &preset);
+    virtual void loadPreset(const persistence::Preset &preset);
     void resetLocalChannels();
 
     bool isTransmiting(int channelID) const;
@@ -102,26 +102,25 @@ public:
     QColor getTintColor() const;
 
 public slots:
-    void enterInRoom(const Login::RoomInfo &roomInfo);
+    void enterInRoom(const login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
-    void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
+    void tryEnterInRoom(const login::RoomInfo &roomInfo, const QString &password = "");
 
     void showFeedbackAboutBlockedUserInChat(const QString &userName);
     void showFeedbackAboutUnblockedUserInChat(const QString &userName);
 
-    void addMainChatMessage(const Ninjam::User &, const QString &message);
-    void addPrivateChatMessage(const Ninjam::User &, const QString &message);
+    void addMainChatMessage(const ninjam::User &, const QString &message);
+    void addPrivateChatMessage(const ninjam::User &, const QString &message);
     void addPrivateChat(const QString &remoteUserName, const QString &userIP);
 
 protected:
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
     Ui::MainFrameClass ui;
     QList<LocalTrackGroupView *> localGroupChannels;
 
     void centerDialog(QWidget *dialog);
 
-    virtual NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &,
-                                                 Controller::MainController *) = 0;
+    virtual NinjamRoomWindow *createNinjamWindow(const login::RoomInfo &, controller::MainController *) = 0;
 
     bool eventFilter(QObject *target, QEvent *event);
 
@@ -132,7 +131,7 @@ protected:
     virtual LocalTrackGroupView *createLocalTrackGroupView(int channelGroupIndex);
 
     virtual void initializeLocalSubChannel(LocalTrackView *localTrackView,
-                                           const Persistence::Subchannel &subChannel);
+                                           const persistence::Subchannel &subChannel);
 
     void stopCurrentRoomStream();
 
@@ -142,8 +141,10 @@ protected:
     QList<T> getLocalChannels() const
     {
         QList<T> localChannels;
-        foreach (LocalTrackGroupView *trackGroupView, localGroupChannels)
+
+        for (auto trackGroupView : localGroupChannels)
             localChannels.append(dynamic_cast<T>(trackGroupView));
+
         return localChannels;
     }
 
@@ -211,8 +212,8 @@ protected slots:
     virtual void handleServerConnectionError(const QString &errorMsg);
 
     // +++++  ROOM FEATURES ++++++++
-    void playPublicRoomStream(const Login::RoomInfo &roomInfo);
-    void stopPublicRoomStream(const Login::RoomInfo &roomInfo);
+    void playPublicRoomStream(const login::RoomInfo &roomInfo);
+    void stopPublicRoomStream(const login::RoomInfo &roomInfo);
 
     // collapse areas
     void toggleLocalTracksCollapseStatus();
@@ -246,7 +247,7 @@ private slots:
 
     void showJamtabaCurrentVersion();
 
-    void refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms);
+    void refreshPublicRoomsList(const QList<login::RoomInfo> &publicRooms);
 
     void hideChordsPanel();
 
@@ -280,7 +281,7 @@ private slots:
     void handleUserLeaving(const QString &userName);
     void handleUserEntering(const QString &userName);
 
-    void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
+    void handleChordProgressionMessage(const ninjam::User &user, const QString &message);
     void sendNewChatMessage(const QString &msg);
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
@@ -348,17 +349,17 @@ private:
 
     QScopedPointer<NinjamRoomWindow> ninjamWindow;
 
-    QScopedPointer<Login::RoomInfo> roomToJump; // store the next room reference when jumping from on room to another
+    QScopedPointer<login::RoomInfo> roomToJump; // store the next room reference when jumping from on room to another
     QString passwordToJump;
 
-    static bool jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2);
+    static bool jamRoomLessThan(const login::RoomInfo &r1, const login::RoomInfo &r2);
 
     void setCameraComboVisibility(bool show);
 
     void initializeCamera(const QString &cameraDeviceName);
 
     void initializeLoginService();
-    void initializeLocalInputChannels(const Persistence::LocalInputTrackSettings &localInputSettings);
+    void initializeLocalInputChannels(const persistence::LocalInputTrackSettings &localInputSettings);
 
     void initializeMainTabWidget();
     void initializeViewMenu();
@@ -388,7 +389,7 @@ private:
 
     ChordsPanel *createChordsPanel();
 
-    JamRoomViewPanel *createJamRoomViewPanel(const Login::RoomInfo &roomInfo);
+    JamRoomViewPanel *createJamRoomViewPanel(const login::RoomInfo &roomInfo);
 
     void setupSignals();
     void setupWidgets();
@@ -399,7 +400,7 @@ private:
     void addNinjamPanelsInBottom();
 
     void showLastChordsInMainChat();
-    void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
+    void createVoteButton(const gui::chat::SystemVotingMessage &votingMessage);
     bool canShowBlockButtonInChatMessage(const QString &userName) const;
 
     void loadTranslationFile(const QString &locale);
@@ -443,7 +444,7 @@ inline NinjamRoomWindow* MainWindow::getNinjamRomWindow() const
     return this->ninjamWindow.data();
 }
 
-inline Controller::MainController *MainWindow::getMainController() const
+inline controller::MainController *MainWindow::getMainController() const
 {
     return mainController;
 }

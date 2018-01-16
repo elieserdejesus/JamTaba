@@ -3,7 +3,7 @@
 #include <QString>
 #include "midi/MidiMessage.h"
 
-using namespace Midi;
+using namespace midi;
 
 class TestMidiMessage: public QObject
 {

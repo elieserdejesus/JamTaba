@@ -19,7 +19,7 @@ public:
     Encoder(uint channels, uint sampleRate, float quality);
     ~Encoder();
 
-    QByteArray encode(const Audio::SamplesBuffer &audioBuffer) override;
+    QByteArray encode(const audio::SamplesBuffer &audioBuffer) override;
     QByteArray finishIntervalEncoding() override;
 
     int getChannels() const;

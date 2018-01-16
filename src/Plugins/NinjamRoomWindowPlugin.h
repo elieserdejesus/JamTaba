@@ -11,7 +11,7 @@ class NinjamRoomWindowPlugin : public NinjamRoomWindow
     Q_OBJECT
 
 public:
-    NinjamRoomWindowPlugin(MainWindowPlugin *parent, const Login::RoomInfo &roomInfo, MainControllerPlugin *mainController);
+    NinjamRoomWindowPlugin(MainWindowPlugin *parent, const login::RoomInfo &roomInfo, MainControllerPlugin *mainController);
 
 private slots:
     void setHostSyncState(bool syncWithHost);

@@ -17,19 +17,19 @@ class QCoreApplication;
 
 class MainWindowStandalone;
 
-namespace Midi {
+namespace midi {
 class MidiDriver;
 }
 
 
-namespace Controller {
+namespace controller {
 
 class MainControllerStandalone : public MainController
 {
     Q_OBJECT
 
 public:
-    MainControllerStandalone(Persistence::Settings settings, QApplication *application);
+    MainControllerStandalone(persistence::Settings settings, QApplication *application);
     ~MainControllerStandalone();
 
     void initializeVstPluginsList(const QStringList &paths);
@@ -62,12 +62,12 @@ public:
         return 44100;
     }
 
-    inline Audio::AudioDriver *getAudioDriver() const
+    inline audio::AudioDriver *getAudioDriver() const
     {
         return audioDriver.data();
     }
 
-    inline Midi::MidiDriver *getMidiDriver() const
+    inline midi::MidiDriver *getMidiDriver() const
     {
         return midiDriver.data();
     }
@@ -94,11 +94,11 @@ public:
         return vstPluginFinder.data();
     }
 
-    void removePlugin(int inputTrackIndex, Audio::Plugin *PLUGIN);
-    QMap<QString, QList<Audio::PluginDescriptor> > getPluginsDescriptors(Audio::PluginDescriptor::Category category);
-    Audio::Plugin *addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex, const Audio::PluginDescriptor &descriptor);
+    void removePlugin(int inputTrackIndex, audio::Plugin *PLUGIN);
+    QMap<QString, QList<audio::PluginDescriptor> > getPluginsDescriptors(audio::PluginDescriptor::Category category);
+    audio::Plugin *addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex, const audio::PluginDescriptor &descriptor);
 
-    std::vector<Midi::MidiMessage> pullMidiMessagesFromPlugins() override;
+    std::vector<midi::MidiMessage> pullMidiMessagesFromPlugins() override;
 
 public slots:
     void setSampleRate(int newSampleRate) override;
@@ -115,21 +115,21 @@ public slots:
 
     void openExternalAudioControlPanel();
 
-    void connectInNinjamServer(const Ninjam::Server &server) override;
+    void connectInNinjamServer(const ninjam::Server &server) override;
 
 protected:
-    Midi::MidiDriver *createMidiDriver();
+    midi::MidiDriver *createMidiDriver();
 
     // TODO - Audio driver need just the audio settings to initialize, not the entire settings.
-    Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
+    audio::AudioDriver *createAudioDriver(const persistence::Settings &settings);
 
-    Controller::NinjamController *createNinjamController() override;
+    controller::NinjamController *createNinjamController() override;
 
     void setCSS(const QString &css) override;
 
     void setupNinjamControllerSignals() override;
 
-    std::vector<Midi::MidiMessage> pullMidiMessagesFromDevices() override;
+    std::vector<midi::MidiMessage> pullMidiMessagesFromDevices() override;
 
 protected slots:
     void updateBpm(int newBpm) override;
@@ -155,10 +155,10 @@ private:
     QList<Host *> hosts;
     QApplication *application;
 
-    QScopedPointer<Audio::AudioDriver> audioDriver;
-    QScopedPointer<Midi::MidiDriver> midiDriver;
+    QScopedPointer<audio::AudioDriver> audioDriver;
+    QScopedPointer<midi::MidiDriver> midiDriver;
 
-    QList<Audio::PluginDescriptor> pluginsDescriptors;
+    QList<audio::PluginDescriptor> pluginsDescriptors;
 
     MainWindowStandalone *window;
 
@@ -170,9 +170,9 @@ private:
  #endif
 
     // used to sort plugins list
-    static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1, const Audio::PluginDescriptor &d2);
+    static bool pluginDescriptorLessThan(const audio::PluginDescriptor &d1, const audio::PluginDescriptor &d2);
 
-    Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
+    audio::Plugin *createPluginInstance(const audio::PluginDescriptor &descriptor);
 
     void scanVstPlugins(bool scanOnlyNewVstPlugins);
 

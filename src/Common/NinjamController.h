@@ -11,12 +11,12 @@
 
 class NinjamTrackNode;
 
-namespace Audio {
+namespace audio {
 class MetronomeTrackNode;
 class SamplesBuffer;
 }
 
-namespace Controller {
+namespace controller {
 class MainController;
 
 // ++++++++++++++++++++
@@ -26,10 +26,10 @@ class NinjamController : public QObject
     Q_OBJECT
 
 public:
-    explicit NinjamController(Controller::MainController *mainController);
+    explicit NinjamController(controller::MainController *mainController);
     virtual ~NinjamController();
-    virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
-    void start(const Ninjam::Server &server);
+    virtual void process(const audio::SamplesBuffer &in, audio::SamplesBuffer &out, int sampleRate);
+    void start(const ninjam::Server &server);
     void stop(bool emitDisconnectedSignal);
     bool isRunning() const;
 
@@ -51,7 +51,7 @@ public:
 
     void recreateEncoders();
 
-    QByteArray encode(const Audio::SamplesBuffer &buffer, uint channelIndex);
+    QByteArray encode(const audio::SamplesBuffer &buffer, uint channelIndex);
     QByteArray encodeLastPartOfInterval(uint channelIndex);
 
     void scheduleEncoderChangeForChannel(int channelIndex);
@@ -67,17 +67,17 @@ public:
 
     void recreateMetronome(int newSampleRate);
 
-    void blockUserInChat(const Ninjam::User &user);
+    void blockUserInChat(const ninjam::User &user);
     void blockUserInChat(const QString &userNameToBlock);
 
-    void unblockUserInChat(const Ninjam::User &user);
+    void unblockUserInChat(const ninjam::User &user);
     void unblockUserInChat(const QString &userNameToBlock);
 
     bool userIsBlockedInChat(const QString &userName) const;
 
     bool userIsBot(const QString userName) const;
 
-    Ninjam::User getUserByName(const QString &userName) const;
+    ninjam::User getUserByName(const QString &userName) const;
 
     uint getSamplesPerInterval() const;
 
@@ -90,17 +90,17 @@ signals:
     void intervalBeatChanged(int intervalBeat);
     void startingNewInterval();
     void startProcessing(int intervalPosition);
-    void channelAdded(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
-    void channelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
-    void channelNameChanged(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
+    void channelAdded(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID);
+    void channelRemoved(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID);
+    void channelNameChanged(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID);
     void channelXmitChanged(long channelID, bool transmiting);
     void channelAudioChunkDownloaded(long channelID);
     void channelAudioFullyDownloaded(long channelID);
     void userLeave(const QString &userName);
     void userEnter(const QString &userName);
 
-    void publicChatMessageReceived(const Ninjam::User &user, const QString &message );
-    void privateChatMessageReceived(const Ninjam::User &user, const QString &message );
+    void publicChatMessageReceived(const ninjam::User &user, const QString &message );
+    void privateChatMessageReceived(const ninjam::User &user, const QString &message );
     void topicMessageReceived(const QString &message);
 
     void encodedAudioAvailableToSend(const QByteArray &encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
@@ -119,18 +119,18 @@ protected:
 
     QMap<QString, NinjamTrackNode *> trackNodes; // the other users channels
 
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
 
-    Audio::MetronomeTrackNode *metronomeTrackNode;
+    audio::MetronomeTrackNode *metronomeTrackNode;
 
 private:
-    static QString getUniqueKeyForChannel(const Ninjam::UserChannel &channel);
-    static QString getUniqueKeyForUser(const Ninjam::User& user);
+    static QString getUniqueKeyForChannel(const ninjam::UserChannel &channel);
+    static QString getUniqueKeyForUser(const ninjam::User& user);
 
-    void addTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void removeTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void addTrack(const ninjam::User &user, const ninjam::UserChannel &channel);
+    void removeTrack(const ninjam::User &user, const ninjam::UserChannel &channel);
 
-    static bool userIsBlockedInChat(const Ninjam::User &user);
+    static bool userIsBlockedInChat(const ninjam::User &user);
 
     static QList<QString> chatBlockedUsers; // using static to keep the blocked users list until Jamtaba is closed.
 
@@ -151,7 +151,7 @@ private:
 
     static long generateNewTrackID();
 
-    Audio::MetronomeTrackNode *createMetronomeTrackNode(int sampleRate);
+    audio::MetronomeTrackNode *createMetronomeTrackNode(int sampleRate);
 
     QMap<int, AudioEncoder *> encoders;
     AudioEncoder *getEncoder(quint8 channelIndex);
@@ -181,15 +181,15 @@ private slots:
     // ninjam events
     void scheduleBpmChangeEvent(quint16 newBpm);
     void scheduleBpiChangeEvent(quint16 newBpi, quint16 oldBpi);
-    void handleIntervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
-    void handleIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int downloadedBytes);
-    void addNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void removeNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void updateNinjamRemoteChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void handleNinjamUserExiting(const Ninjam::User &user);
-    void handleNinjamUserEntering(const Ninjam::User &user);
-    void handleReceivedPublicChatMessage(const Ninjam::User &user, const QString &message);
-    void handleReceivedPrivateChatMessage(const Ninjam::User &user, const QString &message);
+    void handleIntervalCompleted(const ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
+    void handleIntervalDownloading(const ninjam::User &user, quint8 channelIndex, int downloadedBytes);
+    void addNinjamRemoteChannel(const ninjam::User &user, const ninjam::UserChannel &channel);
+    void removeNinjamRemoteChannel(const ninjam::User &user, const ninjam::UserChannel &channel);
+    void updateNinjamRemoteChannel(const ninjam::User &user, const ninjam::UserChannel &channel);
+    void handleNinjamUserExiting(const ninjam::User &user);
+    void handleNinjamUserEntering(const ninjam::User &user);
+    void handleReceivedPublicChatMessage(const ninjam::User &user, const QString &message);
+    void handleReceivedPrivateChatMessage(const ninjam::User &user, const QString &message);
 
 }; // end of class
 

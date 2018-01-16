@@ -4,7 +4,7 @@
 #include "audio/core/SamplesBuffer.h"
 #include <QTest>
 
-using namespace Audio;
+using namespace audio;
 
 void TestSamplesBuffer::copy()
 {

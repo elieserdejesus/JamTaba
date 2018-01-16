@@ -22,9 +22,9 @@ public:
     TextEditorModifier *createTextEditorModifier() override;
 
 protected:
-    NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) override;
+    NinjamRoomWindow *createNinjamWindow(const login::RoomInfo &, controller::MainController *) override;
 
-    void initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel) override;
+    void initializeLocalSubChannel(LocalTrackView *subChannelView, const persistence::Subchannel &subChannel) override;
 
     void removeAllInputLocalTracks() override;
 

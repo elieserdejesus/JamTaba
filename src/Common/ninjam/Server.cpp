@@ -5,7 +5,7 @@
 #include "log/Logging.h"
 #include <QSet>
 
-using namespace Ninjam;
+using namespace ninjam;
 
 Server::Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers) :
     port(port),

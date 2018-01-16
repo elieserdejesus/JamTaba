@@ -6,7 +6,7 @@
 
 #include <QScopedPointer>
 
-namespace AU {
+namespace au {
 
 class AudioUnitHost : public Host
 {

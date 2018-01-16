@@ -7,11 +7,12 @@
 #include <QScopedPointer>
 #include "audio/SamplesBufferResampler.h"
 
-namespace Midi {
+namespace midi {
 class MidiMessage;
 }
 
-namespace Audio {
+namespace audio {
+
 class AudioNode;
 class SamplesBuffer;
 class LocalInputNode;
@@ -25,7 +26,7 @@ private:
 public:
     explicit AudioMixer(int sampleRate);
     ~AudioMixer();
-    void process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const std::vector<Midi::MidiMessage> &midiBuffer, bool attenuateAfterSumming = false);
+    void process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const std::vector<midi::MidiMessage> &midiBuffer, bool attenuateAfterSumming = false);
     void addNode(AudioNode *node);
     void removeNode(AudioNode *node);
 
@@ -40,7 +41,7 @@ private:
 
 inline void AudioMixer::setSampleRate(int newSampleRate)
 {
-    this->sampleRate = newSampleRate;
+    sampleRate = newSampleRate;
 }
 
 } // namespace

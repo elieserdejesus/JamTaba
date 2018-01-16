@@ -3,7 +3,7 @@
 #include "log/Logging.h"
 #include <QRegularExpression>
 
-using namespace Geo;
+using namespace geo;
 
 Location::Location() :
     countryName("UNKNOWN"),
@@ -47,5 +47,5 @@ Location NullIpToLocationResolver::resolve(const QString &ip, const QString &lan
 {
     Q_UNUSED(ip)
     Q_UNUSED(languageCode)
-    return Geo::Location();
+    return geo::Location();
 }

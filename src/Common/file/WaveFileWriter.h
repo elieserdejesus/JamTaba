@@ -3,7 +3,7 @@
 
 #include "FileReader.h"
 
-namespace Audio {
+namespace audio {
 
 class WaveFileWriter
 {

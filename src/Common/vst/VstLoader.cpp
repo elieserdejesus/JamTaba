@@ -7,9 +7,9 @@
 #include "VstHost.h"
 #include "log/Logging.h"
 
-using namespace Vst;
+using namespace vst;
 
-AEffect* VstLoader::load(const QString &path, Vst::VstHost* host){
+AEffect* VstLoader::load(const QString &path, vst::VstHost* host){
     if(!host){
         return 0;
     }
@@ -47,7 +47,7 @@ AEffect* VstLoader::load(const QString &path, Vst::VstHost* host){
     //QCoreApplication::processEvents();
     try{
         qCDebug(jtStandaloneVstPlugin) << "Initializing effect for " << path ;
-        effect = entryPoint( (audioMasterCallback)host->hostCallback);// myHost->vstHost->AudioMasterCallback);
+        effect = entryPoint((audioMasterCallback)host->hostCallback);// myHost->vstHost->AudioMasterCallback);
     }
     catch(... ){
         qCritical() << "Error loading VST plugin";

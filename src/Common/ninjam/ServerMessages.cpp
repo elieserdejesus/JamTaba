@@ -5,9 +5,9 @@
 #include "ninjam/User.h"
 #include "ninjam/Service.h"
 
-using namespace Ninjam;
+using namespace ninjam;
 
-namespace Ninjam {
+namespace ninjam {
 
 // some functions used only in the Ninjam namespace...
 
@@ -72,7 +72,7 @@ void ServerAuthChallengeMessage::readFrom(QDataStream &stream)
     //Q_ASSERT(protocolVersion == 0x00020000);
 
     if (serverHasLicenceAgreement)
-        licenceAgreement = Ninjam::extractString(stream);
+        licenceAgreement = ninjam::extractString(stream);
 }
 
 void ServerAuthChallengeMessage::printDebug(QDebug &dbg) const
@@ -97,7 +97,7 @@ void ServerAuthReplyMessage::readFrom(QDataStream &stream)
     stream >> flag;
 
     quint32 stringSize = payload - sizeof(flag) - sizeof(maxChannels);
-    message = Ninjam::extractString(stream, stringSize);
+    message = ninjam::extractString(stream, stringSize);
 
     stream >> maxChannels;
 }
@@ -170,13 +170,13 @@ void UserInfoChangeNotifyMessage::readFrom(QDataStream &stream)
         quint8 flags;
         stream >> active >> channelIndex >> volume >> pan >> flags;
         bytesConsumed += 6;
-        QString userFullName = Ninjam::extractString(stream);
+        QString userFullName = ninjam::extractString(stream);
         if(!users.contains(userFullName)){
             users.insert(userFullName, User(userFullName));
         }
         User &user = users[userFullName];
         bytesConsumed += userFullName.toUtf8().size() + 1;
-        QString channelName = Ninjam::extractString(stream);
+        QString channelName = ninjam::extractString(stream);
         bytesConsumed += channelName.toUtf8().size() + 1;
         bool channelIsActive = active > 0 ? true : false;
         user.addChannel(UserChannel(userFullName, channelName, channelIndex, channelIsActive,
@@ -288,7 +288,7 @@ void DownloadIntervalBegin::readFrom(QDataStream &stream)
     stream >> channelIndex;
 
     quint32 stringSize = payload - 16 - sizeof(estimatedSize) - 4 - sizeof(channelIndex);
-    userName = Ninjam::extractString(stream, stringSize);
+    userName = ninjam::extractString(stream, stringSize);
 }
 
 bool DownloadIntervalBegin::isAudio() const
@@ -345,7 +345,7 @@ void DownloadIntervalWrite::readFrom(QDataStream &stream)
 
 // ++++++++++++++++++
 
-QDataStream& Ninjam::operator >>(QDataStream &stream, ServerMessage &message)
+QDataStream& ninjam::operator >>(QDataStream &stream, ServerMessage &message)
 {
     message.readFrom(stream);
     return stream;

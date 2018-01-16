@@ -4,13 +4,14 @@
 #include <QString>
 #include "aeffectx.h"
 
-namespace Vst {
+namespace vst {
+
 class VstHost;
 
 class VstLoader
 {
 public:
-    static AEffect *load(const QString &path, Vst::VstHost *host);
+    static AEffect *load(const QString &path, vst::VstHost *host);
     static void unload(AEffect *effect);
 };
 }

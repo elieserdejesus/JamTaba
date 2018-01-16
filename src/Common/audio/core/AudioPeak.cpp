@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <QtGlobal>
 
-using namespace Audio;
+using namespace audio;
 
 AudioPeak::AudioPeak(float leftPeak, float rightPeak, float rmsLeft, float rmsRight)
 {

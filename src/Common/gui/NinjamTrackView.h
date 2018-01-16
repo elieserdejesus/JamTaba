@@ -9,7 +9,7 @@
 #include "audio/NinjamTrackNode.h"
 #include "MultiStateButton.h"
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
 
@@ -20,9 +20,9 @@ class NinjamTrackView : public BaseTrackView
     Q_OBJECT
 
 public:
-    NinjamTrackView(Controller::MainController *mainController, long trackID);
+    NinjamTrackView(controller::MainController *mainController, long trackID);
     void setChannelName(const QString &name);
-    void setInitialValues(const Persistence::CacheEntry &initialValues);
+    void setInitialValues(const persistence::CacheEntry &initialValues);
     void setNinjamChannelData(const QString &userFullName, quint8 channelIndex);
 
     // interval chunks visual feedback
@@ -52,7 +52,7 @@ private:
     MarqueeLabel *channelNameLabel;
     MultiStateButton *buttonLowCut;
     QPushButton *buttonReceive;
-    Persistence::CacheEntry cacheEntry; // used to remember the track controls values
+    persistence::CacheEntry cacheEntry; // used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay; // display downloaded interval chunks
 
     // used to send channel receive on/off messages

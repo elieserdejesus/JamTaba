@@ -62,7 +62,7 @@ void NinjamControllerPlugin::startSynchronizedWithHost(qint32 startPosition)
     }
 }
 
-void NinjamControllerPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate)
+void NinjamControllerPlugin::process(const audio::SamplesBuffer &in, audio::SamplesBuffer &out, int sampleRate)
 {
     if (!waitingForHostSync)
         NinjamController::process(in, out, sampleRate);

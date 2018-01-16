@@ -5,7 +5,7 @@
 #include <QFileInfo>
 #include <QDir>
 
-using namespace Ninjam;
+using namespace ninjam;
 
 /**
 Simulate the connection in a full server using data collected with Wireshark. The sequence of received message are a

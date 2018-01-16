@@ -12,11 +12,11 @@ class FxPanel : public QWidget
     Q_OBJECT
 
 public:
-    FxPanel(LocalTrackViewStandalone *parent, Controller::MainControllerStandalone *mainController);
+    FxPanel(LocalTrackViewStandalone *parent, controller::MainControllerStandalone *mainController);
 
     virtual ~FxPanel();
 
-    void addPlugin(Audio::Plugin *plugin, quint32 pluginSlotIndex);
+    void addPlugin(audio::Plugin *plugin, quint32 pluginSlotIndex);
 
     qint32 getPluginFreeSlotIndex() const; // return -1 if no free slots are available
 
@@ -34,7 +34,7 @@ public:
 
 private:
     QList<FxPanelItem *> items;
-    Controller::MainControllerStandalone *controller; // storing a 'casted' controller for convenience
+    controller::MainControllerStandalone *controller; // storing a 'casted' controller for convenience
     LocalTrackViewStandalone *localTrackView;
 };
 

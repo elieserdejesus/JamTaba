@@ -18,7 +18,7 @@
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
 
-NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID) :
+NinjamTrackView::NinjamTrackView(controller::MainController *mainController, long trackID) :
     BaseTrackView(mainController, trackID),
     orientation(Qt::Vertical),
     downloadingFirstInterval(true)
@@ -141,7 +141,7 @@ void NinjamTrackView::updateStyleSheet()
     BaseTrackView::updateStyleSheet();
 }
 
-void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialValues)
+void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialValues)
 {
     cacheEntry = initialValues;
 
@@ -194,7 +194,7 @@ void NinjamTrackView::setActivatedStatus(bool deactivated)
     BaseTrackView::setActivatedStatus(deactivated);
 
     if (deactivated) { // remote user stop xmiting and the track is greyed/unlighted?
-        Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
+        auto trackNode = mainController->getTrackNode(getTrackID());
         if (trackNode)
             trackNode->resetLastPeak(); // reset the internal node last peak to avoid getting the last peak calculated when the remote user was transmiting.
 
@@ -364,7 +364,7 @@ void NinjamTrackView::updateBoostValue(int index)
 {
     BaseTrackView::updateBoostValue(index);
 
-    Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
+    auto trackNode = mainController->getTrackNode(getTrackID());
     if (trackNode) {
         cacheEntry.setBoost(trackNode->getBoost());
         mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);

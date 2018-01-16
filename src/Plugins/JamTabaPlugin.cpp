@@ -41,7 +41,7 @@ void JamTabaPlugin::initialize()
             QApplication::setApplicationName("Jamtaba 2");
             QApplication::setApplicationVersion(VERSION);
 
-            Persistence::Settings settings; // read from file in constructor
+            persistence::Settings settings; // read from file in constructor
             settings.load();
             qCDebug(jtVstPlugin)<< "Creating controller!";
             controller.reset(createPluginMainController(settings, this));

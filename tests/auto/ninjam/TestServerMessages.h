@@ -5,7 +5,7 @@
 #include "ninjam/ServerMessages.h"
 #include "ninjam/UserChannel.h"
 
-using namespace Ninjam;
+using namespace ninjam;
 
 //these tests are checking if the server messages are extracted correctly from some stream
 

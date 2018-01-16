@@ -5,19 +5,19 @@
 #include <QVBoxLayout>
 #include <QPainter>
 
-using namespace Controller;
+using namespace controller;
 
 FxPanel::FxPanel(LocalTrackViewStandalone *parent, MainControllerStandalone *mainController) :
     QWidget(parent),
     controller(mainController),
     localTrackView(parent)
 {
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    auto mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(QMargins(0, 0, 0, 0));
     mainLayout->setSpacing(1);
 
     for (int i = 0; i < 4; i++) {
-        FxPanelItem *item = new FxPanelItem(localTrackView, mainController);
+        auto item = new FxPanelItem(localTrackView, mainController);
         items.append(item);
         mainLayout->addWidget(item);
     }
@@ -25,8 +25,8 @@ FxPanel::FxPanel(LocalTrackViewStandalone *parent, MainControllerStandalone *mai
 
 void FxPanel::removePlugins()
 {
-    QList<FxPanelItem *> items = findChildren<FxPanelItem *>();
-    for (FxPanelItem *item : items) {
+    auto items = findChildren<FxPanelItem *>();
+    for (auto item : items) {
         if (item->containPlugin())
             item->unsetPlugin();
     }
@@ -34,9 +34,9 @@ void FxPanel::removePlugins()
 
 qint32 FxPanel::getPluginFreeSlotIndex() const
 {
-    QList<FxPanelItem *> items = findChildren<FxPanelItem *>();
+    auto items = findChildren<FxPanelItem *>();
     int slotIndex = 0;
-    for (FxPanelItem *item : items) {
+    for (auto item : items) {
         if (!item->containPlugin())
             return slotIndex;
         slotIndex++;
@@ -44,11 +44,11 @@ qint32 FxPanel::getPluginFreeSlotIndex() const
     return -1; // no free slot
 }
 
-void FxPanel::addPlugin(Audio::Plugin *plugin, quint32 pluginSlotIndex)
+void FxPanel::addPlugin(audio::Plugin *plugin, quint32 pluginSlotIndex)
 {
-    QList<FxPanelItem *> items = findChildren<FxPanelItem *>();
+    auto items = findChildren<FxPanelItem *>();
     if (pluginSlotIndex < (quint32)items.count()) {
-        FxPanelItem *fxPanelItem = items.at(pluginSlotIndex);
+        auto fxPanelItem = items.at(pluginSlotIndex);
         if (!fxPanelItem->containPlugin())
             fxPanelItem->setPlugin(plugin);
         else

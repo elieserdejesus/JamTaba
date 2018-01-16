@@ -10,12 +10,12 @@
 #include <QDir>
 #include <QDebug>
 
-using namespace Audio;
+using namespace audio;
 
-const QString MetronomeUtils::DEFAULT_BUILT_IN_METRONOME_ALIAS("Default");
-const QString MetronomeUtils::DEFAULT_BUILT_IN_METRONOME_DIR(":/metronome");
+const QString metronomeUtils::DEFAULT_BUILT_IN_METRONOME_ALIAS("Default");
+const QString metronomeUtils::DEFAULT_BUILT_IN_METRONOME_DIR(":/metronome");
 
-QList<QString> MetronomeUtils::getBuiltInMetronomeAliases()
+QList<QString> metronomeUtils::getBuiltInMetronomeAliases()
 {
     QDir metronomeDir(DEFAULT_BUILT_IN_METRONOME_DIR);
     if (!metronomeDir.exists()) {
@@ -43,7 +43,7 @@ QList<QString> MetronomeUtils::getBuiltInMetronomeAliases()
     return aliases;
 }
 
-QList<int> MetronomeUtils::getAccentBeats(int beatsPerAccent, int bpi)
+QList<int> metronomeUtils::getAccentBeats(int beatsPerAccent, int bpi)
 {
     QList<int> accentBeats = QList<int>();
     for(int i = 1; beatsPerAccent > 0 && i < bpi; i++) {
@@ -54,7 +54,7 @@ QList<int> MetronomeUtils::getAccentBeats(int beatsPerAccent, int bpi)
     return accentBeats;
 }
 
-QList<int> MetronomeUtils::getAccentBeatsFromString(QString value)
+QList<int> metronomeUtils::getAccentBeatsFromString(QString value)
 {
     QList<int> accentBeats;
     QList<QString> accentBeatsStrings = value.trimmed().split(QRegExp("  *"));
@@ -70,25 +70,25 @@ QList<int> MetronomeUtils::getAccentBeatsFromString(QString value)
     return accentBeats;
 }
 
-void MetronomeUtils::createBuiltInSounds(const QString &alias, Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &offBeatBuffer, Audio::SamplesBuffer &accentBeatBuffer, quint32 localSampleRate)
+void metronomeUtils::createBuiltInSounds(const QString &alias, SamplesBuffer &firstBeatBuffer, SamplesBuffer &offBeatBuffer, SamplesBuffer &accentBeatBuffer, quint32 localSampleRate)
 {
     createBuiltInSound(alias, "1st", firstBeatBuffer, localSampleRate);
     createBuiltInSound(alias, "off", offBeatBuffer, localSampleRate);
     createBuiltInSound(alias, "accent", accentBeatBuffer, localSampleRate);
 }
 
-void MetronomeUtils::createBuiltInSound(const QString &alias, const QString &beat, Audio::SamplesBuffer &beatBuffer, quint32 localSampleRate) {
+void metronomeUtils::createBuiltInSound(const QString &alias, const QString &beat, SamplesBuffer &beatBuffer, quint32 localSampleRate) {
     QString beatFile = buildMetronomeFileNameFromAlias(alias, beat);
     createBuffer(QFileInfo(DEFAULT_BUILT_IN_METRONOME_DIR, beatFile).absoluteFilePath(), beatBuffer, localSampleRate);
 }
 
-QString MetronomeUtils::buildMetronomeFileNameFromAlias(const QString &alias, const QString &beat)
+QString metronomeUtils::buildMetronomeFileNameFromAlias(const QString &alias, const QString &beat)
 {
     return (!alias.isEmpty() ? alias : DEFAULT_BUILT_IN_METRONOME_ALIAS) + "_" + beat + ".ogg";
 }
 
-void MetronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile,
-                                        Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &offBeatBuffer, Audio::SamplesBuffer &accentBeatBuffer, quint32 localSampleRate)
+void metronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile,
+                                        SamplesBuffer &firstBeatBuffer, SamplesBuffer &offBeatBuffer, SamplesBuffer &accentBeatBuffer, quint32 localSampleRate)
 {
     if (QFileInfo(firstBeatAudioFile).exists()){
         createBuffer(firstBeatAudioFile, firstBeatBuffer, localSampleRate);
@@ -107,7 +107,7 @@ void MetronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const
     }
 }
 
-void MetronomeUtils::removeSilenceInBufferStart(Audio::SamplesBuffer &buffer)
+void metronomeUtils::removeSilenceInBufferStart(SamplesBuffer &buffer)
 {
     int audioStartingIndex = 0;
     int frames = buffer.getFrameLenght();
@@ -128,11 +128,11 @@ void MetronomeUtils::removeSilenceInBufferStart(Audio::SamplesBuffer &buffer)
     }
 }
 
-void MetronomeUtils::createBuffer(const QString &audioFilePath, Audio::SamplesBuffer &outBuffer, quint32 localSampleRate)
+void metronomeUtils::createBuffer(const QString &audioFilePath, SamplesBuffer &outBuffer, quint32 localSampleRate)
 {
-    std::unique_ptr<Audio::FileReader> reader = Audio::FileReaderFactory::createFileReader(audioFilePath);
+    std::unique_ptr<FileReader> reader = FileReaderFactory::createFileReader(audioFilePath);
     quint32 audioFileSampleRate; //will be changed inside reader->read
-    Audio::SamplesBuffer originalBuffer(1);//assuming mono for while
+    SamplesBuffer originalBuffer(1);//assuming mono for while
     reader->read(audioFilePath, originalBuffer, audioFileSampleRate);//buffer will be filled with audio file samples
 
     //need resample?
@@ -147,7 +147,7 @@ void MetronomeUtils::createBuffer(const QString &audioFilePath, Audio::SamplesBu
     }
 }
 
-void MetronomeUtils::createResampledBuffer(const Audio::SamplesBuffer &buffer, Audio::SamplesBuffer &outBuffer, int originalSampleRate,
+void metronomeUtils::createResampledBuffer(const SamplesBuffer &buffer, SamplesBuffer &outBuffer, int originalSampleRate,
                                      int finalSampleRate)
 {
     int finalSize = (double)finalSampleRate/originalSampleRate * buffer.getFrameLenght();

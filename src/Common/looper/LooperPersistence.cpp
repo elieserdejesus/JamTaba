@@ -10,7 +10,7 @@
 #include <QJsonDocument>
 #include <QFileInfo>
 
-using namespace Audio;
+using namespace audio;
 
 LoopInfo::LoopInfo(quint32 bpm, quint16 bpi, const QString &name, bool audioIsEncoded, quint8 mode) :
     bpm(bpm),

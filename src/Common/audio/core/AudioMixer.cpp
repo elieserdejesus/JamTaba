@@ -6,7 +6,7 @@
 #include <QMutexLocker>
 #include "log/Logging.h"
 
-using namespace Audio;
+using namespace audio;
 
 AudioMixer::AudioMixer(int sampleRate) :
     sampleRate(sampleRate)
@@ -37,7 +37,7 @@ AudioMixer::~AudioMixer()
     qCDebug(jtAudio) << "Audio mixer destructor finished!";
 }
 
-void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const std::vector<Midi::MidiMessage> &midiBuffer, bool attenuateAfterSumming)
+void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const std::vector<midi::MidiMessage> &midiBuffer, bool attenuateAfterSumming)
 {
     static int soloedBuffersInLastProcess = 0;
     // --------------------------------------
@@ -48,14 +48,14 @@ void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sample
         if (canProcess) {
 
             // each channel (not subchannel) will receive a full copy of incomming midi messages
-            std::vector<Midi::MidiMessage> midiMessages(midiBuffer.size());
+            std::vector<midi::MidiMessage> midiMessages(midiBuffer.size());
             midiMessages.insert(midiMessages.begin(), midiBuffer.begin(), midiBuffer.end());
 
             node->processReplacing(in, out, sampleRate, midiMessages);
         }
         else { // just discard the samples if node is muted, the internalBuffer is not copyed to out buffer
-            static Audio::SamplesBuffer internalBuffer(2);
-            static std::vector<Midi::MidiMessage> emptyMidiBuffer;
+            static audio::SamplesBuffer internalBuffer(2);
+            static std::vector<midi::MidiMessage> emptyMidiBuffer;
             internalBuffer.setFrameLenght(out.getFrameLenght());
             node->processReplacing(in, internalBuffer, sampleRate, emptyMidiBuffer);
         }

@@ -17,9 +17,9 @@
 #include "widgets/BlinkableButton.h"
 #include "widgets/Slider.h"
 
-using namespace Audio;
+using namespace audio;
 
-namespace Controller {
+namespace controller {
 class NinjamController;
 class MainController;
 }
@@ -33,7 +33,7 @@ class LooperWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit LooperWindow(QWidget *parent, Controller::MainController *mainController);
+    explicit LooperWindow(QWidget *parent, controller::MainController *mainController);
     ~LooperWindow();
 
     void setLooper(Looper *looper);
@@ -105,7 +105,7 @@ private:
 
     QMap<quint8, LayerView> layerViews;
 
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
 
     void deleteWavePanels();
 
@@ -190,7 +190,7 @@ private:
     void updateMaxLayersControls();
     void setMaxLayerComboBoxValuesAvailability(int valuesToDisable);
 
-    void loadLoopInfo(const QString &loopDir, const Audio::LoopInfo &info);
+    void loadLoopInfo(const QString &loopDir, const audio::LoopInfo &info);
 
     void updateLayersControls();
     void updateModeComboBox();
@@ -205,7 +205,7 @@ private:
     QColor tintColor;
 };
 
-Q_DECLARE_METATYPE(Audio::Looper::RecordingOption)
-Q_DECLARE_METATYPE(Audio::Looper::PlayingOption)
+Q_DECLARE_METATYPE(audio::Looper::RecordingOption)
+Q_DECLARE_METATYPE(audio::Looper::PlayingOption)
 
 #endif // LOOPERWINDOW_H

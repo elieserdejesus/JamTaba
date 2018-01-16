@@ -5,11 +5,11 @@
 #include <QObject>
 #include <QMutex>
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
 
-namespace Audio {
+namespace audio {
 
 
 class ChannelRange
@@ -75,7 +75,7 @@ signals:
     void started();
 
 public:
-    explicit AudioDriver(Controller::MainController *mainController);
+    explicit AudioDriver(controller::MainController *mainController);
     virtual ~AudioDriver();
     virtual void setProperties(int firstIn, int lastIn, int firstOut, int lastOut);
 
@@ -139,7 +139,7 @@ protected:
 
     void recreateBuffers();
 
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
 };
 
 

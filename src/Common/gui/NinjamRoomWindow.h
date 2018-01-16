@@ -21,7 +21,7 @@ namespace Ui {
 class NinjamRoomWindow;
 }
 
-namespace Controller {
+namespace controller {
 class NinjamController;
 class MainController;
 }
@@ -31,8 +31,8 @@ class NinjamRoomWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &roomInfo,
-                              Controller::MainController *mainController);
+    explicit NinjamRoomWindow(MainWindow *parent, const login::RoomInfo &roomInfo,
+                              controller::MainController *mainController);
     ~NinjamRoomWindow();
     void updatePeaks();
     void updateGeoLocations();
@@ -54,7 +54,7 @@ public:
 
     QString getRoomName() const;
 
-    Login::RoomInfo getRoomInfo() const;
+    login::RoomInfo getRoomInfo() const;
 
     bool metronomeFloatingWindowIsVisible() const;
     void closeMetronomeFloatingWindow();
@@ -72,7 +72,7 @@ public slots:
 protected:
     Ui::NinjamRoomWindow *ui;
     MainWindow *mainWindow;
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
     NinjamPanel *ninjamPanel; // panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
     MetronomePanel *metronomePanel;
 
@@ -83,14 +83,14 @@ protected:
 private:
     QMap<QString, NinjamTrackGroupView *> trackGroups;
 
-    Login::RoomInfo roomInfo;
+    login::RoomInfo roomInfo;
 
-    void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
+    void handleChordProgressionMessage(const ninjam::User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
     MetronomePanel *createMetronomePanel();
 
-    void setupSignals(Controller::NinjamController *ninjamController);
+    void setupSignals(controller::NinjamController *ninjamController);
 
     NinjamTrackView *getTrackViewByID(long trackID);
 
@@ -145,12 +145,12 @@ private slots:
     void deleteFloatingWindow();
 
     // video
-    void setVideoInterval(const Ninjam::User &user, const QByteArray &encodedVideoData);
+    void setVideoInterval(const ninjam::User &user, const QByteArray &encodedVideoData);
 
     // ninjam controller events
-    void addChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
-    void removeChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
-    void changeChannelName(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
+    void addChannel(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID);
+    void removeChannel(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID);
+    void changeChannelName(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID);
     void updateIntervalDownloadingProgressBar(long trackID);
     void hideIntervalDownloadingProgressBar(long trackID);
 
@@ -189,7 +189,7 @@ inline QString NinjamRoomWindow::getRoomName() const
     return roomInfo.getName();
 }
 
-inline Login::RoomInfo NinjamRoomWindow::getRoomInfo() const
+inline login::RoomInfo NinjamRoomWindow::getRoomInfo() const
 {
     return roomInfo;
 }

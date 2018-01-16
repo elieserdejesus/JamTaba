@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <QList>
 
-namespace Audio {
+namespace audio {
 
 class AudioNodeProcessor;
 
@@ -21,9 +21,9 @@ public:
     AudioNode();
     virtual ~AudioNode();
 
-    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer);
+    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<midi::MidiMessage> &midiBuffer);
 
-    virtual std::vector<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const;
+    virtual std::vector<midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const;
 
     virtual void setMute(bool muted);
 
@@ -68,8 +68,8 @@ public:
 
 protected:
 
-    inline virtual void preFaderProcess(Audio::SamplesBuffer &out){ Q_UNUSED(out) } // called after process all input and plugins, and just before compute gain, pan and boost.
-    inline virtual void postFaderProcess(Audio::SamplesBuffer &out){ Q_UNUSED(out) } // called after compute gain, pan and boost.
+    inline virtual void preFaderProcess(audio::SamplesBuffer &out){ Q_UNUSED(out) } // called after process all input and plugins, and just before compute gain, pan and boost.
+    inline virtual void postFaderProcess(audio::SamplesBuffer &out){ Q_UNUSED(out) } // called after compute gain, pan and boost.
 
     int getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght);
 
@@ -78,7 +78,7 @@ protected:
     SamplesBuffer internalInputBuffer;
     SamplesBuffer internalOutputBuffer;
 
-    mutable Audio::AudioPeak lastPeak;
+    mutable audio::AudioPeak lastPeak;
     QMutex mutex; // used to protected connections manipulation because nodes can be added or removed by different threads
 
     // pan

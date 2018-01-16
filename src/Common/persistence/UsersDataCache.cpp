@@ -7,7 +7,7 @@
 #include "Configurator.h"
 #include "CacheHeader.h"
 
-using namespace Persistence;
+using namespace persistence;
 
 const quint32 UsersDataCacheHeader::REVISION = 3; // added 3 low cut states (off, normal and drastic) in revision 3
 

@@ -3,7 +3,7 @@
 
 #include "MidiMessage.h"
 
-using namespace Midi;
+using namespace midi;
 
 #include "log/Logging.h"
 
@@ -115,7 +115,7 @@ QString RtMidiDriver::getInputDeviceName(uint index) const{
     return "";
 }
 
-void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<Midi::MidiMessage> &outBuffer)
+void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<midi::MidiMessage> &outBuffer)
 {
     //qCDebug(jtMidi) << "consuming messages from stream - RtMidiDriver";
     std::vector<unsigned char> messageBytes;
@@ -123,7 +123,7 @@ void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, 
         messageBytes.clear();
         stream->getMessage(&messageBytes);
         if (messageBytes.size() == 3) { // Jamtaba is handling only the 3 bytes common midi messages. Uncommon midi messages will be ignored.
-            outBuffer.push_back(Midi::MidiMessage::fromVector(messageBytes, deviceIndex));
+            outBuffer.push_back(midi::MidiMessage::fromVector(messageBytes, deviceIndex));
         }
         else{
             if (!messageBytes.empty())
@@ -133,10 +133,11 @@ void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, 
     while(!messageBytes.empty());
 }
 
-std::vector<MidiMessage> RtMidiDriver::getBuffer(){
-    std::vector<Midi::MidiMessage> buffer;
+std::vector<MidiMessage> RtMidiDriver::getBuffer()
+{
+    std::vector<midi::MidiMessage> buffer;
     int deviceIndex = 0;
-    foreach (RtMidiIn* stream, midiStreams) {
+    for (auto stream : midiStreams) {
         consumeMessagesFromStream(stream, deviceIndex, buffer);
         deviceIndex++;
     }

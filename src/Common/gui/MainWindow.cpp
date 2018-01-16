@@ -32,12 +32,11 @@
 #include "ThemeLoader.h"
 #include "performance/PerformanceMonitor.h"
 
-using namespace Audio;
-using namespace Persistence;
-using namespace Controller;
-using namespace Ninjam;
-using namespace Persistence;
-using namespace Login;
+using namespace audio;
+using namespace persistence;
+using namespace controller;
+using namespace ninjam;
+using namespace login;
 
 const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
@@ -49,7 +48,7 @@ const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200; //in miliseconds
 
 const QString MainWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
 
-MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent) :
+MainWindow::MainWindow(controller::MainController *mainController, QWidget *parent) :
     QMainWindow(parent),
     mainController(mainController),
     camera(nullptr),
@@ -315,7 +314,7 @@ QImage MainWindow::pickCameraFrame() const
 
 void MainWindow::initializeMeteringOptions()
 {
-    const Persistence::Settings &settings = mainController->getSettings();
+    const auto &settings = mainController->getSettings();
     AudioMeter::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
     quint8 meterOption = settings.getMeterOption();
     switch (meterOption) {
@@ -436,8 +435,8 @@ void MainWindow::initializeThemeMenu()
 
     // create a menu action for each theme
     QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
-    QStringList themes = Theme::Loader::getAvailableThemes(themesDir);
-    for (const QString &themeDir : themes) {
+    auto themes = theme::Loader::getAvailableThemes(themesDir);
+    for (const auto &themeDir : themes) {
         QString themeName = QFileInfo(themeDir).baseName();
         QAction *action = ui.menuTheme->addAction(getStripedThemeName(themeName));
         action->setData(themeName);
@@ -492,8 +491,8 @@ void MainWindow::initializeLanguageMenu()
         QStringList locales = translationsDir.entryList();
         for (auto translationFile : locales) {
             QLocale loc(translationFile);
-            QString nativeLanguageName = Gui::capitalize(loc.nativeLanguageName());
-            QString englishLanguageName = Gui::capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
+            QString nativeLanguageName = gui::capitalize(loc.nativeLanguageName());
+            QString englishLanguageName = gui::capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
 
             QString actionText = nativeLanguageName + " (" + englishLanguageName + ")";
             auto actions = ui.menuLanguage->actions();
@@ -544,7 +543,7 @@ void MainWindow::initialize()
     if (qApp->styleSheet().isEmpty()) { // allow custom stylesheet via app arguments
         QString themeName = mainController->getTheme();
         QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
-        if(!Theme::Loader::canLoad(themesDir, themeName))
+        if(!theme::Loader::canLoad(themesDir, themeName))
             themeName = "Flat"; // fallback to Flat theme
         setTheme(themeName);
     }
@@ -607,8 +606,6 @@ void MainWindow::toggleBottomAreaCollapseStatus()
     updateCollapseButtons();
 }
 
-
-
 void MainWindow::toggleLocalTracksCollapseStatus()
 {
     if (localGroupChannels.isEmpty())
@@ -620,14 +617,14 @@ void MainWindow::toggleLocalTracksCollapseStatus()
     updateCollapseButtons();
 }
 
-Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
+persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
 {
     LocalInputTrackSettings settings;
-    for (LocalTrackGroupView *trackGroupView : localGroupChannels) {
+    for (auto trackGroupView : localGroupChannels) {
         Channel channel(trackGroupView->getGroupName());
         int subchannelsCount = 0;
-        for (LocalTrackView *trackView : trackGroupView->getTracks<LocalTrackView *>()) {
-            LocalInputNode *inputNode = trackView->getInputNode();
+        for (auto trackView : trackGroupView->getTracks<LocalTrackView *>()) {
+            auto inputNode = trackView->getInputNode();
             ChannelRange inputNodeRange = inputNode->getAudioInputRange();
             int firstInput = inputNodeRange.getFirstChannel();
             int channels = inputNodeRange.getChannels();
@@ -688,7 +685,7 @@ void MainWindow::removeChannelsGroup(int channelIndex)
 {
     if (localGroupChannels.size() > 1) { // the first channel group can't be removed
         if (channelIndex >= 0 && channelIndex < localGroupChannels.size()) {
-            LocalTrackGroupView *channel = localGroupChannels.at(channelIndex);
+            auto channel = localGroupChannels.at(channelIndex);
             ui.localTracksLayout->removeWidget(channel);
             localGroupChannels.removeAt(channelIndex);
 
@@ -764,7 +761,7 @@ LocalTrackGroupView *MainWindow::createLocalTrackGroupView(int channelGroupIndex
 LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QString &channelName,
                                                  bool createFirstSubchannel)
 {
-    LocalTrackGroupView *localChannel = createLocalTrackGroupView(channelGroupIndex);
+    auto localChannel = createLocalTrackGroupView(channelGroupIndex);
 
     connect(localChannel, &LocalTrackGroupView::nameChanged, this, &MainWindow::updateChannelsNames);
 
@@ -796,7 +793,7 @@ void MainWindow::loadPreset(const Preset &preset)
         initializeLocalInputChannels(preset.inputTrackSettings);
 
         //set all loaded channels xmit to ON
-        for (LocalTrackGroupView *trackGroupView :  localGroupChannels ) {
+        for (auto  trackGroupView :  localGroupChannels ) {
             mainController->setTransmitingStatus(trackGroupView->getChannelIndex(), true);
         }
 
@@ -809,7 +806,7 @@ void MainWindow::removeAllInputLocalTracks()
     mainController->removeAllInputTracks();
 
     while (!localGroupChannels.isEmpty()) {
-        LocalTrackGroupView *view = localGroupChannels.first();
+        auto view = localGroupChannels.first();
         ui.localTracksLayout->removeWidget(view);
         view->deleteLater();
         localGroupChannels.pop_front();
@@ -830,7 +827,7 @@ void MainWindow::openLooperWindow(uint trackID)
 
      auto inputTrack = mainController->getInputTrack(trackID);
      if (inputTrack) {
-        LooperWindow *looperWindow = looperWindows[trackID];
+        auto looperWindow = looperWindows[trackID];
         if (!looperWindow) {
             looperWindow = new LooperWindow(this, mainController);
             looperWindows.insert(trackID, looperWindow);
@@ -839,7 +836,7 @@ void MainWindow::openLooperWindow(uint trackID)
 
         looperWindow->setLooper(inputTrack->getLooper());
 
-        LocalTrackGroupView *channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
+        auto channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
         Q_ASSERT(channel);
 
         int subchannelInternalIndex = channel->getSubchannelInternalIndex(trackID);
@@ -873,14 +870,14 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
     QApplication::setOverrideCursor(Qt::WaitCursor); // this line was hanging/freezing in Mac
 
     int channelIndex = 0;
-    for (const Persistence::Channel &channel : inputsSettings.channels) {
+    for (const auto &channel : inputsSettings.channels) {
         qCDebug(jtGUI) << "\tCreating channel "<< channel.name;
         bool createFirstSubChannel = channel.subChannels.isEmpty();
-        LocalTrackGroupView *channelView = addLocalChannel(channelIndex, channel.name,
+        auto channelView = addLocalChannel(channelIndex, channel.name,
                                                            createFirstSubChannel);
-        for (const Persistence::Subchannel &subChannel : channel.subChannels) {
+        for (const auto &subChannel : channel.subChannels) {
             qCDebug(jtGUI) << "\t\tCreating sub-channel ";
-            LocalTrackView *subChannelView = channelView->addTrackView(channelIndex);
+            auto subChannelView = channelView->addTrackView(channelIndex);
             initializeLocalSubChannel(subChannelView, subChannel);
         }
         channelIndex++;
@@ -954,7 +951,7 @@ void MainWindow::centerBusyDialog()
     busyDialog.move(newX, newY);
 }
 
-bool MainWindow::jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2)
+bool MainWindow::jamRoomLessThan(const login::RoomInfo &r1, const login::RoomInfo &r2)
 {
     return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
 }
@@ -1014,7 +1011,7 @@ void MainWindow::showNewVersionAvailableMessage(const QString &latestVersionDeta
     QMessageBox::information(this, tr("New Jamtaba version available!"), text);
 }
 
-JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &roomInfo)
+JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const login::RoomInfo &roomInfo)
 {
     auto newJamRoomView = new JamRoomViewPanel(roomInfo, mainController);
 
@@ -1022,7 +1019,7 @@ JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &room
 
     connect(newJamRoomView, &JamRoomViewPanel::finishingListeningTheRoom, this, &MainWindow::stopPublicRoomStream);
 
-    connect(newJamRoomView, SIGNAL(enteringInTheRoom(Login::RoomInfo)), this, SLOT(tryEnterInRoom(Login::RoomInfo)));
+    connect(newJamRoomView, SIGNAL(enteringInTheRoom(login::RoomInfo)), this, SLOT(tryEnterInRoom(login::RoomInfo)));
 
     return newJamRoomView;
 }
@@ -1032,37 +1029,37 @@ bool MainWindow::canUseTwoColumnLayoutInPublicRooms() const
     return ui.contentTabWidget->width() >= 860;
 }
 
-void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms)
+void MainWindow::refreshPublicRoomsList(const QList<login::RoomInfo> &publicRooms)
 {
     if (publicRooms.isEmpty())
         return;
 
     hideBusyDialog();
 
-    QList<Login::RoomInfo> sortedRooms(publicRooms);
+    QList<login::RoomInfo> sortedRooms(publicRooms);
     qSort(sortedRooms.begin(), sortedRooms.end(), jamRoomLessThan);
 
     int index = 0;
     bool twoCollumns = canUseTwoColumnLayoutInPublicRooms();
-    for (const Login::RoomInfo &roomInfo : sortedRooms) {
-        if (roomInfo.getType() == Login::RoomTYPE::NINJAM) { // skipping other rooms at moment
+    for (const auto &roomInfo : sortedRooms) {
+        if (roomInfo.getType() == login::RoomTYPE::NINJAM) { // skipping other rooms at moment
             int rowIndex = twoCollumns ? (index / 2) : (index);
             int collumnIndex = twoCollumns ? (index % 2) : 0;
-            JamRoomViewPanel *roomViewPanel = roomViewPanels[roomInfo.getID()];
+            auto roomViewPanel = roomViewPanels[roomInfo.getID()];
             if (roomViewPanel) {
                 roomViewPanel->refresh(roomInfo);
                 // check if is playing a public room stream but this room is empty now
                 if (mainController->isPlayingRoomStream()) {
-                    if (roomInfo.isEmpty()
-                        && mainController->getCurrentStreamingRoomID() == roomInfo.getID())
+                    if (roomInfo.isEmpty() && mainController->getCurrentStreamingRoomID() == roomInfo.getID()) {
                         stopCurrentRoomStream();
+                    }
                 }
                 ui.allRoomsContent->layout()->removeWidget(roomViewPanel); // the widget is removed but added again
             } else {
                 roomViewPanel = createJamRoomViewPanel(roomInfo);
                 roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
             }
-            QGridLayout *layout = dynamic_cast<QGridLayout *>(ui.allRoomsContent->layout());
+            auto layout = dynamic_cast<QGridLayout *>(ui.allRoomsContent->layout());
             layout->addWidget(roomViewPanel, rowIndex, collumnIndex);
             index++;
         }
@@ -1070,20 +1067,21 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
 
     if (mainController->isPlayingInNinjamRoom())
         this->ninjamWindow->updateGeoLocations();
+
     /** updating country flag and country names after refresh the public rooms list. This is necessary because the call to webservice used to get country codes and  country names is not synchronous. So, if country code and name are not cached we receive these data from the webservice after some seconds.*/
 }
 
-void MainWindow::playPublicRoomStream(const Login::RoomInfo &roomInfo)
+void MainWindow::playPublicRoomStream(const login::RoomInfo &roomInfo)
 {
     // clear all plots
-    for (JamRoomViewPanel *viewPanel : this->roomViewPanels.values())
+    for (auto viewPanel : this->roomViewPanels.values())
         viewPanel->clear(roomInfo.getID() != viewPanel->getRoomInfo().getID());
 
     if (roomInfo.hasStream()) // just in case...
         mainController->playRoomStream(roomInfo);
 }
 
-void MainWindow::stopPublicRoomStream(const Login::RoomInfo &roomInfo)
+void MainWindow::stopPublicRoomStream(const login::RoomInfo &roomInfo)
 {
     Q_UNUSED(roomInfo)
     stopCurrentRoomStream();
@@ -1099,7 +1097,7 @@ QStringList MainWindow::getChannelsNames() const
 }
 
 // user trying enter in a room
-void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password)
+void MainWindow::tryEnterInRoom(const login::RoomInfo &roomInfo, const QString &password)
 {
     // stop room stream before enter in a room
     if (mainController->isPlayingRoomStream()) {
@@ -1130,7 +1128,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
 
     if (mainController->isPlayingInNinjamRoom()) {
         // store the room to jump and wait for disconnectedFromServer event to connect in this new room
-        roomToJump.reset(new Login::RoomInfo(roomInfo));
+        roomToJump.reset(new login::RoomInfo(roomInfo));
         passwordToJump = password;
 
         mainController->stopNinjamController(); // disconnect from current ninjam server
@@ -1141,7 +1139,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
     }
 }
 
-void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
+void MainWindow::enterInRoom(const login::RoomInfo &roomInfo)
 {
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
@@ -1169,7 +1167,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 
 void MainWindow::collapseBottomArea(bool collapse)
 {
-    Gui::setLayoutItemsVisibility(ui.masterControlsLayout, !collapse);
+    gui::setLayoutItemsVisibility(ui.masterControlsLayout, !collapse);
 
     bool canHandleNinjamPanels = mainController->isPlayingInNinjamRoom() && ninjamWindow && ninjamWindow->getNinjamPanel() && ninjamWindow->getMetronomePanel();
 
@@ -1282,7 +1280,7 @@ void MainWindow::setPrivateChatInputstatus(const QString userName, bool enabled)
         return;
 
     for (auto chat : chatTabWidget->getChats()) {
-        QString chatUserName = Ninjam::extractUserName(chat->getUserFullName());
+        QString chatUserName = ninjam::extractUserName(chat->getUserFullName());
         if (chatUserName == userName) {
             chat->setInputsStatus(enabled);
         }
@@ -1335,7 +1333,7 @@ void MainWindow::showLastChordsInMainChat()
     }
 }
 
-void MainWindow::createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage)
+void MainWindow::createVoteButton(const gui::chat::SystemVotingMessage &votingMessage)
 {
     if (!votingMessage.isValidVotingMessage())
         return;
@@ -1353,7 +1351,7 @@ void MainWindow::createVoteButton(const Gui::Chat::SystemVotingMessage &votingMe
         mainChatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
 }
 
-void MainWindow::handleChordProgressionMessage(const Ninjam::User &user, const QString &message)
+void MainWindow::handleChordProgressionMessage(const ninjam::User &user, const QString &message)
 {
     Q_UNUSED(user)
 
@@ -1387,7 +1385,7 @@ bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
     return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
 }
 
-void MainWindow::addPrivateChatMessage(const Ninjam::User &user, const QString &message)
+void MainWindow::addPrivateChatMessage(const ninjam::User &user, const QString &message)
 {
     if (!chatTabWidget->contains(user.getFullName())) {
         createPrivateChat(user.getName(), user.getIp(), false); // create new private chat, but not focused
@@ -1405,7 +1403,7 @@ void MainWindow::addPrivateChatMessage(const Ninjam::User &user, const QString &
         chatPanel->addMessage(user.getName(), message, true, true);
 }
 
-void MainWindow::addMainChatMessage(const Ninjam::User &user, const QString &message)
+void MainWindow::addMainChatMessage(const ninjam::User &user, const QString &message)
 {
     Q_ASSERT(chatTabWidget);
     Q_ASSERT(ninjamWindow);
@@ -1413,7 +1411,7 @@ void MainWindow::addMainChatMessage(const Ninjam::User &user, const QString &mes
 
     QString userName = user.getName();
 
-    bool isSystemVoteMessage = Gui::Chat::parseSystemVotingMessage(message).isValidVotingMessage();
+    bool isSystemVoteMessage = gui::chat::parseSystemVotingMessage(message).isValidVotingMessage();
 
     bool isChordProgressionMessage = false;
     if (!isSystemVoteMessage) {
@@ -1431,11 +1429,11 @@ void MainWindow::addMainChatMessage(const Ninjam::User &user, const QString &mes
     static bool localUserWasVotingInLastMessage = false;
 
     if (isSystemVoteMessage) {
-        Gui::Chat::SystemVotingMessage voteMessage = Gui::Chat::parseSystemVotingMessage(message);
+        auto voteMessage = gui::chat::parseSystemVotingMessage(message);
 
         QTimer *expirationTimer = voteMessage.isBpiVotingMessage() ? bpiVotingExpiratonTimer : bpmVotingExpirationTimer;
 
-        bool isFirstSystemVoteMessage = Gui::Chat::isFirstSystemVotingMessage(userName, message);
+        bool isFirstSystemVoteMessage = gui::chat::isFirstSystemVotingMessage(userName, message);
         if (isFirstSystemVoteMessage) { //starting a new votation round
             if (!localUserWasVotingInLastMessage) {  //don't create the vote button if local user is proposing BPI or BPM change
                 createVoteButton(voteMessage);
@@ -1457,7 +1455,7 @@ void MainWindow::addMainChatMessage(const Ninjam::User &user, const QString &mes
         handleChordProgressionMessage(user, message);
     }
 
-    localUserWasVotingInLastMessage = Gui::Chat::isLocalUserVotingMessage(message) && user.getName() == mainController->getUserName();
+    localUserWasVotingInLastMessage = gui::chat::isLocalUserVotingMessage(message) && user.getName() == mainController->getUserName();
 }
 
 void MainWindow::addMainChatPanel()
@@ -1521,8 +1519,8 @@ void MainWindow::addPrivateChat(const QString &remoteUserName, const QString &us
 
 void MainWindow::blockUserInChat(const QString &userNameToBlock)
 {
-    Controller::NinjamController *ninjamController = mainController->getNinjamController();
-    Ninjam::User user = ninjamController->getUserByName(userNameToBlock);
+    auto ninjamController = mainController->getNinjamController();
+    auto user = ninjamController->getUserByName(userNameToBlock);
     if (user.getName() == userNameToBlock)
         ninjamController->blockUserInChat(user);
 }
@@ -1530,7 +1528,7 @@ void MainWindow::blockUserInChat(const QString &userNameToBlock)
 void MainWindow::voteToChangeBpi(int newBpi)
 {
     if (mainController->isPlayingInNinjamRoom()) {
-        Controller::NinjamController *controller = mainController->getNinjamController();
+        auto controller = mainController->getNinjamController();
         if (controller)
             controller->voteBpi(newBpi);
     }
@@ -1539,7 +1537,7 @@ void MainWindow::voteToChangeBpi(int newBpi)
 void MainWindow::voteToChangeBpm(int newBpm)
 {
     if (mainController->isPlayingInNinjamRoom()) {
-        Controller::NinjamController *controller = mainController->getNinjamController();
+        auto controller = mainController->getNinjamController();
         if (controller)
             controller->voteBpm(newBpm);
     }
@@ -1781,7 +1779,7 @@ void MainWindow::timerEvent(QTimerEvent *)
             bool buffering = mainController->getRoomStreamer()->isBuffering();
             roomView->setShowBufferingState(buffering);
             if (!buffering) {
-                Audio::AudioPeak peak = mainController->getRoomStreamPeak();
+                auto peak = mainController->getRoomStreamPeak();
                 roomView->addPeak(peak.getMaxPeak());
             } else {
                 int percentage = mainController->getRoomStreamer()->getBufferingPercentage();
@@ -1791,14 +1789,14 @@ void MainWindow::timerEvent(QTimerEvent *)
     }
 
     // update looper window sound waves
-    for (LooperWindow *looperWindow : looperWindows.values()) {
+    for (auto looperWindow : looperWindows.values()) {
         if (looperWindow && looperWindow->isVisible()) {
             looperWindow->updateDrawings();
         }
     }
 
     // update master peaks
-    Audio::AudioPeak masterPeak = mainController->getMasterPeak();
+    auto masterPeak = mainController->getMasterPeak();
     ui.masterMeter->setPeak(masterPeak.getLeftPeak(), masterPeak.getRightPeak(),
                             masterPeak.getLeftRMS(), masterPeak.getRightRMS());
 
@@ -1890,7 +1888,7 @@ void MainWindow::connectInPrivateServer(const QString &server, int serverPort,
     mainController->setUserName(userName);
     ui.userNameLineEdit->setText(userName);
 
-    Login::RoomInfo roomInfo(server, serverPort, Login::RoomTYPE::NINJAM, 32, 32);
+    login::RoomInfo roomInfo(server, serverPort, login::RoomTYPE::NINJAM, 32, 32);
     tryEnterInRoom(roomInfo, password);
 }
 
@@ -2094,9 +2092,9 @@ void MainWindow::updateMeteringMenu()
 
 void MainWindow::updatePublicRoomsListLayout()
 {
-    QList<Login::RoomInfo> roomInfos;
+    QList<login::RoomInfo> roomInfos;
 
-    for (JamRoomViewPanel *roomView : roomViewPanels)
+    for (auto roomView : roomViewPanels)
         roomInfos.append(roomView->getRoomInfo());
 
     refreshPublicRoomsList(roomInfos);
@@ -2259,8 +2257,8 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
 
 void MainWindow::sendAcceptedChordProgressionToServer(const ChordProgression &progression)
 {
-    Login::LoginService *service = mainController->getLoginService();
-    Login::RoomInfo currentRoom = ninjamWindow->getRoomInfo();
+    auto service = mainController->getLoginService();
+    auto currentRoom = ninjamWindow->getRoomInfo();
     QString chords = progression.toString();
     bool chordProgressionIsOutdated = service->getChordProgressionFor(currentRoom) != chords;
     if (chordProgressionIsOutdated) {
@@ -2397,7 +2395,7 @@ void MainWindow::setupSignals()
 
     connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);
 
-    connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::handleThemeChanged);
+    connect(mainController, &controller::MainController::themeChanged, this, &MainWindow::handleThemeChanged);
 
     ui.contentTabWidget->installEventFilter(this);
 

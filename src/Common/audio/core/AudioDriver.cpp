@@ -6,7 +6,7 @@
 #include <QMutexLocker>
 #include "log/Logging.h"
 
-using namespace Audio;
+using namespace audio;
 
 // +++++++++++++++++++++
 
@@ -40,7 +40,7 @@ void ChannelRange::setToMono()
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++
-AudioDriver::AudioDriver(Controller::MainController *mainController) :
+AudioDriver::AudioDriver(controller::MainController *mainController) :
     globalInputRange(0, 0),
     globalOutputRange(0, 0),
     audioDeviceIndex(0),

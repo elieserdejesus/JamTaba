@@ -7,7 +7,6 @@
 
 namespace vorbis {
 
-
 class Decoder
 {
 
@@ -15,7 +14,7 @@ public:
 
     Decoder();
     ~Decoder();
-    const Audio::SamplesBuffer &decode(int maxSamplesToDecode);
+    const audio::SamplesBuffer &decode(int maxSamplesToDecode);
 
     bool isStereo() const;
 
@@ -33,7 +32,7 @@ public:
 
 private:
 
-    Audio::SamplesBuffer internalBuffer;
+    audio::SamplesBuffer internalBuffer;
     OggVorbis_File vorbisFile;
     bool initialized;
     QByteArray vorbisInput;
