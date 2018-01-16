@@ -36,8 +36,8 @@ protected:
 private slots:
     void on_translateButton_clicked();
     void fireBlockingUserSignal();
-    void on_networkReplyFinished(QNetworkReply *);
-    void on_networkReplyError(QNetworkReply::NetworkError);
+    void handleAvailableTranslation(QNetworkReply *);
+    void handleTranslationError(QNetworkReply::NetworkError);
 
 private:
     QString originalText;

@@ -108,10 +108,12 @@ void ChatMessagePanel::translate()
 {
     emit startingTranslation();
 
-    QNetworkAccessManager *httpClient = new QNetworkAccessManager(this);
+    auto httpClient = new QNetworkAccessManager(this);
     QString encodedText(QUrl::toPercentEncoding(originalText));
-    QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="
-                  + preferredTargetTranslationLanguage +"&dt=t&q=" + encodedText;
+    QString url = QString("http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=%1&dt=t&q=%2")
+            .arg(preferredTargetTranslationLanguage)
+            .arg(encodedText);
+
     QNetworkRequest req;
     req.setUrl(QUrl(url));
     req.setOriginatingObject(this);
@@ -121,11 +123,9 @@ void ChatMessagePanel::translate()
 
     QNetworkReply *reply = httpClient->get(req);
 
-    QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this,
-                     SLOT(on_networkReplyError(QNetworkReply::NetworkError)));
+    QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(handleTranslationError(QNetworkReply::NetworkError)));
 
-    QObject::connect(httpClient, SIGNAL(finished(QNetworkReply *)), this,
-                     SLOT(on_networkReplyFinished(QNetworkReply *)));
+    QObject::connect(httpClient, SIGNAL(finished(QNetworkReply *)), this, SLOT(handleAvailableTranslation(QNetworkReply *)));
 
     ui->labelMessage->setText("..."); // translating
 }
@@ -133,8 +133,9 @@ void ChatMessagePanel::translate()
 void ChatMessagePanel::on_translateButton_clicked()
 {
     if (ui->translateButton->isChecked()) {
-        if (translatedText.isEmpty())
+        if (translatedText.isEmpty()) {
             translate();
+        }
         else {
             setMessageLabelText("<i>" + translatedText + "</i>");
         }
@@ -151,33 +152,45 @@ void ChatMessagePanel::fireBlockingUserSignal()
 
 void ChatMessagePanel::setPrefferedTranslationLanguage(const QString &targetLanguage)
 {
-    this->preferredTargetTranslationLanguage = targetLanguage;
+    preferredTargetTranslationLanguage = targetLanguage;
 }
 
-void ChatMessagePanel::on_networkReplyError(QNetworkReply::NetworkError)
+void ChatMessagePanel::handleTranslationError(QNetworkReply::NetworkError)
 {
-    QString errorString = (qobject_cast<QNetworkReply *>(QObject::sender()))->errorString();
-    qCritical() << "Translation error:" << errorString;
+    auto sender = qobject_cast<QNetworkReply *>(QObject::sender());
+    if (!sender)
+        return;
+
+    qCritical() << "Translation error:" << sender->errorString();
+
+    setTranslatedMessage(tr("Translation error!"));
 
     emit translationFinished();
-
-    setMessageLabelText(emojifiedText); // restore the original text
 }
 
-void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply)
+void ChatMessagePanel::handleAvailableTranslation(QNetworkReply *reply)
 {
-    QString data(reply->readAll());
-    ChatMessagePanel *messagePanel
-        = qobject_cast<ChatMessagePanel *>(reply->request().originatingObject());
-    int startSlash = data.indexOf(QRegExp("\""));
-    int endSlash = data.indexOf(QRegExp("\""), startSlash + 1);
-    QString translatedText = data.mid(startSlash+1, endSlash - startSlash - 1);
-    if (translatedText.isEmpty())
-        translatedText = "translation error!";
+    auto messagePanel = qobject_cast<ChatMessagePanel *>(reply->request().originatingObject());
+    if (!messagePanel)
+        return;
 
-    messagePanel->setTranslatedMessage(translatedText);
+    if (reply->error() == QNetworkReply::NoError) {
 
-    reply->manager()->deleteLater();
+        QString downloadedData(reply->readAll());
+
+        int startSlash = downloadedData.indexOf(QRegExp("\""));
+        int endSlash = downloadedData.indexOf(QRegExp("\""), startSlash + 1);
+
+        QString translatedText = downloadedData.mid(startSlash+1, endSlash - startSlash - 1);
+        if (translatedText.isEmpty())
+            translatedText = "translation error!";
+
+        messagePanel->setTranslatedMessage(translatedText);
+    }
+
+    if (reply->manager())
+        reply->manager()->deleteLater();
+
     reply->deleteLater();
 
     emit translationFinished();
