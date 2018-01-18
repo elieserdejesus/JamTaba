@@ -40,6 +40,8 @@ public:
 
     BlinkableButton *getXmitButton() const;
 
+    QSize sizeHint() const override; // fixing #962
+
 protected:
 
     LocalTrackView *createTrackView(long trackID) override;

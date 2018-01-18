@@ -364,6 +364,17 @@ void LocalTrackGroupView::deletePreset(QAction *action)
 }
 
 // +++++++++++++++++++++++++++++
+
+// fixing #962
+
+QSize LocalTrackGroupView::sizeHint() const
+{
+    if (peakMeterOnly)
+        return QFrame::sizeHint();
+
+    return TrackGroupView::sizeHint();
+}
+
 void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
 {
     if (this->peakMeterOnly != peakMeterOnly) {
