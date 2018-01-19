@@ -1,7 +1,7 @@
 #ifndef TRACKVIEW_H
 #define TRACKVIEW_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QGridLayout>
 #include <QToolButton>
 #include "audio/core/AudioPeak.h"
@@ -22,7 +22,7 @@ namespace controller {
 class MainController;
 }
 
-class BaseTrackView : public QWidget
+class BaseTrackView : public QFrame
 {
     Q_OBJECT
 
@@ -76,7 +76,6 @@ protected:
 
     controller::MainController *mainController;
 
-    void paintEvent(QPaintEvent *) override;
     void changeEvent(QEvent *e) override;
 
     virtual void translateUI();
@@ -124,7 +123,7 @@ protected:
 
     virtual void setupVerticalLayout();
 
-    static const int FADER_HEIGHT;
+    static const uint FADER_HEIGHT;
 
 private:
     static QMap<long, BaseTrackView *> trackViews;

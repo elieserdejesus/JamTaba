@@ -91,6 +91,12 @@ IntervalProgressDisplay
     border: 1px solid rgb(0, 30, 30);
 }
 
+NinjamTrackView #receiveButton
+{
+    min-height: 21px;
+    min-width: 21px;
+}
+
 NinjamTrackView #receiveButton:!checked
 {
     background-color: transparent;
@@ -100,8 +106,6 @@ NinjamTrackView #receiveButton:!checked
 NinjamTrackView #lowCutButton,
 NinjamTrackView #receiveButton
 {
-    height: 20px;
-    min-width: 13px;
     margin: 0px;
     border-image: none;
     border: none;
@@ -152,9 +156,11 @@ NinjamPanel QComboBox QAbstractItemView
     padding-left: 6px;
 }
 
+/*
 MetronomePanel QPushButton
 {
     margin: 0px;
     margin-top: 3px;
     margin-bottom: 3px;
 }
+*/

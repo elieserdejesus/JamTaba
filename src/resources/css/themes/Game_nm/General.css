@@ -5,6 +5,23 @@
     font-size: 10px;
 }
 
+#muteButton,
+#soloButton,
+#buttonListen,
+#buttonEnter,
+#buttonStereoInversion,
+#buttonLooper,
+#lowCutButton,
+MetronomePanel QPushButton
+{
+    padding: -2px;
+}
+
+BoostSpinBox
+{
+    padding: -3px;
+}
+
 #muteButton:enabled:!checked,
 #soloButton:enabled:!checked,
 #buttonListen:enabled:!checked,
@@ -22,9 +39,6 @@ MetronomePanel QPushButton:enabled
     border: 7px transparent;
 
     color: #58A9AA;
-
-    height: 9px;
-    padding: 1px;
 }
 
 #muteButton:disabled,
@@ -40,9 +54,6 @@ MetronomePanel QPushButton:disabled
     border: 7px transparent;
 
     color: rgba(0, 255, 255, 50);
-
-    height: 9px;
-    padding: 1px;
 }
 
 #muteButton:enabled:!checked:hover,
@@ -56,9 +67,6 @@ MetronomePanel QPushButton:enabled:hover
 {
     border-image: url('/images/button_hover.png') 7px;
     border: 7px transparent;
-
-    height: 9px;
-    padding: 0px;
 
     color: white;
 }
@@ -78,9 +86,6 @@ MetronomePanel QPushButton:enabled:hover
 
     border: 7px transparent;
     border-right: 8px transparent;
-
-    height: 9px;
-    padding: 0px;
 }
 
 #muteButton:checked:hover,
@@ -91,10 +96,6 @@ MetronomePanel QPushButton:enabled:hover
     border-image: url('/images/button_checked.png') 7px 8px 7px 7px;
     border: 7px transparent;
     border-right: 8px transparent;
-
-    height: 9px;
-    padding: 0px;
-
 }
 
 #receiveButton:enabled:!checked

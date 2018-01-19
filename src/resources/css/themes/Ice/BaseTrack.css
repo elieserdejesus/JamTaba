@@ -23,11 +23,6 @@ BoostSpinBox
     border-radius: 6px;
 }
 
-BoostSpinBox
-{
-    max-width: 16px;
-}
-
 QPushButton#buttonStereoInversion:checked
 {
     background-color: rgb(129, 181, 255);

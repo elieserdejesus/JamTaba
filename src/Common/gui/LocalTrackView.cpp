@@ -129,8 +129,8 @@ LocalTrackView::LocalTrackView(controller::MainController *mainController, int c
 
     setActivatedStatus(false);
 
-    secondaryChildsLayout->addWidget(buttonLooper);
-    secondaryChildsLayout->addWidget(buttonStereoInversion);
+    secondaryChildsLayout->addWidget(buttonLooper, 0, Qt::AlignCenter);
+    secondaryChildsLayout->addWidget(buttonStereoInversion, 0, Qt::AlignCenter);
 
     connect(inputNode->getLooper(), &audio::Looper::stateChanged, this, &LocalTrackView::updateLooperButtonIcon);
     connect(inputNode->getLooper(), &audio::Looper::currentLayerChanged, this, &LocalTrackView::updateLooperButtonIcon);
@@ -288,7 +288,7 @@ QPushButton *LocalTrackView::createLooperButton()
 {
     QPushButton *button = new QPushButton(IconFactory::createLooperButtonIcon(getTintColor()), "");
     button->setObjectName(QStringLiteral("buttonLooper"));
-    button->setEnabled(false); // disaled by default
+    button->setEnabled(false); // disabled by default
 
     connect(button, &QPushButton::clicked, [=]{
         emit openLooperEditor(this->trackID);

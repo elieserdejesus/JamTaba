@@ -10,7 +10,7 @@ BoostSpinBox
 {
     font-size: 9px;
     border-color: rgb(110,110,110);
-    padding: 2px;
+    /*padding: 2px;*/
     color: rgb(50,50,50);
 }
 
@@ -25,7 +25,7 @@ BoostSpinBox
 {
     border-style: outset;
     border-width: 1px;
-    max-width: 16px;
+    /*max-width: 16px;*/
 }
 
 QPushButton#buttonStereoInversion:checked

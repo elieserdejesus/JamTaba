@@ -17,7 +17,7 @@
 #include <QButtonGroup>
 #include <QEvent>
 
-const int BaseTrackView::FADER_HEIGHT = 12;
+const uint BaseTrackView::FADER_HEIGHT = 12;
 
 const int BaseTrackView::NARROW_WIDTH = 85;
 const int BaseTrackView::WIDE_WIDTH = 120;
@@ -44,8 +44,6 @@ BaseTrackView::BaseTrackView(controller::MainController *mainController, long tr
 
     // add in static map
     BaseTrackView::trackViews.insert(trackID, this);
-
-    setAttribute(Qt::WA_NoBackground);
 }
 
 void BaseTrackView::setTintColor(const QColor &color)
@@ -149,8 +147,8 @@ void BaseTrackView::createLayoutStructure()
     muteSoloLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     muteSoloLayout->setSpacing(1);
     muteSoloLayout->setContentsMargins(0, 0, 0, 0);
-    muteSoloLayout->addWidget(muteButton);
-    muteSoloLayout->addWidget(soloButton);
+    muteSoloLayout->addWidget(muteButton, 0, Qt::AlignCenter);
+    muteSoloLayout->addWidget(soloButton, 0, Qt::AlignCenter);
 
     boostSpinBox = new BoostSpinBox(this);
 
@@ -368,15 +366,6 @@ void BaseTrackView::toggleSoloStatus()
 {
     mainController->setTrackSolo(this->trackID, !mainController->trackIsSoloed(this->trackID),
                                  true);
-}
-
-// little to allow stylesheet in custom widget
-void BaseTrackView::paintEvent(QPaintEvent *)
-{
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 QPoint BaseTrackView::getDbValuePosition(const QString &dbValueText,

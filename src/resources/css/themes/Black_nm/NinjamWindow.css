@@ -45,7 +45,7 @@ NinjamTrackView[horizontal="true"] QPushButton#receiveButton:checked,
 NinjamTrackView QPushButton#lowCutButton:hover:checked,
 NinjamTrackView QPushButton#receiveButton:checked
 {
-    margin-top: -1px;
+    /*margin-top: -1px;*/
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(80, 80, 80));
     color: rgba(0, 0, 0, 160);
     border: none;

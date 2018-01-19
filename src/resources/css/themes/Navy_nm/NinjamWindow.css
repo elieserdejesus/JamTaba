@@ -106,10 +106,3 @@ NinjamTrackView #receiveButton:!checked
 }
 
 
-MetronomePanel #soloButton,
-MetronomePanel #muteButton
-{
-    width: 14px;
-}
-
-

@@ -1,6 +1,7 @@
 #include "MetronomePanel.h"
 #include "ui_MetronomePanel.h"
 #include "IconFactory.h"
+#include "BaseTrackView.h"
 
 MetronomePanel::MetronomePanel(QWidget *parent) :
     QWidget(parent),

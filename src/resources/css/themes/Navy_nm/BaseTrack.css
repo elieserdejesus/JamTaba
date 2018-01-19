@@ -1,3 +1,9 @@
+BoostSpinBox > QToolButton
+{
+    max-width: 16px;
+    max-height: 16px;
+}
+
 TrackGroupView
 {
     background-color: rgb(76, 76, 76);
@@ -29,40 +35,6 @@ NinjamTrackGroupView[horizontal="true"]
     border-radius: 2px;
 }
 
-
-BoostSpinBox,
-NinjamTrackView[horizontal="false"] BoostSpinBox
-{
-    min-height: 33px; /* affecting vertical tracks */
-    min-width: 16px;
-    margin-bottom: 6px;
-}
-
-NinjamTrackView[horizontal="true"] BoostSpinBox
-{
-    margin-top: 0px;
-    padding: 0px;
-    min-width: 33px;
-    min-height: 17px;
-}
-
-NinjamTrackView[horizontal="true"] QToolButton#lowCutButton
-
-{
-    padding: 0px;
-    padding-left: 3px;
-    padding-right: 3px;
-    margin-top: 0px;
-
-    min-height: 12px;
-
-    width: 12px;
-    min-width: 12px;
-
-    max-width: 12px;
-
-
-}
 
 
 

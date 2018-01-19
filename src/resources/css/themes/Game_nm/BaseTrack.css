@@ -1,15 +1,3 @@
-#muteButton,
-#soloButton,
-#buttonStereoInversion,
-#buttonLooper,
-#lowCutButton,
-BoostSpinBox
-{
-
-    max-width: 10px;
-    min-height: 8px;
-}
-
 
 #midiToolsButton
 {
@@ -21,22 +9,6 @@ BoostSpinBox
 TrackGroupView
 {
     background-color: none;
-}
-
-BoostSpinBox,
-NinjamTrackView[horizontal="false"] BoostSpinBox
-{
-
-    min-height: 16px;
-    min-width: 12px;
-    margin-bottom: 0px;
-    padding: -2px;
-}
-
-NinjamTrackView[horizontal="true"] QPushButton,
-NinjamTrackView[horizontal="true"] BoostSpinBox
-{
-    margin-bottom: 3px;
 }
 
 BoostSpinBox QToolButton:enabled:hover
