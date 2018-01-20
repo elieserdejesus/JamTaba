@@ -9,18 +9,13 @@ NinjamTrackView QPushButton#lowCutButton:hover:checked,
 NinjamTrackView QPushButton#receiveButton:hover:checked
 
 {
-    /*margin-top: -1px;*/
     background-color: rgb(229, 99, 24);
     border: none;
 }
 
 NinjamTrackView[horizontal="true"]
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop: 0.0 #FFD470,
-        stop: 0.15 #FDE09B,
-        stop: 0.9 #FDE5A9,
-        stop: 1.0 #EF820D);
+    background-color: rgba(255, 255, 255, 10);
 }
 
 NinjamTrackView[horizontal="true"][unlighted="true"]
@@ -133,10 +128,20 @@ NinjamTrackView  #channelName               /* channel name for ninjamers */
     max-width: 130px;
 }
 
+NinjamTrackGroupView[horizontal="true"]
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 #FFD470,
+        stop: 0.15 #FDE09B,
+        stop: 0.9 #FDE5A9,
+        stop: 1.0 #FFA45F
+    );
+}
+
 NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
- {
-     background: rgba(255, 255, 255, 100);
- }
+{
+    background: rgba(255, 255, 255, 100);
+}
 
 
 /* NinjamPanel is the widget where the ninjam controls are showed (in bottom when we are connected in a server)

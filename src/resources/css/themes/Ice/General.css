@@ -321,6 +321,7 @@ QMenu::item::enabled:selected
 QTabWidget::pane
 {
     background-color: transparent;
+    border-image: url('/images/bg.png') 0 0 0 0 stretch stretch;
 }
 
 

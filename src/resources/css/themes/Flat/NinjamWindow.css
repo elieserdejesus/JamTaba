@@ -14,9 +14,7 @@ NinjamTrackView QPushButton#receiveButton:hover:checked
 
 NinjamTrackView[horizontal="true"]
 {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-        stop:0 rgb(240, 240, 240),
-        stop:1 rgb(200, 200, 200));
+    background: rgba(0, 0, 0, 5);
 }
 
 NinjamTrackView[horizontal="true"][unlighted="true"]

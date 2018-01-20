@@ -69,6 +69,7 @@
         <file>css/themes/Volcano_nm/PublicRooms.css</file>
         <file>css/themes/Volcano_nm/Chat.css</file>
         <file>css/themes/Volcano_nm/Chords.css</file>
+        <file>css/themes/Volcano_nm/imagens/bg.png</file>
     </qresource>
     <qresource prefix="/css/themes/Black_nm">
         <file>css/themes/Black_nm/BaseTrack.css</file>
@@ -102,6 +103,7 @@
         <file>css/themes/Ice/MainWindow.css</file>
         <file>css/themes/Ice/NinjamWindow.css</file>
         <file>css/themes/Ice/PublicRooms.css</file>
+        <file>css/themes/Ice/images/bg.png</file>
     </qresource>
     <qresource prefix="/tr">
         <file alias="en.qm">../../translations/en.qm</file>

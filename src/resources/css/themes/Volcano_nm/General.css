@@ -267,7 +267,7 @@ QTabBar::tab
 
 QTabBar::tab:selected
 {
-    background-color: rgb(239, 114, 24);
+    background-color: #DB650F;
 }
 
 QTabBar::tab:!selected:hover
@@ -330,6 +330,7 @@ QMenu::item::enabled:selected
 QTabWidget::pane
 {
     background-color: transparent;
+    border-image: url('/images/bg.png') 0 0 0 0 stretch stretch;
 }
 
 AudioMeter
