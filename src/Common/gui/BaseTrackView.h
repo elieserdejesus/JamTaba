@@ -125,14 +125,14 @@ protected:
 
     static const uint FADER_HEIGHT;
 
+    QColor tintColor;
+
 private:
     static QMap<long, BaseTrackView *> trackViews;
     audio::AudioPeak maxPeak;
 
     QLabel *highLevelIcon;
     QLabel *lowLevelIcon;
-
-    QColor tintColor;
 
 protected slots:
     virtual void toggleMuteStatus();

@@ -4,6 +4,42 @@
 #include <QImage>
 #include <QPushButton>
 
+QPixmap IconFactory::createMidiIcon(const QColor &tintColor)
+{
+    QImage image(":/images/input_midi.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QPixmap IconFactory::createNoInputIcon(const QColor &tintColor)
+{
+    QImage image(":/images/input_no.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QPixmap IconFactory::createMonoInputIcon(const QColor &tintColor)
+{
+    QImage image(":/images/input_mono.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QPixmap IconFactory::createStereoInputIcon(const QColor &tintColor)
+{
+    QImage image(":/images/input_stereo.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
 QIcon IconFactory::createChatEmojiIcon(const QColor &tintColor)
 {
     QImage image(":/emoji/smile.png");

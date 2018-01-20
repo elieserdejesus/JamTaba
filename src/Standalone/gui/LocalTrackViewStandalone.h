@@ -47,6 +47,8 @@ public:
 
     void setToMidi();
 
+    void setTintColor(const QColor &color) override;
+
 signals:
     void trackInputChanged();
 
@@ -120,7 +122,7 @@ private:
     QString getInputText();
     QString getAudioInputText();
     QString getMidiInputText();
-    QString getInputTypeIconFile();
+    QPixmap getInputTypePixmap();
     bool canUseMidiDeviceIndex(int midiDeviceIndex) const;
 
     void paintRoutingMidiArrow(int topMargin, int arrowSize, bool drawMidiWord);
@@ -131,11 +133,6 @@ private:
     MidiToolsDialog *midiToolsDialog;
 
     QColor midiRoutingArrowColor;
-
-    static const QString MIDI_ICON;
-    static const QString MONO_ICON;
-    static const QString STEREO_ICON;
-    static const QString NO_INPUT_ICON;
 
     static QString getNoInputText();
 

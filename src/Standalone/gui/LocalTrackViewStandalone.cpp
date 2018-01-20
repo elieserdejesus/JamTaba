@@ -3,16 +3,13 @@
 #include "FxPanel.h"
 #include "FxPanelItem.h"
 #include "BoostSpinBox.h"
+#include "IconFactory.h"
+
 #include <QGridLayout>
 #include <QStyle>
 #include <QSlider>
 #include <QPainter>
 #include <QDesktopWidget>
-
-const QString LocalTrackViewStandalone::MIDI_ICON = ":/images/input_midi.png";
-const QString LocalTrackViewStandalone::MONO_ICON = ":/images/input_mono.png";
-const QString LocalTrackViewStandalone::STEREO_ICON = ":/images/input_stereo.png";
-const QString LocalTrackViewStandalone::NO_INPUT_ICON = ":/images/input_no.png";
 
 LocalTrackViewStandalone::LocalTrackViewStandalone(controller::MainControllerStandalone *mainController, int channelIndex) :
     LocalTrackView(mainController, channelIndex),
@@ -54,6 +51,13 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(controller::MainControllerSta
     connect(inputNode, &audio::LocalInputNode::midiNoteLearned, this, &LocalTrackViewStandalone::useLearnedMidiNote);
 
     translateUI();
+}
+
+void LocalTrackViewStandalone::setTintColor(const QColor &color)
+{
+    LocalTrackView::setTintColor(color);
+
+    updateInputIcon();
 }
 
 void LocalTrackViewStandalone::setToMidi()
@@ -510,7 +514,7 @@ void LocalTrackViewStandalone::setupMetersLayout()
 QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
 {
     auto monoInputsMenu = new QMenu(tr("Mono"), parent);
-    monoInputsMenu->setIcon(QIcon(MONO_ICON));
+    monoInputsMenu->setIcon(QIcon(IconFactory::createMonoInputIcon(tintColor)));
     auto audioDriver = controller->getAudioDriver();
     int globalInputs = audioDriver->getInputsCount();
     QString deviceName(audioDriver->getAudioInputDeviceName(audioDriver->getAudioDeviceIndex()));
@@ -536,7 +540,8 @@ void LocalTrackViewStandalone::showInputSelectionMenu()
     menu.addMenu(createMonoInputsMenu(&menu));
     menu.addMenu(createStereoInputsMenu(&menu));
     menu.addMenu(createMidiInputsMenu(&menu));
-    QAction *noInputAction = menu.addAction(QIcon(NO_INPUT_ICON), getNoInputText());
+    auto icon = QIcon(IconFactory::createNoInputIcon(tintColor));
+    QAction *noInputAction = menu.addAction(icon, getNoInputText());
     QObject::connect(noInputAction, SIGNAL(triggered()), this, SLOT(setToNoInput()));
 
     menu.move(mapToGlobal(inputSelectionButton->parentWidget()->pos()));
@@ -551,7 +556,7 @@ QString LocalTrackViewStandalone::getNoInputText()
 QMenu *LocalTrackViewStandalone::createStereoInputsMenu(QMenu *parent)
 {
     auto stereoInputsMenu = new QMenu(tr("Stereo"), parent);
-    stereoInputsMenu->setIcon(QIcon(STEREO_ICON));
+    stereoInputsMenu->setIcon(QIcon(IconFactory::createStereoInputIcon(tintColor)));
     auto audioDriver = controller->getAudioDriver();
     int globalInputs = audioDriver->getInputsCount();
     QString deviceName(audioDriver->getAudioInputDeviceName(audioDriver->getAudioDeviceIndex()));
@@ -589,7 +594,7 @@ QString LocalTrackViewStandalone::getInputChannelNameOnly(int inputIndex)
 QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
 {
     auto midiInputsMenu = new QMenu(tr("MIDI"), parent);
-    midiInputsMenu->setIcon(QIcon(MIDI_ICON));
+    midiInputsMenu->setIcon(QIcon(IconFactory::createMidiIcon(tintColor)));
     auto midiDriver = controller->getMidiDriver();
     int totalMidiDevices = midiDriver->getMaxInputDevices();
     int globallyEnabledMidiDevices = 0;
@@ -650,26 +655,23 @@ void LocalTrackViewStandalone::setToNoInput()
     }
 }
 
-QString LocalTrackViewStandalone::getInputTypeIconFile()
+QPixmap LocalTrackViewStandalone::getInputTypePixmap()
 {
     if (inputNode->isAudio()) { // using audio as input method
         if (inputNode->isStereo())
-            return STEREO_ICON;
+            return IconFactory::createStereoInputIcon(tintColor);
         else if (inputNode->isMono())
-            return MONO_ICON;
+            return IconFactory::createMonoInputIcon(tintColor);
         else
-            return NO_INPUT_ICON; // range is empty = no audio input
+            return IconFactory::createNoInputIcon(tintColor); // range is empty = no audio input
     }
 
     if (inputNode->isMidi()) {
-        if (canUseMidiDeviceIndex(inputNode->getMidiDeviceIndex())) {
-            return MIDI_ICON;
-        } else {
-            return NO_INPUT_ICON; // midi device index invalid
-        }
+        if (canUseMidiDeviceIndex(inputNode->getMidiDeviceIndex()))
+            return IconFactory::createMidiIcon(tintColor);
     }
 
-    return NO_INPUT_ICON;
+    return IconFactory::createNoInputIcon(tintColor);
 }
 
 bool LocalTrackViewStandalone::canUseMidiDeviceIndex(int midiDeviceIndex) const
@@ -685,8 +687,7 @@ void LocalTrackViewStandalone::updateInputIcon()
 {
     // set the icon
     Q_ASSERT(inputTypeIconLabel);
-    QString iconFile = getInputTypeIconFile();
-    inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
+    inputTypeIconLabel->setPixmap(getInputTypePixmap());
 }
 
 void LocalTrackViewStandalone::refreshInputSelectionName()
