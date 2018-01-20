@@ -71,7 +71,7 @@ ChatMessagePanel #labelMessage
     selection-color: white;
     padding: 0px;
     margin: 0px;
-    margin-top: -6px;
+    margin-top: -3px;
 }
 
 /* emoji buttons */
