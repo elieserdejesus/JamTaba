@@ -2271,6 +2271,7 @@
 					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
 					"/Users/elieser/Desktop/Qt-5.6/plugins/mediaservice",
 				);
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
@@ -2328,6 +2329,7 @@
 					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
 					"/Users/elieser/Desktop/Qt-5.6/plugins/mediaservice",
 				);
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
@@ -2384,6 +2386,7 @@
 					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
 					"/Users/elieser/Desktop/Qt-5.6/plugins/mediaservice",
 				);
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
@@ -2429,6 +2432,7 @@
 					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
 				);
 				LIBRARY_STYLE = Bundle;
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-bundle";
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
@@ -2466,6 +2470,7 @@
 					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
 				);
 				LIBRARY_STYLE = Bundle;
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-bundle";
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
@@ -2502,6 +2507,7 @@
 					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
 				);
 				LIBRARY_STYLE = Bundle;
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-bundle";
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
