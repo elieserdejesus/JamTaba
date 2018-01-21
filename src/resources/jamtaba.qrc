@@ -69,7 +69,7 @@
         <file>css/themes/Volcano_nm/PublicRooms.css</file>
         <file>css/themes/Volcano_nm/Chat.css</file>
         <file>css/themes/Volcano_nm/Chords.css</file>
-        <file>css/themes/Volcano_nm/imagens/bg.png</file>
+        <file>css/themes/Volcano_nm/images/bg.png</file>
     </qresource>
     <qresource prefix="/css/themes/Black_nm">
         <file>css/themes/Black_nm/BaseTrack.css</file>

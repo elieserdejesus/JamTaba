@@ -31,7 +31,7 @@ public:
     
     qint32 getStartPositionForHostSync() const override;
     
-    MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
+    MainControllerPlugin *createPluginMainController(const persistence::Settings &settings, JamTabaPlugin *plugin) const override;
     
     // JamTabaAUInterface
     void processAudio(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess) override;
