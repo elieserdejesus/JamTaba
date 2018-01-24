@@ -118,6 +118,7 @@ quint32 NinjamTrackNode::IntervalDecoder::getDecodedSamples(audio::SamplesBuffer
     outBuffer.set(decodedBuffer);
     decodedBuffer.discardFirstSamples(totalSamples);
     mutex.unlock();
+
     return totalSamples;
 }
 

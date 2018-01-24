@@ -72,6 +72,30 @@ void MainController::setChannelReceiveStatus(const QString &userFullName, quint8
     }
 }
 
+long MainController::getDownloadTransferRate(const QString userFullName, quint8 channelIndex) const
+{
+    if (!isPlayingInNinjamRoom())
+        return 0;
+
+    return ninjamService.getDownloadTransferRate(userFullName, channelIndex);
+}
+
+long MainController::getTotalDownloadTransferRate() const
+{
+    if (!isPlayingInNinjamRoom())
+        return 0;
+
+    return ninjamService.getTotalDownloadTransferRate();
+}
+
+long MainController::getTotalUploadTransferRate() const
+{
+    if (!isPlayingInNinjamRoom())
+        return 0;
+
+    return ninjamService.getTotalUploadTransferRate();
+}
+
 void MainController::setVideoProperties(const QSize &resolution)
 {
     videoEncoder.setVideoResolution(resolution);

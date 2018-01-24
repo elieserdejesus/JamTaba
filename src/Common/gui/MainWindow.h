@@ -243,6 +243,8 @@ protected slots:
 
     virtual void updateLocalInputChannelsGeometry();
 
+    void setNetworkUsageUpdatePeriod(quint32 periodInMilliseconds);
+
 private slots:
 
     void showJamtabaCurrentVersion();
@@ -351,6 +353,14 @@ private:
 
     QScopedPointer<login::RoomInfo> roomToJump; // store the next room reference when jumping from on room to another
     QString passwordToJump;
+
+    QLabel *transmitTransferRateLabel;
+    QLabel *transmitIcon;
+    QLabel *receiveTransferRateLabel;
+    QLabel *receiveIcon;
+
+    quint32 networkUsageUpdatePeriod;
+    const static quint32 DEFAULT_NETWORK_USAGE_UPDATE_PERIOD;
 
     static bool jamRoomLessThan(const login::RoomInfo &r1, const login::RoomInfo &r2);
 

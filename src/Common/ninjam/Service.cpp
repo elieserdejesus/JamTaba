@@ -14,6 +14,38 @@ using namespace ninjam;
 
 const QStringList Service::botNames = buildBotNamesList();
 
+Service::NetworkUsageMeasurer::NetworkUsageMeasurer() :
+    lastMeasureTimeStamp(0),
+    transferRate(0)
+{
+}
+
+void Service::NetworkUsageMeasurer::addTransferedBytes(long bytesTransfered)
+{
+    totalBytesTransfered += bytesTransfered;
+
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+
+    if (!lastMeasureTimeStamp)
+        lastMeasureTimeStamp = now;
+
+    const qint64 ellapsedTime = now - lastMeasureTimeStamp;
+
+    if (ellapsedTime >= 1000) {
+        transferRate = totalBytesTransfered / (ellapsedTime / 1000.0);
+        totalBytesTransfered = 0;
+        lastMeasureTimeStamp = now;
+    }
+}
+
+long Service::NetworkUsageMeasurer::getTransferRate() const
+{
+    return transferRate;
+}
+
+
+// ---------------------------------------------------------------------
+
 /**
     This is a nested class used to bind the downloaded audio data (encoded in ogg vorbis) with a GUID (global unique ID),
     an user name and a channel index (users can use more than one channel). When a dowload is finished (the ninjam audio interval is
@@ -138,10 +170,16 @@ void Service::sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, boo
 //this slot is invoked when socket receive new data
 void Service::handleAllReceivedMessages()
 {
+    qint64 bytesAvailable = socket->bytesAvailable();
+
     messagesHandler->handleAllMessages();
     if (needSendKeepAlive()) {
         sendMessageToServer(ClientKeepAlive());
     }
+
+    qint64 bytesProcessed = bytesAvailable - (bytesAvailable - socket->bytesAvailable());
+
+    totalDownloadMeasurer.addTransferedBytes(bytesProcessed);
 }
 
 void Service::clear()
@@ -258,6 +296,9 @@ void Service::sendMessageToServer(const ClientMessage &message)
     if (bytesWrited > 0) {
         socket->flush();
         lastSendTime = QDateTime::currentMSecsSinceEpoch();
+
+        totalUploadMeasurer.addTransferedBytes(bytesWrited);
+
     } else {
         qCritical() << "Bytes not writed in socket!";
     }
@@ -317,6 +358,10 @@ void Service::process(const DownloadIntervalWrite &msg)
     if (downloads.contains(msg.getGUID())) {
         Download &download = downloads[msg.getGUID()];
         download.appendEncodedData(msg.getEncodedData());
+
+        auto &measurer = channelDownloadMeasurers[download.getUserFullName()][download.getChannelIndex()];
+        auto bytesReceived = msg.getEncodedData().size();
+        measurer.addTransferedBytes(bytesReceived);
 
         User user = currentServer->getUser(download.getUserFullName());
 
@@ -556,4 +601,10 @@ QTcpSocket * Service::createSocket()
 QString Service::getCurrentServerLicence() const
 {
     return serverLicence;
+}
+
+long Service::getDownloadTransferRate(const QString userFullName, quint8 channelIndex) const
+{
+    const auto &measurer = channelDownloadMeasurers[userFullName][channelIndex];
+    return measurer.getTransferRate();
 }

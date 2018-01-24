@@ -33,7 +33,7 @@ public:
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
 
-    void updateGuiElements();
+    virtual void updateGuiElements();
 
     int getTracksCount() const;
 

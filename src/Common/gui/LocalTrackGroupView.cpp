@@ -8,6 +8,7 @@
 
 #include <QInputDialog>
 #include <QToolTip>
+#include <QDateTime>
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindow) :
     TrackGroupView(mainWindow->createTextEditorModifier()),

@@ -44,6 +44,8 @@ const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
 const quint8 MainWindow::MAX_REFRESH_RATE = 60; // in Hertz
 
+const quint32 MainWindow::DEFAULT_NETWORK_USAGE_UPDATE_PERIOD = 4000; // 4 seconds
+
 const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200; //in miliseconds
 
 const QString MainWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
@@ -91,8 +93,16 @@ MainWindow::MainWindow(controller::MainController *mainController, QWidget *pare
     setupWidgets();
     setupSignals();
 
+    setNetworkUsageUpdatePeriod(MainWindow::DEFAULT_NETWORK_USAGE_UPDATE_PERIOD);
     qCDebug(jtGUI) << "MainWindow created!";
 
+}
+
+void MainWindow::setNetworkUsageUpdatePeriod(quint32 periodInMilliseconds)
+{
+    networkUsageUpdatePeriod = periodInMilliseconds;
+
+    NinjamTrackView::setNetworkUsageUpdatePeriod(periodInMilliseconds);
 }
 
 void MainWindow::setupMainTabCornerWidgets()
@@ -123,6 +133,36 @@ void MainWindow::setupMainTabCornerWidgets()
    performanceMonitorLabel->setVisible(false); // showing RAM monitor in windows only
 #endif
 
+    transmitTransferRateLabel = new QLabel(this);
+    transmitTransferRateLabel->setObjectName(QStringLiteral("transmitTransferRateLabel"));
+    transmitTransferRateLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    transmitTransferRateLabel->setAlignment(Qt::AlignCenter);
+    transmitTransferRateLabel->setText("12");
+
+    transmitIcon = new QLabel(this);
+    transmitIcon->setObjectName("transmitIcon");
+    transmitIcon->setPixmap(IconFactory::createTransmitPixmap(tintColor));
+
+    receiveTransferRateLabel = new QLabel(this);
+    receiveTransferRateLabel->setObjectName(QStringLiteral("receiveTransferRateLabel"));
+    receiveTransferRateLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    receiveTransferRateLabel->setAlignment(Qt::AlignCenter);
+    receiveTransferRateLabel->setText("23");
+
+    receiveIcon = new QLabel(this);
+    receiveIcon->setObjectName("receiveIcon");
+    receiveIcon->setPixmap(IconFactory::createReceivePixmap(tintColor));
+
+    auto transferRateLayout = new QHBoxLayout();
+    transferRateLayout->setContentsMargins(0, 0, 0, 0);
+    transferRateLayout->setSpacing(0);
+    transferRateLayout->addWidget(transmitIcon);
+    transferRateLayout->addWidget(transmitTransferRateLabel, 1);
+    transferRateLayout->addWidget(receiveIcon);
+    transferRateLayout->addWidget(receiveTransferRateLabel, 1);
+
+    frameLayout->addLayout(transferRateLayout);
+    frameLayout->addSpacing(12);
     frameLayout->addWidget(performanceMonitorLabel);
     frameLayout->addSpacing(12);
     frameLayout->addWidget(buttonCollapseLocalChannels);
@@ -426,6 +466,10 @@ void MainWindow::setTintColor(const QColor &color)
     auto chats = chatTabWidget->getChats();
     for (auto chatPanel : chats)
         chatPanel->setTintColor(color);
+
+    // network usage icons
+    transmitIcon->setPixmap(IconFactory::createTransmitPixmap(color));
+    receiveIcon->setPixmap(IconFactory::createReceivePixmap(color));
 }
 
 void MainWindow::initializeThemeMenu()
@@ -1802,6 +1846,39 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update all blinkable buttons
     BlinkableButton::updateAllBlinkableButtons();
+
+    // update network transfer rate labels
+    static qint64 lastNetworkTransferRateUpdate = QDateTime::currentMSecsSinceEpoch();
+
+    bool showNetworkUsageLabels = mainController->isPlayingInNinjamRoom();
+    transmitTransferRateLabel->setVisible(showNetworkUsageLabels);
+    receiveTransferRateLabel->setVisible(showNetworkUsageLabels);
+    receiveIcon->setVisible(showNetworkUsageLabels);
+    transmitIcon->setVisible(showNetworkUsageLabels);
+
+    if (mainController->isPlayingInNinjamRoom()) {
+        const qint64 ellapsedTime = now - lastNetworkTransferRateUpdate;
+        if (ellapsedTime >= networkUsageUpdatePeriod) {
+            QString transmitTransferRate = QString::number(mainController->getTotalUploadTransferRate() / 1024 * 8);
+            transmitTransferRateLabel->setText(transmitTransferRate.leftJustified(3, QChar(' ')));
+            QString transmitText = QString("%1 %2 Kbps")
+                                            .arg(tr("Uploading"))
+                                            .arg(transmitTransferRate);
+            transmitTransferRateLabel->setToolTip(transmitText);
+            transmitIcon->setToolTip(transmitTransferRateLabel->toolTip());
+
+            QString receiveTransferRate = QString::number(mainController->getTotalDownloadTransferRate() / 1024 * 8);
+            receiveTransferRateLabel->setText(receiveTransferRate.leftJustified(3, QChar(' ')));
+            QString receiveText = QString("%1 %2 Kbps")
+                                            .arg(tr("Downloading"))
+                                            .arg(receiveTransferRate);
+            receiveTransferRateLabel->setToolTip(receiveText);
+            receiveIcon->setToolTip(transmitTransferRateLabel->toolTip());
+
+            lastNetworkTransferRateUpdate = now;
+        }
+    }
+
 }
 
 void MainWindow::resizeEvent(QResizeEvent *ev)

@@ -32,7 +32,7 @@ public:
 
     void setActivatedStatus(bool deactivated);
 
-    void updateGuiElements();
+    void updateGuiElements() override;
 
     QSize sizeHint() const override;
 
@@ -41,6 +41,8 @@ public:
     void updateStyleSheet() override;
 
     void setTintColor(const QColor &color) override;
+
+    static void setNetworkUsageUpdatePeriod(quint32 periodInMilliseconds);
 
 protected:
 
@@ -52,6 +54,8 @@ private:
     MarqueeLabel *channelNameLabel;
     MultiStateButton *buttonLowCut;
     QPushButton *buttonReceive;
+    QHBoxLayout *networkUsageLayout;
+    QLabel *networkUsageLabel;
     persistence::CacheEntry cacheEntry; // used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay; // display downloaded interval chunks
 
@@ -74,7 +78,13 @@ private:
     MarqueeLabel *createChannelNameLabel() const;
     QPushButton *createReceiveButton() const;
 
+    NinjamTrackNode *getTrackNode() const;
+
     static const int WIDE_HEIGHT;
+
+    qint64 lastNetworkUsageUpdate;
+
+    static quint32 networkUsageUpdatePeriod;
 
 protected slots:
     // overriding the base class slots

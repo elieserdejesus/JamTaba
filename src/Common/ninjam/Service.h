@@ -72,10 +72,11 @@ public:
 
     inline ninjam::Server *getCurrentServer() const { return currentServer.data(); }
 
-    static inline QStringList getBotNamesList()
-    {
-        return botNames;
-    }
+    static QStringList getBotNamesList();
+
+    long getTotalUploadTransferRate() const;
+    long getTotalDownloadTransferRate() const;
+    long getDownloadTransferRate(const QString userFullName, quint8 channelIndex) const;
 
 signals:
     void userChannelCreated(const ninjam::User &user, const ninjam::UserChannel &channel);
@@ -136,6 +137,24 @@ private:
     QString password;
     QStringList channels; // channels names
 
+    // statistics
+    class NetworkUsageMeasurer
+    {
+    public:
+        NetworkUsageMeasurer();
+        void addTransferedBytes(long totalBytesTransfered);
+        long getTransferRate() const;
+
+    private:
+        long totalBytesTransfered;
+        qint64 lastMeasureTimeStamp;
+        long transferRate;
+    };
+
+    NetworkUsageMeasurer totalUploadMeasurer;
+    NetworkUsageMeasurer totalDownloadMeasurer;
+    QMap<QString, QMap<quint8, NetworkUsageMeasurer>> channelDownloadMeasurers; // using userFullName as key in first QMap and channel ID as key in second map
+
     void sendMessageToServer(const ClientMessage &message);
     void handleUserChannels(const User &remoteUser);
     bool channelIsOutdate(const User &user, const UserChannel &serverChannel);
@@ -153,6 +172,21 @@ private:
     void setupSocketSignals();
 
 };
+
+inline long Service::getTotalDownloadTransferRate() const
+{
+    return totalDownloadMeasurer.getTransferRate();
+}
+
+inline long Service::getTotalUploadTransferRate() const
+{
+    return totalUploadMeasurer.getTransferRate();
+}
+
+inline QStringList Service::getBotNamesList()
+{
+    return botNames;
+}
 
 } // namespace
 

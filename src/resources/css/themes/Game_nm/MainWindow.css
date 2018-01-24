@@ -70,7 +70,9 @@ NinjamTrackGroupView,
 }
 
 
-QLabel#labelPerformanceMonitor
+#labelPerformanceMonitor,
+#transmitTransferRateLabel,
+#receiveTransferRateLabel
 {
     color: rgba(0, 255, 255, 80);
     background-color: transparent;

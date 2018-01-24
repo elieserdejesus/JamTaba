@@ -43,6 +43,10 @@ public:
     virtual void start();
     virtual void stop();
 
+    long getTotalUploadTransferRate() const;
+    long getTotalDownloadTransferRate() const;
+    long getDownloadTransferRate(const QString userFullName, quint8 channelIndex) const;
+
     void setVideoProperties(const QSize &resolution);
 
     QSize getVideoResolution() const;

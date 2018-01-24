@@ -168,6 +168,12 @@ NinjamTrackView
     border: none;
 }
 
+NinjamTrackView #receiveLabel
+{
+    color: rgba(0, 0, 0, 120);
+    font-size: 9px;
+}
+
 NinjamTrackView #soloButton,
 NinjamTrackView #muteButton,
 NinjamTrackView #lowCutButton,

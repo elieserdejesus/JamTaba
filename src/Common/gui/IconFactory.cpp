@@ -4,6 +4,24 @@
 #include <QImage>
 #include <QPushButton>
 
+QPixmap IconFactory::createReceivePixmap(const QColor &tintColor)
+{
+    QImage image(":/images/receive.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QPixmap IconFactory::createTransmitPixmap(const QColor &tintColor)
+{
+    QImage image(":/images/transmit.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
 QPixmap IconFactory::createMidiIcon(const QColor &tintColor)
 {
     QImage image(":/images/input_midi.png");
@@ -146,14 +164,12 @@ QPixmap IconFactory::createLowLevelIcon(const QColor &tintColor)
 
 QIcon IconFactory::createReceiveIcon(const QColor &tintColor)
 {
-    QImage image(":/images/receive.png");
-
-    IconFactory::tintImage(image, tintColor);
+    auto image = IconFactory::createReceivePixmap(tintColor);
 
     QIcon icon;
 
-    icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::On);
-    icon.addPixmap(QPixmap::fromImage(image), QIcon::Disabled, QIcon::On);
+    icon.addPixmap(image, QIcon::Normal, QIcon::On);
+    icon.addPixmap(image, QIcon::Disabled, QIcon::On);
 
     return icon;
 }

@@ -29,13 +29,30 @@ QPushButton#buttonCollapseLocalTracks:!checked
     background: none;
 }
 
-QLabel#labelPerformanceMonitor
+#labelPerformanceMonitor,
+#transmitTransferRateLabel,
+#transmitIcon,
+#receiveTransferRateLabel,
+#receiveIcon
 {
     background-color: rgba(0, 0, 0, 30);
     color: rgba(255, 255, 255, 140);
-    padding-left: 3px;
+}
+
+#transmitTransferRateLabel,
+#receiveTransferRateLabel
+{
+    padding-left: 0px;
     padding-right: 3px;
 }
+
+#transmitIcon,
+#receiveIcon
+{
+    padding-right: 1px;
+    padding-left: 3px;
+}
+
 
 /* Zoom buttons in main window right bottom corner */
 #zoomInButton,
