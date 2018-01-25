@@ -167,6 +167,7 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
 
     if (!chatPanel) {     // create new chat
         auto botNames = mainController->getBotNames();
+        auto emojiManager = mainController->getEmojiManager();
         chatPanel = new ChatPanel(userFullName, botNames, colorsPool, textModifider, emojiManager);
         int tabIndex = tabBar->addTab(remoteUserName);
         stackWidget->addWidget(chatPanel);

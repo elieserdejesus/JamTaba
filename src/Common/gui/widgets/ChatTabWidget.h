@@ -8,7 +8,6 @@
 class UsersColorsPool;
 class ChatPanel;
 class TextEditorModifier;
-class EmojiManager;
 
 namespace controller {
     class MainController;
@@ -62,8 +61,6 @@ private:
     ChatPanel *mainChat;
 
     controller::MainController *mainController;
-
-    EmojiManager *emojiManager;
 
     void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages);
 
