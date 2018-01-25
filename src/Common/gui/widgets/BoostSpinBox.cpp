@@ -26,7 +26,7 @@ BoostSpinBox::BoostSpinBox(QWidget *parent) :
     connect(buttonIncrease, &QToolButton::clicked, this, &BoostSpinBox::increaseBoost);
     connect(buttonDecrease, &QToolButton::clicked, this, &BoostSpinBox::decreaseBoost);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     setOrientation(Qt::Vertical);
 }

@@ -61,7 +61,7 @@ void TrackGroupView::showMaxPeakMarker(bool showMarker)
 void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
 {
     setObjectName(QStringLiteral("TrackGroupView"));
-    setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
 
     mainLayout = new QGridLayout(this);
     mainLayout->setSpacing(0);

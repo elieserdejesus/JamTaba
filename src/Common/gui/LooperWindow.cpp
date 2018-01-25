@@ -44,7 +44,7 @@ LooperWindow::LooperWindow(QWidget *parent, controller::MainController *mainCont
     ui->layersWidget->setLayout(layout);
 
     // set as non resizable
-    setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setMinimumSize(size());
     setMaximumSize(size());
     setSizeGripEnabled(false);
@@ -256,7 +256,7 @@ void LooperWindow::setLooper(audio::Looper *looper)
             auto layerWavePanel = new LooperWavePanel(looper, layerIndex);
             auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex, tintColor);
 
-            layerWavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
+            layerWavePanel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
 
             gridLayout->addWidget(layerWavePanel, layerIndex, 0);
             gridLayout->addLayout(layerControlsLayout, layerIndex, 1);
@@ -402,7 +402,7 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     gainSlider = new Slider();
     gainSlider->setObjectName(QStringLiteral("levelSlider"));
     gainSlider->setOrientation(Qt::Horizontal);
-    gainSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+    gainSlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     gainSlider->setMaximum(120);
     gainSlider->setValue(Utils::poweredGainToLinear(looper->getLayerGain(layerIndex)) * 100);
     gainSlider->setTickPosition(QSlider::NoTicks);

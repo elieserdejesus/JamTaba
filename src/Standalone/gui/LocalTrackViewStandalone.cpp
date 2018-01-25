@@ -214,7 +214,7 @@ QLabel *LocalTrackViewStandalone::createInputTypeIconLabel(QWidget *parent)
     QLabel *label = new QLabel(parent);
     label->setObjectName(QStringLiteral("inputSelectionIcon"));
     label->setTextFormat(Qt::RichText);
-    label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
+    label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
     return label;
 }
 
@@ -222,8 +222,7 @@ QPushButton *LocalTrackViewStandalone::createInputSelectionButton(QWidget *paren
 {
     QPushButton *fakeComboButton = new QPushButton(parent);
     fakeComboButton->setObjectName(QStringLiteral("inputSelectionButton"));
-    fakeComboButton->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
-                                               QSizePolicy::MinimumExpanding));
+    fakeComboButton->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     QObject::connect(fakeComboButton, SIGNAL(clicked()), this, SLOT(showInputSelectionMenu()));
 
@@ -237,7 +236,7 @@ QWidget *LocalTrackViewStandalone::createInputPanel()
     inputPanel->setLayout(new QHBoxLayout(inputPanel));
     inputPanel->layout()->setContentsMargins(0, 0, 0, 0);
     inputPanel->layout()->setSpacing(0);
-    inputPanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
+    inputPanel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
     this->inputSelectionButton = createInputSelectionButton(inputPanel);
     inputPanel->layout()->addWidget(inputSelectionButton);// button in right
@@ -249,7 +248,7 @@ QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
 {
     QPushButton * button = new QPushButton();
     button->setObjectName(QStringLiteral("midiToolsButton"));
-    button->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+    button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     button->setVisible(false);
     connect(button, SIGNAL(clicked(bool)), this, SLOT(openMidiToolsDialog()));
     return button;

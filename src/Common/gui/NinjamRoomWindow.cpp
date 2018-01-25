@@ -787,13 +787,13 @@ void NinjamRoomWindow::setTracksSize(TracksSize newTracksSize)
 void NinjamRoomWindow::adjustTracksPanelSizePolicy()
 {
     if (tracksLayout == TracksLayout::HorizontalLayout) {
-        ui->tracksPanel->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
+        ui->tracksPanel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     }
     else if (tracksLayout == TracksLayout::VerticalLayout) {
-        ui->tracksPanel->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding));
+        ui->tracksPanel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
     }
     else if (tracksLayout == TracksLayout::GridLayout) {
-        ui->tracksPanel->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
+        ui->tracksPanel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     }
     else {
         qCritical() << "Can't adjust for layout value" << static_cast<int>(tracksLayout);

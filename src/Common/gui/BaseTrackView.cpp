@@ -56,12 +56,12 @@ void BaseTrackView::setTintColor(const QColor &color)
 
 void BaseTrackView::setupVerticalLayout()
 {
-    setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
+    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
 
     levelSlider->setOrientation(Qt::Vertical);
     levelSliderLayout->setDirection(QBoxLayout::TopToBottom);
 
-    peakMeter->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding));
+    peakMeter->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
     peakMeter->setOrientation(Qt::Vertical);
 
     metersLayout->setDirection(QHBoxLayout::LeftToRight);
@@ -84,12 +84,12 @@ void BaseTrackView::createLayoutStructure()
 
     labelPanL = new QLabel();
     labelPanL->setObjectName(QStringLiteral("labelPanL"));
-    labelPanL->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+    labelPanL->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     labelPanL->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
     labelPanR = new QLabel();
     labelPanR->setObjectName(QStringLiteral("labelPanR"));
-    labelPanR->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+    labelPanR->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     labelPanR->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
     panSlider = new Slider();
@@ -105,7 +105,7 @@ void BaseTrackView::createLayoutStructure()
 
     levelSlider = new Slider();
     levelSlider->setObjectName(QStringLiteral("levelSlider"));
-    levelSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+    levelSlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     levelSlider->setMaximum(120);
     levelSlider->setValue(100);
     levelSlider->setTickPosition(QSlider::NoTicks);

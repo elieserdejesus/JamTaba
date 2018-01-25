@@ -37,7 +37,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     delete groupNameField;
     groupNameLabel = new MarqueeLabel();
     groupNameLabel->setObjectName("groupNameField");
-    groupNameLabel->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum));
+    groupNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     QHBoxLayout *groupNameLayout = new QHBoxLayout();
     groupNameLayout->addWidget(groupNameLabel, 1);
@@ -268,7 +268,7 @@ void NinjamTrackGroupView::setTracksLayout(TracksLayout newLayout)
         qCritical() << "Invalid layout " << static_cast<quint8>(newLayout);
     }
 
-    topPanel->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum));
+    topPanel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     setProperty("horizontal", orientation == Qt::Horizontal ? true : false);
     refreshStyleSheet();
@@ -300,7 +300,7 @@ void NinjamTrackGroupView::setupGridLayout()
 
     tracksLayout->setDirection(QBoxLayout::LeftToRight);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
 }
 
 void NinjamTrackGroupView::setupHorizontalLayout()
@@ -323,7 +323,7 @@ void NinjamTrackGroupView::setupHorizontalLayout()
 
     topPanel->setVisible(true);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 }
 
 void NinjamTrackGroupView::setupVerticalLayout()
@@ -347,7 +347,7 @@ void NinjamTrackGroupView::setupVerticalLayout()
     tracksLayout->setDirection(QBoxLayout::LeftToRight);
     topPanelLayout->setDirection(QBoxLayout::TopToBottom);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 }
 
 void NinjamTrackGroupView::resetMainLayoutStretch()

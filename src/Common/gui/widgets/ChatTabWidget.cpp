@@ -40,7 +40,7 @@ ChatTabWidget::ChatTabWidget(QWidget *parent, controller::MainController *mainCo
 
     setObjectName(QStringLiteral("chatTabWidget"));
 
-    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     stackWidget->setMinimumWidth(230); // TODO Refactoring: remove these 'Magic Numbers'
 }

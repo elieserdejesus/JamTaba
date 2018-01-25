@@ -129,7 +129,7 @@ void ChatPanel::showEvent(QShowEvent *ev)
 void ChatPanel::createVoteButton(const QString &voteType, quint32 value, quint32 expireTime)
 {
     QPushButton *voteButton = new NinjamVoteButton(voteType, value, expireTime);
-    voteButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+    voteButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     ui->scrollContent->layout()->addWidget(voteButton);
     ui->scrollContent->layout()->setAlignment(voteButton, Qt::AlignRight);
     connect(voteButton, &QPushButton::clicked, this, &ChatPanel::confirmVote);
@@ -166,8 +166,7 @@ void ChatPanel::addChordProgressionConfirmationMessage(const ChordProgression &p
     QString buttonText = tr("Use/load the chords above");
     QPushButton *chordProgressionButton = new ChordProgressionConfirmationButton(buttonText,
                                                                                  progression);
-    chordProgressionButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum,
-                                                      QSizePolicy::Preferred));
+    chordProgressionButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     ui->scrollContent->layout()->addWidget(chordProgressionButton);
     ui->scrollContent->layout()->setAlignment(chordProgressionButton, Qt::AlignRight);
     connect(chordProgressionButton, &QPushButton::clicked, this, &ChatPanel::confirmChordProgression);

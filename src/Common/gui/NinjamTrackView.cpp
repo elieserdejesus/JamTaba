@@ -103,7 +103,7 @@ MarqueeLabel *NinjamTrackView::createChannelNameLabel() const
     MarqueeLabel *label = new MarqueeLabel();
     label->setObjectName("channelName");
     label->setText("");
-    label->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
+    label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
     label->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
 
     return label;
@@ -299,7 +299,7 @@ void NinjamTrackView::setupVerticalLayout()
 
 void NinjamTrackView::setupHorizontalLayout()
 {
-    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     mainLayout->removeWidget(channelNameLabel);
     mainLayout->removeItem(primaryChildsLayout);
@@ -321,7 +321,7 @@ void NinjamTrackView::setupHorizontalLayout()
     levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
 
     peakMeter->setOrientation(Qt::Horizontal);
-    peakMeter->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
+    peakMeter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
     metersLayout->setDirection(QBoxLayout::TopToBottom);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
