@@ -33,14 +33,8 @@ ChatTabWidget::ChatTabWidget(QWidget *parent, controller::MainController *mainCo
 
     layout->setAlignment(tabBar, Qt::AlignTop | Qt::AlignLeft);
 
-    connect(tabBar, &QTabBar::currentChanged, this, [=](int index) {
-
-        if (!stackWidget->isVisible())
-            collapse(false);
-
-        stackWidget->setCurrentIndex(index);
-
-    });
+    connect(tabBar, &QTabBar::currentChanged, this, &ChatTabWidget::changeCurrentTab);
+    connect(tabBar, &QTabBar::tabBarClicked, this, &ChatTabWidget::changeCurrentTab);
 
     connect(tabBar, &QTabBar::tabCloseRequested, this, &ChatTabWidget::closeChatTab);
 
@@ -49,6 +43,19 @@ ChatTabWidget::ChatTabWidget(QWidget *parent, controller::MainController *mainCo
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
 
     stackWidget->setMinimumWidth(230); // TODO Refactoring: remove these 'Magic Numbers'
+}
+
+void ChatTabWidget::changeCurrentTab(int tabIndex)
+{
+    if (tabBar->currentIndex() != tabIndex) {
+        tabBar->setCurrentIndex(tabIndex);
+        return;
+    }
+
+    if (!stackWidget->isVisible())
+        collapse(false);
+
+    stackWidget->setCurrentIndex(tabIndex);
 }
 
 void ChatTabWidget::clear()

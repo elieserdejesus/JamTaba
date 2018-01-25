@@ -50,6 +50,7 @@ signals:
 
 private slots:
     void closeChatTab(int index);
+    void changeCurrentTab(int tabIndex);
 
 private:
     QTabBar *tabBar;
