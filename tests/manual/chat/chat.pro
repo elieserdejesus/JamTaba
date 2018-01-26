@@ -24,10 +24,11 @@ SOURCES += gui/chat/EmojiWidget.cpp
 SOURCES += gui/chat/EmojiManager.cpp
 SOURCES += gui/IconFactory.cpp
 SOURCES += gui/UsersColorsPool.cpp
+SOURCES += ninjam/User.cpp
+SOURCES += ninjam/UserChannel.cpp
 
 SOURCES += test_Chat.cpp
 
 FORMS += gui/chat/ChatMessagePanel.ui
 FORMS += gui/chat/ChatPanel.ui
 
-RESOURCES += resources.qrc

@@ -50,11 +50,7 @@ ChatPanel #chatText:!focus
 
 /* ChatMessagePanel is the widget used to show ONE chat message
 ----------------------------------------------------------------*/
-ChatMessagePanel
-{
-    border: 1px solid rgba(0, 0, 0, 50);
-    border-radius: 0px;
-}
+
 
 ChatMessagePanel #labelUserName             /* The name of chat message author */
 {

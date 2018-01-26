@@ -7,6 +7,7 @@
 #include "ChatPanel.h"
 #include "UsersColorsPool.h"
 #include "MainController.h"
+#include "ninjam/User.h"
 
 ChatTabWidget::ChatTabWidget(QWidget *parent, controller::MainController *mainController, UsersColorsPool *colorsPool) :
     QFrame(parent),
@@ -70,9 +71,14 @@ void ChatTabWidget::clear()
     }
 
     mainChat = nullptr;
+
+    for (auto chat : privateChats.values())
+        chat->deleteLater();
+
+    privateChats.clear();
 }
 
-ChatPanel *ChatTabWidget::createPublicChat(const QString &jamTabaChatBotName, TextEditorModifier *textEditorModifier)
+ChatPanel *ChatTabWidget::createPublicChat(TextEditorModifier *textEditorModifier)
 {
     if (mainChat)
         return mainChat;
@@ -82,7 +88,7 @@ ChatPanel *ChatTabWidget::createPublicChat(const QString &jamTabaChatBotName, Te
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
-    mainChat = new ChatPanel(jamTabaChatBotName, botNames, colorsPool, textEditorModifier, emojiManager);
+    mainChat = new ChatPanel(botNames, colorsPool, textEditorModifier, emojiManager);
     stackWidget->addWidget(mainChat);
 
     connect(mainChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
@@ -118,9 +124,15 @@ void ChatTabWidget::closeChatTab(int index)
     tabBar->removeTab(index);
 
     if (index < stackWidget->count()) {
-        auto widget = stackWidget->widget(index);
-        stackWidget->removeWidget(widget);
-        widget->deleteLater();
+        auto chatPanel = static_cast<ChatPanel *>(stackWidget->widget(index));
+        if (chatPanel) {
+            stackWidget->removeWidget(chatPanel);
+            privateChats.remove(chatPanel->getRemoteUserFullName());
+            chatPanel->deleteLater();
+        }
+        else {
+            qCritical() << "Error deleting chatPanel!";
+        }
     }
 
 }
@@ -168,29 +180,32 @@ void ChatTabWidget::collapse(bool collapse)
 
 ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const QString &userIP, TextEditorModifier *textModifider, bool focusNewChat)
 {
-    QString userFullName = remoteUserName + "@" + userIP;
+    QString remoteUserFullName = remoteUserName + "@" + userIP;
 
-    auto chatPanel = getPrivateChat(userFullName);
+    auto chatPanel = getPrivateChat(remoteUserFullName);
 
     if (!chatPanel) {     // create new chat
         auto botNames = mainController->getBotNames();
         auto emojiManager = mainController->getEmojiManager();
-        chatPanel = new ChatPanel(userFullName, botNames, colorsPool, textModifider, emojiManager);
+        chatPanel = new ChatPanel(botNames, colorsPool, textModifider, emojiManager);
+        chatPanel->setRemoteUserFullName(remoteUserFullName);
         int tabIndex = tabBar->addTab(remoteUserName);
         stackWidget->addWidget(chatPanel);
 
         connect(chatPanel, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
-            updatePrivateChatTabTitle(tabIndex, unreaded);
+            updatePrivateChatTabTitle(tabIndex, unreaded, remoteUserName);
         });
 
         if (focusNewChat)
             tabBar->setCurrentIndex(tabIndex);
+
+        privateChats.insert(remoteUserFullName, chatPanel);
     }
 
     return chatPanel;
 }
 
-void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages)
+void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages, const QString &remoteUserName)
 {
     Q_ASSERT(chatIndex > 0); // index ZERO is the public chat
 
@@ -198,41 +213,31 @@ void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessag
     if (!chatPanel)
         return;
 
-    QString text = chatPanel->getUserFullName().replace(QRegularExpression("@.+"), "");
+    QString tabText = ninjam::extractUserName(remoteUserName);
     if (unreadedMessages > 0)
-        text = QString("(%1) %2").arg(unreadedMessages).arg(text);
+        tabText = QString("(%1) %2").arg(unreadedMessages).arg(tabText);
 
-    tabBar->setTabText(chatIndex, text);
+    tabBar->setTabText(chatIndex, tabText);
 }
 
 
 bool ChatTabWidget::contains(const QString &userFullName) const
 {
-    for (auto chat : getChats())
-        if (chat->getUserFullName() == userFullName)
-            return true;
-
-    return false;
+    return (getPrivateChat(userFullName) != nullptr);
 }
 
-ChatPanel *ChatTabWidget::getPrivateChat(const QString &userFullName)
+ChatPanel *ChatTabWidget::getPrivateChat(const QString &userFullName) const
 {
-    for (auto chat : getChats())
-        if (chat->getUserFullName() == userFullName)
-            return chat;
-
-    return nullptr;
+    return privateChats[userFullName];
 }
 
-
-QList<ChatPanel *>ChatTabWidget::getChats() const
+void ChatTabWidget::setChatsTintColor(const QColor &color)
 {
-    QList<ChatPanel *> chats;
-    for (int i = 0; i < stackWidget->count(); ++i) {
-        chats << static_cast<ChatPanel *>(stackWidget->widget(i));
-    }
+    if(mainChat)
+        mainChat->setTintColor(color);
 
-    return chats;
+    for (auto chat : privateChats.values())
+        chat->setTintColor(color);
 }
 
 ChatPanel *ChatTabWidget::getFocusedChatPanel() const

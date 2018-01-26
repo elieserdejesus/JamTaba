@@ -28,10 +28,6 @@ ChatPanel #chatText:focus                   /* text input field focused */
 
 /* ChatMessagePanel is the widget used to show ONE chat message
 ----------------------------------------------------------------*/
-ChatMessagePanel
-{
-    border: 1px solid black;
-}
 
 ChatMessagePanel #labelUserName             /* The name of chat message author */
 {

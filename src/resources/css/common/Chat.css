@@ -34,12 +34,6 @@
 
 /* Stylesheet used in chat messages widget (ChatMessagePanel).
 ------------------------------------------ */
-ChatMessagePanel
-{
-    padding: 0px;
-    padding-left: 3px;
-    padding-right: 3px;
-}
 
 ChatMessagePanel #labelUserName /* chat message author */
 {
@@ -66,7 +60,6 @@ ChatMessagePanel #blockButton      /* the small B (block user in chat) button */
 
 ChatMessagePanel #labelMessage
 {
-    background-color: transparent;
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
     padding: 0px;

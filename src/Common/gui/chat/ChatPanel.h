@@ -20,20 +20,16 @@ class EmojiManager;
 class TextEditorModifier;
 class UsersColorsPool;
 
-namespace Controller {
-class MainController;
-}
-
 class ChatPanel : public QWidget
 {
     Q_OBJECT
 
 public:
-    ChatPanel(const QString &userFullName, const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier, EmojiManager *emojiManager);
+    ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool, TextEditorModifier *chatInputModifier, EmojiManager *emojiManager);
 
     virtual ~ChatPanel();
 
-    void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
+    void addMessage(const QString &localUserName, const QString &msgAuthor, const QString &msgText, bool showTranslationButton = true, bool showBlockButton = false);
     void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));
     void addBpmVoteConfirmationMessage(quint32 newBpmValue, quint32 expireTime);
     void addBpiVoteConfirmationMessage(quint32 newBpiValue, quint32 expireTime);
@@ -43,9 +39,11 @@ public:
     void removeMessagesFrom(const QString &userName);
     void setInputsStatus(bool enabled);
     bool inputsAreEnabled() const;
-    QString getUserFullName() const;
 
     void setTintColor(const QColor &color);
+
+    void setRemoteUserFullName(const QString &remoteUserFullName);
+    QString getRemoteUserFullName() const;
 
 public slots:
     void setTopicMessage(const QString &topic);
@@ -73,6 +71,7 @@ private slots:
 protected:
     void changeEvent(QEvent *) override;
     void showEvent(QShowEvent *) override;
+    bool eventFilter(QObject *, QEvent *) override;
 
 private:
     Ui::ChatPanel *ui;
@@ -82,9 +81,11 @@ private:
 
     EmojiWidget *emojiWidget;
     EmojiManager *emojiManager;
-
     QAction *emojiAction;
+
     QColor tintColor;
+
+    QString remoteUserFulName; // used in private chats only
 
     static const int MAX_MESSAGES = 50;
 
@@ -96,20 +97,23 @@ private:
 
     bool autoTranslating;
 
-    void addMessagePanelInLayout(ChatMessagePanel *msgPanel);
+    void addMessagePanelInLayout(ChatMessagePanel *msgPanel, Qt::Alignment alignment);
 
     UsersColorsPool *colorsPool;
-
-    QString userFullName; // username@ip
 
     uint unreadedMessages; // messages added when this widget is not focused
 
     void setUnreadedMessages(uint unreaded);
 };
 
-inline QString ChatPanel::getUserFullName() const
+inline QString ChatPanel::getRemoteUserFullName() const
 {
-    return userFullName;
+    return remoteUserFulName;
+}
+
+inline void ChatPanel::setRemoteUserFullName(const QString &remoteUserFullName)
+{
+    this->remoteUserFulName = remoteUserFullName;
 }
 
 class NinjamVoteButton : public QPushButton

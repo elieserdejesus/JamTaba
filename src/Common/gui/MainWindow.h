@@ -323,7 +323,7 @@ private:
     void hideBusyDialog();
     void centerBusyDialog();
 
-    void createPrivateChat(const QString &remoteUserName, const QString &userIP, bool focusNewChat);
+    void createPrivateChat(const QString &remoteUserName, const QString &remoteUserIP, bool focusNewChat);
     void setPrivateChatInputstatus(const QString userName, bool enabled);
 
     void closeAllLooperWindows();

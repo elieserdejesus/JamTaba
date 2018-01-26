@@ -11,8 +11,12 @@ public:
     QSize sizeHint() const override;
     QSize minimumSizeHint() const override;
 
+private slots:
+    void updateWidth();
+
 private:
-    int getMinimumHeight() const;
+    quint32 computeBestWidth() const;
+    quint32 bestWidth;
 
 };
 

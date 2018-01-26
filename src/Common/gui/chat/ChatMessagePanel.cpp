@@ -1,29 +1,25 @@
 #include "ChatMessagePanel.h"
 #include "ui_ChatMessagePanel.h"
+#include "log/Logging.h"
+#include "EmojiManager.h"
+
+#include <QTime>
+#include <QPainter>
 #include <QDebug>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QMetaMethod>
-#include "log/Logging.h"
-#include <QTime>
-#include "EmojiManager.h"
-
-ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
-    QFrame(parent),
-    ui(new Ui::ChatMessagePanel)
-{
-    ui->setupUi(this);
-}
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg,
-                                   const QColor &userNameBackgroundColor,
-                                   const QColor &textColor,
+                                   const QColor &backgroundColor, const QColor &textColor,
                                    bool showTranslationButton, bool showBlockButton, Emojifier *emojifier) :
     QFrame(parent),
     ui(new Ui::ChatMessagePanel),
     userName(userName),
-    emojifier(emojifier)
+    emojifier(emojifier),
+    backgroundColor(backgroundColor),
+    showArrow(true),
+    arrowSide(ChatMessagePanel::LeftSide)
 {
     ui->setupUi(this);
 
@@ -32,9 +28,116 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, con
     else
         emojifiedText = msg;
 
-    initialize(userName, msg, userNameBackgroundColor, textColor, showTranslationButton, showBlockButton);
+    initialize(userName, msg, showTranslationButton, showBlockButton);
 
     connect(ui->blockButton, &QPushButton::clicked, this, &ChatMessagePanel::fireBlockingUserSignal);
+
+    setBackgroundRole(QPalette::NoRole);
+
+    setStyleSheet(QString("color: %1;").arg(textColor.name()));
+
+    buildPainterPath();
+
+    adjustContentMargins();
+}
+
+void ChatMessagePanel::adjustContentMargins()
+{
+    int left = (arrowSide == ChatMessagePanel::LeftSide ? ARROW_WIDTH : 0) + 3;
+    int top = 3;
+    int right = (arrowSide == ChatMessagePanel::RightSide ? ARROW_WIDTH : 0) + 3;
+    int bottom = 3;
+    QMargins margins(left, top, right, bottom);
+
+    ui->verticalLayout->setContentsMargins(margins);
+}
+
+void ChatMessagePanel::setShowArrow(bool showArrow)
+{
+    this->showArrow = showArrow;
+    if (!showArrow)
+        arrowSide = ChatMessagePanel::LeftSide;
+
+    buildPainterPath();
+
+    adjustContentMargins();
+
+    update();
+}
+
+void ChatMessagePanel::setArrowSide(ArrowSide side)
+{
+    arrowSide = side;
+
+    buildPainterPath();
+
+    adjustContentMargins();
+
+    update();
+}
+
+void ChatMessagePanel::buildPainterPath()
+{
+    painterPath = QPainterPath();
+
+    const quint8 round = showArrow ? 10 : 3;
+
+    const quint32 arrowHeight = showArrow ? ARROW_WIDTH * 0.8 : 0;
+
+    quint32 w = width();
+    quint32 h = height();
+
+    quint32 left = 0;
+    quint32 right = w - 1;
+    quint32 bottom = h - 1;
+    quint32 top = 0;
+
+    if (arrowSide == ChatMessagePanel::LeftSide) {
+        painterPath.moveTo(left, top);
+        painterPath.lineTo(right - round, top); // top line
+        painterPath.quadTo(right, top, right, top + round); // top right corner
+        painterPath.lineTo(right, bottom - round); // right line
+        painterPath.quadTo(right, bottom, right - round, bottom); // bottom right corner
+        painterPath.lineTo(left + round + ARROW_WIDTH, bottom); // bottom line
+        painterPath.quadTo(left + ARROW_WIDTH, bottom, left + ARROW_WIDTH, bottom - round); // bottom left corner
+        painterPath.lineTo(left + ARROW_WIDTH, top + arrowHeight);
+    }
+    else {
+        painterPath.moveTo(right, top);
+        painterPath.lineTo(left + round, top); // top line
+        painterPath.quadTo(left, top, left, top + round); // top left corner
+        painterPath.lineTo(left, bottom - round); // left line
+        painterPath.quadTo(left, bottom, left + round, bottom); // bottom left corner
+        painterPath.lineTo(right - round - ARROW_WIDTH, bottom); // bottom line
+        painterPath.quadTo(right - ARROW_WIDTH, bottom, right - ARROW_WIDTH, bottom - round); // bottom right corner
+        painterPath.lineTo(right - ARROW_WIDTH, top + arrowHeight);
+    }
+
+    shadowPath = painterPath.translated(arrowSide == LeftSide ? -1 : 1, 1);
+
+}
+
+void ChatMessagePanel::resizeEvent(QResizeEvent *ev)
+{
+    QFrame::resizeEvent(ev);
+
+    buildPainterPath();
+
+    ui->labelMessage->setMaximumWidth(parentWidget()->width() - 30);
+}
+
+void ChatMessagePanel::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    static const QColor shadowColor(0, 0, 0, 90);
+
+    if (showArrow)
+        painter.fillPath(shadowPath, shadowColor);
+
+    painter.fillPath(painterPath, backgroundColor);
 }
 
 void ChatMessagePanel::focusInEvent(QFocusEvent *ev)
@@ -52,9 +155,7 @@ void ChatMessagePanel::changeEvent(QEvent *e)
     QWidget::changeEvent(e);
 }
 
-void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
-                                  const QColor &msgBackgroundColor, const QColor &textColor,
-                                  bool showTranslationButton, bool showBlockButton)
+void ChatMessagePanel::initialize(const QString &userName, const QString &msg, bool showTranslationButton, bool showBlockButton)
 {
     if (!userName.isEmpty() && !userName.isNull()) {
         ui->labelUserName->setText(userName);
@@ -62,8 +163,6 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
     else {
         ui->labelUserName->setVisible(false);
     }
-
-    setStyleSheet(buildCssString(msgBackgroundColor, textColor));
 
     setMessageLabelText(emojifiedText);
 
@@ -82,15 +181,6 @@ void ChatMessagePanel::setMessageLabelText(const QString &msg)
     newMessage = replaceLinksInString(newMessage);
 
     ui->labelMessage->setText(newMessage);
-}
-
-QString ChatMessagePanel::buildCssString(const QColor &bgColor, const QColor &textColor)
-{
-    QString css = "ChatMessagePanel { ";
-    css += " background-color: " + bgColor.name(QColor::HexArgb) + ";";
-    css += " color: " + textColor.name() + ";";
-    css += "}";
-    return css;
 }
 
 QString ChatMessagePanel::replaceLinksInString(const QString &string)
@@ -127,7 +217,7 @@ void ChatMessagePanel::translate()
 
     QObject::connect(httpClient, SIGNAL(finished(QNetworkReply *)), this, SLOT(handleAvailableTranslation(QNetworkReply *)));
 
-    ui->labelMessage->setText("..."); // translating
+    //ui->labelMessage->setText("..."); // translating
 }
 
 void ChatMessagePanel::on_translateButton_clicked()

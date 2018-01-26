@@ -14,13 +14,13 @@
 #include "TextEditorModifier.h"
 #include "UsersColorsPool.h"
 #include "EmojiManager.h"
+#include "ninjam/User.h"
 
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
-ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, UsersColorsPool *colorsPool,
+ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
                         TextEditorModifier *chatInputModifier, EmojiManager *emojiManager) :
     QWidget(nullptr),
-    userFullName(userFullName),
     ui(new Ui::ChatPanel),
     emojiManager(emojiManager),
     botNames(botNames),
@@ -31,7 +31,7 @@ ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, U
 {
     ui->setupUi(this);
     QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
-    contentLayout->setContentsMargins(0, 0, 0, 0);
+    contentLayout->setContentsMargins(3, 3, 3, 3);
     ui->scrollContent->setLayout(contentLayout);
 
     connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
@@ -84,6 +84,16 @@ ChatPanel::ChatPanel(const QString &userFullName, const QStringList &botNames, U
         chatInputModifier->modify(ui->chatText, finishEditorPressingReturnKey);
     }
 
+    ui->scrollContent->installEventFilter(this);
+}
+
+bool ChatPanel::eventFilter(QObject *o, QEvent *e)
+{
+    if (o == ui->scrollContent && e->type() == QEvent::Resize) {
+        ui->scrollContent->setMaximumWidth(ui->chatScroll->viewport()->width());
+    }
+
+    return QWidget::eventFilter(o, e);
 }
 
 void ChatPanel::setTintColor(const QColor &color)
@@ -237,18 +247,24 @@ void ChatPanel::addLastChordsMessage(const QString &userName, const QString &mes
     ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, userName, message,
                                                       backgroundColor, textColor, false, false);
 
-    addMessagePanelInLayout(msgPanel);
+    addMessagePanelInLayout(msgPanel, Qt::AlignLeft);
 
 }
 
-void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton, bool showBlockButton)
+void ChatPanel::addMessage(const QString &localUserName, const QString &msgAuthor, const QString &msgText, bool showTranslationButton, bool showBlockButton)
 {
-    QString name = !userName.isEmpty() ? userName : "JamTaba";
+
+    QString name = !msgAuthor.isEmpty() ? msgAuthor : "JamTaba";
+
     QColor backgroundColor = getUserColor(name);
+
     bool isBot = backgroundColor == BOT_COLOR;
+    bool isLocalUser = msgAuthor == ninjam::extractUserName(localUserName);
+
     QColor textColor = isBot ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = backgroundColor;
-    ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, userMessage,
+
+    ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, msgText,
                                                       userNameBackgroundColor, textColor, showTranslationButton, showBlockButton, emojiManager);
 
     connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
@@ -257,8 +273,15 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     connect(msgPanel, &ChatMessagePanel::blockingUser, this, &ChatPanel::userBlockingChatMessagesFrom);
 
     msgPanel->setPrefferedTranslationLanguage(this->autoTranslationLanguage);
+    msgPanel->setShowArrow(!isBot);
+    if (!isBot && isLocalUser) // local user messages are showed in right side
+        msgPanel->setArrowSide(ChatMessagePanel::RightSide);
 
-    addMessagePanelInLayout(msgPanel);
+    Qt::Alignment alignment = Qt::AlignLeft;
+    if (isLocalUser)
+        alignment = Qt::AlignRight;
+
+    addMessagePanelInLayout(msgPanel, alignment);
 
     if (autoTranslating)
         msgPanel->translate();// request the translation
@@ -277,7 +300,7 @@ void ChatPanel::setUnreadedMessages(uint unreaded)
     }
 }
 
-void ChatPanel::addMessagePanelInLayout(ChatMessagePanel *msgPanel)
+void ChatPanel::addMessagePanelInLayout(ChatMessagePanel *msgPanel, Qt::Alignment alignment)
 {
     ui->scrollContent->layout()->addWidget(msgPanel);
     if (ui->scrollContent->layout()->count() > MAX_MESSAGES) {
@@ -287,7 +310,7 @@ void ChatPanel::addMessagePanelInLayout(ChatMessagePanel *msgPanel)
         delete panels.first();
     }
     ui->scrollContent->layout()->setAlignment(Qt::AlignTop);
-    ui->scrollContent->layout()->setAlignment(msgPanel, Qt::AlignTop);
+    ui->scrollContent->layout()->setAlignment(msgPanel, Qt::AlignTop | alignment);
 }
 
 // +++++++++++++++++++++++++++++++++++=

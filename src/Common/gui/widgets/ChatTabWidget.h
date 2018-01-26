@@ -30,13 +30,11 @@ public:
 
     ChatPanel *getFocusedChatPanel() const;
 
-    QList<ChatPanel *> getChats() const;
-
     bool contains(const QString &userFullName) const;
 
-    ChatPanel *getPrivateChat(const QString &userFullName);
+    ChatPanel *getPrivateChat(const QString &userFullName) const;
 
-    ChatPanel *createPublicChat(const QString &jamTabaChatBotName, TextEditorModifier *textEditorModifier);
+    ChatPanel *createPublicChat(TextEditorModifier *textEditorModifier);
     ChatPanel *createPrivateChat(const QString &remoteUserName, const QString &userIP, TextEditorModifier *textModifider, bool focusNewChat);
 
     void updatePublicChatTabTitle(uint unreadedMessages = 0);
@@ -44,6 +42,8 @@ public:
     bool isCollapsed() const;
 
     void clear();
+
+    void setChatsTintColor(const QColor &color);
 
 signals:
     void collapsedChanged(bool collapsed);
@@ -60,10 +60,11 @@ private:
     UsersColorsPool *colorsPool;
 
     ChatPanel *mainChat;
+    QMap<QString, ChatPanel*> privateChats;
 
     controller::MainController *mainController;
 
-    void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages);
+    void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages, const QString &remoteUserName);
 
     void removeTabCloseButton(int buttonIndex);
 };

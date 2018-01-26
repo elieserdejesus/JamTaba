@@ -16,13 +16,21 @@ class ChatMessagePanel : public QFrame
     Q_OBJECT
 
 public:
-    explicit ChatMessagePanel(QWidget *parent);
-    ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg, const QColor &userNameBackgroundColor,
+    ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg, const QColor &backgroundColor,
                      const QColor &textColor, bool showTranslationButton, bool showBlockButton, Emojifier *emojifier = nullptr);
     ~ChatMessagePanel();
     void setPrefferedTranslationLanguage(const QString &targetLanguage);
     void translate();
     QString getUserName() const;
+
+    enum ArrowSide
+    {
+        LeftSide,
+        RightSide
+    };
+
+    void setShowArrow(bool showArrow);
+    void setArrowSide(ArrowSide side);
 
 signals:
     void startingTranslation();
@@ -32,6 +40,8 @@ signals:
 protected:
     void changeEvent(QEvent *) override;
     void focusInEvent(QFocusEvent *) override;
+    void paintEvent(QPaintEvent *ev) override;
+    void resizeEvent(QResizeEvent *ev) override;
 
 private slots:
     void on_translateButton_clicked();
@@ -46,20 +56,30 @@ private:
     Ui::ChatMessagePanel *ui;
     QString preferredTargetTranslationLanguage;
 
+    QPainterPath painterPath;
+    QPainterPath shadowPath;
+    bool showArrow;
+    ArrowSide arrowSide;
+
+    QColor backgroundColor;
+
+    const static quint32 ARROW_WIDTH = 10;
+
+    void buildPainterPath();
+
     QString userName;
 
     Emojifier *emojifier;
 
     static QString replaceLinksInString(const QString &string);
 
-    static QString buildCssString(const QColor &bgColor, const QColor &textColor);
-
-    void initialize(const QString &userName, const QString &msg,
-                    const QColor &msgBackgroundColor, const QColor &textColor, bool showTranslationButton, bool showBlockButton);
+    void initialize(const QString &userName, const QString &msg, bool showTranslationButton, bool showBlockButton);
 
     void setTranslatedMessage(const QString &translatedMessage);
 
     void setMessageLabelText(const QString &msg);
+
+    void adjustContentMargins();
 
 };
 
