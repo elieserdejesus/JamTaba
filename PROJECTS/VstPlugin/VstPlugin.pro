@@ -9,7 +9,6 @@ TARGET = "JamtabaVST2"  #using this name (with a '2' suffix) to match the previo
 TEMPLATE = lib
 CONFIG += shared
 
-INCLUDEPATH += $$SOURCE_PATH/Common
 INCLUDEPATH += $$SOURCE_PATH/Plugins
 INCLUDEPATH += $$SOURCE_PATH/Plugins/VST
 

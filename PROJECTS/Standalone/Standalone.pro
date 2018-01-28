@@ -3,18 +3,20 @@ TEMPLATE = app
 
 include(../Jamtaba-common.pri)
 
+VPATH += $$SOURCE_PATH
+VPATH += $$SOURCE_PATH/Standalone
+
+INCLUDEPATH += $$SOURCE_PATH/Libs
+INCLUDEPATH += $$SOURCE_PATH/Libs/RtMidi
+
 INCLUDEPATH += $$ROOT_PATH/libs/includes/portaudio
 INCLUDEPATH += $$ROOT_PATH/libs/includes/rtmidi
 
 INCLUDEPATH += $$SOURCE_PATH/Standalone
+
 INCLUDEPATH += $$SOURCE_PATH/Standalone/gui
-INCLUDEPATH += $$SOURCE_PATH/Libs
+
 INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x
-
-DEPENDPATH +=  $$ROOT_PATH/libs/includes/portaudio
-DEPENDPATH +=  $$ROOT_PATH/libs/includes/rtmidi
-
-VPATH += $$SOURCE_PATH/Standalone
 
 HEADERS += MainControllerStandalone.h
 HEADERS += gui/MainWindowStandalone.h
