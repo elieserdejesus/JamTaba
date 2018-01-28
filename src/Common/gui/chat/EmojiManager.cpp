@@ -22,24 +22,7 @@ const QStringList EmojiManager::categories = QStringList()
         << "Objects"
         << "Symbols";
 
-const QMap<QString, QString> EmojiManager::combinationsMap = QMap<QString, QString>({
-    {":)", "1F603"},
-    {":-)", "1F603"},
-    {":(", "1F61E"},
-    {":-(", "1F61E"},
-    {";)", "1F609"},
-    {";-)", "1F609"},
-    {":-o)", "1F632"},
-    {":-O)", "1F632"},
-    {":/)", "1F615"},
-    {":-/)", "1F615"},
-    {":D", "1F601"},
-    {":-D)", "1F601"},
-    {":@", "1F620"},
-    {":-@)", "1F620"},
-    {"(y)", "1F44D"},
-    {"(n)", "1F44E"}
-});
+const QMap<QString, QString> EmojiManager::combinationsMap = EmojiManager::getCombinationsMap();
 
 
 Emoji::Emoji(const QString &name, const QString category, uint sortOrder, const QString &unifiedCode) :
@@ -224,3 +207,26 @@ void EmojiManager::addRecent(const QString &emojiCode)
     recents << emojiCode;
 }
 
+QMap<QString, QString> EmojiManager::getCombinationsMap()
+{
+    QMap<QString, QString> combinations;
+
+    combinations.insert(":)",   "1F603");
+    combinations.insert(":-)",  "1F603");
+    combinations.insert(":(",   "1F61E");
+    combinations.insert(":-(",  "1F61E");
+    combinations.insert(";)",   "1F609");
+    combinations.insert(";-)",  "1F609");
+    combinations.insert(":-o)", "1F632");
+    combinations.insert(":-O)", "1F632");
+    combinations.insert(":/)",  "1F615");
+    combinations.insert(":-/)", "1F615");
+    combinations.insert(":D",   "1F601");
+    combinations.insert(":-D)", "1F601");
+    combinations.insert(":@",   "1F620");
+    combinations.insert(":-@)", "1F620");
+    combinations.insert("(y)",  "1F44D");
+    combinations.insert("(n)",  "1F44E");
+
+    return combinations;
+}

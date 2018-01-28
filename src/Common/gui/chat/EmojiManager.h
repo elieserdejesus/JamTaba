@@ -71,6 +71,8 @@ private:
 
     QStringList recents;
 
+    static QMap<QString, QString> getCombinationsMap();
+
 };
 
 inline QStringList EmojiManager::getRecents() const
