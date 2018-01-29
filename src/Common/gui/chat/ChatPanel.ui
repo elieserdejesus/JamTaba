@@ -29,33 +29,7 @@
    <property name="horizontalSpacing">
     <number>6</number>
    </property>
-   <item row="2" column="0">
-    <widget class="QLineEdit" name="chatText">
-     <property name="accessibleDescription">
-      <string>Type your text to sent on the chat here</string>
-     </property>
-     <property name="placeholderText">
-      <string>type here ...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QPushButton" name="buttonAutoTranslate">
-     <property name="toolTip">
-      <string>Auto translate</string>
-     </property>
-     <property name="accessibleDescription">
-      <string>Turn on/off the auto translation for chat messages</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2">
+   <item row="1" column="0" colspan="3">
     <widget class="QScrollArea" name="chatScroll">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -87,14 +61,20 @@
         <x>0</x>
         <y>0</y>
         <width>235</width>
-        <height>300</height>
+        <height>303</height>
        </rect>
       </property>
      </widget>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="0" column="2" alignment="Qt::AlignTop">
     <widget class="QPushButton" name="buttonClear">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="toolTip">
       <string>clear the messages ...</string>
      </property>
@@ -125,6 +105,38 @@
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" alignment="Qt::AlignTop">
+    <widget class="QPushButton" name="buttonAutoTranslate">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>Auto translate</string>
+     </property>
+     <property name="accessibleDescription">
+      <string>Turn on/off the auto translation for chat messages</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QLineEdit" name="chatText">
+     <property name="accessibleDescription">
+      <string>Type your text to sent on the chat here</string>
+     </property>
+     <property name="placeholderText">
+      <string>type here ...</string>
      </property>
     </widget>
    </item>
