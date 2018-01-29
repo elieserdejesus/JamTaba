@@ -79,28 +79,40 @@ void ChatMessagePanel::setArrowSide(ArrowSide side)
 void ChatMessagePanel::buildPainterPath()
 {
     painterPath = QPainterPath();
+    shadowPath = QPainterPath();
 
-    const quint8 round = showArrow ? 10 : 3;
+    const qreal round = showArrow ? 10 : 3;
 
-    const quint32 arrowHeight = showArrow ? ARROW_WIDTH * 0.8 : 0;
+    const qreal arrowHeight = showArrow ? ARROW_WIDTH * 0.8 : 0;
 
-    quint32 w = width();
-    quint32 h = height();
+    qreal w = width();
+    qreal h = height();
 
-    quint32 left = 0;
-    quint32 right = w - 1;
-    quint32 bottom = h - 1;
-    quint32 top = 0;
+    qreal left = 0.0;
+    qreal right = w - 1.0;
+    qreal bottom = h - 1.0;
+    qreal top = 0.0;
+
+    QList<QPainterPath *> paths;
+    paths.append(&painterPath);
+    paths.append(&shadowPath);
 
     if (arrowSide == ChatMessagePanel::LeftSide) {
         painterPath.moveTo(left, top);
+
         painterPath.lineTo(right - round, top); // top line
         painterPath.quadTo(right, top, right, top + round); // top right corner
         painterPath.lineTo(right, bottom - round); // right line
         painterPath.quadTo(right, bottom, right - round, bottom); // bottom right corner
-        painterPath.lineTo(left + round + ARROW_WIDTH, bottom); // bottom line
-        painterPath.quadTo(left + ARROW_WIDTH, bottom, left + ARROW_WIDTH, bottom - round); // bottom left corner
-        painterPath.lineTo(left + ARROW_WIDTH, top + arrowHeight);
+
+        shadowPath.moveTo(right - round, bottom);
+
+        for (auto path : paths) {
+            path->lineTo(left + round + ARROW_WIDTH, bottom); // bottom line
+            path->quadTo(left + ARROW_WIDTH, bottom, left + ARROW_WIDTH, bottom - round); // bottom left corner
+            path->lineTo(left + ARROW_WIDTH, top + arrowHeight);
+            path->lineTo(left, top);
+        }
     }
     else {
         painterPath.moveTo(right, top);
@@ -108,13 +120,16 @@ void ChatMessagePanel::buildPainterPath()
         painterPath.quadTo(left, top, left, top + round); // top left corner
         painterPath.lineTo(left, bottom - round); // left line
         painterPath.quadTo(left, bottom, left + round, bottom); // bottom left corner
-        painterPath.lineTo(right - round - ARROW_WIDTH, bottom); // bottom line
-        painterPath.quadTo(right - ARROW_WIDTH, bottom, right - ARROW_WIDTH, bottom - round); // bottom right corner
-        painterPath.lineTo(right - ARROW_WIDTH, top + arrowHeight);
+
+        shadowPath.moveTo(left + round, bottom);
+
+        for (auto path : paths) {
+            path->lineTo(right - round - ARROW_WIDTH, bottom); // bottom line
+            path->quadTo(right - ARROW_WIDTH, bottom, right - ARROW_WIDTH, bottom - round); // bottom right corner
+            path->lineTo(right - ARROW_WIDTH, top + arrowHeight);
+            path->lineTo(right, top);
+        }
     }
-
-    shadowPath = painterPath.translated(arrowSide == LeftSide ? -1 : 1, 1);
-
 }
 
 void ChatMessagePanel::resizeEvent(QResizeEvent *ev)
@@ -134,9 +149,12 @@ void ChatMessagePanel::paintEvent(QPaintEvent *)
 
     static const QColor shadowColor(0, 0, 0, 90);
 
-    if (showArrow)
-        painter.fillPath(shadowPath, shadowColor);
+    if (showArrow) {
+        painter.setPen(shadowColor);
+        painter.drawPath(shadowPath);
+    }
 
+    painter.setPen(Qt::NoPen);
     painter.fillPath(painterPath, backgroundColor);
 }
 
