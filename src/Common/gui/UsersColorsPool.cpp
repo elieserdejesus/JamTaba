@@ -40,7 +40,7 @@ QList<QColor> UsersColorsPool::createColors(int totalColors) const
     for (int x = 0; x < totalColors; ++x) {
         QColor color;
         qreal h = (qreal)x/totalColors;
-        color.setHsvF(h, 0.25, 0.95);
+        color.setHsvF(h, 0.25, 0.95, 0.85);
         colors.append(color);
     }
     srand(QDateTime::currentMSecsSinceEpoch());
