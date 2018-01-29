@@ -24,7 +24,8 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     mainController(mainController),
     userIP(initialValues.getUserIP()),
     tracksLayoutEnum(TracksLayout::VerticalLayout),
-    videoFrameRate(10)
+    videoFrameRate(10),
+    intervalsWithoutReceiveVideo(0)
 {
 
     // change the top panel layout to vertical (original is horizontal)
@@ -132,14 +133,19 @@ void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)
 
 void NinjamTrackGroupView::startVideoStream()
 {
+    lastVideoRender = 0;
+
     if (!decodedImages.isEmpty()) {
         while (decodedImages.size() > 1)
             decodedImages.removeFirst(); // keep just the last decoded interval
     }
     else {
-        videoWidget->setVisible(false); // hide the video widget when transmition is stopped
-        mainLayout->removeWidget(videoWidget);
-        updateGeometry();
+        intervalsWithoutReceiveVideo++;
+        if (intervalsWithoutReceiveVideo > 1) {
+            videoWidget->setVisible(false); // hide the video widget when transmition is stopped
+            mainLayout->removeWidget(videoWidget);
+            updateGeometry();
+        }
     }
 }
 
@@ -148,6 +154,8 @@ void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
     videoWidget->setCurrentFrame(frame);
 
     videoWidget->setVisible(true);
+
+    intervalsWithoutReceiveVideo = 0;
 }
 
 void NinjamTrackGroupView::hideChatBlockIcon(const QString &unblockedUserName)

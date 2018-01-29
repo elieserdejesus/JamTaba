@@ -75,6 +75,7 @@ private:
     quint64 lastVideoRender;
     QList<QList<QImage>> decodedImages;
     uint videoFrameRate;
+    uint intervalsWithoutReceiveVideo;
 
     void setupHorizontalLayout();
     void setupVerticalLayout();
