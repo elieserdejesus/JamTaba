@@ -204,7 +204,8 @@ void EmojiManager::addRecent(const QString &emojiCode)
     categorizedMap["Recent"].removeAll(emoji);
     categorizedMap["Recent"].push_front(emoji);
 
-    recents << emojiCode;
+    if (!recents.contains(emojiCode))
+        recents << emojiCode;
 }
 
 QMap<QString, QString> EmojiManager::getCombinationsMap()
