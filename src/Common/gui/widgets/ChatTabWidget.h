@@ -4,6 +4,7 @@
 #include <QFrame>
 #include <QTabBar>
 #include <QStackedWidget>
+#include <QMap>
 
 class UsersColorsPool;
 class ChatPanel;
