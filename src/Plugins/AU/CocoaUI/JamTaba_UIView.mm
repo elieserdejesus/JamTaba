@@ -13,6 +13,7 @@
     if (mainWindow) {
         // ensuring json config file will be saved when AU view is closed
         auto controller = mainWindow->getMainController();
+        controller->storeWindowSettings(false, QPointF(), mainWindow->size());
         controller->saveLastUserSettings(mainWindow->getInputsSettings());
         mainWindow = nullptr;
     }
