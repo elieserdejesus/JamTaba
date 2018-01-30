@@ -14,7 +14,6 @@
 #include "ChordsPanel.h"
 #include "MapWidget.h"
 #include "BlinkableButton.h"
-#include "CrashReportDialog.h"
 #include "InactivityDetector.h"
 #include "IconFactory.h"
 
@@ -569,14 +568,6 @@ void MainWindow::initializeGuiRefreshTimer()
 
 void MainWindow::initialize()
 {
-#ifdef Q_OS_WIN
-    if (MainController::crashedInLastExecution()) {
-        CrashReportDialog dialog(this);
-        dialog.setLogDetails(Configurator::getInstance()->getPreviousLogContent());
-        dialog.exec();
-    }
-#endif
-
     // initialize text modifier here to avoid a pure virtual method call in constructor
     TextEditorModifier *textEditorModifier = createTextEditorModifier();
     if (textEditorModifier) {

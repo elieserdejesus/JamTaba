@@ -4,6 +4,7 @@
 #include "LocalTrackView.h"
 #include "log/Logging.h"
 #include "audio/core/PluginDescriptor.h"
+#include "CrashReportDialog.h"
 
 #include <QTimer>
 #include <QDesktopWidget>
@@ -26,6 +27,19 @@ MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainControl
     setupShortcuts();
 
     initializePluginFinder();
+}
+
+void MainWindowStandalone::initialize()
+{
+    MainWindow::initialize();
+
+#ifdef Q_OS_WIN
+    if (MainController::crashedInLastExecution()) {
+        CrashReportDialog dialog(this);
+        dialog.setLogDetails(Configurator::getInstance()->getPreviousLogContent());
+        dialog.exec();
+    }
+#endif
 }
 
 TextEditorModifier *MainWindowStandalone::createTextEditorModifier()

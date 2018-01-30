@@ -21,6 +21,8 @@ public:
 
     void refreshTrackInputSelection(int inputTrackIndex);
 
+    void initialize() override;
+
     MainControllerStandalone * getMainController() const override
     {
         return controller;

@@ -55,7 +55,7 @@ public:
     MainWindow(controller::MainController *mainController, QWidget *parent = 0);
     virtual ~MainWindow();
 
-    void initialize();
+    virtual void initialize();
 
     void detachMainController();
 

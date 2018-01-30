@@ -27,6 +27,7 @@ HEADERS += gui/ScanFolderPanel.h
 HEADERS += gui/FxPanel.h
 HEADERS += gui/FxPanelItem.h
 HEADERS += gui/MidiToolsDialog.h
+HEADERS += gui/CrashReportDialog.h
 
 HEADERS += audio/PortAudioDriver.h
 HEADERS += audio/Host.h
@@ -64,12 +65,14 @@ SOURCES += vst/VstLoader.cpp
 SOURCES += Libs/SingleApplication/singleapplication.cpp
 SOURCES += Libs/RtMidi/RtMidi.cpp
 SOURCES += audio/PortAudioDriver.cpp
+SOURCES += gui/CrashReportDialog.cpp
 
 mac:SOURCES += AU/AudioUnitHost.cpp
 mac:SOURCES += AU/AudioUnitPluginFinder.cpp
 
 
 FORMS += gui/MidiToolsDialog.ui
+FORMS += gui/CrashReportDialog.ui
 
 #conditional sources to different platforms
 win32{
