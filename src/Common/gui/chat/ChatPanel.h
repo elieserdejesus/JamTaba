@@ -45,6 +45,8 @@ public:
     void setRemoteUserFullName(const QString &remoteUserFullName);
     QString getRemoteUserFullName() const;
 
+    static void setFontSizeOffset(qint8 sizeOffset);
+
 public slots:
     void setTopicMessage(const QString &topic);
 
@@ -55,6 +57,7 @@ signals:
     void userConfirmingChordProgression(const ChordProgression &chordProgression);
     void userBlockingChatMessagesFrom(const QString &blockedUserName);
     void unreadedMessagesChanged(int unreadedMessages);
+    void fontSizeOffsetEdited(qint8 newOffset); // font size offset edited by user
 
 private slots:
     void sendNewMessage();
@@ -68,6 +71,9 @@ private slots:
     void showTranslationProgressFeedback();
     void hideTranslationProgressFeedback();
 
+    void increaseFontSize();
+    void decreaseFontSize();
+
 protected:
     void changeEvent(QEvent *) override;
     void showEvent(QShowEvent *) override;
@@ -75,15 +81,12 @@ protected:
 
 private:
     Ui::ChatPanel *ui;
-    QColor getUserColor(const QString &userName);
     QStringList botNames;
     static const QColor BOT_COLOR;
 
     EmojiWidget *emojiWidget;
     EmojiManager *emojiManager;
     QAction *emojiAction;
-
-    QColor tintColor;
 
     QString remoteUserFulName; // used in private chats only
 
@@ -93,17 +96,30 @@ private:
 
     QString autoTranslationLanguage;
 
-    void createVoteButton(const QString &voteType, quint32 value, quint32 expireTime);
-
     bool autoTranslating;
-
-    void addMessagePanelInLayout(ChatMessagePanel *msgPanel, Qt::Alignment alignment);
 
     UsersColorsPool *colorsPool;
 
     uint unreadedMessages; // messages added when this widget is not focused
 
+    static qint8 fontSizeOffset;
+
+    static QList<ChatPanel *> instances;
+
+    const static qint8 MAX_FONT_OFFSET;
+    const static qint8 MIN_FONT_OFFSET;
+
+    QColor getUserColor(const QString &userName);
+
+    void addMessagePanelInLayout(ChatMessagePanel *msgPanel, Qt::Alignment alignment);
+
+    void createVoteButton(const QString &voteType, quint32 value, quint32 expireTime);
+
     void setUnreadedMessages(uint unreaded);
+
+    void setupSignals();
+
+    void setMessagesFontSizeOffset(qint8 offset);
 };
 
 inline QString ChatPanel::getRemoteUserFullName() const

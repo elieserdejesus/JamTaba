@@ -374,6 +374,8 @@ private:
 
     uint intervalsBeforeInactivityWarning;
 
+    qint8 chatFontSizeOffset;
+
     bool readFile(const QList<SettingsObject *> &sections);
     bool writeFile(const QList<SettingsObject *> &sections);
 
@@ -495,6 +497,9 @@ public:
 
     QList<bool> getMidiInputDevicesStatus() const;
 
+    qint8 getChatFontSizeOffset() const;
+    void storeChatFontSizeOffset(qint8 sizeOffset);
+
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // TRANSLATION
@@ -535,6 +540,16 @@ public:
 
     uint getIntervalsBeforeInactivityWarning() const;
 };
+
+inline void Settings::storeChatFontSizeOffset(qint8 sizeOffset)
+{
+    chatFontSizeOffset = sizeOffset;
+}
+
+inline qint8 Settings::getChatFontSizeOffset() const
+{
+    return chatFontSizeOffset;
+}
 
 inline QStringList Settings::getRecentEmojis() const
 {

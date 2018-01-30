@@ -942,6 +942,10 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
 
         }
 
+        if (root.contains("chatFontSizeOffset")) {
+            chatFontSizeOffset = root["chatFontSizeOffset"].toInt();
+        }
+
         return true;
     }
     else {
@@ -983,6 +987,7 @@ bool Settings::writeFile(const QList<SettingsObject *> &sections) // io ops ...
         root["usingNarrowTracks"] = usingNarrowedTracks;
         root["masterGain"] = masterFaderGain;
         root["intervalsBeforeInactivityWarning"] = static_cast<int>(intervalsBeforeInactivityWarning);
+        root["chatFontSizeOffset"] = static_cast<int>(chatFontSizeOffset);
 
         if (!recentEmojis.isEmpty()) {
             root["recentEmojis"] = QJsonArray::fromStringList(recentEmojis);
@@ -1083,7 +1088,8 @@ Settings::Settings() :
     theme("Flat"), // flat as default theme,
     ninjamIntervalProgressShape(0),
     usingNarrowedTracks(false),
-    intervalsBeforeInactivityWarning(5) // 5 intervals by default
+    intervalsBeforeInactivityWarning(5), // 5 intervals by default,
+    chatFontSizeOffset(0)
 {
     // qDebug() << "Settings in " << fileDir;
 }

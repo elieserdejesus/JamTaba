@@ -32,12 +32,18 @@
     padding: 3px;
 }
 
+ChatPanel #toolButtonPlus,
+ChatPanel #toolButtonMinus
+{
+    border: none;
+}
+
 /* Stylesheet used in chat messages widget (ChatMessagePanel).
 ------------------------------------------ */
 
 ChatMessagePanel #labelUserName /* chat message author */
 {
-    font-size: 10px;
+    font-size: 7.5pt;
     font-weight: bold;
     margin: 0px;
 }

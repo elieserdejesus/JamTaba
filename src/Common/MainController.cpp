@@ -528,6 +528,11 @@ bool MainController::addTrack(long trackID, audio::AudioNode *trackNode)
     return true;
 }
 
+void MainController::storeChatFontSizeOffset(qint8 fontSizeOffset)
+{
+    settings.storeChatFontSizeOffset(fontSizeOffset);
+}
+
 void MainController::storeMultiTrackRecordingStatus(bool savingMultiTracks)
 {
     if (settings.isSaveMultiTrackActivated() && !savingMultiTracks) { // user is disabling recording multi tracks?

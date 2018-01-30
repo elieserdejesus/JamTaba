@@ -41,6 +41,46 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, con
     adjustContentMargins();
 }
 
+bool ChatMessagePanel::event(QEvent *e)
+{
+    if (e->type() == QEvent::Polish) {
+        originalMessageFont = ChatMessagePanel::getFontDetails(ui->labelMessage->font());
+        originalAuthorFont = ChatMessagePanel::getFontDetails(ui->labelUserName->font());
+    }
+
+    return QFrame::event(e);
+}
+
+ChatMessagePanel::FontDetails ChatMessagePanel::getFontDetails(const QFont &f)
+{
+    ChatMessagePanel::FontDetails fontDetails;
+
+    fontDetails.unit = "px";
+    fontDetails.size = f.pixelSize();
+
+    if (f.pixelSize() <= 0) {
+        fontDetails.unit = "pt";
+        fontDetails.size = f.pointSizeF();
+    }
+
+    return fontDetails;
+}
+
+QString ChatMessagePanel::buildFontStyleSheet(const FontDetails &fontDetails, qint8 fontSizeOffset)
+{
+    return QString("font-size: %1%2;")
+                .arg(fontDetails.size + fontSizeOffset)
+                .arg(fontDetails.unit);
+}
+
+void ChatMessagePanel::setFontSizeOffset(qint8 sizeOffset)
+{
+    ensurePolished(); // compute original fonts size and unit (px or pt)
+
+    ui->labelMessage->setStyleSheet(buildFontStyleSheet(originalMessageFont, sizeOffset));
+    ui->labelUserName->setStyleSheet(buildFontStyleSheet(originalAuthorFont, sizeOffset));
+}
+
 void ChatMessagePanel::adjustContentMargins()
 {
     int left = (arrowSide == ChatMessagePanel::LeftSide ? ARROW_WIDTH : 0) + 3;

@@ -94,6 +94,9 @@ MainWindow::MainWindow(controller::MainController *mainController, QWidget *pare
     setupSignals();
 
     setNetworkUsageUpdatePeriod(MainWindow::DEFAULT_NETWORK_USAGE_UPDATE_PERIOD);
+
+    ChatPanel::setFontSizeOffset(mainController->getChatFontSizeOffset());
+
     qCDebug(jtGUI) << "MainWindow created!";
 
 }
@@ -1518,6 +1521,7 @@ void MainWindow::addMainChatPanel()
     connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
     connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
     connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+    connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 
     initializeVotingExpirationTimers();
 
@@ -1558,6 +1562,8 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
     });
 
     connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+
+    connect(chatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 }
 
 void MainWindow::addPrivateChat(const QString &remoteUserName, const QString &userIP)

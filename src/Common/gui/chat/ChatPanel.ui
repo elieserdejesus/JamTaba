@@ -13,7 +13,10 @@
   <property name="windowTitle">
    <string notr="true"/>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>6</number>
+   </property>
    <property name="leftMargin">
     <number>6</number>
    </property>
@@ -26,10 +29,77 @@
    <property name="bottomMargin">
     <number>6</number>
    </property>
-   <property name="horizontalSpacing">
-    <number>6</number>
-   </property>
-   <item row="1" column="0" colspan="3">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>3</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="topicLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="MinimumExpanding">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Topic</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignTop">
+      <widget class="QPushButton" name="buttonAutoTranslate">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Auto translate</string>
+       </property>
+       <property name="accessibleDescription">
+        <string>Turn on/off the auto translation for chat messages</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignTop">
+      <widget class="QPushButton" name="buttonClear">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>clear the messages ...</string>
+       </property>
+       <property name="accessibleDescription">
+        <string>Press that button to clear your message</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="QScrollArea" name="chatScroll">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -61,87 +131,128 @@
         <x>0</x>
         <y>0</y>
         <width>235</width>
-        <height>303</height>
+        <height>298</height>
        </rect>
       </property>
      </widget>
     </widget>
    </item>
-   <item row="0" column="2" alignment="Qt::AlignTop">
-    <widget class="QPushButton" name="buttonClear">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="spacing">
+      <number>0</number>
      </property>
-     <property name="toolTip">
-      <string>clear the messages ...</string>
-     </property>
-     <property name="accessibleDescription">
-      <string>Press that button to clear your message</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="topicLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Ignored" vsizetype="MinimumExpanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Topic</string>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::PlainText</enum>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1" alignment="Qt::AlignTop">
-    <widget class="QPushButton" name="buttonAutoTranslate">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="toolTip">
-      <string>Auto translate</string>
-     </property>
-     <property name="accessibleDescription">
-      <string>Turn on/off the auto translation for chat messages</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="3">
-    <widget class="QLineEdit" name="chatText">
-     <property name="accessibleDescription">
-      <string>Type your text to sent on the chat here</string>
-     </property>
-     <property name="placeholderText">
-      <string>type here ...</string>
-     </property>
-    </widget>
+     <item>
+      <widget class="QLineEdit" name="chatText">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="accessibleDescription">
+        <string>Type your text to sent on the chat here</string>
+       </property>
+       <property name="placeholderText">
+        <string>type here ...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>3</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item alignment="Qt::AlignRight|Qt::AlignVCenter">
+      <widget class="QLabel" name="labelFontSize">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../../../resources/jamtaba.qrc">:/images/font_size.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>false</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item alignment="Qt::AlignBottom">
+        <widget class="QToolButton" name="toolButtonPlus">
+         <property name="maximumSize">
+          <size>
+           <width>12</width>
+           <height>10</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Increase chat font size</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../resources/jamtaba.qrc">
+           <normaloff>:/images/small_plus.png</normaloff>:/images/small_plus.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QToolButton" name="toolButtonMinus">
+         <property name="maximumSize">
+          <size>
+           <width>12</width>
+           <height>9</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Decrease chat font size</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../resources/jamtaba.qrc">
+           <normaloff>:/images/small_minus.png</normaloff>:/images/small_minus.png</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../resources/jamtaba.qrc"/>
+  <include location="../../../resources/jamtaba.qrc"/>
+ </resources>
  <connections/>
 </ui>

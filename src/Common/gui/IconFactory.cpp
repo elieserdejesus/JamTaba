@@ -4,6 +4,33 @@
 #include <QImage>
 #include <QPushButton>
 
+QPixmap IconFactory::createFontSizePixmap(const QColor &tintColor)
+{
+    QImage image(":/images/font_size.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QIcon IconFactory::createFontSizeIncreaseIcon(const QColor &tintColor)
+{
+    QImage image(":/images/small_plus.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QIcon(QPixmap::fromImage(image));
+}
+
+QIcon IconFactory::createFontSizeDecreaseIcon(const QColor &tintColor)
+{
+    QImage image(":/images/small_minus.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QIcon(QPixmap::fromImage(image));
+}
+
 QPixmap IconFactory::createReceivePixmap(const QColor &tintColor)
 {
     QImage image(":/images/receive.png");

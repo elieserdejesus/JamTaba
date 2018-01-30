@@ -25,7 +25,9 @@ ChatPanel QPushButton#buttonAutoTranslate:!checked
 }
 
 ChatPanel QPushButton#buttonAutoTranslate:hover,
-ChatPanel QPushButton:hover
+ChatPanel QPushButton:hover,
+ChatPanel #toolButtonPlus:hover,
+ChatPanel #toolButtonMinus:hover
 {
     border: 1px solid #368788;
     background-color: rgba(0, 255, 255, 50);

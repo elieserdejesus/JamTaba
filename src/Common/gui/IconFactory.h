@@ -7,6 +7,10 @@
 class IconFactory {
 
 public:
+    static QPixmap createFontSizePixmap(const QColor &tintColor);
+    static QIcon createFontSizeIncreaseIcon(const QColor &tintColor);
+    static QIcon createFontSizeDecreaseIcon(const QColor &tintColor);
+
     static QPixmap createReceivePixmap(const QColor &tintColor);
     static QPixmap createTransmitPixmap(const QColor &tintColor);
     static QPixmap createMidiIcon(const QColor &tintColor);

@@ -23,6 +23,8 @@ public:
     void translate();
     QString getUserName() const;
 
+    void setFontSizeOffset(qint8 sizeOffset);
+
     enum ArrowSide
     {
         LeftSide,
@@ -42,6 +44,7 @@ protected:
     void focusInEvent(QFocusEvent *) override;
     void paintEvent(QPaintEvent *ev) override;
     void resizeEvent(QResizeEvent *ev) override;
+    bool event(QEvent *e) override;
 
 private slots:
     void on_translateButton_clicked();
@@ -63,6 +66,15 @@ private:
 
     QColor backgroundColor;
 
+    struct FontDetails
+    {
+        QString unit = "pt"; // pt or px (point or pixel)
+        qreal size = -1;
+    };
+
+    FontDetails originalMessageFont; // stored after the widget is polished
+    FontDetails originalAuthorFont;
+
     const static quint32 ARROW_WIDTH = 10;
 
     void buildPainterPath();
@@ -81,6 +93,9 @@ private:
 
     void adjustContentMargins();
 
+    static FontDetails getFontDetails(const QFont &f);
+
+    static QString buildFontStyleSheet(const FontDetails &fontDetails, qint8 fontSizeOffset);
 };
 
 inline QString ChatMessagePanel::getUserName() const

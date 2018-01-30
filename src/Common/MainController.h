@@ -240,6 +240,8 @@ public:
 
     EmojiManager *getEmojiManager() const;
 
+    qint8 getChatFontSizeOffset() const;
+
 signals:
     void ipResolved(const QString &ip);
     void themeChanged();
@@ -254,6 +256,8 @@ public slots:
     void processCapturedFrame(int frameID, const QImage &frame);
 
     virtual void connectInNinjamServer(const ninjam::Server &server);
+
+    void storeChatFontSizeOffset(qint8 fontSizeOffset);
 
 protected:
 
@@ -361,6 +365,11 @@ protected slots:
     void uploadEncodedVideoData(const QByteArray &encodedData, bool firstPart);
 
 };
+
+inline qint8 MainController::getChatFontSizeOffset() const
+{
+    return settings.getChatFontSizeOffset();
+}
 
 inline EmojiManager *MainController::getEmojiManager() const
 {

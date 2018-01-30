@@ -16,7 +16,15 @@
 #include "EmojiManager.h"
 #include "ninjam/User.h"
 
+const qint8 ChatPanel::MAX_FONT_OFFSET = 3;
+const qint8 ChatPanel::MIN_FONT_OFFSET = -2;
+
 const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
+
+qint8 ChatPanel::fontSizeOffset = 0;
+
+QList<ChatPanel *> ChatPanel::instances;
+
 
 ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
                         TextEditorModifier *chatInputModifier, EmojiManager *emojiManager) :
@@ -26,33 +34,14 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     botNames(botNames),
     autoTranslating(false),
     colorsPool(colorsPool),
-    unreadedMessages(0),
-    tintColor(Qt::black)
+    unreadedMessages(0)
 {
     ui->setupUi(this);
     QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
-    contentLayout->setContentsMargins(3, 3, 3, 3);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
     ui->scrollContent->setLayout(contentLayout);
 
-    connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
-
-    connect(ui->chatText, &QLineEdit::returnPressed, [=](){
-        //auto scroll when user is typing new messages
-        int scrollValue = ui->chatScroll->verticalScrollBar()->value();
-        int scrollMaximum = ui->chatScroll->verticalScrollBar()->maximum();
-        if (scrollValue < scrollMaximum) { // need auto scroll?
-            ui->chatScroll->verticalScrollBar()->setValue(scrollMaximum);
-        }
-    });
-
     ui->topicLabel->setVisible(false);
-
-    // this event is used to auto scroll down when new messages are added
-    connect(ui->chatScroll->verticalScrollBar(), &QScrollBar::rangeChanged, this, &ChatPanel::autoScroll);
-
-    connect(ui->buttonClear, &QPushButton::clicked, this, &ChatPanel::clearMessages);
-
-    connect(ui->buttonAutoTranslate, &QPushButton::clicked, this, &ChatPanel::toggleAutoTranslate);
 
     // disable blue border when QLineEdit has focus in mac
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -61,23 +50,11 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
 
     emojiWidget = new EmojiWidget(emojiManager, this);
     emojiWidget->setVisible(false);
-    ui->gridLayout->addWidget(emojiWidget, ui->gridLayout->rowCount(), 0, 1, ui->gridLayout->columnCount());
+    layout()->addWidget(emojiWidget);
     emojiWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
-    auto emojiIcon = IconFactory::createChatEmojiIcon(tintColor);
+    auto emojiIcon = IconFactory::createChatEmojiIcon(Qt::black);
     emojiAction = ui->chatText->addAction(emojiIcon, QLineEdit::LeadingPosition);
-
-    connect(emojiAction, &QAction::triggered, [=](){
-        emojiWidget->setVisible(!emojiWidget->isVisible());
-    });
-
-    connect(emojiWidget, &EmojiWidget::emojiSelected, [=](const QString &emojiCode){
-
-        QString newText = ui->chatText->text();
-        newText.insert(ui->chatText->cursorPosition(), EmojiManager::emojiCodeToUtf8(emojiCode));
-        ui->chatText->setText(newText);
-        ui->chatText->setFocus();
-    });
 
     if (chatInputModifier) {
         bool finishEditorPressingReturnKey = false;
@@ -85,6 +62,78 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     }
 
     ui->scrollContent->installEventFilter(this);
+
+    setupSignals();
+
+    instances.append(this);
+}
+
+void ChatPanel::setupSignals()
+{
+    connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
+
+    connect(ui->chatText, &QLineEdit::returnPressed, [=]() {
+        // auto scroll when user is typing new messages
+        int scrollValue = ui->chatScroll->verticalScrollBar()->value();
+        int scrollMaximum = ui->chatScroll->verticalScrollBar()->maximum();
+        if (scrollValue < scrollMaximum) { // need auto scroll?
+            ui->chatScroll->verticalScrollBar()->setValue(scrollMaximum);
+        }
+    });
+
+    // this event is used to auto scroll down when new messages are added
+    connect(ui->chatScroll->verticalScrollBar(), &QScrollBar::rangeChanged, this, &ChatPanel::autoScroll);
+
+    connect(ui->buttonClear, &QPushButton::clicked, this, &ChatPanel::clearMessages);
+
+    connect(ui->buttonAutoTranslate, &QPushButton::clicked, this, &ChatPanel::toggleAutoTranslate);
+
+    connect(emojiAction, &QAction::triggered, [=]() {
+        emojiWidget->setVisible(!emojiWidget->isVisible());
+    });
+
+    connect(emojiWidget, &EmojiWidget::emojiSelected, [=](const QString &emojiCode) {
+        QString newText = ui->chatText->text();
+        newText.insert(ui->chatText->cursorPosition(), EmojiManager::emojiCodeToUtf8(emojiCode));
+        ui->chatText->setText(newText);
+        ui->chatText->setFocus();
+    });
+
+    connect(ui->toolButtonPlus, &QToolButton::clicked, this, &ChatPanel::increaseFontSize);
+    connect(ui->toolButtonMinus, &QToolButton::clicked, this, &ChatPanel::decreaseFontSize);
+}
+
+void ChatPanel::setFontSizeOffset(qint8 sizeOffset)
+{
+    ChatPanel::fontSizeOffset = sizeOffset;
+
+    for (auto chatPanel : ChatPanel::instances)
+        chatPanel->setMessagesFontSizeOffset(fontSizeOffset);
+}
+
+void ChatPanel::setMessagesFontSizeOffset(qint8 offset)
+{
+    auto messages = ui->scrollContent->findChildren<ChatMessagePanel *>();
+    for (auto msg : messages)
+        msg->setFontSizeOffset(offset);
+}
+
+void ChatPanel::increaseFontSize()
+{
+    if (ChatPanel::fontSizeOffset < ChatPanel::MAX_FONT_OFFSET) {
+        ChatPanel::setFontSizeOffset(ChatPanel::fontSizeOffset + 1);
+
+        emit fontSizeOffsetEdited(ChatPanel::fontSizeOffset);
+    }
+}
+
+void ChatPanel::decreaseFontSize()
+{
+    if (ChatPanel::fontSizeOffset > ChatPanel::MIN_FONT_OFFSET) {
+        ChatPanel::setFontSizeOffset(ChatPanel::fontSizeOffset - 1);
+
+        emit fontSizeOffsetEdited(ChatPanel::fontSizeOffset);
+    }
 }
 
 bool ChatPanel::eventFilter(QObject *o, QEvent *e)
@@ -99,6 +148,10 @@ bool ChatPanel::eventFilter(QObject *o, QEvent *e)
 void ChatPanel::setTintColor(const QColor &color)
 {
     emojiAction->setIcon(IconFactory::createChatEmojiIcon(color));
+
+    ui->toolButtonPlus->setIcon(IconFactory::createFontSizeIncreaseIcon(color));
+    ui->toolButtonMinus->setIcon(IconFactory::createFontSizeDecreaseIcon(color));
+    ui->labelFontSize->setPixmap(IconFactory::createFontSizePixmap(color));
 }
 
 bool ChatPanel::inputsAreEnabled() const
@@ -283,6 +336,8 @@ void ChatPanel::addMessage(const QString &localUserName, const QString &msgAutho
 
     addMessagePanelInLayout(msgPanel, alignment);
 
+    msgPanel->setFontSizeOffset(ChatPanel::fontSizeOffset);
+
     if (autoTranslating)
         msgPanel->translate();// request the translation
 
@@ -326,6 +381,8 @@ QColor ChatPanel::getUserColor(const QString &userName)
 
 ChatPanel::~ChatPanel()
 {
+    instances.removeOne(this);
+
     delete ui;
 }
 
