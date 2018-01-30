@@ -57,7 +57,6 @@ Source: {#BuildDir}\Standalone\release\Jamtaba2.exe; DestDir: {app}; Flags: igno
 Source: {#BuildDir}\Standalone\release\Jamtaba2.pdb; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#BuildDir}\Standalone\release\VstScanner.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#BuildDir}\VstPlugin\release\JamtabaVST2.dll; DestDir: {code:GetVST2Dir}; Flags: ignoreversion replacesameversion
-Source: {#BuildDir}\VstPlugin\release\JamtabaVST2.pdb; DestDir: {code:GetVST2Dir}; Flags: ignoreversion replacesameversion
 Source: ..\..\PROJECTS\Jamtaba2.ico; DestDir: {app}; Flags: ignoreversion
 Source: {localappdata}/Jamtaba 2/*.*; DestDir: {userappdata}/JamTaba 2; Flags: external recursesubdirs skipifsourcedoesntexist onlyifdoesntexist
 
