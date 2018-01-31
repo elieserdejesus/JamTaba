@@ -191,7 +191,7 @@ QTabBar:tab
     padding-top: 4px;
     padding-bottom: 2px;
 
-    font-size: 7pt;
+    font-size: 9px;
 
 }
 
@@ -388,7 +388,7 @@ QLineEdit
     margin: 0px;
     color: #58A9AA;
 
-    font-size: 8pt;
+    font-size: 11px;
 }
 
 QLineEdit:focus
@@ -452,7 +452,7 @@ LocalTrackView #inputSelectionButton
 AudioMeter
 {
 
-    font-size: 5pt;
+    font-size: 7px;
 
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: #58A9AA;

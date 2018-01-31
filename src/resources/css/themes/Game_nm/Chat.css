@@ -83,5 +83,5 @@ ChatMessagePanel #labelMessage
     selection-color: rgb(40, 40, 40);
     color: black;
     font-family: "Noto Mono";
-    font-size: 9pt;
+    font-size: 12px;
 }

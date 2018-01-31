@@ -36,7 +36,7 @@ IntervalProgressWindow #intervalPanel
 
 IntervalProgressWindow
 {
-    font-size: 24pt; /* not working */
+    font-size: 26px; /* not working */
 }
 
 IntervalProgressDisplay
