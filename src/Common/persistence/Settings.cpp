@@ -384,6 +384,31 @@ void MetronomeSettings::write(QJsonObject &out) const
 
 // +++++++++++++++++++++++++++
 
+CollapseSettings::CollapseSettings() :
+    SettingsObject("Collapse"),
+    localChannelsCollapsed(false),
+    bottomSectionCollapsed(false),
+    chatSectionCollapsed(false)
+{
+
+}
+
+void CollapseSettings::read(const QJsonObject &in)
+{
+    localChannelsCollapsed = getValueFromJson(in, "localChannels", false);
+    bottomSectionCollapsed = getValueFromJson(in, "bottomSection", false);
+    chatSectionCollapsed = getValueFromJson(in, "chatSection", false);
+}
+
+void CollapseSettings::write(QJsonObject &out) const
+{
+    out["localChannels"] = localChannelsCollapsed;
+    out["bottomSection"] = bottomSectionCollapsed;
+    out["chatSection"] = chatSectionCollapsed;
+}
+
+// ++++++++++++++++++++++
+
 WindowSettings::WindowSettings() :
     SettingsObject("window"),
     maximized(false),
@@ -1077,6 +1102,7 @@ void Settings::load()
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
     sections.append(&rememberSettings);
+    sections.append(&collapseSettings);
 
     readFile(sections);
 }
@@ -1112,6 +1138,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
     sections.append(&rememberSettings);
+    sections.append(&collapseSettings);
 
     writeFile(sections);
 }
@@ -1137,13 +1164,20 @@ QString Settings::getTranslation() const
     return translation;
 }
 
-void Settings::setRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
+void Settings::setRemoteUserRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
 {
     rememberSettings.rememberBoost   = boost;
     rememberSettings.rememberLevel   = level;
     rememberSettings.rememberPan     = pan;
     rememberSettings.rememberLowCut  = lowCut;
     rememberSettings.rememberMute    = mute;
+}
+
+void Settings::setCollapsileSectionsRememberingSettings(bool localChannels, bool bottomSection, bool chatSection)
+{
+    rememberSettings.rememberLocalChannels = localChannels;
+    rememberSettings.rememberBottomSection = bottomSection;
+    rememberSettings.rememberChatSection = chatSection;
 }
 
 //__________________________________________________________
@@ -1176,31 +1210,42 @@ void MeteringSettings::write(QJsonObject &out) const
 
 //________________________________________________________________
 
-RememberUsersSettings::RememberUsersSettings() :
+RememberSettings::RememberSettings() :
     SettingsObject(QStringLiteral("Remember")),
     rememberBoost(true),
     rememberLevel(true),
     rememberPan(true),
     rememberMute(true),
-    rememberLowCut(true)
+    rememberLowCut(true),
+    rememberLocalChannels(true),
+    rememberBottomSection(true),
+    rememberChatSection(true)
 {
 
 }
 
-void RememberUsersSettings::write(QJsonObject &out) const
+void RememberSettings::write(QJsonObject &out) const
 {
     out["boost"] = rememberBoost;
     out["level"] = rememberLevel;
     out["pan"] = rememberPan;
     out["mute"] = rememberMute;
     out["lowCut"] = rememberLowCut;
+
+    out["localChannels"] = rememberLocalChannels;
+    out["bottomSection"] = rememberBottomSection;
+    out["chatSection"] = rememberChatSection;
 }
 
-void RememberUsersSettings::read(const QJsonObject &in)
+void RememberSettings::read(const QJsonObject &in)
 {
     rememberBoost = getValueFromJson(in, "boost", true);
     rememberLevel = getValueFromJson(in, "level", true);
     rememberPan = getValueFromJson(in, "pan", true);
     rememberMute = getValueFromJson(in, "mute", true);
     rememberLowCut = getValueFromJson(in, "lowCut", true);
+
+    rememberLocalChannels = getValueFromJson(in, "localChannels", true);
+    rememberBottomSection = getValueFromJson(in, "bottomSection", false);
+    rememberChatSection = getValueFromJson(in, "chatSection", false);
 }

@@ -35,7 +35,17 @@ ChatTabWidget::ChatTabWidget(QWidget *parent, controller::MainController *mainCo
     layout->setAlignment(tabBar, Qt::AlignTop | Qt::AlignLeft);
 
     connect(tabBar, &QTabBar::currentChanged, this, &ChatTabWidget::changeCurrentTab);
-    connect(tabBar, &QTabBar::tabBarClicked, this, &ChatTabWidget::changeCurrentTab);
+
+    connect(tabBar, &QTabBar::tabBarClicked, [=](int index){
+        if (tabBar->count() < 2) { // just onde tab?
+            toggleCollapse();
+        }
+        else {
+            changeCurrentTab(index);
+            if (isCollapsed()) // user clicking in a collapsed tab
+                toggleCollapse();
+        }
+    });
 
     connect(tabBar, &QTabBar::tabCloseRequested, this, &ChatTabWidget::closeChatTab);
 
@@ -52,9 +62,6 @@ void ChatTabWidget::changeCurrentTab(int tabIndex)
         tabBar->setCurrentIndex(tabIndex);
         return;
     }
-
-    if (!stackWidget->isVisible())
-        collapse(false);
 
     stackWidget->setCurrentIndex(tabIndex);
 }

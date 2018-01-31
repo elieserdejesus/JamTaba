@@ -157,7 +157,12 @@ void PreferencesDialog::accept()
     bool rememberingPan = ui->checkBoxRememberPan->isChecked();
     bool rememberingMute = ui->checkBoxRememberMute->isChecked();
     bool rememberingLowCut = ui->checkBoxRememberLowCut->isChecked();
-    emit rememberSettingsChanged(rememberingBoost, rememberingLevel, rememberingPan, rememberingMute, rememberingLowCut);
+    emit rememberRemoteUserSettingsChanged(rememberingBoost, rememberingLevel, rememberingPan, rememberingMute, rememberingLowCut);
+
+    bool rememberLocalChannels = ui->checkBoxRememberLocalChannels->isChecked();
+    bool rememberBottomSection = ui->checkBoxRememberBottomSection->isChecked();
+    bool rememberChatSection = ui->checkBoxRememberChatSection->isChecked();
+    emit rememberCollapsibleSectionsSettingsChanged(rememberLocalChannels, rememberBottomSection, rememberChatSection);
 
     QDialog::accept();
 }
@@ -220,6 +225,10 @@ void PreferencesDialog::populateRememberTab()
     ui->checkBoxRememberPan->setChecked(settings->isRememberingPan());
     ui->checkBoxRememberMute->setChecked(settings->isRememberingMute());
     ui->checkBoxRememberLowCut->setChecked(settings->isRememberingLowCut());
+
+    ui->checkBoxRememberLocalChannels->setChecked(settings->isRememberingLocalChannels());
+    ui->checkBoxRememberBottomSection->setChecked(settings->isRememberingBottomSection());
+    ui->checkBoxRememberChatSection->setChecked(settings->isRememberingChatSection());
 }
 
 void PreferencesDialog::populateLooperTab()

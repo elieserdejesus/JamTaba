@@ -594,6 +594,16 @@ void MainWindow::initialize()
     auto firstChannelXmitButton = localChannels.first()->getXmitButton();
     uint intervalsBeforeInactivityWarning = mainController->getSettings().getIntervalsBeforeInactivityWarning();
     xmitInactivityDetector = new InactivityDetector(this, firstChannelXmitButton, intervalsBeforeInactivityWarning);
+
+    // remember collapse status
+    auto settings = mainController->getSettings();
+
+    if (settings.isRememberingLocalChannels())
+        showPeakMetersOnlyInLocalControls(settings.isLocalChannelsCollapsed());
+
+    if (settings.isRememberingBottomSection())
+        setBottomCollapsedStatus(settings.isBottomSectionCollapsed());
+
 }
 
 void MainWindow::doWindowInitialization()
@@ -619,6 +629,8 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 
     ui.userNamePanel->setVisible(!showPeakMetersOnly);
     ui.labelYourControls->setVisible(!showPeakMetersOnly);
+
+    mainController->setLocalChannelsCollapsed(showPeakMetersOnly);
 }
 
 void MainWindow::updateLocalInputChannelsGeometry()
@@ -634,13 +646,20 @@ void MainWindow::updateLocalInputChannelsGeometry()
     ui.leftPanel->setMinimumWidth(minWidth);
 }
 
-void MainWindow::toggleBottomAreaCollapseStatus()
+void MainWindow::setBottomCollapsedStatus(bool collapsed)
 {
-    bottomCollapsed = !bottomCollapsed; //toggle
+    bottomCollapsed = collapsed;
 
-    collapseBottomArea(bottomCollapsed);
+    collapseBottomArea(collapsed);
 
     updateCollapseButtons();
+
+    mainController->setBottomSectionCollapsed(collapsed); // store in settings
+}
+
+void MainWindow::toggleBottomAreaCollapseStatus()
+{
+    setBottomCollapsedStatus(!bottomCollapsed);
 }
 
 void MainWindow::toggleLocalTracksCollapseStatus()
@@ -1940,8 +1959,10 @@ QPointF MainWindow::computeLocation() const
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
-    if (mainController)
+    if (mainController) {
         mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
+        mainController->setChatSectionCollapsed(chatTabWidget->isCollapsed());
+    }
 
     closeAllFloatingWindows();
 }
@@ -2094,7 +2115,8 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 
     connect(dialog, &PreferencesDialog::looperWaveFilesBitDepthChanged, mainController, &MainController::storeLooperBitDepth);
 
-    connect(dialog, &PreferencesDialog::rememberSettingsChanged, mainController, &MainController::storeRememberSettings);
+    connect(dialog, &PreferencesDialog::rememberRemoteUserSettingsChanged, mainController, &MainController::storeRemoteUserRememberSettings);
+    connect(dialog, &PreferencesDialog::rememberCollapsibleSectionsSettingsChanged, mainController, &MainController::storeCollapsibleSectionsRememberSettings);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
@@ -2441,9 +2463,15 @@ void MainWindow::setupWidgets()
     ui.masterTitleLabel->setVisible(false);
 
     chatTabWidget = new ChatTabWidget(this, mainController, &usersColorsPool);
+    connect(chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::updateCollapseButtons);
+
     setChatsVisibility(false);
 
-    connect(chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::updateCollapseButtons);
+    // remember chat collapse status
+    auto settings = mainController->getSettings();
+    if (settings.isRememberingChatSection()) {
+        chatTabWidget->collapse(settings.isChatSectionCollapsed());
+    }
 
     ui.gridLayout->addWidget(chatTabWidget, 0, 2, 1, 1);
 }

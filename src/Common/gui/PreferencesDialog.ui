@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>2</number>
+      <number>6</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -862,7 +862,7 @@
        <item>
         <widget class="QGroupBox" name="groupBox_3">
          <property name="title">
-          <string>JamTaba will remember these options when a musician enters the jam:</string>
+          <string>Remember these options when a musician enters the jam:</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_12">
           <property name="spacing">
@@ -915,6 +915,39 @@
             </property>
             <property name="text">
              <string>Low cut</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>Remember collapsible sections when starting JamTaba:</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_13">
+          <property name="spacing">
+           <number>12</number>
+          </property>
+          <item>
+           <widget class="QCheckBox" name="checkBoxRememberLocalChannels">
+            <property name="text">
+             <string>Local Channels (left side)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxRememberBottomSection">
+            <property name="text">
+             <string>Bottom Section (master fader and ninjam controls)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxRememberChatSection">
+            <property name="text">
+             <string>Chat section (right side)</string>
             </property>
            </widget>
           </item>

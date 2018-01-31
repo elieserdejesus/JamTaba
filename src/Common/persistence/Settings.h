@@ -122,6 +122,17 @@ public:
     void read(const QJsonObject &in) override;
 };
 
+class CollapseSettings : public SettingsObject
+{
+public:
+    CollapseSettings();
+    bool localChannelsCollapsed;
+    bool bottomSectionCollapsed;
+    bool chatSectionCollapsed;
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+};
+
 // +++++++++++++++++++++++++++++++++++++++++++
 
 class VstSettings : public SettingsObject
@@ -325,19 +336,33 @@ public:
     quint8 waveDrawingMode;
 };
 
-
-class RememberUsersSettings : public SettingsObject
+class RememberCollapsableSectionsSettings : public SettingsObject
 {
-public:
-    RememberUsersSettings();
+    RememberCollapsableSectionsSettings();
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
 
+
+};
+
+class RememberSettings : public SettingsObject
+{
+public:
+    RememberSettings();
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+
+    // user settings
     bool rememberPan;
     bool rememberBoost;
     bool rememberLevel; // fader
     bool rememberMute;
     bool rememberLowCut;
+
+    // collapsible section settings
+    bool rememberLocalChannels; // local channels are collapsed?
+    bool rememberBottomSection; // bottom section (master fader) is collapsed?
+    bool rememberChatSection; // chat is collapsed?
 
 };
 
@@ -360,7 +385,8 @@ private:
     PrivateServerSettings privateServerSettings;
     MeteringSettings meteringSettings;
     LooperSettings looperSettings;
-    RememberUsersSettings rememberSettings;
+    RememberSettings rememberSettings;
+    CollapseSettings collapseSettings;
 
     QStringList recentEmojis;
 
@@ -530,16 +556,59 @@ public:
     void setLooperFolder(const QString &folder);
     void setLooperBitDepth(quint8 bitDepth);
 
-    // Remembering settings
-    void setRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    // Remember settings
+    void setRemoteUserRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    void setCollapsileSectionsRememberingSettings(bool localChannels, bool bottomSection, bool chatSection);
     bool isRememberingBoost() const;
     bool isRememberingLevel() const;
     bool isRememberingPan() const;
     bool isRememberingMute() const;
     bool isRememberingLowCut() const;
 
+    // remembering collapsible sections
+    bool isRememberingLocalChannels() const;
+    bool isRememberingBottomSection() const;
+    bool isRememberingChatSection() const;
+
+    void setLocalChannelsCollapsed(bool collapsed);
+    void setBottomSectionCollapsed(bool collapsed);
+    void setChatSectionCollapsed(bool collapsed);
+    bool isLocalChannelsCollapsed() const;
+    bool isBottomSectionCollapsed() const;
+    bool isChatSectionCollapsed() const;
+
     uint getIntervalsBeforeInactivityWarning() const;
 };
+
+inline void Settings::setLocalChannelsCollapsed(bool collapsed)
+{
+    collapseSettings.localChannelsCollapsed = collapsed;
+}
+
+inline void Settings::setBottomSectionCollapsed(bool collapsed)
+{
+    collapseSettings.bottomSectionCollapsed = collapsed;
+}
+
+inline void Settings::setChatSectionCollapsed(bool collapsed)
+{
+    collapseSettings.chatSectionCollapsed = collapsed;
+}
+
+inline bool Settings::isLocalChannelsCollapsed() const
+{
+    return collapseSettings.localChannelsCollapsed;
+}
+
+inline bool Settings::isBottomSectionCollapsed() const
+{
+    return collapseSettings.bottomSectionCollapsed;
+}
+
+inline bool Settings::isChatSectionCollapsed() const
+{
+    return collapseSettings.chatSectionCollapsed;
+}
 
 inline void Settings::storeChatFontSizeOffset(qint8 sizeOffset)
 {
@@ -564,6 +633,21 @@ inline void Settings::setRecentEmojis(const QStringList &emojis)
 inline uint Settings::getIntervalsBeforeInactivityWarning() const
 {
     return intervalsBeforeInactivityWarning;
+}
+
+inline bool Settings::isRememberingLocalChannels() const
+{
+    return rememberSettings.rememberLocalChannels;
+}
+
+inline bool Settings::isRememberingBottomSection() const
+{
+    return rememberSettings.rememberBottomSection;
+}
+
+inline bool Settings::isRememberingChatSection() const
+{
+    return rememberSettings.rememberChatSection;
 }
 
 inline bool Settings::isRememberingMute() const

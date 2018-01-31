@@ -42,7 +42,8 @@ signals:
     void looperAudioEncodingFlagChanged(bool savingEncodedAudio);
     void looperWaveFilesBitDepthChanged(quint8 bitDepth);
     void looperFolderChanged(const QString &newLoopsFolder);
-    void rememberSettingsChanged(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    void rememberRemoteUserSettingsChanged(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    void rememberCollapsibleSectionsSettingsChanged(bool localChannels, bool bottomSection, bool chatSection);
 
 public slots:
     void accept() override;

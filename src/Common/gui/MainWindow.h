@@ -218,6 +218,7 @@ protected slots:
     // collapse areas
     void toggleLocalTracksCollapseStatus();
     void toggleBottomAreaCollapseStatus();
+    void setBottomCollapsedStatus(bool collapsed);
     void collapseBottomArea(bool collapse);
 
     // channel name changed

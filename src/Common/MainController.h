@@ -235,6 +235,14 @@ public:
 
     void setAllLoopersStatus(bool activated);
 
+    // collapse settings
+    void setLocalChannelsCollapsed(bool collapsed);
+    void setBottomSectionCollapsed(bool collapsed);
+    void setChatSectionCollapsed(bool collapsed);
+    bool isLocalChannelsCollapsed() const;
+    bool isBottomSectionCollapsed() const;
+    bool isChatSectionCollapsed() const;
+
     static bool crashedInLastExecution();
     static QString getVersionFromLogContent();
 
@@ -251,7 +259,8 @@ public slots:
     void setEncodingQuality(float newEncodingQuality);
     void storeLooperBitDepth(quint8 bitDepth);
 
-    void storeRememberSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    void storeRemoteUserRememberSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    void storeCollapsibleSectionsRememberSettings(bool localChannels, bool bottomSection, bool chatSection);
 
     void processCapturedFrame(int frameID, const QImage &frame);
 
@@ -365,6 +374,37 @@ protected slots:
     void uploadEncodedVideoData(const QByteArray &encodedData, bool firstPart);
 
 };
+
+inline void MainController::setLocalChannelsCollapsed(bool collapsed)
+{
+    settings.setLocalChannelsCollapsed(collapsed);
+}
+
+inline void MainController::setBottomSectionCollapsed(bool collapsed)
+{
+    settings.setBottomSectionCollapsed(collapsed);
+}
+
+inline void MainController::setChatSectionCollapsed(bool collapsed)
+{
+    settings.setChatSectionCollapsed(collapsed);
+}
+
+inline bool MainController::isLocalChannelsCollapsed() const
+{
+    return settings.isLocalChannelsCollapsed();
+}
+
+inline bool MainController::isBottomSectionCollapsed() const
+{
+    return settings.isBottomSectionCollapsed();
+}
+
+inline bool MainController::isChatSectionCollapsed() const
+{
+    return settings.isChatSectionCollapsed();
+}
+
 
 inline qint8 MainController::getChatFontSizeOffset() const
 {
@@ -551,9 +591,14 @@ inline bool MainController::getLooperAudioEncodingFlag() const
     return settings.getLooperAudioEncodingFlag();
 }
 
-inline void MainController::storeRememberSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
+inline void MainController::storeRemoteUserRememberSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
 {
-    settings.setRememberingSettings(boost, level, pan, mute, lowCut);
+    settings.setRemoteUserRememberingSettings(boost, level, pan, mute, lowCut);
+}
+
+inline void MainController::storeCollapsibleSectionsRememberSettings(bool localChannels, bool bottomSection, bool chatSection)
+{
+   settings.setCollapsileSectionsRememberingSettings(localChannels, bottomSection, chatSection);
 }
 
 } // namespace
