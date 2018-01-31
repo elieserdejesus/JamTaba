@@ -338,8 +338,9 @@ void ChatPanel::addMessage(const QString &localUserName, const QString &msgAutho
 
     msgPanel->setFontSizeOffset(ChatPanel::fontSizeOffset);
 
-    if (autoTranslating)
-        msgPanel->translate();// request the translation
+    bool canAutoTranslate = autoTranslating && !isLocalUser; // local user messages are not auto translated
+    if (canAutoTranslate)
+        msgPanel->translate(); // request the auto translation
 
     if (!isVisible()) {
         setUnreadedMessages(unreadedMessages + 1);
