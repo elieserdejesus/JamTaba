@@ -290,11 +290,13 @@ void FFMpegMuxer::addAudioStream(AVCodecID codecID)
     AVCodec *codec = avcodec_find_encoder(codecID);
     if (!codec) {
         qCritical() << "Could not find encoder for " << avcodec_get_name(codecID);
+        return;
     }
 
     audioStream->stream = avformat_new_stream(formatContext, NULL);
     if (!audioStream->stream) {
         qCritical() << "Could not allocate stream";
+        return;
     }
     audioStream->stream->id = formatContext->nb_streams-1;
 
