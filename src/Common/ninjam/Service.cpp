@@ -15,6 +15,7 @@ using namespace ninjam;
 const QStringList Service::botNames = buildBotNamesList();
 
 Service::NetworkUsageMeasurer::NetworkUsageMeasurer() :
+    totalBytesTransfered(0),
     lastMeasureTimeStamp(0),
     transferRate(0)
 {
