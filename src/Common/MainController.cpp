@@ -387,11 +387,12 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, qui
         videoIntervalToUpload.clear();
     }
 
-    if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
-        for (auto jamRecorder : getActiveRecorders()) {
-            jamRecorder->appendLocalUserVideo(encodedData, isFirstPart);
-        }
-    }
+    // disabling the video recording
+//    if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
+//        for (auto jamRecorder : getActiveRecorders()) {
+//            jamRecorder->appendLocalUserVideo(encodedData, isFirstPart);
+//        }
+//    }
 }
 
 void MainController::enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart)
