@@ -1,8 +1,8 @@
 #include <QTest>
 #include <QDebug>
 #include "TestServerMessages.h"
-#include "ninjam/User.h"
-#include "ninjam/UserChannel.h"
+#include "ninjam/client/User.h"
+#include "ninjam/client/UserChannel.h"
 #include <QDataStream>
 #include <QUuid>
 

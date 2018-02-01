@@ -4,7 +4,7 @@
 #include <QFrame>
 #include <QLabel>
 #include <QPushButton>
-#include "ninjam/Server.h"
+#include "ninjam/client/Server.h"
 #include "loginserver/LoginService.h"
 #include "WavePeakPanel.h"
 

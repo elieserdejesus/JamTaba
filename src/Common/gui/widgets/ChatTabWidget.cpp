@@ -7,7 +7,7 @@
 #include "ChatPanel.h"
 #include "UsersColorsPool.h"
 #include "MainController.h"
-#include "ninjam/User.h"
+#include "ninjam/client/User.h"
 
 ChatTabWidget::ChatTabWidget(QWidget *parent, controller::MainController *mainController, UsersColorsPool *colorsPool) :
     QFrame(parent),

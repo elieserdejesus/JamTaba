@@ -1,9 +1,9 @@
 #include "ServerMessages.h"
 #include <QDebug>
 #include <QDataStream>
-#include "ninjam/UserChannel.h"
-#include "ninjam/User.h"
-#include "ninjam/Service.h"
+#include "ninjam/client/UserChannel.h"
+#include "ninjam/client/User.h"
+#include "ninjam/client/Service.h"
 
 using namespace ninjam;
 

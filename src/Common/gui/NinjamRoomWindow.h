@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QTimer>
-#include "ninjam/UserChannel.h"
+#include "ninjam/client/UserChannel.h"
 #include "loginserver/LoginService.h"
 #include "chat/ChatPanel.h"
 #include "NinjamTrackGroupView.h"

@@ -1,6 +1,6 @@
 #include "TestServerMessagesHandler.h"
-#include "ninjam/ServerMessagesHandler.h"
-#include "ninjam/ServerMessages.h"
+#include "ninjam/client/ServerMessagesHandler.h"
+#include "ninjam/client/ServerMessages.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>

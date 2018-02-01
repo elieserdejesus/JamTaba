@@ -14,7 +14,7 @@
 #include "TextEditorModifier.h"
 #include "UsersColorsPool.h"
 #include "EmojiManager.h"
-#include "ninjam/User.h"
+#include "ninjam/client/User.h"
 
 const qint8 ChatPanel::MAX_FONT_OFFSET = 3;
 const qint8 ChatPanel::MIN_FONT_OFFSET = -2;

@@ -3,9 +3,9 @@
 
 #include <QDebug>
 #include "MainController.h"
-#include "ninjam/User.h"
-#include "ninjam/UserChannel.h"
-#include "ninjam/Server.h"
+#include "ninjam/client/User.h"
+#include "ninjam/client/UserChannel.h"
+#include "ninjam/client/Server.h"
 #include "MapWidget.h"
 #include "MapMarker.h"
 

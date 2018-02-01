@@ -2,8 +2,8 @@
 #define TESTE_SERVICE_H
 
 #include <QObject>
-#include "ninjam/ServerMessages.h"
-#include "ninjam/UserChannel.h"
+#include "ninjam/client/ServerMessages.h"
+#include "ninjam/client/UserChannel.h"
 
 using namespace ninjam;
 

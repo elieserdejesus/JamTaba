@@ -7,8 +7,8 @@
 #include <QTimer>
 #include <QDebug>
 #include <QApplication>
-#include "ninjam/Server.h"
-#include "ninjam/Service.h"
+#include "ninjam/client/Server.h"
+#include "ninjam/client/Service.h"
 #include "log/Logging.h"
 
 using namespace login;

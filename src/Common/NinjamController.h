@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QMutex>
-#include "ninjam/User.h"
-#include "ninjam/Server.h"
+#include "ninjam/client/User.h"
+#include "ninjam/client/Server.h"
 #include "audio/Encoder.h"
 
 #include <QThread>

@@ -13,8 +13,8 @@
 
 #include "chat/NinjamVotingMessageParser.h"
 
-#include "ninjam/User.h"
-#include "ninjam/Server.h"
+#include "ninjam/client/User.h"
+#include "ninjam/client/Server.h"
 
 #include <QTranslator>
 #include <QMainWindow>

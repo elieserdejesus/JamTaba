@@ -1,5 +1,5 @@
 #include "ClientMessages.h"
-#include "ninjam/User.h"
+#include "ninjam/client/User.h"
 #include <QCryptographicHash>
 #include <QIODevice>
 #include <QDebug>

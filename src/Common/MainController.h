@@ -5,7 +5,7 @@
 #include <QImage>
 
 #include "geo/IpToLocationResolver.h"
-#include "ninjam/Service.h"
+#include "ninjam/client/Service.h"
 #include "loginserver/LoginService.h"
 #include "persistence/Settings.h"
 #include "persistence/UsersDataCache.h"
