@@ -38,4 +38,5 @@ void PreferencesDialogPlugin::populateAllTabs()
     populateMultiTrackRecordingTab();
     populateMetronomeTab();
     populateLooperTab();
+    populateRememberTab();
 }
