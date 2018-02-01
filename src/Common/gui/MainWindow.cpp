@@ -139,7 +139,6 @@ void MainWindow::setupMainTabCornerWidgets()
     transmitTransferRateLabel->setObjectName(QStringLiteral("transmitTransferRateLabel"));
     transmitTransferRateLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     transmitTransferRateLabel->setAlignment(Qt::AlignCenter);
-    transmitTransferRateLabel->setText("12");
 
     transmitIcon = new QLabel(this);
     transmitIcon->setObjectName("transmitIcon");
@@ -149,7 +148,6 @@ void MainWindow::setupMainTabCornerWidgets()
     receiveTransferRateLabel->setObjectName(QStringLiteral("receiveTransferRateLabel"));
     receiveTransferRateLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     receiveTransferRateLabel->setAlignment(Qt::AlignCenter);
-    receiveTransferRateLabel->setText("23");
 
     receiveIcon = new QLabel(this);
     receiveIcon->setObjectName("receiveIcon");
@@ -164,9 +162,9 @@ void MainWindow::setupMainTabCornerWidgets()
     transferRateLayout->addWidget(receiveTransferRateLabel, 1);
 
     frameLayout->addLayout(transferRateLayout);
-    frameLayout->addSpacing(12);
+    frameLayout->addSpacing(6);
     frameLayout->addWidget(performanceMonitorLabel);
-    frameLayout->addSpacing(12);
+    frameLayout->addSpacing(6);
     frameLayout->addWidget(buttonCollapseLocalChannels);
     frameLayout->addWidget(buttonCollapseBottomArea);
     frameLayout->addWidget(buttonCollapseChat);

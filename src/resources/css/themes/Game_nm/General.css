@@ -176,7 +176,7 @@ LooperWindow QSlider:vertical
 
 QTabWidget#contentTabWidget::tab-bar
 {
-    left: 45px;
+    left: 5px;
 }
 
 QTabBar:tab
@@ -187,9 +187,11 @@ QTabBar:tab
     border-right: none;
     margin: 0px;
 
-    margin-left: 6px;
+    margin-left: 0px;
     padding-top: 4px;
     padding-bottom: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
 
     font-size: 9px;
 
@@ -207,7 +209,7 @@ QTabBar::tab:selected
     border-left: 7px transparent;
 
     margin: 0px;
-    padding: 7px;
+    padding: 0px;
     padding-top: -3px;
     padding-bottom: 2px;
 
