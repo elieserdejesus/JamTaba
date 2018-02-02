@@ -1,25 +1,33 @@
 #include "MainWindow.h"
-#include "PreferencesDialog.h"
+#include "LooperWindow.h"
 #include "LocalTrackView.h"
+#include "LocalTrackGroupView.h"
 #include "ChatTabWidget.h"
-#include "audio/core/LocalInputNode.h"
 #include "NinjamRoomWindow.h"
-#include "Highligther.h"
-#include "PrivateServerDialog.h"
-#include "NinjamController.h"
-#include "Utils.h" // TODO refactoring to AudioUtils.h and use namespace
-#include "GuiUtils.h"
 #include "UserNameDialog.h"
-#include "log/Logging.h"
 #include "JamRoomViewPanel.h"
-#include "ChordsPanel.h"
 #include "MapWidget.h"
+#include "PreferencesDialog.h"
+#include "PrivateServerDialog.h"
+#include "ChordsPanel.h"
 #include "BlinkableButton.h"
 #include "InactivityDetector.h"
 #include "IconFactory.h"
-
-#include "LooperWindow.h"
+#include "ThemeLoader.h"
+#include "Highligther.h"
 #include "ChatChordsProgressionParser.h"
+#include "NinjamController.h"
+#include "MainController.h"
+#include "Utils.h" // TODO refactoring to AudioUtils.h and use namespace
+#include "GuiUtils.h"
+#include "BusyDialog.h"
+#include "UsersColorsPool.h"
+#include "ScreensaverBlocker.h"
+#include "log/Logging.h"
+#include "audio/core/LocalInputNode.h"
+#include "performance/PerformanceMonitor.h"
+#include "video/VideoFrameGrabber.h"
+#include "chat/NinjamVotingMessageParser.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
@@ -27,16 +35,6 @@
 #include <QDateTime>
 #include <QImage>
 #include <QCameraInfo>
-
-#include "MainController.h"
-#include "ThemeLoader.h"
-#include "performance/PerformanceMonitor.h"
-
-using namespace audio;
-using namespace persistence;
-using namespace controller;
-using namespace ninjam;
-using namespace login;
 
 const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
@@ -50,7 +48,15 @@ const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200; //in miliseconds
 
 const QString MainWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
 
-MainWindow::MainWindow(controller::MainController *mainController, QWidget *parent) :
+using persistence::LocalInputTrackSettings;
+using persistence::Channel;
+using persistence::SubChannel;
+using persistence::Preset;
+using login::LoginService;
+using controller::MainController;
+using controller::NinjamController;
+
+MainWindow::MainWindow(MainController *mainController, QWidget *parent) :
     QMainWindow(parent),
     mainController(mainController),
     camera(nullptr),
@@ -59,7 +65,7 @@ MainWindow::MainWindow(controller::MainController *mainController, QWidget *pare
     cameraCombo(nullptr),
     cameraLayout(nullptr),
     bottomCollapsed(false),
-    busyDialog(nullptr),
+    busyDialog(new BusyDialog(this)),
     bpmVotingExpirationTimer(nullptr),
     bpiVotingExpiratonTimer(nullptr),
     buttonCollapseLocalChannels(nullptr),
@@ -67,10 +73,13 @@ MainWindow::MainWindow(controller::MainController *mainController, QWidget *pare
     buttonCollapseBottomArea(nullptr),
     performanceMonitorLabel(nullptr),
     xmitInactivityDetector(nullptr),
+    screensaverBlocker(new ScreensaverBlocker()),
+    usersColorsPool(new UsersColorsPool()),
     chatTabWidget(nullptr),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
     chordsPanel(nullptr),
+    performanceMonitor(new PerformanceMonitor()),
     lastPerformanceMonitorUpdate(0)
 {
     qCDebug(jtGUI) << "Creating MainWindow...";
@@ -695,7 +704,7 @@ persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
             quint8 higherNote = inputNode->getMidiHigherNote();
             bool routindMidiInput = subchannelsCount > 0 && inputNode->isRoutingMidiInput(); // midi routing is not allowed in first subchannel
 
-            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted,
+            SubChannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted,
                                                                     transpose, lowerNote, higherNote, routindMidiInput);
             channel.subChannels.append(sub);
 
@@ -870,9 +879,9 @@ void MainWindow::removeAllInputLocalTracks()
 
 
 // this function is overrided in MainWindowStandalone to load input selections and plugins
-void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const Subchannel &subChannel)
+void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const SubChannel &subChannel)
 {
-    BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
+    auto boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted, subChannel.stereoInverted);
 }
 
@@ -984,26 +993,26 @@ void MainWindow::showBusyDialog()
 
 void MainWindow::showBusyDialog(const QString &message)
 {
-    busyDialog.setParent(this);
+    busyDialog->setParent(this);
     centerBusyDialog();
-    busyDialog.show(message);
+    busyDialog->show(message);
 }
 
 void MainWindow::hideBusyDialog()
 {
-    busyDialog.hide();
+    busyDialog->hide();
 }
 
 void MainWindow::centerBusyDialog()
 {
-    if (!busyDialog.parentWidget())
+    if (!busyDialog->parentWidget())
         return;
 
-    QSize parentSize = busyDialog.parentWidget()->size();
-    QSize busyDialogSize = busyDialog.size();
+    QSize parentSize = busyDialog->parentWidget()->size();
+    QSize busyDialogSize = busyDialog->size();
     int newX = parentSize.width()/2 - busyDialogSize.width()/2;
     int newY = parentSize.height()/2;
-    busyDialog.move(newX, newY);
+    busyDialog->move(newX, newY);
 }
 
 bool MainWindow::jamRoomLessThan(const login::RoomInfo &r1, const login::RoomInfo &r2)
@@ -1351,7 +1360,7 @@ void MainWindow::handleUserLeaving(const QString &userName)
 
     setPrivateChatInputstatus(userName, false); // deactive the private chat when user leave
 
-    usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
+    usersColorsPool->giveBack(userName); // reuse the color mapped to this 'leaving' user
 }
 
 void MainWindow::handleUserEntering(const QString &userName)
@@ -1830,14 +1839,14 @@ void MainWindow::timerEvent(QTimerEvent *)
     if (now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME) {
 
         if (performanceMonitorLabel)
-            performanceMonitorLabel->setText(QString("MEM: %1%").arg(performanceMonitor.getMemmoryUsed()));
+            performanceMonitorLabel->setText(QString("MEM: %1%").arg(performanceMonitor->getMemmoryUsed()));
 
         lastPerformanceMonitorUpdate = now;
     }
 
     // prevent screen saver if user is playing
     if (mainController->isPlayingInNinjamRoom())
-        screensaverBlocker.update();
+        screensaverBlocker->update();
 
     // update public server stream plot
     if (mainController->isPlayingRoomStream()) {
@@ -2461,7 +2470,7 @@ void MainWindow::setupWidgets()
 
     ui.masterTitleLabel->setVisible(false);
 
-    chatTabWidget = new ChatTabWidget(this, mainController, &usersColorsPool);
+    chatTabWidget = new ChatTabWidget(this, mainController, usersColorsPool.data());
     connect(chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::updateCollapseButtons);
 
     setChatsVisibility(false);
@@ -2579,4 +2588,9 @@ void MainWindow::updateCollapseButtons()
 
     buttonCollapseLocalChannels->setChecked(!ui.localControlsCollapseButton->isChecked());
 
+}
+
+QString MainWindow::getChannelGroupName(int index) const
+{
+    return localGroupChannels.at(index)->getGroupName();
 }

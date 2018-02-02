@@ -2,7 +2,7 @@
 #include "ui_NinjamRoomWindow.h"
 #include "NinjamTrackView.h"
 #include "NinjamTrackGroupView.h"
-
+#include "UsersColorsPool.h"
 #include "ninjam/client/Server.h"
 #include "ninjam/client/User.h"
 #include "ninjam/client/UserChannel.h"

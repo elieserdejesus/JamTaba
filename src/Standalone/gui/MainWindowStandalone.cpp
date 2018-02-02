@@ -5,15 +5,18 @@
 #include "log/Logging.h"
 #include "audio/core/PluginDescriptor.h"
 #include "CrashReportDialog.h"
+#include "vst/VstPluginFinder.h"
+#include "vst/VstPlugin.h"
+#include "PluginScanDialog.h"
 
 #include <QTimer>
 #include <QDesktopWidget>
 #include <QSharedPointer>
 #include <QShortcut>
 
-using namespace persistence;
-using namespace controller;
-using namespace audio;  // TODO rewrite namespaces using lower case
+using persistence::SubChannel;
+using persistence::Channel;
+using persistence::LocalInputTrackSettings;
 
 MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainController) :
     MainWindow(mainController),
@@ -79,7 +82,7 @@ void MainWindowStandalone::setupSignals()
 {
     connect(ui.actionFullscreenMode, &QAction::triggered, this, &MainWindowStandalone::toggleFullScreen);
 
-     audio::PluginFinder *pluginFinder = controller->getVstPluginFinder();
+    auto pluginFinder = controller->getVstPluginFinder();
     if (!pluginFinder)
         return;
 
@@ -135,8 +138,8 @@ void MainWindowStandalone::showPluginScanDialog()
         return; // only show the Plugin Scan dialog if PreferencesDialog is not opened (to avoid two modal dialogs)
 
     if (!pluginScanDialog) {
-        pluginScanDialog.reset(new PluginScanDialog(this));
-        connect(pluginScanDialog.data(), SIGNAL(rejected()), this, SLOT(closePluginScanDialog()));
+        pluginScanDialog = new PluginScanDialog(this);
+        connect(pluginScanDialog, SIGNAL(rejected()), this, SLOT(closePluginScanDialog()));
     }
 
     pluginScanDialog->show();
@@ -145,16 +148,18 @@ void MainWindowStandalone::showPluginScanDialog()
 void MainWindowStandalone::closePluginScanDialog()
 {
     controller->cancelPluginFinders();
-    pluginScanDialog.reset(); // reset to null pointer
+    pluginScanDialog = nullptr; // reset to null pointer
 }
 
 void MainWindowStandalone::hidePluginScanDialog(bool finishedWithoutError)
 {
     Q_UNUSED(finishedWithoutError);
-    if (pluginScanDialog)
+    if (pluginScanDialog) {
         pluginScanDialog->close();
+        pluginScanDialog->deleteLater();
+    }
 
-    pluginScanDialog.reset();
+    pluginScanDialog = nullptr;
 }
 
 void MainWindowStandalone::addPluginToBlackList(const QString &pluginPath)
@@ -162,7 +167,7 @@ void MainWindowStandalone::addPluginToBlackList(const QString &pluginPath)
     QString pluginName = audio::PluginDescriptor::getVstPluginNameFromPath(pluginPath);
     QWidget *parent = this;
     if (pluginScanDialog)
-        parent = pluginScanDialog.data();
+        parent = pluginScanDialog;
     QString message = tr("%1 can't be loaded and will be black listed!").arg(pluginName);
     QMessageBox::warning(parent, tr("Plugin Error!"), message);
     controller->addBlackVstToSettings(pluginPath);
@@ -211,7 +216,7 @@ void MainWindowStandalone::toggleFullScreen()
 
 // sanitize the input selection for each loaded subchannel
 void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *subChannelView,
-                                                             const Subchannel &subChannel)
+                                                             const SubChannel &subChannel)
 {
     int trackID = subChannelView->getInputIndex();
     if (subChannel.isMidi()) {
@@ -239,7 +244,7 @@ void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *sub
 }
 
 void MainWindowStandalone::restoreLocalSubchannelPluginsList(
-    LocalTrackViewStandalone *subChannelView, const Subchannel &subChannel)
+    LocalTrackViewStandalone *subChannelView, const SubChannel &subChannel)
 {
     // create the plugins list
     for (const auto &plugin : subChannel.getPlugins()) {
@@ -268,7 +273,7 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
 }
 
 void MainWindowStandalone::initializeLocalSubChannel(LocalTrackView *subChannelView,
-                                                     const Subchannel &subChannel)
+                                                     const SubChannel &subChannel)
 {
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
@@ -318,8 +323,8 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
         newChannel.subChannels.clear();
         int subChannelID = 0;
         QList<LocalTrackViewStandalone *> trackViews = trackGroupView->getTracks<LocalTrackViewStandalone *>();
-        for (Subchannel subchannel : channel.subChannels) {
-            Subchannel newSubChannel = subchannel;
+        for (SubChannel subchannel : channel.subChannels) {
+            SubChannel newSubChannel = subchannel;
             LocalTrackViewStandalone *trackView = trackViews.at(subChannelID);
             if (trackView)
                 newSubChannel.setPlugins(buildPersistentPluginList(trackView->getInsertedPlugins()));

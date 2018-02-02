@@ -3,19 +3,15 @@
 
 #include "MainController.h"
 #include <QApplication>
-#include "vst/VstPluginFinder.h"
 
 #ifdef Q_OS_MAC
     #include "AU/AudioUnitPluginFinder.h"
 #endif
 
-#include "audio/Host.h"
-#include "audio/core/Plugins.h"
-#include "audio/core/PluginDescriptor.h"
-
 class QCoreApplication;
 
 class MainWindowStandalone;
+class Host;
 
 namespace midi {
  class MidiDriver;
@@ -24,6 +20,14 @@ namespace midi {
 namespace ninjam { namespace client {
  class Server;
 }}
+
+namespace audio {
+    class VSTPluginFinder;
+    class Plugin;
+}
+
+using audio::VSTPluginFinder;
+using audio::Plugin;
 
 namespace controller {
 
@@ -92,7 +96,7 @@ public:
 
     void cancelPluginFinders();
 
-    inline audio::VSTPluginFinder *getVstPluginFinder() const
+    inline VSTPluginFinder *getVstPluginFinder() const
     {
         return vstPluginFinder.data();
     }

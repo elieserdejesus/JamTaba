@@ -33,7 +33,7 @@
 #include "log/Logging.h"
 #include "Configurator.h"
 
-//using namespace controller;
+using ninjam::client::Server;
 
 QString MainControllerStandalone::getJamtabaFlavor() const
 {

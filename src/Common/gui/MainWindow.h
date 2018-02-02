@@ -2,20 +2,6 @@
 #define MAIN_WINDOW_H
 
 #include "ui_MainWindow.h"
-#include "BusyDialog.h"
-#include "LocalTrackGroupView.h"
-#include "ScreensaverBlocker.h"
-#include "TextEditorModifier.h"
-#include "LooperWindow.h"
-#include "UsersColorsPool.h"
-
-#include "performance/PerformanceMonitor.h"
-#include "persistence/Settings.h"
-#include "chat/NinjamVotingMessageParser.h"
-#include "video/VideoFrameGrabber.h"
-#include "video/VideoWidget.h"
-
-//#include "ninjam/client/Server.h"
 
 #include <QTranslator>
 #include <QMainWindow>
@@ -23,6 +9,7 @@
 #include <QCamera>
 #include <QCameraInfo>
 #include <QVideoFrame>
+#include <QComboBox>
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -33,22 +20,45 @@ class ChordsPanel;
 class ChatPanel;
 class InactivityDetector;
 class ChatTabWidget;
+class LocalTrackGroupView;
+class CameraFrameGrabber;
+class VideoWidget;
+class BusyDialog;
+class LooperWindow;
+class UsersColorsPool;
+class ScreensaverBlocker;
+class PerformanceMonitor;
+class TextEditorModifier;
 
 namespace login {
-    class RoomInfo;
+class RoomInfo;
 }
 
 namespace controller {
-    class MainController;
+class MainController;
 }
 
-namespace ninjam {
-    namespace client {
-        class User;
-    }
+namespace ninjam { namespace client {
+class User;
+}}
+
+namespace gui { namespace chat {
+class SystemVotingMessage;
+}}
+
+namespace persistence {
+class LocalInputTrackSettings;
+class Preset;
+class SubChannel;
+class Channel;
 }
 
 using ninjam::client::User;
+using persistence::LocalInputTrackSettings;
+using persistence::Preset;
+using persistence::Channel;
+using persistence::SubChannel;
+using gui::chat::SystemVotingMessage;
 
 class MainWindow : public QMainWindow
 {
@@ -64,7 +74,7 @@ public:
 
     void detachMainController();
 
-    virtual persistence::LocalInputTrackSettings getInputsSettings() const;
+    virtual LocalInputTrackSettings getInputsSettings() const;
 
     int getChannelGroupsCount() const;
 
@@ -79,7 +89,7 @@ public:
 
     virtual controller::MainController *getMainController() const;
 
-    virtual void loadPreset(const persistence::Preset &preset);
+    virtual void loadPreset(const Preset &preset);
     void resetLocalChannels();
 
     bool isTransmiting(int channelID) const;
@@ -135,8 +145,7 @@ protected:
     // this factory method is overrided in derived classes to create more specific views
     virtual LocalTrackGroupView *createLocalTrackGroupView(int channelGroupIndex);
 
-    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView,
-                                           const persistence::Subchannel &subChannel);
+    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView, const SubChannel &subChannel);
 
     void stopCurrentRoomStream();
 
@@ -301,7 +310,7 @@ private:
 
     bool bottomCollapsed;
 
-    BusyDialog busyDialog;
+    BusyDialog *busyDialog;
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
     QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
 
@@ -318,9 +327,9 @@ private:
 
     InactivityDetector *xmitInactivityDetector;
 
-    UsersColorsPool usersColorsPool;
+    QScopedPointer<UsersColorsPool> usersColorsPool;
 
-    ScreensaverBlocker screensaverBlocker;
+    QScopedPointer<ScreensaverBlocker> screensaverBlocker;
 
     ChatTabWidget *chatTabWidget;
 
@@ -416,7 +425,7 @@ private:
     void addNinjamPanelsInBottom();
 
     void showLastChordsInMainChat();
-    void createVoteButton(const gui::chat::SystemVotingMessage &votingMessage);
+    void createVoteButton(const SystemVotingMessage &votingMessage);
     bool canShowBlockButtonInChatMessage(const QString &userName) const;
 
     void loadTranslationFile(const QString &locale);
@@ -437,8 +446,8 @@ private:
 
     void setupMainTabCornerWidgets();
 
-    PerformanceMonitor performanceMonitor; // cpu and memmory usage
-    qint64 lastPerformanceMonitorUpdate;
+    QScopedPointer<PerformanceMonitor> performanceMonitor; // cpu and memmory usage
+    qint64 lastPerformanceMonitorUpdate; // TODO move to PerformenceMonitor
     static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
     static const QString NIGHT_MODE_SUFFIX;
@@ -452,7 +461,7 @@ inline QColor MainWindow::getTintColor() const
 
 inline UsersColorsPool *MainWindow::getUsersColorsPool() const
 {
-    return const_cast<UsersColorsPool *>(&usersColorsPool);
+    return usersColorsPool.data();
 }
 
 inline NinjamRoomWindow* MainWindow::getNinjamRomWindow() const
@@ -468,11 +477,6 @@ inline controller::MainController *MainWindow::getMainController() const
 inline int MainWindow::getChannelGroupsCount() const
 {
     return localGroupChannels.size();
-}
-
-inline QString MainWindow::getChannelGroupName(int index) const
-{
-    return localGroupChannels.at(index)->getGroupName();
 }
 
 #endif

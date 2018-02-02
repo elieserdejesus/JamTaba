@@ -1,5 +1,6 @@
 #include "LocalTrackViewStandalone.h"
 #include "audio/core/LocalInputNode.h"
+#include "audio/core/Plugins.h"
 #include "FxPanel.h"
 #include "FxPanelItem.h"
 #include "BoostSpinBox.h"

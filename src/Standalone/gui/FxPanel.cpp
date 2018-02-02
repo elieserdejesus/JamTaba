@@ -1,6 +1,7 @@
 #include "FxPanel.h"
 #include "FxPanelItem.h"
 #include "LocalTrackViewStandalone.h"
+#include "audio/core/Plugins.h"
 
 #include <QVBoxLayout>
 #include <QPainter>
@@ -44,7 +45,7 @@ qint32 FxPanel::getPluginFreeSlotIndex() const
     return -1; // no free slot
 }
 
-void FxPanel::addPlugin(audio::Plugin *plugin, quint32 pluginSlotIndex)
+void FxPanel::addPlugin(Plugin *plugin, quint32 pluginSlotIndex)
 {
     auto items = findChildren<FxPanelItem *>();
     if (pluginSlotIndex < (quint32)items.count()) {

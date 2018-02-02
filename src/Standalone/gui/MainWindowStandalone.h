@@ -2,12 +2,19 @@
 #define MAINFRAMEVST_H
 
 #include "MainWindow.h"
-#include "LocalTrackGroupViewStandalone.h"
-#include "LocalTrackViewStandalone.h"
-#include "MainControllerStandalone.h"
-#include "PluginScanDialog.h"
+#include "LocalTrackGroupViewStandalone.h" // necessary to return covariant type
 
-using namespace controller;
+namespace controller {
+class MainControllerStandalone;
+}
+
+class LocalTrackView;
+class LocalTrackViewStandalone;
+class PluginScanDialog;
+
+using controller::MainControllerStandalone;
+using controller::MainController;
+using persistence::SubChannel;
 
 class MainWindowStandalone : public MainWindow
 {
@@ -37,9 +44,9 @@ protected:
 
     LocalTrackGroupViewStandalone *createLocalTrackGroupView(int channelGroupIndex) override;
 
-    void initializeLocalSubChannel(LocalTrackView *subChannelView, const persistence::Subchannel &subChannel) override;
+    void initializeLocalSubChannel(LocalTrackView *subChannelView, const SubChannel &subChannel) override;
 
-    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const persistence::Subchannel &subChannel);
+    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const SubChannel &subChannel);
 
     PreferencesDialog *createPreferencesDialog() override;
 
@@ -66,7 +73,7 @@ private slots:
 
 private:
     MainControllerStandalone *controller;
-    QScopedPointer<PluginScanDialog> pluginScanDialog;
+    PluginScanDialog *pluginScanDialog;
 
     PreferencesDialog *preferencesDialog; // store the instance to check if dialog is visible e decide show or not the Vst Plugin Scan Dialog
 
@@ -74,7 +81,7 @@ private:
 
     bool midiDeviceIsValid(int deviceIndex) const;
 
-    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, const persistence::Subchannel &subChannel);
+    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, const persistence::SubChannel &subChannel);
 
     bool fullScreenViewMode;
 
