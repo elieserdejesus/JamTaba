@@ -5,19 +5,21 @@
 #endif
 
 #include "MainController.h"
+#include "NinjamController.h"
+#include "Utils.h"
+#include "loginserver/natmap.h"
+#include "ThemeLoader.h"
+#include "audio/core/AudioNode.h"
+#include "audio/core/LocalInputNode.h"
+#include "audio/core/LocalInputGroup.h"
+#include "audio/RoomStreamerNode.h"
+#include "ninjam/client/Service.h"
 #include "recorder/JamRecorder.h"
 #include "recorder/ReaperProjectGenerator.h"
 #include "recorder/ClipSortLogGenerator.h"
 #include "gui/MainWindow.h"
-#include "NinjamController.h"
-#include "geo/WebIpToLocationResolver.h"
-#include "Utils.h"
-#include "loginserver/natmap.h"
 #include "log/Logging.h"
-#include "audio/core/AudioNode.h"
-#include "audio/core/LocalInputNode.h"
-#include "ThemeLoader.h"
-#include "ninjam/client/Service.h"
+#include "geo/WebIpToLocationResolver.h"
 
 #include <QBuffer>
 #include <QByteArray>

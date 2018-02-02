@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include "PeakMeter.h"
 #include "audio/core/AudioPeak.h"
+#include "audio/core/AudioNode.h"
 #include "BoostSpinBox.h"
 #include "IconFactory.h"
 
@@ -24,9 +25,12 @@ const int BaseTrackView::WIDE_WIDTH = 120;
 
 QMap<long, BaseTrackView *> BaseTrackView::trackViews; // static map to quick lookup the views
 
+using audio::AudioNode;
+using controller::MainController;
+
 // -----------------------------------------------------------------------------------------
 
-BaseTrackView::BaseTrackView(controller::MainController *mainController, long trackID) :
+BaseTrackView::BaseTrackView(MainController *mainController, long trackID) :
     mainController(mainController),
     trackID(trackID),
     activated(true),
@@ -188,11 +192,11 @@ void BaseTrackView::bindThisViewWithTrackNodeSignals()
 {
     auto trackNode = mainController->getTrackNode(trackID);
     Q_ASSERT(trackNode);
-    connect(trackNode, &audio::AudioNode::gainChanged, this, &BaseTrackView::setGainSliderPosition);
-    connect(trackNode, &audio::AudioNode::panChanged, this, &BaseTrackView::setPanKnobPosition);
-    connect(trackNode, &audio::AudioNode::muteChanged, this, &BaseTrackView::setMuteStatus);
-    connect(trackNode, &audio::AudioNode::soloChanged, this, &BaseTrackView::setSoloStatus);
-    connect(trackNode, &audio::AudioNode::boostChanged, this, &BaseTrackView::setBoostStatus);
+    connect(trackNode, &AudioNode::gainChanged, this, &BaseTrackView::setGainSliderPosition);
+    connect(trackNode, &AudioNode::panChanged, this, &BaseTrackView::setPanKnobPosition);
+    connect(trackNode, &AudioNode::muteChanged, this, &BaseTrackView::setMuteStatus);
+    connect(trackNode, &AudioNode::soloChanged, this, &BaseTrackView::setSoloStatus);
+    connect(trackNode, &AudioNode::boostChanged, this, &BaseTrackView::setBoostStatus);
 }
 
 // ++++++  signals emitted by Audio Node +++++++

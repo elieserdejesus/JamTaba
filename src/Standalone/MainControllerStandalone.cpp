@@ -780,3 +780,11 @@ void MainControllerStandalone::updateInputTracksRange()
         }
     }
 }
+
+float MainControllerStandalone::getSampleRate() const
+{
+    if (audioDriver)
+        return audioDriver->getSampleRate();
+
+    return 44100;
+}

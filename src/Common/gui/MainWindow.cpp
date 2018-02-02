@@ -25,6 +25,7 @@
 #include "ScreensaverBlocker.h"
 #include "log/Logging.h"
 #include "audio/core/LocalInputNode.h"
+#include "audio/RoomStreamerNode.h"
 #include "performance/PerformanceMonitor.h"
 #include "video/VideoFrameGrabber.h"
 #include "chat/NinjamVotingMessageParser.h"

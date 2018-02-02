@@ -8,18 +8,33 @@
 
 class JamTabaPlugin;
 
+namespace persistence {
+class Settings;
+class Preset;
+}
+
+namespace audio {
+class AudioDriver;
+class LocalInputNode;
+}
+
+using persistence::Settings;
+using persistence::Preset;
+using audio::AudioDriver;
+using audio::LocalInputNode;
+
 class MainControllerPlugin : public controller::MainController
 {
 
     friend class NinjamControllerPlugin;
 
 public:
-    MainControllerPlugin(const persistence::Settings &settings, JamTabaPlugin *plugin);
+    MainControllerPlugin(const Settings &settings, JamTabaPlugin *plugin);
     virtual ~MainControllerPlugin();
 
     QString getUserEnvironmentString() const;
 
-    audio::AudioDriver *createAudioDriver(const persistence::Settings &settings);
+    AudioDriver *createAudioDriver(const Settings &settings);
 
     NinjamControllerPlugin *createNinjamController() override;
 
@@ -30,7 +45,7 @@ public:
 
     void setCSS(const QString &css) override;
 
-    int addInputTrackNode(audio::LocalInputNode *inputTrackNode) override;
+    int addInputTrackNode(LocalInputNode *inputTrackNode) override;
 
     void setSampleRate(int newSampleRate) override;
 
@@ -48,7 +63,7 @@ public:
 
     virtual void resizePluginEditor(int newWidth, int newHeight) = 0;
 
-    persistence::Preset loadPreset(const QString &name) override;
+    Preset loadPreset(const QString &name) override;
 
     inline std::vector<midi::MidiMessage> pullMidiMessagesFromPlugins() override
     {
