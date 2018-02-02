@@ -10,7 +10,8 @@
 #include <QDir>
 #include <QDebug>
 
-using namespace audio;
+using audio::SamplesBuffer;
+using audio::metronomeUtils;
 
 const QString metronomeUtils::DEFAULT_BUILT_IN_METRONOME_ALIAS("Default");
 const QString metronomeUtils::DEFAULT_BUILT_IN_METRONOME_DIR(":/metronome");

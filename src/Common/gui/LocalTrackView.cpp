@@ -14,8 +14,6 @@
 #include <QIcon>
 #include <QFontMetrics>
 
-using namespace controller;
-
 class LocalTrackView::LooperIconFactory
 {
 public:

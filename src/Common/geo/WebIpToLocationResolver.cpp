@@ -16,7 +16,7 @@
 #include "log/Logging.h"
 #include "persistence/CacheHeader.h"
 
-using namespace geo;
+using geo::WebIpToLocationResolver;
 
 const QString WebIpToLocationResolver::COUNTRY_CODES_FILE = "country_codes_cache.bin";
 const QString WebIpToLocationResolver::COUNTRY_NAMES_FILE_PREFIX = "country_names_cache"; //the language code will be concatenated

@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-using namespace midi;
+using midi::MidiMessage;
 
 MidiMessage::MidiMessage(qint32 data, int sourceID) :
     data(data),

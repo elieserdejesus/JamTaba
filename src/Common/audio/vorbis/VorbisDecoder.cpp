@@ -10,7 +10,7 @@
 #include <QThread>
 #include "log/Logging.h"
 
-using namespace vorbis;
+using vorbis::Decoder;
 
 Decoder::Decoder() :
       internalBuffer(2, 4096),

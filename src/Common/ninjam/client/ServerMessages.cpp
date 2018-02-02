@@ -5,36 +5,39 @@
 #include "ninjam/client/User.h"
 #include "ninjam/client/Service.h"
 
-namespace ninjam
+QString ninjam::client::extractString(QDataStream &stream)
 {
-    namespace client
-    {
-        QString extractString(QDataStream &stream)
-        {
-            quint8 byte;
-            QByteArray byteArray;
-            while (!stream.atEnd()) {
-                stream >> byte;
-                if (byte == '\0')
-                    break;
-                byteArray.append(byte);
-            }
-            return QString::fromUtf8(byteArray.data(), byteArray.size());
-        }
-
-        QString extractString(QDataStream &stream, quint32 size)
-        {
-            return QString::fromUtf8(stream.device()->read(size));
-        }
-
+    quint8 byte;
+    QByteArray byteArray;
+    while (!stream.atEnd()) {
+        stream >> byte;
+        if (byte == '\0')
+            break;
+        byteArray.append(byte);
     }
+    return QString::fromUtf8(byteArray.data(), byteArray.size());
 }
 
-using namespace ninjam::client;
+QString extractString(QDataStream &stream, quint32 size)
+{
+    return QString::fromUtf8(stream.device()->read(size));
+}
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 // +++++++++++++  SERVER MESSAGE (Base class) +++++++++++++++=
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+
+using ninjam::client::ServerMessage;
+using ninjam::client::ServerMessageType;
+using ninjam::client::ServerAuthChallengeMessage;
+using ninjam::client::ServerAuthReplyMessage;
+using ninjam::client::ServerChatMessage;
+using ninjam::client::ServerConfigChangeNotifyMessage;
+using ninjam::client::ServerKeepAliveMessage;
+using ninjam::client::UserInfoChangeNotifyMessage;
+using ninjam::client::DownloadIntervalBegin;
+using ninjam::client::DownloadIntervalWrite;
+using ninjam::client::ChatCommandType;
 
 ServerMessage::ServerMessage(ServerMessageType messageType, quint32 payload) :
     messageType(messageType),
@@ -99,7 +102,7 @@ void ServerAuthReplyMessage::readFrom(QDataStream &stream)
     stream >> flag;
 
     quint32 stringSize = payload - sizeof(flag) - sizeof(maxChannels);
-    message = ninjam::client::extractString(stream, stringSize);
+    message = extractString(stream, stringSize);
 
     stream >> maxChannels;
 }
@@ -290,7 +293,7 @@ void DownloadIntervalBegin::readFrom(QDataStream &stream)
     stream >> channelIndex;
 
     quint32 stringSize = payload - 16 - sizeof(estimatedSize) - 4 - sizeof(channelIndex);
-    userName = ninjam::client::extractString(stream, stringSize);
+    userName = extractString(stream, stringSize);
 }
 
 bool DownloadIntervalBegin::isAudio() const

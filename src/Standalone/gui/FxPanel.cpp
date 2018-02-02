@@ -6,8 +6,6 @@
 #include <QVBoxLayout>
 #include <QPainter>
 
-using namespace controller;
-
 FxPanel::FxPanel(LocalTrackViewStandalone *parent, MainControllerStandalone *mainController) :
     QWidget(parent),
     controller(mainController),

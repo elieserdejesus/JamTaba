@@ -27,15 +27,17 @@ namespace controller {
     class MainController;
 }
 
-using namespace ninjam::client;
+using ninjam::client::User;
+using ninjam::client::UserChannel;
+using login::RoomInfo;
+using controller::MainController;
 
 class NinjamRoomWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit NinjamRoomWindow(MainWindow *parent, const login::RoomInfo &roomInfo,
-                              controller::MainController *mainController);
+    explicit NinjamRoomWindow(MainWindow *parent, const RoomInfo &roomInfo, MainController *mainController);
     ~NinjamRoomWindow();
     void updatePeaks();
     void updateGeoLocations();

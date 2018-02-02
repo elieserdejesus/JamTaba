@@ -3,7 +3,7 @@
 #include <cmath>
 #include <cstdint>
 
-using namespace Audio;
+using audio::Filter;
 
 #define SQUARE(x) ((x) * (x))
 

@@ -3,7 +3,8 @@
 #include "audio/core/AudioDriver.h"
 #include "audio/core/SamplesBuffer.h"
 
-using namespace audio;
+using audio::MetronomeTrackNode;
+using audio::SamplesBuffer;
 
 MetronomeTrackNode::MetronomeTrackNode(const SamplesBuffer &firstBeatSamples, const SamplesBuffer &offBeatSamples, const SamplesBuffer &accentBeatSamples) :
     firstBeatBuffer(firstBeatSamples),

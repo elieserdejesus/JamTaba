@@ -35,6 +35,7 @@
 #include <vector>
 
 using controller::NinjamController;
+using ninjam::client::Server;
 
 //+++++++++++++  ENCODING THREAD  +++++++++++++
 

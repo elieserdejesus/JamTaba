@@ -6,7 +6,9 @@
 
 #include <QSet>
 
-using namespace ninjam::client;
+using ninjam::client::Server;
+using ninjam::client::UserChannel;
+using ninjam::client::User;
 
 Server::Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers) :
     port(port),

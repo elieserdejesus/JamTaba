@@ -2,7 +2,10 @@
 #include <QUuid>
 #include "../log/Logging.h"
 
-using namespace recorder;
+using recorder::ReaperProjectGenerator;
+using recorder::Jam;
+using recorder::JamTrack;
+using recorder::JamAudioFile;
 
 void ReaperProjectGenerator::write(const Jam &jam)
 {

@@ -4,7 +4,8 @@
 #include <QRegularExpression>
 #include "log/Logging.h"
 
-using namespace ninjam::client;
+using ninjam::client::User;
+using ninjam::client::UserChannel;
 
 QString ninjam::client::extractUserName(const QString &fullName)
 {

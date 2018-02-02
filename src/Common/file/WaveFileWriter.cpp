@@ -6,7 +6,8 @@
 #include <QThread>
 #include <climits>
 
-using namespace audio;
+using audio::WaveFileWriter;
+using audio::SamplesBuffer;
 
 void WaveFileWriter::write(const QString &filePath, const SamplesBuffer &buffer, quint32 sampleRate, quint8 bitDepth)
 {

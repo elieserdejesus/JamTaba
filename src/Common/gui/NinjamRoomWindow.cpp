@@ -34,11 +34,12 @@
 #include <QButtonGroup>
 #include <QTimer>
 
-using namespace persistence;
-using namespace controller;
+using controller::MainController;
+using controller::NinjamController;
+using login::RoomInfo;
+using persistence::CacheEntry;
 
-NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const login::RoomInfo &roomInfo,
-                                                                MainController *mainController) :
+NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const RoomInfo &roomInfo, MainController *mainController) :
     QWidget(mainWindow),
     ui(new Ui::NinjamRoomWindow),
     mainWindow(mainWindow),

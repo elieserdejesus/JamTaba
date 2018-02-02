@@ -17,8 +17,6 @@
 #include "widgets/BlinkableButton.h"
 #include "widgets/Slider.h"
 
-using namespace audio;
-
 namespace controller {
 class NinjamController;
 class MainController;
@@ -28,12 +26,20 @@ namespace Ui {
 class LooperWindow;
 }
 
+using audio::Looper;
+using audio::LooperLayer;
+using audio::LooperState;
+using audio::LoopSaver;
+using audio::LoopLayerInfo;
+using audio::AudioPeak;
+using controller::MainController;
+
 class LooperWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit LooperWindow(QWidget *parent, controller::MainController *mainController);
+    explicit LooperWindow(QWidget *parent, MainController *mainController);
     ~LooperWindow();
 
     void setLooper(Looper *looper);

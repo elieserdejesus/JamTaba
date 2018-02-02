@@ -4,9 +4,10 @@
 #include <QFileInfo>
 #include "audio/vorbis/VorbisDecoder.h"
 
-using namespace audio;
+using audio::OggFileReader;
+using audio::SamplesBuffer;
 
-bool OggFileReader::read(const QString &filePath, audio::SamplesBuffer &outBuffer, quint32 &sampleRate)
+bool OggFileReader::read(const QString &filePath, SamplesBuffer &outBuffer, quint32 &sampleRate)
 {
     // Open the ogg file
     QFile oggFile(filePath);

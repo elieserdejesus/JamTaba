@@ -2,7 +2,8 @@
 #include "audio/core/PluginDescriptor.h"
 #include "log/Logging.h"
 
-using namespace audio;
+using audio::PluginFinder;
+using audio::PluginDescriptor;
 
 void PluginFinder::finishScan()
 {

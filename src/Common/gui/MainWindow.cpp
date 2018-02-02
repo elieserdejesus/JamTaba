@@ -56,6 +56,8 @@ using persistence::Preset;
 using login::LoginService;
 using controller::MainController;
 using controller::NinjamController;
+using audio::ChannelRange;
+using audio::AbstractMp3Streamer;
 
 MainWindow::MainWindow(MainController *mainController, QWidget *parent) :
     QMainWindow(parent),

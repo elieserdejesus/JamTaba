@@ -12,11 +12,11 @@
 #include <QStackedLayout>
 #include <QtConcurrent>
 
-using namespace controller;
-using namespace persistence;
-
 const uint NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT = 350;
 const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.64;
+
+using controller::MainController;
+using persistence::CacheEntry;
 
 NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long trackID,
                                            const QString &channelName, const QColor &userColor,

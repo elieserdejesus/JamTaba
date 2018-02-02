@@ -4,11 +4,8 @@
 #include "MainWindow.h"
 #include "JamTabaPlugin.h"
 #include "log/Logging.h"
-//#include "Editor.h"
 
-using namespace controller;
-
-MainControllerPlugin::MainControllerPlugin(const persistence::Settings &settings, JamTabaPlugin *plugin) :
+MainControllerPlugin::MainControllerPlugin(const Settings &settings, JamTabaPlugin *plugin) :
     MainController(settings),
     plugin(plugin)
 {

@@ -6,7 +6,8 @@
 #include <cmath>
 #include <climits>
 
-using namespace audio;
+using audio::Mp3DecoderMiniMp3;
+using audio::SamplesBuffer;
 
 const int Mp3DecoderMiniMp3::MINIMUM_SIZE_TO_DECODE = 1024 + 256;
 const int Mp3DecoderMiniMp3::AUDIO_SAMPLES_BUFFER_MAX_SIZE = 4096 * 2;

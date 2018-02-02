@@ -3,7 +3,7 @@
 #include <CoreAudio/CoreAudio.h>
 #include <QDebug>
 
-using namespace au;
+using au::AudioUnitHost;
 
 QScopedPointer<AudioUnitHost> AudioUnitHost::instance;
 

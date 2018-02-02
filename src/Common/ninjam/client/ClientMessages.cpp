@@ -6,7 +6,14 @@
 #include <QDebug>
 #include <QDataStream>
 
-using namespace ninjam::client;
+using ninjam::client::ClientMessage;
+using ninjam::client::ClientAuthUserMessage;
+using ninjam::client::ClientIntervalUploadWrite;
+using ninjam::client::ClientKeepAlive;
+using ninjam::client::ClientSetChannel;
+using ninjam::client::ClientSetUserMask;
+using ninjam::client::ClientUploadIntervalBegin;
+using ninjam::client::ChatMessage;
 
 ClientMessage::ClientMessage(quint8 msgCode, quint32 payload) :
     msgType(msgCode),

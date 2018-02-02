@@ -4,7 +4,8 @@
 #include <QFile>
 #include <QDebug>
 
-using namespace audio;
+using audio::Mp3FileReader;
+using audio::SamplesBuffer;
 
 bool Mp3FileReader::read(const QString &filePath, SamplesBuffer &outBuffer, quint32 &sampleRate)
 {

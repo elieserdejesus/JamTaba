@@ -17,9 +17,9 @@
 #include <QDesktopWidget>
 #include <QStyle>
 
-using namespace audio;
+using controller::MainControllerStandalone;
 
-FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, controller::MainControllerStandalone *mainController) :
+FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, MainControllerStandalone *mainController) :
     QFrame(parent),
     plugin(nullptr),
     bypassButton(new QPushButton(this)),

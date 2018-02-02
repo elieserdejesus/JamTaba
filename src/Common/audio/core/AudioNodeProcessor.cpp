@@ -3,7 +3,7 @@
 #include "midi/MidiDriver.h"
 #include "audio/core/SamplesBuffer.h"
 
-using namespace audio;
+using audio::AudioNodeProcessor;
 
 AudioNodeProcessor::AudioNodeProcessor() :
     bypassed(false)

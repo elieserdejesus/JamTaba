@@ -5,7 +5,8 @@
 #include "OggFileReader.h"
 #include "Mp3FileReader.h"
 
-using namespace audio;
+using audio::FileReader;
+using audio::FileReaderFactory;
 
 class NullFileReader : public FileReader
 {

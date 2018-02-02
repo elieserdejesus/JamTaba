@@ -7,7 +7,8 @@
 #include <QDataStream>
 #include <memory>
 
-using namespace audio;
+using audio::SamplesBuffer;
+using audio::WaveFileReader;
 
 class SampleExtractor
 {

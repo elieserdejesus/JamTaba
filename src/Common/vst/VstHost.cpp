@@ -9,7 +9,7 @@
 #include <cmath>
 #include "log/Logging.h"
 
-using namespace vst;
+using vst::VstHost;
 
 QScopedPointer<VstHost> VstHost::hostInstance;
 

@@ -3,7 +3,9 @@
 #include "log/Logging.h"
 #include <QRegularExpression>
 
-using namespace geo;
+using geo::Location;
+using geo::IpToLocationResolver;
+using geo::NullIpToLocationResolver;
 
 Location::Location() :
     countryName("UNKNOWN"),

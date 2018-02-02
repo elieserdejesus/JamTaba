@@ -1,7 +1,9 @@
 #include "ServerMessagesHandler.h"
 #include "ServerMessages.h"
 
-using namespace ninjam::client;
+using ninjam::client::ServerMessagesHandler;
+using ninjam::client::Service;
+using ninjam::client::MessageHeader;
 
 ServerMessagesHandler::ServerMessagesHandler(Service *service) :
     service(service),

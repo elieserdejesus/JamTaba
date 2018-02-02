@@ -4,7 +4,8 @@
 #include <algorithm>
 #include <cstring>
 
-using namespace audio;
+using audio::SamplesBuffer;
+using audio::AudioPeak;
 
 const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 

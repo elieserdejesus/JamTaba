@@ -11,12 +11,13 @@
 #include "ninjam/client/Service.h"
 #include "log/Logging.h"
 
-using namespace login;
+using login::LoginService;
+using login::UserInfo;
+using login::RoomInfo;
+using login::RoomTYPE;
 
 const QString LoginService::LOGIN_SERVER_URL = "http://jamtaba2.appspot.com/vs";
 //const QString LoginService::LOGIN_SERVER_URL = "http://localhost:8080/vs";
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 UserInfo::UserInfo(long long id, const QString &name, const QString &ip) :
     id(id),

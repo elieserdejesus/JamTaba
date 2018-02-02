@@ -7,9 +7,10 @@
 #include "VstHost.h"
 #include "log/Logging.h"
 
-using namespace vst;
+using vst::VstLoader;
+using vst::VstHost;
 
-AEffect* VstLoader::load(const QString &path, vst::VstHost* host){
+AEffect* VstLoader::load(const QString &path, VstHost* host){
     if(!host){
         return 0;
     }

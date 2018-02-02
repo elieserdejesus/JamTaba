@@ -7,9 +7,7 @@
 #include "log/Logging.h"
 #include "Editor.h"
 
-using namespace controller;
-
-MainControllerVST::MainControllerVST(const persistence::Settings &settings, JamTabaVSTPlugin *plugin) :
+MainControllerVST::MainControllerVST(const Settings &settings, JamTabaVSTPlugin *plugin) :
     MainControllerPlugin(settings, plugin),
     vstPlugin(plugin)
 {

@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-using namespace ninjam::client;
+using ninjam::client::UserChannel;
 
 UserChannel::UserChannel(const QString &userFullName, const QString &channelName, quint8 channelIndex, bool active,
                          quint16 volume, quint8 pan, quint8 flags) :

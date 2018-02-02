@@ -29,11 +29,12 @@
 #include <cassert>
 
 
-using namespace vst;
+using vst::VstPlugin;
+using vst::VstHost;
 
 QMap<QString, QDialog*> VstPlugin::editorsWindows;
 
-VstPlugin::VstPlugin(vst::VstHost* host, const QString &pluginPath) :
+VstPlugin::VstPlugin(VstHost* host, const QString &pluginPath) :
     audio::Plugin(vst::utils::createDescriptor(nullptr, pluginPath)),
     effect(nullptr),
     host(host),

@@ -1,24 +1,24 @@
 #include "PreferencesDialogStandalone.h"
 
-#include "audio/core/AudioDriver.h"
-#include "midi/MidiDriver.h"
-#include "gui/ScanFolderPanel.h"
 #include "QFileDialog"
 #include "persistence/Settings.h"
 #include <QDebug>
+#include "audio/core/AudioDriver.h"
+#include "midi/MidiDriver.h"
+#include "gui/ScanFolderPanel.h"
+
+using audio::AudioDriver;
+using midi::MidiDriver;
+using audio::PluginDescriptor;
 
 /**
  This file contains the common/shared implementation for the Jamtaba plataforms (Win, Mac and Linux) in Standalone. In the Vst Plugin some details are different and implemented in the file VstPreferencesDialog.cpp.
  */
 
-using namespace audio;
-using namespace midi;
-using namespace controller;
-
 PreferencesDialogStandalone::PreferencesDialogStandalone(QWidget *parent,
                                                          bool showAudioControlPanelButton,
-                                                         audio::AudioDriver *audioDriver,
-                                                         midi::MidiDriver *midiDriver) :
+                                                         AudioDriver *audioDriver,
+                                                         MidiDriver *midiDriver) :
     PreferencesDialog(parent),
     audioDriver(audioDriver),
     midiDriver(midiDriver),

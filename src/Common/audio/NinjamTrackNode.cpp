@@ -15,6 +15,8 @@
 const double NinjamTrackNode::LOW_CUT_DRASTIC_FREQUENCY = 220.0; // in Hertz
 const double NinjamTrackNode::LOW_CUT_NORMAL_FREQUENCY = 120.0; // in Hertz
 
+using audio::Filter;
+
 class NinjamTrackNode::LowCutFilter
 {
 public:
@@ -25,14 +27,14 @@ public:
     void setState(NinjamTrackNode::LowCutState state);
 private:
     NinjamTrackNode::LowCutState state;
-    Audio::Filter leftFilter;
-    Audio::Filter rightFilter;
+    Filter leftFilter;
+    Filter rightFilter;
 };
 
 NinjamTrackNode::LowCutFilter::LowCutFilter(double sampleRate) :
     state(LowCutState::OFF),
-    leftFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0),
-    rightFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0)
+    leftFilter(Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0),
+    rightFilter(Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0)
 {
 
 }
