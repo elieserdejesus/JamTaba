@@ -52,7 +52,7 @@ int RoomInfo::getNonBotUsersCount() const
 {
     int nonBots = 0;
     for (const UserInfo &userInfo : users) {
-        if (!ninjam::Service::isBotName(userInfo.getName()))
+        if (!ninjam::client::Service::isBotName(userInfo.getName()))
             nonBots++;
     }
     return nonBots;

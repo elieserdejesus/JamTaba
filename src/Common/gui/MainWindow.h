@@ -3,18 +3,19 @@
 
 #include "ui_MainWindow.h"
 #include "BusyDialog.h"
-#include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
 #include "ScreensaverBlocker.h"
 #include "TextEditorModifier.h"
-#include "performance/PerformanceMonitor.h"
 #include "LooperWindow.h"
 #include "UsersColorsPool.h"
 
+#include "performance/PerformanceMonitor.h"
+#include "persistence/Settings.h"
 #include "chat/NinjamVotingMessageParser.h"
+#include "video/VideoFrameGrabber.h"
+#include "video/VideoWidget.h"
 
-#include "ninjam/client/User.h"
-#include "ninjam/client/Server.h"
+//#include "ninjam/client/Server.h"
 
 #include <QTranslator>
 #include <QMainWindow>
@@ -22,11 +23,6 @@
 #include <QCamera>
 #include <QCameraInfo>
 #include <QVideoFrame>
-
-#include "video/VideoFrameGrabber.h"
-#include "video/VideoWidget.h"
-
-#include "ChatTabWidget.h"
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -36,14 +32,23 @@ class ChordProgression;
 class ChordsPanel;
 class ChatPanel;
 class InactivityDetector;
+class ChatTabWidget;
 
 namespace login {
-class RoomInfo;
+    class RoomInfo;
 }
 
 namespace controller {
-class MainController;
+    class MainController;
 }
+
+namespace ninjam {
+    namespace client {
+        class User;
+    }
+}
+
+using ninjam::client::User;
 
 class MainWindow : public QMainWindow
 {
@@ -109,8 +114,8 @@ public slots:
     void showFeedbackAboutBlockedUserInChat(const QString &userName);
     void showFeedbackAboutUnblockedUserInChat(const QString &userName);
 
-    void addMainChatMessage(const ninjam::User &, const QString &message);
-    void addPrivateChatMessage(const ninjam::User &, const QString &message);
+    void addMainChatMessage(const User &, const QString &message);
+    void addPrivateChatMessage(const User &, const QString &message);
     void addPrivateChat(const QString &remoteUserName, const QString &userIP);
 
 protected:
@@ -284,7 +289,7 @@ private slots:
     void handleUserLeaving(const QString &userName);
     void handleUserEntering(const QString &userName);
 
-    void handleChordProgressionMessage(const ninjam::User &user, const QString &message);
+    void handleChordProgressionMessage(const User &user, const QString &message);
     void sendNewChatMessage(const QString &msg);
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);

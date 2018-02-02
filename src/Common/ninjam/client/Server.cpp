@@ -3,9 +3,10 @@
 #include "User.h"
 #include "UserChannel.h"
 #include "log/Logging.h"
+
 #include <QSet>
 
-using namespace ninjam;
+using namespace ninjam::client;
 
 Server::Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers) :
     port(port),

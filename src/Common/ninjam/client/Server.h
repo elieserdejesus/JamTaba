@@ -2,158 +2,163 @@
 #define SERVER_H
 
 #include <QMap>
+#include <QString>
+#include "User.h"
 
-class QString;
-
-namespace ninjam {
-class User;
-class UserChannel;
-
-class Server
+namespace ninjam
 {
 
-public:
-    Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers = 0);
+namespace client
+{
+    class UserChannel;
 
-    ~Server();
-
-    void addUserChannel(const UserChannel &newChannel);
-    void removeUserChannel(const UserChannel &channel);
-    void updateUserChannel(const UserChannel &serverChannel);
-    void updateUserChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receive);
-
-    User getUser(const QString &userFullName) const;
-
-    inline void setStreamUrl(const QString &streamUrl)
+    class Server
     {
-        this->streamUrl = streamUrl;
-    }
 
-    inline QString getStreamUrl() const
-    {
-        return streamUrl;
-    }
+    public:
+        Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers = 0);
 
-    inline bool isLocalHostServer() const
-    {
-        return host == "localhost";
-    }
+        ~Server();
 
-    inline int getMaxChannels() const
-    {
-        return maxChannels;
-    }
+        void addUserChannel(const UserChannel &newChannel);
+        void removeUserChannel(const UserChannel &channel);
+        void updateUserChannel(const UserChannel &serverChannel);
+        void updateUserChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receive);
 
-    void setMaxChannels(int max)
-    {
-        this->maxChannels = (quint8)max;
-    }
+        User getUser(const QString &userFullName) const;
 
-    inline bool hasStream() const
-    {
-        // mutantlab server is using a nsv format, I did not find a lib to handle this audio format
-        return !streamUrl.isNull() && !host.toLower().contains("mutant");
-    }
+        inline void setStreamUrl(const QString &streamUrl)
+        {
+            this->streamUrl = streamUrl;
+        }
 
-    inline bool isFull() const
-    {
-        return users.size() == maxUsers;
-    }
+        inline QString getStreamUrl() const
+        {
+            return streamUrl;
+        }
 
-    inline void setLicence(const QString &licenceText)
-    {
-        this->licence = licenceText;
-    }
+        inline bool isLocalHostServer() const
+        {
+            return host == "localhost";
+        }
 
-    inline QString getLicence() const
-    {
-        return licence;
-    }
+        inline int getMaxChannels() const
+        {
+            return maxChannels;
+        }
 
-    inline void setMaxUsers(unsigned int maxUsers)
-    {
-        this->maxUsers = (quint8)maxUsers;
-    }
+        void setMaxChannels(int max)
+        {
+            this->maxChannels = (quint8)max;
+        }
 
-    inline void setIsActive(bool active)
-    {
-        this->activeServer = active;
-    }
+        inline bool hasStream() const
+        {
+            // mutantlab server is using a nsv format, I did not find a lib to handle this audio format
+            return !streamUrl.isNull() && !host.toLower().contains("mutant");
+        }
 
-    bool containsUser(const User &user) const;
-    bool containsUser(const QString &userFullName) const;
+        inline bool isFull() const
+        {
+            return users.size() == maxUsers;
+        }
 
-    void addUser(const User &user);
+        inline void setLicence(const QString &licenceText)
+        {
+            this->licence = licenceText;
+        }
 
-    void removeUser(const QString &fullUserName);
+        inline QString getLicence() const
+        {
+            return licence;
+        }
 
-    inline quint16 getBpi() const
-    {
-        return bpi;
-    }
+        inline void setMaxUsers(unsigned int maxUsers)
+        {
+            this->maxUsers = (quint8)maxUsers;
+        }
 
-    inline quint16 getBpm() const
-    {
-        return bpm;
-    }
+        inline void setIsActive(bool active)
+        {
+            this->activeServer = active;
+        }
 
-    inline quint8 getMaxUsers() const
-    {
-        return maxUsers;
-    }
+        bool containsUser(const User &user) const;
+        bool containsUser(const QString &userFullName) const;
 
-    QList<User> getUsers() const;
+        void addUser(const User &user);
 
-    inline bool isActive() const
-    {
-        return activeServer;
-    }
+        void removeUser(const QString &fullUserName);
 
-    inline quint16 getPort() const
-    {
-        return port;
-    }
+        inline quint16 getBpi() const
+        {
+            return bpi;
+        }
 
-    inline QString getHostName() const
-    {
-        return host;
-    }
+        inline quint16 getBpm() const
+        {
+            return bpm;
+        }
 
-    QString getUniqueName() const;
+        inline quint8 getMaxUsers() const
+        {
+            return maxUsers;
+        }
 
-    bool setBpm(quint16 bpm);
+        QList<User> getUsers() const;
 
-    bool setBpi(quint16 bpi);
+        inline bool isActive() const
+        {
+            return activeServer;
+        }
 
-    inline QString getTopic() const
-    {
-        return topic;
-    }
+        inline quint16 getPort() const
+        {
+            return port;
+        }
 
-    inline void setTopic(const QString &topicText)
-    {
-        this->topic = topicText;
-    }
+        inline QString getHostName() const
+        {
+            return host;
+        }
 
-private:
-    quint16 port;
-    QString host;
-    quint8 maxUsers;
-    quint16 bpm;
-    quint16 bpi;
-    bool activeServer;
-    QString streamUrl;
-    QString topic;
-    QString licence;
-    QMap<QString, User> users;
-    quint8 maxChannels;
+        QString getUniqueName() const;
 
-    static const int MIN_BPM = 40;
-    static const int MAX_BPM = 400;
-    static const int MAX_BPI = 64;
-    static const int MIN_BPI = 2;
-};
+        bool setBpm(quint16 bpm);
 
-}// namespace
+        bool setBpi(quint16 bpi);
+
+        inline QString getTopic() const
+        {
+            return topic;
+        }
+
+        inline void setTopic(const QString &topicText)
+        {
+            this->topic = topicText;
+        }
+
+    private:
+        quint16 port;
+        QString host;
+        quint8 maxUsers;
+        quint16 bpm;
+        quint16 bpi;
+        bool activeServer;
+        QString streamUrl;
+        QString topic;
+        QString licence;
+        QMap<QString, User> users;
+        quint8 maxChannels;
+
+        static const int MIN_BPM = 40;
+        static const int MAX_BPM = 400;
+        static const int MAX_BPI = 64;
+        static const int MIN_BPI = 2;
+    };
+
+} // client ns
+
+} // ninjam ns
 
 #endif

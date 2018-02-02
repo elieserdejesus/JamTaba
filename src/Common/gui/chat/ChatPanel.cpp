@@ -312,7 +312,7 @@ void ChatPanel::addMessage(const QString &localUserName, const QString &msgAutho
     QColor backgroundColor = getUserColor(name);
 
     bool isBot = backgroundColor == BOT_COLOR;
-    bool isLocalUser = msgAuthor == ninjam::extractUserName(localUserName);
+    bool isLocalUser = msgAuthor == ninjam::client::extractUserName(localUserName);
 
     QColor textColor = Qt::black;
     QColor userNameBackgroundColor = backgroundColor;

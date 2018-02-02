@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-using namespace ninjam;
+using namespace ninjam::client;
 
 UserChannel::UserChannel(const QString &userFullName, const QString &channelName, quint8 channelIndex, bool active,
                          quint16 volume, quint8 pan, quint8 flags) :
@@ -28,12 +28,3 @@ UserChannel::~UserChannel()
     //
 }
 
-QDebug &ninjam::operator<<(QDebug &out, const UserChannel &ch)
-{
-    out << "UserChannel{"
-        << "name=" << ch.getName()
-        << ", active=" << ch.isActive()
-        << ", index=" << ch.getIndex() << '}';
-
-    return out;
-}

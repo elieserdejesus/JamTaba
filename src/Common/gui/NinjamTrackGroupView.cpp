@@ -4,6 +4,7 @@
 #include "NinjamController.h"
 #include "video/FFMpegDemuxer.h"
 #include "IconFactory.h"
+#include "ninjam/client/Service.h"
 
 #include <QMenu>
 #include <QDateTime>
@@ -187,7 +188,7 @@ void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
     QString localIP;
     auto service = mainController->getNinjamService();
     if (service) {
-        localIP = ninjam::extractUserIP(service->getConnectedUserName());
+        localIP = ninjam::client::extractUserIP(service->getConnectedUserName());
     }
     privateChatAction->setEnabled(!userIP.isEmpty() && !localIP.isEmpty()); // admin IPs are empty
 

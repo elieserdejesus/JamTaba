@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "PreferencesDialog.h"
 #include "LocalTrackView.h"
+#include "ChatTabWidget.h"
 #include "audio/core/LocalInputNode.h"
 #include "NinjamRoomWindow.h"
 #include "Highligther.h"
@@ -1405,7 +1406,7 @@ void MainWindow::createVoteButton(const gui::chat::SystemVotingMessage &votingMe
         mainChatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
 }
 
-void MainWindow::handleChordProgressionMessage(const ninjam::User &user, const QString &message)
+void MainWindow::handleChordProgressionMessage(const User &user, const QString &message)
 {
     Q_UNUSED(user)
 
@@ -1439,7 +1440,7 @@ bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
     return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
 }
 
-void MainWindow::addPrivateChatMessage(const ninjam::User &remoteUser, const QString &message)
+void MainWindow::addPrivateChatMessage(const User &remoteUser, const QString &message)
 {
     if (!chatTabWidget->contains(remoteUser.getFullName())) {
         createPrivateChat(remoteUser.getName(), remoteUser.getIp(), false); // create new private chat, but not focused
@@ -1459,7 +1460,7 @@ void MainWindow::addPrivateChatMessage(const ninjam::User &remoteUser, const QSt
     }
 }
 
-void MainWindow::addMainChatMessage(const ninjam::User &msgAuthor, const QString &message)
+void MainWindow::addMainChatMessage(const User &msgAuthor, const QString &message)
 {
     Q_ASSERT(chatTabWidget);
     Q_ASSERT(ninjamWindow);

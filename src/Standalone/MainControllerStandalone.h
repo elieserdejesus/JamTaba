@@ -18,9 +18,12 @@ class QCoreApplication;
 class MainWindowStandalone;
 
 namespace midi {
-class MidiDriver;
+ class MidiDriver;
 }
 
+namespace ninjam { namespace client {
+ class Server;
+}}
 
 namespace controller {
 
@@ -115,7 +118,7 @@ public slots:
 
     void openExternalAudioControlPanel();
 
-    void connectInNinjamServer(const ninjam::Server &server) override;
+    void connectInNinjamServer(const Server &server) override;
 
 protected:
     midi::MidiDriver *createMidiDriver();

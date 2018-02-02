@@ -17,15 +17,17 @@
 #include "audio/core/AudioNode.h"
 #include "audio/core/LocalInputNode.h"
 #include "ThemeLoader.h"
+#include "ninjam/client/Service.h"
 
 #include <QBuffer>
 #include <QByteArray>
 #include <QDateTime>
 
-using namespace persistence;
-using namespace midi;
-using namespace ninjam;
-using namespace controller;
+using ninjam::client::Service;
+using ninjam::client::Server;
+using persistence::Settings;
+using persistence::LocalInputTrackSettings;
+using controller::MainController;
 
 const quint8 MainController::CAMERA_FPS = 10;
 
@@ -36,6 +38,7 @@ const QString MainController::CRASH_FLAG_STRING = "JamTaba closed without crash 
 MainController::MainController(const Settings &settings) :
     loginService(this),
     audioMixer(44100),
+    ninjamService(new Service()),
     settings(settings),
     mainWindow(nullptr),
     mutex(QMutex::Recursive),
@@ -68,7 +71,7 @@ MainController::MainController(const Settings &settings) :
 void MainController::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
 {
     if (isPlayingInNinjamRoom()) {
-        ninjamService.setChannelReceiveStatus(userFullName, channelIndex, receiveChannel);
+        ninjamService->setChannelReceiveStatus(userFullName, channelIndex, receiveChannel);
     }
 }
 
@@ -77,7 +80,7 @@ long MainController::getDownloadTransferRate(const QString userFullName, quint8 
     if (!isPlayingInNinjamRoom())
         return 0;
 
-    return ninjamService.getDownloadTransferRate(userFullName, channelIndex);
+    return ninjamService->getDownloadTransferRate(userFullName, channelIndex);
 }
 
 long MainController::getTotalDownloadTransferRate() const
@@ -85,7 +88,7 @@ long MainController::getTotalDownloadTransferRate() const
     if (!isPlayingInNinjamRoom())
         return 0;
 
-    return ninjamService.getTotalDownloadTransferRate();
+    return ninjamService->getTotalDownloadTransferRate();
 }
 
 long MainController::getTotalUploadTransferRate() const
@@ -93,7 +96,7 @@ long MainController::getTotalUploadTransferRate() const
     if (!isPlayingInNinjamRoom())
         return 0;
 
-    return ninjamService.getTotalUploadTransferRate();
+    return ninjamService->getTotalUploadTransferRate();
 }
 
 void MainController::setVideoProperties(const QSize &resolution)
@@ -159,11 +162,11 @@ void MainController::finishUploads()
 {
     for (int channelIndex : audioIntervalsToUpload.keys()) {
         auto &audioInterval = audioIntervalsToUpload[channelIndex];
-        ninjamService.sendIntervalPart(audioInterval.getGUID(), QByteArray(), true);
+        ninjamService->sendIntervalPart(audioInterval.getGUID(), QByteArray(), true);
     }
 
     if (!videoIntervalToUpload.isEmpty())
-        ninjamService.sendIntervalPart(videoIntervalToUpload.getGUID(), QByteArray(), true);
+        ninjamService->sendIntervalPart(videoIntervalToUpload.getGUID(), QByteArray(), true);
 }
 
 void MainController::quitFromNinjamServer(const QString &error)
@@ -206,7 +209,7 @@ void MainController::setupNinjamControllerSignals()
     connect(controller, &NinjamController::startProcessing, this, &MainController::requestCameraFrame);
 }
 
-void MainController::connectInNinjamServer(const ninjam::Server &server)
+void MainController::connectInNinjamServer(const Server &server)
 {
     qCDebug(jtCore) << "connected in ninjam server";
 
@@ -336,12 +339,12 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, qui
         auto &audioInterval = audioIntervalsToUpload[channelIndex];
 
         // flush the end of previous interval
-        ninjamService.sendIntervalPart(audioInterval.getGUID(), audioInterval.getData(), true); // is the last part of interval
+        ninjamService->sendIntervalPart(audioInterval.getGUID(), audioInterval.getData(), true); // is the last part of interval
 
         UploadIntervalData newInterval; // generate a new GUID
         audioIntervalsToUpload.insert(channelIndex, newInterval);
 
-        ninjamService.sendIntervalBegin(newInterval.getGUID(), channelIndex, true); // starting a new audio interval
+        ninjamService->sendIntervalBegin(newInterval.getGUID(), channelIndex, true); // starting a new audio interval
     }
 
     auto &interval = audioIntervalsToUpload[channelIndex];
@@ -350,7 +353,7 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, qui
 
     bool canSend = interval.getTotalBytes() >= 4096;
     if (canSend) {
-        ninjamService.sendIntervalPart(interval.getGUID(), interval.getData(), false); // is not the last part of interval
+        ninjamService->sendIntervalPart(interval.getGUID(), interval.getData(), false); // is not the last part of interval
         interval.clear();
     }
 
@@ -371,19 +374,19 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, qui
         if (!videoIntervalToUpload.isEmpty()) {
 
             // flush the end of previous interval
-            ninjamService.sendIntervalPart(videoIntervalToUpload.getGUID(), videoIntervalToUpload.getData(), true); // is the last part of interval
+            ninjamService->sendIntervalPart(videoIntervalToUpload.getGUID(), videoIntervalToUpload.getData(), true); // is the last part of interval
         }
 
         videoIntervalToUpload = UploadIntervalData(); // generate a new GUID
 
-        ninjamService.sendIntervalBegin(videoIntervalToUpload.getGUID(), channelIndex, false); // starting a new audio interval
+        ninjamService->sendIntervalBegin(videoIntervalToUpload.getGUID(), channelIndex, false); // starting a new audio interval
     }
 
     videoIntervalToUpload.appendData(encodedData);
 
     bool canSend = videoIntervalToUpload.getTotalBytes() >= 4096;
     if (canSend) {
-        ninjamService.sendIntervalPart(videoIntervalToUpload.getGUID(), videoIntervalToUpload.getData(), false); // is not the last part of interval
+        ninjamService->sendIntervalPart(videoIntervalToUpload.getGUID(), videoIntervalToUpload.getData(), false); // is not the last part of interval
         videoIntervalToUpload.clear();
     }
 
@@ -430,7 +433,7 @@ QString MainController::getUserName() const
 
 QStringList MainController::getBotNames()
 {
-    return ninjam::Service::getBotNamesList();
+    return Service::getBotNamesList();
 }
 
 geo::Location MainController::getGeoLocation(const QString &ip)
@@ -970,13 +973,13 @@ void MainController::enterInRoom(const login::RoomInfo &room, const QStringList 
 void MainController::sendNewChannelsNames(const QStringList &channelsNames)
 {
     if (isPlayingInNinjamRoom())
-        ninjamService.sendNewChannelsListToServer(channelsNames);
+        ninjamService->sendNewChannelsListToServer(channelsNames);
 }
 
 void MainController::sendRemovedChannelMessage(int removedChannelIndex)
 {
     if (isPlayingInNinjamRoom())
-        ninjamService.sendRemovedChannelIndex(removedChannelIndex);
+        ninjamService->sendRemovedChannelIndex(removedChannelIndex);
 }
 
 void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom, const QStringList &channelsNames,
@@ -990,7 +993,7 @@ void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom,
         QString userName = getUserName();
         QString pass = (password.isNull() || password.isEmpty()) ? "" : password;
 
-        this->ninjamService.startServerConnection(serverIp, serverPort, userName, channelsNames,
+        this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames,
                                                   pass);
     } else {
         qCritical() << "user name not choosed yet!";
@@ -1006,11 +1009,11 @@ void MainController::start()
         roomStreamer.reset(new audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer.addNode(roomStreamer.data());
 
-        connect(&ninjamService, &Service::connectedInServer, this, &MainController::connectInNinjamServer);
+        connect(ninjamService.data(), &Service::connectedInServer, this, &MainController::connectInNinjamServer);
 
-        connect(&ninjamService, &Service::disconnectedFromServer, this, &MainController::disconnectFromNinjamServer);
+        connect(ninjamService.data(), &Service::disconnectedFromServer, this, &MainController::disconnectFromNinjamServer);
 
-        connect(&ninjamService, &Service::error, this, &MainController::quitFromNinjamServer);
+        connect(ninjamService.data(), &Service::error, this, &MainController::quitFromNinjamServer);
 
         qInfo() << "Starting " + getUserEnvironmentString();
 

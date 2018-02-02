@@ -4,77 +4,80 @@
 #include <QMap>
 #include "UserChannel.h"
 
-namespace ninjam {
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-class User
+namespace ninjam
 {
 
-public:
-    explicit User(const QString &fullName = "");
-    virtual ~User();
+namespace client
+{
+    QString extractUserName(const QString &userFullName);
+    QString extractUserIP(const QString &userFullName);
 
-    inline bool hasChannels() const
+    class User
     {
-        return !channels.isEmpty();
-    }
 
-    inline bool hasChannel(int channelIndex) const
-    {
-        return this->channels.contains(channelIndex);
-    }
+    public:
+        explicit User(const QString &fullName = "");
+        virtual ~User();
 
-    inline QList<UserChannel> getChannels() const
-    {
-        return channels.values();
-    }
+        inline bool hasChannels() const
+        {
+            return !channels.isEmpty();
+        }
 
-    inline bool operator<(const User &other) const
-    {
-        return getFullName() < other.getFullName();
-    }
+        inline bool hasChannel(int channelIndex) const
+        {
+            return this->channels.contains(channelIndex);
+        }
 
-    UserChannel getChannel(quint8 index) const;
+        inline QList<UserChannel> getChannels() const
+        {
+            return channels.values();
+        }
 
-    inline QString getIp() const
-    {
-        return ip;
-    }
+        inline bool operator<(const User &other) const
+        {
+            return getFullName() < other.getFullName();
+        }
 
-    inline QString getName() const
-    {
-        return name;
-    }
+        UserChannel getChannel(quint8 index) const;
 
-    inline QString getFullName() const
-    {
-        return fullName;
-    }
+        inline QString getIp() const
+        {
+            return ip;
+        }
 
-    void updateChannelName(quint8 channelIndex, const QString &newName);
-    void updateChannelReceiveStatus(quint8 channelIndex, bool receiving);
+        inline QString getName() const
+        {
+            return name;
+        }
 
-    void addChannel(const UserChannel &channel);
-    void removeChannel(quint8 channelIndex);
+        inline QString getFullName() const
+        {
+            return fullName;
+        }
 
-    inline int getChannelsCount() const
-    {
-        return channels.size();
-    }
+        void updateChannelName(quint8 channelIndex, const QString &newName);
+        void updateChannelReceiveStatus(quint8 channelIndex, bool receiving);
 
-private:
-    QString fullName;
-    QString name;
-    QString ip;
-    QMap<int, UserChannel> channels;
-};
+        void addChannel(const UserChannel &channel);
+        void removeChannel(quint8 channelIndex);
 
-QDebug &operator<<(QDebug &out, const ninjam::User &user);
+        inline int getChannelsCount() const
+        {
+            return channels.size();
+        }
 
-QString extractUserName(const QString &userFullName);
-QString extractUserIP(const QString &userFullName);
+    private:
+        QString fullName;
+        QString name;
+        QString ip;
+        QMap<int, UserChannel> channels;
+    };
 
-}
+    QDebug &operator<<(QDebug &out, const User &user);
+
+} //ns
+
+} // ns
 
 #endif

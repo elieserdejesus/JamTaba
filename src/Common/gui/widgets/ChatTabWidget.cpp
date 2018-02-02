@@ -220,7 +220,7 @@ void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessag
     if (!chatPanel)
         return;
 
-    QString tabText = ninjam::extractUserName(remoteUserName);
+    QString tabText = ninjam::client::extractUserName(remoteUserName);
     if (unreadedMessages > 0)
         tabText = QString("(%1) %2").arg(unreadedMessages).arg(tabText);
 

@@ -1,7 +1,7 @@
 #include "ServerMessagesHandler.h"
 #include "ServerMessages.h"
 
-using namespace ninjam;
+using namespace ninjam::client;
 
 ServerMessagesHandler::ServerMessagesHandler(Service *service) :
     service(service),
@@ -83,7 +83,7 @@ bool ServerMessagesHandler::executeMessageHandler(MessageHeader *header)
     return false;
 }
 
-QDataStream &ninjam::operator >>(QDataStream &stream, MessageHeader *header)
+QDataStream &ninjam::client::operator >>(QDataStream &stream, ninjam::client::MessageHeader *header)
 {
     if (header)
         stream >> header->messageTypeCode >> header->payload;

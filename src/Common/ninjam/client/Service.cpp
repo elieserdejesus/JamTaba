@@ -4,13 +4,14 @@
 #include "UserChannel.h"
 #include "ServerMessages.h"
 #include "ClientMessages.h"
+#include "ServerMessagesHandler.h"
 #include "log/Logging.h"
+
 #include <QDataStream>
 #include <QDateTime>
 #include <QTcpSocket>
-#include "ServerMessagesHandler.h"
 
-using namespace ninjam;
+using namespace ninjam::client;
 
 const QStringList Service::botNames = buildBotNamesList();
 
@@ -283,7 +284,7 @@ void Service::sendMessageToServer(const ClientMessage &message)
         return;
 
     QByteArray outBuffer;
-    outBuffer << message;
+    message.serializeTo(outBuffer);
 
     int totalDataToSend = outBuffer.size();
     int dataSended = 0;

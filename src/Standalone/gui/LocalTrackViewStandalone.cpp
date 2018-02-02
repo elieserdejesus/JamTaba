@@ -4,6 +4,7 @@
 #include "FxPanelItem.h"
 #include "BoostSpinBox.h"
 #include "IconFactory.h"
+#include "log/Logging.h"
 
 #include <QGridLayout>
 #include <QStyle>

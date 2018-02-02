@@ -5,35 +5,37 @@
 #include "ninjam/client/User.h"
 #include "ninjam/client/Service.h"
 
-using namespace ninjam;
-
-namespace ninjam {
-
-// some functions used only in the Ninjam namespace...
-
-QString extractString(QDataStream &stream)
+namespace ninjam
 {
-    quint8 byte;
-    QByteArray byteArray;
-    while (!stream.atEnd()) {
-        stream >> byte;
-        if (byte == '\0')
-            break;
-        byteArray.append(byte);
+    namespace client
+    {
+        QString extractString(QDataStream &stream)
+        {
+            quint8 byte;
+            QByteArray byteArray;
+            while (!stream.atEnd()) {
+                stream >> byte;
+                if (byte == '\0')
+                    break;
+                byteArray.append(byte);
+            }
+            return QString::fromUtf8(byteArray.data(), byteArray.size());
+        }
+
+        QString extractString(QDataStream &stream, quint32 size)
+        {
+            return QString::fromUtf8(stream.device()->read(size));
+        }
+
     }
-    return QString::fromUtf8(byteArray.data(), byteArray.size());
 }
 
-QString extractString(QDataStream &stream, quint32 size)
-{
-    return QString::fromUtf8(stream.device()->read(size));
-}
-
-}
+using namespace ninjam::client;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 // +++++++++++++  SERVER MESSAGE (Base class) +++++++++++++++=
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+
 ServerMessage::ServerMessage(ServerMessageType messageType, quint32 payload) :
     messageType(messageType),
     payload(payload)
@@ -72,7 +74,7 @@ void ServerAuthChallengeMessage::readFrom(QDataStream &stream)
     //Q_ASSERT(protocolVersion == 0x00020000);
 
     if (serverHasLicenceAgreement)
-        licenceAgreement = ninjam::extractString(stream);
+        licenceAgreement = ninjam::client::extractString(stream);
 }
 
 void ServerAuthChallengeMessage::printDebug(QDebug &dbg) const
@@ -97,7 +99,7 @@ void ServerAuthReplyMessage::readFrom(QDataStream &stream)
     stream >> flag;
 
     quint32 stringSize = payload - sizeof(flag) - sizeof(maxChannels);
-    message = ninjam::extractString(stream, stringSize);
+    message = ninjam::client::extractString(stream, stringSize);
 
     stream >> maxChannels;
 }
@@ -170,13 +172,13 @@ void UserInfoChangeNotifyMessage::readFrom(QDataStream &stream)
         quint8 flags;
         stream >> active >> channelIndex >> volume >> pan >> flags;
         bytesConsumed += 6;
-        QString userFullName = ninjam::extractString(stream);
+        QString userFullName = ninjam::client::extractString(stream);
         if(!users.contains(userFullName)){
             users.insert(userFullName, User(userFullName));
         }
         User &user = users[userFullName];
         bytesConsumed += userFullName.toUtf8().size() + 1;
-        QString channelName = ninjam::extractString(stream);
+        QString channelName = ninjam::client::extractString(stream);
         bytesConsumed += channelName.toUtf8().size() + 1;
         bool channelIsActive = active > 0 ? true : false;
         user.addChannel(UserChannel(userFullName, channelName, channelIndex, channelIsActive,
@@ -288,7 +290,7 @@ void DownloadIntervalBegin::readFrom(QDataStream &stream)
     stream >> channelIndex;
 
     quint32 stringSize = payload - 16 - sizeof(estimatedSize) - 4 - sizeof(channelIndex);
-    userName = ninjam::extractString(stream, stringSize);
+    userName = ninjam::client::extractString(stream, stringSize);
 }
 
 bool DownloadIntervalBegin::isAudio() const
@@ -342,15 +344,5 @@ void DownloadIntervalWrite::readFrom(QDataStream &stream)
     if (bytesReaded < 0)
         qWarning() << "Error reading encoded data!  return:" << bytesReaded << " payload:" << payload << " encodedData.size:" << encodedData.size();
 }
-
-// ++++++++++++++++++
-
-QDataStream& ninjam::operator >>(QDataStream &stream, ServerMessage &message)
-{
-    message.readFrom(stream);
-    return stream;
-}
-
-// +++++++++++++++++++++++++++++++++++++++++=
 
 

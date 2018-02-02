@@ -1,11 +1,12 @@
 #include "ClientMessages.h"
 #include "ninjam/client/User.h"
+
 #include <QCryptographicHash>
 #include <QIODevice>
 #include <QDebug>
 #include <QDataStream>
 
-using namespace ninjam;
+using namespace ninjam::client;
 
 ClientMessage::ClientMessage(quint8 msgCode, quint32 payload) :
     msgType(msgCode),
@@ -368,19 +369,3 @@ void ClientIntervalUploadWrite::printDebug(QDebug &dbg) const
         << isLastPart
         << '}';
 }
-
-//+++++++++++++++++++++++++++
-
-QDebug& ninjam::operator<<(QDebug &dbg, const ClientMessage &message)
-{
-    message.printDebug(dbg);
-    return dbg;
-}
-
-QByteArray &ninjam::operator <<(QByteArray &byteArray, const ClientMessage &message)
-{
-    message.serializeTo(byteArray);
-    return byteArray;
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
