@@ -68,7 +68,7 @@ MainWindow::MainWindow(MainController *mainController, QWidget *parent) :
     cameraCombo(nullptr),
     cameraLayout(nullptr),
     bottomCollapsed(false),
-    busyDialog(new BusyDialog(this)),
+    busyDialog(new BusyDialog()),
     bpmVotingExpirationTimer(nullptr),
     bpiVotingExpiratonTimer(nullptr),
     buttonCollapseLocalChannels(nullptr),
@@ -997,8 +997,9 @@ void MainWindow::showBusyDialog()
 void MainWindow::showBusyDialog(const QString &message)
 {
     busyDialog->setParent(this);
-    centerBusyDialog();
     busyDialog->show(message);
+    centerBusyDialog();
+
 }
 
 void MainWindow::hideBusyDialog()

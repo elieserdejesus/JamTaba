@@ -11,7 +11,6 @@ class MainController;
 
 namespace audio {
 
-
 class ChannelRange
 {
 
