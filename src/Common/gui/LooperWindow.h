@@ -11,11 +11,11 @@
 #include <QTimer>
 
 #include "looper/Looper.h"
-#include "LooperWavePanel.h"
 #include "looper/LooperPersistence.h"
 #include "looper/LooperLayer.h"
 #include "widgets/BlinkableButton.h"
 #include "widgets/Slider.h"
+#include "widgets/LooperWavePanel.h"
 
 namespace controller {
 class NinjamController;

@@ -3,7 +3,8 @@
 
 #include <QFrame>
 #include <QStringList>
-#include <intervalProgress/IntervalProgressWindow.h>
+
+#include "intervalProgress/IntervalProgressWindow.h"
 
 class QComboBox;
 class QAbstractSlider;

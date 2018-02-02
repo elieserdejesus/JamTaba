@@ -2,8 +2,8 @@
 #include "NinjamRoomWindowPlugin.h"
 #include "MainControllerPlugin.h"
 #include "PreferencesDialogPlugin.h"
-#include "LocalTrackView.h"
-#include "LocalTrackGroupView.h"
+#include "gui/LocalTrackView.h"
+#include "gui/LocalTrackGroupView.h"
 #include "audio/core/LocalInputNode.h"
 #include "TopLevelTextEditorModifier.h"
 

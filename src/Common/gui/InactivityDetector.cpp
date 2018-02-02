@@ -3,7 +3,7 @@
 #include "NinjamController.h"
 #include "MainWindow.h"
 #include "MainController.h"
-#include "BlinkableButton.h"
+#include "widgets/BlinkableButton.h"
 
 #include <QToolTip>
 

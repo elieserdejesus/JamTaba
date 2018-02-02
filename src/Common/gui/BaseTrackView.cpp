@@ -1,10 +1,11 @@
 #include "BaseTrackView.h"
+
 #include "MainController.h"
 #include "Utils.h"
-#include "PeakMeter.h"
 #include "audio/core/AudioPeak.h"
 #include "audio/core/AudioNode.h"
-#include "BoostSpinBox.h"
+#include "widgets/BoostSpinBox.h"
+#include "widgets/PeakMeter.h"
 #include "IconFactory.h"
 
 #include <QStyleOption>

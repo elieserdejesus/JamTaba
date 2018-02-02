@@ -1,13 +1,13 @@
 #include "MainWindowStandalone.h"
 #include "PreferencesDialogStandalone.h"
-#include "NinjamRoomWindow.h"
-#include "LocalTrackView.h"
+#include "gui/NinjamRoomWindow.h"
+#include "gui/LocalTrackView.h"
+#include "gui/CrashReportDialog.h"
+#include "gui/PluginScanDialog.h"
 #include "log/Logging.h"
 #include "audio/core/PluginDescriptor.h"
-#include "CrashReportDialog.h"
 #include "vst/VstPluginFinder.h"
 #include "vst/VstPlugin.h"
-#include "PluginScanDialog.h"
 
 #include <QTimer>
 #include <QDesktopWidget>

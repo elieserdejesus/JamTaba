@@ -1,7 +1,7 @@
 #ifndef STANDALONE_LOCAL_TRACK_VIEW_H
 #define STANDALONE_LOCAL_TRACK_VIEW_H
 
-#include "LocalTrackView.h"
+#include "gui/LocalTrackView.h"
 #include "audio/core/AudioDriver.h"
 #include "MainControllerStandalone.h"
 #include "MidiToolsDialog.h"

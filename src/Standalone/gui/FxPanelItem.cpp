@@ -1,8 +1,8 @@
 #include "FxPanelItem.h"
-#include "plugins/Guis.h"
+#include "gui/plugins/Guis.h"
 #include "audio/core/Plugins.h"
 #include "MainController.h"
-#include "LocalTrackView.h"
+#include "gui/LocalTrackView.h"
 #include "audio/core/PluginDescriptor.h"
 #include "LocalTrackViewStandalone.h"
 

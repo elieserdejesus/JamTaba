@@ -2,11 +2,12 @@
 #define NINJAMTRACKGROUPVIEW_H
 
 #include "TrackGroupView.h"
+#include "NinjamTrackView.h"
+#include "widgets/MarqueeLabel.h"
+#include "video/VideoWidget.h"
+
 #include <QLabel>
 #include <QBoxLayout>
-#include "MarqueeLabel.h"
-#include "NinjamTrackView.h"
-#include "video/VideoWidget.h"
 
 namespace controller {
 class MainController;
@@ -16,7 +17,8 @@ namespace persistence {
 class CacheEntry;
 }
 
-enum class TracksLayout {
+enum class TracksLayout
+{
     VerticalLayout,
     HorizontalLayout,
     GridLayout

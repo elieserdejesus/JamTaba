@@ -7,11 +7,6 @@ SOURCE_PATH = "$$ROOT_PATH/src"
 VST_SDK_PATH = "$$ROOT_PATH/VST_SDK"
 
 INCLUDEPATH += $$SOURCE_PATH/Common
-INCLUDEPATH += $$SOURCE_PATH/Common/gui
-INCLUDEPATH += $$SOURCE_PATH/Common/gui/widgets
-INCLUDEPATH += $$SOURCE_PATH/Common/gui/chords
-INCLUDEPATH += $$SOURCE_PATH/Common/gui/chat
-INCLUDEPATH += $$SOURCE_PATH/Common/gui/screensaver
 
 INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
 INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis

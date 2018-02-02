@@ -4,15 +4,15 @@
 #include <QScopedPointer>
 #include <QImage>
 
+#include "UploadIntervalData.h"
 #include "geo/IpToLocationResolver.h"
 #include "loginserver/LoginService.h"
 #include "persistence/Settings.h"
 #include "persistence/UsersDataCache.h"
 #include "audio/core/AudioMixer.h"
 #include "midi/MidiDriver.h"
-#include "UploadIntervalData.h"
 #include "video/FFMpegMuxer.h"
-#include "EmojiManager.h"
+#include "gui/chat/EmojiManager.h"
 
 class MainWindow;
 

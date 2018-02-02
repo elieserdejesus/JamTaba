@@ -6,8 +6,8 @@
 #include "ninjam/client/User.h"
 #include "ninjam/client/UserChannel.h"
 #include "ninjam/client/Server.h"
-#include "MapWidget.h"
-#include "MapMarker.h"
+#include "widgets/MapWidget.h"
+#include "widgets/MapMarker.h"
 
 JamRoomViewPanel::JamRoomViewPanel(const login::RoomInfo &roomInfo, controller::MainController *mainController) :
     QFrame(nullptr),

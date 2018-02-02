@@ -8,7 +8,6 @@
 #include "NinjamController.h"
 #include "Utils.h"
 #include "loginserver/natmap.h"
-#include "ThemeLoader.h"
 #include "audio/core/AudioNode.h"
 #include "audio/core/LocalInputNode.h"
 #include "audio/core/LocalInputGroup.h"
@@ -18,6 +17,7 @@
 #include "recorder/ReaperProjectGenerator.h"
 #include "recorder/ClipSortLogGenerator.h"
 #include "gui/MainWindow.h"
+#include "gui/ThemeLoader.h"
 #include "log/Logging.h"
 #include "geo/WebIpToLocationResolver.h"
 

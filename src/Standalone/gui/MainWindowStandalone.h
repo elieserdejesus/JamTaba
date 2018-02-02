@@ -1,7 +1,7 @@
 #ifndef MAINFRAMEVST_H
 #define MAINFRAMEVST_H
 
-#include "MainWindow.h"
+#include "gui/MainWindow.h"
 #include "LocalTrackGroupViewStandalone.h" // necessary to return covariant type
 
 namespace controller {

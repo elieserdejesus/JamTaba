@@ -1,7 +1,7 @@
 #include "MainControllerPlugin.h"
 #include "midi/MidiDriver.h"
 #include "audio/core/LocalInputNode.h"
-#include "MainWindow.h"
+#include "gui/MainWindow.h"
 #include "JamTabaPlugin.h"
 #include "log/Logging.h"
 
