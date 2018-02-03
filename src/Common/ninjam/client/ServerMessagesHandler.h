@@ -5,6 +5,7 @@
 #include <QDataStream>
 #include "log/Logging.h"
 #include "Service.h"
+#include "ninjam/Ninjam.h"
 
 namespace ninjam
 {
@@ -12,12 +13,6 @@ namespace ninjam
 namespace client
 {
     class Service;
-
-    struct MessageHeader
-    {
-        quint8 messageTypeCode;
-        quint32 payload;
-    };
 
     class ServerMessagesHandler
     {
@@ -29,32 +24,27 @@ namespace client
         virtual void handleAllMessages();
 
     protected:
-        QDataStream stream;
+        //QDataStream stream;
         QIODevice *device;
         Service *service;
-        QScopedPointer<MessageHeader> currentHeader; // the last messageHeader readed from socket
+        MessageHeader currentHeader; // the last messageHeader readed from socket
 
-        bool executeMessageHandler(MessageHeader *header);
+        bool executeMessageHandler(const MessageHeader &header);
 
         template<class MessageClazz> // MessageClazz will be 'translated' to some class derived from ServerMessage
         bool handleMessage(quint32 payload)
         {
             Q_ASSERT(device);
+            Q_ASSERT(service);
+
             bool allMessageDataIsAvailable = device->bytesAvailable() >= payload;
             if (allMessageDataIsAvailable) {
-                MessageClazz message(payload);
-                message.readFrom(stream);
-                if (service)
-                    service->process(message); // calling overload versions of 'process'
+                service->process(MessageClazz::from(device, payload)); // calling overload versions of 'process'
                 return true; // the message was handled
             }
             return false; // the message was not handled
         }
-
-        MessageHeader *extractNextMessageHeader();
     };
-
-    QDataStream &operator >>(QDataStream &stream, ninjam::client::MessageHeader *header);
 
     } // ns
 } // ns

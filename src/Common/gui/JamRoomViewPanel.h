@@ -7,7 +7,7 @@
 
 #include "gui/widgets/WavePeakPanel.h"
 
-#include "ninjam/client/Server.h"
+#include "ninjam/client/ServerInfo.h"
 #include "loginserver/LoginService.h"
 
 class MapWidget;

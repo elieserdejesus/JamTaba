@@ -55,6 +55,10 @@ namespace client
             this->active = active;
         }
 
+        inline quint8 getFlags() const
+        {
+            return flags;
+        }
     private:
         QString userFullName;
         QString channelName;

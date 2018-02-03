@@ -1,13 +1,13 @@
-#include "TestServer.h"
-#include "ninjam/client/Server.h"
+#include "TestServerInfo.h"
+#include "ninjam/client/ServerInfo.h"
 #include "ninjam/client/User.h"
 #include <QTest>
 
-using namespace ninjam;
+using namespace ninjam::client;
 
 void TestServer::addUser()
 {
-    Server server("localhost", 2040, 2);
+    ServerInfo server("localhost", 2040, 2);
     QString userFullName("anon@localhost");
     User user(userFullName);
     server.addUser(user);
@@ -23,9 +23,9 @@ void TestServer::addUserChannel_data()
     QTest::addColumn<quint8>("serverMaxChannels");
     QTest::addColumn<quint8>("channelsToAdd");
 
-    QTest::newRow("Server with 2 max channels, adding 1 channels") << (quint8)2 << (quint8)1;
-    QTest::newRow("Server with 2 max channels, adding 2 channels") << (quint8)2 << (quint8)2;
-    QTest::newRow("Server with 2 max channels, adding 3 channels") << (quint8)2 << (quint8)3;
+    QTest::newRow("ServerInfo with 2 max channels, adding 1 channels") << (quint8)2 << (quint8)1;
+    QTest::newRow("ServerInfo with 2 max channels, adding 2 channels") << (quint8)2 << (quint8)2;
+    QTest::newRow("ServerInfo with 2 max channels, adding 3 channels") << (quint8)2 << (quint8)3;
 }
 
 void TestServer::addUserChannel()
@@ -33,7 +33,7 @@ void TestServer::addUserChannel()
     QFETCH(quint8, serverMaxChannels);
     QFETCH(quint8, channelsToAdd);
 
-    Server server("localhost", 2040, serverMaxChannels);
+    ServerInfo server("localhost", 2040, serverMaxChannels);
     QString userFullName("anon@localhost");
     server.addUser(User(userFullName));
 
@@ -66,7 +66,7 @@ void TestServer::removeUserChannel_data()
 
 void TestServer::removeUserChannel()
 {
-    Server server("localhost", 2040, 2);
+    ServerInfo server("localhost", 2040, 2);
     QString userFullName("anon@localhost");
     server.addUser(User(userFullName));
 
@@ -103,7 +103,7 @@ void TestServer::updateUserChannel_data()
 
 void TestServer::updateUserChannel()
 {
-    Server server("localhost", 2040, 2);
+    ServerInfo server("localhost", 2040, 2);
     QString userFullName("anon@localhost");
     server.addUser(User(userFullName));
 

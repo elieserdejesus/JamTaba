@@ -1,16 +1,17 @@
 #include <QTest>
-#include "TestServer.h"
-#include "TestServerMessages.h"
-//#include "TestServerMessagesHandler.h"
+#include "TestServerInfo.h"
+#include "TestMessagesSerialization.h"
+#include "TestServerMessagesHandler.h"
 
 int main(int argc, char *argv[])
 {
-    TestServerMessages testServerMessages;
+    TestMessagesSerialization testServerMessages;
     TestServer testServer;
-    //TestServerMessagesHandler testServerMessagesHandler;
+    TestServerMessagesHandler testServerMessagesHandler;
+
     int testResults = 0;
     testResults |= QTest::qExec(&testServerMessages, argc, argv);
     testResults |= QTest::qExec(&testServer, argc, argv);
-    //testResults |= QTest::qExec(&testServerMessagesHandler);
+    testResults |= QTest::qExec(&testServerMessagesHandler, argc, argv);
     return testResults;
 }

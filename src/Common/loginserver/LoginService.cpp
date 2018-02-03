@@ -7,7 +7,7 @@
 #include <QTimer>
 #include <QDebug>
 #include <QApplication>
-#include "ninjam/client/Server.h"
+#include "ninjam/client/ServerInfo.h"
 #include "ninjam/client/Service.h"
 #include "log/Logging.h"
 

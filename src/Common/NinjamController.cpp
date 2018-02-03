@@ -4,7 +4,7 @@
 #include "ninjam/client/Service.h"
 #include "ninjam/client/User.h"
 #include "ninjam/client/UserChannel.h"
-#include "ninjam/client/Server.h"
+#include "ninjam/client/ServerInfo.h"
 #include "audio/core/AudioNode.h"
 #include "audio/core/SamplesBuffer.h"
 #include "audio/core/AudioDriver.h"
@@ -35,7 +35,7 @@
 #include <vector>
 
 using controller::NinjamController;
-using ninjam::client::Server;
+using ninjam::client::ServerInfo;
 
 //+++++++++++++  ENCODING THREAD  +++++++++++++
 
@@ -483,7 +483,7 @@ NinjamController::~NinjamController()
 
 }
 
-void NinjamController::start(const Server& server)
+void NinjamController::start(const ServerInfo& server)
 {
     qCDebug(jtNinjamCore) << "starting ninjam controller...";
     QMutexLocker locker(&mutex);

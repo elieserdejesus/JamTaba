@@ -1,5 +1,6 @@
 #include "ClientMessages.h"
 #include "ninjam/client/User.h"
+#include "ninjam/Ninjam.h"
 
 #include <QCryptographicHash>
 #include <QIODevice>
@@ -25,21 +26,6 @@ ClientMessage::ClientMessage(quint8 msgCode, quint32 payload) :
 ClientMessage::~ClientMessage()
 {
     //
-}
-
-void ClientMessage::serializeString(const QString &string, QDataStream &stream){
-
-    QByteArray dataArray = string.toUtf8();
-    stream.writeRawData(dataArray.data(), dataArray.size());
-
-    stream << quint8('\0'); // NUL TERMINATED
-}
-
-void ClientMessage::serializeByteArray(const QByteArray &array, QDataStream &stream){
-
-    for (int i = 0; i < array.size(); ++i) {
-        stream << quint8(array[i]);
-    }
 }
 
 //++++++++++++++++++++++++++++++++++++++=
@@ -90,8 +76,8 @@ void ClientAuthUserMessage::serializeTo(QByteArray& buffer) const {
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << msgType << payload;
-    serializeByteArray(passwordHash, stream);
-    serializeString(userName, stream);
+    ninjam::serializeByteArray(passwordHash, stream);
+    ninjam::serializeString(userName, stream);
     stream << clientCapabilites;
     stream << protocolVersion;
 }
@@ -201,7 +187,7 @@ void ClientSetUserMask::serializeTo(QByteArray &buffer) const
     stream << payload;
     //++++++++++++  END HEADER ++++++++++++
 
-    ClientMessage::serializeString(userName, stream);
+    ninjam::serializeString(userName, stream);
     stream << channelsMask;
 }
 
@@ -254,9 +240,9 @@ void ChatMessage::serializeTo(QByteArray &buffer) const
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << msgType;
     stream << payload;
-    ClientMessage::serializeString(command, stream);
+    ninjam::serializeString(command, stream);
     if (type != ChatMessageType::PrivateMessage) {
-        ClientMessage::serializeString(text, stream);
+        ninjam::serializeString(text, stream);
     }
     else {
         QChar whiteSpace(' ');
@@ -265,11 +251,10 @@ void ChatMessage::serializeTo(QByteArray &buffer) const
             QString userFullName = text.left(whiteSpaceIndex);
             QString message = text.mid(whiteSpaceIndex + 1);
 
-            ClientMessage::serializeString(userFullName, stream);
-            ClientMessage::serializeString(message, stream);
+            ninjam::serializeString(userFullName, stream);
+            ninjam::serializeString(message, stream);
         }
     }
-
 }
 
 void ChatMessage::printDebug(QDebug &dbg) const

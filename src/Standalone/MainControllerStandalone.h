@@ -120,7 +120,7 @@ public slots:
 
     void openExternalAudioControlPanel();
 
-    void connectInNinjamServer(const Server &server) override;
+    void connectInNinjamServer(const ServerInfo &server) override;
 
 protected:
     midi::MidiDriver *createMidiDriver();

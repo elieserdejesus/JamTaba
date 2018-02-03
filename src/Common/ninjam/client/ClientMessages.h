@@ -34,8 +34,6 @@ namespace ninjam
             }
 
         protected:
-            static void serializeString(const QString &string, QDataStream &stream);
-            static void serializeByteArray(const QByteArray &array, QDataStream &stream);
 
             quint8 msgType;
             quint32 payload;

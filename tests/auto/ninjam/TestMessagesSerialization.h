@@ -5,11 +5,11 @@
 #include "ninjam/client/ServerMessages.h"
 #include "ninjam/client/UserChannel.h"
 
-using namespace ninjam;
+using namespace ninjam::client;
 
 //these tests are checking if the server messages are extracted correctly from some stream
 
-class TestServerMessages : public QObject
+class TestMessagesSerialization : public QObject
 {
     Q_OBJECT
 

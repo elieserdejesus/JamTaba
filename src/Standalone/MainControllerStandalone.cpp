@@ -33,7 +33,7 @@
 #include "log/Logging.h"
 #include "Configurator.h"
 
-using ninjam::client::Server;
+using ninjam::client::ServerInfo;
 
 QString MainControllerStandalone::getJamtabaFlavor() const
 {
@@ -237,7 +237,7 @@ void MainControllerStandalone::updateBpm(int newBpm)
         host->setTempo(newBpm);
 }
 
-void MainControllerStandalone::connectInNinjamServer(const Server &server)
+void MainControllerStandalone::connectInNinjamServer(const ServerInfo &server)
 {
     MainController::connectInNinjamServer(server);
 

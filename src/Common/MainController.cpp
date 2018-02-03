@@ -26,7 +26,7 @@
 #include <QDateTime>
 
 using ninjam::client::Service;
-using ninjam::client::Server;
+using ninjam::client::ServerInfo;
 using persistence::Settings;
 using persistence::LocalInputTrackSettings;
 using controller::MainController;
@@ -182,7 +182,7 @@ void MainController::quitFromNinjamServer(const QString &error)
     }
 }
 
-void MainController::disconnectFromNinjamServer(const Server &server)
+void MainController::disconnectFromNinjamServer(const ServerInfo &server)
 {
     Q_UNUSED(server);
 
@@ -211,7 +211,7 @@ void MainController::setupNinjamControllerSignals()
     connect(controller, &NinjamController::startProcessing, this, &MainController::requestCameraFrame);
 }
 
-void MainController::connectInNinjamServer(const Server &server)
+void MainController::connectInNinjamServer(const ServerInfo &server)
 {
     qCDebug(jtCore) << "connected in ninjam server";
 

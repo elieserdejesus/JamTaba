@@ -3,7 +3,7 @@
 #include "NinjamTrackView.h"
 #include "NinjamTrackGroupView.h"
 #include "UsersColorsPool.h"
-#include "ninjam/client/Server.h"
+#include "ninjam/client/ServerInfo.h"
 #include "ninjam/client/User.h"
 #include "ninjam/client/UserChannel.h"
 #include "ninjam/client/Service.h"

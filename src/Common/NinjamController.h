@@ -10,7 +10,7 @@
 class NinjamTrackNode;
 
 namespace ninjam { namespace client {
-class Server;
+class ServerInfo;
 class User;
 class UserChannel;
 }}
@@ -24,7 +24,7 @@ namespace controller {
 
 class MainController;
 
-using ninjam::client::Server;
+using ninjam::client::ServerInfo;
 using ninjam::client::User;
 using ninjam::client::UserChannel;
 using audio::SamplesBuffer;
@@ -38,7 +38,7 @@ public:
     explicit NinjamController(MainController *mainController);
     virtual ~NinjamController();
     virtual void process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate);
-    void start(const Server &server);
+    void start(const ServerInfo &server);
     void stop(bool emitDisconnectedSignal);
     bool isRunning() const;
 

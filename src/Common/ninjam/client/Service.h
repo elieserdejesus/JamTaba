@@ -16,15 +16,15 @@ namespace ninjam
 namespace client
 {
     class Service;
-    class Server;
+    class ServerInfo;
     class ClientMessage;
     class Service;
     class ServerMessage;
     class ServerMessagesHandler;
     class ServerKeepAliveMessage;
-    class ServerAuthChallengeMessage;
-    class ServerAuthReplyMessage;
-    class ServerConfigChangeNotifyMessage;
+    class AuthChallengeMessage;
+    class AuthReplyMessage;
+    class ConfigChangeNotifyMessage;
     class ServerKeepAliveMessage;
     class ServerChatMessage;
     class UserInfoChangeNotifyMessage;
@@ -69,7 +69,7 @@ namespace client
         void voteToChangeBPM(quint16 newBPM);
         void voteToChangeBPI(quint16 newBPI);
 
-        inline Server *getCurrentServer() const { return currentServer.data(); }
+        inline ServerInfo *getCurrentServer() const { return currentServer.data(); }
 
         static QStringList getBotNamesList();
 
@@ -87,8 +87,8 @@ namespace client
         void audioIntervalCompleted(const User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
         void videoIntervalCompleted(const User &user, const QByteArray &encodedVideoData);
         void audioIntervalDownloading(const User &user, quint8 channelIndex, int bytesDownloaded);
-        void disconnectedFromServer(const Server &server);
-        void connectedInServer(const Server &server);
+        void disconnectedFromServer(const ServerInfo &server);
+        void connectedInServer(const ServerInfo &server);
         void publicChatMessageReceived(const User &sender, const QString &message);
         void privateChatMessageReceived(const User &sender, const QString &message);
         void serverTopicMessageReceived(const QString &topic);
@@ -100,9 +100,9 @@ namespace client
         virtual QTcpSocket *createSocket();
 
         // +++++= message handlers.
-        virtual void process(const ServerAuthChallengeMessage &msg);
-        virtual void process(const ServerAuthReplyMessage &msg);
-        virtual void process(const ServerConfigChangeNotifyMessage &msg);
+        virtual void process(const AuthChallengeMessage &msg);
+        virtual void process(const AuthReplyMessage &msg);
+        virtual void process(const ConfigChangeNotifyMessage &msg);
         virtual void process(const UserInfoChangeNotifyMessage &msg);
         virtual void process(const ServerChatMessage &msg);
         virtual void process(const ServerKeepAliveMessage &msg);
@@ -129,7 +129,7 @@ namespace client
         long serverKeepAlivePeriod;
         QString serverLicence;
 
-        QScopedPointer<Server> currentServer;
+        QScopedPointer<ServerInfo> currentServer;
 
         bool initialized;
         QString userName;

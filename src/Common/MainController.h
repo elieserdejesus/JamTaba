@@ -18,7 +18,7 @@ class MainWindow;
 
 namespace ninjam { namespace client {
 class Service;
-class Server;
+class ServerInfo;
 }}
 
 namespace persistence {
@@ -44,7 +44,7 @@ namespace controller {
 class NinjamController;
 
 using ninjam::client::Service;
-using ninjam::client::Server;
+using ninjam::client::ServerInfo;
 using persistence::Settings;
 using persistence::LocalInputTrackSettings;
 using persistence::Preset;
@@ -310,7 +310,7 @@ public slots:
 
     void processCapturedFrame(int frameID, const QImage &frame);
 
-    virtual void connectInNinjamServer(const Server &server);
+    virtual void connectInNinjamServer(const ServerInfo &server);
 
     void storeChatFontSizeOffset(qint8 fontSizeOffset);
 
@@ -407,7 +407,7 @@ private:
 protected slots:
 
     // ninjam
-    virtual void disconnectFromNinjamServer(const Server &server);
+    virtual void disconnectFromNinjamServer(const ServerInfo &server);
     virtual void quitFromNinjamServer(const QString &error);
 
     virtual void enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex,

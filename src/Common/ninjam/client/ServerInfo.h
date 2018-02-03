@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef CLIENT_SERVER_H
+#define CLIENT_SERVER_H
 
 #include <QMap>
 #include <QString>
@@ -12,13 +12,13 @@ namespace client
 {
     class UserChannel;
 
-    class Server
+    class ServerInfo
     {
 
     public:
-        Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers = 0);
+        ServerInfo(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers = 0);
 
-        ~Server();
+        ~ServerInfo();
 
         void addUserChannel(const UserChannel &newChannel);
         void removeUserChannel(const UserChannel &channel);

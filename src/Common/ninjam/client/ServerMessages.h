@@ -6,6 +6,8 @@
 #include <QMap>
 #include <QtGlobal>
 #include <QStringList>
+#include <QIODevice>
+#include <QDebug>
 
 /**
  * All details about ninjam protocol are based on the Stefanha documentation work in wahjam.
@@ -45,10 +47,9 @@ enum class  ChatCommandType : quint8
 class ServerMessage
 {
 public:
-    explicit ServerMessage(ServerMessageType messageType, quint32 payload);
+    explicit ServerMessage(ServerMessageType messageType);
     virtual ~ServerMessage();
 
-    virtual void readFrom(QDataStream &stream) = 0;
     virtual void printDebug(QDebug &dbg) const = 0;
 
     inline ServerMessageType getMessageType() const
@@ -57,63 +58,65 @@ public:
     }
 
 protected:
-    quint32 payload;
-
-private:
     const ServerMessageType messageType;
 };
 
 // ++++++++++++++++++++++++++++++++++
 
-class ServerAuthChallengeMessage : public ServerMessage
+class AuthChallengeMessage : public ServerMessage
 {
 public:
-    explicit ServerAuthChallengeMessage(quint32 payload);
+    AuthChallengeMessage(const QByteArray &challenge, const QString &licence, quint32 serverCapabilities, quint32 protocolVersion);
+
+    static AuthChallengeMessage from(QIODevice *device, quint32 payload);
+    void to(QIODevice *stream) const;
 
     void printDebug(QDebug &dbg) const override;
-    void readFrom(QDataStream &stream) override;
 
-    inline QByteArray getChallenge() const
-    {
-        return challenge;
-    }
-
-    inline quint32 getProtocolVersion() const
-    {
-        return protocolVersion;
-    }
-
-    inline quint32 getServerKeepAlivePeriod() const
-    {
-        return serverKeepAlivePeriod;
-    }
-
-    inline bool serverHasLicenceAgreement() const
-    {
-        return !licenceAgreement.isNull() && !licenceAgreement.isEmpty();
-    }
-
-    inline QString getLicenceAgreement() const
-    {
-        return licenceAgreement;
-    }
+    QByteArray getChallenge() const;
+    quint32 getProtocolVersion() const;
+    quint32 getServerKeepAlivePeriod() const;
+    bool serverHasLicenceAgreement() const;
+    QString getLicenceAgreement() const;
 
 private:
     QByteArray challenge;
     QString licenceAgreement;
-    quint32 serverKeepAlivePeriod;
+    quint32 serverCapabilities;
     quint32 protocolVersion;         // The Protocol Version field should contain 0x00020000.
 };
 
+inline QByteArray AuthChallengeMessage::getChallenge() const
+{
+    return challenge;
+}
+
+inline quint32 AuthChallengeMessage::getProtocolVersion() const
+{
+    return protocolVersion;
+}
+
+inline bool AuthChallengeMessage::serverHasLicenceAgreement() const
+{
+    return !licenceAgreement.isNull() && !licenceAgreement.isEmpty();
+}
+
+inline QString AuthChallengeMessage::getLicenceAgreement() const
+{
+    return licenceAgreement;
+}
+
 // ++++++++++++++++++++++++++++++++
 
-class ServerAuthReplyMessage : public ServerMessage
+class AuthReplyMessage : public ServerMessage
 {
 public:
-    explicit ServerAuthReplyMessage(quint32 payload);
+    AuthReplyMessage(quint8 flag, const QString &message, quint8 maxChannels);
+    void to(QIODevice *device) const;
+
+    static AuthReplyMessage from(QIODevice *stream, quint32 payload);
 
     void printDebug(QDebug &debug) const override;
-    void readFrom(QDataStream &stream) override;
 
     inline QString getErrorMessage() const
     {
@@ -149,54 +152,64 @@ private:
 class ServerKeepAliveMessage : public ServerMessage
 {
 public:
-    explicit ServerKeepAliveMessage(quint32 payload);
     void printDebug(QDebug &dbg) const override;
-    void readFrom(QDataStream &stream) override;
+    static ServerKeepAliveMessage from(QIODevice *stream, quint32 payload);
+private:
+    ServerKeepAliveMessage();
 };
 
-// ++++++++++++++++++++++++=
+// -----------------------------------------------------------------
 
-class ServerConfigChangeNotifyMessage : public ServerMessage
+class ConfigChangeNotifyMessage : public ServerMessage
 {
+public:
+    ConfigChangeNotifyMessage(quint16 bpm, quint16 bpi);
+    static ConfigChangeNotifyMessage from(QIODevice *device, quint32 payload);
+    void to(QIODevice *device) const;
+    void printDebug(QDebug &dbg) const override;
+
+    quint16 getBpi() const;
+    quint16 getBpm() const;
+
 private:
     quint16 bpm;
     quint16 bpi;
-
-public:
-    explicit ServerConfigChangeNotifyMessage(quint32 payload);
-    void readFrom(QDataStream &stream) override;
-    void printDebug(QDebug &dbg) const override;
-
-    inline quint16 getBpi() const
-    {
-        return bpi;
-    }
-
-    inline quint16 getBpm() const
-    {
-        return bpm;
-    }
 };
 
-// ++++++++++++++
+inline quint16 ConfigChangeNotifyMessage::getBpi() const
+{
+    return bpi;
+}
+
+inline quint16 ConfigChangeNotifyMessage::getBpm() const
+{
+    return bpm;
+}
+
+// -----------------------------------------------------------------
 
 class UserInfoChangeNotifyMessage : public ServerMessage
 {
 public:
-    explicit UserInfoChangeNotifyMessage(quint32 payload);
+    UserInfoChangeNotifyMessage();
     ~UserInfoChangeNotifyMessage();
+    void addUserChannel(const QString &userFullName, const UserChannel &channel);
+    void to(QIODevice *device) const;
+    static UserInfoChangeNotifyMessage from(QIODevice *stream, quint32 payload);
 
-    void readFrom(QDataStream &stream) override;
     void printDebug(QDebug &dbg) const override;
 
-    inline QList<User> getUsers() const
-    {
-        return users.values();
-    }
+    QList<User> getUsers() const;
 
 private:
     QMap<QString, User> users;
+    quint32 getPayload() const;
 };
+
+inline QList<User> UserInfoChangeNotifyMessage::getUsers() const
+{
+    return users.values();
+}
 
 // ++++++++++++=
 
@@ -220,9 +233,14 @@ private:
 class ServerChatMessage : public ServerMessage
 {
 public:
-    explicit ServerChatMessage(quint32 payload);
+    ServerChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3, const QString &arg4);
+
     void printDebug(QDebug &dbg) const override;
-    void readFrom(QDataStream &stream) override;
+
+    static ServerChatMessage from(QIODevice *stream, quint32 payload);
+    void to(QIODevice *device) const;
+
+    quint32 getPayload() const;
 
     inline QStringList getArguments() const
     {
@@ -231,13 +249,13 @@ public:
 
     inline ChatCommandType getCommand() const
     {
-        return commandType;
+        return commandTypeFromString(command);
     }
 
     static ChatCommandType commandTypeFromString(const QString &string);
 
 private:
-    ChatCommandType commandType;
+    QString command;
     QStringList arguments;
 };
 
@@ -258,9 +276,11 @@ If the FourCC field contains "OGGv" then this is a valid Ogg Vorbis encoded down
 class DownloadIntervalBegin : public ServerMessage
 {
 public:
-    explicit DownloadIntervalBegin(quint32 payload);
+    DownloadIntervalBegin(const QByteArray &GUID, quint32 estimatedSize, const QByteArray &fourCC, quint8 channelIndex, const QString &userName);
 
-    void readFrom(QDataStream &stream) override;
+    static DownloadIntervalBegin from(QIODevice *stream, quint32 payload);
+    void to(QIODevice *device) const;
+
     void printDebug(QDebug &dbg) const override;
 
     inline quint8  getChannelIndex() const
@@ -315,9 +335,11 @@ private:
 class DownloadIntervalWrite : public ServerMessage
 {
 public:
-    explicit DownloadIntervalWrite(quint32 payload);
+    static DownloadIntervalWrite from(QIODevice *stream, quint32 payload);
+    void to(QIODevice *device) const;
 
-    void readFrom(QDataStream &stream) override;
+    DownloadIntervalWrite(const QByteArray &GUID, quint8 flags, const QByteArray &encodedData);
+
     void printDebug(QDebug &dbg) const override;
 
     inline QByteArray getGUID() const
