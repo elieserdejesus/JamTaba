@@ -33,6 +33,20 @@ namespace client
     class User;
     class UserChannel;
 
+    // statistics
+    class NetworkUsageMeasurer
+    {
+    public:
+        NetworkUsageMeasurer();
+        long getTransferRate() const;
+        void addTransferedBytes(qint64 totalBytesTransfered);
+
+    private:
+        long totalBytesTransfered;
+        qint64 lastMeasureTimeStamp;
+        long transferRate;
+    };
+
     class Service : public QObject
     {
         Q_OBJECT
@@ -135,20 +149,6 @@ namespace client
         QString userName;
         QString password;
         QStringList channels; // channels names
-
-        // statistics
-        class NetworkUsageMeasurer
-        {
-        public:
-            NetworkUsageMeasurer();
-            void addTransferedBytes(long totalBytesTransfered);
-            long getTransferRate() const;
-
-        private:
-            long totalBytesTransfered;
-            qint64 lastMeasureTimeStamp;
-            long transferRate;
-        };
 
         NetworkUsageMeasurer totalUploadMeasurer;
         NetworkUsageMeasurer totalDownloadMeasurer;

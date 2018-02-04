@@ -79,11 +79,11 @@ void Server::handleReceivedMessages()
     auto socket = qobject_cast<QTcpSocket *>(QObject::sender());
     if (socket) {
         qDebug() << "handleReceivedMessages();" << socket->bytesAvailable();
-        while (device->bytesAvailable() >= 5) { // all messages have minimum of 5 bytes
+        while (socket->bytesAvailable() >= 5) { // all messages have minimum of 5 bytes
             auto header = MessageHeader::from(socket);
             if (header.getMessageType() == 0x80) { // client auth user message
                 qDebug() << "Received Client auth user message";
-                auto msg = ClientAuthUserMessage::fro
+                //auto msg = ClientAuthUserMessage::fro
             }
             else {
                 qCritical() << "message code:" << header.getMessageType();

@@ -72,9 +72,11 @@ ClientAuthUserMessage::ClientAuthUserMessage(const QString &userName, const QByt
     this->payload = 29 + this->userName.size();
 }
 
-void ClientAuthUserMessage::serializeTo(QByteArray& buffer) const {
-    QDataStream stream(&buffer, QIODevice::WriteOnly);
+void ClientAuthUserMessage::serializeTo(QIODevice *device) const
+{
+    QDataStream stream(device);
     stream.setByteOrder(QDataStream::LittleEndian);
+
     stream << msgType << payload;
     ninjam::serializeByteArray(passwordHash, stream);
     ninjam::serializeString(userName, stream);
@@ -117,11 +119,11 @@ ClientSetChannel::ClientSetChannel(const QString &channelNameToRemove) :
 }
 
 
-void ClientSetChannel::serializeTo(QByteArray &buffer) const
+void ClientSetChannel::serializeTo(QIODevice *device) const
 {
-    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    QDataStream stream(device);
     stream.setByteOrder(QDataStream::LittleEndian);
-    //payload = 0;
+
     stream << msgType << payload;
     //++++++++
     stream << quint16(4); // parameter size (4 bytes - volume (2 bytes) + pan (1 byte) + flags (1 byte))
@@ -151,15 +153,14 @@ ClientKeepAlive::ClientKeepAlive() :
 
 }
 
-void ClientKeepAlive::serializeTo(QByteArray &buffer) const
+void ClientKeepAlive::serializeTo(QIODevice *device) const
 {
     // just the header bytes, no payload
-    QDataStream stream(&buffer, QIODevice::WriteOnly);
-
+    QDataStream stream(device);
     stream.setByteOrder(QDataStream::LittleEndian);
 
-    stream << msgType
-           << payload;
+    stream << msgType;
+    stream << payload;
 }
 
 void ClientKeepAlive::printDebug(QDebug &dbg) const
@@ -179,12 +180,14 @@ ClientSetUserMask::ClientSetUserMask(const QString &userName, quint32 channelsMa
     payload += userName.size() + 1;
 }
 
-void ClientSetUserMask::serializeTo(QByteArray &buffer) const
+void ClientSetUserMask::serializeTo(QIODevice *device) const
 {
-    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    QDataStream stream(device);
     stream.setByteOrder(QDataStream::LittleEndian);
+
     stream << msgType;
     stream << payload;
+
     //++++++++++++  END HEADER ++++++++++++
 
     ninjam::serializeString(userName, stream);
@@ -234,12 +237,14 @@ QString ChatMessage::getTypeCommand(ChatMessageType type)
     return "MSG";
 }
 
-void ChatMessage::serializeTo(QByteArray &buffer) const
+void ChatMessage::serializeTo(QIODevice *device) const
 {
-    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    QDataStream stream(device);
     stream.setByteOrder(QDataStream::LittleEndian);
+
     stream << msgType;
     stream << payload;
+
     ninjam::serializeString(command, stream);
     if (type != ChatMessageType::PrivateMessage) {
         ninjam::serializeString(text, stream);
@@ -293,11 +298,13 @@ ClientUploadIntervalBegin::ClientUploadIntervalBegin(const QByteArray &GUID, qui
     }
 }
 
-void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer) const
+void ClientUploadIntervalBegin::serializeTo(QIODevice *device) const
 {
-    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    QDataStream stream(device);
     stream.setByteOrder(QDataStream::LittleEndian);
+
     //quint32 payload = 16 + 4 + 4 + 1 + userName.size();
+
     stream << msgType;
     stream << payload;
     stream.writeRawData(GUID, 16);
@@ -305,10 +312,6 @@ void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer) const
     stream.writeRawData(fourCC, 4);
     stream << channelIndex;
     stream.writeRawData(userName.toStdString().c_str(), userName.size());
-
-    if ((quint32)buffer.size() != payload + 5){
-        qCritical() << "wrong size!";
-    }
 }
 
 void ClientUploadIntervalBegin::printDebug(QDebug &dbg) const
@@ -335,10 +338,11 @@ ClientIntervalUploadWrite::ClientIntervalUploadWrite(const QByteArray &GUID, con
 
 }
 
-void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const
+void ClientIntervalUploadWrite::serializeTo(QIODevice *device) const
 {
-    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    QDataStream stream(device);
     stream.setByteOrder(QDataStream::LittleEndian);
+
     stream << msgType;
     stream << payload;
 
@@ -346,8 +350,6 @@ void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const
     quint8 intervalCompleted = isLastPart ? (quint8) 1 : (quint8) 0; // If the Flag field bit 0 is set then the upload is complete.
     stream << intervalCompleted;
     stream.writeRawData(encodedData.data(), encodedData.size());
-
-    Q_ASSERT(buffer.size() == (int)(payload + 5));
 }
 
 void ClientIntervalUploadWrite::printDebug(QDebug &dbg) const

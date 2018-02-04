@@ -15,14 +15,14 @@ using namespace ninjam::client;
 
 const QStringList Service::botNames = buildBotNamesList();
 
-Service::NetworkUsageMeasurer::NetworkUsageMeasurer() :
+NetworkUsageMeasurer::NetworkUsageMeasurer() :
     totalBytesTransfered(0),
     lastMeasureTimeStamp(0),
     transferRate(0)
 {
 }
 
-void Service::NetworkUsageMeasurer::addTransferedBytes(long bytesTransfered)
+void NetworkUsageMeasurer::addTransferedBytes(qint64 bytesTransfered)
 {
     totalBytesTransfered += bytesTransfered;
 
@@ -40,7 +40,7 @@ void Service::NetworkUsageMeasurer::addTransferedBytes(long bytesTransfered)
     }
 }
 
-long Service::NetworkUsageMeasurer::getTransferRate() const
+long NetworkUsageMeasurer::getTransferRate() const
 {
     return transferRate;
 }
@@ -148,6 +148,10 @@ void Service::setupSocketSignals()
     connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
     connect(socket, SIGNAL(disconnected()), this, SLOT(handleSocketDisconnection()));
     connect(socket, SIGNAL(connected()), this, SLOT(handleSocketConnection()));
+
+    connect(socket, &QTcpSocket::bytesWritten, [&](quint64 bytesWritten){
+        totalUploadMeasurer.addTransferedBytes(bytesWritten);
+    });
 }
 
 void Service::sendIntervalPart(const QByteArray &GUID, const QByteArray &encodedData,
@@ -283,29 +287,10 @@ void Service::sendMessageToServer(const ClientMessage &message)
     if (!socket)
         return;
 
-    QByteArray outBuffer;
-    message.serializeTo(outBuffer);
+    message.serializeTo(socket);
 
-    int totalDataToSend = outBuffer.size();
-    int dataSended = 0;
-    int bytesWrited = -1;
-    do {
-        bytesWrited = socket->write(outBuffer.data() + dataSended, totalDataToSend - dataSended);
-        if (bytesWrited > 0)
-            dataSended += bytesWrited;
-    } while (dataSended < totalDataToSend && bytesWrited != -1);
-
-    if (bytesWrited > 0) {
-        socket->flush();
-        lastSendTime = QDateTime::currentMSecsSinceEpoch();
-
-        totalUploadMeasurer.addTransferedBytes(bytesWrited);
-
-    } else {
-        qCritical() << "Bytes not writed in socket!";
-    }
-
-    Q_ASSERT(message.getPayload() + 5 == (uint)outBuffer.size());
+    socket->flush();
+    lastSendTime = QDateTime::currentMSecsSinceEpoch();
 }
 
 bool Service::needSendKeepAlive() const
