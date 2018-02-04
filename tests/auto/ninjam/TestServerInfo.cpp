@@ -5,7 +5,7 @@
 
 using namespace ninjam::client;
 
-void TestServer::addUser()
+void TestServerInfo::addUser()
 {
     ServerInfo server("localhost", 2040, 2);
     QString userFullName("anon@localhost");
@@ -18,7 +18,7 @@ void TestServer::addUser()
 }
 
 
-void TestServer::addUserChannel_data()
+void TestServerInfo::addUserChannel_data()
 {
     QTest::addColumn<quint8>("serverMaxChannels");
     QTest::addColumn<quint8>("channelsToAdd");
@@ -28,7 +28,7 @@ void TestServer::addUserChannel_data()
     QTest::newRow("ServerInfo with 2 max channels, adding 3 channels") << (quint8)2 << (quint8)3;
 }
 
-void TestServer::addUserChannel()
+void TestServerInfo::addUserChannel()
 {
     QFETCH(quint8, serverMaxChannels);
     QFETCH(quint8, channelsToAdd);
@@ -54,7 +54,7 @@ void TestServer::addUserChannel()
     }
 }
 
-void TestServer::removeUserChannel_data()
+void TestServerInfo::removeUserChannel_data()
 {
     QTest::addColumn<quint8>("channelsToAdd");
     QTest::addColumn<quint8>("channelsToRemove");
@@ -64,7 +64,7 @@ void TestServer::removeUserChannel_data()
 }
 
 
-void TestServer::removeUserChannel()
+void TestServerInfo::removeUserChannel()
 {
     ServerInfo server("localhost", 2040, 2);
     QString userFullName("anon@localhost");
@@ -92,7 +92,7 @@ void TestServer::removeUserChannel()
     }
 }
 
-void TestServer::updateUserChannel_data()
+void TestServerInfo::updateUserChannel_data()
 {
     QTest::addColumn<quint8>("channelsToAdd");
     QTest::addColumn<quint8>("channelsToUpdate");
@@ -101,7 +101,7 @@ void TestServer::updateUserChannel_data()
     QTest::newRow("Addind 1 and Updating 2 channels") << (quint8)1 << (quint8)2;
 }
 
-void TestServer::updateUserChannel()
+void TestServerInfo::updateUserChannel()
 {
     ServerInfo server("localhost", 2040, 2);
     QString userFullName("anon@localhost");

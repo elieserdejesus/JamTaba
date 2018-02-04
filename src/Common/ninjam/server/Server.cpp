@@ -3,9 +3,16 @@
 #include <QDebug>
 #include <QDataStream>
 
+#include "ninjam/Ninjam.h"
 #include "ninjam/client/ServerMessages.h"
+#include "ninjam/client/ClientMessages.h"
 
 using ninjam::server::Server;
+using ninjam::client::AuthChallengeMessage; // TODO message used both in server and client
+using ninjam::client::ClientAuthUserMessage; // todo message used both in server and client
+using ninjam::MessageHeader;
+
+// -------------------------------------------------------------
 
 Server::Server()
 {
@@ -37,28 +44,51 @@ void Server::handleNewConnection()
 
     qCritical() << "new connection from" << socket->peerAddress().toString();
 
-    clients.append(socket);
-
-//    QByteArray buffer;
-//    QDataStream stream(&buffer, QIODevice::WriteOnly);
-//    stream.setByteOrder(QDataStream::LittleEndian);
-
-//    ninjam::client::ServerAuthChallengeMessage authChallenge(0); // tenho que ver esse construtor recebendo o payload
-//    authChallenge.serializeTo(stream);
-
-//    int writed = socket->write(buffer.data(), buffer.size());
-//    qDebug() << writed << " bytes writed in socket";
-
-    connect(socket, &QTcpSocket::readyRead, this, &Server::handleReceivedMessages);
     connect(socket, &QTcpSocket::disconnected, this, &Server::handleDisconnection);
     connect(socket, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, &Server::handleClientSocketError);
+
+    addClient(socket);
+}
+
+void Server::addClient(QTcpSocket *socket)
+{
+    clients.append(socket);
+
+    connect(socket, &QIODevice::readyRead, this, &Server::handleReceivedMessages);
+
+    sendAuthChallenge(socket);
+}
+
+void Server::sendAuthChallenge(QTcpSocket *device)
+{
+    QByteArray challenge("abcdabcd");
+    QString licence("No licence at moment!");
+
+    quint32 protocolVersion = 0x00020000; // fixed value
+    quint16 keepAlivePeriod = 30; // in seconds
+    quint32 serverCapabilities = keepAlivePeriod << 8; // keep alive period value is stored in bytes 8-15
+    if(!licence.isEmpty())
+        serverCapabilities |= 1; // when server has licence the first bit is set.
+
+    auto msg = AuthChallengeMessage(challenge, licence, serverCapabilities, protocolVersion);
+    msg.to(device);
 }
 
 void Server::handleReceivedMessages()
 {
     auto socket = qobject_cast<QTcpSocket *>(QObject::sender());
     if (socket) {
-        qDebug() << "receiving messages" << socket->bytesAvailable() << "bytes available";
+        qDebug() << "handleReceivedMessages();" << socket->bytesAvailable();
+        while (device->bytesAvailable() >= 5) { // all messages have minimum of 5 bytes
+            auto header = MessageHeader::from(socket);
+            if (header.getMessageType() == 0x80) { // client auth user message
+                qDebug() << "Received Client auth user message";
+                auto msg = ClientAuthUserMessage::fro
+            }
+            else {
+                qCritical() << "message code:" << header.getMessageType();
+            }
+        }
     }
 
 }
@@ -90,12 +120,14 @@ void Server::handleAcceptError(QAbstractSocket::SocketError socketError)
 
 void Server::shutdown()
 {
-    tcpServer.close();
+    if (tcpServer.isListening()) {
+        tcpServer.close();
 
-    for (auto socket : clients)
-        socket->deleteLater();
+        for (auto socket : clients)
+             socket->deleteLater();
 
-    clients.clear();
+        clients.clear();
 
-    qDebug() << "server shutdown";
+        qDebug() << "server shutdown";
+    }
 }

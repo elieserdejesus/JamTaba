@@ -13,12 +13,16 @@ class Server : public QObject
 {
 public:
     Server();
-    ~Server();
-    void start(quint16 port);
+    virtual ~Server();
+    virtual void start(quint16 port);
     void shutdown();
 
-private slots:
-    void handleNewConnection();
+protected:
+    void addClient(QTcpSocket *device);
+    void sendAuthChallenge(QTcpSocket *device);
+
+protected slots:
+    virtual void handleNewConnection();
     void handleAcceptError(QAbstractSocket::SocketError socketError);
     void handleReceivedMessages();
     void handleDisconnection();
@@ -26,6 +30,7 @@ private slots:
 
 private:
     QTcpServer tcpServer;
+
     QList<QTcpSocket *> clients; // connected clients
 
     void disconnectClient(QTcpSocket *socket);
