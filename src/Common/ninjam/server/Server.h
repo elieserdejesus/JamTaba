@@ -6,8 +6,27 @@
 #include <QObject>
 #include <QList>
 
+#include "../Ninjam.h"
+
 namespace ninjam {
+
 namespace server {
+
+class RemoteUser
+{
+public:
+    RemoteUser(const QString &name, QTcpSocket *socket);
+    ~RemoteUser();
+
+    inline QString getName() const
+    {
+        return name;
+    }
+
+private:
+    QTcpSocket *socket;
+    QString name;
+};
 
 class Server : public QObject
 {
@@ -18,20 +37,22 @@ public:
     void shutdown();
 
 protected:
-    void addClient(QTcpSocket *device);
     void sendAuthChallenge(QTcpSocket *device);
 
 protected slots:
     virtual void handleNewConnection();
     void handleAcceptError(QAbstractSocket::SocketError socketError);
-    void handleReceivedMessages();
+    void processReceivedBytes();
     void handleDisconnection();
     void handleClientSocketError(QAbstractSocket::SocketError error);
 
 private:
     QTcpServer tcpServer;
 
-    QList<QTcpSocket *> clients; // connected clients
+    QMap<QTcpSocket *, RemoteUser *> clients; // connected clients
+
+    void broadcastUserChangeNotify();
+    bool invokeMessageHandler(const MessageHeader &header);
 
     void disconnectClient(QTcpSocket *socket);
 };

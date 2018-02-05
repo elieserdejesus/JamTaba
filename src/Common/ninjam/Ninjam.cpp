@@ -43,6 +43,24 @@ void serializeByteArray(const QByteArray &array, QDataStream &stream)
     }
 }
 
+QString extractString(QDataStream &stream)
+{
+    quint8 byte;
+    QByteArray byteArray;
+    while (!stream.atEnd()) {
+        stream >> byte;
+        if (byte == '\0')
+            break;
+        byteArray.append(byte);
+    }
+    return QString::fromUtf8(byteArray.data(), byteArray.size());
+}
+
+QString extractString(QDataStream &stream, quint32 size)
+{
+    return QString::fromUtf8(stream.device()->read(size));
+}
+
 } // namespace
 
 

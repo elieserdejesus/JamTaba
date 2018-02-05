@@ -72,6 +72,33 @@ ClientAuthUserMessage::ClientAuthUserMessage(const QString &userName, const QByt
     this->payload = 29 + this->userName.size();
 }
 
+ClientAuthUserMessage ClientAuthUserMessage::unserializeFrom(QIODevice *device, quint32 payload)
+{
+    Q_UNUSED(payload)
+
+    QDataStream stream(device);
+    stream.setByteOrder(QDataStream::LittleEndian);
+
+    QByteArray passwordHash(20, Qt::Uninitialized);
+    int readed = stream.readRawData(passwordHash.data(), passwordHash.size());
+    Q_ASSERT(readed = passwordHash.size());
+
+    QString userName = ninjam::extractString(stream);
+
+    QByteArray challenge(8, Qt::Uninitialized);
+    readed = stream.readRawData(challenge.data(), challenge.size());
+    Q_ASSERT(readed = challenge.size());
+
+    quint32 clientCapabilites;
+    quint32 protocolVersion;
+
+    stream >> clientCapabilites;
+    stream >> protocolVersion;
+
+    return ClientAuthUserMessage(userName, challenge, protocolVersion, QString(passwordHash));
+
+}
+
 void ClientAuthUserMessage::serializeTo(QIODevice *device) const
 {
     QDataStream stream(device);
@@ -118,6 +145,41 @@ ClientSetChannel::ClientSetChannel(const QString &channelNameToRemove) :
     }
 }
 
+ClientSetChannel ClientSetChannel::unserializeFrom(QIODevice *device, quint32 payload)
+{
+    if (payload <= 0)
+        return ClientSetChannel(QStringList()); // no channels
+
+    QDataStream stream(device);
+    stream.setByteOrder(QDataStream::LittleEndian);
+
+    quint16 channelParameterSize; // ??
+    stream >> channelParameterSize;
+
+    quint32 bytesConsumed = sizeof(quint16);
+
+    QStringList channelNames;
+
+    while (bytesConsumed < payload && !stream.atEnd()) {
+
+        quint16 volume;
+        quint8 pan;
+        quint8 flags;
+
+        QString channelName = ninjam::extractString(stream);
+
+        stream >> volume;
+        stream >> pan;
+        stream >> flags;
+
+        bytesConsumed += channelName.toUtf8().size() + 1;
+        bytesConsumed += sizeof(volume) + sizeof(pan) + sizeof(flags);
+
+        channelNames.append(channelName);
+    }
+
+    return ClientSetChannel(channelNames);
+}
 
 void ClientSetChannel::serializeTo(QIODevice *device) const
 {

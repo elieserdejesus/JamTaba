@@ -6,30 +6,11 @@
 #include "ninjam/client/Service.h"
 #include "ninjam/Ninjam.h"
 
-QString ninjam::client::extractString(QDataStream &stream)
-{
-    quint8 byte;
-    QByteArray byteArray;
-    while (!stream.atEnd()) {
-        stream >> byte;
-        if (byte == '\0')
-            break;
-        byteArray.append(byte);
-    }
-    return QString::fromUtf8(byteArray.data(), byteArray.size());
-}
-
-QString extractString(QDataStream &stream, quint32 size)
-{
-    return QString::fromUtf8(stream.device()->read(size));
-}
-
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 // +++++++++++++  SERVER MESSAGE (Base class) +++++++++++++++=
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
 using ninjam::client::ServerMessage;
-using ninjam::client::ServerMessageType;
 using ninjam::client::AuthChallengeMessage;
 using ninjam::client::AuthReplyMessage;
 using ninjam::client::ServerChatMessage;
@@ -41,8 +22,9 @@ using ninjam::client::DownloadIntervalWrite;
 using ninjam::client::ChatCommandType;
 using ninjam::client::User;
 using ninjam::client::UserChannel;
+using ninjam::MessageType;
 
-ServerMessage::ServerMessage(ServerMessageType messageType) :
+ServerMessage::ServerMessage(MessageType messageType) :
     messageType(messageType)
 {
     //
@@ -55,7 +37,7 @@ ServerMessage::~ServerMessage()
 // +++++++++++++++++++++  SERVER AUTH CHALLENGE+++++++++++++++
 
 AuthChallengeMessage::AuthChallengeMessage(const QByteArray &challenge, const QString &licence, quint32 serverCapabilities, quint32 protocolVersion) :
-    ServerMessage(ServerMessageType::AUTH_CHALLENGE),
+    ServerMessage(MessageType::AuthChallenge),
     challenge(challenge),
     licenceAgreement(licence),
     serverCapabilities(serverCapabilities),
@@ -100,7 +82,7 @@ AuthChallengeMessage AuthChallengeMessage::from(QIODevice *device, quint32)
 
     QString licence;
     if (serverHasLicenceAgreement)
-        licence = ninjam::client::extractString(stream);
+        licence = ninjam::extractString(stream);
 
     return AuthChallengeMessage(challenge, licence, serverCapabilities, protocolVersion);
 }
@@ -128,7 +110,7 @@ quint32 AuthChallengeMessage::getServerKeepAlivePeriod() const
 // +++++++++++++++++++++  SERVER AUTH REPLY ++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 AuthReplyMessage::AuthReplyMessage(quint8 flag, const QString &message, quint8 maxChannels) :
-    ServerMessage(ServerMessageType::AUTH_REPLY),
+    ServerMessage(MessageType::AuthReply),
     flag(flag),
     message(message),
     maxChannels(maxChannels)
@@ -162,7 +144,7 @@ AuthReplyMessage AuthReplyMessage::from(QIODevice *device, quint32 payload)
 
     stream >> flag;
     quint32 stringSize = payload - sizeof(flag) - sizeof(maxChannels);
-    message = extractString(stream, stringSize);
+    message = ninjam::extractString(stream, stringSize);
 
     stream >> maxChannels;
 
@@ -181,7 +163,7 @@ void AuthReplyMessage::printDebug(QDebug &debug) const
 // +++++++++++++++++++++  SERVER KEEP ALIVE ++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 ServerKeepAliveMessage::ServerKeepAliveMessage() :
-    ServerMessage(ServerMessageType::KEEP_ALIVE)
+    ServerMessage(MessageType::KeepAlive)
 {
 
 }
@@ -201,7 +183,7 @@ void ServerKeepAliveMessage::printDebug(QDebug &dbg) const
 // +++++++++++++++++++++  SERVER CONFIG CHANGE NOTIFY ++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 ConfigChangeNotifyMessage::ConfigChangeNotifyMessage(quint16 bpm, quint16 bpi) :
-    ServerMessage(ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY),
+    ServerMessage(MessageType::ServerConfigChangeNotify),
     bpm(bpm),
     bpi(bpi)
 {
@@ -243,7 +225,7 @@ void ConfigChangeNotifyMessage::printDebug(QDebug &dbg) const
 // +++++++++++++++++++++  SERVER USER INFO CHANGE NOTIFY +++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage() :
-    ServerMessage(ServerMessageType::USER_INFO_CHANGE_NOTIFY)
+    ServerMessage(MessageType::UserInfoChangeNorify)
 {
 
 }
@@ -318,9 +300,9 @@ UserInfoChangeNotifyMessage UserInfoChangeNotifyMessage::from(QIODevice *device,
 
         bytesConsumed += 6;
 
-        QString userFullName = ninjam::client::extractString(stream);
+        QString userFullName = ninjam::extractString(stream);
         bytesConsumed += userFullName.toUtf8().size() + 1;
-        QString channelName = ninjam::client::extractString(stream);
+        QString channelName = ninjam::extractString(stream);
         bytesConsumed += channelName.toUtf8().size() + 1;
         bool channelIsActive = active > 0 ? true : false;
 
@@ -352,7 +334,7 @@ void UserInfoChangeNotifyMessage::printDebug(QDebug &dbg) const
 // +++++++++++++++++ SERVER CHAT MESSAGE +++++++++++++++++++++
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ServerChatMessage::ServerChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3, const QString &arg4) :
-    ServerMessage(ServerMessageType::CHAT_MESSAGE),
+    ServerMessage(MessageType::ChatMessage),
     command(command)
 {
     arguments.append(arg1);
@@ -455,7 +437,7 @@ void ServerChatMessage::printDebug(QDebug &dbg) const
 
 // ++++++++++++++++++++++++++++++++++++++++++++++
 DownloadIntervalBegin::DownloadIntervalBegin(const QByteArray &GUID, quint32 estimatedSize, const QByteArray &fourCC, quint8 channelIndex, const QString &userName) :
-    ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_BEGIN),
+    ServerMessage(MessageType::DownloadIntervalBegin),
     GUID(GUID),
     estimatedSize(estimatedSize),
     channelIndex(channelIndex),
@@ -540,7 +522,7 @@ void DownloadIntervalBegin::printDebug(QDebug &dbg) const
 // -------------------------------------------------------------------
 
 DownloadIntervalWrite::DownloadIntervalWrite(const QByteArray &GUID, quint8 flags, const QByteArray &encodedData) :
-    ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_WRITE),
+    ServerMessage(MessageType::DownloadIntervalWrite),
     GUID(GUID),
     flags(flags),
     encodedData(encodedData)

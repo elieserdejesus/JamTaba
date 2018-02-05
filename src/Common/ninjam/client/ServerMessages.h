@@ -2,6 +2,7 @@
 #define SERVER_MESSAGES_H
 
 #include "User.h"
+#include "ninjam/Ninjam.h"
 
 #include <QMap>
 #include <QtGlobal>
@@ -20,20 +21,6 @@ class User;
 class UserChannel;
 class Service;
 
-QString extractString(QDataStream &stream);         // ninjam strings are NUL(\0) terminated
-
-enum class ServerMessageType : quint8
-{
-    AUTH_CHALLENGE = 0x00,         // received after connect in server
-    AUTH_REPLY = 0x01,         // received after respond to auth challenge
-    SERVER_CONFIG_CHANGE_NOTIFY = 0x02,         // received when BPI or BPM change
-    USER_INFO_CHANGE_NOTIFY = 0x03,        // received when user add/remove channels or rename a channel
-    DOWNLOAD_INTERVAL_BEGIN = 0x04,         // received when server is notifiyng about the start of a new audio interval stream
-    DOWNLOAD_INTERVAL_WRITE = 0x05,         // received for every audio interval chunk. We receive a lot of these messages while jamming.
-    KEEP_ALIVE = 0xfd,         // server requesting a keepalive. If Jamtaba not respond the server will disconnect.
-    CHAT_MESSAGE = 0xc0         // received when users are sending chat messages
-};
-
 enum class  ChatCommandType : quint8
 {
     MSG = 0,         // TODO remove this 0 value. Is uncessary, right?
@@ -47,18 +34,18 @@ enum class  ChatCommandType : quint8
 class ServerMessage
 {
 public:
-    explicit ServerMessage(ServerMessageType messageType);
+    explicit ServerMessage(MessageType messageType);
     virtual ~ServerMessage();
 
     virtual void printDebug(QDebug &dbg) const = 0;
 
-    inline ServerMessageType getMessageType() const
+    inline MessageType getMessageType() const
     {
         return messageType;
     }
 
 protected:
-    const ServerMessageType messageType;
+    const MessageType messageType;
 };
 
 // ++++++++++++++++++++++++++++++++++

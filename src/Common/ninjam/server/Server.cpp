@@ -10,7 +10,27 @@
 using ninjam::server::Server;
 using ninjam::client::AuthChallengeMessage; // TODO message used both in server and client
 using ninjam::client::ClientAuthUserMessage; // todo message used both in server and client
+using ninjam::client::ClientSetChannel; // used in both
+using ninjam::client::AuthReplyMessage; // used in both client and server
+using ninjam::client::ConfigChangeNotifyMessage;// used in both
+using ninjam::server::RemoteUser;
 using ninjam::MessageHeader;
+using ninjam::MessageType;
+
+// -------------------------------------------------------------
+
+RemoteUser::RemoteUser(const QString &name, QTcpSocket *socket) :
+    socket(socket),
+    name(name)
+{
+
+}
+
+RemoteUser::~RemoteUser()
+{
+    qDebug() << "~RemoteUser";
+    socket->deleteLater();
+}
 
 // -------------------------------------------------------------
 
@@ -46,15 +66,7 @@ void Server::handleNewConnection()
 
     connect(socket, &QTcpSocket::disconnected, this, &Server::handleDisconnection);
     connect(socket, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, &Server::handleClientSocketError);
-
-    addClient(socket);
-}
-
-void Server::addClient(QTcpSocket *socket)
-{
-    clients.append(socket);
-
-    connect(socket, &QIODevice::readyRead, this, &Server::handleReceivedMessages);
+    connect(socket, &QIODevice::readyRead, this, &Server::processReceivedBytes);
 
     sendAuthChallenge(socket);
 }
@@ -74,23 +86,76 @@ void Server::sendAuthChallenge(QTcpSocket *device)
     msg.to(device);
 }
 
-void Server::handleReceivedMessages()
+bool Server::invokeMessageHandler(const MessageHeader &header)
 {
-    auto socket = qobject_cast<QTcpSocket *>(QObject::sender());
-    if (socket) {
-        qDebug() << "handleReceivedMessages();" << socket->bytesAvailable();
-        while (socket->bytesAvailable() >= 5) { // all messages have minimum of 5 bytes
-            auto header = MessageHeader::from(socket);
-            if (header.getMessageType() == 0x80) { // client auth user message
-                qDebug() << "Received Client auth user message";
-                //auto msg = ClientAuthUserMessage::fro
-            }
-            else {
-                qCritical() << "message code:" << header.getMessageType();
-            }
-        }
+    Q_ASSERT(header.isValid());
+
+    auto type = static_cast<MessageType>(header.getMessageType());
+    switch (type) {
+//    case MessageType::AUTH_CHALLENGE:
+//        return handleMessage<AuthChallengeMessage>(header.getPayload());
+    default:
+        qCritical() << "Can't handle the message code " << QString::number(header.getMessageType());
     }
 
+    return false;
+}
+
+void Server::processReceivedBytes()
+{
+    auto socket = qobject_cast<QTcpSocket *>(QObject::sender());
+    if (!socket)
+        return;
+
+    while (socket->bytesAvailable() >= 5) { // all messages have minimum of 5 bytes
+        auto header = MessageHeader::from(socket);
+        if (socket->bytesAvailable() < header.getPayload()) {
+            qCritical() << " not ENOUGH BYTES!";
+            return;
+        }
+        switch (header.getMessageType()) {
+        case MessageType::AuthReply: {
+                auto msg = ClientAuthUserMessage::unserializeFrom(socket, header.getPayload());
+                //igoring challenge and password for while
+
+                qDebug() << "ClientAuthUser received, sending AuthReply";
+
+                quint8 flag = 1; // authentication suceeded
+                QString message("updateUserName"); // updated user name or error message;
+                quint8 maxChannels = 2;
+                AuthReplyMessage authReply(flag, message, maxChannels);
+                authReply.to(socket);
+
+                if (authReply.userIsAuthenticated()) {
+                    clients.insert(socket, new RemoteUser(msg.getUserName(), socket));
+                }
+
+            break;
+        }
+        case MessageType::ClientAuthUser: { // Client Set Channel Info
+            ClientSetChannel msg = ClientSetChannel::unserializeFrom(socket, header.getPayload());
+            qDebug() << "Client Set Channel received  channels:" << msg.getChannelNames();
+
+            // send server config change
+            quint16 bpm = 121;
+            quint16 bpi = 13;
+            auto configChange = ConfigChangeNotifyMessage(bpm, bpi);
+            configChange.to(socket);
+
+            // send each connected user infos to everybody
+            //broadcastUserChangeNotify(???);
+
+            break;
+        }
+        case MessageType::KeepAlive: { // Client keep alive
+            qDebug() << "Client keep alive received";
+            break;
+        }
+        default:
+            qCritical() << "not handled message code:" << header.getMessageType();
+        }
+
+    }
 }
 
 void Server::handleDisconnection()
@@ -103,14 +168,15 @@ void Server::handleDisconnection()
 
 void Server::disconnectClient(QTcpSocket *socket)
 {
-    if (clients.removeOne(socket)) {
-        qDebug() << "socket" << socket->peerAddress() << "removed";
+    if (clients.contains(socket)) {
+        delete clients[socket];
+        clients.remove(socket);
     }
 }
 
 void Server::handleClientSocketError(QAbstractSocket::SocketError error)
 {
-    qCritical() << "ERROR" << error;
+    qCritical() << "ERROR" << error << qobject_cast<QTcpSocket *>(QObject::sender())->errorString();
 }
 
 void Server::handleAcceptError(QAbstractSocket::SocketError socketError)
@@ -122,9 +188,6 @@ void Server::shutdown()
 {
     if (tcpServer.isListening()) {
         tcpServer.close();
-
-        for (auto socket : clients)
-             socket->deleteLater();
 
         clients.clear();
 

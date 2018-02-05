@@ -42,23 +42,23 @@ bool ServerMessagesHandler::executeMessageHandler(const MessageHeader &header)
 {
     Q_ASSERT(header.isValid());
 
-    ServerMessageType type = static_cast<ServerMessageType>(header.getMessageType());
+    MessageType type = static_cast<MessageType>(header.getMessageType());
     switch (type) {
-    case ServerMessageType::AUTH_CHALLENGE:
+    case MessageType::AuthChallenge:
         return handleMessage<AuthChallengeMessage>(header.getPayload());
-    case ServerMessageType::AUTH_REPLY:
+    case MessageType::AuthReply:
         return handleMessage<AuthReplyMessage>(header.getPayload());
-    case ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY:
+    case MessageType::ServerConfigChangeNotify:
         return handleMessage<ConfigChangeNotifyMessage>(header.getPayload());
-    case ServerMessageType::USER_INFO_CHANGE_NOTIFY:
+    case MessageType::UserInfoChangeNorify:
         return handleMessage<UserInfoChangeNotifyMessage>(header.getPayload());
-    case ServerMessageType::KEEP_ALIVE:
+    case MessageType::KeepAlive:
         return handleMessage<ServerKeepAliveMessage>(header.getPayload());
-    case ServerMessageType::CHAT_MESSAGE:
+    case MessageType::ChatMessage:
         return handleMessage<ServerChatMessage>(header.getPayload());
-    case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN:
+    case MessageType::DownloadIntervalBegin:
         return handleMessage<DownloadIntervalBegin>(header.getPayload());
-    case ServerMessageType::DOWNLOAD_INTERVAL_WRITE:
+    case MessageType::DownloadIntervalWrite:
         return handleMessage<DownloadIntervalWrite>(header.getPayload());
     default:
         qCritical() << "Can't handle the message code " << QString::number(header.getMessageType());

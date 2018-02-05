@@ -6,6 +6,7 @@
 #include <QString>
 #include <QStringList>
 #include <QDebug>
+#include <QIODevice>
 
 namespace ninjam {
 namespace client {
@@ -45,8 +46,14 @@ public:
     ClientAuthUserMessage(const QString &userName, const QByteArray &challenge,
                           quint32 protocolVersion, const QString &password);
 
+    static ClientAuthUserMessage unserializeFrom(QIODevice *device, quint32 payload);
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;
+
+    inline QString getUserName() const
+    {
+        return userName;
+    }
 
 private:
     QByteArray passwordHash;
@@ -64,9 +71,14 @@ public:
     explicit ClientSetChannel(const QStringList &channels);
     explicit ClientSetChannel(const QString &channelNameToRemove);
 
+    static ClientSetChannel unserializeFrom(QIODevice *device, quint32 payload);
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;
 
+    inline QStringList getChannelNames() const
+    {
+        return channelNames;
+    }
 private:
     QStringList channelNames;
     quint16 volume;

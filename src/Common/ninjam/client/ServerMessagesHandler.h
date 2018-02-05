@@ -39,7 +39,10 @@ namespace client
 
             bool allMessageDataIsAvailable = device->bytesAvailable() >= payload;
             if (allMessageDataIsAvailable) {
-                service->process(MessageClazz::from(device, payload)); // calling overload versions of 'process'
+                auto msg = MessageClazz::from(device, payload);
+                service->process(msg); // calling overload versions of 'process'
+                msg.printDebug(qDebug());
+                //qDebug() << msg;
                 return true; // the message was handled
             }
             return false; // the message was not handled
