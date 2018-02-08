@@ -278,6 +278,8 @@ ClientToServerChatMessage::ClientToServerChatMessage(const QString &command, con
     arguments.append(arg2);
     arguments.append(arg3);
     arguments.append(arg4);
+
+    Q_ASSERT(arguments.size() == 4);
 }
 
 ClientToServerChatMessage ClientToServerChatMessage::buildPublicMessage(const QString &message)
@@ -299,52 +301,46 @@ ClientToServerChatMessage ClientToServerChatMessage::buildAdminMessage(const QSt
     return ClientToServerChatMessage("ADMIN", msg, QString(), QString(), QString());
 }
 
-//QString ClientToServerChatMessage::satinizeText(const QString &msg, ChatMessageType type)
-//{
-//    if (type == ChatMessageType::AdminMessage) {
-//        return msg.right(msg.size() - 1); // remove the first char (/)
-//    }
-//    else if (type == ChatMessageType::PrivateMessage) { // remove '/msg ' from string
-//        return QString(msg).replace(QString("/msg "), "");
-//    }
+bool ClientToServerChatMessage::isPublicMessage() const
+{
+    return command == "MSG";
+}
 
-//    return msg;
-//}
+bool ClientToServerChatMessage::isPrivateMessage() const
+{
+    return command == "PRIVMSG";
+}
 
-//QString ClientToServerChatMessage::getTypeCommand(ChatMessageType type)
-//{
-//    switch (type) {
-//        case ChatMessageType::AdminMessage:   return "ADMIN";
-//        case ChatMessageType::PrivateMessage: return "PRIVMSG";
-//        case ChatMessageType::TopicMessage:   return "TOPIC";
-//    }
+bool ClientToServerChatMessage::isAdminMessage() const
+{
+    return command == "ADMIN";
+}
 
-//    return "MSG";
-//}
+ClientToServerChatMessage ClientToServerChatMessage::from(QIODevice *device, quint32 payload)
+{
 
-//ClientToServerChatMessage ClientToServerChatMessage::from(QIODevice *device, quint32 payload)
-//{
+    QDataStream stream(device);
+    stream.setByteOrder(QDataStream::LittleEndian);
 
-//    QDataStream stream(device);
-//    stream.setByteOrder(QDataStream::LittleEndian);
+    QByteArray byteArray(payload, Qt::Uninitialized);
 
-//    QByteArray byteArray(payload, Qt::Uninitialized);
+    int readed = stream.readRawData(byteArray.data(), payload);
 
-//    int readed = stream.readRawData(byteArray.data(), payload);
+    Q_ASSERT(readed == payload);
 
-//    Q_ASSERT(readed == payload);
+    auto arrays = byteArray.split('\0');
 
-//    auto arrays = byteArray.split('\0');
-//    Q_ASSERT(arrays.size() >= 5);
+    Q_ASSERT(arrays.size() > 1);
 
-//    QString command(arrays.at(0));
-//    QString arg1 = QString::fromUtf8(arrays.at(1));
-//    QString arg2 = QString::fromUtf8(arrays.at(2));
-//    QString arg3 = QString::fromUtf8(arrays.at(3));
-//    QString arg4 = QString::fromUtf8(arrays.at(4));
+    QString command(arrays.at(0));
+    QString arg1 = QString::fromUtf8(arrays.at(1));
 
-//    return ClientToServerChatMessage(command, arg1, arg2, arg3,arg4);
-//}
+    QString arg2 = (arrays.size() >= 3) ? QString::fromUtf8(arrays.at(2)) : QString();
+    QString arg3 = (arrays.size() >= 4) ? QString::fromUtf8(arrays.at(3)) : QString();
+    QString arg4 = (arrays.size() >= 5) ? QString::fromUtf8(arrays.at(4)) : QString();
+
+    return ClientToServerChatMessage(command, arg1, arg2, arg3,arg4);
+}
 
 void ClientToServerChatMessage::serializeTo(QIODevice *device) const
 {
@@ -417,7 +413,8 @@ UploadIntervalBegin UploadIntervalBegin::from(QIODevice *device, quint32 payload
     quint8 channelIndex;
     stream >> channelIndex;
 
-    //QString userName = ninjam::extractString(stream, payload - 16 - 4 - 4 - 1);
+    // reading and discarding another bytes, old jamtaba versions are wrongly sending user name in this message
+    ninjam::extractString(stream, payload - 16 - 4 - 4 - 1);
 
     bool isAudioInterval = fourCC[0] == 'O' && fourCC[1] == 'G' && fourCC[2] == 'G' && fourCC[3] == 'v';
     return UploadIntervalBegin(GUID, channelIndex, isAudioInterval);

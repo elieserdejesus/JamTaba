@@ -16,6 +16,10 @@ class TestServerClientCommunication : public QObject
 private slots:
     void clientServerConnectionAndDisconnection();
     void clientServerConnectionAndDisconnection_data();
+
+    void publicChatMessage();
+
+    //void privateChatMessage();
 };
 
 #endif

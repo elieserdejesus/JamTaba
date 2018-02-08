@@ -125,6 +125,22 @@ public:
     static ClientToServerChatMessage buildPrivateMessage(const QString &message, const QString &destionationUserName);
     static ClientToServerChatMessage buildAdminMessage(const QString &message);
 
+    static ClientToServerChatMessage from(QIODevice *device, quint32 payload);
+
+    inline QString getCommand() const
+    {
+        return command;
+    }
+
+    inline QStringList getArguments() const
+    {
+        return arguments;
+    }
+
+    bool isPublicMessage() const;
+    bool isAdminMessage() const;
+    bool isPrivateMessage() const;
+
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;
 
@@ -132,8 +148,6 @@ private:
     ClientToServerChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3, const QString &arg4);
     QString command;
     QStringList arguments;
-
-    //static QString satinizeText(const QString &msg, ChatMessageType type);
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

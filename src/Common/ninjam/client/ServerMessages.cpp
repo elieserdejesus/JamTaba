@@ -345,6 +345,16 @@ ServerToClientChatMessage::ServerToClientChatMessage(const QString &command, con
     arguments.append(arg4);
 }
 
+ServerToClientChatMessage ServerToClientChatMessage::buildPrivateMessage(const QString &destinationUserName, const QString &message)
+{
+    return ServerToClientChatMessage("PRIVMSG", destinationUserName, message);
+}
+
+ServerToClientChatMessage ServerToClientChatMessage::buildPublicMessage(const QString &userName, const QString &message)
+{
+    return ServerToClientChatMessage("MSG", userName, message);
+}
+
 ServerToClientChatMessage ServerToClientChatMessage::buildTopicMessage(const QString &topic)
 {
     return ServerToClientChatMessage("TOPIC", QString(), topic, QString(), QString());

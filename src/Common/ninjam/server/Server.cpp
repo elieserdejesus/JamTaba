@@ -56,12 +56,12 @@ void RemoteUser::setLastKeepAliveToNow()
 
 Server::Server() :
     bpm(120),
-    bpi(16),
+    bpi(8),
     topic("No topic!"),
     licence("No licence at moment!"),
     maxChannels(2),
     maxUsers(8),
-    keepAlivePeriod(5)
+    keepAlivePeriod(30)
 {
     connect(&tcpServer, &QTcpServer::newConnection, this, &Server::handleNewConnection);
     connect(&tcpServer, &QTcpServer::acceptError, this, &Server::handleAcceptError);
@@ -252,29 +252,80 @@ void Server::broadcastUserChangeNotify(const RemoteUser &remoteUser)
 
 void Server::processUploadIntervalBegin(QTcpSocket *socket, const MessageHeader &header)
 {
+    qint64 before = socket->bytesAvailable();
     auto msg = UploadIntervalBegin::from(socket, header.getPayload());
-    qDebug() << "Upload interval begin received from " << remoteUsers[socket].getName();
+    //qDebug() << "Upload interval begin received from " << remoteUsers[socket].getName();
+    Q_ASSERT(before - socket->bytesAvailable() == header.getPayload());
 }
 
 void Server::processUploadIntervalWrite(QTcpSocket *socket, const MessageHeader &header)
 {
+    qint64 before = socket->bytesAvailable();
     auto msg = UploadIntervalWrite::from(socket, header.getPayload());
-    qDebug() << "Upload interval write received " << msg.getEncodedData().size() << " bytes";
+    //qDebug() << "Upload interval write received " << msg.getEncodedData().size() << " bytes";
+    Q_ASSERT(before - socket->bytesAvailable() == header.getPayload());
+}
+
+void Server::broadcastPublicChatMessage(const ClientToServerChatMessage &receivedMessage, const QString &userFullName)
+{
+    Q_ASSERT(receivedMessage.isPublicMessage());
+
+    QString messageText = receivedMessage.getArguments().at(0);
+    auto msg = ServerToClientChatMessage::buildPublicMessage(userFullName, messageText);
+    for (auto s : remoteUsers.keys()) {
+        msg.to(s);
+        s->flush();
+    }
 }
 
 void Server::processChatMessage(QTcpSocket *socket, const ninjam::MessageHeader &header)
 {
-//    ClientToServerChatMessage receivedMessage = ClientToServerChatMessage::from(socket, header.getPayload());
-//    for (auto socket : remoteUsers.keys()) {
-//        receivedMessage.to(socket);
-//    }
+    if (!remoteUsers.contains(socket))
+        return;
+
+    ClientToServerChatMessage receivedMessage = ClientToServerChatMessage::from(socket, header.getPayload());
+
+    if (receivedMessage.isPublicMessage()) {
+        QString userFullName = remoteUsers[socket].getFullName();
+        broadcastPublicChatMessage(receivedMessage, userFullName);
+    }
+    else if (receivedMessage.isPrivateMessage()) {
+        QString senderFullName = remoteUsers[socket].getFullName();
+        QString destinationUserName = receivedMessage.getArguments().at(0);
+        if (!destinationUserName.contains("@"))
+            destinationUserName += "@" + tcpServer.serverAddress().toString();
+        QString text = receivedMessage.getArguments().at(1);
+        auto msg = ServerToClientChatMessage::buildPrivateMessage(senderFullName, text);
+        for (auto s : remoteUsers.keys()) {
+            const RemoteUser &user = remoteUsers[s];
+            if (user.getFullName() == destinationUserName) {
+                msg.to(s);
+                break;
+            }
+        }
+    }
+    else if (receivedMessage.isAdminMessage()) {
+
+    }
+    else {
+        qCritical() << "Error handling chat message!" << receivedMessage.getCommand() << receivedMessage.getArguments();
+    }
+
+}
+
+void Server::processKeepAlive(QTcpSocket *socket, const ninjam::MessageHeader &)
+{
+    if (remoteUsers.contains(socket)) {
+        qDebug() << "processing keep alive";
+        remoteUsers[socket].setLastKeepAliveToNow();
+    }
 }
 
 void Server::processReceivedBytes()
 {
     auto socket = qobject_cast<QTcpSocket *>(QObject::sender());
     if (!socket) {
-        qCritical() << "Error, socket is NULL!";
+        qFatal("Error, socket is NULL!");
         return;
     }
 
@@ -288,14 +339,17 @@ void Server::processReceivedBytes()
                 disconnectClient(socket);
             }
             else {
+                //qDebug() << "Requesting keep alive to" << user.getFullName();
                 ClientKeepAlive msg;
                 msg.serializeTo(socket);
             }
         }
     }
 
-    if (!remoteUsers.contains(socket))
+    if (!remoteUsers.contains(socket)) {
+        qFatal("NOT CONTAIN SOCKET");
         return;
+    }
 
     RemoteUser &user = remoteUsers[socket];
 
@@ -305,12 +359,19 @@ void Server::processReceivedBytes()
         if (!header.isValid()) {
             header = MessageHeader::from(socket);
             user.setCurrentHeader(header);
+//            qDebug() << "Reading new header to" << user.getName()
+//                     << " code:" << QString::number(static_cast<quint8>(header.getMessageType()), 16)
+//                     << " payload:" << header.getPayload();
         }
+//        else {
+//            qDebug() << "Header is valid to " << user.getName() << " continuing...";
+//        }
 
         Q_ASSERT(header.isValid());
 
         if (socket->bytesAvailable() < header.getPayload()) {
-            qDebug() << "not enough bytes " << socket->bytesAvailable() << "/" << header.getPayload() << " bytes available";
+            qDebug() << "not enough bytes " << socket->bytesAvailable() << "/" << header.getPayload()
+                     << " bytes available  msg code:"<< QString::number(static_cast<quint8>(header.getMessageType()), 16);
             return;
         }
 
@@ -324,8 +385,7 @@ void Server::processReceivedBytes()
             break;
 
         case MessageType::KeepAlive:
-            if (remoteUsers.contains(socket))
-                    remoteUsers[socket].setLastKeepAliveToNow();
+            processKeepAlive(socket, header);
             break;
 
         case MessageType::UploadIntervalBegin:
@@ -341,9 +401,11 @@ void Server::processReceivedBytes()
             break;
 
         default:
-            qCritical() << "not handled message code:" << static_cast<quint8>(header.getMessageType());
+            qFatal(QString("not handled message code: %1")
+                   .arg(QString::number(static_cast<quint8>(header.getMessageType())), 16).toStdString().c_str());
         }
 
+        //qDebug() << "Header used, reseting to parse next message";
         user.setCurrentHeader(MessageHeader()); // invalidate header to force a new parsing in next loop iteration
     }
 
@@ -359,6 +421,7 @@ void Server::handleDisconnection()
 
 void Server::disconnectClient(QTcpSocket *socket)
 {
+    qDebug() << "Trying to disconnect" << socket;
     if (remoteUsers.contains(socket)) {
         qDebug() << "Disconnecting " << remoteUsers[socket].getName();
         remoteUsers.remove(socket);

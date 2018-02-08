@@ -23,7 +23,7 @@ class Service;
 
 enum class  ChatCommandType : quint8
 {
-    MSG = 0,         // TODO remove this 0 value. Is uncessary, right?
+    MSG,
     PRIVMSG,
     TOPIC,
     JOIN,
@@ -220,13 +220,16 @@ inline QList<User> UserInfoChangeNotifyMessage::getUsers() const
 class ServerToClientChatMessage : public ServerMessage
 {
 public:
-    ServerToClientChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3, const QString &arg4);
+
+    ServerToClientChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3 = QString(), const QString &arg4 = QString());
 
     static ServerToClientChatMessage buildTopicMessage(const QString &topic);
+    static ServerToClientChatMessage buildPublicMessage(const QString &authorName, const QString &message);
+    static ServerToClientChatMessage buildPrivateMessage(const QString &destinationUserName, const QString &message);
+    static ServerToClientChatMessage from(QIODevice *stream, quint32 payload);
 
     void printDebug(QDebug &dbg) const override;
 
-    static ServerToClientChatMessage from(QIODevice *stream, quint32 payload);
     void to(QIODevice *device) const;
 
     quint32 getPayload() const;
@@ -246,6 +249,8 @@ public:
 private:
     QString command;
     QStringList arguments;
+
+
 };
 
 /*

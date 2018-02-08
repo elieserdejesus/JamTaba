@@ -20,6 +20,96 @@ using namespace ninjam;
 using namespace ninjam::client;
 using namespace ninjam::server;
 
+//void TestServerClientCommunication::privateChatMessage()
+//{
+//    int argc = 0;
+//    char **argv = nullptr;
+
+//    QCoreApplication app(argc, argv);
+
+//    const quint16 serverPort = 2049;
+//    Server server;
+//    server.start(serverPort);
+
+//    QString chatMessage("testing private chat message");
+
+//    QString receiverName("receiver");
+//    QString senderName("sender");
+
+//    Service client;
+//    Service client2;
+
+//    quint8 connections = 0;
+
+//    connect(&client, &Service::disconnectedFromServer, &app, &QCoreApplication::quit);
+
+//    connect(&client, &Service::privateChatMessageReceived, [&](const User &sender, const QString &msg){
+//        qDebug() << "Private chat message received:" << msg << " from" << sender.getFullName();
+//        QCOMPARE(chatMessage, msg);
+//        QCOMPARE(sender.getName(), senderName);
+
+//        client2.disconnectFromServer(true);
+//        client.disconnectFromServer(true);
+//    });
+
+//    connect(&client, &Service::connectedInServer, [&](const ServerInfo &serverInfo){
+//        qDebug() << "Connected in server" << serverInfo.getUniqueName();
+
+//        connections++;
+
+//        if (connections >= 2)
+//            client2.sendPrivateChatMessage(chatMessage, receiverName);
+//    });
+
+//    connect(&client2, &Service::connectedInServer, [&](const ServerInfo &serverInfo){
+//        qDebug() << "Connected in server" << serverInfo.getUniqueName();
+
+//        connections++;
+
+//        if (connections >= 2)
+//            client2.sendPrivateChatMessage(chatMessage, receiverName);
+//    });
+
+//    client.startServerConnection("localhost", serverPort, receiverName, QStringList());
+//    client2.startServerConnection("localhost", serverPort, senderName, QStringList());
+
+//    app.exec();
+//}
+
+void TestServerClientCommunication::publicChatMessage()
+{
+    int argc = 0;
+    char **argv = nullptr;
+
+    QCoreApplication app(argc, argv);
+
+    const quint16 serverPort = 2049;
+    Server server;
+    server.start(serverPort);
+
+    QString chatMessage("testing chat message");
+
+    Service client;
+
+    connect(&client, &Service::disconnectedFromServer, &app, &QCoreApplication::quit);
+
+    connect(&client, &Service::publicChatMessageReceived, [&](const User &sender, const QString &msg){
+        qDebug() << "Chat message received:" << msg;
+        QCOMPARE(chatMessage, msg);
+        client.disconnectFromServer(true);
+    });
+
+    connect(&client, &Service::connectedInServer, [&](const ServerInfo &serverInfo){
+        qDebug() << "Connected in server" << serverInfo.getUniqueName();
+
+        client.sendPublicChatMessage(chatMessage);
+    });
+
+    client.startServerConnection("localhost", serverPort, "userName", QStringList());
+
+    app.exec();
+}
+
 void TestServerClientCommunication::clientServerConnectionAndDisconnection_data()
 {
     QTest::addColumn<QString>("userName");

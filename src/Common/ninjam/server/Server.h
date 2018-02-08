@@ -9,11 +9,16 @@
 #include "../Ninjam.h"
 #include "ninjam/client/User.h"
 
+namespace ninjam { namespace client {
+    class ClientToServerChatMessage;
+}}
+
 namespace ninjam {
 
 namespace server {
 
 using ninjam::client::User;
+using ninjam::client::ClientToServerChatMessage;
 
 class RemoteUser : public User
 {
@@ -83,13 +88,14 @@ private:
     quint16 keepAlivePeriod;
 
     void broadcastUserChangeNotify(const RemoteUser &user);
-    void broadcastPublicChatMessage();
+    void broadcastPublicChatMessage(const ClientToServerChatMessage &receivedMessage, const QString &userFullName);
 
     void processClientAuthUserMessage(QTcpSocket *socket, const MessageHeader &header);
     void processClientSetChannel(QTcpSocket *socket, const MessageHeader &header);
     void processUploadIntervalBegin(QTcpSocket *socket, const MessageHeader &header);
     void processUploadIntervalWrite(QTcpSocket *socket, const MessageHeader &header);
     void processChatMessage(QTcpSocket *socket, const MessageHeader &header);
+    void processKeepAlive(QTcpSocket *socket, const MessageHeader &header);
 
     void disconnectClient(QTcpSocket *socket);
 
