@@ -154,13 +154,15 @@ void Service::setupSocketSignals()
     });
 }
 
-void Service::sendIntervalPart(const QByteArray &GUID, const QByteArray &encodedData,
-                                    bool isLastPart)
+void Service::sendIntervalPart(const QByteArray &GUID, const QByteArray &encodedData, bool isLastPart)
 {
     if (!initialized)
         return;
 
-    sendMessageToServer(ClientIntervalUploadWrite(GUID, encodedData, isLastPart));
+    auto msg = UploadIntervalWrite(GUID, encodedData, isLastPart);
+    sendMessageToServer(msg);
+
+    msg.printDebug(qDebug());
 }
 
 void Service::sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, bool isAudioInterval)
@@ -168,7 +170,9 @@ void Service::sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, boo
     if (!initialized)
         return;
 
-    sendMessageToServer(ClientUploadIntervalBegin(GUID, channelIndex, this->userName, isAudioInterval));
+    auto msg = UploadIntervalBegin(GUID, channelIndex, isAudioInterval);
+    sendMessageToServer(msg);
+    msg.printDebug(qDebug());
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -258,28 +262,29 @@ float Service::getIntervalPeriod() const
 void Service::voteToChangeBPI(quint16 newBPI)
 {
     QString text = "!vote bpi " + QString::number(newBPI);
-    sendMessageToServer(ChatMessage(text));
+    sendMessageToServer(ClientToServerChatMessage::buildPublicMessage(text));
 }
 
 void Service::voteToChangeBPM(quint16 newBPM)
 {
     QString text = "!vote bpm " + QString::number(newBPM);
-    sendMessageToServer(ChatMessage(text));
+    sendMessageToServer(ClientToServerChatMessage::buildPublicMessage(text));
 }
 
-void Service::sendPrivateChatMessage(const QString &message)
+void Service::sendPrivateChatMessage(const QString &message, const QString &destinationUser)
 {
-    sendMessageToServer(ChatMessage(message, ChatMessage::PrivateMessage));
+    sendMessageToServer(ClientToServerChatMessage::buildPrivateMessage(message, destinationUser));
 }
 
 void Service::sendPublicChatMessage(const QString &message)
 {
-    sendMessageToServer(ChatMessage(message));
+    sendMessageToServer(ClientToServerChatMessage::buildPublicMessage(message));
 }
 
 void Service::sendAdminCommand(const QString &message)
 {
-    sendMessageToServer(ChatMessage(message, ChatMessage::AdminMessage));
+    auto msg = ClientToServerChatMessage::buildAdminMessage(message);
+    sendMessageToServer(msg);
 }
 
 void Service::sendMessageToServer(const ClientMessage &message)
@@ -502,7 +507,7 @@ bool Service::channelIsOutdate(const User &user, const UserChannel &serverChanne
 
 // +++++++++++++ CHAT MESSAGES ++++++++++++++++++++++
 
-void Service::process(const ServerChatMessage &msg)
+void Service::process(const ServerToClientChatMessage &msg)
 {
     switch (msg.getCommand()) {
     case ChatCommandType::JOIN:

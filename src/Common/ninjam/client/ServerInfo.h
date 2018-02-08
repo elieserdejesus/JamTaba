@@ -42,7 +42,7 @@ namespace client
             return host == "localhost";
         }
 
-        inline int getMaxChannels() const
+        inline quint8 getMaxChannels() const
         {
             return maxChannels;
         }

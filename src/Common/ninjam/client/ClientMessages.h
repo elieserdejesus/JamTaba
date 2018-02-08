@@ -7,22 +7,26 @@
 #include <QStringList>
 #include <QDebug>
 #include <QIODevice>
+#include "ninjam/Ninjam.h"
 
 namespace ninjam {
+
 namespace client {
 
 class User;
 
+using ninjam::MessageType;
+
 class ClientMessage
 {
 public:
-    ClientMessage(quint8 msgCode, quint32 payload);
+    ClientMessage(MessageType type, quint32 payload);
     virtual ~ClientMessage();
 
     virtual void printDebug(QDebug &dbg) const = 0;
     virtual void serializeTo(QIODevice *device) const = 0;
 
-    inline quint8 getMsgType() const
+    inline MessageType getMsgType() const
     {
         return msgType;
     }
@@ -34,7 +38,7 @@ public:
 
 protected:
 
-    quint8 msgType; // TODO this is common to server and client messages
+    MessageType msgType; // TODO this is common to server and client messages
     quint32 payload;
 };
 
@@ -88,6 +92,7 @@ private:
 
 // ++++++++++++++++++++++++++
 
+// TODO merge Client and ServerKeep Alive
 class ClientKeepAlive : public ClientMessage
 {
 public:
@@ -112,30 +117,23 @@ private:
 
 // +++++++++++++++++++++++++++
 
-class ChatMessage : public ClientMessage
+class ClientToServerChatMessage : public ClientMessage
 {
 public:
 
-    enum ChatMessageType
-    {
-        PublicMessage,              // MSG
-        PrivateMessage,             // PRIVMSG
-        TopicMessage,               // TOPIC
-        AdminMessage                // ADMIN
-    };
-
-    ChatMessage(const QString &text, ChatMessageType type = ChatMessageType::PublicMessage);
+    static ClientToServerChatMessage buildPublicMessage(const QString &message);
+    static ClientToServerChatMessage buildPrivateMessage(const QString &message, const QString &destionationUserName);
+    static ClientToServerChatMessage buildAdminMessage(const QString &message);
 
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;
 
 private:
-    QString text;
+    ClientToServerChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3, const QString &arg4);
     QString command;
-    ChatMessageType type;
+    QStringList arguments;
 
-    static QString getTypeCommand(ChatMessageType type);
-    static QString satinizeText(const QString &msg, ChatMessageType type);
+    //static QString satinizeText(const QString &msg, ChatMessageType type);
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -149,11 +147,12 @@ Offset Type        Field
 0x19   ...         Username (NUL-terminated)
 */
 
-class ClientUploadIntervalBegin : public ClientMessage
+class UploadIntervalBegin : public ClientMessage
 {
 public:
-    ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName,
-                              bool isAudioInterval);
+    UploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, bool isAudioInterval);
+
+    static UploadIntervalBegin from(QIODevice *device, quint32 payload);
 
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;
@@ -170,19 +169,24 @@ private:
     quint32 estimatedSize;
     char fourCC[4];
     quint8 channelIndex;
-    QString userName;
 };
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++=
 
-class ClientIntervalUploadWrite : public ClientMessage
+class UploadIntervalWrite : public ClientMessage
 {
 public:
-    ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedData,
-                              bool isLastPart);
+    UploadIntervalWrite(const QByteArray &GUID, const QByteArray &encodedData, bool isLastPart);
+
+    static UploadIntervalWrite from(QIODevice *device, quint32 payload);
 
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;
+
+    inline QByteArray getEncodedData() const
+    {
+        return encodedData;
+    }
 
 private:
     QByteArray GUID;

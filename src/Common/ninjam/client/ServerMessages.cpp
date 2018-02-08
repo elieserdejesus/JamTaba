@@ -13,10 +13,11 @@
 using ninjam::client::ServerMessage;
 using ninjam::client::AuthChallengeMessage;
 using ninjam::client::AuthReplyMessage;
-using ninjam::client::ServerChatMessage;
+using ninjam::client::ServerToClientChatMessage;
 using ninjam::client::ConfigChangeNotifyMessage;
 using ninjam::client::ServerKeepAliveMessage;
 using ninjam::client::UserInfoChangeNotifyMessage;
+using ninjam::client::DownloadIntervalBegin;
 using ninjam::client::DownloadIntervalBegin;
 using ninjam::client::DownloadIntervalWrite;
 using ninjam::client::ChatCommandType;
@@ -333,7 +334,8 @@ void UserInfoChangeNotifyMessage::printDebug(QDebug &dbg) const
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // +++++++++++++++++ SERVER CHAT MESSAGE +++++++++++++++++++++
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-ServerChatMessage::ServerChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3, const QString &arg4) :
+
+ServerToClientChatMessage::ServerToClientChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3, const QString &arg4) :
     ServerMessage(MessageType::ChatMessage),
     command(command)
 {
@@ -343,7 +345,12 @@ ServerChatMessage::ServerChatMessage(const QString &command, const QString &arg1
     arguments.append(arg4);
 }
 
-quint32 ServerChatMessage::getPayload() const
+ServerToClientChatMessage ServerToClientChatMessage::buildTopicMessage(const QString &topic)
+{
+    return ServerToClientChatMessage("TOPIC", QString(), topic, QString(), QString());
+}
+
+quint32 ServerToClientChatMessage::getPayload() const
 {
     quint32 payload = command.size() + 1; // +1 to include nul terminator
     for (const QString &arg : arguments)
@@ -352,7 +359,7 @@ quint32 ServerChatMessage::getPayload() const
     return payload;
 }
 
-void ServerChatMessage::to(QIODevice *device) const
+void ServerToClientChatMessage::to(QIODevice *device) const
 {
     QDataStream stream(device);
     stream.setByteOrder(QDataStream::LittleEndian);
@@ -368,7 +375,7 @@ void ServerChatMessage::to(QIODevice *device) const
         ninjam::serializeString(argument, stream);
 }
 
-ServerChatMessage ServerChatMessage::from(QIODevice *device, quint32 payload)
+ServerToClientChatMessage ServerToClientChatMessage::from(QIODevice *device, quint32 payload)
 {
     /*
      Offset Type Field
@@ -405,10 +412,10 @@ ServerChatMessage ServerChatMessage::from(QIODevice *device, quint32 payload)
     QString arg3 = QString::fromUtf8(arrays.at(3));
     QString arg4 = QString::fromUtf8(arrays.at(4));
 
-    return ServerChatMessage(command, arg1, arg2, arg3,arg4);
+    return ServerToClientChatMessage(command, arg1, arg2, arg3,arg4);
 }
 
-ChatCommandType ServerChatMessage::commandTypeFromString(const QString &string)
+ChatCommandType ServerToClientChatMessage::commandTypeFromString(const QString &string)
 {
     if (string == "MSG")
         return ChatCommandType::MSG;
@@ -428,7 +435,7 @@ ChatCommandType ServerChatMessage::commandTypeFromString(const QString &string)
     return ChatCommandType::USERCOUNT; /*if(string == "USERCOUNT")*/
 }
 
-void ServerChatMessage::printDebug(QDebug &dbg) const
+void ServerToClientChatMessage::printDebug(QDebug &dbg) const
 {
     dbg << "RECEIVE ServerChatMessage{ command=" << command
         << " arguments=" << arguments << "}"
@@ -437,7 +444,7 @@ void ServerChatMessage::printDebug(QDebug &dbg) const
 
 // ++++++++++++++++++++++++++++++++++++++++++++++
 DownloadIntervalBegin::DownloadIntervalBegin(const QByteArray &GUID, quint32 estimatedSize, const QByteArray &fourCC, quint8 channelIndex, const QString &userName) :
-    ServerMessage(MessageType::DownloadIntervalBegin),
+    ServerMessage(MessageType::UploadIntervalBegin),
     GUID(GUID),
     estimatedSize(estimatedSize),
     channelIndex(channelIndex),
@@ -457,19 +464,21 @@ void DownloadIntervalBegin::to(QIODevice *device) const
     stream << static_cast<quint8>(messageType);
     stream << static_cast<quint32>(16 + 4 + 4 + 1 + userName.toUtf8().size() + 1); // payload
 
-    ninjam::serializeByteArray(GUID, stream);
+    ninjam::serializeByteArray(getGUID(), stream);
 
-    stream << estimatedSize;
+    stream << getEstimatedSize();
 
-    stream.writeRawData(fourCC, 4);
+    stream.writeRawData(getFourCC().data(), 4);
 
-    stream << channelIndex;
+    stream << getChannelIndex();
 
     ninjam::serializeString(userName, stream);
 }
 
 DownloadIntervalBegin DownloadIntervalBegin::from(QIODevice *device, quint32 payload)
 {
+    Q_UNUSED(payload)
+
     QByteArray GUID(16, Qt::Uninitialized);
     QByteArray fourCC(4, Qt::Uninitialized);
 
@@ -487,8 +496,8 @@ DownloadIntervalBegin DownloadIntervalBegin::from(QIODevice *device, quint32 pay
 
     stream >> channelIndex;
 
-    quint32 stringSize = payload - 16 - sizeof(estimatedSize) - 4 - sizeof(channelIndex);
-    QString userName = extractString(stream, stringSize);
+    quint32 stringSize = payload - 16 - 4 - 4 - 1;
+    QString userName(ninjam::extractString(stream, stringSize));
 
     return DownloadIntervalBegin(GUID, estimatedSize, fourCC, channelIndex, userName);
 }
@@ -516,13 +525,13 @@ void DownloadIntervalBegin::printDebug(QDebug &dbg) const
         << "\tdownloadIsComplete="<< isComplete() << endl
         << "\testimatedSize=" << estimatedSize << endl
         << "\tchannelIndex=" << channelIndex  << endl
-        << "\tuserName=" << userName << endl <<"}" << endl;
+        << "}" << endl;
 }
 
 // -------------------------------------------------------------------
 
 DownloadIntervalWrite::DownloadIntervalWrite(const QByteArray &GUID, quint8 flags, const QByteArray &encodedData) :
-    ServerMessage(MessageType::DownloadIntervalWrite),
+    ServerMessage(MessageType::UploadIntervalWrite),
     GUID(GUID),
     flags(flags),
     encodedData(encodedData)

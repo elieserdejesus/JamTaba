@@ -14,6 +14,17 @@ const QRegularExpression gui::chat::ADMIN_COMMAND_REGEX("^/bpi|^/bpm|^/kick|^/to
 
 const QRegularExpression gui::chat::PRIVATE_MESSAGE_REGEX("^/msg");
 
+QString gui::chat::extractDestinationUserNameFromPrivateMessage(const QString &text)
+{
+    QString t(text);
+    t.replace("/msg ", "");
+    int index = t.indexOf(QChar(' '));
+    if (index > 0) {
+        return t.left(index);
+    }
+
+    return text;
+}
 
 bool gui::chat::isPrivateMessage(const QString &message)
 {

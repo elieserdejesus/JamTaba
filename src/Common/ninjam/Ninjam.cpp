@@ -3,14 +3,14 @@
 namespace ninjam {
 
 MessageHeader::MessageHeader(quint8 type, quint32 payload) :
-    messageTypeCode(type),
+    messageType(static_cast<MessageType>(type)),
     payload(payload)
 {
 
 }
 
 MessageHeader::MessageHeader() :
-    MessageHeader(0xff, 0) // invalid header
+    MessageHeader(static_cast<quint8>(MessageType::Invalid), 0) // invalid header
 {
 
 }

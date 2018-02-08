@@ -26,7 +26,7 @@ namespace client
     class AuthReplyMessage;
     class ConfigChangeNotifyMessage;
     class ServerKeepAliveMessage;
-    class ServerChatMessage;
+    class ServerToClientChatMessage;
     class UserInfoChangeNotifyMessage;
     class DownloadIntervalBegin;
     class DownloadIntervalWrite;
@@ -60,7 +60,7 @@ namespace client
         static bool isBotName(const QString &userName);
 
         void sendPublicChatMessage(const QString &message);
-        void sendPrivateChatMessage(const QString &message);
+        void sendPrivateChatMessage(const QString &message, const QString &destinationUser);
         void sendAdminCommand(const QString &message);
 
         void setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel);
@@ -118,7 +118,7 @@ namespace client
         virtual void process(const AuthReplyMessage &msg);
         virtual void process(const ConfigChangeNotifyMessage &msg);
         virtual void process(const UserInfoChangeNotifyMessage &msg);
-        virtual void process(const ServerChatMessage &msg);
+        virtual void process(const ServerToClientChatMessage &msg);
         virtual void process(const ServerKeepAliveMessage &msg);
         virtual void process(const DownloadIntervalBegin &msg);
         virtual void process(const DownloadIntervalWrite &msg);

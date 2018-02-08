@@ -67,7 +67,7 @@ namespace client
             return channels.size();
         }
 
-    private:
+    protected:
         QString fullName;
         QString name;
         QString ip;

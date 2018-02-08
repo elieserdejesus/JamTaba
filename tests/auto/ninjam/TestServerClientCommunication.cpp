@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QTimer>
+#include <QRegularExpression>
 
 #include "ninjam/Ninjam.h"
 #include "ninjam/client/User.h"
@@ -19,10 +20,29 @@ using namespace ninjam;
 using namespace ninjam::client;
 using namespace ninjam::server;
 
+void TestServerClientCommunication::clientServerConnectionAndDisconnection_data()
+{
+    QTest::addColumn<QString>("userName");
+    QTest::addColumn<QString>("newUserName"); // new name after connected
+    QTest::addColumn<QStringList>("channels");
+
+    QTest::newRow("Connecting using valid name, 2 channels")
+            << QString("tester") << QString("tester") << (QStringList() << "first" << "second");
+
+    QTest::newRow("Connecting using INvalid name, 2 channels")
+            << QString("tester!@.") << QString("tester___") << (QStringList() << "first" << "second");
+
+    QTest::newRow("Connecting using big name, no channels")
+            << QString("01234567890123456789") << QString("0123456789012345") << (QStringList());
+
+    QTest::newRow("Connecting as anon, no channels")
+            << QString("") << QString("anon") << (QStringList());
+}
+
 void TestServerClientCommunication::clientServerConnectionAndDisconnection()
 {
     int argc = 0;
-    char **argv;
+    char **argv = nullptr;
 
     QCoreApplication app(argc, argv);
 
@@ -30,19 +50,32 @@ void TestServerClientCommunication::clientServerConnectionAndDisconnection()
     Server server;
     server.start(serverPort);
 
+    QFETCH(QString, userName);
+    QFETCH(QString, newUserName);
+    QFETCH(QStringList, channels);
+
     Service client;
 
-    connect(&client, &Service::connectedInServer, [&](const ServerInfo &info){
-        qDebug() << "Connected in server" << info.getUniqueName();
+    connect(&client, &Service::disconnectedFromServer, &app, &QCoreApplication::quit);
+
+    connect(&client, &Service::connectedInServer, [&](const ServerInfo &serverInfo){
+        qDebug() << "Connected in server" << serverInfo.getUniqueName();
+
+        QCOMPARE(serverInfo.getTopic(), server.getTopic());
+        QCOMPARE(serverInfo.getBpi(), server.getBpi());
+        QCOMPARE(serverInfo.getBpm(), server.getBpm());
+        QCOMPARE(serverInfo.getHostName(), QString("localhost"));
+        QCOMPARE(serverInfo.getLicence(), server.getLicence());
+        QCOMPARE(serverInfo.getMaxChannels(), server.getMaxChannels());
+
+        QString name = ninjam::client::extractUserName(client.getConnectedUserName()); // remove IP from name
+        QCOMPARE(name, newUserName);
+
         client.disconnectFromServer(true);
-        app.quit();
+
     });
 
-    QString userName("test");
-    QStringList channels;
-    channels << "firstChannel";
-    channels << "secondChannel";
-    client.startServerConnection("localhost", serverPort, userName, channels);
+    //client.startServerConnection("localhost", serverPort, userName, channels);
 
     app.exec();
 }

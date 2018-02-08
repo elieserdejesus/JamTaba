@@ -45,7 +45,7 @@ public:
     }
 
 protected:
-    const MessageType messageType;
+    MessageType messageType;
 };
 
 // ++++++++++++++++++++++++++++++++++
@@ -217,14 +217,16 @@ inline QList<User> UserInfoChangeNotifyMessage::getUsers() const
         USERCOUNT <users> <maxusers> -- server status
     */
 
-class ServerChatMessage : public ServerMessage
+class ServerToClientChatMessage : public ServerMessage
 {
 public:
-    ServerChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3, const QString &arg4);
+    ServerToClientChatMessage(const QString &command, const QString &arg1, const QString &arg2, const QString &arg3, const QString &arg4);
+
+    static ServerToClientChatMessage buildTopicMessage(const QString &topic);
 
     void printDebug(QDebug &dbg) const override;
 
-    static ServerChatMessage from(QIODevice *stream, quint32 payload);
+    static ServerToClientChatMessage from(QIODevice *stream, quint32 payload);
     void to(QIODevice *device) const;
 
     quint32 getPayload() const;
@@ -264,15 +266,21 @@ class DownloadIntervalBegin : public ServerMessage
 {
 public:
     DownloadIntervalBegin(const QByteArray &GUID, quint32 estimatedSize, const QByteArray &fourCC, quint8 channelIndex, const QString &userName);
+    virtual ~DownloadIntervalBegin() {}
 
     static DownloadIntervalBegin from(QIODevice *stream, quint32 payload);
-    void to(QIODevice *device) const;
+    virtual void to(QIODevice *device) const;
 
     void printDebug(QDebug &dbg) const override;
 
     inline quint8  getChannelIndex() const
     {
         return channelIndex;
+    }
+
+    inline QByteArray getFourCC() const
+    {
+        return QByteArray(&fourCC[0], 4);
     }
 
     inline quint32 getEstimatedSize() const
@@ -283,11 +291,6 @@ public:
     inline QByteArray getGUID() const
     {
         return GUID;
-    }
-
-    inline QString getUserName() const
-    {
-        return userName;
     }
 
     bool isAudio() const;
@@ -302,6 +305,11 @@ public:
     inline bool isComplete() const
     {
         return fourCC[0] == 0 && fourCC[3] == 0;
+    }
+
+    inline QString getUserName() const
+    {
+        return userName;
     }
 
 private:

@@ -112,7 +112,7 @@ public:
 
         //check the topic message
         currentHeader = MessageHeader::from(device);
-        auto topicMessage = ServerChatMessage::from(device, currentHeader.getPayload());
+        auto topicMessage = ServerToClientChatMessage::from(device, currentHeader.getPayload());
 
         QVERIFY(topicMessage.getCommand() == ChatCommandType::TOPIC);
         QCOMPARE(topicMessage.getArguments().at(1), QString("\"Happy New Year 2016 ALL!!\""));

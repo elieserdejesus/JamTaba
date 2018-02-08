@@ -42,8 +42,7 @@ bool ServerMessagesHandler::executeMessageHandler(const MessageHeader &header)
 {
     Q_ASSERT(header.isValid());
 
-    MessageType type = static_cast<MessageType>(header.getMessageType());
-    switch (type) {
+    switch (header.getMessageType()) {
     case MessageType::AuthChallenge:
         return handleMessage<AuthChallengeMessage>(header.getPayload());
     case MessageType::AuthReply:
@@ -55,13 +54,13 @@ bool ServerMessagesHandler::executeMessageHandler(const MessageHeader &header)
     case MessageType::KeepAlive:
         return handleMessage<ServerKeepAliveMessage>(header.getPayload());
     case MessageType::ChatMessage:
-        return handleMessage<ServerChatMessage>(header.getPayload());
+        return handleMessage<ServerToClientChatMessage>(header.getPayload());
     case MessageType::DownloadIntervalBegin:
         return handleMessage<DownloadIntervalBegin>(header.getPayload());
     case MessageType::DownloadIntervalWrite:
         return handleMessage<DownloadIntervalWrite>(header.getPayload());
     default:
-        qCritical() << "Can't handle the message code " << QString::number(header.getMessageType());
+        qCritical() << "Can't handle the message code " << static_cast<quint8>(header.getMessageType());
     }
     return false;
 }

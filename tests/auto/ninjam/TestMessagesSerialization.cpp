@@ -50,7 +50,7 @@ void TestMessagesSerialization::chatMessage()
     QBuffer device;
     device.open(QIODevice::ReadWrite);
 
-    ServerChatMessage message(command, arg1, arg2, arg3, arg4);
+    ServerToClientChatMessage message(command, arg1, arg2, arg3, arg4);
 
     message.to(&device);
 
@@ -63,7 +63,7 @@ void TestMessagesSerialization::chatMessage()
     auto header = MessageHeader::from(&device);
     QCOMPARE(header.getPayload(), payload);
 
-    auto otherMessage = ServerChatMessage::from(&device, payload); //populate the message
+    auto otherMessage = ServerToClientChatMessage::from(&device, payload); //populate the message
 
     QCOMPARE(otherMessage.getCommand(), message.getCommand());
     QCOMPARE(otherMessage.getMessageType(), message.getMessageType());
@@ -129,7 +129,7 @@ void TestMessagesSerialization::downloadIntervalBegin()
     QBuffer device;
     device.open(QIODevice::ReadWrite);
 
-    DownloadIntervalBegin msg = DownloadIntervalBegin(GUID, estimatedSize, fourCC, channelIndex, userName);
+    auto msg = DownloadIntervalBegin(GUID, estimatedSize, fourCC, channelIndex, userName);
     msg.to(&device);
 
     device.reset();

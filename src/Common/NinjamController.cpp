@@ -606,7 +606,8 @@ void NinjamController::sendChatMessage(const QString &msg)
         service->sendAdminCommand(msg);
     }
     else if (gui::chat::isPrivateMessage(msg)) {
-        service->sendPrivateChatMessage(msg);
+        QString destUserName = gui::chat::extractDestinationUserNameFromPrivateMessage(msg);
+        service->sendPrivateChatMessage(QString(msg).replace(destUserName, ""), destUserName);
     }
     else {
         service->sendPublicChatMessage(msg);
