@@ -261,6 +261,18 @@ quint32 UserInfoChangeNotifyMessage::getPayload() const
     return payload;
 }
 
+UserInfoChangeNotifyMessage UserInfoChangeNotifyMessage::buildDeactivationMessage(const ninjam::client::User &user)
+{
+    UserInfoChangeNotifyMessage msg;
+
+    for (const UserChannel &channel : user.getChannels()) {
+        QString userFullName = user.getFullName();
+        msg.addUserChannel(userFullName, UserChannel(userFullName, channel.getName(), channel.getIndex(), false));
+    }
+
+    return msg;
+}
+
 void UserInfoChangeNotifyMessage::to(QIODevice *device) const
 {
     QDataStream stream(device);
@@ -361,6 +373,16 @@ ServerToClientChatMessage ServerToClientChatMessage::buildPublicMessage(const QS
 ServerToClientChatMessage ServerToClientChatMessage::buildTopicMessage(const QString &topic)
 {
     return ServerToClientChatMessage("TOPIC", QString(), topic, QString(), QString());
+}
+
+ServerToClientChatMessage ServerToClientChatMessage::buildUserJoinMessage(const QString &userName)
+{
+    return ServerToClientChatMessage("JOIN", userName, QString(), QString(), QString());
+}
+
+ServerToClientChatMessage ServerToClientChatMessage::buildUserPartMessage(const QString &userName)
+{
+    return ServerToClientChatMessage("PART", userName, QString(), QString(), QString());
 }
 
 quint32 ServerToClientChatMessage::getPayload() const

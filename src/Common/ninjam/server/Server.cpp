@@ -215,8 +215,15 @@ void Server::processClientAuthUserMessage(QTcpSocket *socket, const MessageHeade
     AuthReplyMessage authReply(flag, newUserName, maxChannels);
     authReply.to(socket);
 
-    if (!authReply.userIsAuthenticated()) {
-        remoteUsers.remove(socket);
+    if (authReply.userIsAuthenticated()) {
+        auto msg = ServerToClientChatMessage::buildUserJoinMessage(newUserName);
+        for (auto skt : remoteUsers.keys()) {
+            if (skt != socket)
+                msg.to(skt);
+        }
+    }
+    else {
+        disconnectClient(socket);
     }
 }
 
@@ -292,6 +299,9 @@ void Server::processClientSetChannel(QTcpSocket *socket, const ninjam::MessageHe
         // send bpm, bpi and server topic to connected user
         sendServerInitialInfosTo(socket);
         user.setReceivedServerInfos();
+
+        //QString message = QString("%1 has joined the room.").arg(user.getName());
+        //broadcastServerMessage(message, socket); // broadcast to everybody, except the connected user
     }
 }
 
@@ -362,6 +372,23 @@ void Server::processUploadIntervalWrite(QTcpSocket *senderSocket, const MessageH
     }
 }
 
+void Server::broadcastServerMessage(const QString &serverMessage)
+{
+//    auto msg = ServerToClientChatMessage::buildServerMessage(serverMessage);
+//    for (auto s : remoteUsers.keys()) {
+//        msg.to(s);
+//    }
+}
+
+void Server::broadcastServerMessage(const QString &serverMessage, QTcpSocket *exclude)
+{
+//    auto msg = ServerToClientChatMessage::buildServerMessage(serverMessage);
+//    for (auto s : remoteUsers.keys()) {
+//        if (s != exclude)
+//            msg.to(s);
+//    }
+}
+
 void Server::broadcastPublicChatMessage(const ClientToServerChatMessage &receivedMessage, const QString &userFullName)
 {
     Q_ASSERT(receivedMessage.isPublicMessage());
@@ -370,7 +397,7 @@ void Server::broadcastPublicChatMessage(const ClientToServerChatMessage &receive
     auto msg = ServerToClientChatMessage::buildPublicMessage(userFullName, messageText);
     for (auto s : remoteUsers.keys()) {
         msg.to(s);
-        s->flush();
+        //s->flush();
     }
 }
 
@@ -600,7 +627,18 @@ void Server::handleDisconnection()
 void Server::disconnectClient(QTcpSocket *socket)
 {
     if (remoteUsers.contains(socket)) {
-        qDebug() << "Disconnecting " << remoteUsers[socket].getName();
+        const RemoteUser &user = remoteUsers[socket];
+
+        // send the PART message and deactivate all user channels
+        auto msg = UserInfoChangeNotifyMessage::buildDeactivationMessage(user);
+        auto partMsg = ServerToClientChatMessage::buildUserPartMessage(user.getFullName());
+        for (auto skt : remoteUsers.keys()) {
+            if (skt != socket) {
+                partMsg.to(skt);
+                msg.to(skt);
+            }
+        }
+
         remoteUsers.remove(socket);
         socket->deleteLater();
     }

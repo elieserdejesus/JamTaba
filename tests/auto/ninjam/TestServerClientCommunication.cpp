@@ -164,54 +164,46 @@ void TestServerClientCommunication::clientServerConnectionAndDisconnection()
 
     });
 
-    client.startServerConnection("localhost", serverPort, userName, channels);
+    //client.startServerConnection("localhost", serverPort, userName, channels);
 
     app.exec();
 }
 
-//void TestServerClientCommunication::connectInNonEmptyServer()
-//{
-//    int argc = 0;
-//    char **argv = nullptr;
+void TestServerClientCommunication::connectInNonEmptyServer()
+{
+    int argc = 0;
+    char **argv = nullptr;
 
-//    QCoreApplication app(argc, argv);
+    QCoreApplication app(argc, argv);
 
-//    const quint16 serverPort = 2049;
-//    Server server;
-//    server.start(serverPort);
+    const quint16 serverPort = 2049;
+    Server server;
+    server.start(serverPort);
 
-//    Service client1;
-//    Service client2;
-//    QString user1 = "user1";
-//    QString user2 = "user2";
+    Service client1;
+    Service client2;
+    QString user1 = "user1";
+    QString user2 = "user2";
 
-//    quint8 connections = 0;
+    connect(&client1, &Service::disconnectedFromServer, &app, &QCoreApplication::quit);
 
-//    connect(&client1, &Service::disconnectedFromServer, &app, &QCoreApplication::quit);
+    connect(&client1, &Service::connectedInServer, [&](){
+        client2.startServerConnection("localhost", serverPort, user2, QStringList("channel2"));
+    });
 
-//    connect(&client1, &Service::connectedInServer, [&](const ServerInfo &serverInfo){
-//        qDebug() << "Connected in server" << serverInfo.getUniqueName() << serverInfo.getUsers();
-//        connections++;
-//        if (connections >= 2) {
-//            QCOMPARE(serverInfo.getUsers().size(), 1);
-//            client2.disconnectFromServer(true);
-//            client1.disconnectFromServer(true);
-//        }
-//    });
+    connect(&client1, &Service::userEntered, [&](const User &newUser){
+        qDebug() << "USER ENTERED:" << newUser.getFullName();
+    });
 
-//    connect(&client2, &Service::connectedInServer, [&](const ServerInfo &serverInfo){
-//        qDebug() << "Connected in server" << serverInfo.getUniqueName() << serverInfo.getUsers();
-//        connections++;
-//        if (connections >= 2) {
-//            QCOMPARE(serverInfo.getUsers().size(), 1);
-//            client2.disconnectFromServer(true);
-//            client1.disconnectFromServer(true);
-//        }
-//    });
+    connect(&client2, &Service::connectedInServer, [&](const ServerInfo &serverInfo){
+        qDebug() << "Connected in server" << serverInfo.getUniqueName() << serverInfo.getUsers();
+        QCOMPARE(serverInfo.getUsers().size(), 1);
+        client2.disconnectFromServer(true);
+        client1.disconnectFromServer(true);
+    });
 
-//    client1.startServerConnection("localhost", serverPort, user1, QStringList("channel1"));
-//    client2.startServerConnection("localhost", serverPort, user2, QStringList("channel2"));
+    client1.startServerConnection("localhost", serverPort, user1, QStringList("channel1"));
 
-//    app.exec();
-//}
+    app.exec();
+}
 

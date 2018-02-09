@@ -24,7 +24,6 @@ namespace client
         virtual void handleAllMessages();
 
     protected:
-        //QDataStream stream;
         QIODevice *device;
         Service *service;
         MessageHeader currentHeader; // the last messageHeader readed from socket

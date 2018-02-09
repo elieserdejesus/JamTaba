@@ -185,6 +185,7 @@ public:
     void addUserChannel(const QString &userFullName, const UserChannel &channel);
     void to(QIODevice *device) const;
     static UserInfoChangeNotifyMessage from(QIODevice *stream, quint32 payload);
+    static UserInfoChangeNotifyMessage buildDeactivationMessage(const User &user);
 
     void printDebug(QDebug &dbg) const override;
 
@@ -228,6 +229,8 @@ public:
     static ServerToClientChatMessage buildTopicMessage(const QString &topic);
     static ServerToClientChatMessage buildPublicMessage(const QString &authorName, const QString &message);
     static ServerToClientChatMessage buildPrivateMessage(const QString &destinationUserName, const QString &message);
+    static ServerToClientChatMessage buildUserJoinMessage(const QString &userName);
+    static ServerToClientChatMessage buildUserPartMessage(const QString &userName);
     static ServerToClientChatMessage from(QIODevice *stream, quint32 payload);
 
     void printDebug(QDebug &dbg) const override;

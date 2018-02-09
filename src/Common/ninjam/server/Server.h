@@ -101,6 +101,8 @@ private:
     void broadcastUserChanges(const RemoteUser &user);
     void sendConnectedUsersTo(QTcpSocket *socket);
     void broadcastPublicChatMessage(const ClientToServerChatMessage &receivedMessage, const QString &userFullName);
+    void broadcastServerMessage(const QString &serverMessage);
+    void broadcastServerMessage(const QString &serverMessage, QTcpSocket *exclude);
 
     void processClientAuthUserMessage(QTcpSocket *socket, const MessageHeader &header);
     void processClientSetChannel(QTcpSocket *socket, const MessageHeader &header);

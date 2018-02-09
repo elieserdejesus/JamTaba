@@ -26,7 +26,7 @@ private slots:
 
     void privateChatMessage();
 
-    //void connectInNonEmptyServer();
+    void connectInNonEmptyServer();
 
 };
 
