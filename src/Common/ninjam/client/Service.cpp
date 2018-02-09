@@ -306,6 +306,13 @@ bool Service::needSendKeepAlive() const
 
 void Service::process(const UserInfoChangeNotifyMessage &msg)
 {
+    qDebug() << "Service::process UserInfoChangeNotifyMessage connected as"
+             << getConnectedUserName() << " receiving users: " << msg.getUsers().size();
+
+    if (!msg.getUsers().isEmpty()) {
+        qDebug() << "Service::process UserInfoChangeNotifyMessage receiving" << msg.getUsers().first().getChannelsCount() << " channels from " << msg.getUsers().first().getFullName();
+    }
+
     for (const User &user : msg.getUsers()) {
         if (!currentServer->containsUser(user)) {
             currentServer->addUser(user);

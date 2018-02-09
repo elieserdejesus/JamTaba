@@ -19,14 +19,14 @@ class TestServerClientCommunication : public QObject
     Q_OBJECT
 
 private slots:
-    //void clientServerConnectionAndDisconnection();
-    //void clientServerConnectionAndDisconnection_data();
+    void clientServerConnectionAndDisconnection();
+    void clientServerConnectionAndDisconnection_data();
 
-    //void publicChatMessage();
+    void publicChatMessage();
 
-    //void privateChatMessage();
+    void privateChatMessage();
 
-    void connectInNonEmptyServer();
+    //void connectInNonEmptyServer();
 
 };
 

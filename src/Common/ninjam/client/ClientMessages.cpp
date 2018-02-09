@@ -216,7 +216,7 @@ void ClientSetChannel::printDebug(QDebug &dbg) const
 ClientKeepAlive::ClientKeepAlive() :
     ClientMessage(MessageType::KeepAlive, 0)
 {
-    qDebug() << "keep alive";
+
 }
 
 void ClientKeepAlive::serializeTo(QIODevice *device) const

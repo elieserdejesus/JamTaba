@@ -30,9 +30,20 @@ public:
     void setCurrentHeader(MessageHeader header);
     void setFullName(const QString &fullName);
 
+    inline bool receivedInitialServerInfos() const
+    {
+        return receivedServerInfos;
+    }
+
+    inline void setReceivedServerInfos()
+    {
+        receivedServerInfos = true;
+    }
+
 private:
     MessageHeader currentHeader;
     quint64 lastKeepAliveReceived;
+    bool receivedServerInfos;
 };
 
 inline void RemoteUser::setCurrentHeader(MessageHeader header)
@@ -87,7 +98,8 @@ private:
     quint8 maxChannels;
     quint16 keepAlivePeriod;
 
-    void broadcastUserChangeNotify(const RemoteUser &user);
+    void broadcastUserChanges(const RemoteUser &user);
+    void sendConnectedUsersTo(QTcpSocket *socket);
     void broadcastPublicChatMessage(const ClientToServerChatMessage &receivedMessage, const QString &userFullName);
 
     void processClientAuthUserMessage(QTcpSocket *socket, const MessageHeader &header);
@@ -97,6 +109,14 @@ private:
     void processChatMessage(QTcpSocket *socket, const MessageHeader &header);
     void processKeepAlive(QTcpSocket *socket, const MessageHeader &header);
     void processClientSetUserMask(QTcpSocket *socket, const MessageHeader &header);
+
+    void sendServerInitialInfosTo(QTcpSocket *socket);
+
+    void sendPrivateMessage(const QString &sender, const ClientToServerChatMessage &receivedMessage);
+    void processAdminCommand(const QString &cmd);
+    void setTopic(const QString &newTopic);
+    void setBpi(quint16 newBpi);
+    void setBpm(quint16 newBpm);
 
     void disconnectClient(QTcpSocket *socket);
 
