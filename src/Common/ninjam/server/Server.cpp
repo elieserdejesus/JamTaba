@@ -265,7 +265,6 @@ void Server::sendServerInitialInfosTo(QTcpSocket *socket)
 void Server::processClientSetChannel(QTcpSocket *socket, const ninjam::MessageHeader &header)
 {
     auto msg = ClientSetChannel::unserializeFrom(socket, header.getPayload());
-    qDebug() << "Client Set Channel received  channels:" << msg.getChannelNames();
 
     /**
       ClientSetChannel is received after server/client handshake, it's the end of the initialization process. But this message is
@@ -327,25 +326,40 @@ void Server::broadcastUserChanges(const RemoteUser &remoteUser)
     for (auto socket : remoteUsers.keys()) {
         if (remoteUsers[socket].getFullName() != remoteUser.getFullName()) {
             msg.to(socket);
-            qDebug() << "Broadcasting " << remoteUser.getFullName() << "to " << remoteUsers[socket].getFullName();
         }
     }
 }
 
-void Server::processUploadIntervalBegin(QTcpSocket *socket, const MessageHeader &header)
+void Server::processUploadIntervalBegin(QTcpSocket *senderSocket, const MessageHeader &header)
 {
-    qint64 before = socket->bytesAvailable();
-    auto msg = UploadIntervalBegin::from(socket, header.getPayload());
-    //qDebug() << "Upload interval begin received from " << remoteUsers[socket].getName();
-    Q_ASSERT(before - socket->bytesAvailable() == header.getPayload());
+    if (!remoteUsers.contains(senderSocket))
+        return;
+
+    auto msg = UploadIntervalBegin::from(senderSocket, header.getPayload());
+    auto senderFullName = remoteUsers[senderSocket].getFullName();
+
+    auto downloadMsg = DownloadIntervalBegin::from(msg, senderFullName);
+
+    for (auto socket : remoteUsers.keys()) {
+        if (socket != senderSocket) {
+            downloadMsg.to(socket);
+        }
+    }
 }
 
-void Server::processUploadIntervalWrite(QTcpSocket *socket, const MessageHeader &header)
+void Server::processUploadIntervalWrite(QTcpSocket *senderSocket, const MessageHeader &header)
 {
-    qint64 before = socket->bytesAvailable();
-    auto msg = UploadIntervalWrite::from(socket, header.getPayload());
-    //qDebug() << "Upload interval write received " << msg.getEncodedData().size() << " bytes";
-    Q_ASSERT(before - socket->bytesAvailable() == header.getPayload());
+    if (!remoteUsers.contains(senderSocket))
+        return;
+
+    // parsing the DownloadIntervalWrite directly, because the message is identical to UploadIntervaWrite
+    auto downloadMsg = DownloadIntervalWrite::from(senderSocket, header.getPayload());
+
+    for (auto socket : remoteUsers.keys()) {
+        if (socket != senderSocket) {
+            downloadMsg.to(socket);
+        }
+    }
 }
 
 void Server::broadcastPublicChatMessage(const ClientToServerChatMessage &receivedMessage, const QString &userFullName)
@@ -382,7 +396,6 @@ void Server::setTopic(const QString &newTopic)
 {
     if (newTopic != topic) {
         topic = newTopic;
-        qDebug() << "setting topic to " << newTopic;
 
         auto msg = ServerToClientChatMessage::buildTopicMessage(newTopic);
         for (auto socket : remoteUsers.keys()) {
@@ -395,7 +408,6 @@ void Server::setBpi(quint16 newBpi)
 {
     if (newBpi != bpi && newBpi > 0) {
         bpi = newBpi;
-        qDebug() << "setting bpi to " << bpi;
 
         auto msg = ConfigChangeNotifyMessage(bpm, bpi);
         for (auto socket : remoteUsers.keys()) {
@@ -408,7 +420,6 @@ void Server::setBpm(quint16 newBpm)
 {
     if (newBpm != bpm && newBpm > 0) {
         bpm = newBpm;
-        qDebug() << "setting bpm to " << bpm;
 
         auto msg = ConfigChangeNotifyMessage(bpm, bpi);
         for (auto socket : remoteUsers.keys()) {
@@ -573,7 +584,6 @@ void Server::processReceivedBytes()
                    .arg(QString::number(static_cast<quint8>(header.getMessageType())), 16).toStdString().c_str());
         }
 
-        //qDebug() << "Header used, reseting to parse next message";
         user.setCurrentHeader(MessageHeader()); // invalidate header to force a new parsing in next loop iteration
     }
 
@@ -589,7 +599,6 @@ void Server::handleDisconnection()
 
 void Server::disconnectClient(QTcpSocket *socket)
 {
-    qDebug() << "Trying to disconnect" << socket;
     if (remoteUsers.contains(socket)) {
         qDebug() << "Disconnecting " << remoteUsers[socket].getName();
         remoteUsers.remove(socket);

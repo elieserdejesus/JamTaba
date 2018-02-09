@@ -160,7 +160,7 @@ void TestServerClientCommunication::clientServerConnectionAndDisconnection()
         QString name = ninjam::client::extractUserName(client.getConnectedUserName()); // remove IP from name
         QCOMPARE(name, newUserName);
 
-        //client.disconnectFromServer(true);
+        client.disconnectFromServer(true);
 
     });
 

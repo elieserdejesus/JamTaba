@@ -181,6 +181,21 @@ public:
         return GUID;
     }
 
+    inline QByteArray getFourCC() const
+    {
+        return QByteArray(&fourCC[0], 4);
+    }
+
+    inline quint32 getEstimatedSize() const
+    {
+        return estimatedSize;
+    }
+
+    inline quint8 getChannelIndex() const
+    {
+        return channelIndex;
+    }
+
 private:
     QByteArray GUID;
     quint32 estimatedSize;
@@ -193,7 +208,7 @@ private:
 class UploadIntervalWrite : public ClientMessage
 {
 public:
-    UploadIntervalWrite(const QByteArray &GUID, const QByteArray &encodedData, bool isLastPart);
+    UploadIntervalWrite(const QByteArray &GUID, const QByteArray &encodedData, bool lastPart);
 
     static UploadIntervalWrite from(QIODevice *device, quint32 payload);
 
@@ -205,10 +220,20 @@ public:
         return encodedData;
     }
 
+    inline QByteArray getGUID() const
+    {
+        return GUID;
+    }
+
+    inline bool isLastPart() const
+    {
+        return lastPart;
+    }
+
 private:
     QByteArray GUID;
     QByteArray encodedData;
-    bool isLastPart;
+    bool lastPart;
 };
 }     // ns
 } // ns

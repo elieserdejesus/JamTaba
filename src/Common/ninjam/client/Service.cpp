@@ -516,8 +516,6 @@ bool Service::channelIsOutdate(const User &user, const UserChannel &serverChanne
 
 void Service::process(const ServerToClientChatMessage &msg)
 {
-    //quando testei com 2 jamtabas deu erro, analisar o que está chegando
-
     switch (msg.getCommand()) {
     case ChatCommandType::JOIN:
     {

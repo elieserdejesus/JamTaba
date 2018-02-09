@@ -467,7 +467,7 @@ UploadIntervalWrite::UploadIntervalWrite(const QByteArray &GUID, const QByteArra
     ClientMessage(MessageType::UploadIntervalWrite, 16 + 1 + encodedData.size()),
     GUID(GUID),
     encodedData(encodedData),
-    isLastPart(isLastPart)
+    lastPart(isLastPart)
 {
 
 }
@@ -501,7 +501,7 @@ void UploadIntervalWrite::serializeTo(QIODevice *device) const
     stream << payload;
 
     stream.writeRawData(GUID.data(), 16);
-    quint8 intervalCompleted = isLastPart ? (quint8) 1 : (quint8) 0; // If the Flag field bit 0 is set then the upload is complete.
+    quint8 intervalCompleted = lastPart ? (quint8) 1 : (quint8) 0; // If the Flag field bit 0 is set then the upload is complete.
     stream << intervalCompleted;
     stream.writeRawData(encodedData.data(), encodedData.size());
 }
@@ -514,6 +514,6 @@ void UploadIntervalWrite::printDebug(QDebug &dbg) const
         << ", encodedAudioBuffer= "
         << payload
         << " bytes, isLastPart="
-        << isLastPart
+        << lastPart
         << '}';
 }

@@ -20,6 +20,8 @@ namespace client {
 class User;
 class UserChannel;
 class Service;
+class UploadIntervalBegin;
+class UploadIntervalWrite;
 
 enum class  ChatCommandType : quint8
 {
@@ -274,6 +276,7 @@ public:
     virtual ~DownloadIntervalBegin() {}
 
     static DownloadIntervalBegin from(QIODevice *stream, quint32 payload);
+    static DownloadIntervalBegin from(const UploadIntervalBegin &msg, const QString &userName);
     virtual void to(QIODevice *device) const;
 
     void printDebug(QDebug &dbg) const override;
@@ -336,9 +339,11 @@ class DownloadIntervalWrite : public ServerMessage
 {
 public:
     static DownloadIntervalWrite from(QIODevice *stream, quint32 payload);
-    void to(QIODevice *device) const;
+    static DownloadIntervalWrite from(const UploadIntervalWrite &msg);
 
+    void to(QIODevice *device) const;
     DownloadIntervalWrite(const QByteArray &GUID, quint8 flags, const QByteArray &encodedData);
+
 
     void printDebug(QDebug &dbg) const override;
 

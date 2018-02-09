@@ -1,4 +1,5 @@
 #include "ServerMessages.h"
+#include "ClientMessages.h"
 #include <QDebug>
 #include <QDataStream>
 #include "ninjam/client/UserChannel.h"
@@ -20,6 +21,8 @@ using ninjam::client::UserInfoChangeNotifyMessage;
 using ninjam::client::DownloadIntervalBegin;
 using ninjam::client::DownloadIntervalBegin;
 using ninjam::client::DownloadIntervalWrite;
+using ninjam::client::UploadIntervalBegin;
+using ninjam::client::UploadIntervalWrite;
 using ninjam::client::ChatCommandType;
 using ninjam::client::User;
 using ninjam::client::UserChannel;
@@ -454,7 +457,7 @@ void ServerToClientChatMessage::printDebug(QDebug &dbg) const
 
 // ++++++++++++++++++++++++++++++++++++++++++++++
 DownloadIntervalBegin::DownloadIntervalBegin(const QByteArray &GUID, quint32 estimatedSize, const QByteArray &fourCC, quint8 channelIndex, const QString &userName) :
-    ServerMessage(MessageType::UploadIntervalBegin),
+    ServerMessage(MessageType::DownloadIntervalBegin),
     GUID(GUID),
     estimatedSize(estimatedSize),
     channelIndex(channelIndex),
@@ -483,6 +486,16 @@ void DownloadIntervalBegin::to(QIODevice *device) const
     stream << getChannelIndex();
 
     ninjam::serializeString(userName, stream);
+}
+
+DownloadIntervalBegin DownloadIntervalBegin::from(const UploadIntervalBegin &msg, const QString &userName)
+{
+    auto guid = msg.getGUID();
+    auto estimatedSize = msg.getEstimatedSize();
+    auto fourCC = msg.getFourCC();
+    auto channelIndex = msg.getChannelIndex();
+
+    return DownloadIntervalBegin(guid, estimatedSize, fourCC, channelIndex, userName);
 }
 
 DownloadIntervalBegin DownloadIntervalBegin::from(QIODevice *device, quint32 payload)
@@ -541,12 +554,21 @@ void DownloadIntervalBegin::printDebug(QDebug &dbg) const
 // -------------------------------------------------------------------
 
 DownloadIntervalWrite::DownloadIntervalWrite(const QByteArray &GUID, quint8 flags, const QByteArray &encodedData) :
-    ServerMessage(MessageType::UploadIntervalWrite),
+    ServerMessage(MessageType::DownloadIntervalWrite),
     GUID(GUID),
     flags(flags),
     encodedData(encodedData)
 {
     Q_ASSERT(GUID.size() == 16);
+}
+
+DownloadIntervalWrite DownloadIntervalWrite::from(const UploadIntervalWrite &msg)
+{
+    auto guid = msg.getGUID();
+    auto flags = static_cast<quint8>(msg.isLastPart() ? 1 : 0); // If the Flag field bit 0 is set then the upload is complete.
+    auto encodedData = msg.getEncodedData();
+
+    return DownloadIntervalWrite(guid, flags, encodedData);
 }
 
 void DownloadIntervalWrite::printDebug(QDebug &dbg) const
