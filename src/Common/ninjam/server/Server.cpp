@@ -27,6 +27,7 @@ using ninjam::client::UploadIntervalWrite;      //BOTH
 using ninjam::client::ServerKeepAliveMessage;
 using ninjam::client::ClientToServerChatMessage;
 using ninjam::client::ClientKeepAlive;
+using ninjam::client::ClientSetUserMask;
 using ninjam::client::UserChannel;              // used in both
 using ninjam::client::User;                     // both
 using ninjam::server::RemoteUser;
@@ -231,9 +232,14 @@ void Server::processClientSetChannel(QTcpSocket *socket, const ninjam::MessageHe
     auto configChange = ConfigChangeNotifyMessage(bpm, bpi);
     configChange.to(socket);
 
-    // broadcast the new user to everybody
-    if (remoteUsers.contains(socket))
-        broadcastUserChangeNotify(remoteUsers[socket]);
+    if (remoteUsers.contains(socket)) { // broadcast the new user to everybody
+        RemoteUser &user = remoteUsers[socket];
+        for (quint8 index = 0; index < msg.getChannelNames().size(); ++index) {
+            QString channelName(msg.getChannelNames().at(index));
+            user.addChannel(UserChannel(user.getFullName(), channelName, index));
+        }
+        broadcastUserChangeNotify(user);
+    }
 
     auto topicMessage = ServerToClientChatMessage::buildTopicMessage(topic);
     topicMessage.to(socket);
@@ -321,15 +327,9 @@ void Server::processKeepAlive(QTcpSocket *socket, const ninjam::MessageHeader &)
     }
 }
 
-void Server::processReceivedBytes()
+void Server::updateKeepAliveInfos()
 {
-    auto socket = qobject_cast<QTcpSocket *>(QObject::sender());
-    if (!socket) {
-        qFatal("Error, socket is NULL!");
-        return;
-    }
-
-    //check if remote users need keep alive request
+    // check if remote users need keep alive request
     for (auto socket : remoteUsers.keys()) {
         const auto &user = remoteUsers[socket];
         auto now = QDateTime::currentMSecsSinceEpoch();
@@ -339,11 +339,27 @@ void Server::processReceivedBytes()
                 disconnectClient(socket);
             }
             else {
-                //qDebug() << "Requesting keep alive to" << user.getFullName();
                 ClientKeepAlive msg;
                 msg.serializeTo(socket);
             }
         }
+    }
+}
+
+void Server::processClientSetUserMask(QTcpSocket *socket, const ninjam::MessageHeader &header)
+{
+    auto msg = ClientSetUserMask::from(socket, header.getPayload());
+
+}
+
+void Server::processReceivedBytes()
+{
+    updateKeepAliveInfos();
+
+    auto socket = qobject_cast<QTcpSocket *>(QObject::sender());
+    if (!socket) {
+        qFatal("Error, socket is NULL!");
+        return;
     }
 
     if (!remoteUsers.contains(socket)) {
@@ -359,13 +375,7 @@ void Server::processReceivedBytes()
         if (!header.isValid()) {
             header = MessageHeader::from(socket);
             user.setCurrentHeader(header);
-//            qDebug() << "Reading new header to" << user.getName()
-//                     << " code:" << QString::number(static_cast<quint8>(header.getMessageType()), 16)
-//                     << " payload:" << header.getPayload();
         }
-//        else {
-//            qDebug() << "Header is valid to " << user.getName() << " continuing...";
-//        }
 
         Q_ASSERT(header.isValid());
 
@@ -398,6 +408,10 @@ void Server::processReceivedBytes()
 
         case MessageType::ChatMessage:
             processChatMessage(socket, header);
+            break;
+
+        case MessageType::ClientSetUserMask:
+            processClientSetUserMask(socket, header);
             break;
 
         default:

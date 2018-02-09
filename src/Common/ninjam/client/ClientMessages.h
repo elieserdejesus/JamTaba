@@ -107,6 +107,9 @@ class ClientSetUserMask : public ClientMessage
 {
 public:
     explicit ClientSetUserMask(const QString &userName, quint32 channelsMask);
+
+    static ClientSetUserMask from(QIODevice *device, quint32 payload);
+
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;
 

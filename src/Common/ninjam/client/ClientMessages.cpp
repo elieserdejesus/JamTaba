@@ -246,6 +246,21 @@ ClientSetUserMask::ClientSetUserMask(const QString &userName, quint32 channelsMa
     payload += userName.size() + 1;
 }
 
+ClientSetUserMask ClientSetUserMask::from(QIODevice *device, quint32 payload)
+{
+    Q_UNUSED(payload)
+
+    QDataStream stream(device);
+    stream.setByteOrder(QDataStream::LittleEndian);
+
+    QString userName(ninjam::extractString(stream));
+    quint32 channelsMask;
+
+    stream >> channelsMask;
+
+    return ClientSetUserMask(userName, channelsMask);
+}
+
 void ClientSetUserMask::serializeTo(QIODevice *device) const
 {
     QDataStream stream(device);
@@ -362,15 +377,14 @@ void ClientToServerChatMessage::serializeTo(QIODevice *device) const
 
 void ClientToServerChatMessage::printDebug(QDebug &dbg) const
 {
-//    dbg << "SEND ChatMessage{
-//        << " "
-//        << "command="
-//        << command
-//        << " arg1=" << arguments.at(0)
-//        << " arg2=" << arguments.at(1)
-//        << " arg3=" << arguments.at(2)
-//        << " arg4=" << arguments.at(3)
-//        << '}';
+    dbg << "SEND ChatMessage{"
+        << "command="
+        << command
+        << " arg1=" << arguments.at(0)
+        << " arg2=" << arguments.at(1)
+        << " arg3=" << arguments.at(2)
+        << " arg4=" << arguments.at(3)
+        << '}';
 }
 
 //+++++++++++++++++++++++++

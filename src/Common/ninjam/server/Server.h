@@ -96,10 +96,13 @@ private:
     void processUploadIntervalWrite(QTcpSocket *socket, const MessageHeader &header);
     void processChatMessage(QTcpSocket *socket, const MessageHeader &header);
     void processKeepAlive(QTcpSocket *socket, const MessageHeader &header);
+    void processClientSetUserMask(QTcpSocket *socket, const MessageHeader &header);
 
     void disconnectClient(QTcpSocket *socket);
 
     QString generateUniqueUserName(const QString &userName) const; // return sanitized and unique username
+
+    void updateKeepAliveInfos();
 
     static QHostAddress getBestHostAddress();
 };
