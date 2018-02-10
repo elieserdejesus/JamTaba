@@ -59,6 +59,17 @@ namespace client
         {
             return flags;
         }
+
+        inline quint16 getVolume() const
+        {
+            return volume;
+        }
+
+        inline quint8 getPan() const
+        {
+            return pan;
+        }
+
     private:
         QString userFullName;
         QString channelName;

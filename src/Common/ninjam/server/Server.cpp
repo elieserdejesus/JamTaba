@@ -70,6 +70,16 @@ RemoteUser::RemoteUser() :
 
 }
 
+void RemoteUser::updateChannels(const QList<UserChannel> &newChannels)
+{
+    channels.clear();
+
+    for (quint8 i = 0; i < newChannels.size(); ++i) {
+        if (newChannels[i].isActive())
+            addChannel(UserChannel(getFullName(), newChannels[i].getName(), i));
+    }
+}
+
 void RemoteUser::setFullName(const QString &fullName)
 {
     this->fullName = fullName;
@@ -275,7 +285,7 @@ void Server::processClientSetChannel(QTcpSocket *socket, const ninjam::MessageHe
 
     /**
       ClientSetChannel is received after server/client handshake, it's the end of the initialization process. But this message is
-      received while jamming too.
+      received while jamming too, when channels are added, removed or the channel name is changed.
     */
 
     if (!remoteUsers.contains(socket))
@@ -284,13 +294,10 @@ void Server::processClientSetChannel(QTcpSocket *socket, const ninjam::MessageHe
     RemoteUser &user = remoteUsers[socket];
 
     // update remote user channels list
-    for (quint8 index = 0; index < msg.getChannelNames().size(); ++index) {
-        QString channelName(msg.getChannelNames().at(index));
-        user.addChannel(UserChannel(user.getFullName(), channelName, index));
-    }
+    user.updateChannels(msg.getChannels());
 
     // broadcast the updated remote user channels to everybody
-    broadcastUserChanges(user);
+    broadcastUserChanges(user.getFullName(), msg.getChannels());
 
     if (!user.receivedInitialServerInfos()) {
         // send everybody to connected remote user
@@ -326,16 +333,17 @@ void Server::sendConnectedUsersTo(QTcpSocket *socket)
     msg.to(socket);
 }
 
-void Server::broadcastUserChanges(const RemoteUser &remoteUser)
+void Server::broadcastUserChanges(const QString userFullName, const QList<UserChannel> &userChannels)
 {
     UserInfoChangeNotifyMessage msg;
 
-    for (int c = 0; c < remoteUser.getChannelsCount(); ++c)
-        msg.addUserChannel(remoteUser.getFullName(), remoteUser.getChannel(c));
+    for (int c = 0; c < userChannels.size(); ++c)
+        msg.addUserChannel(userFullName, userChannels.at(c));
 
     for (auto socket : remoteUsers.keys()) {
-        if (remoteUsers[socket].getFullName() != remoteUser.getFullName()) {
+        if (remoteUsers[socket].getFullName() != userFullName) {
             msg.to(socket);
+            //msg.printDebug(qDebug());
         }
     }
 }

@@ -400,14 +400,27 @@ void Service::process(const AuthChallengeMessage &msg)
 void Service::sendNewChannelsListToServer(const QStringList &channelsNames)
 {
     this->channels = channelsNames;
-    sendMessageToServer(ClientSetChannel(channels));
+
+    ClientSetChannel msg;
+    for (auto channelName : channelsNames)
+        msg.addChannel(channelName);
+
+    sendMessageToServer(msg);
 }
 
 void Service::sendRemovedChannelIndex(int removedChannelIndex)
 {
     Q_ASSERT(removedChannelIndex >= 0 && removedChannelIndex < channels.size());
+
+    ClientSetChannel msg;
+    for (int i = 0; i < channels.size(); ++i) {
+        quint8 flag = static_cast<quint8>((i == removedChannelIndex) ? 1 : 0); // 1 is deactivating the channel
+        msg.addChannel(channels[i], flag);
+    }
+
     channels.removeAt(removedChannelIndex);
-    sendMessageToServer(ClientSetChannel(channels));
+
+    sendMessageToServer(msg);
 }
 
 void Service::process(const AuthReplyMessage &msg)

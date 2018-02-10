@@ -11,6 +11,7 @@
 
 namespace ninjam { namespace client {
     class ClientToServerChatMessage;
+    class UserChannel;
 }}
 
 namespace ninjam {
@@ -18,6 +19,7 @@ namespace ninjam {
 namespace server {
 
 using ninjam::client::User;
+using ninjam::client::UserChannel;
 using ninjam::client::ClientToServerChatMessage;
 
 class RemoteUser : public User
@@ -29,6 +31,7 @@ public:
     MessageHeader getCurrentHeader() const;
     void setCurrentHeader(MessageHeader header);
     void setFullName(const QString &fullName);
+    void updateChannels(const QList<UserChannel> &newChannels);
 
     inline bool receivedInitialServerInfos() const
     {
@@ -98,7 +101,7 @@ private:
     quint8 maxChannels;
     quint16 keepAlivePeriod;
 
-    void broadcastUserChanges(const RemoteUser &user);
+    void broadcastUserChanges(const QString userFullName, const QList<UserChannel> &userChannels);
     void sendConnectedUsersTo(QTcpSocket *socket);
     void broadcastPublicChatMessage(const ClientToServerChatMessage &receivedMessage, const QString &userFullName);
     void broadcastServerMessage(const QString &serverMessage);

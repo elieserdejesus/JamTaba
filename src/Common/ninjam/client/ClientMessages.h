@@ -14,6 +14,7 @@ namespace ninjam {
 namespace client {
 
 class User;
+class UserChannel;
 
 using ninjam::MessageType;
 
@@ -72,22 +73,21 @@ private:
 class ClientSetChannel : public ClientMessage
 {
 public:
-    explicit ClientSetChannel(const QStringList &channels);
-    explicit ClientSetChannel(const QString &channelNameToRemove);
-
+    ClientSetChannel();
+    explicit ClientSetChannel(const QStringList &channelsNames);
     static ClientSetChannel unserializeFrom(QIODevice *device, quint32 payload);
+
+    void addChannel(const QString &channelName, quint8 flags = 0);
+
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;
 
-    inline QStringList getChannelNames() const
+    inline QList<UserChannel> getChannels() const
     {
-        return channelNames;
+        return channels;
     }
 private:
-    QStringList channelNames;
-    quint16 volume;
-    quint8 pan;
-    quint8 flags;
+    QList<UserChannel> channels;
 };
 
 // ++++++++++++++++++++++++++

@@ -1,5 +1,6 @@
 #include "ClientMessages.h"
 #include "ninjam/client/User.h"
+#include "ninjam/client/UserChannel.h"
 #include "ninjam/Ninjam.h"
 
 #include <QCryptographicHash>
@@ -16,6 +17,7 @@ using ninjam::client::ClientSetChannel;
 using ninjam::client::ClientSetUserMask;
 using ninjam::client::UploadIntervalBegin;
 using ninjam::client::ClientToServerChatMessage;
+using ninjam::client::UserChannel;
 using ninjam::MessageType;
 
 ClientMessage::ClientMessage(MessageType type, quint32 payload) :
@@ -121,37 +123,30 @@ void ClientAuthUserMessage::printDebug(QDebug &dbg) const
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-ClientSetChannel::ClientSetChannel(const QStringList &channels) :
-    ClientMessage(MessageType::ClientSetChannel, 0),
-    volume(0),
-    pan(0),
-    flags(0)
+ClientSetChannel::ClientSetChannel() :
+    ClientMessage(MessageType::ClientSetChannel, 0)
 {
-    payload = 2;
-    channelNames.append(channels);
-    for (int i = 0; i < channelNames.size(); i++) {
-        payload += (channelNames[i].toUtf8().size() + 1) + 2 + 1 + 1; // NUL + volume(short) + pan(byte) + flags(byte)
-    }
+    payload = sizeof(quint16);
 }
 
-
-ClientSetChannel::ClientSetChannel(const QString &channelNameToRemove) :
-    ClientMessage(MessageType::ClientSetChannel, 0),
-    volume(0),
-    pan(0),
-    flags(1) //to remove
+ClientSetChannel::ClientSetChannel(const QStringList &channelsNames) :
+    ClientSetChannel()
 {
-    payload = 2;
-    channelNames.append(channelNameToRemove);
-    for (int i = 0; i < channelNames.size(); i++) {
-        payload += (channelNames[i].toUtf8().size() + 1) + 2 + 1 + 1; // NUL + volume(short) + pan(byte) + flags(byte)
-    }
+    for (auto channelName : channelsNames)
+        addChannel(channelName);
+}
+
+void ClientSetChannel::addChannel(const QString &channelName, quint8 flags)
+{
+    payload += (channelName.toUtf8().size() + 1) + 2 + 1 + 1; // NUL + volume(short) + pan(byte) + flags(byte)
+
+    channels.append(UserChannel());
 }
 
 ClientSetChannel ClientSetChannel::unserializeFrom(QIODevice *device, quint32 payload)
 {
     if (payload <= 0)
-        return ClientSetChannel(QStringList()); // no channels
+        return ClientSetChannel(); // no channels
 
     QDataStream stream(device);
     stream.setByteOrder(QDataStream::LittleEndian);
@@ -161,7 +156,7 @@ ClientSetChannel ClientSetChannel::unserializeFrom(QIODevice *device, quint32 pa
 
     quint32 bytesConsumed = sizeof(quint16);
 
-    QStringList channelNames;
+    ClientSetChannel  msg;
 
     while (bytesConsumed < payload && !stream.atEnd()) {
 
@@ -178,10 +173,10 @@ ClientSetChannel ClientSetChannel::unserializeFrom(QIODevice *device, quint32 pa
         bytesConsumed += channelName.toUtf8().size() + 1;
         bytesConsumed += sizeof(volume) + sizeof(pan) + sizeof(flags);
 
-        channelNames.append(channelName);
+        msg.addChannel(channelName, flags);
     }
 
-    return ClientSetChannel(channelNames);
+    return msg;
 }
 
 void ClientSetChannel::serializeTo(QIODevice *device) const
@@ -193,11 +188,11 @@ void ClientSetChannel::serializeTo(QIODevice *device) const
     stream << payload;
     //++++++++
     stream << quint16(4); // parameter size (4 bytes - volume (2 bytes) + pan (1 byte) + flags (1 byte))
-    for (int i = 0; i < channelNames.size(); ++i) {
-        serializeString(channelNames[i], stream);
-        stream << volume;
-        stream << pan;
-        stream << flags;
+    for (const UserChannel &channel : channels) {
+        ninjam::serializeString(channel.getName(), stream);
+        stream << channel.getVolume();
+        stream << channel.getPan();
+        stream << channel.getFlags();
     }
 }
 
@@ -205,8 +200,8 @@ void ClientSetChannel::printDebug(QDebug &dbg) const
 {
     dbg << "SEND ClientSetChannel{ payloadLenght="
         << payload
-        << " channelName="
-        << channelNames
+        << " channels="
+        << channels.size()
         << '}'
         << endl;
 }
