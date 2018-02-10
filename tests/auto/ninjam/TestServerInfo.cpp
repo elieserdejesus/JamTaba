@@ -40,7 +40,7 @@ void TestServerInfo::addUserChannel()
     //adding some channels
     for (quint8 channelIndex = 0; channelIndex < channelsToAdd; ++channelIndex) {
         QString channelName = "channel " + QString::number(channelIndex);
-        server.addUserChannel(UserChannel(userFullName, channelName, channelIndex));
+        server.addUserChannel(userFullName, UserChannel(channelName, channelIndex));
     }
 
     //checking
@@ -76,14 +76,14 @@ void TestServerInfo::removeUserChannel()
     //adding some channels
     for (quint8 channelIndex = 0; channelIndex < channelsToAdd; ++channelIndex) {
         QString channelName = "channel " + QString::number(channelIndex);
-        server.addUserChannel(UserChannel(userFullName, channelName, channelIndex));
+        server.addUserChannel(userFullName, UserChannel(channelName, channelIndex));
     }
 
     //removing channels and check
     for (quint8 channelIndex = 0; channelIndex < channelsToRemove; ++channelIndex) {
         UserChannel channel = server.getUser(userFullName).getChannel(channelIndex);
         if(channelsToRemove >= channelsToAdd){
-            server.removeUserChannel(channel);
+            server.removeUserChannel(userFullName, channel);
             QVERIFY(!server.getUser(userFullName).hasChannel(channel.getIndex()));
         }
         else{
@@ -112,14 +112,14 @@ void TestServerInfo::updateUserChannel()
 
     //adding channels
     for (quint8 index = 0; index < channelsToAdd; ++index) {
-        server.addUserChannel(UserChannel(userFullName, "channel name " + QString::number(index), index));
+        server.addUserChannel(userFullName, UserChannel("channel name " + QString::number(index), index));
     }
 
     //updating channels names
     for (quint8 index = 0; index < channelsToUpdate; ++index) {
         bool channelIsExpected = index < channelsToAdd;
         QString newName = "newChannelName" + QString::number(index);
-        server.updateUserChannel(UserChannel(userFullName, newName, index));
+        server.updateUserChannel(userFullName, UserChannel(newName, index));
         QString channelName = server.getUser(userFullName).getChannel(index).getName();
         QCOMPARE(channelName, channelIsExpected ? newName : QString("invalid"));
     }

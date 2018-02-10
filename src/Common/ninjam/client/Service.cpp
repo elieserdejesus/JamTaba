@@ -231,15 +231,15 @@ bool Service::isBotName(const QString &userName)
 QStringList Service::buildBotNamesList()
 {
     QStringList names;
-    names.append("Jambot");
-    names.append("ninjamer.com");
-    names.append("ninbot");
-    names.append("ninbot.com");
-    names.append("MUTANTLAB");
-    names.append("mutantlab.com");
-    names.append("LiveStream");
-    names.append("localhost");
-    names.append("ninjamers.servebeer.com");
+    names.append(QStringLiteral("Jambot"));
+    names.append(QStringLiteral("ninjamer.com"));
+    names.append(QStringLiteral("ninbot"));
+    names.append(QStringLiteral("ninbot.com"));
+    names.append(QStringLiteral("MUTANTLAB"));
+    names.append(QStringLiteral("mutantlab.com"));
+    names.append(QStringLiteral("LiveStream"));
+    names.append(QStringLiteral("localhost"));
+    names.append(QStringLiteral("ninjamers.servebeer.com"));
     return names;
 }
 
@@ -306,12 +306,7 @@ bool Service::needSendKeepAlive() const
 
 void Service::process(const UserInfoChangeNotifyMessage &msg)
 {
-    qDebug() << "Service::process UserInfoChangeNotifyMessage connected as"
-             << getConnectedUserName() << " receiving users: " << msg.getUsers().size();
-
-    if (!msg.getUsers().isEmpty()) {
-        qDebug() << "Service::process UserInfoChangeNotifyMessage receiving" << msg.getUsers().first().getChannelsCount() << " channels from " << msg.getUsers().first().getFullName();
-    }
+    msg.printDebug(qDebug());
 
     for (const User &user : msg.getUsers()) {
         if (!currentServer->containsUser(user)) {
@@ -414,8 +409,8 @@ void Service::sendRemovedChannelIndex(int removedChannelIndex)
 
     ClientSetChannel msg;
     for (int i = 0; i < channels.size(); ++i) {
-        quint8 flag = static_cast<quint8>((i == removedChannelIndex) ? 1 : 0); // 1 is deactivating the channel
-        msg.addChannel(channels[i], flag);
+        bool active = i == removedChannelIndex ? false  : true;
+        msg.addChannel(channels[i], active);
     }
 
     channels.removeAt(removedChannelIndex);
@@ -492,22 +487,22 @@ void Service::setBpi(quint16 bpi)
 void Service::handleUserChannels(const User &remoteUser)
 {
     // check for new channels
-    User localUser = currentServer->getUser(remoteUser.getFullName());
+    const User &localUser = currentServer->getUser(remoteUser.getFullName());
     for (const UserChannel &serverChannel : remoteUser.getChannels()) {
         if (serverChannel.isActive()) {
             if (!localUser.hasChannel(serverChannel.getIndex())) {
-                currentServer->addUserChannel(serverChannel);
+                currentServer->addUserChannel(remoteUser.getFullName(), serverChannel);
                 emit userChannelCreated(localUser, serverChannel);
             } else { // check for channel updates
                 if (localUser.hasChannels()) {
                     if (channelIsOutdate(localUser, serverChannel)) {
-                        currentServer->updateUserChannel(serverChannel);
+                        currentServer->updateUserChannel(remoteUser.getFullName(), serverChannel);
                         emit userChannelUpdated(localUser, serverChannel);
                     }
                 }
             }
         } else {
-            currentServer->removeUserChannel(serverChannel);
+            currentServer->removeUserChannel(remoteUser.getFullName(), serverChannel);
             emit userChannelRemoved(localUser, serverChannel);
         }
     }
@@ -516,12 +511,12 @@ void Service::handleUserChannels(const User &remoteUser)
 // check if the local stored channel and the server channel are different
 bool Service::channelIsOutdate(const User &user, const UserChannel &serverChannel)
 {
-    if (user.getFullName() == serverChannel.getUserFullName()) {
+    //if (user.getFullName() == serverChannel.getUserFullName()) {
         if (user.hasChannel(serverChannel.getIndex())) {
             UserChannel userChannel = user.getChannel(serverChannel.getIndex());
             return userChannel.getName() != serverChannel.getName();
         }
-    }
+    //}
     return false;
 }
 

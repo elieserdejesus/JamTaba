@@ -20,9 +20,9 @@ namespace client
 
         ~ServerInfo();
 
-        void addUserChannel(const UserChannel &newChannel);
-        void removeUserChannel(const UserChannel &channel);
-        void updateUserChannel(const UserChannel &serverChannel);
+        void addUserChannel(const QString &userFullName, const UserChannel &newChannel);
+        void removeUserChannel(const QString &userFullName, const UserChannel &channel);
+        void updateUserChannel(const QString &userFullName, const UserChannel &serverChannel);
         void updateUserChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receive);
 
         User getUser(const QString &userFullName) const;

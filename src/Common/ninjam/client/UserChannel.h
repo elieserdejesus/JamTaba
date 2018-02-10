@@ -14,7 +14,7 @@ namespace client
     {
 
     public:
-        UserChannel(const QString &userFullName, const QString &channelName, quint8 channelIndex,
+        UserChannel(const QString &channelName, quint8 channelIndex,
                     bool active=true, quint16 volume=0, quint8 pan=0, quint8 flags=0);
         UserChannel();
 
@@ -38,11 +38,6 @@ namespace client
         inline QString getName() const
         {
             return channelName;
-        }
-
-        inline QString getUserFullName() const
-        {
-            return userFullName;
         }
 
         inline void setName(const QString &name)
@@ -71,7 +66,6 @@ namespace client
         }
 
     private:
-        QString userFullName;
         QString channelName;
         bool active;
         quint8 index;

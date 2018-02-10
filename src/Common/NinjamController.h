@@ -134,7 +134,7 @@ protected:
     MetronomeTrackNode *metronomeTrackNode;
 
 private:
-    static QString getUniqueKeyForChannel(const UserChannel &channel);
+    static QString getUniqueKeyForChannel(const UserChannel &channel, const QString &userFullName);
     static QString getUniqueKeyForUser(const User &user);
 
     void addTrack(const User &user, const UserChannel &channel);

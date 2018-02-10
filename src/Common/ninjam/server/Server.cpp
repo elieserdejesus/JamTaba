@@ -76,7 +76,7 @@ void RemoteUser::updateChannels(const QList<UserChannel> &newChannels)
 
     for (quint8 i = 0; i < newChannels.size(); ++i) {
         if (newChannels[i].isActive())
-            addChannel(UserChannel(getFullName(), newChannels[i].getName(), i));
+            addChannel(UserChannel(newChannels[i].getName(), i));
     }
 }
 

@@ -621,9 +621,9 @@ long NinjamController::generateNewTrackID()
     return TRACK_IDS++;
 }
 
-QString NinjamController::getUniqueKeyForChannel(const UserChannel &channel)
+QString NinjamController::getUniqueKeyForChannel(const UserChannel &channel, const QString &userFullName)
 {
-    return channel.getUserFullName() + QString::number(channel.getIndex());
+    return userFullName + QString::number(channel.getIndex());
 }
 
 QString NinjamController::getUniqueKeyForUser(const User &user)
@@ -652,7 +652,7 @@ void NinjamController::addTrack(const User &user, const UserChannel &channel)
     //checkThread("addTrack();");
     {
         QMutexLocker locker(&mutex);
-        trackNodes.insert(getUniqueKeyForChannel(channel), trackNode);
+        trackNodes.insert(getUniqueKeyForChannel(channel, user.getFullName()), trackNode);
     } // release the mutex before emit the signal
     
     trackAdded = mainController->addTrack(trackNode->getID(), trackNode);
@@ -662,7 +662,7 @@ void NinjamController::addTrack(const User &user, const UserChannel &channel)
     }
     else {
         QMutexLocker locker(&mutex);
-        trackNodes.remove(getUniqueKeyForChannel(channel));
+        trackNodes.remove(getUniqueKeyForChannel(channel, user.getFullName()));
         delete trackNode;
     }
 }
@@ -674,7 +674,7 @@ void NinjamController::removeTrack(const User &user, const UserChannel &channel)
     {
         QMutexLocker locker(&mutex);
         //checkThread("removeTrack();");
-        QString uniqueKey = getUniqueKeyForChannel(channel);
+        QString uniqueKey = getUniqueKeyForChannel(channel, user.getFullName());
 
         if (trackNodes.contains(uniqueKey)) {
             auto trackNode = trackNodes[uniqueKey];
@@ -807,7 +807,7 @@ void NinjamController::removeNinjamRemoteChannel(const User &user, const UserCha
 
 void NinjamController::updateNinjamRemoteChannel(const User &user, const UserChannel &channel)
 {
-    QString uniqueKey = getUniqueKeyForChannel(channel);
+    QString uniqueKey = getUniqueKeyForChannel(channel, user.getFullName());
     QMutexLocker locker(&mutex);
     if (trackNodes.contains(uniqueKey)) {
         auto trackNode = trackNodes[uniqueKey];
@@ -837,7 +837,7 @@ void NinjamController::handleIntervalCompleted(const User &user, quint8 channelI
     }
 
     auto channel = user.getChannel(channelIndex);
-    QString channelKey = getUniqueKeyForChannel(channel);
+    QString channelKey = getUniqueKeyForChannel(channel, user.getFullName());
     QMutexLocker locker(&mutex);
     if (trackNodes.contains(channelKey)) {
         NinjamTrackNode* trackNode = trackNodes[channelKey];
@@ -944,7 +944,7 @@ void NinjamController::handleIntervalDownloading(const User &user, quint8 channe
 {
     Q_UNUSED(downloadedBytes);
     auto channel = user.getChannel(channelIndex);
-    QString channelKey = getUniqueKeyForChannel(channel);
+    QString channelKey = getUniqueKeyForChannel(channel, user.getFullName());
 
     mutex.lock();
     NinjamTrackNode* track = trackNodes[channelKey];

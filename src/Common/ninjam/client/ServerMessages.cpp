@@ -267,7 +267,7 @@ UserInfoChangeNotifyMessage UserInfoChangeNotifyMessage::buildDeactivationMessag
 
     for (const UserChannel &channel : user.getChannels()) {
         QString userFullName = user.getFullName();
-        msg.addUserChannel(userFullName, UserChannel(userFullName, channel.getName(), channel.getIndex(), false));
+        msg.addUserChannel(userFullName, UserChannel(channel.getName(), channel.getIndex(), false));
     }
 
     return msg;
@@ -322,7 +322,7 @@ UserInfoChangeNotifyMessage UserInfoChangeNotifyMessage::from(QIODevice *device,
         bytesConsumed += channelName.toUtf8().size() + 1;
         bool channelIsActive = active > 0 ? true : false;
 
-        message.addUserChannel(userFullName, UserChannel(userFullName, channelName, channelIndex, channelIsActive, volume, pan, flags));
+        message.addUserChannel(userFullName, UserChannel(channelName, channelIndex, channelIsActive, volume, pan, flags));
     }
 
     return message;

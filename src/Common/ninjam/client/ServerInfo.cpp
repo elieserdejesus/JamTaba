@@ -44,9 +44,8 @@ void ServerInfo::addUser(const User &user)
     }
 }
 
-void ServerInfo::updateUserChannel(const UserChannel &serverChannel)
+void ServerInfo::updateUserChannel(const QString &userFullName, const UserChannel &serverChannel)
 {
-    QString userFullName = serverChannel.getUserFullName();
     if (users.contains(userFullName)) {
         quint8 channelIndex = serverChannel.getIndex();
         users[userFullName].updateChannelName(channelIndex, serverChannel.getName());
@@ -61,9 +60,8 @@ void ServerInfo::updateUserChannelReceiveStatus(const QString &userFullName, qui
     }
 }
 
-void ServerInfo::removeUserChannel(const UserChannel &channel)
+void ServerInfo::removeUserChannel(const QString &userFullName, const UserChannel &channel)
 {
-    QString userFullName = channel.getUserFullName();
     if (users.contains(userFullName)) {
         users[userFullName].removeChannel(channel.getIndex());
     }
@@ -74,9 +72,8 @@ void ServerInfo::removeUser(const QString &fullUserName)
     users.remove(fullUserName);
 }
 
-void ServerInfo::addUserChannel(const UserChannel &newChannel)
+void ServerInfo::addUserChannel(const QString &userFullName, const UserChannel &newChannel)
 {
-    QString userFullName = newChannel.getUserFullName();
     if (users.contains(userFullName)) {
         int userChannelsCount = users[userFullName].getChannelsCount();
         if (userChannelsCount < maxChannels)
