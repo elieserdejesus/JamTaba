@@ -72,11 +72,20 @@ RemoteUser::RemoteUser() :
 
 void RemoteUser::updateChannels(const QList<UserChannel> &newChannels)
 {
-    channels.clear();
+    QSet<quint8> updatedIndexes;
 
-    for (quint8 i = 0; i < newChannels.size(); ++i) {
-        if (newChannels[i].isActive())
-            addChannel(UserChannel(newChannels[i].getName(), i));
+    for (const UserChannel &channel : newChannels) {
+        quint8 index = channel.getIndex();
+        channels.insert(index, channel);
+        updatedIndexes.insert(index);
+    }
+
+    // deactivate non updated channels
+    for (quint8 index : channels.keys()) {
+        if (!updatedIndexes.contains(index)) {
+            channels[index].setActive(false);
+            channels[index].setName(QString());
+        }
     }
 }
 
@@ -99,7 +108,7 @@ Server::Server() :
     bpi(8),
     topic("No topic!"),
     licence("No licence at moment!"),
-    maxChannels(2),
+    maxChannels(4),
     maxUsers(8),
     keepAlivePeriod(30)
 {
@@ -297,8 +306,7 @@ void Server::processClientSetChannel(QTcpSocket *socket, const ninjam::MessageHe
     user.updateChannels(msg.getChannels());
 
     // broadcast the updated remote user channels to everybody
-    broadcastUserChanges(user.getFullName(), msg.getChannels());
-
+    broadcastUserChanges(user.getFullName(), user.getChannels());
     if (!user.receivedInitialServerInfos()) {
         // send everybody to connected remote user
         sendConnectedUsersTo(socket);
@@ -654,7 +662,7 @@ void Server::disconnectClient(QTcpSocket *socket)
 
 void Server::handleClientSocketError(QAbstractSocket::SocketError error)
 {
-    qCritical() << "ERROR" << error << qobject_cast<QTcpSocket *>(QObject::sender())->errorString();
+    qDebug() << qobject_cast<QTcpSocket *>(QObject::sender())->errorString();
 }
 
 void Server::handleAcceptError(QAbstractSocket::SocketError socketError)

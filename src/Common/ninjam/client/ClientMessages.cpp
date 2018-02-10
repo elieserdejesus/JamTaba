@@ -174,6 +174,7 @@ ClientSetChannel ClientSetChannel::unserializeFrom(QIODevice *device, quint32 pa
         bytesConsumed += sizeof(volume) + sizeof(pan) + sizeof(flags);
 
         bool active = flags == 0;
+
         msg.addChannel(channelName, active);
     }
 

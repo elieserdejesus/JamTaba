@@ -161,8 +161,6 @@ void Service::sendIntervalPart(const QByteArray &GUID, const QByteArray &encoded
 
     auto msg = UploadIntervalWrite(GUID, encodedData, isLastPart);
     sendMessageToServer(msg);
-
-    msg.printDebug(qDebug());
 }
 
 void Service::sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, bool isAudioInterval)
@@ -172,7 +170,6 @@ void Service::sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, boo
 
     auto msg = UploadIntervalBegin(GUID, channelIndex, isAudioInterval);
     sendMessageToServer(msg);
-    msg.printDebug(qDebug());
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -306,7 +303,7 @@ bool Service::needSendKeepAlive() const
 
 void Service::process(const UserInfoChangeNotifyMessage &msg)
 {
-    msg.printDebug(qDebug());
+    //msg.printDebug(qDebug());
 
     for (const User &user : msg.getUsers()) {
         if (!currentServer->containsUser(user)) {

@@ -164,7 +164,7 @@ void TestServerClientCommunication::clientServerConnectionAndDisconnection()
 
     });
 
-    //client.startServerConnection("localhost", serverPort, userName, channels);
+    client.startServerConnection("localhost", serverPort, userName, channels);
 
     app.exec();
 }

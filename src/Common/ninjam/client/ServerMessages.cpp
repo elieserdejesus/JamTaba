@@ -335,13 +335,16 @@ UserInfoChangeNotifyMessage::~UserInfoChangeNotifyMessage()
 
 void UserInfoChangeNotifyMessage::printDebug(QDebug &dbg) const
 {
-    dbg << "UserInfoChangeNotify{\n";
+    dbg << endl
+        << "UserInfoChangeNotify " << endl
+        << "{" << endl;
+
     for (const User &user : users.values()) {
-        dbg << "\t" << user.getFullName() << "\n";
+        dbg << " ->" << user.getFullName() << "\n";
         for (const UserChannel &channel : user.getChannels()) {
-            dbg << "\t\t" << channel.getName() << "\n";;
+            dbg << "  ->>" << channel.getIndex() << " - " <<  channel.getName() << "active:" << channel.isActive() <<  " flags:" << channel.getFlags() << endl;
         }
-        dbg << "\n";
+        dbg << endl;
     }
     dbg << "}";
 }
