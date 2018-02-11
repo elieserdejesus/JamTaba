@@ -5,6 +5,7 @@
 #include <QRegularExpression>
 #include <QNetworkInterface>
 #include <QDateTime>
+#include <QTcpServer>
 
 #include "ninjam/Ninjam.h"
 #include "ninjam/client/ServerMessages.h"
@@ -121,6 +122,11 @@ Server::~Server()
     shutdown();
 }
 
+bool Server::isStarted() const
+{
+    return tcpServer.isListening();
+}
+
 QHostAddress Server::getBestHostAddress()
 {
     return QHostAddress::AnyIPv4;
@@ -187,7 +193,7 @@ void Server::start(quint16 port)
     else
         qCritical() << "Error starting server " << address << tcpServer.errorString();
 
-    getBestHostAddress();
+    emit serverStarted();
 }
 
 void Server::handleNewConnection()
@@ -196,7 +202,7 @@ void Server::handleNewConnection()
     if (!socket)
         return;
 
-    qCritical() << "new connection from" << socket->peerAddress().toString();
+    emit incommingConnection(socket->peerAddress().toString());
 
     connect(socket, &QTcpSocket::disconnected, this, &Server::handleDisconnection);
     connect(socket, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, &Server::handleClientSocketError);
@@ -240,6 +246,8 @@ void Server::processClientAuthUserMessage(QTcpSocket *socket, const MessageHeade
             if (skt != socket)
                 msg.to(skt);
         }
+
+        emit userEntered(newUserName);
     }
     else {
         disconnectClient(socket);
@@ -566,12 +574,16 @@ void Server::processReceivedBytes()
 
     auto socket = qobject_cast<QTcpSocket *>(QObject::sender());
     if (!socket) {
-        qFatal("Error, socket is NULL!");
+        qCritical("Error, socket is NULL!");
         return;
     }
 
     if (!remoteUsers.contains(socket)) {
-        qFatal("NOT CONTAIN SOCKET");
+        qCritical("not contain socket!");
+        if (socket->isOpen()) {
+            socket->close();
+            socket->deleteLater();
+        }
         return;
     }
 
@@ -640,14 +652,26 @@ void Server::handleDisconnection()
         disconnectClient(socket);
 }
 
+QStringList Server::getConnectedUsersNames() const
+{
+    QStringList names;
+
+    for (const RemoteUser &user : remoteUsers.values())
+        names.append(user.getFullName());
+
+    return names;
+}
+
 void Server::disconnectClient(QTcpSocket *socket)
 {
     if (remoteUsers.contains(socket)) {
         const RemoteUser &user = remoteUsers[socket];
 
+        QString userFullName = user.getFullName();
+
         // send the PART message and deactivate all user channels
         auto msg = UserInfoChangeNotifyMessage::buildDeactivationMessage(user);
-        auto partMsg = ServerToClientChatMessage::buildUserPartMessage(user.getFullName());
+        auto partMsg = ServerToClientChatMessage::buildUserPartMessage(userFullName);
         for (auto skt : remoteUsers.keys()) {
             if (skt != socket) {
                 partMsg.to(skt);
@@ -657,6 +681,8 @@ void Server::disconnectClient(QTcpSocket *socket)
 
         remoteUsers.remove(socket);
         socket->deleteLater();
+
+        emit userLeave(userFullName);
     }
 }
 
@@ -670,13 +696,26 @@ void Server::handleAcceptError(QAbstractSocket::SocketError socketError)
     qCritical() << socketError <<  tcpServer.errorString();
 }
 
+quint16 Server::getPort() const
+{
+    return tcpServer.serverPort();
+}
+
+QString Server::getIP() const
+{
+    return tcpServer.serverAddress().toString();
+}
+
 void Server::shutdown()
 {
     if (tcpServer.isListening()) {
         tcpServer.close();
 
+        for (auto socket : remoteUsers.keys())
+            disconnectClient(socket);
+
         remoteUsers.clear();
 
-        qDebug() << "server shutdown";
+        emit serverStopped();
     }
 }

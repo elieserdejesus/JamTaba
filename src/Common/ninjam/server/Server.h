@@ -66,11 +66,18 @@ inline quint64 RemoteUser::getLastKeepAliveReceived() const
 
 class Server : public QObject
 {
+    Q_OBJECT
+
 public:
     Server();
     virtual ~Server();
     virtual void start(quint16 port);
     void shutdown();
+
+    bool isStarted() const;
+
+    quint16 getPort() const;
+    QString getIP() const;
 
     quint16 getBpi() const;
     quint16 getBpm() const;
@@ -78,6 +85,15 @@ public:
     QString getLicence() const;
     quint8 getMaxUsers() const;
     quint8 getMaxChannels() const;
+
+    QStringList getConnectedUsersNames() const;
+
+signals:
+    void serverStarted();
+    void serverStopped();
+    void incommingConnection(const QString &incommingIP);
+    void userEntered(const QString &userName);
+    void userLeave(const QString &userName);
 
 protected:
     void sendAuthChallenge(QTcpSocket *device);
