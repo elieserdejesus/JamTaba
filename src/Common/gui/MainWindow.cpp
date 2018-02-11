@@ -9,6 +9,7 @@
 #include "widgets/ChatTabWidget.h"
 #include "PreferencesDialog.h"
 #include "PrivateServerDialog.h"
+#include "PrivateServerWindow.h"
 #include "chords/ChordsPanel.h"
 #include "chords/ChatChordsProgressionParser.h"
 #include "widgets/BlinkableButton.h"
@@ -2037,6 +2038,14 @@ void MainWindow::openUrlInUserBrowser(const QString &url)
     }
 }
 
+void MainWindow::showPrivateServerWindow()
+{
+    auto privateServerWindow = new PrivateServerWindow(this);
+
+    privateServerWindow->show();
+    privateServerWindow->exec();
+}
+
 void MainWindow::showConnectWithPrivateServerDialog()
 {
     auto privateServerDialog = new PrivateServerDialog(ui.centralWidget, mainController);
@@ -2497,6 +2506,8 @@ void MainWindow::setupSignals()
     connect(ui.actionNinjam_Official_Site, &QAction::triggered, this, &MainWindow::showNinjamOfficialWebPage);
 
     connect(ui.actionConnectWithPrivateServer, &QAction::triggered, this, &MainWindow::showConnectWithPrivateServerDialog);
+
+    connect(ui.actionHostPrivateServer, &QAction::triggered, this, &MainWindow::showPrivateServerWindow);
 
     connect(ui.actionReportBugs, &QAction::triggered, this, &MainWindow::showJamtabaIssuesWebPage);
 

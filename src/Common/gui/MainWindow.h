@@ -201,6 +201,7 @@ protected slots:
     void showNinjamOfficialWebPage();
 
     void showConnectWithPrivateServerDialog();
+    void showPrivateServerWindow();
 
     // view menu
     void updateMeteringMenu();
