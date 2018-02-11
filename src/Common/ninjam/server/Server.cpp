@@ -189,11 +189,9 @@ void Server::start(quint16 port)
     QHostAddress address = Server::getBestHostAddress();
     bool listening = tcpServer.listen(address, port);
     if (listening)
-        qDebug() << "Server listening port:" << tcpServer.serverPort();
+        emit serverStarted();
     else
-        qCritical() << "Error starting server " << address << tcpServer.errorString();
-
-    emit serverStarted();
+        emit errorStartingServer(tcpServer.errorString());
 }
 
 void Server::handleNewConnection()

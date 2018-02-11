@@ -90,6 +90,7 @@ public:
 
 signals:
     void serverStarted();
+    void errorStartingServer(const QString &errorMessage);
     void serverStopped();
     void incommingConnection(const QString &incommingIP);
     void userEntered(const QString &userName);

@@ -21,6 +21,9 @@ PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
 
 PrivateServerWindow::~PrivateServerWindow()
 {
+
+    server.reset(nullptr);
+
     delete ui;
 }
 
@@ -31,6 +34,10 @@ void PrivateServerWindow::setupServer()
 
     connect(server.data(), &Server::serverStarted, this, &PrivateServerWindow::serverStarted);
     connect(server.data(), &Server::serverStopped, this, &PrivateServerWindow::serverStopped);
+
+    connect(server.data(), &Server::errorStartingServer, [=](const QString &errorMessage){
+        appendTextInLog(errorMessage);
+    });
 
     connect(server.data(), &Server::incommingConnection, [=](const QString &ip){
         appendTextInLog(QString("Incomming connection from %1").arg(ip));
@@ -47,6 +54,8 @@ void PrivateServerWindow::setupServer()
 
         updateUserList();
     });
+
+
 }
 
 void PrivateServerWindow::appendTextInLog(const QString &text)
