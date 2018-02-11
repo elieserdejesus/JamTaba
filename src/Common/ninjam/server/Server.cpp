@@ -233,7 +233,7 @@ void Server::processClientAuthUserMessage(QTcpSocket *socket, const MessageHeade
 
     quint8 flag = 1; // authentication suceeded
     QString newUserName(generateUniqueUserName(msg.getUserName())); // updated user name or error message;
-    newUserName += "@" + tcpServer.serverAddress().toString();
+    newUserName += "@" + socket->peerAddress().toString();
 
     remoteUsers[socket].setFullName(newUserName);
 
