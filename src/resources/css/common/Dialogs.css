@@ -73,6 +73,14 @@ PreferencesDialog #plainTextEdit
     background: transparent;
 }
 
+PrivateServerWindow QListWidget,
+PrivateServerWindow QTextBrowser
+{
+    background-color: rgba(255, 255, 255, 15);
+    border: none;
+
+}
+
 PreferencesDialog QGroupBox,
 MidiToolsDialog QGroupBox,
 PreferencesDialog #sampleRateLabel,
