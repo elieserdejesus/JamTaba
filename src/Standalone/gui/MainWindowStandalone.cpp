@@ -59,7 +59,7 @@ void MainWindowStandalone::setupShortcuts()
     ui.actionMetronome->setShortcut(QKeySequence(Qt::Key_F9));
     ui.actionLooper->setShortcut(QKeySequence(Qt::Key_F10));
     ui.actionUsersManual->setShortcut(QKeySequence(Qt::Key_F1));
-    ui.actionPrivate_Server->setShortcut(QKeySequence(Qt::Key_F2));
+    ui.actionConnectWithPrivateServer->setShortcut(QKeySequence(Qt::Key_F2));
     ui.actionShowRmsOnly->setShortcut(QKeySequence(Qt::Key_F3));
     ui.actionShowPeaksOnly->setShortcut(QKeySequence(Qt::Key_F4));
     ui.actionFullscreenMode->setShortcut(QKeySequence(Qt::Key_F11));

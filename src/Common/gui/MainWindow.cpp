@@ -2037,7 +2037,7 @@ void MainWindow::openUrlInUserBrowser(const QString &url)
     }
 }
 
-void MainWindow::showPrivateServerDialog()
+void MainWindow::showConnectWithPrivateServerDialog()
 {
     auto privateServerDialog = new PrivateServerDialog(ui.centralWidget, mainController);
 
@@ -2496,7 +2496,7 @@ void MainWindow::setupSignals()
 
     connect(ui.actionNinjam_Official_Site, &QAction::triggered, this, &MainWindow::showNinjamOfficialWebPage);
 
-    connect(ui.actionPrivate_Server, &QAction::triggered, this, &MainWindow::showPrivateServerDialog);
+    connect(ui.actionConnectWithPrivateServer, &QAction::triggered, this, &MainWindow::showConnectWithPrivateServerDialog);
 
     connect(ui.actionReportBugs, &QAction::triggered, this, &MainWindow::showJamtabaIssuesWebPage);
 
