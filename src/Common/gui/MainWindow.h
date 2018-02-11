@@ -29,6 +29,7 @@ class UsersColorsPool;
 class ScreensaverBlocker;
 class PerformanceMonitor;
 class TextEditorModifier;
+class PrivateServerWindow;
 
 namespace login {
 class RoomInfo;
@@ -333,6 +334,8 @@ private:
     QScopedPointer<ScreensaverBlocker> screensaverBlocker;
 
     ChatTabWidget *chatTabWidget;
+
+    QScopedPointer<PrivateServerWindow> privateServerWindow;
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();

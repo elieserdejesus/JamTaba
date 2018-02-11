@@ -2040,10 +2040,14 @@ void MainWindow::openUrlInUserBrowser(const QString &url)
 
 void MainWindow::showPrivateServerWindow()
 {
-    auto privateServerWindow = new PrivateServerWindow(this);
+    if (!privateServerWindow) {
+        privateServerWindow.reset(new PrivateServerWindow(this));
+    }
 
-    privateServerWindow->show();
-    privateServerWindow->exec();
+    if (!privateServerWindow->isVisible())
+        privateServerWindow->show();
+    else
+        privateServerWindow->raise();
 }
 
 void MainWindow::showConnectWithPrivateServerDialog()
