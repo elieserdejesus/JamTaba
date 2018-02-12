@@ -13,6 +13,10 @@ PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
     networkUsageTimerID(0)
 {
     ui->setupUi(this);
+    
+#ifdef Q_OS_MAC
+    setWindowFlags(windowFlags() | Qt::Popup);
+#endif
 
     connect(ui->pushButtonStart, &QPushButton::clicked, this, &PrivateServerWindow::startServer);
     connect(ui->pushButtonStop, &QPushButton::clicked, this, &PrivateServerWindow::stopServer);

@@ -2041,13 +2041,14 @@ void MainWindow::openUrlInUserBrowser(const QString &url)
 void MainWindow::showPrivateServerWindow()
 {
     if (!privateServerWindow) {
-        privateServerWindow.reset(new PrivateServerWindow(this));
+        privateServerWindow.reset(new PrivateServerWindow());
     }
 
     if (!privateServerWindow->isVisible())
         privateServerWindow->show();
-    else
-        privateServerWindow->raise();
+    
+    privateServerWindow->raise();
+    privateServerWindow->activateWindow();
 }
 
 void MainWindow::showConnectWithPrivateServerDialog()
