@@ -5,13 +5,13 @@
 
 #include "miniupnpc.h"
 
-class UpNpManager : public QObject
+class UPnPManager : public QObject
 {
     Q_OBJECT
 
 public:
-    UpNpManager();
-    ~UpNpManager();
+    UPnPManager();
+    ~UPnPManager();
     void openPort(quint16 port);
     void closePort(quint16 port);
 

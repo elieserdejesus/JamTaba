@@ -3,6 +3,7 @@
 #include "ninjam/server/Server.h"
 
 #include <QDateTime>
+#include <QtConcurrent/QtConcurrent>
 
 PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
     QDialog(parent),
@@ -16,7 +17,25 @@ PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
     ui->pushButtonStart->setEnabled(true);
     ui->pushButtonStop->setEnabled(false);
 
+    connect(&upnpManager, &UPnPManager::portOpened, this, &PrivateServerWindow::portOpened);
+
+    connect(&upnpManager, &UPnPManager::portClosed, [=](){
+        appendTextInLog("Port closed in your router!");
+    });
+
+    connect(&upnpManager, &UPnPManager::errorDetected, [=](const QString &error){
+        appendTextInLog("ERROR in UPnP: " + error);
+    });
+
     setServerDetailsVisibility(false);
+}
+
+void PrivateServerWindow::portOpened(const QString &localIP, const QString &externalIP)
+{
+    Q_UNUSED(localIP);
+    appendTextInLog("Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!");
+    appendTextInLog("Your external IP is " + externalIP);
+    ui->lineEditIP->setText(externalIP);
 }
 
 PrivateServerWindow::~PrivateServerWindow()
@@ -83,7 +102,7 @@ void PrivateServerWindow::serverStarted()
     ui->textBrowser->append(QString());
     appendTextInLog("Server started");
 
-    ui->lineEditIP->setText(serverIP);
+    //ui->lineEditIP->setText(serverIP);
     ui->lineEditPort->setText(QString::number(serverPort));
 
     ui->pushButtonStart->setEnabled(false);
@@ -125,8 +144,12 @@ void PrivateServerWindow::startServer()
     }
 
     if (!server->isStarted()) {
-        quint16 port = 2049;
+        quint16 port = PREFERRED_PORT;
         server->start(port);
+
+        appendTextInLog(QString("Trying to open the port %1 in your router (UPnP) to allow external connections ...").arg(port));
+
+        QtConcurrent::run(&upnpManager, &UPnPManager::openPort, port);
     }
 }
 
@@ -137,5 +160,7 @@ void PrivateServerWindow::stopServer()
 
     if (server->isStarted()) {
         server->shutdown();
+
+        QtConcurrent::run(&upnpManager, &UPnPManager::closePort, PREFERRED_PORT);
     }
 }

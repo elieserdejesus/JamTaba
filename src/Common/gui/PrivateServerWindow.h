@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QScopedPointer>
 
+#include "upnp/UPnPManager.h"
+
 namespace Ui {
 class PrivateServerWindow;
 }
@@ -29,6 +31,8 @@ private slots:
     void serverStarted();
     void serverStopped();
 
+    void portOpened(const QString &localIP, const QString &externalIP);
+
 private:
     Ui::PrivateServerWindow *ui;
 
@@ -40,6 +44,9 @@ private:
     void appendTextInLog(const QString &text);
 
     QScopedPointer<Server> server;
+    UPnPManager upnpManager;
+
+    static const quint16 PREFERRED_PORT = 2049;
 };
 
 #endif // PRIVATESERVERWINDOW_H

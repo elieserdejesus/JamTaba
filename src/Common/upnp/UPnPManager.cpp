@@ -15,7 +15,7 @@
 #include "upnperrors.h"
 #include "miniupnpcstrings.h"
 
-UpNpManager::UpNpManager() :
+UPnPManager::UPnPManager() :
     QObject(nullptr),
     devlist(nullptr)
 {
@@ -31,7 +31,7 @@ UpNpManager::UpNpManager() :
 
 }
 
-UpNpManager::~UpNpManager()
+UPnPManager::~UPnPManager()
 {
 #ifdef _WIN32
     int nResult = WSACleanup();
@@ -44,7 +44,7 @@ UpNpManager::~UpNpManager()
         freeUPNPDevlist(devlist);
 }
 
-void UpNpManager::openPort(quint16 port)
+void UPnPManager::openPort(quint16 port)
 {
     int ipv6 = 0;
     unsigned char ttl = 2;	/* defaulting to 2 */
@@ -103,7 +103,7 @@ void UpNpManager::openPort(quint16 port)
     emit portOpened(QString(iaddr), QString(externalIPAddress));
 }
 
-void UpNpManager::closePort(quint16 port)
+void UPnPManager::closePort(quint16 port)
 {
     const char *eport = QString::number(port).toStdString().c_str();
     int result = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, eport, "TCP", nullptr);
