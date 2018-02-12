@@ -12,6 +12,9 @@ INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
 INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
 INCLUDEPATH += $$ROOT_PATH/libs/includes/minimp3
 INCLUDEPATH += $$ROOT_PATH/libs/includes/ffmpeg
+INCLUDEPATH += $$ROOT_PATH/libs/includes/miniupnp
+
+DEFINES += MINIUPNP_STATICLIB
 
 win32:INCLUDEPATH += $$ROOT_PATH/libs/includes/stackwalker
 
@@ -159,6 +162,7 @@ HEADERS += persistence/CacheHeader.h
 HEADERS += log/Logging.h
 HEADERS += UploadIntervalData.h
 HEADERS += performance/PerformanceMonitor.h
+HEADERS += upnp/UPnPManager.h
 
 SOURCES += MainController.cpp
 SOURCES += NinjamController.cpp
@@ -281,6 +285,7 @@ SOURCES += persistence/UsersDataCache.cpp
 SOURCES += persistence/Settings.cpp
 SOURCES += persistence/CacheHeader.cpp
 SOURCES += UploadIntervalData.cpp
+SOURCES += upnp/UPnPManager.cpp
 
 #multiplatform implementations
 win32:SOURCES += performance/WindowsPerformanceMonitor.cpp
