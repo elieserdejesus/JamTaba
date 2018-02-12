@@ -23,11 +23,17 @@ PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
         appendTextInLog("Port closed in your router!");
     });
 
-    connect(&upnpManager, &UPnPManager::errorDetected, [=](const QString &error){
-        appendTextInLog("ERROR in UPnP: " + error);
-    });
+    connect(&upnpManager, &UPnPManager::errorDetected, this, &PrivateServerWindow::upnpError);
 
     setServerDetailsVisibility(false);
+
+    ui->labelIPValue->setText(QString());
+    ui->labelPortValue->setText(QString());
+}
+
+void PrivateServerWindow::upnpError(const QString &error)
+{
+    appendTextInLog("ERROR in UPnP: " + error);
 }
 
 void PrivateServerWindow::portOpened(const QString &localIP, const QString &externalIP)
@@ -35,7 +41,11 @@ void PrivateServerWindow::portOpened(const QString &localIP, const QString &exte
     Q_UNUSED(localIP);
     appendTextInLog("Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!");
     appendTextInLog("Your external IP is " + externalIP);
-    ui->lineEditIP->setText(externalIP);
+
+    ui->labelIPValue->setText(externalIP);
+    ui->labelPortValue->setText(QString::number(PREFERRED_PORT));
+
+    setServerDetailsVisibility(true);
 }
 
 PrivateServerWindow::~PrivateServerWindow()
@@ -96,19 +106,11 @@ void PrivateServerWindow::updateUserList()
 
 void PrivateServerWindow::serverStarted()
 {
-    quint16 serverPort = server->getPort();
-    QString serverIP = server->getIP();
-
     ui->textBrowser->append(QString());
     appendTextInLog("Server started");
 
-    //ui->lineEditIP->setText(serverIP);
-    ui->lineEditPort->setText(QString::number(serverPort));
-
     ui->pushButtonStart->setEnabled(false);
     ui->pushButtonStop->setEnabled(true);
-
-    setServerDetailsVisibility(true);
 
     ui->listWidget->clear();
 }
@@ -120,8 +122,8 @@ void PrivateServerWindow::serverStopped()
     ui->pushButtonStart->setEnabled(true);
     ui->pushButtonStop->setEnabled(false);
 
-    ui->lineEditIP->setText(QString());
-    ui->lineEditPort->setText(QString());
+    ui->labelIPValue->setText(QString());
+    ui->labelPortValue->setText(QString());
 
     setServerDetailsVisibility(false);
 
@@ -132,8 +134,8 @@ void PrivateServerWindow::setServerDetailsVisibility(bool visible)
 {
     ui->labelIP->setVisible(visible);
     ui->labelPort->setVisible(visible);
-    ui->lineEditIP->setVisible(visible);
-    ui->lineEditPort->setVisible(visible);
+    ui->labelIPValue->setVisible(visible);
+    ui->labelPortValue->setVisible(visible);
 }
 
 void PrivateServerWindow::startServer()

@@ -156,6 +156,10 @@ void Server::handleNewConnection()
     connect(socket, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, &Server::handleClientSocketError);
     connect(socket, &QIODevice::readyRead, this, &Server::processReceivedBytes);
 
+    connect(socket, &QTcpSocket::bytesWritten, [&](qint64 bytes){
+        totalUploadMeasurer.addTransferedBytes(bytes);
+    });
+
     remoteUsers.insert(socket, RemoteUser());
 
     sendAuthChallenge(socket);
@@ -533,6 +537,8 @@ void Server::processReceivedBytes()
         }
         return;
     }
+
+    totalDownloadMeasurer.addTransferedBytes(socket->bytesAvailable());
 
     RemoteUser &user = remoteUsers[socket];
 

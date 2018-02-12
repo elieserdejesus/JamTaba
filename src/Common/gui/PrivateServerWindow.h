@@ -32,6 +32,7 @@ private slots:
     void serverStopped();
 
     void portOpened(const QString &localIP, const QString &externalIP);
+    void upnpError(const QString &error);
 
 private:
     Ui::PrivateServerWindow *ui;

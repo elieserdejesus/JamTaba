@@ -6,6 +6,19 @@
 
 namespace ninjam {
 
+class NetworkUsageMeasurer // used in network statistics
+{
+public:
+    NetworkUsageMeasurer();
+    long getTransferRate() const;
+    void addTransferedBytes(qint64 totalBytesTransfered);
+
+private:
+    long totalBytesTransfered;
+    qint64 lastMeasureTimeStamp;
+    long transferRate;
+};
+
 enum class MessageType : quint8
 {
     AuthChallenge = 0x00,               // received after connect in server

@@ -1,6 +1,41 @@
 #include "Ninjam.h"
 
+#include <QDateTime>
+
 namespace ninjam {
+
+NetworkUsageMeasurer::NetworkUsageMeasurer() :
+    totalBytesTransfered(0),
+    lastMeasureTimeStamp(0),
+    transferRate(0)
+{
+
+}
+
+void NetworkUsageMeasurer::addTransferedBytes(qint64 bytesTransfered)
+{
+    totalBytesTransfered += bytesTransfered;
+
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+
+    if (!lastMeasureTimeStamp)
+        lastMeasureTimeStamp = now;
+
+    const qint64 ellapsedTime = now - lastMeasureTimeStamp;
+
+    if (ellapsedTime >= 1000) {
+        transferRate = totalBytesTransfered / (ellapsedTime / 1000.0);
+        totalBytesTransfered = 0;
+        lastMeasureTimeStamp = now;
+    }
+}
+
+long NetworkUsageMeasurer::getTransferRate() const
+{
+    return transferRate;
+}
+
+// ---------------------------------------------------------------
 
 MessageHeader::MessageHeader(quint8 type, quint32 payload) :
     messageType(static_cast<MessageType>(type)),

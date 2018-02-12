@@ -2,6 +2,7 @@
 #define SERVICE_H
 
 #include "log/Logging.h"
+#include "ninjam/Ninjam.h"
 
 #include <QtGlobal>
 #include <QScopedPointer>
@@ -32,20 +33,6 @@ namespace client
     class DownloadIntervalWrite;
     class User;
     class UserChannel;
-
-    // statistics
-    class NetworkUsageMeasurer
-    {
-    public:
-        NetworkUsageMeasurer();
-        long getTransferRate() const;
-        void addTransferedBytes(qint64 totalBytesTransfered);
-
-    private:
-        long totalBytesTransfered;
-        qint64 lastMeasureTimeStamp;
-        long transferRate;
-    };
 
     class Service : public QObject
     {

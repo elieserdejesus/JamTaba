@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QList>
 
-#include "../Ninjam.h"
+#include "ninjam/Ninjam.h"
 #include "ninjam/client/User.h"
 
 namespace ninjam { namespace client {
@@ -88,6 +88,9 @@ public:
 
     QStringList getConnectedUsersNames() const;
 
+    quint64 getDownloadTransferRate() const;
+    quint64 getUploadTransferRate() const;
+
 signals:
     void serverStarted();
     void errorStartingServer(const QString &errorMessage);
@@ -117,6 +120,9 @@ private:
     quint8 maxUsers;
     quint8 maxChannels;
     quint16 keepAlivePeriod;
+
+    NetworkUsageMeasurer totalUploadMeasurer;
+    NetworkUsageMeasurer totalDownloadMeasurer;
 
     void broadcastUserChanges(const QString userFullName, const QList<UserChannel> &userChannels);
     void sendConnectedUsersTo(QTcpSocket *socket);
@@ -148,6 +154,16 @@ private:
 
     static QHostAddress getBestHostAddress();
 };
+
+inline quint64 Server::getDownloadTransferRate() const
+{
+    return totalDownloadMeasurer.getTransferRate();
+}
+
+inline quint64 Server::getUploadTransferRate() const
+{
+    return totalUploadMeasurer.getTransferRate();
+}
 
 inline quint8 Server::getMaxChannels() const
 {
