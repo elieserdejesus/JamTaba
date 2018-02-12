@@ -7,7 +7,8 @@
 
 PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::PrivateServerWindow)
+    ui(new Ui::PrivateServerWindow),
+    networkUsageTimerID(0)
 {
     ui->setupUi(this);
 
@@ -113,6 +114,11 @@ void PrivateServerWindow::serverStarted()
     ui->pushButtonStop->setEnabled(true);
 
     ui->listWidget->clear();
+
+    if (networkUsageTimerID)
+        killTimer(networkUsageTimerID);
+
+    networkUsageTimerID = startTimer(3000);
 }
 
 void PrivateServerWindow::serverStopped()
@@ -128,6 +134,9 @@ void PrivateServerWindow::serverStopped()
     setServerDetailsVisibility(false);
 
     ui->listWidget->clear();
+
+    if (networkUsageTimerID)
+        killTimer(networkUsageTimerID);
 }
 
 void PrivateServerWindow::setServerDetailsVisibility(bool visible)
@@ -136,6 +145,11 @@ void PrivateServerWindow::setServerDetailsVisibility(bool visible)
     ui->labelPort->setVisible(visible);
     ui->labelIPValue->setVisible(visible);
     ui->labelPortValue->setVisible(visible);
+
+    ui->labelDownload->setVisible(visible);
+    ui->labelDownloadValue->setVisible(visible);
+    ui->labelUpload->setVisible(visible);
+    ui->labelUploadValue->setVisible(visible);
 }
 
 void PrivateServerWindow::startServer()
@@ -165,4 +179,17 @@ void PrivateServerWindow::stopServer()
 
         QtConcurrent::run(&upnpManager, &UPnPManager::closePort, PREFERRED_PORT);
     }
+}
+
+void PrivateServerWindow::timerEvent(QTimerEvent *)
+{
+    if (!server)
+        return;
+
+    static const quint64 KBPS = 1024 * 8;
+
+    quint64 download = server->getDownloadTransferRate() / KBPS; // Kbps
+    quint64 upload = server->getUploadTransferRate() / KBPS;
+    ui->labelDownloadValue->setText(QString::number(download));
+    ui->labelUploadValue->setText(QString::number(upload));
 }

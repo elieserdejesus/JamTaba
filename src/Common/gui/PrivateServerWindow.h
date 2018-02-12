@@ -24,6 +24,9 @@ public:
     explicit PrivateServerWindow(QWidget *parent = 0);
     ~PrivateServerWindow();
 
+protected:
+    void timerEvent(QTimerEvent *);
+
 private slots:
     void startServer();
     void stopServer();
@@ -46,6 +49,8 @@ private:
 
     QScopedPointer<Server> server;
     UPnPManager upnpManager;
+
+    int networkUsageTimerID;
 
     static const quint16 PREFERRED_PORT = 2049;
 };
