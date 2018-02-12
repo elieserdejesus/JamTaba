@@ -130,56 +130,6 @@ bool Server::isStarted() const
 QHostAddress Server::getBestHostAddress()
 {
     return QHostAddress::AnyIPv4;
-
-//    QList<QHostAddress> possibleMatches;
-//    auto interfaces = QNetworkInterface::allInterfaces();
-
-//  QHostAddress bestHostAddress = QHostAddress::AnyIPv4;
-
-//  for(int i = 0; i < interfaces.size(); i++)
-//  {
-//    unsigned int flags = interfaces[i].flags();
-//    bool isLoopback = static_cast<bool>(flags & QNetworkInterface::IsLoopBack);
-//    bool isP2P = static_cast<bool>(flags & QNetworkInterface::IsPointToPoint);
-//    bool isRunning = static_cast<bool>(flags & QNetworkInterface::IsRunning);
-
-//    if ( !isRunning ) // If this interface isn't running, we don't care about it
-//        continue;
-
-//    // We only want valid interfaces that aren't loopback/virtual and not point to point
-//    if ( !interfaces[i].isValid() || isLoopback || isP2P )
-//        continue;
-
-//    auto addresses = interfaces[i].allAddresses();
-//    for(int a=0; a < addresses.size(); a++)
-//    {
-//      if (addresses[a] == QHostAddress::LocalHost)
-//          continue; // Ignore local host
-
-//      if (!addresses[a].toIPv4Address())
-//          continue; // Ignore non-ipv4 addresses
-
-//      bestHostAddress = addresses[a];
-//      if (bestHostAddress.isNull())
-//          continue;
-//      bool foundMatch = false;
-//      for (int j=0; j < possibleMatches.size(); j++) {
-//          if ( bestHostAddress == possibleMatches[j] ) {
-//              foundMatch = true;
-//              break;
-//          }
-//      }
-
-//      if ( !foundMatch ) {
-//          possibleMatches.push_back(bestHostAddress);
-//          qDebug() << "possible address: " << interfaces[i].humanReadableName() << "->" << bestHostAddress;
-//      }
-
-//    }
-//  }
-
-//  return bestHostAddress;
-
 }
 
 void Server::start(quint16 port)
@@ -357,7 +307,6 @@ void Server::broadcastUserChanges(const QString userFullName, const QList<UserCh
     for (auto socket : remoteUsers.keys()) {
         if (remoteUsers[socket].getFullName() != userFullName) {
             msg.to(socket);
-            //msg.printDebug(qDebug());
         }
     }
 }
@@ -598,8 +547,8 @@ void Server::processReceivedBytes()
         Q_ASSERT(header.isValid());
 
         if (socket->bytesAvailable() < header.getPayload()) {
-            qDebug() << "not enough bytes " << socket->bytesAvailable() << "/" << header.getPayload()
-                     << " bytes available  msg code:"<< QString::number(static_cast<quint8>(header.getMessageType()), 16);
+//            qDebug() << "not enough bytes " << socket->bytesAvailable() << "/" << header.getPayload()
+//                     << " bytes available  msg code:"<< QString::number(static_cast<quint8>(header.getMessageType()), 16);
             return;
         }
 
@@ -686,7 +635,7 @@ void Server::disconnectClient(QTcpSocket *socket)
 
 void Server::handleClientSocketError(QAbstractSocket::SocketError error)
 {
-    qDebug() << qobject_cast<QTcpSocket *>(QObject::sender())->errorString();
+    //qDebug() << qobject_cast<QTcpSocket *>(QObject::sender())->errorString();
 }
 
 void Server::handleAcceptError(QAbstractSocket::SocketError socketError)
