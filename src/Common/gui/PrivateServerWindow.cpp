@@ -186,10 +186,8 @@ void PrivateServerWindow::timerEvent(QTimerEvent *)
     if (!server)
         return;
 
-    static const quint64 KBPS = 1024 * 8;
-
-    quint64 download = server->getDownloadTransferRate() / KBPS; // Kbps
-    quint64 upload = server->getUploadTransferRate() / KBPS;
+    quint64 download = server->getDownloadTransferRate() / 1024 * 8; // Kbps
+    quint64 upload = server->getUploadTransferRate() / 1024 * 8;
     ui->labelDownloadValue->setText(QString::number(download));
     ui->labelUploadValue->setText(QString::number(upload));
 }

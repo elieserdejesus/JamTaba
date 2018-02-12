@@ -538,7 +538,7 @@ void Server::processReceivedBytes()
         return;
     }
 
-    totalDownloadMeasurer.addTransferedBytes(socket->bytesAvailable());
+    qint64 bytesAvailable = socket->bytesAvailable();
 
     RemoteUser &user = remoteUsers[socket];
 
@@ -596,6 +596,9 @@ void Server::processReceivedBytes()
     }
 
     user.setLastKeepAliveToNow();
+
+    qint64 bytesRemaining = socket->bytesAvailable();
+    totalDownloadMeasurer.addTransferedBytes(bytesAvailable - bytesRemaining);
 }
 
 void Server::handleDisconnection()
