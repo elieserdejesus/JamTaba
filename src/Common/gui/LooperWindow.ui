@@ -442,21 +442,22 @@
   <customwidget>
    <class>AudioMeter</class>
    <extends>QWidget</extends>
-   <header>widgets/PeakMeter.h</header>
+   <header>gui/widgets/PeakMeter.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Slider</class>
    <extends>QSlider</extends>
-   <header>widgets/Slider.h</header>
+   <header>gui/widgets/Slider.h</header>
   </customwidget>
   <customwidget>
    <class>BlinkableButton</class>
    <extends>QPushButton</extends>
-   <header>widgets/BlinkableButton.h</header>
+   <header>gui/widgets/BlinkableButton.h</header>
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

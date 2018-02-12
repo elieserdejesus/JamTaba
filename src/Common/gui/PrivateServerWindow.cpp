@@ -5,6 +5,8 @@
 #include <QDateTime>
 #include <QtConcurrent/QtConcurrent>
 
+const quint16 PrivateServerWindow::PREFERRED_PORT = 2049;
+
 PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PrivateServerWindow),

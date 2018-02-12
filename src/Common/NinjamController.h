@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QMutex>
 #include <QThread>
+#include <QMap>
 
 #include "audio/Encoder.h"
 

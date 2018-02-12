@@ -52,7 +52,7 @@ private:
 
     int networkUsageTimerID;
 
-    static const quint16 PREFERRED_PORT = 2049;
+    static const quint16 PREFERRED_PORT;
 };
 
 #endif // PRIVATESERVERWINDOW_H

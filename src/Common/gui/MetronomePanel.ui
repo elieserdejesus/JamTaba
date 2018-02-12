@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>244</width>
-    <height>75</height>
+    <height>92</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -65,7 +65,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>:/images/level low.png</pixmap>
+        <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
        </property>
       </widget>
      </item>
@@ -115,7 +115,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>:/images/level high.png</pixmap>
+        <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
        </property>
       </widget>
      </item>
@@ -306,7 +306,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../../resources/jamtaba.qrc">
          <normaloff>:/images/windows.png</normaloff>:/images/windows.png</iconset>
        </property>
        <property name="checkable">
@@ -329,7 +329,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../../resources/jamtaba.qrc">
          <normaloff>:/images/gear-hover.png</normaloff>:/images/gear-hover.png</iconset>
        </property>
       </widget>
@@ -342,15 +342,18 @@
   <customwidget>
    <class>AudioMeter</class>
    <extends>QWidget</extends>
-   <header>widgets/PeakMeter.h</header>
+   <header>gui/widgets/PeakMeter.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Slider</class>
    <extends>QSlider</extends>
-   <header>widgets/Slider.h</header>
+   <header>gui/widgets/Slider.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../resources/jamtaba.qrc"/>
+  <include location="../../resources/jamtaba.qrc"/>
+ </resources>
  <connections/>
 </ui>

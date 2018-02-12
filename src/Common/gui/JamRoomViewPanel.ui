@@ -196,7 +196,7 @@
   <customwidget>
    <class>WavePeakPanel</class>
    <extends>QWidget</extends>
-   <header>widgets/WavePeakPanel.h</header>
+   <header>gui/widgets/WavePeakPanel.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

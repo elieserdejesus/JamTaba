@@ -171,7 +171,7 @@ private:
 
     QScopedPointer<VSTPluginFinder> vstPluginFinder;
 #ifdef Q_OS_MAC
-    QScopedPointer<AudioUnitPluginFinder> auPluginFinder;
+    QScopedPointer<audio::AudioUnitPluginFinder> auPluginFinder;
  #endif
 
     // used to sort plugins list
