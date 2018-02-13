@@ -1,6 +1,5 @@
 /* Dialogs in Black theme */
 
-PrivateServerWindow,
 PreferencesDialog
 {
     background-color: rgb(70, 70, 70);
@@ -11,7 +10,8 @@ QInputDialog,
 MidiToolsDialog,
 UserNameDialog,
 PrivateServerDialog,
-LooperWindow
+LooperWindow,
+PrivateServerWindow
 {
     border-color: rgb(20, 20, 20);
     color: rgb(40, 40, 40);
@@ -20,7 +20,12 @@ LooperWindow
     stop:1 rgb(40, 40, 40));
 }
 
-PrivateServerDialog #label, #label_2, #label_3
+PrivateServerDialog #label,
+PrivateServerDialog #label_2,
+PrivateServerDialog #label_3,
+PrivateServerWindow QGroupBox,
+PrivateServerWindow QLabel,
+PrivateServerWindow QTextBrowser
 {
     color: rgb(160, 160, 160);
 }
