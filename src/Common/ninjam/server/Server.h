@@ -10,6 +10,8 @@
 #include "ninjam/Ninjam.h"
 #include "ninjam/client/User.h"
 
+#include <functional>
+
 namespace ninjam { namespace client {
     class ClientToServerChatMessage;
     class UserChannel;
@@ -176,6 +178,9 @@ private:
 
     void processBpiVoteMessage(const ClientToServerChatMessage &msg, const QString &userFullName);
     void processBpmVoteMessage(const ClientToServerChatMessage &msg, const QString &userFullName);
+    void processVoteMessage(const QString &userFullName, quint16 voteValue, quint16 currentValue, QMap<quint16, Voting *> &votings, std::function<Voting *()> createVoting);
+    Voting *createBpiVoting();
+    Voting *createBpmVoting();
 
     void processClientAuthUserMessage(QTcpSocket *socket, const MessageHeader &header);
     void processClientSetChannel(QTcpSocket *socket, const MessageHeader &header);

@@ -591,31 +591,53 @@ void Server::processAdminCommand(const QString &cmd)
     }
 }
 
+Voting *Server::createBpiVoting()
+{
+    auto newVoting = new Voting(this);
+
+    connect(newVoting, &Voting::expired, this, &Server::bpiVotingExpired);
+    connect(newVoting, &Voting::accepted, this, &Server::bpiVotingAccepted);
+    connect(newVoting, &Voting::incremented, this, &Server::bpiVotingIncremented);
+
+    return newVoting;
+}
+
+Voting *Server::createBpmVoting()
+{
+    auto newVoting = new Voting(this);
+
+    connect(newVoting, &Voting::expired, this, &Server::bpmVotingExpired);
+    connect(newVoting, &Voting::accepted, this, &Server::bpmVotingAccepted);
+    connect(newVoting, &Voting::incremented, this, &Server::bpmVotingIncremented);
+
+    return newVoting;
+}
+
+void Server::processVoteMessage(const QString &userFullName, quint16 voteValue, quint16 currentValue,
+                                QMap<quint16, Voting *> &votings, std::function<Voting *()> createVoting)
+{
+    bool canVote = voteValue && voteValue != currentValue;
+    if (canVote) {
+        if (!votings.contains(voteValue))
+            votings.insert(voteValue, createVoting());
+
+        auto voting = votings[voteValue];
+        if (!voting->isRunning()) {
+            auto requiredVotes = static_cast<quint8>(remoteUsers.size() * votingSettings.trheshold);
+            voting->start(voteValue, requiredVotes, votingSettings.expirationPeriod);
+        }
+
+        voting->registerVote(userFullName, voteValue);
+    }
+}
+
 void Server::processBpiVoteMessage(const ninjam::client::ClientToServerChatMessage &msg, const QString &userFullName)
 {
     Q_ASSERT(msg.isBpiVoteMessage());
 
     quint16 voteValue = msg.extractBpiVoteValue();
 
-    bool canVote = voteValue && voteValue != bpi;
-    if (canVote) {
-        if (!bpiVotings.contains(voteValue)) {
-            auto newVoting = new Voting(this);
-            bpiVotings.insert(voteValue, newVoting);
-
-            connect(newVoting, &Voting::expired, this, &Server::bpiVotingExpired);
-            connect(newVoting, &Voting::accepted, this, &Server::bpiVotingAccepted);
-            connect(newVoting, &Voting::incremented, this, &Server::bpiVotingIncremented);
-        }
-
-        auto bpiVoting = bpiVotings[voteValue];
-        if (!bpiVoting->isRunning()) {
-            auto requiredVotes = static_cast<quint8>(remoteUsers.size() * votingSettings.trheshold);
-            bpiVoting->start(voteValue, requiredVotes, votingSettings.expirationPeriod);
-        }
-
-        bpiVoting->registerVote(userFullName, voteValue);
-    }
+    processVoteMessage(userFullName, voteValue, bpi, bpiVotings, std::bind(&Server::createBpiVoting, this));
 }
 
 void Server::processBpmVoteMessage(const ninjam::client::ClientToServerChatMessage &msg, const QString &userFullName)
@@ -624,26 +646,7 @@ void Server::processBpmVoteMessage(const ninjam::client::ClientToServerChatMessa
 
     quint16 voteValue = msg.extractBpmVoteValue();
 
-    bool canVote = voteValue && voteValue != bpm;
-    if (canVote) {
-
-        if (!bpmVotings.contains(voteValue)) {
-            auto newVoting = new Voting();
-            bpmVotings.insert(voteValue, newVoting);
-
-            connect(newVoting, &Voting::expired, this, &Server::bpmVotingExpired);
-            connect(newVoting, &Voting::accepted, this, &Server::bpmVotingAccepted);
-            connect(newVoting, &Voting::incremented, this, &Server::bpmVotingIncremented);
-        }
-
-        auto bpmVoting = bpmVotings[voteValue];
-        if (!bpmVoting->isRunning()) {
-            auto requiredVotes = static_cast<quint8>(remoteUsers.size() * votingSettings.trheshold);
-            bpmVoting->start(voteValue, requiredVotes, votingSettings.expirationPeriod);
-        }
-
-        bpmVoting->registerVote(userFullName, voteValue);
-    }
+    processVoteMessage(userFullName, voteValue, bpm, bpmVotings, std::bind(&Server::createBpmVoting, this));
 }
 
 void Server::processChatMessage(QTcpSocket *socket, const ninjam::MessageHeader &header)
