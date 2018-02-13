@@ -14,6 +14,7 @@ LooperWindow #resetButton::menu-indicator
     image: none;
 }
 
+PrivateServerWindow QGroupBox,
 LooperWindow QGroupBox
 {
     border: 1px solid rgb(0, 0, 0, 20);
@@ -23,6 +24,7 @@ LooperWindow QGroupBox
     margin-right: 3px;
 }
 
+PrivateServerWindow QGroupBox::title,
 LooperWindow QGroupBox::title
 {
     subcontrol-origin: margin;
@@ -78,7 +80,6 @@ PrivateServerWindow QTextBrowser
 {
     background-color: rgba(255, 255, 255, 15);
     border: none;
-
 }
 
 PreferencesDialog QGroupBox,
