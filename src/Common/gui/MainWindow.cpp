@@ -2565,6 +2565,9 @@ void MainWindow::closeAllFloatingWindows()
         ninjamWindow->closeMetronomeFloatingWindow();
 
     closeAllLooperWindows();
+
+    if (privateServerWindow)
+        privateServerWindow->close();
 }
 
 void MainWindow::initializeVotingExpirationTimers()
