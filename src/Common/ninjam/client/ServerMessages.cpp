@@ -7,6 +7,8 @@
 #include "ninjam/client/Service.h"
 #include "ninjam/Ninjam.h"
 
+#include <cstring>
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 // +++++++++++++  SERVER MESSAGE (Base class) +++++++++++++++=
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=

@@ -1,4 +1,4 @@
-#include "UpNpManager.h"
+#include "UPnPManager.h"
 
 #include <QDebug>
 
