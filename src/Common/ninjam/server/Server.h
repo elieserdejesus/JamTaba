@@ -167,8 +167,10 @@ private:
     };
 
     VotingSettings votingSettings;
-    QMap<quint16, Voting *> bpmVotings;
-    QMap<quint16, Voting *> bpiVotings;
+
+    using VotingMap = QMap<quint16, Voting *>;
+    VotingMap bpmVotings;
+    VotingMap bpiVotings;
 
     void broadcastUserChanges(const QString userFullName, const QList<UserChannel> &userChannels);
     void sendConnectedUsersTo(QTcpSocket *socket);
@@ -178,7 +180,7 @@ private:
 
     void processBpiVoteMessage(const ClientToServerChatMessage &msg, const QString &userFullName);
     void processBpmVoteMessage(const ClientToServerChatMessage &msg, const QString &userFullName);
-    void processVoteMessage(const QString &userFullName, quint16 voteValue, quint16 currentValue, QMap<quint16, Voting *> &votings, std::function<Voting *()> createVoting);
+    void processVoteMessage(const QString &userFullName, quint16 voteValue, quint16 currentValue, VotingMap &votings, std::function<Voting *()> createVoting);
     Voting *createBpiVoting();
     Voting *createBpmVoting();
 

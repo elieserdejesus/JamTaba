@@ -613,8 +613,8 @@ Voting *Server::createBpmVoting()
     return newVoting;
 }
 
-void Server::processVoteMessage(const QString &userFullName, quint16 voteValue, quint16 currentValue,
-                                QMap<quint16, Voting *> &votings, std::function<Voting *()> createVoting)
+void Server::processVoteMessage(const QString &userFullName, quint16 voteValue, quint16 currentValue, VotingMap &votings,
+                                                                                            std::function<Voting *()> createVoting)
 {
     bool canVote = voteValue && voteValue != currentValue;
     if (canVote) {
