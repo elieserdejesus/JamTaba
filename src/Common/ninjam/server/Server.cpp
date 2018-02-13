@@ -109,7 +109,7 @@ Server::Server() :
     bpi(8),
     topic("No topic!"),
     licence("No licence at moment!"),
-    maxChannels(4),
+    maxChannels(2),
     maxUsers(8),
     keepAlivePeriod(30)
 {
