@@ -365,6 +365,11 @@ ServerToClientChatMessage::ServerToClientChatMessage(const QString &command, con
     arguments.append(arg4);
 }
 
+ServerToClientChatMessage ServerToClientChatMessage::buildVoteSystemMessage(const QString &message)
+{
+    return ServerToClientChatMessage("MSG", QString(), QString("[voting system] %1").arg(message), QString(), QString());
+}
+
 ServerToClientChatMessage ServerToClientChatMessage::buildPrivateMessage(const QString &destinationUserName, const QString &message)
 {
     return ServerToClientChatMessage("PRIVMSG", destinationUserName, message);

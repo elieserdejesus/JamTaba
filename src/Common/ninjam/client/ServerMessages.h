@@ -231,6 +231,8 @@ public:
     static ServerToClientChatMessage buildPrivateMessage(const QString &destinationUserName, const QString &message);
     static ServerToClientChatMessage buildUserJoinMessage(const QString &userName);
     static ServerToClientChatMessage buildUserPartMessage(const QString &userName);
+    static ServerToClientChatMessage buildVoteSystemMessage(const QString&message);
+
     static ServerToClientChatMessage from(QIODevice *stream, quint32 payload);
 
     void printDebug(QDebug &dbg) const override;

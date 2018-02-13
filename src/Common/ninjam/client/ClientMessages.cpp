@@ -313,6 +313,57 @@ ClientToServerChatMessage ClientToServerChatMessage::buildAdminMessage(const QSt
     return ClientToServerChatMessage("ADMIN", msg, QString(), QString(), QString());
 }
 
+bool ClientToServerChatMessage::isBpiVoteMessage() const
+{
+    if (!isPublicMessage())
+        return false;
+
+    QString voteCommand = arguments.at(0);
+    return voteCommand.startsWith("!vote bpi ");
+}
+
+quint16 ClientToServerChatMessage::extractVoteValue(const QString &string)
+{
+    auto parts = string.split(" ");
+    if (parts.size() == 3) {
+        return static_cast<quint16>(parts.at(2).toInt());
+    }
+
+    return 0;
+}
+
+
+quint16 ClientToServerChatMessage::extractBpmVoteValue() const
+{
+    if (isBpmVoteMessage()) {
+        if (!arguments.empty()) {
+            return extractVoteValue(arguments.at(0));
+        }
+    }
+
+    return 0;
+}
+
+quint16 ClientToServerChatMessage::extractBpiVoteValue() const
+{
+    if (isBpiVoteMessage()) {
+        if (!arguments.empty()) {
+            return extractVoteValue(arguments.at(0));
+        }
+    }
+
+    return 0;
+}
+
+bool ClientToServerChatMessage::isBpmVoteMessage() const
+{
+    if (!isPublicMessage())
+        return false;
+
+    QString voteCommand = arguments.at(0);
+    return voteCommand.startsWith("!vote bpm ");
+}
+
 bool ClientToServerChatMessage::isPublicMessage() const
 {
     return command == "MSG";

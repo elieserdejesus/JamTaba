@@ -143,6 +143,13 @@ public:
     bool isPublicMessage() const;
     bool isAdminMessage() const;
     bool isPrivateMessage() const;
+    bool isBpiVoteMessage() const;
+    bool isBpmVoteMessage() const;
+
+    quint16 extractBpiVoteValue() const;
+    quint16 extractBpmVoteValue() const;
+
+    static quint16 extractVoteValue(const QString &string);
 
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;

@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <QObject>
 #include <QList>
+#include <QTimer>
 
 #include "ninjam/Ninjam.h"
 #include "ninjam/client/User.h"
@@ -64,6 +65,31 @@ inline quint64 RemoteUser::getLastKeepAliveReceived() const
     return lastKeepAliveReceived;
 }
 
+class Voting : public QObject {
+
+    Q_OBJECT
+
+public:
+    Voting(QObject *parent = nullptr);
+    ~Voting();
+    void start(quint16 newValue, quint8 requiredVotes, quint64 expiration = 60000);
+    void registerVote(const QString &userFullName, quint16 value);
+    bool isRunning() const;
+
+signals:
+    void expired(quint16 voteValue);
+    void incremented(quint16 votingValue, quint16 currentVotes, quint16 requiredVotes, quint64 expirationTime);
+    void accepted(quint16 acceptedValue);
+
+private:
+    quint16 value;
+    QTimer *timer;
+    quint8 requiredVotes;
+    QSet<QString> voters;
+
+    void reset();
+};
+
 class Server : public QObject
 {
     Q_OBJECT
@@ -109,6 +135,14 @@ protected slots:
     void handleDisconnection();
     void handleClientSocketError(QAbstractSocket::SocketError error);
 
+    void bpiVotingExpired(quint16 bpiValue);
+    void bpiVotingAccepted(quint16 acceptedValue);
+    void bpiVotingIncremented(quint16 votingValue, quint16 currentVotes, quint16 requiredVotes, quint64 expirationTime);
+
+    void bpmVotingExpired(quint16 bpmValue);
+    void bpmVotingAccepted(quint16 acceptedValue);
+    void bpmVotingIncremented(quint16 votingValue, quint16 currentVotes, quint16 requiredVotes, quint64 expirationTime);
+
 private:
     QTcpServer tcpServer;
     QMap<QTcpSocket *, RemoteUser> remoteUsers; // connected clients
@@ -124,11 +158,24 @@ private:
     NetworkUsageMeasurer totalUploadMeasurer;
     NetworkUsageMeasurer totalDownloadMeasurer;
 
+    struct VotingSettings
+    {
+        qreal trheshold;
+        quint64 expirationPeriod;
+    };
+
+    VotingSettings votingSettings;
+    QMap<quint16, Voting *> bpmVotings;
+    QMap<quint16, Voting *> bpiVotings;
+
     void broadcastUserChanges(const QString userFullName, const QList<UserChannel> &userChannels);
     void sendConnectedUsersTo(QTcpSocket *socket);
     void broadcastPublicChatMessage(const ClientToServerChatMessage &receivedMessage, const QString &userFullName);
-    void broadcastServerMessage(const QString &serverMessage);
+    void broadcastVotingSystemMessage(const QString &message);
     void broadcastServerMessage(const QString &serverMessage, QTcpSocket *exclude);
+
+    void processBpiVoteMessage(const ClientToServerChatMessage &msg, const QString &userFullName);
+    void processBpmVoteMessage(const ClientToServerChatMessage &msg, const QString &userFullName);
 
     void processClientAuthUserMessage(QTcpSocket *socket, const MessageHeader &header);
     void processClientSetChannel(QTcpSocket *socket, const MessageHeader &header);

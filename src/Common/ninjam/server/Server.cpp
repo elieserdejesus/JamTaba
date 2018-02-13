@@ -14,6 +14,7 @@
 #include "ninjam/client/UserChannel.h"
 
 using ninjam::server::Server;
+using ninjam::server::Voting;
 using ninjam::client::AuthChallengeMessage;     // TODO message used both in server and client
 using ninjam::client::ClientAuthUserMessage;    // todo message used both in server and client
 using ninjam::client::ClientSetChannel;         // used in both
@@ -104,14 +105,94 @@ void RemoteUser::setLastKeepAliveToNow()
 
 // -------------------------------------------------------------
 
+Voting::Voting(QObject *parent) :
+    QObject(parent),
+    value(0),
+    requiredVotes(0),
+    timer(nullptr)
+{
+
+}
+
+Voting::~Voting()
+{
+    //qDebug() << "Destructing voting " << value;
+}
+
+bool Voting::isRunning() const
+{
+    return timer && timer->isActive();
+}
+
+void Voting::start(quint16 newValue, quint8 requiredVotes, quint64 expiration)
+{
+    if (!timer) {
+        timer = new QTimer(this);
+        timer->setSingleShot(true);
+        timer->setTimerType(Qt::PreciseTimer);
+
+        connect(timer, &QTimer::timeout, this, [&](){
+            emit expired(value);
+            reset();
+        });
+    }
+
+    if (isRunning())
+        return;
+
+    reset();
+
+    this->requiredVotes = requiredVotes;
+    this->value = newValue;
+    timer->setInterval(expiration);
+    timer->start();
+}
+
+void Voting::registerVote(const QString &userFullName, quint16 value)
+{
+    if (!isRunning())
+        return;
+
+    if (voters.contains(userFullName))
+        return; // discard duplicated vote
+
+    if (value != this->value)
+        return; // user voting using wrong bpm/bpi value
+
+    voters.insert(userFullName);
+
+    auto voteCount = voters.count();
+
+    if (voteCount >= requiredVotes) {
+        emit accepted(value);
+        timer->stop();
+        reset();
+    }
+    else {
+        auto expirationTime = timer->interval();
+        emit incremented(value, voteCount, requiredVotes, expirationTime);
+    }
+}
+
+void Voting::reset()
+{
+    voters.clear();
+    value = 0;
+    requiredVotes = 0;
+}
+
+// -------------------------------------------------------------
+
+
 Server::Server() :
     bpm(120),
-    bpi(8),
+    bpi(16),
     topic("No topic!"),
     licence("No licence at moment!"),
     maxChannels(2),
     maxUsers(8),
-    keepAlivePeriod(30)
+    keepAlivePeriod(30),
+    votingSettings({0.6, 10000}) // 60% for threshold, 60 seconds to vote expiration
 {
     connect(&tcpServer, &QTcpServer::newConnection, this, &Server::handleNewConnection);
     connect(&tcpServer, &QTcpServer::acceptError, this, &Server::handleAcceptError);
@@ -120,6 +201,64 @@ Server::Server() :
 Server::~Server()
 {
     shutdown();
+}
+
+void Server::bpiVotingIncremented(quint16 votingValue, quint16 currentVotes, quint16 requiredVotes, quint64 expirationTime)
+{
+    //[voting system] leading candidate: 1/3 votes for 8 BPI [each vote expires in 20s]
+
+    auto msg = QString("leading candidate: %1/%2 votes for %3 BPI [each vote expires in %4s]")
+            .arg(currentVotes)
+            .arg(requiredVotes)
+            .arg(votingValue)
+            .arg(expirationTime/1000); // expiration time in seconds
+
+    broadcastVotingSystemMessage(msg);
+}
+
+void Server::bpiVotingAccepted(quint16 acceptedValue)
+{
+    if (acceptedValue != bpi) {// maybe admin changed the value before voting is finished?
+        setBpi(acceptedValue);
+        broadcastVotingSystemMessage(QString("setting BPM to %1").arg(acceptedValue));
+    }
+}
+
+void Server::bpiVotingExpired(quint16 bpiValue)
+{
+    if (bpiVotings.contains(bpiValue)) {
+        bpiVotings[bpiValue]->deleteLater();
+        bpiVotings.remove(bpiValue);
+    }
+}
+
+void Server::bpmVotingIncremented(quint16 votingValue, quint16 currentVotes, quint16 requiredVotes, quint64 expirationTime)
+{
+    //[voting system] leading candidate: 1/3 votes for 8 BPM [each vote expires in 20s]
+
+    auto msg = QString("leading candidate: %1/%2 votes for %3 BPM [each vote expires in %4s]")
+            .arg(currentVotes)
+            .arg(requiredVotes)
+            .arg(votingValue)
+            .arg(expirationTime/1000); // expiration time in seconds
+
+    broadcastVotingSystemMessage(msg);
+}
+
+void Server::bpmVotingAccepted(quint16 acceptedValue)
+{
+    if (acceptedValue != bpm) {  // maybe admin changed the value before voting is finished?
+        setBpm(acceptedValue);
+        broadcastVotingSystemMessage(QString("setting BPI to %1").arg(acceptedValue));
+    }
+}
+
+void Server::bpmVotingExpired(quint16 bpmValue)
+{
+    if (bpmVotings.contains(bpmValue)) {
+        bpmVotings[bpmValue]->deleteLater();
+        bpmVotings.remove(bpmValue);
+    }
 }
 
 bool Server::isStarted() const
@@ -347,21 +486,11 @@ void Server::processUploadIntervalWrite(QTcpSocket *senderSocket, const MessageH
     }
 }
 
-void Server::broadcastServerMessage(const QString &serverMessage)
+void Server::broadcastVotingSystemMessage(const QString &message)
 {
-//    auto msg = ServerToClientChatMessage::buildServerMessage(serverMessage);
-//    for (auto s : remoteUsers.keys()) {
-//        msg.to(s);
-//    }
-}
-
-void Server::broadcastServerMessage(const QString &serverMessage, QTcpSocket *exclude)
-{
-//    auto msg = ServerToClientChatMessage::buildServerMessage(serverMessage);
-//    for (auto s : remoteUsers.keys()) {
-//        if (s != exclude)
-//            msg.to(s);
-//    }
+    auto msg = ServerToClientChatMessage::buildVoteSystemMessage(message);
+    for (auto socket : remoteUsers.keys())
+        msg.to(socket);
 }
 
 void Server::broadcastPublicChatMessage(const ClientToServerChatMessage &receivedMessage, const QString &userFullName)
@@ -372,7 +501,6 @@ void Server::broadcastPublicChatMessage(const ClientToServerChatMessage &receive
     auto msg = ServerToClientChatMessage::buildPublicMessage(userFullName, messageText);
     for (auto s : remoteUsers.keys()) {
         msg.to(s);
-        //s->flush();
     }
 }
 
@@ -463,6 +591,61 @@ void Server::processAdminCommand(const QString &cmd)
     }
 }
 
+void Server::processBpiVoteMessage(const ninjam::client::ClientToServerChatMessage &msg, const QString &userFullName)
+{
+    Q_ASSERT(msg.isBpiVoteMessage());
+
+    quint16 voteValue = msg.extractBpiVoteValue();
+
+    bool canVote = voteValue && voteValue != bpi;
+    if (canVote) {
+        if (!bpiVotings.contains(voteValue)) {
+            auto newVoting = new Voting(this);
+            bpiVotings.insert(voteValue, newVoting);
+
+            connect(newVoting, &Voting::expired, this, &Server::bpiVotingExpired);
+            connect(newVoting, &Voting::accepted, this, &Server::bpiVotingAccepted);
+            connect(newVoting, &Voting::incremented, this, &Server::bpiVotingIncremented);
+        }
+
+        auto bpiVoting = bpiVotings[voteValue];
+        if (!bpiVoting->isRunning()) {
+            auto requiredVotes = static_cast<quint8>(remoteUsers.size() * votingSettings.trheshold);
+            bpiVoting->start(voteValue, requiredVotes, votingSettings.expirationPeriod);
+        }
+
+        bpiVoting->registerVote(userFullName, voteValue);
+    }
+}
+
+void Server::processBpmVoteMessage(const ninjam::client::ClientToServerChatMessage &msg, const QString &userFullName)
+{
+    Q_ASSERT(msg.isBpmVoteMessage());
+
+    quint16 voteValue = msg.extractBpmVoteValue();
+
+    bool canVote = voteValue && voteValue != bpm;
+    if (canVote) {
+
+        if (!bpmVotings.contains(voteValue)) {
+            auto newVoting = new Voting();
+            bpmVotings.insert(voteValue, newVoting);
+
+            connect(newVoting, &Voting::expired, this, &Server::bpmVotingExpired);
+            connect(newVoting, &Voting::accepted, this, &Server::bpmVotingAccepted);
+            connect(newVoting, &Voting::incremented, this, &Server::bpmVotingIncremented);
+        }
+
+        auto bpmVoting = bpmVotings[voteValue];
+        if (!bpmVoting->isRunning()) {
+            auto requiredVotes = static_cast<quint8>(remoteUsers.size() * votingSettings.trheshold);
+            bpmVoting->start(voteValue, requiredVotes, votingSettings.expirationPeriod);
+        }
+
+        bpmVoting->registerVote(userFullName, voteValue);
+    }
+}
+
 void Server::processChatMessage(QTcpSocket *socket, const ninjam::MessageHeader &header)
 {
     if (!remoteUsers.contains(socket))
@@ -470,13 +653,18 @@ void Server::processChatMessage(QTcpSocket *socket, const ninjam::MessageHeader 
 
     ClientToServerChatMessage receivedMessage = ClientToServerChatMessage::from(socket, header.getPayload());
 
+    QString userFullName = remoteUsers[socket].getFullName();
+
     if (receivedMessage.isPublicMessage()) {
-        QString userFullName = remoteUsers[socket].getFullName();
         broadcastPublicChatMessage(receivedMessage, userFullName);
+
+        if (receivedMessage.isBpiVoteMessage())
+            processBpiVoteMessage(receivedMessage, userFullName);
+        else if (receivedMessage.isBpmVoteMessage())
+            processBpmVoteMessage(receivedMessage, userFullName);
     }
     else if (receivedMessage.isPrivateMessage()) {
-        QString senderFullName = remoteUsers[socket].getFullName();
-        sendPrivateMessage(senderFullName, receivedMessage);
+        sendPrivateMessage(userFullName, receivedMessage);
     }
     else if (receivedMessage.isAdminMessage()) {
         processAdminCommand(receivedMessage.getArguments().at(0));
@@ -644,6 +832,7 @@ void Server::disconnectClient(QTcpSocket *socket)
 
 void Server::handleClientSocketError(QAbstractSocket::SocketError error)
 {
+    Q_UNUSED(error)
     //qDebug() << qobject_cast<QTcpSocket *>(QObject::sender())->errorString();
 }
 
