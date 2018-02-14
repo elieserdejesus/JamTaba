@@ -34,7 +34,7 @@ public:
     MessageHeader getCurrentHeader() const;
     void setCurrentHeader(MessageHeader header);
     void setFullName(const QString &fullName);
-    void updateChannels(const QList<UserChannel> &newChannels);
+    void updateChannels(const QList<UserChannel> &newChannels, quint8 maxChannels);
 
     inline bool receivedInitialServerInfos() const
     {

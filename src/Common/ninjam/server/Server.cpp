@@ -72,7 +72,7 @@ RemoteUser::RemoteUser() :
 
 }
 
-void RemoteUser::updateChannels(const QList<UserChannel> &newChannels)
+void RemoteUser::updateChannels(const QList<UserChannel> &newChannels, quint8 maxChannels)
 {
     QSet<quint8> updatedIndexes;
 
@@ -89,6 +89,10 @@ void RemoteUser::updateChannels(const QList<UserChannel> &newChannels)
             channels[index].setName(QString());
         }
     }
+
+    // keep just 'maxChannels'
+    while (channels.size() > maxChannels)
+        channels.remove(channels.keys().last());
 }
 
 void RemoteUser::setFullName(const QString &fullName)
@@ -190,7 +194,7 @@ Server::Server() :
     topic("No topic!"),
     licence("No licence at moment!"),
     maxChannels(2),
-    maxUsers(8),
+    maxUsers(4),
     keepAlivePeriod(30),
     votingSettings({0.6, 10000}) // 60% for threshold, 60 seconds to vote expiration
 {
@@ -288,6 +292,11 @@ void Server::handleNewConnection()
     QTcpSocket *socket = tcpServer.nextPendingConnection();
     if (!socket)
         return;
+
+    if (remoteUsers.size() >= maxUsers) {
+        socket->disconnectFromHost(); // reject the connection
+        return;
+    }
 
     emit incommingConnection(socket->peerAddress().toString());
 
@@ -402,7 +411,7 @@ void Server::processClientSetChannel(QTcpSocket *socket, const ninjam::MessageHe
     RemoteUser &user = remoteUsers[socket];
 
     // update remote user channels list
-    user.updateChannels(msg.getChannels());
+    user.updateChannels(msg.getChannels(), maxChannels);
 
     // broadcast the updated remote user channels to everybody
     broadcastUserChanges(user.getFullName(), user.getChannels());
