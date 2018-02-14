@@ -105,7 +105,11 @@ void UPnPManager::openPort(quint16 port)
 
 void UPnPManager::closePort(quint16 port)
 {
-    const char *eport = QString::number(port).toStdString().c_str();
+    if (!devlist)
+        return;
+
+    QByteArray ba = QString::number(port).toLatin1();
+    const char *eport = ba.data();
     int result = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, eport, "TCP", nullptr);
     if (result == 0)
         emit portClosed();
