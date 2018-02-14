@@ -4,7 +4,7 @@
 #include "log/Logging.h"
 #include "Vorbis.h"
 
-using namespace vorbis;
+using vorbis::Encoder;
 
 Encoder::Encoder()
     :initialized(false)

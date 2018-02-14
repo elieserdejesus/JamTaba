@@ -11,11 +11,13 @@
 
 #include "audio/Resampler.h"
 
-using namespace audio;
+using audio::AudioNode;
+using audio::SamplesBuffer;
+using audio::AudioPeak;
+using audio::AudioNodeProcessor;
 
-const double AudioNode::ROOT_2_OVER_2 = 1.414213562373095 *0.5;
+const double AudioNode::ROOT_2_OVER_2 = 1.414213562373095 * 0.5;
 const double AudioNode::PI_OVER_2 = 3.141592653589793238463 * 0.5;
-
 
 void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<midi::MidiMessage> &midiBuffer)
 {

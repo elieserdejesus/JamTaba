@@ -1,7 +1,7 @@
 #ifndef TOP_LEVEL_TEXT_EDITOR_MODIFIER_H
 #define TOP_LEVEL_TEXT_EDITOR_MODIFIER_H
 
-#include "TextEditorModifier.h"
+#include "gui/TextEditorModifier.h"
 
 #include <QSharedPointer>
 

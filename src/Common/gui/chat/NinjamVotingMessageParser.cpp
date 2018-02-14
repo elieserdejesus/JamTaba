@@ -2,7 +2,7 @@
 #include <QRegularExpression>
 #include <QDebug>
 
-using namespace gui::chat;
+using gui::chat::SystemVotingMessage;
 
 /** System voting format is: [voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s] */
 const QRegularExpression gui::chat::SYSTEM_VOTING_REGEX("\\[voting system\\] leading candidate: (\\d{1,2})\\/(\\d{1,2}) votes for (\\d{1,3}) (\\bBPI|\\bBPM) \\[each vote expires in (\\d{1,3})s\\]");
@@ -14,6 +14,17 @@ const QRegularExpression gui::chat::ADMIN_COMMAND_REGEX("^/bpi|^/bpm|^/kick|^/to
 
 const QRegularExpression gui::chat::PRIVATE_MESSAGE_REGEX("^/msg");
 
+QString gui::chat::extractDestinationUserNameFromPrivateMessage(const QString &text)
+{
+    QString t(text);
+    t.replace("/msg ", "");
+    int index = t.indexOf(QChar(' '));
+    if (index > 0) {
+        return t.left(index);
+    }
+
+    return text;
+}
 
 bool gui::chat::isPrivateMessage(const QString &message)
 {

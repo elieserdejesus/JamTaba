@@ -2,7 +2,7 @@
 #include "MainController.h"
 #include "audio/core/LocalInputNode.h"
 #include "GuiUtils.h"
-#include "BoostSpinBox.h"
+#include "widgets/BoostSpinBox.h"
 #include "IconFactory.h"
 
 #include <QLayout>
@@ -13,8 +13,6 @@
 #include <QPainter>
 #include <QIcon>
 #include <QFontMetrics>
-
-using namespace controller;
 
 class LocalTrackView::LooperIconFactory
 {

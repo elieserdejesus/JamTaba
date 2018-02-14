@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include "ninjam/Server.h"
+#include "ninjam/client/ServerInfo.h"
 
 class NatMap;
 class QTimer;

@@ -1,7 +1,7 @@
 #ifndef STANDALONE_LOCAL_TRACKGROUP_VIEW_H
 #define STANDALONE_LOCAL_TRACKGROUP_VIEW_H
 
-#include "LocalTrackGroupView.h"
+#include "gui/LocalTrackGroupView.h"
 #include "LocalTrackViewStandalone.h"
 
 class MainWindowStandalone;

@@ -45,6 +45,7 @@ namespace gui
 
         bool isAdminCommand(const QString &message);
         bool isPrivateMessage(const QString &message);
+        QString extractDestinationUserNameFromPrivateMessage(const QString &text);
 
     } // Chat namespace
 

@@ -2,7 +2,7 @@
 #include "log/Logging.h"
 #include "MidiMessage.h"
 
-using namespace midi;
+using midi::MidiDriver;
 
 MidiDriver::MidiDriver()
 {

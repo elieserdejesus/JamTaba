@@ -4,6 +4,7 @@
 #include "NinjamController.h"
 #include "video/FFMpegDemuxer.h"
 #include "IconFactory.h"
+#include "ninjam/client/Service.h"
 
 #include <QMenu>
 #include <QDateTime>
@@ -11,11 +12,11 @@
 #include <QStackedLayout>
 #include <QtConcurrent>
 
-using namespace controller;
-using namespace persistence;
-
 const uint NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT = 350;
 const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.64;
+
+using controller::MainController;
+using persistence::CacheEntry;
 
 NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long trackID,
                                            const QString &channelName, const QColor &userColor,
@@ -187,7 +188,7 @@ void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
     QString localIP;
     auto service = mainController->getNinjamService();
     if (service) {
-        localIP = ninjam::extractUserIP(service->getConnectedUserName());
+        localIP = ninjam::client::extractUserIP(service->getConnectedUserName());
     }
     privateChatAction->setEnabled(!userIP.isEmpty() && !localIP.isEmpty()); // admin IPs are empty
 

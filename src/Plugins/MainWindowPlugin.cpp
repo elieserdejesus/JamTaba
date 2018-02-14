@@ -2,7 +2,8 @@
 #include "NinjamRoomWindowPlugin.h"
 #include "MainControllerPlugin.h"
 #include "PreferencesDialogPlugin.h"
-#include "LocalTrackView.h"
+#include "gui/LocalTrackView.h"
+#include "gui/LocalTrackGroupView.h"
 #include "audio/core/LocalInputNode.h"
 #include "TopLevelTextEditorModifier.h"
 
@@ -11,7 +12,6 @@
 const QSize MainWindowPlugin::PLUGIN_WINDOW_MIN_SIZE = QSize(990, 600);
 
 const quint32 MainWindowPlugin::ZOOM_STEP = 70;
-
 
 MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
@@ -100,7 +100,7 @@ void MainWindowPlugin::removeAllInputLocalTracks()
     firstChannelIsInitialized = false; // prepare for the next local input tracks initialization (loading presets)
 }
 
-void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView, const persistence::Subchannel &subChannel)
+void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView, const persistence::SubChannel &subChannel)
 {
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);

@@ -8,7 +8,7 @@
 #include <QTimer>
 #include <QAction>
 
-#include "chords/ChordProgression.h"
+#include "gui/chords/ChordProgression.h"
 
 namespace Ui {
 class ChatPanel;

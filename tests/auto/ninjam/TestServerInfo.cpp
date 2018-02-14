@@ -1,13 +1,13 @@
-#include "TestServer.h"
-#include "ninjam/Server.h"
-#include "ninjam/User.h"
+#include "TestServerInfo.h"
+#include "ninjam/client/ServerInfo.h"
+#include "ninjam/client/User.h"
 #include <QTest>
 
-using namespace ninjam;
+using namespace ninjam::client;
 
-void TestServer::addUser()
+void TestServerInfo::addUser()
 {
-    Server server("localhost", 2040, 2);
+    ServerInfo server("localhost", 2040, 2);
     QString userFullName("anon@localhost");
     User user(userFullName);
     server.addUser(user);
@@ -18,29 +18,29 @@ void TestServer::addUser()
 }
 
 
-void TestServer::addUserChannel_data()
+void TestServerInfo::addUserChannel_data()
 {
     QTest::addColumn<quint8>("serverMaxChannels");
     QTest::addColumn<quint8>("channelsToAdd");
 
-    QTest::newRow("Server with 2 max channels, adding 1 channels") << (quint8)2 << (quint8)1;
-    QTest::newRow("Server with 2 max channels, adding 2 channels") << (quint8)2 << (quint8)2;
-    QTest::newRow("Server with 2 max channels, adding 3 channels") << (quint8)2 << (quint8)3;
+    QTest::newRow("ServerInfo with 2 max channels, adding 1 channels") << (quint8)2 << (quint8)1;
+    QTest::newRow("ServerInfo with 2 max channels, adding 2 channels") << (quint8)2 << (quint8)2;
+    QTest::newRow("ServerInfo with 2 max channels, adding 3 channels") << (quint8)2 << (quint8)3;
 }
 
-void TestServer::addUserChannel()
+void TestServerInfo::addUserChannel()
 {
     QFETCH(quint8, serverMaxChannels);
     QFETCH(quint8, channelsToAdd);
 
-    Server server("localhost", 2040, serverMaxChannels);
+    ServerInfo server("localhost", 2040, serverMaxChannels);
     QString userFullName("anon@localhost");
     server.addUser(User(userFullName));
 
     //adding some channels
     for (quint8 channelIndex = 0; channelIndex < channelsToAdd; ++channelIndex) {
         QString channelName = "channel " + QString::number(channelIndex);
-        server.addUserChannel(UserChannel(userFullName, channelName, channelIndex));
+        server.addUserChannel(userFullName, UserChannel(channelName, channelIndex));
     }
 
     //checking
@@ -54,7 +54,7 @@ void TestServer::addUserChannel()
     }
 }
 
-void TestServer::removeUserChannel_data()
+void TestServerInfo::removeUserChannel_data()
 {
     QTest::addColumn<quint8>("channelsToAdd");
     QTest::addColumn<quint8>("channelsToRemove");
@@ -64,9 +64,9 @@ void TestServer::removeUserChannel_data()
 }
 
 
-void TestServer::removeUserChannel()
+void TestServerInfo::removeUserChannel()
 {
-    Server server("localhost", 2040, 2);
+    ServerInfo server("localhost", 2040, 2);
     QString userFullName("anon@localhost");
     server.addUser(User(userFullName));
 
@@ -76,14 +76,14 @@ void TestServer::removeUserChannel()
     //adding some channels
     for (quint8 channelIndex = 0; channelIndex < channelsToAdd; ++channelIndex) {
         QString channelName = "channel " + QString::number(channelIndex);
-        server.addUserChannel(UserChannel(userFullName, channelName, channelIndex));
+        server.addUserChannel(userFullName, UserChannel(channelName, channelIndex));
     }
 
     //removing channels and check
     for (quint8 channelIndex = 0; channelIndex < channelsToRemove; ++channelIndex) {
         UserChannel channel = server.getUser(userFullName).getChannel(channelIndex);
         if(channelsToRemove >= channelsToAdd){
-            server.removeUserChannel(channel);
+            server.removeUserChannel(userFullName, channel);
             QVERIFY(!server.getUser(userFullName).hasChannel(channel.getIndex()));
         }
         else{
@@ -92,7 +92,7 @@ void TestServer::removeUserChannel()
     }
 }
 
-void TestServer::updateUserChannel_data()
+void TestServerInfo::updateUserChannel_data()
 {
     QTest::addColumn<quint8>("channelsToAdd");
     QTest::addColumn<quint8>("channelsToUpdate");
@@ -101,9 +101,9 @@ void TestServer::updateUserChannel_data()
     QTest::newRow("Addind 1 and Updating 2 channels") << (quint8)1 << (quint8)2;
 }
 
-void TestServer::updateUserChannel()
+void TestServerInfo::updateUserChannel()
 {
-    Server server("localhost", 2040, 2);
+    ServerInfo server("localhost", 2040, 2);
     QString userFullName("anon@localhost");
     server.addUser(User(userFullName));
 
@@ -112,14 +112,14 @@ void TestServer::updateUserChannel()
 
     //adding channels
     for (quint8 index = 0; index < channelsToAdd; ++index) {
-        server.addUserChannel(UserChannel(userFullName, "channel name " + QString::number(index), index));
+        server.addUserChannel(userFullName, UserChannel("channel name " + QString::number(index), index));
     }
 
     //updating channels names
     for (quint8 index = 0; index < channelsToUpdate; ++index) {
         bool channelIsExpected = index < channelsToAdd;
         QString newName = "newChannelName" + QString::number(index);
-        server.updateUserChannel(UserChannel(userFullName, newName, index));
+        server.updateUserChannel(userFullName, UserChannel(newName, index));
         QString channelName = server.getUser(userFullName).getChannel(index).getName();
         QCOMPARE(channelName, channelIsExpected ? newName : QString("invalid"));
     }

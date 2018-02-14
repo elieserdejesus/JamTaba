@@ -11,13 +11,11 @@
 #include <QTimer>
 
 #include "looper/Looper.h"
-#include "LooperWavePanel.h"
 #include "looper/LooperPersistence.h"
 #include "looper/LooperLayer.h"
 #include "widgets/BlinkableButton.h"
 #include "widgets/Slider.h"
-
-using namespace audio;
+#include "widgets/LooperWavePanel.h"
 
 namespace controller {
 class NinjamController;
@@ -28,12 +26,20 @@ namespace Ui {
 class LooperWindow;
 }
 
+using audio::Looper;
+using audio::LooperLayer;
+using audio::LooperState;
+using audio::LoopSaver;
+using audio::LoopLayerInfo;
+using audio::AudioPeak;
+using controller::MainController;
+
 class LooperWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit LooperWindow(QWidget *parent, controller::MainController *mainController);
+    explicit LooperWindow(QWidget *parent, MainController *mainController);
     ~LooperWindow();
 
     void setLooper(Looper *looper);

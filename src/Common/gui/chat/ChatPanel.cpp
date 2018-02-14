@@ -2,6 +2,10 @@
 #include "ui_ChatPanel.h"
 #include "ChatMessagePanel.h"
 #include "EmojiWidget.h"
+#include "EmojiManager.h"
+#include "gui/TextEditorModifier.h"
+#include "gui/UsersColorsPool.h"
+#include "ninjam/client/User.h"
 
 #include <QWidget>
 #include <QScrollBar>
@@ -9,12 +13,7 @@
 #include <QKeyEvent>
 #include <QWidget>
 #include <QGridLayout>
-#include "IconFactory.h"
-
-#include "TextEditorModifier.h"
-#include "UsersColorsPool.h"
-#include "EmojiManager.h"
-#include "ninjam/User.h"
+#include "gui/IconFactory.h"
 
 const qint8 ChatPanel::MAX_FONT_OFFSET = 3;
 const qint8 ChatPanel::MIN_FONT_OFFSET = -2;
@@ -24,7 +23,6 @@ const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 qint8 ChatPanel::fontSizeOffset = 0;
 
 QList<ChatPanel *> ChatPanel::instances;
-
 
 ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
                         TextEditorModifier *chatInputModifier, EmojiManager *emojiManager) :
@@ -312,7 +310,7 @@ void ChatPanel::addMessage(const QString &localUserName, const QString &msgAutho
     QColor backgroundColor = getUserColor(name);
 
     bool isBot = backgroundColor == BOT_COLOR;
-    bool isLocalUser = msgAuthor == ninjam::extractUserName(localUserName);
+    bool isLocalUser = msgAuthor == ninjam::client::extractUserName(localUserName);
 
     QColor textColor = Qt::black;
     QColor userNameBackgroundColor = backgroundColor;

@@ -1,9 +1,11 @@
 #include "LocalInputGroup.h"
 #include "LocalInputNode.h"
 
-using namespace audio;
+using audio::LocalInputGroup;
+using audio::LocalInputNode;
+using audio::SamplesBuffer;
 
-LocalInputGroup::LocalInputGroup(int groupIndex, audio::LocalInputNode *firstInput) :
+LocalInputGroup::LocalInputGroup(int groupIndex, LocalInputNode *firstInput) :
     groupIndex(groupIndex),
     transmiting(true)
 {
@@ -15,7 +17,7 @@ LocalInputGroup::~LocalInputGroup()
     groupedInputs.clear();
 }
 
-void LocalInputGroup::addInputNode(audio::LocalInputNode *input)
+void LocalInputGroup::addInputNode(LocalInputNode *input)
 {
     groupedInputs.append(input);
 }
@@ -30,7 +32,7 @@ LocalInputNode *LocalInputGroup::getInputNode(quint8 index) const
 }
 
 
-void LocalInputGroup::mixGroupedInputs(audio::SamplesBuffer &out)
+void LocalInputGroup::mixGroupedInputs(SamplesBuffer &out)
 {
     for (auto inputTrack : groupedInputs) {
         auto lastBuffer = inputTrack->getLastBuffer();
@@ -43,7 +45,7 @@ void LocalInputGroup::mixGroupedInputs(audio::SamplesBuffer &out)
     }
 }
 
-void LocalInputGroup::removeInput(audio::LocalInputNode *input)
+void LocalInputGroup::removeInput(LocalInputNode *input)
 {
     if (!groupedInputs.removeOne(input))
         qCritical() << "the input track was not removed!";

@@ -7,8 +7,8 @@
 
 #include <QDebug>
 
-using namespace audio;
-using namespace std;
+using audio::LooperLayer;
+using audio::SamplesBuffer;
 
 LooperLayer::LooperLayer() :
     lastSamplesPerPeak(0),

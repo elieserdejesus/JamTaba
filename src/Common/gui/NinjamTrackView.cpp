@@ -1,6 +1,5 @@
 #include "NinjamTrackView.h"
-#include "BaseTrackView.h"
-#include "PeakMeter.h"
+
 #include <QLineEdit>
 #include <QLabel>
 #include <QDebug>
@@ -10,11 +9,14 @@
 #include <QSlider>
 #include <QStyle>
 #include <QDateTime>
+
+#include "BaseTrackView.h"
 #include "MainController.h"
 #include "Utils.h"
-#include "audio/NinjamTrackNode.h"
-#include "BoostSpinBox.h"
 #include "IconFactory.h"
+#include "audio/NinjamTrackNode.h"
+#include "widgets/BoostSpinBox.h"
+#include "widgets/PeakMeter.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 

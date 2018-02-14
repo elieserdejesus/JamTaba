@@ -7,16 +7,17 @@
 #include <QTimer>
 #include <QDebug>
 #include <QApplication>
-#include "ninjam/Server.h"
-#include "ninjam/Service.h"
+#include "ninjam/client/ServerInfo.h"
+#include "ninjam/client/Service.h"
 #include "log/Logging.h"
 
-using namespace login;
+using login::LoginService;
+using login::UserInfo;
+using login::RoomInfo;
+using login::RoomTYPE;
 
 const QString LoginService::LOGIN_SERVER_URL = "http://jamtaba2.appspot.com/vs";
 //const QString LoginService::LOGIN_SERVER_URL = "http://localhost:8080/vs";
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 UserInfo::UserInfo(long long id, const QString &name, const QString &ip) :
     id(id),
@@ -52,7 +53,7 @@ int RoomInfo::getNonBotUsersCount() const
 {
     int nonBots = 0;
     for (const UserInfo &userInfo : users) {
-        if (!ninjam::Service::isBotName(userInfo.getName()))
+        if (!ninjam::client::Service::isBotName(userInfo.getName()))
             nonBots++;
     }
     return nonBots;

@@ -453,7 +453,9 @@
     <property name="title">
      <string>Ninjam</string>
     </property>
-    <addaction name="actionPrivate_Server"/>
+    <addaction name="actionConnectWithPrivateServer"/>
+    <addaction name="actionHostPrivateServer"/>
+    <addaction name="separator"/>
     <addaction name="actionNinjam_community_forum"/>
     <addaction name="actionNinjam_Official_Site"/>
    </widget>
@@ -530,9 +532,9 @@
     <string>Recording ...</string>
    </property>
   </action>
-  <action name="actionPrivate_Server">
+  <action name="actionConnectWithPrivateServer">
    <property name="text">
-    <string>Private Server ...</string>
+    <string>Connect with private server ...</string>
    </property>
   </action>
   <action name="actionNinjam_community_forum">
@@ -680,24 +682,29 @@
     <string>Remember ...</string>
    </property>
   </action>
+  <action name="actionHostPrivateServer">
+   <property name="text">
+    <string>Host a private server in your machine ...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
    <class>AudioMeter</class>
    <extends>QWidget</extends>
-   <header>PeakMeter.h</header>
+   <header>gui/widgets/PeakMeter.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Slider</class>
    <extends>QSlider</extends>
-   <header>Slider.h</header>
+   <header>gui/widgets/Slider.h</header>
   </customwidget>
   <customwidget>
    <class>UserNameLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>UserNameLineEdit.h</header>
+   <header>gui/widgets/UserNameLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

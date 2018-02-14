@@ -2,8 +2,7 @@
 #define MAINWINDOWPLUGIN_H
 
 #include "gui/MainWindow.h"
-#include "NinjamRoomWindowPlugin.h"
-#include "MainControllerPlugin.h"
+#include "MainControllerPlugin.h" // necessary to return covariant type
 
 class NinjamRoomWindowPlugin;
 
@@ -24,7 +23,7 @@ public:
 protected:
     NinjamRoomWindow *createNinjamWindow(const login::RoomInfo &, controller::MainController *) override;
 
-    void initializeLocalSubChannel(LocalTrackView *subChannelView, const persistence::Subchannel &subChannel) override;
+    void initializeLocalSubChannel(LocalTrackView *subChannelView, const persistence::SubChannel &subChannel) override;
 
     void removeAllInputLocalTracks() override;
 

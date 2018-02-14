@@ -1,9 +1,11 @@
 #include "LocalTrackViewStandalone.h"
 #include "audio/core/LocalInputNode.h"
+#include "audio/core/Plugins.h"
 #include "FxPanel.h"
 #include "FxPanelItem.h"
-#include "BoostSpinBox.h"
-#include "IconFactory.h"
+#include "gui/widgets/BoostSpinBox.h"
+#include "gui/IconFactory.h"
+#include "log/Logging.h"
 
 #include <QGridLayout>
 #include <QStyle>

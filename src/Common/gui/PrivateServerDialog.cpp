@@ -4,9 +4,9 @@
 #include "persistence/Settings.h"
 #include <QDebug>
 
-using namespace persistence;
+using controller::MainController;
 
-PrivateServerDialog::PrivateServerDialog(QWidget *parent, controller::MainController *mainController) :
+PrivateServerDialog::PrivateServerDialog(QWidget *parent, MainController *mainController) :
     QDialog(parent),
     ui(new Ui::PrivateServerDialog),
     mainController(mainController)

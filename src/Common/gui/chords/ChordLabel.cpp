@@ -1,11 +1,13 @@
 #include "ChordLabel.h"
+
 #include <QVariant>
 #include <QStyle>
 #include <QStyleOption>
 #include <QPainter>
 #include <QLayout>
 #include <QKeyEvent>
-#include "chords/ChatChordsProgressionParser.h"
+
+#include "ChatChordsProgressionParser.h"
 
 ChordLabel *ChordLabel::currentChordLabel = nullptr;
 const QColor ChordLabel::BEAT_PROGRESS_COLOR = QColor(0, 255, 0, 35); // transparent green

@@ -3,36 +3,41 @@
 
 #include <QWidget>
 #include <QTimer>
-#include "ninjam/UserChannel.h"
-#include "loginserver/LoginService.h"
-#include "chat/ChatPanel.h"
-#include "NinjamTrackGroupView.h"
 #include <QMessageBox>
+#include <QToolButton>
+
+#include "loginserver/LoginService.h"
+#include "NinjamTrackGroupView.h"
 #include "NinjamPanel.h"
 #include "MetronomePanel.h"
 #include "intervalProgress/IntervalProgressWindow.h"
+#include "chat/ChatPanel.h"
+#include "ninjam/client/UserChannel.h"
 
 class MainWindow;
 class NinjamTrackGroupView;
 class NinjamTrackView;
-class QToolButton;
 
 namespace Ui {
-class NinjamRoomWindow;
+    class NinjamRoomWindow;
 }
 
 namespace controller {
-class NinjamController;
-class MainController;
+    class NinjamController;
+    class MainController;
 }
+
+using ninjam::client::User;
+using ninjam::client::UserChannel;
+using login::RoomInfo;
+using controller::MainController;
 
 class NinjamRoomWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit NinjamRoomWindow(MainWindow *parent, const login::RoomInfo &roomInfo,
-                              controller::MainController *mainController);
+    explicit NinjamRoomWindow(MainWindow *parent, const RoomInfo &roomInfo, MainController *mainController);
     ~NinjamRoomWindow();
     void updatePeaks();
     void updateGeoLocations();
@@ -85,7 +90,7 @@ private:
 
     login::RoomInfo roomInfo;
 
-    void handleChordProgressionMessage(const ninjam::User &user, const QString &message);
+    void handleChordProgressionMessage(const User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
     MetronomePanel *createMetronomePanel();
@@ -145,12 +150,12 @@ private slots:
     void deleteFloatingWindow();
 
     // video
-    void setVideoInterval(const ninjam::User &user, const QByteArray &encodedVideoData);
+    void setVideoInterval(const User &user, const QByteArray &encodedVideoData);
 
     // ninjam controller events
-    void addChannel(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID);
-    void removeChannel(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID);
-    void changeChannelName(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID);
+    void addChannel(const User &user, const UserChannel &channel, long channelID);
+    void removeChannel(const User &user, const UserChannel &channel, long channelID);
+    void changeChannelName(const User &user, const UserChannel &channel, long channelID);
     void updateIntervalDownloadingProgressBar(long trackID);
     void hideIntervalDownloadingProgressBar(long trackID);
 

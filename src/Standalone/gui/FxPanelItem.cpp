@@ -1,8 +1,8 @@
 #include "FxPanelItem.h"
-#include "plugins/Guis.h"
+#include "gui/plugins/Guis.h"
 #include "audio/core/Plugins.h"
 #include "MainController.h"
-#include "LocalTrackView.h"
+#include "gui/LocalTrackView.h"
 #include "audio/core/PluginDescriptor.h"
 #include "LocalTrackViewStandalone.h"
 
@@ -17,9 +17,9 @@
 #include <QDesktopWidget>
 #include <QStyle>
 
-using namespace audio;
+using controller::MainControllerStandalone;
 
-FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, controller::MainControllerStandalone *mainController) :
+FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, MainControllerStandalone *mainController) :
     QFrame(parent),
     plugin(nullptr),
     bypassButton(new QPushButton(this)),

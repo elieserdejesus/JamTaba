@@ -6,7 +6,9 @@
 #include <QMutexLocker>
 #include "log/Logging.h"
 
-using namespace audio;
+using audio::AudioMixer;
+using audio::AudioNode;
+using audio::SamplesBuffer;
 
 AudioMixer::AudioMixer(int sampleRate) :
     sampleRate(sampleRate)

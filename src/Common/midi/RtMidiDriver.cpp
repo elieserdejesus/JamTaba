@@ -2,10 +2,10 @@
 #include "RtMidi.h"
 
 #include "MidiMessage.h"
-
-using namespace midi;
-
 #include "log/Logging.h"
+
+using midi::RtMidiDriver;
+using midi::MidiMessage;
 
 RtMidiDriver::RtMidiDriver(const QList<bool> &deviceStatuses){
 

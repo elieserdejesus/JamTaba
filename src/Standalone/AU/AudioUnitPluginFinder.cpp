@@ -1,9 +1,8 @@
 #include "AudioUnitPluginFinder.h"
-
-using namespace audio;
-
 #include <QApplication>
 #include "log/Logging.h"
+
+using audio::AudioUnitPluginFinder;
 
 AudioUnitPluginFinder::AudioUnitPluginFinder()
 {

@@ -3,11 +3,11 @@
 
 #include "TrackGroupView.h"
 #include "BaseTrackView.h"
-#include "IntervalChunksDisplay.h"
+#include "widgets/IntervalChunksDisplay.h"
+#include "widgets/MarqueeLabel.h"
+#include "widgets/MultiStateButton.h"
 #include "persistence/UsersDataCache.h"
-#include "MarqueeLabel.h"
 #include "audio/NinjamTrackNode.h"
-#include "MultiStateButton.h"
 
 namespace controller {
 class MainController;

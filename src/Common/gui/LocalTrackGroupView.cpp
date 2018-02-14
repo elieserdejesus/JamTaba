@@ -4,7 +4,7 @@
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "MainController.h"
-#include "BlinkableButton.h"
+#include "widgets/BlinkableButton.h"
 
 #include <QInputDialog>
 #include <QToolTip>

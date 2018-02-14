@@ -4,9 +4,11 @@
 #include <QFrame>
 #include <QLabel>
 #include <QPushButton>
-#include "ninjam/Server.h"
+
+#include "gui/widgets/WavePeakPanel.h"
+
+#include "ninjam/client/ServerInfo.h"
 #include "loginserver/LoginService.h"
-#include "WavePeakPanel.h"
 
 class MapWidget;
 

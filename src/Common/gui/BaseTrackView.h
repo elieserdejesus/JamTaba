@@ -1,11 +1,12 @@
 #ifndef TRACKVIEW_H
 #define TRACKVIEW_H
 
+#include "audio/core/AudioPeak.h"
+#include "widgets/Slider.h"
+
 #include <QFrame>
 #include <QGridLayout>
 #include <QToolButton>
-#include "audio/core/AudioPeak.h"
-#include "Slider.h"
 
 class AudioMeter;
 class QLabel;

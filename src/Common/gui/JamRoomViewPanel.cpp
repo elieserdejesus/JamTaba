@@ -3,11 +3,11 @@
 
 #include <QDebug>
 #include "MainController.h"
-#include "ninjam/User.h"
-#include "ninjam/UserChannel.h"
-#include "ninjam/Server.h"
-#include "MapWidget.h"
-#include "MapMarker.h"
+#include "ninjam/client/User.h"
+#include "ninjam/client/UserChannel.h"
+#include "ninjam/client/ServerInfo.h"
+#include "widgets/MapWidget.h"
+#include "widgets/MapMarker.h"
 
 JamRoomViewPanel::JamRoomViewPanel(const login::RoomInfo &roomInfo, controller::MainController *mainController) :
     QFrame(nullptr),

@@ -6,7 +6,10 @@
 #include <QDialog>
 #include <QMutexLocker>
 
-using namespace audio;
+using audio::Plugin;
+using audio::PluginDescriptor;
+using audio::JamtabaDelay;
+using audio::SamplesBuffer;
 
 Plugin::Plugin(const PluginDescriptor &pluginDescriptor) :
     name(pluginDescriptor.getName()),

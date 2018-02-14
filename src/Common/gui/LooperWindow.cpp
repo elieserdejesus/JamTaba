@@ -7,6 +7,7 @@
 #include "persistence/Settings.h"
 #include "file/FileUtils.h"
 #include "IconFactory.h"
+//#include "looper/LooperPersistence.h"
 
 #include <QGridLayout>
 #include <QSpinBox>
@@ -18,10 +19,13 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-using namespace controller;
-using namespace audio;
+using controller::MainController;
+using controller::NinjamController;
+using audio::LoopInfo;
+using audio::LoopLoader;
+using audio::SamplesBuffer;
 
-LooperWindow::LooperWindow(QWidget *parent, controller::MainController *mainController) :
+LooperWindow::LooperWindow(QWidget *parent, MainController *mainController) :
     QDialog(parent),
     ui(new Ui::LooperWindow),
     mainController(mainController),

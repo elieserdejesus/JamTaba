@@ -1,49 +1,19 @@
 #include "Service.h"
-#include "Server.h"
+#include "ServerInfo.h"
 #include "User.h"
 #include "UserChannel.h"
 #include "ServerMessages.h"
 #include "ClientMessages.h"
+#include "ServerMessagesHandler.h"
 #include "log/Logging.h"
+
 #include <QDataStream>
 #include <QDateTime>
 #include <QTcpSocket>
-#include "ServerMessagesHandler.h"
 
-using namespace ninjam;
+using namespace ninjam::client;
 
 const QStringList Service::botNames = buildBotNamesList();
-
-Service::NetworkUsageMeasurer::NetworkUsageMeasurer() :
-    totalBytesTransfered(0),
-    lastMeasureTimeStamp(0),
-    transferRate(0)
-{
-}
-
-void Service::NetworkUsageMeasurer::addTransferedBytes(long bytesTransfered)
-{
-    totalBytesTransfered += bytesTransfered;
-
-    const qint64 now = QDateTime::currentMSecsSinceEpoch();
-
-    if (!lastMeasureTimeStamp)
-        lastMeasureTimeStamp = now;
-
-    const qint64 ellapsedTime = now - lastMeasureTimeStamp;
-
-    if (ellapsedTime >= 1000) {
-        transferRate = totalBytesTransfered / (ellapsedTime / 1000.0);
-        totalBytesTransfered = 0;
-        lastMeasureTimeStamp = now;
-    }
-}
-
-long Service::NetworkUsageMeasurer::getTransferRate() const
-{
-    return transferRate;
-}
-
 
 // ---------------------------------------------------------------------
 
@@ -147,15 +117,19 @@ void Service::setupSocketSignals()
     connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
     connect(socket, SIGNAL(disconnected()), this, SLOT(handleSocketDisconnection()));
     connect(socket, SIGNAL(connected()), this, SLOT(handleSocketConnection()));
+
+    connect(socket, &QTcpSocket::bytesWritten, [&](quint64 bytesWritten){
+        totalUploadMeasurer.addTransferedBytes(bytesWritten);
+    });
 }
 
-void Service::sendIntervalPart(const QByteArray &GUID, const QByteArray &encodedData,
-                                    bool isLastPart)
+void Service::sendIntervalPart(const QByteArray &GUID, const QByteArray &encodedData, bool isLastPart)
 {
     if (!initialized)
         return;
 
-    sendMessageToServer(ClientIntervalUploadWrite(GUID, encodedData, isLastPart));
+    auto msg = UploadIntervalWrite(GUID, encodedData, isLastPart);
+    sendMessageToServer(msg);
 }
 
 void Service::sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, bool isAudioInterval)
@@ -163,7 +137,8 @@ void Service::sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, boo
     if (!initialized)
         return;
 
-    sendMessageToServer(ClientUploadIntervalBegin(GUID, channelIndex, this->userName, isAudioInterval));
+    auto msg = UploadIntervalBegin(GUID, channelIndex, isAudioInterval);
+    sendMessageToServer(msg);
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -222,15 +197,15 @@ bool Service::isBotName(const QString &userName)
 QStringList Service::buildBotNamesList()
 {
     QStringList names;
-    names.append("Jambot");
-    names.append("ninjamer.com");
-    names.append("ninbot");
-    names.append("ninbot.com");
-    names.append("MUTANTLAB");
-    names.append("mutantlab.com");
-    names.append("LiveStream");
-    names.append("localhost");
-    names.append("ninjamers.servebeer.com");
+    names.append(QStringLiteral("Jambot"));
+    names.append(QStringLiteral("ninjamer.com"));
+    names.append(QStringLiteral("ninbot"));
+    names.append(QStringLiteral("ninbot.com"));
+    names.append(QStringLiteral("MUTANTLAB"));
+    names.append(QStringLiteral("mutantlab.com"));
+    names.append(QStringLiteral("LiveStream"));
+    names.append(QStringLiteral("localhost"));
+    names.append(QStringLiteral("ninjamers.servebeer.com"));
     return names;
 }
 
@@ -253,28 +228,29 @@ float Service::getIntervalPeriod() const
 void Service::voteToChangeBPI(quint16 newBPI)
 {
     QString text = "!vote bpi " + QString::number(newBPI);
-    sendMessageToServer(ChatMessage(text));
+    sendMessageToServer(ClientToServerChatMessage::buildPublicMessage(text));
 }
 
 void Service::voteToChangeBPM(quint16 newBPM)
 {
     QString text = "!vote bpm " + QString::number(newBPM);
-    sendMessageToServer(ChatMessage(text));
+    sendMessageToServer(ClientToServerChatMessage::buildPublicMessage(text));
 }
 
-void Service::sendPrivateChatMessage(const QString &message)
+void Service::sendPrivateChatMessage(const QString &message, const QString &destinationUser)
 {
-    sendMessageToServer(ChatMessage(message, ChatMessage::PrivateMessage));
+    sendMessageToServer(ClientToServerChatMessage::buildPrivateMessage(message, destinationUser));
 }
 
 void Service::sendPublicChatMessage(const QString &message)
 {
-    sendMessageToServer(ChatMessage(message));
+    sendMessageToServer(ClientToServerChatMessage::buildPublicMessage(message));
 }
 
 void Service::sendAdminCommand(const QString &message)
 {
-    sendMessageToServer(ChatMessage(message, ChatMessage::AdminMessage));
+    auto msg = ClientToServerChatMessage::buildAdminMessage(message);
+    sendMessageToServer(msg);
 }
 
 void Service::sendMessageToServer(const ClientMessage &message)
@@ -282,29 +258,10 @@ void Service::sendMessageToServer(const ClientMessage &message)
     if (!socket)
         return;
 
-    QByteArray outBuffer;
-    outBuffer << message;
+    message.serializeTo(socket);
 
-    int totalDataToSend = outBuffer.size();
-    int dataSended = 0;
-    int bytesWrited = -1;
-    do {
-        bytesWrited = socket->write(outBuffer.data() + dataSended, totalDataToSend - dataSended);
-        if (bytesWrited > 0)
-            dataSended += bytesWrited;
-    } while (dataSended < totalDataToSend && bytesWrited != -1);
-
-    if (bytesWrited > 0) {
-        socket->flush();
-        lastSendTime = QDateTime::currentMSecsSinceEpoch();
-
-        totalUploadMeasurer.addTransferedBytes(bytesWrited);
-
-    } else {
-        qCritical() << "Bytes not writed in socket!";
-    }
-
-    Q_ASSERT(message.getPayload() + 5 == (uint)outBuffer.size());
+    socket->flush();
+    lastSendTime = QDateTime::currentMSecsSinceEpoch();
 }
 
 bool Service::needSendKeepAlive() const
@@ -315,6 +272,8 @@ bool Service::needSendKeepAlive() const
 
 void Service::process(const UserInfoChangeNotifyMessage &msg)
 {
+    //msg.printDebug(qDebug());
+
     for (const User &user : msg.getUsers()) {
         if (!currentServer->containsUser(user)) {
             currentServer->addUser(user);
@@ -390,7 +349,7 @@ void Service::process(const ServerKeepAliveMessage &)
     sendMessageToServer(ClientKeepAlive());
 }
 
-void Service::process(const ServerAuthChallengeMessage &msg)
+void Service::process(const AuthChallengeMessage &msg)
 {
     ClientAuthUserMessage msgAuthUser(userName, msg.getChallenge(),
                                       msg.getProtocolVersion(), password);
@@ -402,17 +361,30 @@ void Service::process(const ServerAuthChallengeMessage &msg)
 void Service::sendNewChannelsListToServer(const QStringList &channelsNames)
 {
     this->channels = channelsNames;
-    sendMessageToServer(ClientSetChannel(channels));
+
+    ClientSetChannel msg;
+    for (auto channelName : channelsNames)
+        msg.addChannel(channelName);
+
+    sendMessageToServer(msg);
 }
 
 void Service::sendRemovedChannelIndex(int removedChannelIndex)
 {
     Q_ASSERT(removedChannelIndex >= 0 && removedChannelIndex < channels.size());
+
+    ClientSetChannel msg;
+    for (int i = 0; i < channels.size(); ++i) {
+        bool active = i == removedChannelIndex ? false  : true;
+        msg.addChannel(channels[i], active);
+    }
+
     channels.removeAt(removedChannelIndex);
-    sendMessageToServer(ClientSetChannel(channels));
+
+    sendMessageToServer(msg);
 }
 
-void Service::process(const ServerAuthReplyMessage &msg)
+void Service::process(const AuthReplyMessage &msg)
 {
     if (msg.userIsAuthenticated() && socket) {
         userName = msg.getNewUserName(); // replace the user name with the (possible) new name generated by the ninjam server
@@ -420,7 +392,7 @@ void Service::process(const ServerAuthReplyMessage &msg)
         quint8 serverMaxChannels = msg.getMaxChannels();
         QString serverIp = socket->peerName();
         quint16 serverPort = socket->peerPort();
-        currentServer.reset(new Server(serverIp, serverPort, serverMaxChannels));
+        currentServer.reset(new ServerInfo(serverIp, serverPort, serverMaxChannels));
     }
     // when user is not authenticated the socketErrorSlot is called and dispatch an error signal
 }
@@ -481,22 +453,22 @@ void Service::setBpi(quint16 bpi)
 void Service::handleUserChannels(const User &remoteUser)
 {
     // check for new channels
-    User localUser = currentServer->getUser(remoteUser.getFullName());
+    const User &localUser = currentServer->getUser(remoteUser.getFullName());
     for (const UserChannel &serverChannel : remoteUser.getChannels()) {
         if (serverChannel.isActive()) {
             if (!localUser.hasChannel(serverChannel.getIndex())) {
-                currentServer->addUserChannel(serverChannel);
+                currentServer->addUserChannel(remoteUser.getFullName(), serverChannel);
                 emit userChannelCreated(localUser, serverChannel);
             } else { // check for channel updates
                 if (localUser.hasChannels()) {
                     if (channelIsOutdate(localUser, serverChannel)) {
-                        currentServer->updateUserChannel(serverChannel);
+                        currentServer->updateUserChannel(remoteUser.getFullName(), serverChannel);
                         emit userChannelUpdated(localUser, serverChannel);
                     }
                 }
             }
         } else {
-            currentServer->removeUserChannel(serverChannel);
+            currentServer->removeUserChannel(remoteUser.getFullName(), serverChannel);
             emit userChannelRemoved(localUser, serverChannel);
         }
     }
@@ -505,18 +477,18 @@ void Service::handleUserChannels(const User &remoteUser)
 // check if the local stored channel and the server channel are different
 bool Service::channelIsOutdate(const User &user, const UserChannel &serverChannel)
 {
-    if (user.getFullName() == serverChannel.getUserFullName()) {
+    //if (user.getFullName() == serverChannel.getUserFullName()) {
         if (user.hasChannel(serverChannel.getIndex())) {
             UserChannel userChannel = user.getChannel(serverChannel.getIndex());
             return userChannel.getName() != serverChannel.getName();
         }
-    }
+    //}
     return false;
 }
 
 // +++++++++++++ CHAT MESSAGES ++++++++++++++++++++++
 
-void Service::process(const ServerChatMessage &msg)
+void Service::process(const ServerToClientChatMessage &msg)
 {
     switch (msg.getCommand()) {
     case ChatCommandType::JOIN:
@@ -582,7 +554,7 @@ void Service::process(const ServerChatMessage &msg)
     }
 }
 
-void Service::process(const ServerConfigChangeNotifyMessage &msg)
+void Service::process(const ConfigChangeNotifyMessage &msg)
 {
     quint16 bpi = msg.getBpi();
     quint16 bpm = msg.getBpm();

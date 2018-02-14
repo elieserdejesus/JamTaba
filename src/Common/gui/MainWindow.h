@@ -2,19 +2,6 @@
 #define MAIN_WINDOW_H
 
 #include "ui_MainWindow.h"
-#include "BusyDialog.h"
-#include "persistence/Settings.h"
-#include "LocalTrackGroupView.h"
-#include "ScreensaverBlocker.h"
-#include "TextEditorModifier.h"
-#include "performance/PerformanceMonitor.h"
-#include "LooperWindow.h"
-#include "UsersColorsPool.h"
-
-#include "chat/NinjamVotingMessageParser.h"
-
-#include "ninjam/User.h"
-#include "ninjam/Server.h"
 
 #include <QTranslator>
 #include <QMainWindow>
@@ -22,11 +9,7 @@
 #include <QCamera>
 #include <QCameraInfo>
 #include <QVideoFrame>
-
-#include "video/VideoFrameGrabber.h"
-#include "video/VideoWidget.h"
-
-#include "ChatTabWidget.h"
+#include <QComboBox>
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -36,6 +19,17 @@ class ChordProgression;
 class ChordsPanel;
 class ChatPanel;
 class InactivityDetector;
+class ChatTabWidget;
+class LocalTrackGroupView;
+class CameraFrameGrabber;
+class VideoWidget;
+class BusyDialog;
+class LooperWindow;
+class UsersColorsPool;
+class ScreensaverBlocker;
+class PerformanceMonitor;
+class TextEditorModifier;
+class PrivateServerWindow;
 
 namespace login {
 class RoomInfo;
@@ -44,6 +38,28 @@ class RoomInfo;
 namespace controller {
 class MainController;
 }
+
+namespace ninjam { namespace client {
+class User;
+}}
+
+namespace gui { namespace chat {
+class SystemVotingMessage;
+}}
+
+namespace persistence {
+class LocalInputTrackSettings;
+class Preset;
+class SubChannel;
+class Channel;
+}
+
+using ninjam::client::User;
+using persistence::LocalInputTrackSettings;
+using persistence::Preset;
+using persistence::Channel;
+using persistence::SubChannel;
+using gui::chat::SystemVotingMessage;
 
 class MainWindow : public QMainWindow
 {
@@ -59,7 +75,7 @@ public:
 
     void detachMainController();
 
-    virtual persistence::LocalInputTrackSettings getInputsSettings() const;
+    virtual LocalInputTrackSettings getInputsSettings() const;
 
     int getChannelGroupsCount() const;
 
@@ -74,7 +90,7 @@ public:
 
     virtual controller::MainController *getMainController() const;
 
-    virtual void loadPreset(const persistence::Preset &preset);
+    virtual void loadPreset(const Preset &preset);
     void resetLocalChannels();
 
     bool isTransmiting(int channelID) const;
@@ -109,8 +125,8 @@ public slots:
     void showFeedbackAboutBlockedUserInChat(const QString &userName);
     void showFeedbackAboutUnblockedUserInChat(const QString &userName);
 
-    void addMainChatMessage(const ninjam::User &, const QString &message);
-    void addPrivateChatMessage(const ninjam::User &, const QString &message);
+    void addMainChatMessage(const User &, const QString &message);
+    void addPrivateChatMessage(const User &, const QString &message);
     void addPrivateChat(const QString &remoteUserName, const QString &userIP);
 
 protected:
@@ -130,8 +146,7 @@ protected:
     // this factory method is overrided in derived classes to create more specific views
     virtual LocalTrackGroupView *createLocalTrackGroupView(int channelGroupIndex);
 
-    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView,
-                                           const persistence::Subchannel &subChannel);
+    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView, const SubChannel &subChannel);
 
     void stopCurrentRoomStream();
 
@@ -186,7 +201,8 @@ protected slots:
     void showNinjamCommunityWebPage();
     void showNinjamOfficialWebPage();
 
-    void showPrivateServerDialog();
+    void showConnectWithPrivateServerDialog();
+    void showPrivateServerWindow();
 
     // view menu
     void updateMeteringMenu();
@@ -284,7 +300,7 @@ private slots:
     void handleUserLeaving(const QString &userName);
     void handleUserEntering(const QString &userName);
 
-    void handleChordProgressionMessage(const ninjam::User &user, const QString &message);
+    void handleChordProgressionMessage(const User &user, const QString &message);
     void sendNewChatMessage(const QString &msg);
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
@@ -296,7 +312,7 @@ private:
 
     bool bottomCollapsed;
 
-    BusyDialog busyDialog;
+    BusyDialog *busyDialog;
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
     QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
 
@@ -313,11 +329,13 @@ private:
 
     InactivityDetector *xmitInactivityDetector;
 
-    UsersColorsPool usersColorsPool;
+    QScopedPointer<UsersColorsPool> usersColorsPool;
 
-    ScreensaverBlocker screensaverBlocker;
+    QScopedPointer<ScreensaverBlocker> screensaverBlocker;
 
     ChatTabWidget *chatTabWidget;
+
+    QScopedPointer<PrivateServerWindow> privateServerWindow;
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();
@@ -411,7 +429,7 @@ private:
     void addNinjamPanelsInBottom();
 
     void showLastChordsInMainChat();
-    void createVoteButton(const gui::chat::SystemVotingMessage &votingMessage);
+    void createVoteButton(const SystemVotingMessage &votingMessage);
     bool canShowBlockButtonInChatMessage(const QString &userName) const;
 
     void loadTranslationFile(const QString &locale);
@@ -432,8 +450,8 @@ private:
 
     void setupMainTabCornerWidgets();
 
-    PerformanceMonitor performanceMonitor; // cpu and memmory usage
-    qint64 lastPerformanceMonitorUpdate;
+    QScopedPointer<PerformanceMonitor> performanceMonitor; // cpu and memmory usage
+    qint64 lastPerformanceMonitorUpdate; // TODO move to PerformenceMonitor
     static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
     static const QString NIGHT_MODE_SUFFIX;
@@ -447,7 +465,7 @@ inline QColor MainWindow::getTintColor() const
 
 inline UsersColorsPool *MainWindow::getUsersColorsPool() const
 {
-    return const_cast<UsersColorsPool *>(&usersColorsPool);
+    return usersColorsPool.data();
 }
 
 inline NinjamRoomWindow* MainWindow::getNinjamRomWindow() const
@@ -463,11 +481,6 @@ inline controller::MainController *MainWindow::getMainController() const
 inline int MainWindow::getChannelGroupsCount() const
 {
     return localGroupChannels.size();
-}
-
-inline QString MainWindow::getChannelGroupName(int index) const
-{
-    return localGroupChannels.at(index)->getGroupName();
 }
 
 #endif

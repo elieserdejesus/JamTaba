@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class TestServer : public QObject
+class TestServerInfo : public QObject
 {
     Q_OBJECT
 

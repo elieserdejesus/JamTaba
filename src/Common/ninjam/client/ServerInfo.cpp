@@ -1,13 +1,16 @@
-#include "Server.h"
+#include "ServerInfo.h"
 #include "ServerMessages.h"
 #include "User.h"
 #include "UserChannel.h"
 #include "log/Logging.h"
+
 #include <QSet>
 
-using namespace ninjam;
+using ninjam::client::ServerInfo;
+using ninjam::client::UserChannel;
+using ninjam::client::User;
 
-Server::Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers) :
+ServerInfo::ServerInfo(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers) :
     port(port),
     host(host),
     maxUsers(maxUsers),
@@ -20,30 +23,29 @@ Server::Server(const QString &host, quint16 port, quint8 maxChannels, quint8 max
 {
 }
 
-Server::~Server()
+ServerInfo::~ServerInfo()
 {
 }
 
-bool Server::containsUser(const QString &userFullName) const
+bool ServerInfo::containsUser(const QString &userFullName) const
 {
     return users.contains(userFullName);
 }
 
-bool Server::containsUser(const User &user) const
+bool ServerInfo::containsUser(const User &user) const
 {
     return containsUser(user.getFullName());
 }
 
-void Server::addUser(const User &user)
+void ServerInfo::addUser(const User &user)
 {
     if (!users.contains(user.getFullName())) {
         users.insert(user.getFullName(), User(user.getFullName()));
     }
 }
 
-void Server::updateUserChannel(const UserChannel &serverChannel)
+void ServerInfo::updateUserChannel(const QString &userFullName, const UserChannel &serverChannel)
 {
-    QString userFullName = serverChannel.getUserFullName();
     if (users.contains(userFullName)) {
         quint8 channelIndex = serverChannel.getIndex();
         users[userFullName].updateChannelName(channelIndex, serverChannel.getName());
@@ -51,29 +53,27 @@ void Server::updateUserChannel(const UserChannel &serverChannel)
     }
 }
 
-void Server::updateUserChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receive)
+void ServerInfo::updateUserChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receive)
 {
     if (users.contains(userFullName)) {
         users[userFullName].updateChannelReceiveStatus(channelIndex, receive);
     }
 }
 
-void Server::removeUserChannel(const UserChannel &channel)
+void ServerInfo::removeUserChannel(const QString &userFullName, const UserChannel &channel)
 {
-    QString userFullName = channel.getUserFullName();
     if (users.contains(userFullName)) {
         users[userFullName].removeChannel(channel.getIndex());
     }
 }
 
-void Server::removeUser(const QString &fullUserName)
+void ServerInfo::removeUser(const QString &fullUserName)
 {
     users.remove(fullUserName);
 }
 
-void Server::addUserChannel(const UserChannel &newChannel)
+void ServerInfo::addUserChannel(const QString &userFullName, const UserChannel &newChannel)
 {
-    QString userFullName = newChannel.getUserFullName();
     if (users.contains(userFullName)) {
         int userChannelsCount = users[userFullName].getChannelsCount();
         if (userChannelsCount < maxChannels)
@@ -87,7 +87,7 @@ void Server::addUserChannel(const UserChannel &newChannel)
     }
 }
 
-User Server::getUser(const QString &userFullName) const
+User ServerInfo::getUser(const QString &userFullName) const
 {
     if (users.contains(userFullName))
         return users[userFullName];
@@ -95,22 +95,22 @@ User Server::getUser(const QString &userFullName) const
     return User("");
 }
 
-QList<User> Server::getUsers() const
+QList<User> ServerInfo::getUsers() const
 {
     return users.values();
 }
 
-QString Server::getUniqueName() const
+QString ServerInfo::getUniqueName() const
 {
     return host + ":" + QString::number(port);
 }
 
-bool Server::setBpm(quint16 bpm)
+bool ServerInfo::setBpm(quint16 bpm)
 {
     if (bpm == this->bpm)
         return false;
 
-    if (bpm >= Server::MIN_BPM && bpm <= Server::MAX_BPM) {
+    if (bpm >= ServerInfo::MIN_BPM && bpm <= ServerInfo::MAX_BPM) {
         this->bpm = bpm;
         return true;
     }
@@ -118,12 +118,12 @@ bool Server::setBpm(quint16 bpm)
     return false;
 }
 
-bool Server::setBpi(quint16 bpi)
+bool ServerInfo::setBpi(quint16 bpi)
 {
     if (bpi == this->bpi)
         return false;
 
-    if (bpi >= Server::MIN_BPI && bpi <= Server::MAX_BPI) {
+    if (bpi >= ServerInfo::MIN_BPI && bpi <= ServerInfo::MAX_BPI) {
         this->bpi = bpi;
         return true;
     }

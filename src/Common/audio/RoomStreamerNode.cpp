@@ -17,12 +17,21 @@
 #include <QMutexLocker>
 #include <QFile>
 
-using namespace audio;
+namespace audio {
+class Mp3Decoder;
+}
+
+using audio::AbstractMp3Streamer;
+using audio::NinjamRoomStreamerNode;
+using audio::AudioFileStreamerNode;
+using audio::Mp3Decoder;
+using audio::Mp3DecoderMiniMp3;
+using audio::SamplesBuffer;
 
 const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING = 2048;
 
 // +++++++++++++
-AbstractMp3Streamer::AbstractMp3Streamer(audio::Mp3Decoder *decoder) :
+AbstractMp3Streamer::AbstractMp3Streamer(Mp3Decoder *decoder) :
     decoder(decoder),
     device(nullptr),
     streaming(false),

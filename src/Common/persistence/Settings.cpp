@@ -551,7 +551,7 @@ Plugin::Plugin(const audio::PluginDescriptor &descriptor, bool bypassed, const Q
 
 }
 
-Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel,
+SubChannel::SubChannel(int firstInput, int channelsCount, int midiDevice, int midiChannel,
                        float gain, int boost, float pan, bool muted, bool stereoInverted,
                        qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote, bool routingMidiToFirstSubchannel) :
     firstInput(firstInput),
@@ -590,7 +590,7 @@ LocalInputTrackSettings::LocalInputTrackSettings(bool createOneTrack) :
         bool muted = false;
         bool stereoInverted = false;
         bool routingMidi = false;
-        Subchannel subchannel(firstInput, channelsCount, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote, routingMidi);
+        SubChannel subchannel(firstInput, channelsCount, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote, routingMidi);
         channel.subChannels.append(subchannel);
         this->channels.append(channel);
     }
@@ -604,7 +604,7 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
         channelObject["name"] = channel.name;
         QJsonArray subchannelsArrays;
         int subchannelsCount = 0;
-        for (const Subchannel &sub : channel.subChannels) {
+        for (const SubChannel &sub : channel.subChannels) {
             QJsonObject subChannelObject;
             subChannelObject["firstInput"]       = sub.firstInput;
             subChannelObject["channelsCount"]    = sub.channelsCount;
@@ -722,7 +722,7 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
                                 plugins.append(plugin);
                         }
                     }
-                    persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,
+                    persistence::SubChannel subChannel(firstInput, channelsCount, midiDevice,
                                                        midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote, routingMidi);
                     subChannel.setPlugins(plugins);
                     channel.subChannels.append(subChannel);

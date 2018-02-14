@@ -3,7 +3,7 @@
 #include <QStringList>
 #include <QFile>
 
-using namespace audio;
+using audio::PluginDescriptor;
 
 PluginDescriptor::PluginDescriptor() :
       name(""),

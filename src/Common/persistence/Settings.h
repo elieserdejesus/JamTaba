@@ -216,10 +216,10 @@ public:
 
 // +++++++++++++++++++++++++++++++++
 
-class Subchannel
+class SubChannel
 {
 public:
-    Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain,
+    SubChannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain,
                int boost, float pan, bool muted, bool stereoInverted, qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote, bool routingMidiToFirstSubchannel);
     int firstInput;
     int channelsCount;
@@ -281,7 +281,7 @@ class Channel
 public:
     explicit Channel(const QString &name);
     QString name;
-    QList<Subchannel> subChannels;
+    QList<SubChannel> subChannels;
 };
 
 // +++++++++++++++++++++++++++++++++

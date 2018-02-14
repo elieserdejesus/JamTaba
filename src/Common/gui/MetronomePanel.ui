@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>244</width>
-    <height>75</height>
+    <height>92</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -342,13 +342,13 @@
   <customwidget>
    <class>AudioMeter</class>
    <extends>QWidget</extends>
-   <header>PeakMeter.h</header>
+   <header>gui/widgets/PeakMeter.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Slider</class>
    <extends>QSlider</extends>
-   <header>Slider.h</header>
+   <header>gui/widgets/Slider.h</header>
   </customwidget>
  </customwidgets>
  <resources>

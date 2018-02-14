@@ -2,21 +2,32 @@
 #define FXPANEL_H
 
 #include <QWidget>
-#include "MainControllerStandalone.h"
+//#include "MainControllerStandalone.h"
 
 class FxPanelItem;
 class LocalTrackViewStandalone;
+
+namespace controller {
+class MainControllerStandalone;
+}
+
+namespace audio {
+class Plugin;
+}
+
+using controller::MainControllerStandalone;
+using audio::Plugin;
 
 class FxPanel : public QWidget
 {
     Q_OBJECT
 
 public:
-    FxPanel(LocalTrackViewStandalone *parent, controller::MainControllerStandalone *mainController);
+    FxPanel(LocalTrackViewStandalone *parent, MainControllerStandalone *mainController);
 
     virtual ~FxPanel();
 
-    void addPlugin(audio::Plugin *plugin, quint32 pluginSlotIndex);
+    void addPlugin(Plugin *plugin, quint32 pluginSlotIndex);
 
     qint32 getPluginFreeSlotIndex() const; // return -1 if no free slots are available
 

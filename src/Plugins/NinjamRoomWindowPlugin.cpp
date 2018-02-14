@@ -5,7 +5,7 @@
 #include "MainWindowPlugin.h"
 #include <QToolTip>
 
-using namespace controller;
+using controller::NinjamController;
 
 // +++++++++++++++++++++++++++++++++++++++++++++
 NinjamRoomWindowPlugin::NinjamRoomWindowPlugin(MainWindowPlugin *mainWindow, const login::RoomInfo &roomInfo,

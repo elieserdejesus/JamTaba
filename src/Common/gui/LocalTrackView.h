@@ -2,7 +2,8 @@
 #define LOCAL_TRACK_VIEW_H
 
 #include "BaseTrackView.h"
-#include "PeakMeter.h"
+#include "gui/widgets/PeakMeter.h"
+
 #include <QPushButton>
 
 class FxPanel;

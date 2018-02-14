@@ -5,7 +5,7 @@
 
 #include "log/Logging.h"
 
-using namespace audio;
+using audio::VSTPluginFinder;
 
 VSTPluginFinder::VSTPluginFinder()
 {

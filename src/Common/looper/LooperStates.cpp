@@ -4,9 +4,13 @@
 
 #include <QDebug>
 
-using namespace audio;
-
-// ----------------------------------------------------
+using audio::LooperState;
+using audio::StoppedState;
+using audio::WaitingToRecordState;
+using audio::PlayingState;
+using audio::RecordingState;
+using audio::Looper;
+using audio::SamplesBuffer;
 
 LooperState::LooperState(Looper *looper)
     : looper(looper)

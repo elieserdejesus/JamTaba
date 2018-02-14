@@ -1,15 +1,18 @@
 #include "ChatTabWidget.h"
 
+#include "MainController.h"
+
 #include <QBoxLayout>
 #include <QStyle>
 #include <QRegularExpression>
 
-#include "ChatPanel.h"
-#include "UsersColorsPool.h"
-#include "MainController.h"
-#include "ninjam/User.h"
+#include "gui/chat/ChatPanel.h"
+#include "gui/UsersColorsPool.h"
+#include "ninjam/client/User.h"
 
-ChatTabWidget::ChatTabWidget(QWidget *parent, controller::MainController *mainController, UsersColorsPool *colorsPool) :
+using controller::MainController;
+
+ChatTabWidget::ChatTabWidget(QWidget *parent, MainController *mainController, UsersColorsPool *colorsPool) :
     QFrame(parent),
     tabBar(new QTabBar(this)),
     stackWidget(new QStackedWidget(this)),
@@ -220,7 +223,7 @@ void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessag
     if (!chatPanel)
         return;
 
-    QString tabText = ninjam::extractUserName(remoteUserName);
+    QString tabText = ninjam::client::extractUserName(remoteUserName);
     if (unreadedMessages > 0)
         tabText = QString("(%1) %2").arg(unreadedMessages).arg(tabText);
 

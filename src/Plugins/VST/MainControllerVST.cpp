@@ -2,14 +2,12 @@
 #include "NinjamControllerPlugin.h"
 #include "midi/MidiDriver.h"
 #include "audio/core/LocalInputNode.h"
-#include "MainWindow.h"
+#include "gui/MainWindow.h"
 #include "JamTabaVSTPlugin.h"
 #include "log/Logging.h"
 #include "Editor.h"
 
-using namespace controller;
-
-MainControllerVST::MainControllerVST(const persistence::Settings &settings, JamTabaVSTPlugin *plugin) :
+MainControllerVST::MainControllerVST(const Settings &settings, JamTabaVSTPlugin *plugin) :
     MainControllerPlugin(settings, plugin),
     vstPlugin(plugin)
 {

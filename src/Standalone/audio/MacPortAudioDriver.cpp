@@ -1,6 +1,6 @@
 #include "PortAudioDriver.h"
 #include "pa_mac_core.h"
-#include "../log/Logging.h"
+#include "log/Logging.h"
 
 namespace audio {
 

@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QMenu>
 #include <QActionGroup>
-#include "PeakMeter.h"
+#include "widgets/PeakMeter.h"
 
 TrackGroupView::TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *parent) :
     QFrame(parent)

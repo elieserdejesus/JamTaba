@@ -11,6 +11,7 @@
 #include "NinjamController.h"
 #include "vst/VstPluginChecker.h"
 #include "gui/MainWindowStandalone.h"
+#include "ninjam/client/Service.h"
 
 #include <QDialog>
 #include <QHostAddress>
@@ -32,7 +33,7 @@
 #include "log/Logging.h"
 #include "Configurator.h"
 
-using namespace controller;
+using ninjam::client::ServerInfo;
 
 QString MainControllerStandalone::getJamtabaFlavor() const
 {
@@ -191,7 +192,7 @@ bool MainControllerStandalone::pluginDescriptorLessThan(const audio::PluginDescr
                 window->refreshTrackInputSelection(localChannelIndex);
             if (isPlayingInNinjamRoom()) {// send the finish interval message
                 if (audioIntervalsToUpload.contains(localChannelIndex)) {
-                    ninjamService.sendIntervalPart(
+                    ninjamService->sendIntervalPart(
                         audioIntervalsToUpload[localChannelIndex].getGUID(), QByteArray(), true);
                     if (ninjamController)
                         ninjamController->scheduleEncoderChangeForChannel(
@@ -236,7 +237,7 @@ void MainControllerStandalone::updateBpm(int newBpm)
         host->setTempo(newBpm);
 }
 
-void MainControllerStandalone::connectInNinjamServer(const ninjam::Server &server)
+void MainControllerStandalone::connectInNinjamServer(const ServerInfo &server)
 {
     MainController::connectInNinjamServer(server);
 
@@ -778,4 +779,12 @@ void MainControllerStandalone::updateInputTracksRange()
             }
         }
     }
+}
+
+float MainControllerStandalone::getSampleRate() const
+{
+    if (audioDriver)
+        return audioDriver->getSampleRate();
+
+    return 44100;
 }

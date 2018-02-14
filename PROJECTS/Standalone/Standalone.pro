@@ -114,8 +114,8 @@ win32{
         LIBS_PATH = "static/win64-msvc"
     }
 
-    CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -lstackwalker
-    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lvorbisfiled -lvorbisd -loggd -lavcodecd -lavutild -lavformatd -lswscaled -lswresampled -lstackwalkerd
+    CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -lstackwalker -lminiupnpc
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lvorbisfiled -lvorbisd -loggd -lavcodecd -lavutild -lavformatd -lswscaled -lswresampled -lstackwalkerd -lminiupnpcd
 
     CONFIG(release, debug|release) {
         #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
@@ -123,7 +123,9 @@ win32{
         QMAKE_LFLAGS_RELEASE += /LTCG
     }
 
-    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 -lPsapi
+    LIBS += -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 -lPsapi
+    LIBS += -lIPHlpApi # used by miniupnp lib
+
     #performance monitor lib
     QMAKE_CXXFLAGS += -DPSAPI_VERSION=1
 
@@ -136,7 +138,7 @@ macx{
     #message("Mac x86_64 build")
     LIBS_PATH = "static/mac64"
 
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -liconv
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavcodec -lavutil -lavformat -lswscale -lswresample -liconv -lminiupnpc
     LIBS += -framework IOKit
     LIBS += -framework CoreAudio
     LIBS += -framework CoreMidi
@@ -161,6 +163,6 @@ linux{
     DEFINES += __LINUX_ALSA__
 
 
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavformat -lavcodec -lswscale -lavutil -lswresample
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavformat -lavcodec -lswscale -lavutil -lswresample -lminiupnpc
     LIBS += -lasound
 }

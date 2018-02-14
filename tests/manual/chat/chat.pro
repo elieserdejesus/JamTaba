@@ -24,8 +24,8 @@ SOURCES += gui/chat/EmojiWidget.cpp
 SOURCES += gui/chat/EmojiManager.cpp
 SOURCES += gui/IconFactory.cpp
 SOURCES += gui/UsersColorsPool.cpp
-SOURCES += ninjam/User.cpp
-SOURCES += ninjam/UserChannel.cpp
+SOURCES += ninjam/client/User.cpp
+SOURCES += ninjam/client/UserChannel.cpp
 
 SOURCES += test_Chat.cpp
 

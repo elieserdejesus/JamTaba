@@ -7,6 +7,7 @@
 #include "JamTabaAUPlugin.h"
 #import "MainWindowPlugin.h"
 #import "JamTabaAUPlugin.h"
+#import "Logging.h"
 
 #include <QtPlugin>
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);

@@ -4,9 +4,10 @@
 #include <QRegularExpression>
 #include "log/Logging.h"
 
-using namespace ninjam;
+using ninjam::client::User;
+using ninjam::client::UserChannel;
 
-QString ninjam::extractUserName(const QString &fullName)
+QString ninjam::client::extractUserName(const QString &fullName)
 {
     QChar separator('@');
     if (fullName.contains(separator))
@@ -15,7 +16,7 @@ QString ninjam::extractUserName(const QString &fullName)
     return fullName;
 }
 
-QString ninjam::extractUserIP(const QString &fullName)
+QString ninjam::client::extractUserIP(const QString &fullName)
 {
     QChar separator('@');
     if (fullName.contains(separator))
@@ -27,8 +28,8 @@ QString ninjam::extractUserIP(const QString &fullName)
 
 User::User(const QString &fullName) :
     fullName(fullName),
-    name(ninjam::extractUserName(fullName)),
-    ip(ninjam::extractUserIP(fullName))
+    name(ninjam::client::extractUserName(fullName)),
+    ip(ninjam::client::extractUserIP(fullName))
 
 {
 
@@ -75,7 +76,7 @@ void User::removeChannel(quint8 channelIndex)
     this->channels.remove(channelIndex);
 }
 
-QDebug &ninjam::operator<<(QDebug &out, const User &user)
+QDebug &ninjam::client::operator<<(QDebug &out, const User &user)
 {
     out << "NinjamUser{"
         << "name=" << user.getName()

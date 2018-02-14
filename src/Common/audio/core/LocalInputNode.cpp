@@ -6,7 +6,9 @@
 
 #include <QDateTime>
 
-using namespace audio;
+using audio::LocalInputNode;
+using audio::Looper;
+using audio::SamplesBuffer;
 
 LocalInputNode::MidiInput::MidiInput() :
     device(-1),

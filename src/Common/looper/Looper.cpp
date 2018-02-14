@@ -9,7 +9,10 @@
 #include <vector>
 #include <QThread>
 
-using namespace audio;
+using audio::Looper;
+using audio::AudioPeak;
+using audio::SamplesBuffer;
+using audio::LooperState;
 
 Looper::Looper()
     : Looper(Mode::Sequence, 4) // calling overloaded constructor

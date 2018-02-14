@@ -2,16 +2,16 @@
 #include "ui_NinjamRoomWindow.h"
 #include "NinjamTrackView.h"
 #include "NinjamTrackGroupView.h"
-
-#include "ninjam/Server.h"
-#include "ninjam/User.h"
-#include "ninjam/UserChannel.h"
+#include "UsersColorsPool.h"
+#include "ninjam/client/ServerInfo.h"
+#include "ninjam/client/User.h"
+#include "ninjam/client/UserChannel.h"
+#include "ninjam/client/Service.h"
 #include "audio/MetronomeTrackNode.h"
 #include "audio/core/AudioDriver.h"
 #include "audio/NinjamTrackNode.h"
 #include "NinjamController.h"
 #include "MainController.h"
-#include "ninjam/Service.h"
 #include "chords/ChordsPanel.h"
 #include "chords/ChordProgression.h"
 #include "chords/ChatChordsProgressionParser.h"
@@ -34,11 +34,12 @@
 #include <QButtonGroup>
 #include <QTimer>
 
-using namespace persistence;
-using namespace controller;
+using controller::MainController;
+using controller::NinjamController;
+using login::RoomInfo;
+using persistence::CacheEntry;
 
-NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const login::RoomInfo &roomInfo,
-                                                                MainController *mainController) :
+NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const RoomInfo &roomInfo, MainController *mainController) :
     QWidget(mainWindow),
     ui(new Ui::NinjamRoomWindow),
     mainWindow(mainWindow),
@@ -434,7 +435,7 @@ void NinjamRoomWindow::setChannelXmitStatus(long channelID, bool transmiting)
         trackView->setActivatedStatus(!transmiting);
 }
 
-void NinjamRoomWindow::removeChannel(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID)
+void NinjamRoomWindow::removeChannel(const User &user, const UserChannel &channel, long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel removed:" << channel.getName();
     Q_UNUSED(channel);
@@ -462,7 +463,7 @@ NinjamTrackView *NinjamRoomWindow::getTrackViewByID(long trackID)
     return dynamic_cast<NinjamTrackView *>(NinjamTrackView::getTrackViewByID(trackID));
 }
 
-void NinjamRoomWindow::changeChannelName(const ninjam::User &, const ninjam::UserChannel &channel, long channelID)
+void NinjamRoomWindow::changeChannelName(const User &, const UserChannel &channel, long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel name changed:" << channel.getName();
     auto trackView = getTrackViewByID(channelID);
@@ -530,7 +531,7 @@ void NinjamRoomWindow::reAddTrackGroups()
     adjustTracksPanelSizePolicy();
 }
 
-void NinjamRoomWindow::addChannel(const ninjam::User &user, const ninjam::UserChannel &channel, long channelID)
+void NinjamRoomWindow::addChannel(const User &user, const UserChannel &channel, long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel added - creating channel view:" << user.getFullName() << " "
                          << channel.getName();
@@ -728,11 +729,11 @@ void NinjamRoomWindow::setupSignals(controller::NinjamController* ninjamControll
 
     connect(ninjamPanel, &NinjamPanel::intervalShapeChanged, this, &NinjamRoomWindow::setNewIntervalShape);
 
-    connect(mainController->getNinjamService(), &ninjam::Service::videoIntervalCompleted, this, &NinjamRoomWindow::setVideoInterval);
+    connect(mainController->getNinjamService(), &ninjam::client::Service::videoIntervalCompleted, this, &NinjamRoomWindow::setVideoInterval);
 
 }
 
-void NinjamRoomWindow::setVideoInterval(const ninjam::User &user, const QByteArray &encodedVideoData)
+void NinjamRoomWindow::setVideoInterval(const User &user, const QByteArray &encodedVideoData)
 {
     auto group = trackGroups[user.getFullName()];
     if (group) {

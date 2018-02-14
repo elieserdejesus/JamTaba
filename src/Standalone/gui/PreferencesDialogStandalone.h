@@ -1,7 +1,7 @@
 #ifndef STANDALONE_PREFERENCES_DIALOG_H
 #define STANDALONE_PREFERENCES_DIALOG_H
 
-#include "PreferencesDialog.h"
+#include "gui/PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
 namespace audio {
