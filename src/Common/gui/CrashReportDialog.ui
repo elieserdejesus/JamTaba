@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string notr="true">Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -23,7 +23,7 @@
       <string notr="true">font-size: 12pt;</string>
      </property>
      <property name="text">
-      <string>Sorry, JamTaba crashed in your last jam!</string>
+      <string notr="true">Sorry, JamTaba crashed in your last jam!</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -49,7 +49,7 @@
    <item>
     <widget class="QLabel" name="labelCrashReportMessage">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please &lt;span style=&quot; font-weight:600;&quot;&gt;send&lt;/span&gt; the crash report  below to &lt;span style=&quot; font-weight:600;&quot;&gt;elieserdejesus@gmail.com&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please &lt;span style=&quot; font-weight:600;&quot;&gt;send&lt;/span&gt; the crash report  below to &lt;span style=&quot; font-weight:600;&quot;&gt;elieserdejesus@gmail.com&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="scaledContents">
       <bool>false</bool>

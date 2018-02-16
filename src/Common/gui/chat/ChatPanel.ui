@@ -43,7 +43,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Topic</string>
+        <string notr="true">Topic</string>
        </property>
        <property name="textFormat">
         <enum>Qt::PlainText</enum>

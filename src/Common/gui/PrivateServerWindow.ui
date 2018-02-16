@@ -11,13 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Hosting Ninjam Private Server</string>
+   <string notr="true">Hosting Ninjam Private Server</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="groupBoxYourServer">
      <property name="title">
-      <string>Your Private Server</string>
+      <string notr="true">Your Private Server</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item alignment="Qt::AlignLeft">
@@ -29,7 +29,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Start</string>
+         <string notr="true">Start</string>
         </property>
        </widget>
       </item>
@@ -42,7 +42,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Stop</string>
+         <string notr="true">Stop</string>
         </property>
        </widget>
       </item>
@@ -71,7 +71,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Server IP:</string>
+         <string notr="true">Server IP:</string>
         </property>
        </widget>
       </item>
@@ -84,7 +84,7 @@
          </font>
         </property>
         <property name="text">
-         <string>192.168.1.1</string>
+         <string notr="true">192.168.1.1</string>
         </property>
         <property name="textInteractionFlags">
          <set>Qt::TextEditorInteraction</set>
@@ -116,7 +116,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Server Port:</string>
+         <string notr="true">Server Port:</string>
         </property>
        </widget>
       </item>
@@ -129,7 +129,7 @@
          </font>
         </property>
         <property name="text">
-         <string>2049</string>
+         <string notr="true">2049</string>
         </property>
         <property name="textInteractionFlags">
          <set>Qt::LinksAccessibleByMouse|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -155,7 +155,7 @@
       <item>
        <widget class="QLabel" name="labelUpload">
         <property name="text">
-         <string>Up (Kbps):</string>
+         <string notr="true">Up (Kbps):</string>
         </property>
        </widget>
       </item>
@@ -168,7 +168,7 @@
          </font>
         </property>
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </widget>
       </item>
@@ -191,7 +191,7 @@
       <item>
        <widget class="QLabel" name="labelDownload">
         <property name="text">
-         <string>Down (Kbps):</string>
+         <string notr="true">Down (Kbps):</string>
         </property>
        </widget>
       </item>
@@ -204,7 +204,7 @@
          </font>
         </property>
         <property name="text">
-         <string>0</string>
+         <string notr="true">0</string>
         </property>
        </widget>
       </item>
@@ -235,7 +235,7 @@
         </sizepolicy>
        </property>
        <property name="title">
-        <string>Log</string>
+        <string notr="true">Log</string>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
@@ -263,7 +263,7 @@
         </sizepolicy>
        </property>
        <property name="title">
-        <string>Connected Users</string>
+        <string notr="true">Connected Users</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>

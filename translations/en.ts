@@ -2,21 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en" sourcelanguage="en">
 <context>
-    <name>Audio::Looper</name>
-    <message>
-        <source>Sequence</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>All Layers</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Selected Layer</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>BaseTrackView</name>
     <message>
         <source>L</source>
@@ -34,6 +19,9 @@
         <source>S</source>
         <translation></translation>
     </message>
+</context>
+<context>
+    <name>BoostSpinBox</name>
     <message>
         <source>Boost</source>
         <translation></translation>
@@ -68,6 +56,10 @@
         <source>B</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Translation error!</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ChatPanel</name>
@@ -97,6 +89,25 @@
     </message>
     <message>
         <source>Use/load the chords above</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>type here ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Increase chat font size</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Decrease chat font size</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ChatTabWidget</name>
+    <message>
+        <source>Chat</source>
         <translation></translation>
     </message>
 </context>
@@ -154,6 +165,13 @@
     </message>
 </context>
 <context>
+    <name>InactivityDetector</name>
+    <message>
+        <source>You are not transmiting for a long time! This is intentional?</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>IntervalChunksDisplay</name>
     <message>
         <source>Downloaded intervals</source>
@@ -206,10 +224,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission to others</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Add or remove channels...</source>
         <translation></translation>
     </message>
@@ -259,6 +273,10 @@
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Enable/disable your audio transmission for others</source>
         <translation></translation>
     </message>
 </context>
@@ -517,10 +535,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Private Server ...</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Ninjam community (Ninbot) ...</source>
         <translation></translation>
     </message>
@@ -628,6 +642,18 @@
         <source>Looper ...</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Connect with private server ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remember ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Host a private server in your machine ...</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -700,10 +726,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Chat</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Black</source>
         <translation></translation>
     </message>
@@ -748,6 +770,50 @@
         <source>Channel %1</source>
         <translation></translation>
     </message>
+    <message>
+        <source>%1 has left the room.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1 has joined the room.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Last chords used</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Private chat with %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1 is blocked in the chat</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1 is unblocked in the chat</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Uploading</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Downloading</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collapse bottom area</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collapse chat</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collapse local channels</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
@@ -761,6 +827,14 @@
     </message>
     <message>
         <source>Decrease</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Height</source>
         <translation></translation>
     </message>
 </context>
@@ -780,6 +854,49 @@
     </message>
     <message>
         <source>The audio device can&apos;t be started! Please check your audio device and try restart Jamtaba!</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>MetronomePanel</name>
+    <message>
+        <source>metronome</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Slider to change the BPM of the metronome</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Solo metronome</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Button to soloing the metronome</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>mute metronome</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Button to mute the metronome</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>open a metronome floating window</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>open metronome preferences</source>
         <translation></translation>
     </message>
 </context>
@@ -823,46 +940,6 @@
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation></translation>
-    </message>
-    <message>
-        <source>metronome</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Slider to change the BPM of the metronome</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>L</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>R</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Solo metronome</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Button to soloing the metronome</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>mute metronome</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Button to mute the metronome</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>open metronome preferences</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>open a metronome floating window</source>
         <translation></translation>
     </message>
     <message>
@@ -929,6 +1006,10 @@
         <source>%1 beats</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Custom...</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>NinjamRoomWindow</name>
@@ -969,23 +1050,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>Last chords used</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>%1 is blocked in the chat</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>%1 is unblocked in the chat</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>%1 has left the room.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>%1 has joined the room.</source>
+        <source>Set tracks layout to grid</source>
         <translation></translation>
     </message>
 </context>
@@ -1027,6 +1092,10 @@
         <source>Unblock %1 in chat</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Private chat with %1</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>NinjamTrackView</name>
@@ -1048,6 +1117,18 @@
     </message>
     <message>
         <source>Drastic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Downloading</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Mono</source>
         <translation></translation>
     </message>
 </context>
@@ -1073,19 +1154,19 @@
         <translation></translation>
     </message>
     <message>
-        <source>Found plugins:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>This is the plugin found list box</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>No plugins found!</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>scanning %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Founded plugins:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>This is the plugin founded list box</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No plugins founded!</source>
         <translation></translation>
     </message>
 </context>
@@ -1097,10 +1178,6 @@
     </message>
     <message>
         <source>Audio Files</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Choosing Secondary beat audio file...</source>
         <translation></translation>
     </message>
     <message>
@@ -1204,19 +1281,11 @@
         <translation></translation>
     </message>
     <message>
-        <source>Metronome Sound:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Custom Metronome Sounds</source>
         <translation></translation>
     </message>
     <message>
         <source>Primary Beat:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Secondary Beat:</source>
         <translation></translation>
     </message>
     <message>
@@ -1289,6 +1358,90 @@
     </message>
     <message>
         <source>Choosing loops folder ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Built-in metronomes:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Off Beat:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Accent Beat:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remember</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remember these options when a musician enters the jam:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The user channel level</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Level</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The user channel mute status</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The user channel pan</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Pan</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The user channel boost</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Boost</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The user channel low cut button status</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Low cut</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remember collapsible sections when starting JamTaba:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Local Channels (left side)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Bottom Section (master fader and ninjam controls)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Chat section (right side)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Choosing Off beat audio file...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Choosing Accent beat audio file...</source>
         <translation></translation>
     </message>
 </context>
@@ -1384,6 +1537,21 @@
     </message>
 </context>
 <context>
+    <name>Slider</name>
+    <message>
+        <source>center</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>UserNameDialog</name>
     <message>
         <source>Login ...</source>
@@ -1403,6 +1571,21 @@
     </message>
     <message>
         <source>Press this button if you are ok</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>audio::Looper</name>
+    <message>
+        <source>Sequence</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>All Layers</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Selected Layer</source>
         <translation></translation>
     </message>
 </context>
