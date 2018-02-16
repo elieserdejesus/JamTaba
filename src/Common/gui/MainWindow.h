@@ -272,6 +272,7 @@ private slots:
 
     void setChatsVisibility(bool chatVisible);
     void toggleChatCollapseStatus();
+    void chatCollapseChanged(bool chatCollapsed);
 
     // preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
