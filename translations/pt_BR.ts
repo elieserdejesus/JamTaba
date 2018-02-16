@@ -61,7 +61,7 @@
     </message>
     <message>
         <source>Translation error!</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro na tradução!</translation>
     </message>
 </context>
 <context>
@@ -96,15 +96,15 @@
     </message>
     <message>
         <source>type here ...</source>
-        <translation type="unfinished"></translation>
+        <translation>digite aqui ...</translation>
     </message>
     <message>
         <source>Increase chat font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Aumenta a fonte do chat</translation>
     </message>
     <message>
         <source>Decrease chat font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Diminui a fonte do chat</translation>
     </message>
 </context>
 <context>
@@ -171,7 +171,7 @@
     <name>InactivityDetector</name>
     <message>
         <source>You are not transmiting for a long time! This is intentional?</source>
-        <translation type="unfinished"></translation>
+        <translation>Você não está transmitindo por um longo período. Essa é a sua intenção?</translation>
     </message>
 </context>
 <context>
@@ -280,7 +280,7 @@
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
-        <translation type="unfinished"></translation>
+        <translation>Ativa/Desativa a transmissão do seu áudio para os outros músicos</translation>
     </message>
 </context>
 <context>
@@ -647,15 +647,15 @@
     </message>
     <message>
         <source>Connect with private server ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Conectar com um servidor privado ...</translation>
     </message>
     <message>
         <source>Remember ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Lembrar ...</translation>
     </message>
     <message>
         <source>Host a private server in your machine ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Criar um servidor privado no seu computador ...</translation>
     </message>
 </context>
 <context>
@@ -787,7 +787,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat privado com %1</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
@@ -799,23 +799,23 @@
     </message>
     <message>
         <source>Uploading</source>
-        <translation type="unfinished"></translation>
+        <translation>Enviando</translation>
     </message>
     <message>
         <source>Downloading</source>
-        <translation type="unfinished"></translation>
+        <translation>Baixando</translation>
     </message>
     <message>
         <source>Collapse bottom area</source>
-        <translation type="unfinished"></translation>
+        <translation>Colpsa a área inferior</translation>
     </message>
     <message>
         <source>Collapse chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Colapsa o chat</translation>
     </message>
     <message>
         <source>Collapse local channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Colapsa os seus canais</translation>
     </message>
 </context>
 <context>
@@ -834,11 +834,11 @@
     </message>
     <message>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Largura</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>Altura</translation>
     </message>
 </context>
 <context>
@@ -1011,7 +1011,7 @@
     </message>
     <message>
         <source>Custom...</source>
-        <translation type="unfinished"></translation>
+        <translation>Customizado ...</translation>
     </message>
 </context>
 <context>
@@ -1054,7 +1054,7 @@
     </message>
     <message>
         <source>Set tracks layout to grid</source>
-        <translation type="unfinished"></translation>
+        <translation>Mudar o layout das pistas para grade</translation>
     </message>
 </context>
 <context>
@@ -1097,7 +1097,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat particularcom %1</translation>
     </message>
 </context>
 <context>
@@ -1124,7 +1124,7 @@
     </message>
     <message>
         <source>Downloading</source>
-        <translation type="unfinished"></translation>
+        <translation>Baixando</translation>
     </message>
     <message>
         <source>Stereo</source>
@@ -1162,15 +1162,15 @@
     </message>
     <message>
         <source>Founded plugins:</source>
-        <translation type="unfinished"></translation>
+        <translation>Plugins encontrados:</translation>
     </message>
     <message>
         <source>This is the plugin founded list box</source>
-        <translation type="unfinished"></translation>
+        <translation>Esta é a lista de plugins encontrados</translation>
     </message>
     <message>
         <source>No plugins founded!</source>
-        <translation type="unfinished"></translation>
+        <translation>Nenhum plugin encontrado!</translation>
     </message>
 </context>
 <context>
@@ -1365,51 +1365,51 @@
     </message>
     <message>
         <source>Built-in metronomes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Metronomos embutidos:</translation>
     </message>
     <message>
         <source>Off Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tempo fraco:</translation>
     </message>
     <message>
         <source>Accent Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tempo forte:</translation>
     </message>
     <message>
         <source>Remember</source>
-        <translation type="unfinished"></translation>
+        <translation>Lembrar</translation>
     </message>
     <message>
         <source>Remember these options when a musician enters the jam:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lembrar estas opções quando um músico entrar na jam:</translation>
     </message>
     <message>
         <source>The user channel level</source>
-        <translation type="unfinished"></translation>
+        <translation>O volume do canal</translation>
     </message>
     <message>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Volume</translation>
     </message>
     <message>
         <source>The user channel mute status</source>
-        <translation type="unfinished"></translation>
+        <translation>O status do mute do canal</translation>
     </message>
     <message>
         <source>Mute</source>
-        <translation type="unfinished"></translation>
+        <translation>Mute</translation>
     </message>
     <message>
         <source>The user channel pan</source>
-        <translation type="unfinished"></translation>
+        <translation>O pan do canal</translation>
     </message>
     <message>
         <source>Pan</source>
-        <translation type="unfinished"></translation>
+        <translation>Pan</translation>
     </message>
     <message>
         <source>The user channel boost</source>
-        <translation type="unfinished"></translation>
+        <translation>O ganho do canal</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -1417,7 +1417,7 @@
     </message>
     <message>
         <source>The user channel low cut button status</source>
-        <translation type="unfinished"></translation>
+        <translation>O status do corte de grave do canal</translation>
     </message>
     <message>
         <source>Low cut</source>
@@ -1425,27 +1425,27 @@
     </message>
     <message>
         <source>Remember collapsible sections when starting JamTaba:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lembrar as áreas colapsáveis:</translation>
     </message>
     <message>
         <source>Local Channels (left side)</source>
-        <translation type="unfinished"></translation>
+        <translation>Canais locais (lado esquerdo)</translation>
     </message>
     <message>
         <source>Bottom Section (master fader and ninjam controls)</source>
-        <translation type="unfinished"></translation>
+        <translation>Área inferior (volume master e controle ninjam)</translation>
     </message>
     <message>
         <source>Chat section (right side)</source>
-        <translation type="unfinished"></translation>
+        <translation>Área do chat (lado direito)</translation>
     </message>
     <message>
         <source>Choosing Off beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Escolhendo o árquivo de áudio para o tempo fraco ...</translation>
     </message>
     <message>
         <source>Choosing Accent beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Escolhendo o árquivo de áudio para o tempo forte ...</translation>
     </message>
 </context>
 <context>
@@ -1543,7 +1543,7 @@
     <name>Slider</name>
     <message>
         <source>center</source>
-        <translation type="unfinished"></translation>
+        <translation>centro</translation>
     </message>
     <message>
         <source>L</source>
