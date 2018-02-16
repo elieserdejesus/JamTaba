@@ -1522,39 +1522,39 @@
     <name>PrivateServerWindow</name>
     <message>
         <source>Your Private Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Seu Servidor Privado</translation>
     </message>
     <message>
         <source>Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Iniciar</translation>
     </message>
     <message>
         <source>Stop</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Server IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP do servidor:</translation>
     </message>
     <message>
         <source>Server Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta do servidor:</translation>
     </message>
     <message>
         <source>Upload (Kbps):</source>
-        <translation type="unfinished"></translation>
+        <translation>Enviando (Kbps):</translation>
     </message>
     <message>
         <source>Download (Kbps):</source>
-        <translation type="unfinished"></translation>
+        <translation>Baixando (Kbps):</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Log</translation>
     </message>
     <message>
         <source>Connected Users</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuários Conectados</translation>
     </message>
 </context>
 <context>
