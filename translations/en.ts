@@ -1158,15 +1158,15 @@
         <translation></translation>
     </message>
     <message>
-        <source>Founded plugins:</source>
+        <source>Found plugins:</source>
         <translation></translation>
     </message>
     <message>
-        <source>This is the plugin founded list box</source>
+        <source>This is the plugin found list box</source>
         <translation></translation>
     </message>
     <message>
-        <source>No plugins founded!</source>
+        <source>No plugins found!</source>
         <translation></translation>
     </message>
 </context>
