@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>829</width>
+    <width>842</width>
     <height>317</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <item>
     <widget class="QGroupBox" name="groupBoxYourServer">
      <property name="title">
-      <string notr="true">Your Private Server</string>
+      <string>Your Private Server</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item alignment="Qt::AlignLeft">
@@ -29,7 +29,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string notr="true">Start</string>
+         <string>Start</string>
         </property>
        </widget>
       </item>
@@ -42,7 +42,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string notr="true">Stop</string>
+         <string>Stop</string>
         </property>
        </widget>
       </item>
@@ -71,7 +71,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string notr="true">Server IP:</string>
+         <string>Server IP:</string>
         </property>
        </widget>
       </item>
@@ -116,7 +116,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string notr="true">Server Port:</string>
+         <string>Server Port:</string>
         </property>
        </widget>
       </item>
@@ -155,7 +155,7 @@
       <item>
        <widget class="QLabel" name="labelUpload">
         <property name="text">
-         <string notr="true">Up (Kbps):</string>
+         <string>Upload (Kbps):</string>
         </property>
        </widget>
       </item>
@@ -191,7 +191,7 @@
       <item>
        <widget class="QLabel" name="labelDownload">
         <property name="text">
-         <string notr="true">Down (Kbps):</string>
+         <string>Download (Kbps):</string>
         </property>
        </widget>
       </item>
@@ -235,7 +235,7 @@
         </sizepolicy>
        </property>
        <property name="title">
-        <string notr="true">Log</string>
+        <string>Log</string>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
@@ -263,7 +263,7 @@
         </sizepolicy>
        </property>
        <property name="title">
-        <string notr="true">Connected Users</string>
+        <string>Connected Users</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>

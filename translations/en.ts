@@ -1516,6 +1516,45 @@
     </message>
 </context>
 <context>
+    <name>PrivateServerWindow</name>
+    <message>
+        <source>Your Private Server</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Server IP:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Server Port:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Upload (Kbps):</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Download (Kbps):</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connected Users</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
