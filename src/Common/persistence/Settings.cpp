@@ -937,12 +937,7 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         else
             this->ninjamIntervalProgressShape = 0;
 
-        if (root.contains("tracksLayoutOrientation")) {
-            int value = root["tracksLayoutOrientation"].toInt(2); // 2 is the Qt::Vertical value
-            this->tracksLayoutOrientation = value == 2 ? Qt::Vertical : Qt::Horizontal;
-        } else {
-            this->tracksLayoutOrientation = Qt::Vertical;
-        }
+        tracksLayoutOrientation = root["tracksLayoutOrientation"].toInt(0); // vertical as fallback value;
 
         if (root.contains("usingNarrowTracks"))
             this->usingNarrowedTracks = root["usingNarrowTracks"].toBool(false);
