@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.0" language="fr_FR">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -1362,7 +1362,7 @@
     </message>
     <message>
         <source>Metronome Sound:</source>
-        <translation type="unfinished"></translation>
+        <translation>Son du Métronome:</translation>
     </message>
     <message>
         <source>Off Beat:</source>
