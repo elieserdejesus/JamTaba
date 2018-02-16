@@ -1361,7 +1361,7 @@
         <translation>Choisir le dossier des Loops ...</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
+        <source>Metronome Sound:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

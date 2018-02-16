@@ -1362,7 +1362,7 @@
         <translation>Wybór folderu dla pętli ...</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
+        <source>Metronome Sound:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -1364,7 +1364,7 @@
         <translation>Escolhendo o diretório dos loops ...</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
+        <source>Metronome Sound:</source>
         <translation>Metronomos embutidos:</translation>
     </message>
     <message>
