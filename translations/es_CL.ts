@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
@@ -1008,7 +1008,7 @@
     </message>
     <message>
         <source>Custom...</source>
-        <translation type="unfinished"></translation>
+        <translation>Personalizado...</translation>
     </message>
 </context>
 <context>
@@ -1051,7 +1051,7 @@
     </message>
     <message>
         <source>Set tracks layout to grid</source>
-        <translation type="unfinished">Utilizar diseño de Pista enrejado</translation>
+        <translation>Utilizar diseño de Pista de red</translation>
     </message>
 </context>
 <context>
@@ -1163,7 +1163,7 @@
     </message>
     <message>
         <source>This is the plugin found list box</source>
-        <translation type="unfinished">Este es el recuadro de la lista de plugins encontrados</translation>
+        <translation>Éste es el recuadro referente a la lista de plugins encontrados</translation>
     </message>
     <message>
         <source>No plugins found!</source>
@@ -1362,51 +1362,51 @@
     </message>
     <message>
         <source>Metronome Sound:</source>
-        <translation type="unfinished"></translation>
+        <translation>Sonido del Metrónomo:</translation>
     </message>
     <message>
         <source>Off Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Beat secundario:</translation>
     </message>
     <message>
         <source>Accent Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Beat acentuado:</translation>
     </message>
     <message>
         <source>Remember</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar</translation>
     </message>
     <message>
         <source>Remember these options when a musician enters the jam:</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar estas opciones cuando un músico entra al jam:</translation>
     </message>
     <message>
         <source>The user channel level</source>
-        <translation type="unfinished"></translation>
+        <translation>El nivel del canal de usuario</translation>
     </message>
     <message>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Nivel</translation>
     </message>
     <message>
         <source>The user channel mute status</source>
-        <translation type="unfinished"></translation>
+        <translation>El estátus de silencio del canal de usuario</translation>
     </message>
     <message>
         <source>Mute</source>
-        <translation type="unfinished"></translation>
+        <translation>Silenciar</translation>
     </message>
     <message>
         <source>The user channel pan</source>
-        <translation type="unfinished"></translation>
+        <translation>El paneo del canal de usuario</translation>
     </message>
     <message>
         <source>Pan</source>
-        <translation type="unfinished"></translation>
+        <translation>Paneo</translation>
     </message>
     <message>
         <source>The user channel boost</source>
-        <translation type="unfinished"></translation>
+        <translation>La ganancia del canal de usario</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -1414,7 +1414,7 @@
     </message>
     <message>
         <source>The user channel low cut button status</source>
-        <translation type="unfinished"></translation>
+        <translation>el estátus de la atenuación de bajos del canal de usuario</translation>
     </message>
     <message>
         <source>Low cut</source>
@@ -1422,27 +1422,27 @@
     </message>
     <message>
         <source>Remember collapsible sections when starting JamTaba:</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar secciones colapsables al iniciar Jamtaba:</translation>
     </message>
     <message>
         <source>Local Channels (left side)</source>
-        <translation type="unfinished"></translation>
+        <translation>Canales locales (lado izquierdo)</translation>
     </message>
     <message>
         <source>Bottom Section (master fader and ninjam controls)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sección inferior (volumen general y controles de ninjam)</translation>
     </message>
     <message>
         <source>Chat section (right side)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sección de chat (lado derecho)</translation>
     </message>
     <message>
         <source>Choosing Off beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Escogiendo el archivo de beat secundario...</translation>
     </message>
     <message>
         <source>Choosing Accent beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Escogiendo el archivo de beat acentuado...</translation>
     </message>
 </context>
 <context>
@@ -1547,7 +1547,7 @@
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished">Log</translation>
+        <translation>Log</translation>
     </message>
     <message>
         <source>Connected Users</source>

@@ -1365,7 +1365,7 @@
     </message>
     <message>
         <source>Metronome Sound:</source>
-        <translation type="unfinished">Som do Metrônomo:</translation>
+        <translation>Som do Metrônomo:</translation>
     </message>
     <message>
         <source>Off Beat:</source>
