@@ -1223,6 +1223,11 @@ void MainWindow::enterInRoom(const login::RoomInfo &roomInfo)
 
     addMainChatPanel();
 
+    Q_ASSERT(chatTabWidget);
+
+    auto settings = mainController->getSettings();
+    chatTabWidget->collapse(settings.isRememberingChatSection() && settings.isChatSectionCollapsed());
+
     addNinjamPanelsInBottom();
 
     ui.leftPanel->adjustSize();
@@ -2489,7 +2494,7 @@ void MainWindow::setupWidgets()
     ui.masterTitleLabel->setVisible(false);
 
     chatTabWidget = new ChatTabWidget(this, mainController, usersColorsPool.data());
-    connect(chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::updateCollapseButtons);
+    connect(chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::chatCollapseChanged);
 
     setChatsVisibility(false);
 
@@ -2596,6 +2601,13 @@ void MainWindow::initializeCollapseButtons()
     connect(buttonCollapseChat, &QPushButton::clicked, this, &MainWindow::toggleChatCollapseStatus);
 
     updateCollapseButtons();
+}
+
+void MainWindow::chatCollapseChanged(bool chatCollapsed)
+{
+    updateCollapseButtons();
+
+    mainController->setChatSectionCollapsed(chatCollapsed); // update the persistence status
 }
 
 void MainWindow::updateCollapseButtons()
