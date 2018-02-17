@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt_BR" sourcelanguage="en_US">
+<TS version="2.1" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -1555,6 +1555,47 @@
     <message>
         <source>Connected Users</source>
         <translation>Usuários Conectados</translation>
+    </message>
+    <message>
+        <source>Port closed in your router!</source>
+        <translation>A porta do seu roteador foi fechada!</translation>
+    </message>
+    <message>
+        <source>ERROR in UPnP protocol: %1</source>
+        <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
+        <translation>Erro no protocolo UPnP: %1</translation>
+    </message>
+    <message>
+        <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
+        <translation>A porta foi aberta no seu roteador usando o protocolo UPnP! Outros ninjamers podem se conectar no seu servidor!</translation>
+    </message>
+    <message>
+        <source>Your external IP is %1</source>
+        <translation>Seu IP externo é %1</translation>
+    </message>
+    <message>
+        <source>Incomming connection from %1</source>
+        <translation>Conexão chegando de %1</translation>
+    </message>
+    <message>
+        <source>%1 entered in the server</source>
+        <translation>%1 entrou no servidor</translation>
+    </message>
+    <message>
+        <source>%1 left the server</source>
+        <translation>%1 saiu do servidor</translation>
+    </message>
+    <message>
+        <source>Server started</source>
+        <translation>Servidor iniciado</translation>
+    </message>
+    <message>
+        <source>Server stopped!</source>
+        <translation>Servidor parado!</translation>
+    </message>
+    <message>
+        <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
+        <translation>Tentando abrir a porta %1 no seu roteador (UPnP) para permitir conexões externas ...</translation>
     </message>
 </context>
 <context>
