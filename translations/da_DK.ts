@@ -1602,6 +1602,10 @@
         <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Hosting Ninjam Private Server</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Recorder::ClipSortLogGenerator</name>
