@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>6</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -461,7 +461,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>484</width>
+               <width>98</width>
                <height>45</height>
               </rect>
              </property>
@@ -571,7 +571,7 @@
        <item>
         <widget class="QGroupBox" name="groupBoxBuiltInMetronomes">
          <property name="title">
-          <string>Built-in metronomes:</string>
+          <string>Metronome Sound:</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
