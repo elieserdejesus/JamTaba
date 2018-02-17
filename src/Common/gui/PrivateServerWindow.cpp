@@ -27,7 +27,7 @@ PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
     connect(&upnpManager, &UPnPManager::portOpened, this, &PrivateServerWindow::portOpened);
 
     connect(&upnpManager, &UPnPManager::portClosed, [=](){
-        appendTextInLog("Port closed in your router!");
+        appendTextInLog(tr("Port closed in your router!"));
     });
 
     connect(&upnpManager, &UPnPManager::errorDetected, this, &PrivateServerWindow::upnpError);
@@ -40,14 +40,15 @@ PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
 
 void PrivateServerWindow::upnpError(const QString &error)
 {
-    appendTextInLog("ERROR in UPnP: " + error);
+    //: The '%1' symbol will be replaced by the UPnP error description, please keep the '%1' symbol in your translation
+    appendTextInLog(tr("ERROR in UPnP protocol: %1").arg(error));
 }
 
 void PrivateServerWindow::portOpened(const QString &localIP, const QString &externalIP)
 {
     Q_UNUSED(localIP);
-    appendTextInLog("Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!");
-    appendTextInLog("Your external IP is " + externalIP);
+    appendTextInLog(tr("Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!"));
+    appendTextInLog(tr("Your external IP is %1").arg(externalIP));
 
     ui->labelIPValue->setText(externalIP);
     ui->labelPortValue->setText(QString::number(PREFERRED_PORT));
@@ -76,17 +77,17 @@ void PrivateServerWindow::setupServer()
     });
 
     connect(server.data(), &Server::incommingConnection, [=](const QString &ip){
-        appendTextInLog(QString("Incomming connection from %1").arg(ip));
+        appendTextInLog(tr("Incomming connection from %1").arg(ip));
     });
 
     connect(server.data(), &Server::userEntered, [=](const QString &userName){
-        appendTextInLog(QString("%1 entered in the server").arg(userName));
+        appendTextInLog(tr("%1 entered in the server").arg(userName));
 
         updateUserList();
     });
 
     connect(server.data(), &Server::userLeave, [=](const QString &userName){
-        appendTextInLog(QString("%1 left the server").arg(userName));
+        appendTextInLog(tr("%1 left the server").arg(userName));
 
         updateUserList();
     });
@@ -114,7 +115,7 @@ void PrivateServerWindow::updateUserList()
 void PrivateServerWindow::serverStarted()
 {
     ui->textBrowser->append(QString());
-    appendTextInLog("Server started");
+    appendTextInLog(tr("Server started"));
 
     ui->pushButtonStart->setEnabled(false);
     ui->pushButtonStop->setEnabled(true);
@@ -129,7 +130,7 @@ void PrivateServerWindow::serverStarted()
 
 void PrivateServerWindow::serverStopped()
 {
-    appendTextInLog("Server stopped!");
+    appendTextInLog(tr("Server stopped!"));
 
     ui->pushButtonStart->setEnabled(true);
     ui->pushButtonStop->setEnabled(false);
@@ -169,7 +170,7 @@ void PrivateServerWindow::startServer()
         quint16 port = PREFERRED_PORT;
         server->start(port);
 
-        appendTextInLog(QString("Trying to open the port %1 in your router (UPnP) to allow external connections ...").arg(port));
+        appendTextInLog(tr("Trying to open the port %1 in your router (UPnP) to allow external connections ...").arg(port));
 
         QtConcurrent::run(&upnpManager, &UPnPManager::openPort, port);
     }
