@@ -51,7 +51,6 @@ protected:
     PreferencesDialog *createPreferencesDialog() override;
 
 protected slots: // TODO change to private slots?
-    void handleServerConnectionError(const QString &msg);
 
     void setGlobalPreferences(const QList<bool> &, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut);
 

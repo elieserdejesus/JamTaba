@@ -225,7 +225,7 @@ protected slots:
     void showNewVersionAvailableMessage(const QString &latestVersionDetails);
     static QString sanitizeLatestVersionDetails(const QString &details);
     void handleIncompatiblity();
-    virtual void handleServerConnectionError(const QString &errorMsg);
+    void handleServerConnectionError(const QString &errorMsg);
 
     // +++++  ROOM FEATURES ++++++++
     void playPublicRoomStream(const login::RoomInfo &roomInfo);

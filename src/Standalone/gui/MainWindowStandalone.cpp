@@ -439,12 +439,6 @@ void MainWindowStandalone::initializePluginFinder()
     }
 }
 
-void MainWindowStandalone::handleServerConnectionError(const QString &msg)
-{
-    MainWindow::handleServerConnectionError(msg);
-    controller->quit();
-}
-
 void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus,
                                                 int audioDevice, int firstIn, int lastIn,
                                                 int firstOut, int lastOut)

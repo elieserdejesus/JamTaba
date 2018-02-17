@@ -1053,7 +1053,6 @@ void MainWindow::handleServerConnectionError(const QString &errorMsg)
     hideBusyDialog();
     QMessageBox::warning(this, tr("Error!"),
                          tr("Error connecting with Jamtaba server!\n") + errorMsg);
-    close();
 }
 
 QString MainWindow::sanitizeLatestVersionDetails(const QString &details)
