@@ -25,7 +25,8 @@ public:
     ~PrivateServerWindow();
 
 protected:
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *) override;
+    void changeEvent(QEvent *) override;
 
 private slots:
     void startServer();

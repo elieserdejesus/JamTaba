@@ -198,3 +198,14 @@ void PrivateServerWindow::timerEvent(QTimerEvent *)
     ui->labelDownloadValue->setText(QString::number(download));
     ui->labelUploadValue->setText(QString::number(upload));
 }
+
+void PrivateServerWindow::changeEvent(QEvent *ev)
+{
+    if (ev->type() == QEvent::LanguageChange) {
+
+        // translate strings typed directly in PrivateServerWindow.ui file
+        ui->retranslateUi(this);
+    }
+
+    QDialog::changeEvent(ev);
+}
