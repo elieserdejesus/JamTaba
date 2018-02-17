@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="da_DK" sourcelanguage="en">
+<TS version="2.1" language="da_DK" sourcelanguage="en">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -1551,6 +1551,47 @@
     </message>
     <message>
         <source>Connected Users</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port closed in your router!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ERROR in UPnP protocol: %1</source>
+        <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your external IP is %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incomming connection from %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 entered in the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 left the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server started</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server stopped!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
