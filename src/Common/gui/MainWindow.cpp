@@ -520,7 +520,9 @@ QString MainWindow::getTranslatedThemeName(const QString &themeName)
     translatedNames.insert("Flat",    tr("Flat"));
     translatedNames.insert("Rounded", tr("Rounded"));
     translatedNames.insert("Volcano", tr("Volcano"));
-    translatedNames.insert("Ice", tr("Ice"));
+    translatedNames.insert("Ice",     tr("Ice"));
+    translatedNames.insert("Game",    tr("Game"));
+    translatedNames.insert("Navy",    tr("Navy"));
 
     if (translatedNames.contains(themeName))
         return translatedNames[themeName];
