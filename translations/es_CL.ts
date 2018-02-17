@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -58,7 +58,7 @@
     </message>
     <message>
         <source>Translation error!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Error de traducción!</translation>
     </message>
 </context>
 <context>
@@ -93,15 +93,15 @@
     </message>
     <message>
         <source>type here ...</source>
-        <translation type="unfinished"></translation>
+        <translation>escribe aquí ...</translation>
     </message>
     <message>
         <source>Increase chat font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Aumentar el tamaño de letra</translation>
     </message>
     <message>
         <source>Decrease chat font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Reducir el tamaño de letra</translation>
     </message>
 </context>
 <context>
@@ -168,7 +168,7 @@
     <name>InactivityDetector</name>
     <message>
         <source>You are not transmiting for a long time! This is intentional?</source>
-        <translation type="unfinished"></translation>
+        <translation>No estás transmitiendo por bastante tiempo. ¿Es esto intencional?</translation>
     </message>
 </context>
 <context>
@@ -277,7 +277,7 @@
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
-        <translation type="unfinished"></translation>
+        <translation>Habilitar/deshabilitar la transmisión de audio a otros</translation>
     </message>
 </context>
 <context>
@@ -644,15 +644,15 @@
     </message>
     <message>
         <source>Connect with private server ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Conectar con servidor privado ...</translation>
     </message>
     <message>
         <source>Remember ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar ...</translation>
     </message>
     <message>
         <source>Host a private server in your machine ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Alojar servidior privado en esta máquina ...</translation>
     </message>
 </context>
 <context>
@@ -784,7 +784,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat privado con %1</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
@@ -796,23 +796,23 @@
     </message>
     <message>
         <source>Uploading</source>
-        <translation type="unfinished"></translation>
+        <translation>Enviando</translation>
     </message>
     <message>
         <source>Downloading</source>
-        <translation type="unfinished"></translation>
+        <translation>Descargando</translation>
     </message>
     <message>
         <source>Collapse bottom area</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar/Ocultar zona inferior</translation>
     </message>
     <message>
         <source>Collapse chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar/Ocultar chat</translation>
     </message>
     <message>
         <source>Collapse local channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar/Ocultar canales locales</translation>
     </message>
 </context>
 <context>
@@ -831,11 +831,11 @@
     </message>
     <message>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Ancho</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>Alto</translation>
     </message>
 </context>
 <context>
@@ -1008,7 +1008,7 @@
     </message>
     <message>
         <source>Custom...</source>
-        <translation type="unfinished"></translation>
+        <translation>Personalizado...</translation>
     </message>
 </context>
 <context>
@@ -1051,7 +1051,7 @@
     </message>
     <message>
         <source>Set tracks layout to grid</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilizar diseño de Pista de red</translation>
     </message>
 </context>
 <context>
@@ -1094,7 +1094,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat privado con %1</translation>
     </message>
 </context>
 <context>
@@ -1121,7 +1121,7 @@
     </message>
     <message>
         <source>Downloading</source>
-        <translation type="unfinished"></translation>
+        <translation>Descargando</translation>
     </message>
     <message>
         <source>Stereo</source>
@@ -1158,16 +1158,16 @@
         <translation>buscando %1</translation>
     </message>
     <message>
-        <source>Founded plugins:</source>
-        <translation type="unfinished"></translation>
+        <source>Found plugins:</source>
+        <translation>Plugins encontrados:</translation>
     </message>
     <message>
-        <source>This is the plugin founded list box</source>
-        <translation type="unfinished"></translation>
+        <source>This is the plugin found list box</source>
+        <translation>Éste es el recuadro referente a la lista de plugins encontrados</translation>
     </message>
     <message>
-        <source>No plugins founded!</source>
-        <translation type="unfinished"></translation>
+        <source>No plugins found!</source>
+        <translation>¡No se encontraron plugins!</translation>
     </message>
 </context>
 <context>
@@ -1361,52 +1361,52 @@
         <translation>Escogiendo la carpeta de Loops ...</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
-        <translation type="unfinished"></translation>
+        <source>Metronome Sound:</source>
+        <translation>Sonido del Metrónomo:</translation>
     </message>
     <message>
         <source>Off Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Beat secundario:</translation>
     </message>
     <message>
         <source>Accent Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Beat acentuado:</translation>
     </message>
     <message>
         <source>Remember</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar</translation>
     </message>
     <message>
         <source>Remember these options when a musician enters the jam:</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar estas opciones cuando un músico entra al jam:</translation>
     </message>
     <message>
         <source>The user channel level</source>
-        <translation type="unfinished"></translation>
+        <translation>El nivel del canal de usuario</translation>
     </message>
     <message>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Nivel</translation>
     </message>
     <message>
         <source>The user channel mute status</source>
-        <translation type="unfinished"></translation>
+        <translation>El estátus de silencio del canal de usuario</translation>
     </message>
     <message>
         <source>Mute</source>
-        <translation type="unfinished"></translation>
+        <translation>Silenciar</translation>
     </message>
     <message>
         <source>The user channel pan</source>
-        <translation type="unfinished"></translation>
+        <translation>El paneo del canal de usuario</translation>
     </message>
     <message>
         <source>Pan</source>
-        <translation type="unfinished"></translation>
+        <translation>Paneo</translation>
     </message>
     <message>
         <source>The user channel boost</source>
-        <translation type="unfinished"></translation>
+        <translation>La ganancia del canal de usario</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -1414,7 +1414,7 @@
     </message>
     <message>
         <source>The user channel low cut button status</source>
-        <translation type="unfinished"></translation>
+        <translation>el estátus de la atenuación de bajos del canal de usuario</translation>
     </message>
     <message>
         <source>Low cut</source>
@@ -1422,27 +1422,27 @@
     </message>
     <message>
         <source>Remember collapsible sections when starting JamTaba:</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar secciones colapsables al iniciar Jamtaba:</translation>
     </message>
     <message>
         <source>Local Channels (left side)</source>
-        <translation type="unfinished"></translation>
+        <translation>Canales locales (lado izquierdo)</translation>
     </message>
     <message>
         <source>Bottom Section (master fader and ninjam controls)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sección inferior (volumen general y controles de ninjam)</translation>
     </message>
     <message>
         <source>Chat section (right side)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sección de chat (lado derecho)</translation>
     </message>
     <message>
         <source>Choosing Off beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Escogiendo el archivo de beat secundario...</translation>
     </message>
     <message>
         <source>Choosing Accent beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Escogiendo el archivo de beat acentuado...</translation>
     </message>
 </context>
 <context>
@@ -1519,39 +1519,39 @@
     <name>PrivateServerWindow</name>
     <message>
         <source>Your Private Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Tu Servidor Privado</translation>
     </message>
     <message>
         <source>Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Comenzar</translation>
     </message>
     <message>
         <source>Stop</source>
-        <translation type="unfinished"></translation>
+        <translation>Detener</translation>
     </message>
     <message>
         <source>Server IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP del Servidor:</translation>
     </message>
     <message>
         <source>Server Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Puerto del Servidor:</translation>
     </message>
     <message>
         <source>Upload (Kbps):</source>
-        <translation type="unfinished"></translation>
+        <translation>Enviando (Kbps):</translation>
     </message>
     <message>
         <source>Download (Kbps):</source>
-        <translation type="unfinished"></translation>
+        <translation>Descargando (Kbps):</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Log</translation>
     </message>
     <message>
         <source>Connected Users</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuarios Conectados</translation>
     </message>
 </context>
 <context>
@@ -1579,7 +1579,7 @@
     <name>Slider</name>
     <message>
         <source>center</source>
-        <translation type="unfinished"></translation>
+        <translation>centro</translation>
     </message>
     <message>
         <source>L</source>

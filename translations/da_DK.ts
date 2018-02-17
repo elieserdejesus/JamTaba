@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="da_DK" sourcelanguage="en">
+<TS version="2.0" language="da_DK" sourcelanguage="en">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -1158,15 +1158,15 @@
         <translation>Scanner %1</translation>
     </message>
     <message>
-        <source>Founded plugins:</source>
+        <source>Found plugins:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This is the plugin founded list box</source>
+        <source>This is the plugin found list box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>No plugins founded!</source>
+        <source>No plugins found!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1361,8 +1361,8 @@
         <translation>Vælg mappen til loops ...</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
-        <translation type="unfinished"></translation>
+        <source>Metronome Sound:</source>
+        <translation>Metronom lyde:</translation>
     </message>
     <message>
         <source>Off Beat:</source>

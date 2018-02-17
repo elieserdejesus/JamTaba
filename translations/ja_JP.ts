@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.0" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -1167,15 +1167,15 @@
         <translation>%1を走査中</translation>
     </message>
     <message>
-        <source>Founded plugins:</source>
+        <source>Found plugins:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This is the plugin founded list box</source>
+        <source>This is the plugin found list box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>No plugins founded!</source>
+        <source>No plugins found!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1370,8 +1370,8 @@
         <translation>ループフォルダの選択 ...</translation>
     </message>
     <message>
-        <source>Built-in metronomes:</source>
-        <translation type="unfinished"></translation>
+        <source>Metronome Sound:</source>
+        <translation type="unfinished">メトロノーム音:</translation>
     </message>
     <message>
         <source>Off Beat:</source>
