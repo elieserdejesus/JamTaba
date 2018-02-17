@@ -1374,11 +1374,11 @@
     </message>
     <message>
         <source>Off Beat:</source>
-        <translation>Beat secundario:</translation>
+        <translation>Sonido secundario:</translation>
     </message>
     <message>
         <source>Accent Beat:</source>
-        <translation>Beat acentuado:</translation>
+        <translation>Sonido acentuado:</translation>
     </message>
     <message>
         <source>Remember</source>
