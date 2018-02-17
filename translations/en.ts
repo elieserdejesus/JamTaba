@@ -1553,6 +1553,47 @@
         <source>Connected Users</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Port closed in your router!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>ERROR in UPnP protocol: %1</source>
+        <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Your external IP is %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Incomming connection from %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1 entered in the server</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1 left the server</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Server started</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Server stopped!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>Recorder::ClipSortLogGenerator</name>
