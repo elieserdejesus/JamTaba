@@ -814,6 +814,14 @@
         <source>Collapse local channels</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Game</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navy</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>

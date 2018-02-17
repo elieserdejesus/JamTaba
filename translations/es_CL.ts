@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_CL" sourcelanguage="en_US">
+<TS version="2.1" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -813,6 +813,14 @@
     <message>
         <source>Collapse local channels</source>
         <translation>Mostrar/Ocultar canales locales</translation>
+    </message>
+    <message>
+        <source>Game</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navy</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
