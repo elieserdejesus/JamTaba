@@ -1981,7 +1981,6 @@ void MainWindow::closeEvent(QCloseEvent *)
 {
     if (mainController) {
         mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
-        mainController->setChatSectionCollapsed(chatTabWidget->isCollapsed());
     }
 
     closeAllFloatingWindows();
