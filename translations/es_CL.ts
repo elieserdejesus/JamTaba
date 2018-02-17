@@ -816,11 +816,11 @@
     </message>
     <message>
         <source>Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Juego</translation>
     </message>
     <message>
         <source>Navy</source>
-        <translation type="unfinished"></translation>
+        <translation>Naval</translation>
     </message>
 </context>
 <context>
