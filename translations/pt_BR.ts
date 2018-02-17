@@ -1607,7 +1607,7 @@
     </message>
     <message>
         <source>Hosting Ninjam Private Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Hosteando  Servidor Ninjam Privado</translation>
     </message>
 </context>
 <context>
