@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -1555,44 +1555,44 @@
     </message>
     <message>
         <source>Port closed in your router!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Puerto cerrado en tu ruteador!</translation>
     </message>
     <message>
         <source>ERROR in UPnP protocol: %1</source>
         <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>ERROR en protocolo UPnP: %1</translation>
     </message>
     <message>
         <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Puerto abierto en tu ruteador usnado el protocolo UPnP!¡Otros ninjamers pueden conectarse a tu servidor!</translation>
     </message>
     <message>
         <source>Your external IP is %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Tu IP externo es %1</translation>
     </message>
     <message>
         <source>Incomming connection from %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexión entrante desde %1</translation>
     </message>
     <message>
         <source>%1 entered in the server</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ha entrado al servidor</translation>
     </message>
     <message>
         <source>%1 left the server</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 se ha desconectado del servidor</translation>
     </message>
     <message>
         <source>Server started</source>
-        <translation type="unfinished"></translation>
+        <translation>Servidor iniciado</translation>
     </message>
     <message>
         <source>Server stopped!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Servidor detenido!</translation>
     </message>
     <message>
         <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Intentando abrir el puerto %1 en tu ruteador (UPnP) para permitir conexiones externas ...</translation>
     </message>
 </context>
 <context>
