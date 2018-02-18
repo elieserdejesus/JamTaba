@@ -97,11 +97,11 @@
     </message>
     <message>
         <source>Increase chat font size</source>
-        <translation>schrift grösser&gt;</translation>
+        <translation>schrift grösser</translation>
     </message>
     <message>
         <source>Decrease chat font size</source>
-        <translation>schrift kleiner&gt;</translation>
+        <translation>schrift kleiner</translation>
     </message>
 </context>
 <context>
@@ -277,7 +277,7 @@
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
-        <translation>deakiviere deine audioübertragung für andere&gt;</translation>
+        <translation>deakiviere deine audioübertragung für andere</translation>
     </message>
 </context>
 <context>
@@ -797,31 +797,31 @@
     </message>
     <message>
         <source>Uploading</source>
-        <translation>hochladen&gt;</translation>
+        <translation>hochladen</translation>
     </message>
     <message>
         <source>Downloading</source>
-        <translation>herunterladen&gt;</translation>
+        <translation>herunterladen</translation>
     </message>
     <message>
         <source>Collapse bottom area</source>
-        <translation>ein-ausblend button bereich&gt;</translation>
+        <translation>ein-ausblend button bereich</translation>
     </message>
     <message>
         <source>Collapse chat</source>
-        <translation>ein-ausblenden chat&gt;</translation>
+        <translation>ein-ausblenden chat</translation>
     </message>
     <message>
         <source>Collapse local channels</source>
-        <translation>ein-ausblenden lokale kanäle&gt;</translation>
+        <translation>ein-ausblenden lokale kanäle</translation>
     </message>
     <message>
         <source>Game</source>
-        <translation>spiel&gt;</translation>
+        <translation>spiel</translation>
     </message>
     <message>
         <source>Navy</source>
-        <translation>navy&gt;</translation>
+        <translation>navy</translation>
     </message>
 </context>
 <context>
@@ -840,11 +840,11 @@
     </message>
     <message>
         <source>Width</source>
-        <translation>breite&gt;</translation>
+        <translation>breite</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation>höhe&gt;</translation>
+        <translation>höhe</translation>
     </message>
 </context>
 <context>
@@ -1060,7 +1060,7 @@
     </message>
     <message>
         <source>Set tracks layout to grid</source>
-        <translation>setze tracklayout als gitter&gt;</translation>
+        <translation>setze tracklayout als gitter</translation>
     </message>
 </context>
 <context>
@@ -1103,7 +1103,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation>privat chat mit %1&gt;</translation>
+        <translation>privat chat mit %1</translation>
     </message>
 </context>
 <context>
@@ -1130,7 +1130,7 @@
     </message>
     <message>
         <source>Downloading</source>
-        <translation>herunterladen&gt;</translation>
+        <translation>herunterladen</translation>
     </message>
     <message>
         <source>Stereo</source>
@@ -1383,7 +1383,7 @@
     </message>
     <message>
         <source>Remember</source>
-        <translation>speichere&gt;</translation>
+        <translation>speichere</translation>
     </message>
     <message>
         <source>Remember these options when a musician enters the jam:</source>
@@ -1391,31 +1391,31 @@
     </message>
     <message>
         <source>The user channel level</source>
-        <translation>nutzer kanal lautstärke&gt;</translation>
+        <translation>nutzer kanal lautstärke</translation>
     </message>
     <message>
         <source>Level</source>
-        <translation>lautstärke&gt;</translation>
+        <translation>lautstärke</translation>
     </message>
     <message>
         <source>The user channel mute status</source>
-        <translation>nutzer kanal stumm status&gt;</translation>
+        <translation>nutzer kanal stumm status</translation>
     </message>
     <message>
         <source>Mute</source>
-        <translation>stumm&gt;</translation>
+        <translation>stumm</translation>
     </message>
     <message>
         <source>The user channel pan</source>
-        <translation>nutzer kanal balance&gt;</translation>
+        <translation>nutzer kanal balance</translation>
     </message>
     <message>
         <source>Pan</source>
-        <translation>balance&gt;</translation>
+        <translation>balance</translation>
     </message>
     <message>
         <source>The user channel boost</source>
-        <translation>nutzer kanal boost&gt;</translation>
+        <translation>nutzer kanal boost</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -1423,7 +1423,7 @@
     </message>
     <message>
         <source>The user channel low cut button status</source>
-        <translation>nutzer kanal tief pass&gt;</translation>
+        <translation>nutzer kanal tief pass</translation>
     </message>
     <message>
         <source>Low cut</source>
@@ -1435,15 +1435,15 @@
     </message>
     <message>
         <source>Local Channels (left side)</source>
-        <translation>kanäle (linke seite)&gt;</translation>
+        <translation>kanäle (linke seite)</translation>
     </message>
     <message>
         <source>Bottom Section (master fader and ninjam controls)</source>
-        <translation>Bereich (haupt regler und ninjam einstellungen)&gt;</translation>
+        <translation>Bereich (haupt regler und ninjam einstellungen)</translation>
     </message>
     <message>
         <source>Chat section (right side)</source>
-        <translation>bereich (rechte seite)&gt;</translation>
+        <translation>bereich (rechte seite)</translation>
     </message>
     <message>
         <source>Choosing Off beat audio file...</source>
@@ -1532,11 +1532,11 @@
     </message>
     <message>
         <source>Start</source>
-        <translation>start&gt;</translation>
+        <translation>start</translation>
     </message>
     <message>
         <source>Stop</source>
-        <translation>stopp&gt;</translation>
+        <translation>stopp</translation>
     </message>
     <message>
         <source>Server IP:</source>
@@ -1556,11 +1556,11 @@
     </message>
     <message>
         <source>Log</source>
-        <translation>Log&gt;</translation>
+        <translation>Log</translation>
     </message>
     <message>
         <source>Connected Users</source>
-        <translation>verbundene nutzer&gt;</translation>
+        <translation>verbundene nutzer</translation>
     </message>
     <message>
         <source>Port closed in your router!</source>
@@ -1569,7 +1569,7 @@
     <message>
         <source>ERROR in UPnP protocol: %1</source>
         <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
-        <translation>fehler in UPnp protokoll: %1&gt;</translation>
+        <translation>fehler in UPnp protokoll: %1</translation>
     </message>
     <message>
         <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
@@ -1593,7 +1593,7 @@
     </message>
     <message>
         <source>Server started</source>
-        <translation>Server gestartet&gt;</translation>
+        <translation>Server gestartet</translation>
     </message>
     <message>
         <source>Server stopped!</source>
@@ -1605,7 +1605,7 @@
     </message>
     <message>
         <source>Hosting Ninjam Private Server</source>
-        <translation>Hosting Ninjam private Server&gt;</translation>
+        <translation>Hosting Ninjam private Server</translation>
     </message>
 </context>
 <context>
@@ -1633,7 +1633,7 @@
     <name>Slider</name>
     <message>
         <source>center</source>
-        <translation>mitte&gt;</translation>
+        <translation>mitte</translation>
     </message>
     <message>
         <source>L</source>
