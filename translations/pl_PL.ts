@@ -58,7 +58,7 @@
     </message>
     <message>
         <source>Translation error!</source>
-        <translation type="unfinished"></translation>
+        <translation>Błąd tłumaczenia!</translation>
     </message>
 </context>
 <context>
@@ -93,15 +93,15 @@
     </message>
     <message>
         <source>type here ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Wpisz tutaj ...</translation>
     </message>
     <message>
         <source>Increase chat font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwiększ rozmiar czcionki czatu</translation>
     </message>
     <message>
         <source>Decrease chat font size</source>
-        <translation type="unfinished"></translation>
+        <translation>Zmniejsz rozmiar czcionki czatu</translation>
     </message>
 </context>
 <context>
@@ -168,7 +168,7 @@
     <name>InactivityDetector</name>
     <message>
         <source>You are not transmiting for a long time! This is intentional?</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie transmitujesz przez długi czas! Czy to jest zamierzone?</translation>
     </message>
 </context>
 <context>
@@ -277,7 +277,7 @@
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
-        <translation type="unfinished"></translation>
+        <translation>Włącz/wyłącz transmisję audio dla innych</translation>
     </message>
 </context>
 <context>
@@ -645,15 +645,15 @@
     </message>
     <message>
         <source>Connect with private server ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Połącz z prywatnym serwerem ...</translation>
     </message>
     <message>
         <source>Remember ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapamiętaj ...</translation>
     </message>
     <message>
         <source>Host a private server in your machine ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Hostuj prywatny serwer w swoim komputerze ...</translation>
     </message>
 </context>
 <context>
@@ -785,7 +785,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Prywatny czat z %1</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
@@ -797,31 +797,31 @@
     </message>
     <message>
         <source>Uploading</source>
-        <translation type="unfinished"></translation>
+        <translation>Przesyłanie</translation>
     </message>
     <message>
         <source>Downloading</source>
-        <translation type="unfinished"></translation>
+        <translation>Ściąganie</translation>
     </message>
     <message>
         <source>Collapse bottom area</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwiń dolny obszar</translation>
     </message>
     <message>
         <source>Collapse chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwiń czat</translation>
     </message>
     <message>
         <source>Collapse local channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwiń kanały lokalne</translation>
     </message>
     <message>
         <source>Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Gra</translation>
     </message>
     <message>
         <source>Navy</source>
-        <translation type="unfinished"></translation>
+        <translation>Granatowy</translation>
     </message>
 </context>
 <context>
@@ -840,11 +840,11 @@
     </message>
     <message>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Szerokość</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>Wysokość</translation>
     </message>
 </context>
 <context>
@@ -1017,7 +1017,7 @@
     </message>
     <message>
         <source>Custom...</source>
-        <translation type="unfinished"></translation>
+        <translation>Niestandardowy...</translation>
     </message>
 </context>
 <context>
@@ -1060,7 +1060,7 @@
     </message>
     <message>
         <source>Set tracks layout to grid</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustaw układ śladów na siatkę</translation>
     </message>
 </context>
 <context>
@@ -1103,7 +1103,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Prywatny czat z %1</translation>
     </message>
 </context>
 <context>
@@ -1118,7 +1118,7 @@
     </message>
     <message>
         <source>Off</source>
-        <translation>Wył.</translation>
+        <translation>Wył</translation>
     </message>
     <message>
         <source>Normal</source>
@@ -1130,7 +1130,7 @@
     </message>
     <message>
         <source>Downloading</source>
-        <translation type="unfinished"></translation>
+        <translation>Ściąganie</translation>
     </message>
     <message>
         <source>Stereo</source>
@@ -1168,15 +1168,15 @@
     </message>
     <message>
         <source>Found plugins:</source>
-        <translation type="unfinished"></translation>
+        <translation>Znaleziono wtyczki:</translation>
     </message>
     <message>
         <source>This is the plugin found list box</source>
-        <translation type="unfinished"></translation>
+        <translation>To jest pole listy znalezionych wtyczek</translation>
     </message>
     <message>
         <source>No plugins found!</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie znaleziono wtyczek!</translation>
     </message>
 </context>
 <context>
@@ -1375,47 +1375,47 @@
     </message>
     <message>
         <source>Off Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bez uderzenia:</translation>
     </message>
     <message>
         <source>Accent Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaakcentowane uderzenie:</translation>
     </message>
     <message>
         <source>Remember</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapamiętaj</translation>
     </message>
     <message>
         <source>Remember these options when a musician enters the jam:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapamiętaj te opcje, gdy muzyk wchodzi do jamu:</translation>
     </message>
     <message>
         <source>The user channel level</source>
-        <translation type="unfinished"></translation>
+        <translation>Poziom kanału użytkownika</translation>
     </message>
     <message>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Poziom</translation>
     </message>
     <message>
         <source>The user channel mute status</source>
-        <translation type="unfinished"></translation>
+        <translation>Status wyciszenia kanału użytkownika</translation>
     </message>
     <message>
         <source>Mute</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyciszenie</translation>
     </message>
     <message>
         <source>The user channel pan</source>
-        <translation type="unfinished"></translation>
+        <translation>Pan kanału użytkownika</translation>
     </message>
     <message>
         <source>Pan</source>
-        <translation type="unfinished"></translation>
+        <translation>Pan</translation>
     </message>
     <message>
         <source>The user channel boost</source>
-        <translation type="unfinished"></translation>
+        <translation>Podbicie kanału użytkownika</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -1423,7 +1423,7 @@
     </message>
     <message>
         <source>The user channel low cut button status</source>
-        <translation type="unfinished"></translation>
+        <translation>Status przycisku obcięcia basu kanału użytkownika</translation>
     </message>
     <message>
         <source>Low cut</source>
@@ -1431,27 +1431,27 @@
     </message>
     <message>
         <source>Remember collapsible sections when starting JamTaba:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapamiętaj zwijane sekcje podczas uruchamiania JamTaby:</translation>
     </message>
     <message>
         <source>Local Channels (left side)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kanały lokalne (lewa strona)</translation>
     </message>
     <message>
         <source>Bottom Section (master fader and ninjam controls)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sekcja dolna (suwak master i kontrolki ninjam)</translation>
     </message>
     <message>
         <source>Chat section (right side)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sekcja czatu (prawa strona)</translation>
     </message>
     <message>
         <source>Choosing Off beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Wybieranie pliku audio bez uderzenia...</translation>
     </message>
     <message>
         <source>Choosing Accent beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Wybieranie zaakcentowanego uderzenia pliku dźwiękowego...</translation>
     </message>
 </context>
 <context>
@@ -1528,84 +1528,84 @@
     <name>PrivateServerWindow</name>
     <message>
         <source>Your Private Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Twój prywatny serwer</translation>
     </message>
     <message>
         <source>Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Start</translation>
     </message>
     <message>
         <source>Stop</source>
-        <translation type="unfinished"></translation>
+        <translation>Stop</translation>
     </message>
     <message>
         <source>Server IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP serwera:</translation>
     </message>
     <message>
         <source>Server Port:</source>
-        <translation type="unfinished"></translation>
+        <translation>Port serwera:</translation>
     </message>
     <message>
         <source>Upload (Kbps):</source>
-        <translation type="unfinished"></translation>
+        <translation>Wysyłanie (Kbps):</translation>
     </message>
     <message>
         <source>Download (Kbps):</source>
-        <translation type="unfinished"></translation>
+        <translation>Ściąganie (Kbps):</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Log</translation>
     </message>
     <message>
         <source>Connected Users</source>
-        <translation type="unfinished"></translation>
+        <translation>Połączeni użytkownicy</translation>
     </message>
     <message>
         <source>Port closed in your router!</source>
-        <translation type="unfinished"></translation>
+        <translation>Port zamknięty w twoim routerze!</translation>
     </message>
     <message>
         <source>ERROR in UPnP protocol: %1</source>
         <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>BŁĄD w protokole UPnP: %1</translation>
     </message>
     <message>
         <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
-        <translation type="unfinished"></translation>
+        <translation>Port otwarty w routerze za pomocą protokołu UPnP! Inni ninjamowcy mogą połączyć się z serwerem!</translation>
     </message>
     <message>
         <source>Your external IP is %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Twój zewnętrzny adres IP to %1</translation>
     </message>
     <message>
         <source>Incomming connection from %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Połączenie przychodzące z %1</translation>
     </message>
     <message>
         <source>%1 entered in the server</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 wszedł na serwer</translation>
     </message>
     <message>
         <source>%1 left the server</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 opuścił serwer</translation>
     </message>
     <message>
         <source>Server started</source>
-        <translation type="unfinished"></translation>
+        <translation>Uruchomiono serwer</translation>
     </message>
     <message>
         <source>Server stopped!</source>
-        <translation type="unfinished"></translation>
+        <translation>Serwer zatrzymany!</translation>
     </message>
     <message>
         <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Próbuję otworzyć port %1 w twoim routerze (UPnP), aby umożliwić połączenia zewnętrzne ...</translation>
     </message>
     <message>
         <source>Hosting Ninjam Private Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Hosting Ninjam Private Server</translation>
     </message>
 </context>
 <context>
@@ -1633,7 +1633,7 @@
     <name>Slider</name>
     <message>
         <source>center</source>
-        <translation type="unfinished"></translation>
+        <translation>środek</translation>
     </message>
     <message>
         <source>L</source>
