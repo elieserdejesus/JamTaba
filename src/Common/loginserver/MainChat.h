@@ -3,6 +3,7 @@
 
 #include <QWebSocket>
 #include <QtNetwork>
+#include <QTimer>
 
 namespace login {
 
@@ -17,6 +18,7 @@ public:
     void sendServerInvite(const QString &destinationUserFullName, const QString &serverIP, quint16 serverPort);
 
     static const QString MAIN_CHAT_URL;
+    static const quint8 SERVER_PING_PERIOD; // in seconds
 
 public slots:
     void sendPublicMessage(const QString &content);
@@ -34,6 +36,7 @@ private slots:
 
 private:
     QWebSocket webSocket;
+    QTimer *pingTimer;
 
     void parseReceivedData(const QJsonObject &data);
     void parseReceivedMessage(const QJsonObject &data);

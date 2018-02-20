@@ -10,12 +10,20 @@ using login::MainChat;
 const QString MainChat::MAIN_CHAT_URL = "ws://jamtaba-chat-backend.herokuapp.com";
 //const QString MainChat::MAIN_CHAT_URL = "ws://localhost:3000";
 
+const quint8 MainChat::SERVER_PING_PERIOD = 45; // in seconds - Hekoru timeout is 55 seconds
+
 MainChat::MainChat(QObject *parent) :
     QObject(parent),
-    userName("guest")
+    userName("guest"),
+    pingTimer(new QTimer(this))
 {
 
-    connect(&webSocket, &QWebSocket::connected, this, &MainChat::connected);
+    connect(&webSocket, &QWebSocket::connected, [=](){
+
+        pingTimer->start();
+
+        emit connected();
+    });
 
     connect(&webSocket, &QWebSocket::disconnected, this, [=](){
 
@@ -32,6 +40,15 @@ MainChat::MainChat(QObject *parent) :
             emit error(sender->errorString());
     });
 
+    pingTimer->setInterval(SERVER_PING_PERIOD * 1000);
+
+    connect(pingTimer, &QTimer::timeout, [=](){
+        webSocket.ping(); // ping in the server to avoid time out and close connection
+    });
+
+    connect(&webSocket, &QWebSocket::bytesWritten, [=](){
+        pingTimer->start(); // restart the ping timer when some message is sended
+    });
 }
 
 void MainChat::sendPublicMessage(const QString &content)
@@ -42,6 +59,7 @@ void MainChat::sendPublicMessage(const QString &content)
     message["content"] = content;
 
     webSocket.sendTextMessage(QJsonDocument(message).toJson());
+
 }
 
 void MainChat::sendServerInvite(const QString &destinationUserFullName, const QString &serverIP, quint16 serverPort)

@@ -1564,9 +1564,12 @@ void MainWindow::createMainChat()
     });
 
     connect(mainChat.data(), &MainChat::disconnected, [=](){
-        mainChatPanel->setInputsStatus(false);
-
-        QToolTip::showText(rect().center(), "Main chat disconnected!");
+        if (mainController) { // if still running
+            mainChatPanel->setInputsStatus(false);
+            auto localUserName = mainController->getUserName();
+            auto author = JAMTABA_CHAT_BOT_NAME;
+            mainChatPanel->addMessage(localUserName, author, tr("Main chat disconnected!"), true, false);
+        }
     });
 
     connect(mainChat.data(), &MainChat::error, [=](const QString &errorMessage){
