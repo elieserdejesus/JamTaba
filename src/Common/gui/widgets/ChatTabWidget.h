@@ -26,6 +26,8 @@ public:
 
     void toggleCollapse();
 
+    void closeNinjamChats();
+
     void setPreferredTranslationLanguage(const QString locale);
 
     ChatPanel* getNinjamServerChat() const;

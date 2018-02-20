@@ -1780,8 +1780,6 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
         ninjamWindow.reset(nullptr);
     }
 
-    setChatsVisibility(false);
-
     setInputTracksPreparingStatus(false); /** reset the preparing status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
     if (!normalDisconnection) {
@@ -1815,6 +1813,8 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     if (xmitInactivityDetector)
         xmitInactivityDetector->deinitialize();
 
+    ui.chatTabWidget->closeNinjamChats();
+
 }
 
 void MainWindow::closeAllLooperWindows()
@@ -1827,16 +1827,6 @@ void MainWindow::closeAllLooperWindows()
         }
     }
     looperWindows.clear();
-}
-
-void MainWindow::setChatsVisibility(bool chatVisible)
-{
-    if (!ui.chatTabWidget)
-        return;
-
-    ui.chatTabWidget->setVisible(chatVisible);
-
-    updateCollapseButtons();
 }
 
 void MainWindow::setInputTracksPreparingStatus(bool preparing)
@@ -2492,8 +2482,6 @@ void MainWindow::setupWidgets()
 {
     ui.masterMeter->setOrientation(Qt::Horizontal);
 
-    setChatsVisibility(false); // hide chat area until connect in a server to play
-
     if (ui.allRoomsContent->layout())
         delete ui.allRoomsContent->layout();
 
@@ -2511,8 +2499,6 @@ void MainWindow::setupWidgets()
 
     ui.chatTabWidget->initialize(mainController, usersColorsPool.data());
     connect(ui.chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::chatCollapseChanged);
-
-    setChatsVisibility(true);
 
     // remember chat collapse status
     auto settings = mainController->getSettings();

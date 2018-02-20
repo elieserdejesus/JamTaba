@@ -100,6 +100,16 @@ void ChatTabWidget::retranslateUi()
     mainChat->setTopicMessage(tr("Public chat"));
 }
 
+void ChatTabWidget::closeNinjamChats()
+{
+    while (tabBar->count() > 1) {
+        closeChatTab(1);
+    }
+
+    privateChats.clear();
+    ninjamServerChat = nullptr;
+}
+
 ChatPanel *ChatTabWidget::createMainChat(TextEditorModifier *textEditorModifier)
 {
     if (mainChat) {
@@ -133,12 +143,10 @@ ChatPanel *ChatTabWidget::createMainChat(TextEditorModifier *textEditorModifier)
 
 ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, TextEditorModifier *textEditorModifier)
 {
-    if (ninjamServerChat) {
-        return ninjamServerChat;
-    }
+    Q_ASSERT(!ninjamServerChat);
 
     //add ninjam main chat
-    tabBar->addTab(serverName);     //tabBar->addTab(tr("Chat"));
+    tabBar->addTab(serverName);
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
