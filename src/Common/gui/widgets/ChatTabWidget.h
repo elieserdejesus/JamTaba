@@ -19,7 +19,8 @@ class ChatTabWidget : public QFrame
     Q_OBJECT
 
 public:
-    ChatTabWidget(QWidget *parent, controller::MainController *mainController, UsersColorsPool *colorsPool);
+    ChatTabWidget(QWidget *parent);
+    void initialize(controller::MainController *mainController, UsersColorsPool *colorsPool);
 
     void collapse(bool collapse);
 
@@ -57,7 +58,6 @@ private:
     QTabBar *tabBar;
     QStackedWidget *stackWidget;
 
-    QStringList botNames;
     UsersColorsPool *colorsPool;
 
     ChatPanel *mainChat;

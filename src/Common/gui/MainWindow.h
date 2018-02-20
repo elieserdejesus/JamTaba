@@ -19,7 +19,6 @@ class ChordProgression;
 class ChordsPanel;
 class ChatPanel;
 class InactivityDetector;
-class ChatTabWidget;
 class LocalTrackGroupView;
 class CameraFrameGrabber;
 class VideoWidget;
@@ -33,6 +32,7 @@ class PrivateServerWindow;
 
 namespace login {
 class RoomInfo;
+class MainChat;
 }
 
 namespace controller {
@@ -60,6 +60,7 @@ using persistence::Preset;
 using persistence::Channel;
 using persistence::SubChannel;
 using gui::chat::SystemVotingMessage;
+using login::MainChat;
 
 class MainWindow : public QMainWindow
 {
@@ -334,7 +335,7 @@ private:
 
     QScopedPointer<ScreensaverBlocker> screensaverBlocker;
 
-    ChatTabWidget *chatTabWidget;
+    QScopedPointer<MainChat> mainChat;
 
     QScopedPointer<PrivateServerWindow> privateServerWindow;
 

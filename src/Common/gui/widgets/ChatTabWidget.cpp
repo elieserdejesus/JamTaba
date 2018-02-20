@@ -12,14 +12,11 @@
 
 using controller::MainController;
 
-ChatTabWidget::ChatTabWidget(QWidget *parent, MainController *mainController, UsersColorsPool *colorsPool) :
+ChatTabWidget::ChatTabWidget(QWidget *parent) :
     QFrame(parent),
     tabBar(new QTabBar(this)),
     stackWidget(new QStackedWidget(this)),
-    botNames(mainController->getBotNames()),
-    colorsPool(colorsPool),
-    mainChat(nullptr),
-    mainController(mainController)
+    mainChat(nullptr)
 {
 
     QBoxLayout *layout = new QVBoxLayout();
@@ -57,6 +54,12 @@ ChatTabWidget::ChatTabWidget(QWidget *parent, MainController *mainController, Us
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     stackWidget->setMinimumWidth(230); // TODO Refactoring: remove these 'Magic Numbers'
+}
+
+void ChatTabWidget::initialize(MainController *mainController, UsersColorsPool *colorsPool)
+{
+    this->colorsPool = colorsPool;
+    this->mainController = mainController;
 }
 
 void ChatTabWidget::changeCurrentTab(int tabIndex)
