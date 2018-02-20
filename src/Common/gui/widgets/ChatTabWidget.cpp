@@ -146,7 +146,7 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, Text
     Q_ASSERT(!ninjamServerChat);
 
     //add ninjam main chat
-    tabBar->addTab(serverName);
+    auto index = tabBar->addTab(serverName);
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
@@ -160,12 +160,11 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, Text
 
     removeTabCloseButton(1); // the ninjam server chat is not closable
 
-    //updateNinjamChatTabTitle(); // set and translate the chat tab title
-
     ninjamServerChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
 
-    return ninjamServerChat;
+    tabBar->setCurrentIndex(index); // auto change the chat focus no ninjam chat when enter in a server
 
+    return ninjamServerChat;
 }
 
 QIcon ChatTabWidget::createChatTabIcon(uint unreadedMessages)
