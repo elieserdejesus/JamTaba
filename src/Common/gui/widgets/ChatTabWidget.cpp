@@ -16,7 +16,7 @@ ChatTabWidget::ChatTabWidget(QWidget *parent) :
     QFrame(parent),
     tabBar(new QTabBar(this)),
     stackWidget(new QStackedWidget(this)),
-    mainChat(nullptr)
+    ninjamServerChat(nullptr)
 {
 
     QBoxLayout *layout = new QVBoxLayout();
@@ -83,7 +83,7 @@ void ChatTabWidget::clear()
         widget->deleteLater();
     }
 
-    mainChat = nullptr;
+    ninjamServerChat = nullptr;
 
     for (auto chat : privateChats.values())
         chat->deleteLater();
@@ -91,20 +91,20 @@ void ChatTabWidget::clear()
     privateChats.clear();
 }
 
-ChatPanel *ChatTabWidget::createPublicChat(TextEditorModifier *textEditorModifier)
+ChatPanel *ChatTabWidget::createNinjamServerChat(TextEditorModifier *textEditorModifier)
 {
-    if (mainChat)
-        return mainChat;
+    if (ninjamServerChat)
+        return ninjamServerChat;
 
-    //add main chat
-    tabBar->addTab(tr("Chat")); // main tab
+    //add ninjam main chat
+    tabBar->addTab(tr("Chat"));
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
-    mainChat = new ChatPanel(botNames, colorsPool, textEditorModifier, emojiManager);
-    stackWidget->addWidget(mainChat);
+    ninjamServerChat = new ChatPanel(botNames, colorsPool, textEditorModifier, emojiManager);
+    stackWidget->addWidget(ninjamServerChat);
 
-    connect(mainChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
+    connect(ninjamServerChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
 
         updatePublicChatTabTitle(unreaded);
     });
@@ -113,9 +113,9 @@ ChatPanel *ChatTabWidget::createPublicChat(TextEditorModifier *textEditorModifie
 
     updatePublicChatTabTitle(); // set and translate the chat tab title
 
-    mainChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
+    ninjamServerChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
 
-    return mainChat;
+    return ninjamServerChat;
 
 }
 
@@ -246,8 +246,8 @@ ChatPanel *ChatTabWidget::getPrivateChat(const QString &userFullName) const
 
 void ChatTabWidget::setChatsTintColor(const QColor &color)
 {
-    if(mainChat)
-        mainChat->setTintColor(color);
+    if(ninjamServerChat)
+        ninjamServerChat->setTintColor(color);
 
     for (auto chat : privateChats.values())
         chat->setTintColor(color);

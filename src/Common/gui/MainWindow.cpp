@@ -1222,7 +1222,7 @@ void MainWindow::enterInRoom(const login::RoomInfo &roomInfo)
     int index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabName);
     ui.contentTabWidget->setCurrentIndex(index);
 
-    addMainChatPanel();
+    createNinjamServerChat();
 
     auto settings = mainController->getSettings();
     ui.chatTabWidget->collapse(settings.isRememberingChatSection() && settings.isChatSectionCollapsed());
@@ -1331,7 +1331,7 @@ void MainWindow::wireNinjamControllerSignals()
 
     connect(controller, &NinjamController::topicMessageReceived, this, [=](const QString &message) {
 
-        ui.chatTabWidget->getMainChat()->setTopicMessage(message);
+        ui.chatTabWidget->getNinjamServerChat()->setTopicMessage(message);
     });
 
     connect(controller, &NinjamController::started, this, [=]() {
@@ -1383,7 +1383,7 @@ void MainWindow::handleUserEntering(const QString &userName)
     setPrivateChatInputstatus(userName, true); // activate the chat if user is entering again
 }
 
-void MainWindow::showLastChordsInMainChat()
+void MainWindow::showLastChordsInNinjamServerChat()
 {
     Q_ASSERT(ninjamWindow);
 
@@ -1396,7 +1396,7 @@ void MainWindow::showLastChordsInMainChat()
         ChordProgression progression = parser.parse(lastChordProgression);
         QString title = tr("Last chords used");
 
-        auto mainChatPanel = ui.chatTabWidget->getMainChat();
+        auto mainChatPanel = ui.chatTabWidget->getNinjamServerChat();
         Q_ASSERT(mainChatPanel);
         mainChatPanel->addLastChordsMessage(title, progression.toString());
         mainChatPanel->addChordProgressionConfirmationMessage(progression);
@@ -1409,15 +1409,15 @@ void MainWindow::createVoteButton(const gui::chat::SystemVotingMessage &votingMe
     if (!votingMessage.isValidVotingMessage())
         return;
 
-    auto mainChatPanel = ui.chatTabWidget->getMainChat();
-    Q_ASSERT(mainChatPanel);
+    auto ninjamChatPanel = ui.chatTabWidget->getNinjamServerChat();
+    Q_ASSERT(ninjamChatPanel);
 
     quint32 voteValue = votingMessage.getVoteValue();
     quint32 expireTime = votingMessage.getExpirationTime();
     if (votingMessage.isBpiVotingMessage())
-        mainChatPanel->addBpiVoteConfirmationMessage(voteValue, expireTime);
+        ninjamChatPanel->addBpiVoteConfirmationMessage(voteValue, expireTime);
     else
-        mainChatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
+        ninjamChatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
 }
 
 void MainWindow::handleChordProgressionMessage(const User &user, const QString &message)
@@ -1427,9 +1427,9 @@ void MainWindow::handleChordProgressionMessage(const User &user, const QString &
     ChatChordsProgressionParser parser;
     try{
         ChordProgression chordProgression = parser.parse(message);
-        auto mainChatPanel = ui.chatTabWidget->getMainChat();
-        Q_ASSERT(mainChatPanel);
-        mainChatPanel->addChordProgressionConfirmationMessage(chordProgression);
+        auto ninjamChatPanel = ui.chatTabWidget->getNinjamServerChat();
+        Q_ASSERT(ninjamChatPanel);
+        ninjamChatPanel->addChordProgressionConfirmationMessage(chordProgression);
     }
     catch (const std::runtime_error &e) {
         qCritical() << e.what();
@@ -1475,7 +1475,7 @@ void MainWindow::addPrivateChatMessage(const User &remoteUser, const QString &me
 void MainWindow::addMainChatMessage(const User &msgAuthor, const QString &message)
 {
     Q_ASSERT(ninjamWindow);
-    Q_ASSERT(ui.chatTabWidget->getMainChat());
+    Q_ASSERT(ui.chatTabWidget->getNinjamServerChat());
 
     QString remoteUserName = msgAuthor.getName();
 
@@ -1490,7 +1490,7 @@ void MainWindow::addMainChatMessage(const User &msgAuthor, const QString &messag
     bool showBlockButton = canShowBlockButtonInChatMessage(remoteUserName);
     bool showTranslationButton = !isChordProgressionMessage;
 
-    auto mainChatPanel = ui.chatTabWidget->getMainChat();
+    auto mainChatPanel = ui.chatTabWidget->getNinjamServerChat();
     Q_ASSERT(mainChatPanel);
 
     auto localUserName = mainController->getUserName();
@@ -1528,24 +1528,24 @@ void MainWindow::addMainChatMessage(const User &msgAuthor, const QString &messag
     localUserWasVotingInLastMessage = gui::chat::isLocalUserVotingMessage(message) && msgAuthor.getName() == mainController->getUserName();
 }
 
-void MainWindow::addMainChatPanel()
+void MainWindow::createNinjamServerChat()
 {
     qCDebug(jtGUI) << "adding ninjam chat panel...";
 
-    auto mainChatPanel = ui.chatTabWidget->createPublicChat(createTextEditorModifier());
+    auto ninjamChatPanel = ui.chatTabWidget->createNinjamServerChat(createTextEditorModifier());
 
-    mainChatPanel->setTintColor(tintColor);
+    ninjamChatPanel->setTintColor(tintColor);
 
-    connect(mainChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
-    connect(mainChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendNewChatMessage);
-    connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
-    connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
-    connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
-    connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
+    connect(ninjamChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
+    connect(ninjamChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendNewChatMessage);
+    connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
+    connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
+    connect(ninjamChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+    connect(ninjamChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 
     initializeVotingExpirationTimers();
 
-    showLastChordsInMainChat();
+    showLastChordsInNinjamServerChat();
 
     setChatsVisibility(true);
 

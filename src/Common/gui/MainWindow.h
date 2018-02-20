@@ -427,10 +427,10 @@ private:
 
     void restoreWindowPosition();
 
-    void addMainChatPanel();
+    void createNinjamServerChat();
     void addNinjamPanelsInBottom();
 
-    void showLastChordsInMainChat();
+    void showLastChordsInNinjamServerChat();
     void createVoteButton(const SystemVotingMessage &votingMessage);
     bool canShowBlockButtonInChatMessage(const QString &userName) const;
 

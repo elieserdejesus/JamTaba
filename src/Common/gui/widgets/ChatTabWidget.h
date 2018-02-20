@@ -28,7 +28,7 @@ public:
 
     void setPreferredTranslationLanguage(const QString locale);
 
-    ChatPanel* getMainChat() const;
+    ChatPanel* getNinjamServerChat() const;
 
     ChatPanel *getFocusedChatPanel() const;
 
@@ -36,7 +36,7 @@ public:
 
     ChatPanel *getPrivateChat(const QString &userFullName) const;
 
-    ChatPanel *createPublicChat(TextEditorModifier *textEditorModifier);
+    ChatPanel *createNinjamServerChat(TextEditorModifier *textEditorModifier);
     ChatPanel *createPrivateChat(const QString &remoteUserName, const QString &userIP, TextEditorModifier *textModifider, bool focusNewChat);
 
     void updatePublicChatTabTitle(uint unreadedMessages = 0);
@@ -60,7 +60,7 @@ private:
 
     UsersColorsPool *colorsPool;
 
-    ChatPanel *mainChat;
+    ChatPanel *ninjamServerChat;
     QMap<QString, ChatPanel*> privateChats;
 
     controller::MainController *mainController;
@@ -71,11 +71,11 @@ private:
 };
 
 
-inline ChatPanel *ChatTabWidget::getMainChat() const
+inline ChatPanel *ChatTabWidget::getNinjamServerChat() const
 {
-    Q_ASSERT(mainChat);
+    Q_ASSERT(ninjamServerChat);
 
-    return mainChat;
+    return ninjamServerChat;
 }
 
 #endif // CHATTABWIDGET_H
