@@ -10,6 +10,8 @@ namespace gui {
 
     void setLayoutItemsVisibility(QLayout *layout, bool visible);
 
+    QString sanitizeServerName(const QString &serverName);
+
 } // namespace
 
 #endif

@@ -7,6 +7,9 @@
 
 using login::MainChat;
 
+const QString MainChat::MAIN_CHAT_URL = "ws://jamtaba-chat-backend.herokuapp.com";
+//const QString MainChat::MAIN_CHAT_URL = "ws://localhost:3000";
+
 MainChat::MainChat(QObject *parent) :
     QObject(parent),
     userName("guest")

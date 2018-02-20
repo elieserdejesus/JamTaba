@@ -5,6 +5,8 @@
 #include <QBoxLayout>
 #include <QStyle>
 #include <QRegularExpression>
+#include <QPainter>
+#include <QFont>
 
 #include "gui/chat/ChatPanel.h"
 #include "gui/UsersColorsPool.h"
@@ -16,6 +18,7 @@ ChatTabWidget::ChatTabWidget(QWidget *parent) :
     QFrame(parent),
     tabBar(new QTabBar(this)),
     stackWidget(new QStackedWidget(this)),
+    mainChat(nullptr),
     ninjamServerChat(nullptr)
 {
 
@@ -91,13 +94,43 @@ void ChatTabWidget::clear()
     privateChats.clear();
 }
 
-ChatPanel *ChatTabWidget::createNinjamServerChat(TextEditorModifier *textEditorModifier)
+ChatPanel *ChatTabWidget::createMainChat(const QString &chatName, TextEditorModifier *textEditorModifier)
 {
-    if (ninjamServerChat)
+    if (mainChat) {
+        return mainChat;
+    }
+
+    //add main chat
+    tabBar->addTab(chatName);
+
+    auto botNames = mainController->getBotNames();
+    auto emojiManager = mainController->getEmojiManager();
+    mainChat = new ChatPanel(botNames, colorsPool, textEditorModifier, emojiManager);
+    stackWidget->addWidget(mainChat);
+
+    connect(mainChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
+
+        updateMainChatTabTitle(unreaded);
+    });
+
+    removeTabCloseButton(0); // the main chat is not closable
+
+    updateMainChatTabTitle(); // set and translate the main tab title
+
+    mainChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
+
+    return mainChat;
+
+}
+
+ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, TextEditorModifier *textEditorModifier)
+{
+    if (ninjamServerChat) {
         return ninjamServerChat;
+    }
 
     //add ninjam main chat
-    tabBar->addTab(tr("Chat"));
+    tabBar->addTab(serverName);     //tabBar->addTab(tr("Chat"));
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
@@ -106,12 +139,12 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(TextEditorModifier *textEditorM
 
     connect(ninjamServerChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
 
-        updatePublicChatTabTitle(unreaded);
+        updateNinjamChatTabTitle(unreaded);
     });
 
-    removeTabCloseButton(0); // the main chat is not closable
+    removeTabCloseButton(0); // the ninjam main chat is not closable
 
-    updatePublicChatTabTitle(); // set and translate the chat tab title
+    //updateNinjamChatTabTitle(); // set and translate the chat tab title
 
     ninjamServerChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
 
@@ -119,14 +152,47 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(TextEditorModifier *textEditorM
 
 }
 
-void ChatTabWidget::updatePublicChatTabTitle(uint unreadedMessages)
+QIcon ChatTabWidget::createChatTabIcon(uint unreadedMessages)
+{
+    if (unreadedMessages <= 0)
+        return QIcon();
+
+    QPixmap pixmap(":/images/chat_small.png");
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::TextAntialiasing);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    QString text(QString::number(unreadedMessages));
+
+    auto fontMetrics = QFontMetrics(QFont("Arial", 10, QFont::Normal));
+
+    qreal rectWidth = fontMetrics.width(text) * 2;
+
+    QRectF textRect(pixmap.width() - rectWidth, pixmap.height() - fontMetrics.height(), rectWidth, fontMetrics.height());
+
+    painter.setBrush(QColor(255, 0, 0, 180));
+    painter.setPen(Qt::white);
+    painter.drawEllipse(textRect);
+    painter.drawText(textRect, text, QTextOption(Qt::AlignCenter));
+
+    return QIcon(pixmap);
+}
+
+void ChatTabWidget::updateNinjamChatTabTitle(uint unreadedMessages)
+{
+    int chatTabIndex = 1; // assuming ninjam chat is always the second tab
+    tabBar->setTabIcon(chatTabIndex, createChatTabIcon(unreadedMessages));
+}
+
+void ChatTabWidget::updateMainChatTabTitle(uint unreadedMessages)
 {
     int chatTabIndex = 0; // assuming main chat is always the first tab
-    QString text = tr("Chat");
-    if (unreadedMessages > 0)
-        text = QString("(%1) %2").arg(unreadedMessages).arg(text);
+//    QString text = tr("Chat");
+//    if (unreadedMessages > 0)
+//        text = QString("(%1) %2").arg(unreadedMessages).arg(text);
 
-    tabBar->setTabText(chatTabIndex, text);
+    tabBar->setTabIcon(chatTabIndex, createChatTabIcon(unreadedMessages));
 }
 
 void ChatTabWidget::closeChatTab(int index)

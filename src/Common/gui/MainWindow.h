@@ -303,7 +303,7 @@ private slots:
     void handleUserEntering(const QString &userName);
 
     void handleChordProgressionMessage(const User &user, const QString &message);
-    void sendNewChatMessage(const QString &msg);
+    void sendChatMessageToNinjamServer(const QString &msg);
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
     void blockUserInChat(const QString &userNameToBlock);
@@ -427,7 +427,8 @@ private:
 
     void restoreWindowPosition();
 
-    void createNinjamServerChat();
+    void createMainChat();
+    void createNinjamServerChat(const QString &serverName);
     void addNinjamPanelsInBottom();
 
     void showLastChordsInNinjamServerChat();

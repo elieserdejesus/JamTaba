@@ -14,8 +14,12 @@ public:
     MainChat(QObject *parent = nullptr);
     void connectWithServer(const QString &serverUrl);
     void setUserName(const QString &userName);
-    void sendPublicMessage(const QString &content);
     void sendServerInvite(const QString &destinationUserFullName, const QString &serverIP, quint16 serverPort);
+
+    static const QString MAIN_CHAT_URL;
+
+public slots:
+    void sendPublicMessage(const QString &content);
 
 signals:
     void messageReceived(const QString &userName, const QString &content);

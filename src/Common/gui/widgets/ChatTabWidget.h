@@ -36,10 +36,12 @@ public:
 
     ChatPanel *getPrivateChat(const QString &userFullName) const;
 
-    ChatPanel *createNinjamServerChat(TextEditorModifier *textEditorModifier);
+    ChatPanel *createMainChat(const QString &chatName, TextEditorModifier *textEditorModifier);
+    ChatPanel *createNinjamServerChat(const QString &serverName, TextEditorModifier *textEditorModifier);
     ChatPanel *createPrivateChat(const QString &remoteUserName, const QString &userIP, TextEditorModifier *textModifider, bool focusNewChat);
 
-    void updatePublicChatTabTitle(uint unreadedMessages = 0);
+    void updateNinjamChatTabTitle(uint unreadedMessages = 0);
+    void updateMainChatTabTitle(uint unreadedMessages = 0);
 
     bool isCollapsed() const;
 
@@ -61,6 +63,7 @@ private:
     UsersColorsPool *colorsPool;
 
     ChatPanel *ninjamServerChat;
+    ChatPanel *mainChat;
     QMap<QString, ChatPanel*> privateChats;
 
     controller::MainController *mainController;
@@ -68,6 +71,8 @@ private:
     void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages, const QString &remoteUserName);
 
     void removeTabCloseButton(int buttonIndex);
+
+    static QIcon createChatTabIcon(uint unreadedMessages);
 };
 
 

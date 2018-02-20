@@ -38,6 +38,7 @@
 #include <QDateTime>
 #include <QImage>
 #include <QCameraInfo>
+#include <QToolTip>
 
 const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
@@ -617,6 +618,8 @@ void MainWindow::initialize()
 
     if (settings.isRememberingBottomSection())
         setBottomCollapsedStatus(settings.isBottomSectionCollapsed());
+
+    createMainChat();
 
 }
 
@@ -1218,11 +1221,12 @@ void MainWindow::enterInRoom(const login::RoomInfo &roomInfo)
 
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
-    QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
-    int index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabName);
+
+    auto serverName = gui::sanitizeServerName(roomInfo.getName());
+    auto index = ui.contentTabWidget->addTab(ninjamWindow.data(), serverName);
     ui.contentTabWidget->setCurrentIndex(index);
 
-    createNinjamServerChat();
+    createNinjamServerChat(serverName);
 
     auto settings = mainController->getSettings();
     ui.chatTabWidget->collapse(settings.isRememberingChatSection() && settings.isChatSectionCollapsed());
@@ -1528,16 +1532,60 @@ void MainWindow::addMainChatMessage(const User &msgAuthor, const QString &messag
     localUserWasVotingInLastMessage = gui::chat::isLocalUserVotingMessage(message) && msgAuthor.getName() == mainController->getUserName();
 }
 
-void MainWindow::createNinjamServerChat()
+void MainWindow::createMainChat()
+{
+    qCDebug(jtGUI) << "adding main chat panel...";
+
+    auto mainChatPanel = ui.chatTabWidget->createMainChat(tr("Chat"), createTextEditorModifier());
+    mainChatPanel->setTopicMessage(tr("Public chat"));
+
+    mainChatPanel->setTintColor(tintColor);
+
+    connect(mainChatPanel, &ChatPanel::userSendingNewMessage, mainChat.data(), &MainChat::sendPublicMessage);
+
+    connect(mainChat.data(), &MainChat::messageReceived, [=](const QString &userName, const QString &content){
+
+        auto localUserName = mainController->getUserName();
+        mainChatPanel->addMessage(localUserName, userName, content, true, true);
+    });
+
+    //connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+    //connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
+
+    updateCollapseButtons();
+
+    mainChatPanel->setInputsStatus(false);
+
+    connect(mainChat.data(), &MainChat::connected, [=](){
+
+        mainChat->setUserName(mainController->getUserName());
+
+        mainChatPanel->setInputsStatus(true);
+    });
+
+    connect(mainChat.data(), &MainChat::disconnected, [=](){
+        mainChatPanel->setInputsStatus(false);
+
+        QToolTip::showText(rect().center(), "Main chat disconnected!");
+    });
+
+    connect(mainChat.data(), &MainChat::error, [=](const QString &errorMessage){
+        QToolTip::showText(rect().center(), QString("Main chat error! (%1)").arg(errorMessage));
+    });
+
+    mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
+}
+
+void MainWindow::createNinjamServerChat(const QString &serverName)
 {
     qCDebug(jtGUI) << "adding ninjam chat panel...";
 
-    auto ninjamChatPanel = ui.chatTabWidget->createNinjamServerChat(createTextEditorModifier());
+    auto ninjamChatPanel = ui.chatTabWidget->createNinjamServerChat(serverName, createTextEditorModifier());
 
     ninjamChatPanel->setTintColor(tintColor);
 
     connect(ninjamChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
-    connect(ninjamChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendNewChatMessage);
+    connect(ninjamChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendChatMessageToNinjamServer);
     connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
     connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
     connect(ninjamChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
@@ -1546,8 +1594,6 @@ void MainWindow::createNinjamServerChat()
     initializeVotingExpirationTimers();
 
     showLastChordsInNinjamServerChat();
-
-    setChatsVisibility(true);
 
     updateCollapseButtons();
 }
@@ -1617,7 +1663,7 @@ void MainWindow::voteToChangeBpm(int newBpm)
     }
 }
 
-void MainWindow::sendNewChatMessage(const QString &msg)
+void MainWindow::sendChatMessageToNinjamServer(const QString &msg)
 {
     auto ninjamController = mainController->getNinjamController();
     if (ninjamController)
@@ -1926,8 +1972,8 @@ void MainWindow::changeEvent(QEvent *ev)
 
         translateCollapseButtonsToolTips();
 
-        if (ninjamWindow && ui.chatTabWidget)
-            ui.chatTabWidget->updatePublicChatTabTitle(); // translate the chat tab title
+        if (ninjamWindow)
+            ui.chatTabWidget->updateMainChatTabTitle(); // translate the main chat tab title
     }
 
     QMainWindow::changeEvent(ev);
@@ -2521,6 +2567,8 @@ void MainWindow::updateUserName()
 {
     QString newUserName = ui.userNameLineEdit->text();
     mainController->setUserName(newUserName);
+
+    mainChat->setUserName(mainController->getUserName());
 }
 
 void MainWindow::initializeMasterFader()
