@@ -142,7 +142,7 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, Text
         updateNinjamChatTabTitle(unreaded);
     });
 
-    removeTabCloseButton(0); // the ninjam main chat is not closable
+    removeTabCloseButton(1); // the ninjam server chat is not closable
 
     //updateNinjamChatTabTitle(); // set and translate the chat tab title
 
