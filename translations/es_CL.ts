@@ -1398,7 +1398,7 @@
     </message>
     <message>
         <source>The user channel mute status</source>
-        <translation>El estátus de silencio del canal de usuario</translation>
+        <translation>El estado de silencio del canal de usuario</translation>
     </message>
     <message>
         <source>Mute</source>
@@ -1422,7 +1422,7 @@
     </message>
     <message>
         <source>The user channel low cut button status</source>
-        <translation>el estátus de la atenuación de bajos del canal de usuario</translation>
+        <translation>el estado de la atenuación de bajos del canal de usuario</translation>
     </message>
     <message>
         <source>Low cut</source>
