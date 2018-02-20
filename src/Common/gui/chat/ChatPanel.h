@@ -40,6 +40,8 @@ public:
     void setInputsStatus(bool enabled);
     bool inputsAreEnabled() const;
 
+    void setConnectedUsers(const QStringList &usersNames);
+
     void setTintColor(const QColor &color);
 
     void setRemoteUserFullName(const QString &remoteUserFullName);

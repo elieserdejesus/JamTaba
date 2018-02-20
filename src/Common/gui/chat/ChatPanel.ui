@@ -100,6 +100,45 @@
     </layout>
    </item>
    <item>
+    <widget class="QTreeWidget" name="treeWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
+     <property name="indentation">
+      <number>12</number>
+     </property>
+     <property name="uniformRowHeights">
+      <bool>true</bool>
+     </property>
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
+     <property name="headerHidden">
+      <bool>true</bool>
+     </property>
+     <property name="expandsOnDoubleClick">
+      <bool>false</bool>
+     </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
     <widget class="QScrollArea" name="chatScroll">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -131,7 +170,7 @@
         <x>0</x>
         <y>0</y>
         <width>235</width>
-        <height>298</height>
+        <height>223</height>
        </rect>
       </property>
      </widget>
@@ -183,7 +222,7 @@
         <string notr="true"/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../../../resources/jamtaba.qrc">:/images/font_size.png</pixmap>
+        <pixmap>:/images/font_size.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>false</bool>
@@ -219,7 +258,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../../../resources/jamtaba.qrc">
+          <iconset>
            <normaloff>:/images/small_plus.png</normaloff>:/images/small_plus.png</iconset>
          </property>
         </widget>
@@ -239,7 +278,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../../../resources/jamtaba.qrc">
+          <iconset>
            <normaloff>:/images/small_minus.png</normaloff>:/images/small_minus.png</iconset>
          </property>
         </widget>
@@ -250,9 +289,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../../resources/jamtaba.qrc"/>
-  <include location="../../../resources/jamtaba.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

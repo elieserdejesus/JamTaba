@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     ChatPanel chatPanel(botNames, &colorsPool, nullptr, &emojiManager);
     chatPanel.setTopicMessage("Server topic message");
     chatPanel.setObjectName(QStringLiteral("ChatPanel"));
+    chatPanel.setConnectedUsers(QStringList() << "Tester" << "Tester 2" << "Tester 3");
 
     QString localUserName("Tester");
     chatPanel.addMessage(localUserName, "UserName", "message", true);

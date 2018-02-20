@@ -64,6 +64,50 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     setupSignals();
 
     instances.append(this);
+
+    auto root = new QTreeWidgetItem(ui->treeWidget, QStringList());
+    ui->treeWidget->addTopLevelItem(root);
+
+    connect(ui->treeWidget, &QTreeWidget::collapsed, [=](){
+        ui->treeWidget->setMaximumHeight(20);
+    });
+
+    connect(ui->treeWidget, &QTreeWidget::expanded, [=](){
+        auto root = ui->treeWidget->topLevelItem(0);
+        Q_ASSERT(root);
+        if (root->childCount() > 0)
+            ui->treeWidget->setMaximumHeight(150);
+    });
+
+    connect(ui->treeWidget, &QTreeWidget::clicked, [=](QModelIndex index){
+        auto root = ui->treeWidget->topLevelItem(0);
+        Q_ASSERT(root);
+        if (root->isExpanded())
+            ui->treeWidget->collapse(index);
+        else
+            ui->treeWidget->expand(index);
+    });
+
+    ui->treeWidget->expandAll();
+}
+
+void ChatPanel::setConnectedUsers(const QStringList &usersNames)
+{
+    auto root = ui->treeWidget->topLevelItem(0);
+
+    root->setText(0, tr("Connected Users (%1)").arg(usersNames.size()));
+
+    Q_ASSERT(root);
+
+    while (root->childCount() > 0) {
+        delete root->takeChild(0);
+    }
+
+    for (const auto &userName : usersNames) {
+        root->addChild(new QTreeWidgetItem(root, QStringList(userName)));
+    }
+
+    ui->treeWidget->setVisible(usersNames.size() > 1);
 }
 
 void ChatPanel::setupSignals()
