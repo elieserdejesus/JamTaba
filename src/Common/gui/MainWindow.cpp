@@ -1540,8 +1540,7 @@ void MainWindow::createMainChat()
 {
     qCDebug(jtGUI) << "adding main chat panel...";
 
-    auto mainChatPanel = ui.chatTabWidget->createMainChat(tr("Chat"), createTextEditorModifier());
-    mainChatPanel->setTopicMessage(tr("Public chat"));
+    auto mainChatPanel = ui.chatTabWidget->createMainChat(createTextEditorModifier());
 
     mainChatPanel->setTintColor(tintColor);
 
@@ -1970,8 +1969,7 @@ void MainWindow::changeEvent(QEvent *ev)
 
         translateCollapseButtonsToolTips();
 
-        if (ninjamWindow)
-            ui.chatTabWidget->updateMainChatTabTitle(); // translate the main chat tab title
+        ui.chatTabWidget->retranslateUi(); // translate the main chat tab title
     }
 
     QMainWindow::changeEvent(ev);

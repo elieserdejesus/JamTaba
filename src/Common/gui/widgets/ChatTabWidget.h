@@ -36,7 +36,7 @@ public:
 
     ChatPanel *getPrivateChat(const QString &userFullName) const;
 
-    ChatPanel *createMainChat(const QString &chatName, TextEditorModifier *textEditorModifier);
+    ChatPanel *createMainChat(TextEditorModifier *textEditorModifier);
     ChatPanel *createNinjamServerChat(const QString &serverName, TextEditorModifier *textEditorModifier);
     ChatPanel *createPrivateChat(const QString &remoteUserName, const QString &userIP, TextEditorModifier *textModifider, bool focusNewChat);
 
@@ -48,6 +48,8 @@ public:
     void clear();
 
     void setChatsTintColor(const QColor &color);
+
+    void retranslateUi();
 
 signals:
     void collapsedChanged(bool collapsed);

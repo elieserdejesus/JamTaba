@@ -94,19 +94,27 @@ void ChatTabWidget::clear()
     privateChats.clear();
 }
 
-ChatPanel *ChatTabWidget::createMainChat(const QString &chatName, TextEditorModifier *textEditorModifier)
+void ChatTabWidget::retranslateUi()
+{
+    tabBar->setTabText(0, tr("Chat"));
+    mainChat->setTopicMessage(tr("Public chat"));
+}
+
+ChatPanel *ChatTabWidget::createMainChat(TextEditorModifier *textEditorModifier)
 {
     if (mainChat) {
         return mainChat;
     }
 
-    //add main chat
-    tabBar->addTab(chatName);
+    tabBar->addTab(tr("Chat")); // add main chat
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
     mainChat = new ChatPanel(botNames, colorsPool, textEditorModifier, emojiManager);
     stackWidget->addWidget(mainChat);
+
+
+    mainChat->setTopicMessage(tr("Public chat"));
 
     connect(mainChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
 
