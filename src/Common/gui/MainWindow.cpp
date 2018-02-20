@@ -1330,7 +1330,7 @@ void MainWindow::wireNinjamControllerSignals()
     connect(controller, &NinjamController::userBlockedInChat, this, &MainWindow::showFeedbackAboutBlockedUserInChat);
     connect(controller, &NinjamController::userUnblockedInChat, this, &MainWindow::showFeedbackAboutUnblockedUserInChat);
 
-    connect(controller, &NinjamController::publicChatMessageReceived, this, &MainWindow::addMainChatMessage); // main chat
+    connect(controller, &NinjamController::publicChatMessageReceived, this, &MainWindow::addNinjamServerChatMessage); // main chat
     connect(controller, &NinjamController::privateChatMessageReceived, this, &MainWindow::addPrivateChatMessage);
 
     connect(controller, &NinjamController::topicMessageReceived, this, [=](const QString &message) {
@@ -1450,8 +1450,12 @@ bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
 
     **/
 
+    auto userIsBot = false;
+
     auto ninjamController = mainController->getNinjamController();
-    bool userIsBot = ninjamController->userIsBot(userName) || userName == JAMTABA_CHAT_BOT_NAME;
+    if (ninjamController)
+        userIsBot = ninjamController->userIsBot(userName) || userName == JAMTABA_CHAT_BOT_NAME;
+
     bool currentUserIsPostingTheChatMessage = userName == mainController->getUserName(); // chat message author and the current user name are the same?
     return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
 }
@@ -1476,7 +1480,7 @@ void MainWindow::addPrivateChatMessage(const User &remoteUser, const QString &me
     }
 }
 
-void MainWindow::addMainChatMessage(const User &msgAuthor, const QString &message)
+void MainWindow::addNinjamServerChatMessage(const User &msgAuthor, const QString &message)
 {
     Q_ASSERT(ninjamWindow);
     Q_ASSERT(ui.chatTabWidget->getNinjamServerChat());
@@ -1546,7 +1550,8 @@ void MainWindow::createMainChat()
     connect(mainChat.data(), &MainChat::messageReceived, [=](const QString &userName, const QString &content){
 
         auto localUserName = mainController->getUserName();
-        mainChatPanel->addMessage(localUserName, userName, content, true, true);
+        bool showBlockButton = canShowBlockButtonInChatMessage(userName);
+        mainChatPanel->addMessage(localUserName, userName, content, true, showBlockButton);
     });
 
     //connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);

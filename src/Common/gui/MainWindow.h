@@ -126,7 +126,7 @@ public slots:
     void showFeedbackAboutBlockedUserInChat(const QString &userName);
     void showFeedbackAboutUnblockedUserInChat(const QString &userName);
 
-    void addMainChatMessage(const User &, const QString &message);
+    void addNinjamServerChatMessage(const User &, const QString &message);
     void addPrivateChatMessage(const User &, const QString &message);
     void addPrivateChat(const QString &remoteUserName, const QString &userIP);
 
