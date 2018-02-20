@@ -526,3 +526,9 @@ LooperWindow QCheckBox::indicator:checked:hover
     background-color: #7ACBCC;
 }
 
+ChatPanel QTreeWidget
+{
+    selection-color: #58A9AA;
+    selection-background-color: rgba(255, 255, 255, 10);
+}
+

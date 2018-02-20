@@ -1553,6 +1553,8 @@ void MainWindow::createMainChat()
         mainChatPanel->addMessage(localUserName, userName, content, true, showBlockButton);
     });
 
+    connect(mainChat.data(), &MainChat::usersListChanged, ui.chatTabWidget, &ChatTabWidget::setConnectedUsersInMainChat);
+
     //connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
     //connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 

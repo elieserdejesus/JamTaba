@@ -167,6 +167,12 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, Text
     return ninjamServerChat;
 }
 
+void ChatTabWidget::setConnectedUsersInMainChat(const QStringList &usersNames)
+{
+    Q_ASSERT(mainChat);
+    mainChat->setConnectedUsers(usersNames);
+}
+
 QIcon ChatTabWidget::createChatTabIcon(uint unreadedMessages)
 {
     if (unreadedMessages <= 0)

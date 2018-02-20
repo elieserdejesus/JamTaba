@@ -139,3 +139,10 @@ WavePeakPanel
 {
     qproperty-peaksColor: red;
 }
+
+ChatPanel QTreeWidget
+{
+    background-color: rgba(255, 255, 255, 5);
+    selection-color: black;
+    selection-background-color: rgba(255, 255, 255, 5);
+}

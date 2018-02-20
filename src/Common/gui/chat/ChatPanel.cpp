@@ -89,6 +89,8 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     });
 
     ui->treeWidget->expandAll();
+
+    ui->treeWidget->setVisible(false);
 }
 
 void ChatPanel::setConnectedUsers(const QStringList &usersNames)
@@ -107,7 +109,8 @@ void ChatPanel::setConnectedUsers(const QStringList &usersNames)
         root->addChild(new QTreeWidgetItem(root, QStringList(userName)));
     }
 
-    ui->treeWidget->setVisible(usersNames.size() > 1);
+    //ui->treeWidget->setVisible(usersNames.size() > 1);
+    ui->treeWidget->setVisible(true);
 }
 
 void ChatPanel::setupSignals()

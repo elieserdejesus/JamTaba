@@ -53,6 +53,9 @@ public:
 
     void retranslateUi();
 
+public slots:
+    void setConnectedUsersInMainChat(const QStringList &usersNames);
+
 signals:
     void collapsedChanged(bool collapsed);
 
