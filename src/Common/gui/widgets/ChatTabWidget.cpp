@@ -157,23 +157,30 @@ QIcon ChatTabWidget::createChatTabIcon(uint unreadedMessages)
     if (unreadedMessages <= 0)
         return QIcon();
 
-    QPixmap pixmap(":/images/chat_small.png");
+    static const qreal SIZE = 16.0;
+
+    static const QSizeF size(SIZE, SIZE);
+
+    QPixmap pixmap(size.toSize());
+    pixmap.fill(Qt::transparent);
 
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::TextAntialiasing);
     painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
     QString text(QString::number(unreadedMessages));
 
-    auto fontMetrics = QFontMetrics(QFont("Arial", 10, QFont::Normal));
+    auto font = QFont("Arial", 7, QFont::Normal);
 
-    qreal rectWidth = fontMetrics.width(text) * 2;
-
-    QRectF textRect(pixmap.width() - rectWidth, pixmap.height() - fontMetrics.height(), rectWidth, fontMetrics.height());
+    QRectF textRect(QPointF(), size);
 
     painter.setBrush(QColor(255, 0, 0, 180));
+    painter.setPen(Qt::black);
+    painter.drawEllipse(QRectF(QPointF(1, 1), QSizeF(SIZE - 2, SIZE - 2)));
+
     painter.setPen(Qt::white);
-    painter.drawEllipse(textRect);
+    painter.setFont(font);
     painter.drawText(textRect, text, QTextOption(Qt::AlignCenter));
 
     return QIcon(pixmap);
@@ -188,10 +195,6 @@ void ChatTabWidget::updateNinjamChatTabTitle(uint unreadedMessages)
 void ChatTabWidget::updateMainChatTabTitle(uint unreadedMessages)
 {
     int chatTabIndex = 0; // assuming main chat is always the first tab
-//    QString text = tr("Chat");
-//    if (unreadedMessages > 0)
-//        text = QString("(%1) %2").arg(unreadedMessages).arg(text);
-
     tabBar->setTabIcon(chatTabIndex, createChatTabIcon(unreadedMessages));
 }
 
@@ -272,7 +275,7 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
         stackWidget->addWidget(chatPanel);
 
         connect(chatPanel, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
-            updatePrivateChatTabTitle(tabIndex, unreaded, remoteUserName);
+            updatePrivateChatTabTitle(tabIndex, unreaded);
         });
 
         if (focusNewChat)
@@ -284,19 +287,15 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
     return chatPanel;
 }
 
-void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages, const QString &remoteUserName)
+void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages)
 {
-    Q_ASSERT(chatIndex > 0); // index ZERO is the public chat
+    Q_ASSERT(chatIndex > 1); // index 0 is the public chat, index 1 is the ninjam server chat
 
     auto chatPanel = static_cast<ChatPanel *>(stackWidget->widget(chatIndex));
     if (!chatPanel)
         return;
 
-    QString tabText = ninjam::client::extractUserName(remoteUserName);
-    if (unreadedMessages > 0)
-        tabText = QString("(%1) %2").arg(unreadedMessages).arg(tabText);
-
-    tabBar->setTabText(chatIndex, tabText);
+    tabBar->setTabIcon(chatIndex, createChatTabIcon(unreadedMessages));
 }
 
 

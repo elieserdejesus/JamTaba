@@ -68,7 +68,7 @@ private:
 
     controller::MainController *mainController;
 
-    void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages, const QString &remoteUserName);
+    void updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages);
 
     void removeTabCloseButton(int buttonIndex);
 
