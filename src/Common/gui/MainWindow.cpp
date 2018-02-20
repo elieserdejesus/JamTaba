@@ -1830,16 +1830,6 @@ void MainWindow::closeAllLooperWindows()
     looperWindows.clear();
 }
 
-void MainWindow::toggleChatCollapseStatus()
-{
-    Q_ASSERT(mainController);
-
-    if (!mainController->isPlayingInNinjamRoom() || !ui.chatTabWidget->isVisible())
-        return;
-
-    ui.chatTabWidget->toggleCollapse();
-}
-
 void MainWindow::setChatsVisibility(bool chatVisible)
 {
     if (!ui.chatTabWidget)
@@ -2626,7 +2616,7 @@ void MainWindow::initializeCollapseButtons()
 
     connect(buttonCollapseBottomArea, &QPushButton::clicked, this, &MainWindow::toggleBottomAreaCollapseStatus);
 
-    connect(buttonCollapseChat, &QPushButton::clicked, this, &MainWindow::toggleChatCollapseStatus);
+    connect(buttonCollapseChat, &QPushButton::clicked, ui.chatTabWidget, &ChatTabWidget::toggleCollapse);
 
     updateCollapseButtons();
 }
