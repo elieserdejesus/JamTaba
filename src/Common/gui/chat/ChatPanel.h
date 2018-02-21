@@ -7,11 +7,16 @@
 #include <QList>
 #include <QTimer>
 #include <QAction>
+#include <QTreeWidgetItem>
 
 #include "gui/chords/ChordProgression.h"
 
 namespace Ui {
 class ChatPanel;
+}
+
+namespace geo {
+class Location;
 }
 
 class ChatMessagePanel;
@@ -53,6 +58,7 @@ public:
 
 public slots:
     void setTopicMessage(const QString &topic);
+    void updateUserLocation(const QString &ip, const geo::Location &location);
 
 signals:
     void userSendingNewMessage(const QString &msg);
@@ -112,6 +118,8 @@ private:
 
     const static qint8 MAX_FONT_OFFSET;
     const static qint8 MIN_FONT_OFFSET;
+
+    static void setItemCountryFlag(QTreeWidgetItem *item, const geo::Location &location);
 
     QColor getUserColor(const QString &userName);
 

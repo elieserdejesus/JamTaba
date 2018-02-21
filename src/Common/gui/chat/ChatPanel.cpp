@@ -6,6 +6,7 @@
 #include "gui/TextEditorModifier.h"
 #include "gui/UsersColorsPool.h"
 #include "ninjam/client/User.h"
+#include "geo/IpToLocationResolver.h"
 
 #include <QWidget>
 #include <QScrollBar>
@@ -99,6 +100,25 @@ void ChatPanel::hideConnectedUsersWidget()
     ui->treeWidget->setVisible(false);
 }
 
+void ChatPanel::updateUserLocation(const QString &ip, const geo::Location &location)
+{
+    auto root = ui->treeWidget->topLevelItem(0);
+    for (int i = 0; i < root->childCount(); ++i) {
+        auto item = root->child(i);
+        auto itemIP = item->data(0, Qt::UserRole + 1).toString();
+        if (itemIP == ip) {
+            setItemCountryFlag(item, location);
+            break;
+        }
+    }
+}
+
+void ChatPanel::setItemCountryFlag(QTreeWidgetItem *item, const geo::Location &location)
+{
+    auto countryCode = location.getCountryCode().toLower();
+    item->setIcon(0, QIcon(QString(":/flags/flags/%1.png").arg(countryCode)));
+}
+
 void ChatPanel::setConnectedUsers(const QStringList &usersNames)
 {
     auto root = ui->treeWidget->topLevelItem(0);
@@ -111,8 +131,13 @@ void ChatPanel::setConnectedUsers(const QStringList &usersNames)
         delete root->takeChild(0);
     }
 
-    for (const auto &userName : usersNames) {
-        root->addChild(new QTreeWidgetItem(root, QStringList(userName)));
+    for (const auto &userFullName : usersNames) {
+        auto name = ninjam::client::extractUserName(userFullName);
+        auto ip = ninjam::client::extractUserIP(userFullName);
+        auto item = new QTreeWidgetItem(root, QStringList(name));
+        item->setData(0, Qt::UserRole + 1, ip);
+        setItemCountryFlag(item, geo::Location()); // unknown location
+        root->addChild(item);
     }
 
     //ui->treeWidget->setVisible(usersNames.size() > 1);

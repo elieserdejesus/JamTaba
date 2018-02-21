@@ -15,6 +15,7 @@ HEADERS += gui/chat/ChatPanel.h
 HEADERS += gui/chat/EmojiWidget.h
 HEADERS += gui/chat/ChatTextEditor.h
 HEADERS += gui/UsersColorsPool.h
+HEADERS += geo/IpToLocationResolver.h
 
 SOURCES += log/logging.cpp
 SOURCES += gui/chat/ChatMessagePanel.cpp
@@ -26,6 +27,7 @@ SOURCES += gui/IconFactory.cpp
 SOURCES += gui/UsersColorsPool.cpp
 SOURCES += ninjam/client/User.cpp
 SOURCES += ninjam/client/UserChannel.cpp
+SOURCES += geo/IpToLocationResolver.cpp
 
 SOURCES += test_Chat.cpp
 
