@@ -93,6 +93,12 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     ui->treeWidget->setVisible(false);
 }
 
+void ChatPanel::hideConnectedUsersWidget()
+{
+    ui->verticalSpacerBottom->changeSize(0, 0);
+    ui->treeWidget->setVisible(false);
+}
+
 void ChatPanel::setConnectedUsers(const QStringList &usersNames)
 {
     auto root = ui->treeWidget->topLevelItem(0);

@@ -100,7 +100,7 @@
     </layout>
    </item>
    <item>
-    <spacer name="verticalSpacer_2">
+    <spacer name="verticalSpacerTop">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -262,7 +262,7 @@
     </layout>
    </item>
    <item>
-    <spacer name="verticalSpacer">
+    <spacer name="verticalSpacerBottom">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>

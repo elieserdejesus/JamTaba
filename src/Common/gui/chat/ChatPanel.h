@@ -47,6 +47,8 @@ public:
     void setRemoteUserFullName(const QString &remoteUserFullName);
     QString getRemoteUserFullName() const;
 
+    void hideConnectedUsersWidget();
+
     static void setFontSizeOffset(qint8 sizeOffset);
 
 public slots:

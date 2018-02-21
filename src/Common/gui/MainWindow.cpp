@@ -1597,6 +1597,7 @@ void MainWindow::createNinjamServerChat(const QString &serverName)
     auto ninjamChatPanel = ui.chatTabWidget->createNinjamServerChat(serverName, createTextEditorModifier());
 
     ninjamChatPanel->setTintColor(tintColor);
+    ninjamChatPanel->hideConnectedUsersWidget();
 
     connect(ninjamChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
     connect(ninjamChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendChatMessageToNinjamServer);
@@ -1623,6 +1624,7 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
     Q_ASSERT(chatPanel);
 
     chatPanel->setTintColor(tintColor);
+    chatPanel->hideConnectedUsersWidget();
 
     chatPanel->setTopicMessage(tr("Private chat with %1").arg(remoteUserName));
 
