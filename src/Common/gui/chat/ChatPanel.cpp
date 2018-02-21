@@ -48,7 +48,7 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
 
     emojiWidget = new EmojiWidget(emojiManager, this);
     emojiWidget->setVisible(false);
-    layout()->addWidget(emojiWidget);
+    qobject_cast<QVBoxLayout *>(layout())->insertWidget(layout()->count()-2, emojiWidget);
     emojiWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
     auto emojiIcon = IconFactory::createChatEmojiIcon(Qt::black);
@@ -88,7 +88,7 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
             ui->treeWidget->expand(index);
     });
 
-    ui->treeWidget->expandAll();
+    ui->treeWidget->setMaximumHeight(20);
 
     ui->treeWidget->setVisible(false);
 }
