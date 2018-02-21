@@ -27,7 +27,12 @@ MainChat::MainChat(QObject *parent) :
 
     connect(&webSocket, &QWebSocket::disconnected, this, [=](){
 
-        qDebug() << ((QWebSocket *)QObject::sender())->errorString();
+        auto sender = qobject_cast<QWebSocket *>(QObject::sender());
+        if (!sender)
+            return;
+
+        if (sender->error() != QAbstractSocket::UnknownSocketError)
+            qCritical() << sender->errorString();
 
         emit disconnected();
     });
