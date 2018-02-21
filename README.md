@@ -86,10 +86,11 @@ Detailed instructions on how to build a **static compiled Qt** to compile the Vs
 	2 - qtbase-opensource-src-5.5.1.zip
 	3 - qtmultimedia-opensource-src-5.5.1.zip
 	4 - qttools-opensource-src-5.5.1.zip
+	5 - qtwebsockets-opensource-src-5.5.1.zip
 
-**2** - Extract the dowloaded files in your preferred Qt folder, for example C:/MyQt. All files will be extracted inside 4 subfolders.
+**2** - Extract the dowloaded files in your preferred Qt folder, for example C:/MyQt. All files will be extracted inside 5 subfolders.
 
-**3** - Rename the extracted subfolders removing the suffix -opensource-src-5.5.1. The renamed folders will be qtbase, qtmultimedia and qttools. It's not necessary rename the folder qt-everywhere-opensource-src-5.5.1 (see the next step).
+**3** - Rename the extracted subfolders removing the suffix -opensource-src-5.5.1. The renamed folders will be qtbase, qtmultimedia, qtwebsockets and qttools. It's not necessary rename the folder qt-everywhere-opensource-src-5.5.1 (see the next step).
 
 **4** - Move all files inside the folder qt-everywhere-opensource-src-5.5.1 the your Qt folder and delete the folder qt-everywhere-opensource-src-5.5.1. The final folders/files layout will be:
 
