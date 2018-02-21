@@ -1564,7 +1564,11 @@ void MainWindow::createMainChat()
 
     connect(mainChat.data(), &MainChat::connected, [=](){
 
-        mainChat->setUserName(mainController->getUserName());
+        auto localUserName = mainController->getUserName();
+        mainChat->setUserName(localUserName);
+
+        auto msg = tr("Connected with public chat!");
+        mainChatPanel->addMessage(localUserName, JAMTABA_CHAT_BOT_NAME, msg);
 
         mainChatPanel->setInputsStatus(true);
     });
@@ -1582,6 +1586,7 @@ void MainWindow::createMainChat()
         QToolTip::showText(rect().center(), QString("Main chat error! (%1)").arg(errorMessage));
     });
 
+    mainChatPanel->addMessage(mainController->getUserName(), JAMTABA_CHAT_BOT_NAME, tr("Connecting ..."));
     mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
 }
 
