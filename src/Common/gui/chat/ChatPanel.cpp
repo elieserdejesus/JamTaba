@@ -107,16 +107,41 @@ void ChatPanel::updateUserLocation(const QString &ip, const geo::Location &locat
         auto item = root->child(i);
         auto itemIP = item->data(0, Qt::UserRole + 1).toString();
         if (ninjam::client::maskIP(itemIP) == ninjam::client::maskIP(ip)) {
-            setItemCountryFlag(item, location);
+            setItemCountryFlag(item, location.getCountryCode());
             break;
         }
     }
 }
 
-void ChatPanel::setItemCountryFlag(QTreeWidgetItem *item, const geo::Location &location)
+void ChatPanel::setItemCountryFlag(QTreeWidgetItem *item, const QString &countryCode)
 {
-    auto countryCode = location.getCountryCode().toLower();
-    item->setIcon(0, QIcon(QString(":/flags/flags/%1.png").arg(countryCode)));
+    auto icon = QIcon(QString(":/flags/flags/%1.png").arg(countryCode.toLower()));
+    item->setIcon(0, icon);
+
+    item->setData(0, Qt::UserRole + 2, countryCode);
+}
+
+void ChatPanel::setConnectedUserBlockedStatus(const QString &userFullName, bool blocked)
+{
+    auto root = ui->treeWidget->topLevelItem(0);
+    Q_ASSERT(root);
+
+    for (int i = 0; i < root->childCount(); ++i) {
+        auto item = root->child(i);
+        auto itemIp = item->data(0, Qt::UserRole + 1).toString();
+        auto userIp = ninjam::client::extractUserIP(userFullName);
+        auto userName = ninjam::client::extractUserName(userFullName);
+        if (itemIp == userIp && userName == item->text(0)) {
+            if (blocked) {
+                item->setIcon(0, QIcon(":/images/chat_blocked.png"));
+            }
+            else {
+                auto countryCode = item->data(0, Qt::UserRole + 2).toString();
+                setItemCountryFlag(item, countryCode);
+            }
+            return;
+        }
+    }
 }
 
 void ChatPanel::setConnectedUsers(const QStringList &usersNames)
@@ -136,7 +161,7 @@ void ChatPanel::setConnectedUsers(const QStringList &usersNames)
         auto ip = ninjam::client::extractUserIP(userFullName);
         auto item = new QTreeWidgetItem(root, QStringList(name));
         item->setData(0, Qt::UserRole + 1, ip);
-        setItemCountryFlag(item, geo::Location()); // unknown location
+        setItemCountryFlag(item, geo::Location().getCountryCode()); // unknown location
         root->addChild(item);
     }
 

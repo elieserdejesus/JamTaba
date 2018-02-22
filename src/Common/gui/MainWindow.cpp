@@ -1584,6 +1584,14 @@ void MainWindow::createMainChat()
         QToolTip::showText(rect().center(), QString("Main chat error! (%1)").arg(errorMessage));
     });
 
+    connect(mainController, &MainController::userBlockedInChat, [=](const QString &userFullName){
+        mainChatPanel->setConnectedUserBlockedStatus(userFullName, true);
+    });
+
+    connect(mainController, &MainController::userUnblockedInChat, [=](const QString &userFullName){
+        mainChatPanel->setConnectedUserBlockedStatus(userFullName, false);
+    });
+
     mainChatPanel->addMessage(mainController->getUserName(), JAMTABA_CHAT_BOT_NAME, tr("Connecting ..."));
     mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
 }
@@ -1678,10 +1686,12 @@ void MainWindow::sendChatMessageToNinjamServer(const QString &msg)
 
 void MainWindow::showFeedbackAboutBlockedUserInChat(const QString &userFullName)
 {
+    // remote all blocked user messages
     auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
     Q_ASSERT(chatPanel);
     chatPanel->removeMessagesFrom(userFullName);
 
+    // add a message in chat about the blocked user
     auto localUserName = mainController->getUserName();
     auto msgAuthor = JAMTABA_CHAT_BOT_NAME;
     auto blockedUserName = ninjam::client::extractUserName(userFullName);

@@ -114,8 +114,6 @@ QSize MainController::getVideoResolution() const
 
 void MainController::blockUserInChat(const QString &userNameToBlock)
 {
-    qDebug() << "Blocking " << userNameToBlock;
-
     if (!chatBlockedUsers.contains(userNameToBlock)) {
         chatBlockedUsers.insert(userNameToBlock);
         emit userBlockedInChat(userNameToBlock);

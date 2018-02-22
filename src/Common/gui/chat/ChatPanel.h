@@ -46,6 +46,7 @@ public:
     bool inputsAreEnabled() const;
 
     void setConnectedUsers(const QStringList &usersNames);
+    void setConnectedUserBlockedStatus(const QString &usersFullName, bool blocked);
 
     void setTintColor(const QColor &color);
 
@@ -119,7 +120,7 @@ private:
     const static qint8 MAX_FONT_OFFSET;
     const static qint8 MIN_FONT_OFFSET;
 
-    static void setItemCountryFlag(QTreeWidgetItem *item, const geo::Location &location);
+    static void setItemCountryFlag(QTreeWidgetItem *item, const QString &countryCode);
 
     QColor getUserColor(const QString &userName);
 
