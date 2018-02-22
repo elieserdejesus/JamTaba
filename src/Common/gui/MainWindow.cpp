@@ -1543,11 +1543,12 @@ void MainWindow::createMainChat()
 
     connect(mainChatPanel, &ChatPanel::userSendingNewMessage, mainChat.data(), &MainChat::sendPublicMessage);
 
-    connect(mainChat.data(), &MainChat::messageReceived, [=](const QString &userName, const QString &content){
-        qDebug() << "message received from" << userName;
-        auto localUserName = mainController->getUserName();
-        bool showBlockButton = canShowBlockButtonInChatMessage(userName);
-        mainChatPanel->addMessage(localUserName, userName, content, true, showBlockButton);
+    connect(mainChat.data(), &MainChat::messageReceived, [=](const QString &userFullName, const QString &content){
+        if (!mainController->userIsBlockedInChat(userFullName)) {
+            auto localUserName = mainController->getUserName();
+            bool showBlockButton = canShowBlockButtonInChatMessage(userFullName);
+            mainChatPanel->addMessage(localUserName, userFullName, content, true, showBlockButton);
+        }
     });
 
     connect(mainChat.data(), &MainChat::usersListChanged, ui.chatTabWidget, &ChatTabWidget::setConnectedUsersInMainChat);
