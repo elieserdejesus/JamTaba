@@ -1554,6 +1554,7 @@ void MainWindow::createMainChat()
     connect(mainChat.data(), &MainChat::usersListChanged, ui.chatTabWidget, &ChatTabWidget::setConnectedUsersInMainChat);
 
     connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
+    connect(mainChatPanel, &ChatPanel::userUnblockingChatMessagesFrom, mainController, &MainController::unblockUserInChat);
     //connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 
     updateCollapseButtons();

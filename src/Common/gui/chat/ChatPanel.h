@@ -67,6 +67,7 @@ signals:
     void userConfirmingVoteToBpmChange(int newBpm);
     void userConfirmingChordProgression(const ChordProgression &chordProgression);
     void userBlockingChatMessagesFrom(const QString &blockedUserName);
+    void userUnblockingChatMessagesFrom(const QString &blockedUserName);
     void unreadedMessagesChanged(int unreadedMessages);
     void fontSizeOffsetEdited(qint8 newOffset); // font size offset edited by user
 
@@ -133,6 +134,9 @@ private:
     void setupSignals();
 
     void setMessagesFontSizeOffset(qint8 offset);
+
+    void emitBlockingUser();
+    void emitUnblockingUser();
 };
 
 inline QString ChatPanel::getRemoteUserFullName() const
