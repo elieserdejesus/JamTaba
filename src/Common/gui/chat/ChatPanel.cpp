@@ -106,7 +106,7 @@ void ChatPanel::updateUserLocation(const QString &ip, const geo::Location &locat
     for (int i = 0; i < root->childCount(); ++i) {
         auto item = root->child(i);
         auto itemIP = item->data(0, Qt::UserRole + 1).toString();
-        if (itemIP == ip) {
+        if (ninjam::client::maskIP(itemIP) == ninjam::client::maskIP(ip)) {
             setItemCountryFlag(item, location);
             break;
         }

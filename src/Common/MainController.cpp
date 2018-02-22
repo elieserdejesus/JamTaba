@@ -440,11 +440,10 @@ QStringList MainController::getBotNames()
 
 geo::Location MainController::getGeoLocation(const QString &ip)
 {
-    static QString ipMask(".x");
 
-    QString sanitizedIp(ip);
-    if (sanitizedIp.endsWith(ipMask))
-        sanitizedIp.replace(ipMask, ".128"); // replace .x with .128 to generate a valid IP
+    auto sanitizedIp = ninjam::client::maskIP(ip);
+
+    sanitizedIp.replace(ninjam::client::IP_MASK, ".128"); // replace .x (mask) with .128 to generate a valid IP
 
     return ipToLocationResolver->resolve(sanitizedIp, getTranslationLanguage());
 }

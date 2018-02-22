@@ -26,6 +26,25 @@ QString ninjam::client::extractUserIP(const QString &fullName)
 }
 
 
+QString ninjam::client::maskIP(const QString &ip)
+{
+    QString maskedIP(ip);
+
+    // mask ip if necessary to be compatible with ninjam masked IPs
+    if (!maskedIP.endsWith(ninjam::client::IP_MASK)) { // not masked?
+        auto index = maskedIP.lastIndexOf(".");
+        if (index)
+            maskedIP = maskedIP.left(index) + ninjam::client::IP_MASK; // masking
+    }
+
+    return maskedIP;
+}
+
+bool ninjam::client::ipIsMasked(const QString &ip)
+{
+    return ip.endsWith(ninjam::client::IP_MASK);
+}
+
 User::User(const QString &fullName) :
     fullName(fullName),
     name(ninjam::client::extractUserName(fullName)),

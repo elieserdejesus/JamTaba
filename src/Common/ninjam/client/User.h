@@ -9,8 +9,12 @@ namespace ninjam
 
 namespace client
 {
+    static const QString IP_MASK(".x");
+
     QString extractUserName(const QString &userFullName);
     QString extractUserIP(const QString &userFullName);
+    QString maskIP(const QString& ip);
+    bool ipIsMasked(const QString &ip);
 
     class User
     {
