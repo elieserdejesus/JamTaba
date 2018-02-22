@@ -380,28 +380,28 @@ void ChatPanel::addLastChordsMessage(const QString &userName, const QString &mes
 
 }
 
-void ChatPanel::addMessage(const QString &localUserName, const QString &msgAuthor, const QString &msgText, bool showTranslationButton, bool showBlockButton)
+void ChatPanel::addMessage(const QString &localUserName, const QString &msgAuthorFullName, const QString &msgText, bool showTranslationButton, bool showBlockButton)
 {
 
-    QString name = !msgAuthor.isEmpty() ? msgAuthor : "JamTaba";
+    QString fullName = !msgAuthorFullName.isEmpty() ? msgAuthorFullName : "JamTaba";
 
-    QColor backgroundColor = getUserColor(name);
+    QColor backgroundColor = getUserColor(fullName);
 
     bool isBot = backgroundColor == BOT_COLOR;
-    bool isLocalUser = msgAuthor == ninjam::client::extractUserName(localUserName);
+    bool isLocalUser = ninjam::client::extractUserName(msgAuthorFullName) == localUserName;
 
     QColor textColor = Qt::black;
     QColor userNameBackgroundColor = backgroundColor;
 
-    ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, msgText,
+    ChatMessagePanel *msgPanel = new ChatMessagePanel(this, fullName, msgText,
                                                       userNameBackgroundColor, textColor, showTranslationButton, showBlockButton, emojiManager);
 
-    connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
-    connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
+    connect(msgPanel, &ChatMessagePanel::startingTranslation, this, &ChatPanel::showTranslationProgressFeedback);
+    connect(msgPanel, &ChatMessagePanel::translationFinished, this, &ChatPanel::hideTranslationProgressFeedback);
 
     connect(msgPanel, &ChatMessagePanel::blockingUser, this, &ChatPanel::userBlockingChatMessagesFrom);
 
-    msgPanel->setPrefferedTranslationLanguage(this->autoTranslationLanguage);
+    msgPanel->setPrefferedTranslationLanguage(autoTranslationLanguage);
     msgPanel->setShowArrow(!isBot);
     if (!isBot && isLocalUser) // local user messages are showed in right side
         msgPanel->setArrowSide(ChatMessagePanel::RightSide);
@@ -463,12 +463,12 @@ ChatPanel::~ChatPanel()
     delete ui;
 }
 
-void ChatPanel::removeMessagesFrom(const QString &userName)
+void ChatPanel::removeMessagesFrom(const QString &userFullName)
 {
     // remove message panels from user 'userName'
-    QList<ChatMessagePanel *> panels = ui->scrollContent->findChildren<ChatMessagePanel *>();
-    foreach (ChatMessagePanel *msgPanel, panels) {
-        if (msgPanel->getUserName() == userName ) {
+    auto panels = ui->scrollContent->findChildren<ChatMessagePanel *>();
+    for (auto msgPanel : panels) {
+        if (msgPanel->getUserFullName() == userFullName) {
             ui->scrollContent->layout()->removeWidget(msgPanel);
             msgPanel->deleteLater();
         }

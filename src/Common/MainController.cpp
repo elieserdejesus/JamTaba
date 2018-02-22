@@ -114,16 +114,23 @@ QSize MainController::getVideoResolution() const
 
 void MainController::blockUserInChat(const QString &userNameToBlock)
 {
-    if (isPlayingInNinjamRoom()) {
-        ninjamController->blockUserInChat(userNameToBlock);
+    qDebug() << "Blocking " << userNameToBlock;
+
+    if (!chatBlockedUsers.contains(userNameToBlock)) {
+        chatBlockedUsers.insert(userNameToBlock);
+        emit userBlockedInChat(userNameToBlock);
     }
 }
 
 void MainController::unblockUserInChat(const QString &userNameToUnblock)
 {
-    if (isPlayingInNinjamRoom()) {
-        ninjamController->unblockUserInChat(userNameToUnblock);
-    }
+    if (chatBlockedUsers.remove(userNameToUnblock))
+        emit userUnblockedInChat(userNameToUnblock);
+}
+
+bool MainController::userIsBlockedInChat(const QString &userFullName) const
+{
+    return chatBlockedUsers.contains(userFullName);
 }
 
 void MainController::setSampleRate(int newSampleRate)

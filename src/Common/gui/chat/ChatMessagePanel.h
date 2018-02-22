@@ -16,12 +16,12 @@ class ChatMessagePanel : public QFrame
     Q_OBJECT
 
 public:
-    ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg, const QColor &backgroundColor,
+    ChatMessagePanel(QWidget *parent, const QString &userFullName, const QString &msg, const QColor &backgroundColor,
                      const QColor &textColor, bool showTranslationButton, bool showBlockButton, Emojifier *emojifier = nullptr);
     ~ChatMessagePanel();
     void setPrefferedTranslationLanguage(const QString &targetLanguage);
     void translate();
-    QString getUserName() const;
+    QString getUserFullName() const;
 
     void setFontSizeOffset(qint8 sizeOffset);
 
@@ -37,7 +37,7 @@ public:
 signals:
     void startingTranslation();
     void translationFinished();
-    void blockingUser(const QString &userName);
+    void blockingUser(const QString &userFullName);
 
 protected:
     void changeEvent(QEvent *) override;
@@ -79,13 +79,13 @@ private:
 
     void buildPainterPath();
 
-    QString userName;
+    QString userFullName;
 
     Emojifier *emojifier;
 
     static QString replaceLinksInString(const QString &string);
 
-    void initialize(const QString &userName, const QString &msg, bool showTranslationButton, bool showBlockButton);
+    void initialize(const QString &userFullName, const QString &msg, bool showTranslationButton, bool showBlockButton);
 
     void setTranslatedMessage(const QString &translatedMessage);
 
@@ -98,9 +98,9 @@ private:
     static QString buildFontStyleSheet(const FontDetails &fontDetails, qint8 fontSizeOffset);
 };
 
-inline QString ChatMessagePanel::getUserName() const
+inline QString ChatMessagePanel::getUserFullName() const
 {
-    return userName;
+    return userFullName;
 }
 
 #endif // CHATMESSAGEPANEL_H

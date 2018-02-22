@@ -1327,9 +1327,6 @@ void MainWindow::wireNinjamControllerSignals()
     connect(controller, &NinjamController::userLeave, this, &MainWindow::handleUserLeaving);
     connect(controller, &NinjamController::userEnter, this, &MainWindow::handleUserEntering);
 
-    connect(controller, &NinjamController::userBlockedInChat, this, &MainWindow::showFeedbackAboutBlockedUserInChat);
-    connect(controller, &NinjamController::userUnblockedInChat, this, &MainWindow::showFeedbackAboutUnblockedUserInChat);
-
     connect(controller, &NinjamController::publicChatMessageReceived, this, &MainWindow::addNinjamServerChatMessage); // main chat
     connect(controller, &NinjamController::privateChatMessageReceived, this, &MainWindow::addPrivateChatMessage);
 
@@ -1440,7 +1437,7 @@ void MainWindow::handleChordProgressionMessage(const User &user, const QString &
     }
 }
 
-bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
+bool MainWindow::canShowBlockButtonInChatMessage(const QString &userFullName) const
 {
     /**
         Avoid the block button for bot and current user messages. Is not a good idea allow user
@@ -1454,10 +1451,10 @@ bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
 
     auto ninjamController = mainController->getNinjamController();
     if (ninjamController)
-        userIsBot = ninjamController->userIsBot(userName) || userName == JAMTABA_CHAT_BOT_NAME;
+        userIsBot = ninjamController->userIsBot(userFullName) || userFullName == JAMTABA_CHAT_BOT_NAME;
 
-    bool currentUserIsPostingTheChatMessage = userName == mainController->getUserName(); // chat message author and the current user name are the same?
-    return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
+    bool currentUserIsPostingTheChatMessage = ninjam::client::extractUserName(userFullName) == mainController->getUserName(); // chat message author and the current user name are the same?
+    return !userIsBot && !currentUserIsPostingTheChatMessage && !userFullName.isEmpty();
 }
 
 void MainWindow::addPrivateChatMessage(const User &remoteUser, const QString &message)
@@ -1476,7 +1473,7 @@ void MainWindow::addPrivateChatMessage(const User &remoteUser, const QString &me
     auto chatPanel = ui.chatTabWidget->getPrivateChat(remoteUser.getFullName());
     if (chatPanel) {
         auto localUser = mainController->getUserName();
-        chatPanel->addMessage(localUser, remoteUser.getName(), message, true, true);
+        chatPanel->addMessage(localUser, remoteUser.getFullName(), message, true, true);
     }
 }
 
@@ -1485,7 +1482,7 @@ void MainWindow::addNinjamServerChatMessage(const User &msgAuthor, const QString
     Q_ASSERT(ninjamWindow);
     Q_ASSERT(ui.chatTabWidget->getNinjamServerChat());
 
-    QString remoteUserName = msgAuthor.getName();
+    QString remoteUserName = msgAuthor.getFullName();
 
     bool isSystemVoteMessage = gui::chat::parseSystemVotingMessage(message).isValidVotingMessage();
 
@@ -1547,7 +1544,7 @@ void MainWindow::createMainChat()
     connect(mainChatPanel, &ChatPanel::userSendingNewMessage, mainChat.data(), &MainChat::sendPublicMessage);
 
     connect(mainChat.data(), &MainChat::messageReceived, [=](const QString &userName, const QString &content){
-
+        qDebug() << "message received from" << userName;
         auto localUserName = mainController->getUserName();
         bool showBlockButton = canShowBlockButtonInChatMessage(userName);
         mainChatPanel->addMessage(localUserName, userName, content, true, showBlockButton);
@@ -1555,7 +1552,7 @@ void MainWindow::createMainChat()
 
     connect(mainChat.data(), &MainChat::usersListChanged, ui.chatTabWidget, &ChatTabWidget::setConnectedUsersInMainChat);
 
-    //connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+    connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
     //connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 
     updateCollapseButtons();
@@ -1603,7 +1600,7 @@ void MainWindow::createNinjamServerChat(const QString &serverName)
     connect(ninjamChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendChatMessageToNinjamServer);
     connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
     connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
-    connect(ninjamChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+    connect(ninjamChatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
     connect(ninjamChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 
     initializeVotingExpirationTimers();
@@ -1643,7 +1640,7 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
 
     });
 
-    connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+    connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
 
     connect(chatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 }
@@ -1651,14 +1648,6 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
 void MainWindow::addPrivateChat(const QString &remoteUserName, const QString &userIP)
 {
     createPrivateChat(remoteUserName, userIP, true);
-}
-
-void MainWindow::blockUserInChat(const QString &userNameToBlock)
-{
-    auto ninjamController = mainController->getNinjamController();
-    auto user = ninjamController->getUserByName(userNameToBlock);
-    if (user.getName() == userNameToBlock)
-        ninjamController->blockUserInChat(user);
 }
 
 void MainWindow::voteToChangeBpi(int newBpi)
@@ -1686,25 +1675,27 @@ void MainWindow::sendChatMessageToNinjamServer(const QString &msg)
         ninjamController->sendChatMessage(msg);
 }
 
-void MainWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
+void MainWindow::showFeedbackAboutBlockedUserInChat(const QString &userFullName)
 {
     auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
     Q_ASSERT(chatPanel);
-    chatPanel->removeMessagesFrom(userName);
+    chatPanel->removeMessagesFrom(userFullName);
 
     auto localUserName = mainController->getUserName();
     auto msgAuthor = JAMTABA_CHAT_BOT_NAME;
-    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is blocked in the chat").arg(userName));
+    auto blockedUserName = ninjam::client::extractUserName(userFullName);
+    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is blocked in the chat").arg(blockedUserName));
 }
 
-void MainWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
+void MainWindow::showFeedbackAboutUnblockedUserInChat(const QString &userFullName)
 {
     auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
     Q_ASSERT(chatPanel);
 
     auto localUserName = mainController->getUserName();
     auto msgAuthor = JAMTABA_CHAT_BOT_NAME;
-    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is unblocked in the chat").arg(userName));
+    auto unblockedUserName = ninjam::client::extractUserName(userFullName);
+    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is unblocked in the chat").arg(unblockedUserName));
 }
 
 void MainWindow::enableLooperButtonInLocalTracks(bool enable)
@@ -2548,7 +2539,10 @@ void MainWindow::setupSignals()
 
     connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);
 
-    connect(mainController, &controller::MainController::themeChanged, this, &MainWindow::handleThemeChanged);
+    connect(mainController, &MainController::themeChanged, this, &MainWindow::handleThemeChanged);
+
+    connect(mainController, &MainController::userBlockedInChat, this, &MainWindow::showFeedbackAboutBlockedUserInChat);
+    connect(mainController, &MainController::userUnblockedInChat, this, &MainWindow::showFeedbackAboutUnblockedUserInChat);
 
     ui.contentTabWidget->installEventFilter(this);
 

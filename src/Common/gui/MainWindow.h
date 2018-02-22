@@ -123,8 +123,8 @@ public slots:
     void openLooperWindow(uint trackID);
     void tryEnterInRoom(const login::RoomInfo &roomInfo, const QString &password = "");
 
-    void showFeedbackAboutBlockedUserInChat(const QString &userName);
-    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
+    void showFeedbackAboutBlockedUserInChat(const QString &userFullName);
+    void showFeedbackAboutUnblockedUserInChat(const QString &userFullName);
 
     void addNinjamServerChatMessage(const User &, const QString &message);
     void addPrivateChatMessage(const User &, const QString &message);
@@ -304,7 +304,6 @@ private slots:
     void sendChatMessageToNinjamServer(const QString &msg);
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
-    void blockUserInChat(const QString &userNameToBlock);
 
 private:
 
@@ -431,7 +430,7 @@ private:
 
     void showLastChordsInNinjamServerChat();
     void createVoteButton(const SystemVotingMessage &votingMessage);
-    bool canShowBlockButtonInChatMessage(const QString &userName) const;
+    bool canShowBlockButtonInChatMessage(const QString &userFullName) const;
 
     void loadTranslationFile(const QString &locale);
 

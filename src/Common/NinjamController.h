@@ -77,14 +77,6 @@ public:
 
     void recreateMetronome(int newSampleRate);
 
-    void blockUserInChat(const User &user);
-    void blockUserInChat(const QString &userNameToBlock);
-
-    void unblockUserInChat(const User &user);
-    void unblockUserInChat(const QString &userNameToBlock);
-
-    bool userIsBlockedInChat(const QString &userName) const;
-
     bool userIsBot(const QString userName) const;
 
     User getUserByName(const QString &userName) const;
@@ -116,9 +108,6 @@ signals:
     void encodedAudioAvailableToSend(const QByteArray &encodedAudio, quint8 channelIndex,
                                      bool isFirstPart, bool isLastPart);
 
-    void userBlockedInChat(const QString &userName);
-    void userUnblockedInChat(const QString &userName);
-
     void preparingTransmission();     // waiting for start transmission
     void preparedToTransmit();     // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
 
@@ -136,14 +125,9 @@ protected:
 
 private:
     static QString getUniqueKeyForChannel(const UserChannel &channel, const QString &userFullName);
-    static QString getUniqueKeyForUser(const User &user);
 
     void addTrack(const User &user, const UserChannel &channel);
     void removeTrack(const User &user, const UserChannel &channel);
-
-    static bool userIsBlockedInChat(const User &user);
-
-    static QList<QString> chatBlockedUsers;     // using static to keep the blocked users list until Jamtaba is closed.
 
     bool running;
     int lastBeat;

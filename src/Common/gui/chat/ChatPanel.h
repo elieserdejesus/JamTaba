@@ -34,14 +34,14 @@ public:
 
     virtual ~ChatPanel();
 
-    void addMessage(const QString &localUserName, const QString &msgAuthor, const QString &msgText, bool showTranslationButton = true, bool showBlockButton = false);
+    void addMessage(const QString &localUserName, const QString &msgAuthorFullName, const QString &msgText, bool showTranslationButton = true, bool showBlockButton = false);
     void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));
     void addBpmVoteConfirmationMessage(quint32 newBpmValue, quint32 expireTime);
     void addBpiVoteConfirmationMessage(quint32 newBpiValue, quint32 expireTime);
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry(); // called when user switch from mini mode to full view
-    void removeMessagesFrom(const QString &userName);
+    void removeMessagesFrom(const QString &userFullName);
     void setInputsStatus(bool enabled);
     bool inputsAreEnabled() const;
 

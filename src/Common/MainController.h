@@ -19,6 +19,7 @@ class MainWindow;
 namespace ninjam { namespace client {
 class Service;
 class ServerInfo;
+class User;
 }}
 
 namespace persistence {
@@ -45,6 +46,7 @@ class NinjamController;
 
 using ninjam::client::Service;
 using ninjam::client::ServerInfo;
+using ninjam::client::User;
 using persistence::Settings;
 using persistence::LocalInputTrackSettings;
 using persistence::Preset;
@@ -256,8 +258,7 @@ public:
     // to remembering ninjamers controls (pan, level, gain, boost)
     UsersDataCache *getUsersDataCache();     // TODO hide this from callers. Create a function in mainController to update the CacheEntries, so MainController is used as a Façade.
 
-    void blockUserInChat(const QString &userNameToBlock);
-    void unblockUserInChat(const QString &userNameToUnblock);
+    bool userIsBlockedInChat(const QString &userName) const;
 
     void storeMeteringSettings(bool showingMaxPeaks, quint8 meterOption);
 
@@ -298,6 +299,8 @@ public:
 signals:
     void ipResolved(const QString &ip);
     void themeChanged();
+    void userBlockedInChat(const QString &userName);
+    void userUnblockedInChat(const QString &userName);
 
 public slots:
     virtual void setSampleRate(int newSampleRate);
@@ -307,6 +310,9 @@ public slots:
     void storeRemoteUserRememberSettings(bool boost, bool level, bool pan, bool mute, bool lowCut);
     void storeCollapsibleSectionsRememberSettings(bool localChannels, bool bottomSection,
                                                   bool chatSection);
+
+    void blockUserInChat(const QString &userNameToBlock);
+    void unblockUserInChat(const QString &userNameToUnblock);
 
     void processCapturedFrame(int frameID, const QImage &frame);
 
@@ -397,12 +403,12 @@ private:
 
     static const QString CRASH_FLAG_STRING;
 
-    void enqueueAudioDataToUpload(const QByteArray &encodedData, quint8 channelIndex,
-                                  bool isFirstPart);
-    void enqueueVideoDataToUpload(const QByteArray &encodedData, quint8 channelIndex,
-                                  bool isFirstPart);
+    void enqueueAudioDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
+    void enqueueVideoDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
 
     EmojiManager emojiManager;
+
+    QSet<QString> chatBlockedUsers;
 
 protected slots:
 
@@ -410,8 +416,7 @@ protected slots:
     virtual void disconnectFromNinjamServer(const ServerInfo &server);
     virtual void quitFromNinjamServer(const QString &error);
 
-    virtual void enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex,
-                                     bool isFirstPart);
+    virtual void enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
 
     virtual void updateBpi(int newBpi);
     virtual void updateBpm(int newBpm);

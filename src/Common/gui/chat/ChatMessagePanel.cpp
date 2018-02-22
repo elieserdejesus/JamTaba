@@ -2,6 +2,7 @@
 #include "ui_ChatMessagePanel.h"
 #include "log/Logging.h"
 #include "EmojiManager.h"
+#include "ninjam/client/User.h"
 
 #include <QTime>
 #include <QPainter>
@@ -10,12 +11,12 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg,
+ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userFullName, const QString &msg,
                                    const QColor &backgroundColor, const QColor &textColor,
                                    bool showTranslationButton, bool showBlockButton, Emojifier *emojifier) :
     QFrame(parent),
     ui(new Ui::ChatMessagePanel),
-    userName(userName),
+    userFullName(userFullName),
     emojifier(emojifier),
     backgroundColor(backgroundColor),
     showArrow(true),
@@ -28,7 +29,7 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, con
     else
         emojifiedText = msg;
 
-    initialize(userName, msg, showTranslationButton, showBlockButton);
+    initialize(userFullName, msg, showTranslationButton, showBlockButton);
 
     connect(ui->blockButton, &QPushButton::clicked, this, &ChatMessagePanel::fireBlockingUserSignal);
 
@@ -213,10 +214,10 @@ void ChatMessagePanel::changeEvent(QEvent *e)
     QWidget::changeEvent(e);
 }
 
-void ChatMessagePanel::initialize(const QString &userName, const QString &msg, bool showTranslationButton, bool showBlockButton)
+void ChatMessagePanel::initialize(const QString &userFullName, const QString &msg, bool showTranslationButton, bool showBlockButton)
 {
-    if (!userName.isEmpty() && !userName.isNull()) {
-        ui->labelUserName->setText(userName);
+    if (!userFullName.isEmpty() && !userFullName.isNull()) {
+        ui->labelUserName->setText(ninjam::client::extractUserName(userFullName));
     }
     else {
         ui->labelUserName->setVisible(false);
@@ -295,7 +296,7 @@ void ChatMessagePanel::on_translateButton_clicked()
 
 void ChatMessagePanel::fireBlockingUserSignal()
 {
-    emit blockingUser(userName);
+    emit blockingUser(userFullName);
 }
 
 void ChatMessagePanel::setPrefferedTranslationLanguage(const QString &targetLanguage)
