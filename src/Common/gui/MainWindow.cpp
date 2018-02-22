@@ -1582,7 +1582,11 @@ void MainWindow::createMainChat()
     });
 
     connect(mainChat.data(), &MainChat::error, [=](const QString &errorMessage){
-        QToolTip::showText(rect().center(), QString("Main chat error! (%1)").arg(errorMessage));
+        if (mainController) {
+            auto localUserName = mainController->getUserName();
+            auto author = JAMTABA_CHAT_BOT_NAME;
+            mainChatPanel->addMessage(localUserName, author, errorMessage, true, false);
+        }
     });
 
     connect(mainController, &MainController::userBlockedInChat, [=](const QString &userFullName){

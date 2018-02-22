@@ -14,6 +14,7 @@
 #include <QKeyEvent>
 #include <QWidget>
 #include <QGridLayout>
+#include <QMenu>
 #include "gui/IconFactory.h"
 
 const qint8 ChatPanel::MAX_FONT_OFFSET = 3;

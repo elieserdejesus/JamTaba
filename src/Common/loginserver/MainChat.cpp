@@ -58,13 +58,17 @@ MainChat::MainChat(QObject *parent) :
 
 void MainChat::sendPublicMessage(const QString &content)
 {
-    QJsonObject message;
-    message["command"] = "MSG";
-    message["userName"] = userName;
-    message["content"] = content;
+    if (!userName.isEmpty()) {
+        QJsonObject message;
+        message["command"] = "MSG";
+        message["userName"] = userName;
+        message["content"] = content;
 
-    webSocket.sendTextMessage(QJsonDocument(message).toJson());
-
+        webSocket.sendTextMessage(QJsonDocument(message).toJson());
+    }
+    else {
+        emit error(tr("You can't send messages using an empty user name!"));
+    }
 }
 
 void MainChat::sendServerInvite(const QString &destinationUserFullName, const QString &serverIP, quint16 serverPort)
