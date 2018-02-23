@@ -1557,6 +1557,8 @@ void MainWindow::createMainChat()
     connect(mainChatPanel, &ChatPanel::userUnblockingChatMessagesFrom, mainController, &MainController::unblockUserInChat);
     //connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 
+    connect(mainChatPanel, &ChatPanel::connectedUserContextMenuActivated, this, &MainWindow::fillConnectedUserContextMenu);
+
     updateCollapseButtons();
 
     mainChatPanel->setInputsStatus(false);
@@ -1599,6 +1601,48 @@ void MainWindow::createMainChat()
 
     mainChatPanel->addMessage(mainController->getUserName(), JAMTABA_CHAT_BOT_NAME, tr("Connecting ..."));
     mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
+}
+
+void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName)
+{
+    auto userName = ninjam::client::extractUserName(userFullName);
+
+    auto publicServersMenu = new QMenu(tr("Invite %1 to ...").arg(userName), &menu);
+
+    menu.addMenu(publicServersMenu);
+
+    menu.addSeparator();
+
+    auto userIsBlocked = mainController->userIsBlockedInChat(userFullName);
+    qDebug() << userFullName << " blocked:" << userIsBlocked;
+
+    auto blockAction = menu.addAction(tr("Block %1 in chat").arg(userName));
+    blockAction->setData(userFullName);
+    blockAction->setEnabled(!userIsBlocked);
+    connect(blockAction, &QAction::triggered, this, &MainWindow::blockUserInChat);
+
+    auto unblockAction = menu.addAction(tr("Unblock %1 in chat").arg(userName));
+    connect(unblockAction, &QAction::triggered, this, &MainWindow::unblockUserInChat);
+    unblockAction->setData(userFullName);
+    unblockAction->setEnabled(userIsBlocked);
+}
+
+void MainWindow::blockUserInChat()
+{
+    auto action  = qobject_cast<QAction *>(QObject::sender());
+    if (action) {
+        auto userFullName = action->data().toString();
+        mainController->blockUserInChat(userFullName);
+    }
+}
+
+void MainWindow::unblockUserInChat()
+{
+    auto action  = qobject_cast<QAction *>(QObject::sender());
+    if (action) {
+        auto userFullName = action->data().toString();
+        mainController->unblockUserInChat(userFullName);
+    }
 }
 
 void MainWindow::createNinjamServerChat(const QString &serverName)

@@ -70,6 +70,7 @@ signals:
     void userUnblockingChatMessagesFrom(const QString &blockedUserName);
     void unreadedMessagesChanged(int unreadedMessages);
     void fontSizeOffsetEdited(qint8 newOffset); // font size offset edited by user
+    void connectedUserContextMenuActivated(QMenu &menu, const QString &userFullName);
 
 private slots:
     void sendNewMessage();
@@ -85,6 +86,8 @@ private slots:
 
     void increaseFontSize();
     void decreaseFontSize();
+
+    void showContextMenu(const QPoint &pos);
 
 protected:
     void changeEvent(QEvent *) override;
@@ -135,8 +138,6 @@ private:
 
     void setMessagesFontSizeOffset(qint8 offset);
 
-    void emitBlockingUser();
-    void emitUnblockingUser();
 };
 
 inline QString ChatPanel::getRemoteUserFullName() const

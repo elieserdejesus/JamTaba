@@ -305,6 +305,11 @@ private slots:
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
 
+    void blockUserInChat();
+    void unblockUserInChat();
+
+    void fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName);
+
 private:
 
     static const QString JAMTABA_CHAT_BOT_NAME;

@@ -96,46 +96,26 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
 
     ui->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(ui->treeWidget, &QTreeWidget::customContextMenuRequested, [=](const QPoint &pos){
-        auto item = ui->treeWidget->itemAt(pos);
-        auto userName = item->text(0);
-
-        auto userIp = item->data(0, Qt::UserRole + 1).toString();
-
-        auto userFullName = QString("%1@%2")
-                                .arg(userName)
-                                .arg(userIp);
-
-        QMenu menu;
-        auto blockAction = menu.addAction(tr("Block %1 in chat").arg(userName));
-        blockAction->setData(userFullName);
-        connect(blockAction, &QAction::triggered, this, &ChatPanel::emitBlockingUser);
-
-        auto unblockAction = menu.addAction(tr("Unblock %1 in chat").arg(userName));
-        connect(unblockAction, &QAction::triggered, this, &ChatPanel::emitUnblockingUser);
-        unblockAction->setData(userFullName);
-
-        auto menuPos = ui->treeWidget->viewport()->mapToGlobal(pos);
-        menu.exec(menuPos);
-    });
+    connect(ui->treeWidget, &QTreeWidget::customContextMenuRequested, this, &ChatPanel::showContextMenu);
 }
 
-void ChatPanel::emitBlockingUser()
+void ChatPanel::showContextMenu(const QPoint &pos)
 {
-    auto action  = qobject_cast<QAction *>(QObject::sender());
-    if (action) {
-        auto userFullName = action->data().toString();
-        emit userBlockingChatMessagesFrom(userFullName);
-    }
-}
+    auto item = ui->treeWidget->itemAt(pos);
+    if (!item)
+        return;
 
-void ChatPanel::emitUnblockingUser()
-{
-    auto action  = qobject_cast<QAction *>(QObject::sender());
-    if (action) {
-        auto userFullName = action->data().toString();
-        emit userUnblockingChatMessagesFrom(userFullName);
-    }
+    auto userName = item->text(0);
+
+    auto userIp = item->data(0, Qt::UserRole + 1).toString();
+
+    auto userFullName = QString("%1@%2").arg(userName).arg(userIp);
+
+    QMenu menu;
+
+    emit connectedUserContextMenuActivated(menu, userFullName);
+    auto menuPos = ui->treeWidget->viewport()->mapToGlobal(pos);
+    menu.exec(menuPos);
 }
 
 void ChatPanel::hideConnectedUsersWidget()
