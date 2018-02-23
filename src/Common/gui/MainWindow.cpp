@@ -1614,13 +1614,17 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
         auto serverPort = privateServerWindow->getServerPort();
         auto action = serversMenu->addAction(tr("Your private server (%1:%2)").arg(serverIP).arg(serverPort));
         connect(action, &QAction::triggered, [=](){
-            //mainChat->sendServerInvite(userFullName, serverIP, serverPort);
+            mainChat->sendServerInvite(userFullName, serverIP, serverPort);
         });
 
         serversMenu->addSeparator();
     }
 
     // build public servers list
+    QMap<QString, QMenu *> groupMenus;
+    groupMenus.insert("ninbot.com", serversMenu->addMenu("Ninbot"));
+    groupMenus.insert("ninjamer.com", serversMenu->addMenu("Ninjamer"));
+
     for (auto jamRoomView : roomViewPanels.values()) {
         auto roomInfo = jamRoomView->getRoomInfo();
 
@@ -1633,10 +1637,12 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
                 .arg(roomInfo.getPort())
                 .arg(roomDescription);
 
-        auto action = serversMenu->addAction(actionText);
+        auto isGroup = groupMenus.contains(roomInfo.getName());
+        auto groupMenu = isGroup ? groupMenus[roomInfo.getName()] : serversMenu;
+        auto action = groupMenu->addAction(actionText);
         action->setEnabled(!roomInfo.isFull());
         connect(action, &QAction::triggered, [=](){
-            //mainChat->sendServerInvite(userFullName, roomInfo.getName(), roomInfo.getPort());
+            mainChat->sendServerInvite(userFullName, roomInfo.getName(), roomInfo.getPort());
         });
     }
 
