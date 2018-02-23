@@ -314,6 +314,18 @@ void ChatPanel::showEvent(QShowEvent *ev)
     setUnreadedMessages(0);
 }
 
+void ChatPanel::createServerInviteButton(const QString &serverIP, quint16 serverPort)
+{
+    auto inviteButton = new ServerInviteButton(serverIP, serverPort, this);
+
+    inviteButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    ui->scrollContent->layout()->addWidget(inviteButton);
+    ui->scrollContent->layout()->setAlignment(inviteButton, Qt::AlignRight);
+    connect(inviteButton, &QPushButton::clicked, [=](){
+        emit userAcceptingServerInvite(serverIP, serverPort);
+    });
+}
+
 void ChatPanel::createVoteButton(const QString &voteType, quint32 value, quint32 expireTime)
 {
     QPushButton *voteButton = new NinjamVoteButton(voteType, value, expireTime);

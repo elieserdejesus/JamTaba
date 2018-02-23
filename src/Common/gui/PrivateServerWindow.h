@@ -25,7 +25,7 @@ public:
     ~PrivateServerWindow();
     bool serverIsRunning() const;
     quint16 getServerPort() const;
-    QString getServerIP() const;
+    QString getServerExternalIP() const;
 
 protected:
     void timerEvent(QTimerEvent *) override;

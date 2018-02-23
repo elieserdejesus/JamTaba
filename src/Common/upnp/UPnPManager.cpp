@@ -44,6 +44,11 @@ UPnPManager::~UPnPManager()
         freeUPNPDevlist(devlist);
 }
 
+QString UPnPManager::getExternalIp() const
+{
+    return externalIP;
+}
+
 void UPnPManager::openPort(quint16 port)
 {
     int ipv6 = 0;
@@ -100,7 +105,10 @@ void UPnPManager::openPort(quint16 port)
         return;
     }
 
-    emit portOpened(QString(iaddr), QString(externalIPAddress));
+
+    externalIP = QString(externalIPAddress);
+
+    emit portOpened(QString(iaddr), externalIP);
 }
 
 void UPnPManager::closePort(quint16 port)

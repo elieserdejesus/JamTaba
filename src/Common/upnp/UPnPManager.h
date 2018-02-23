@@ -14,6 +14,7 @@ public:
     ~UPnPManager();
     void openPort(quint16 port);
     void closePort(quint16 port);
+    QString getExternalIp() const;
 
 signals:
     void portOpened(const QString &localIP, const QString &externalIP);
@@ -24,6 +25,8 @@ private:
     UPNPDev *devlist;
     UPNPUrls urls;
     IGDdatas data;
+
+    QString externalIP;
 };
 
 #endif // UPNPMANAGER_H

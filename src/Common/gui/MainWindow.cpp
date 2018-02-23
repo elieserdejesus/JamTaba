@@ -1222,10 +1222,11 @@ void MainWindow::enterInRoom(const login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
 
-    auto serverName = gui::sanitizeServerName(roomInfo.getName());
-    auto index = ui.contentTabWidget->addTab(ninjamWindow.data(), serverName);
+    auto tabText = QString("%1 [%2]").arg(roomInfo.getName()).arg(roomInfo.getPort());
+    auto index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabText);
     ui.contentTabWidget->setCurrentIndex(index);
 
+    auto serverName = gui::sanitizeServerName(roomInfo.getName());
     createNinjamServerChat(serverName);
 
     auto settings = mainController->getSettings();
@@ -1559,6 +1560,22 @@ void MainWindow::createMainChat()
 
     connect(mainChatPanel, &ChatPanel::connectedUserContextMenuActivated, this, &MainWindow::fillConnectedUserContextMenu);
 
+    connect(mainChat.data(), &MainChat::serverInviteReceived, [=](const QString &senderFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer){
+        auto localUserName = mainController->getUserName();
+        bool showBlockButton = true;
+        auto msg = tr("Let's play in %1:%2 ?").arg(serverIP).arg(serverPort);
+        if (isPrivateServer)
+            msg = tr("Let's play in my private server?");
+
+        mainChatPanel->addMessage(localUserName, senderFullName, msg, true, showBlockButton);
+
+        mainChatPanel->createServerInviteButton(serverIP, serverPort);
+    });
+
+    connect(mainChatPanel, &ChatPanel::userAcceptingServerInvite, [=](const QString &serverIP, quint16 serverPort){
+        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, login::RoomTYPE::NINJAM, 8));
+    });
+
     updateCollapseButtons();
 
     mainChatPanel->setInputsStatus(false);
@@ -1610,11 +1627,11 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
     auto serversMenu = new QMenu(tr("Invite %1 to ...").arg(userName), &menu);
 
     if (privateServerWindow && privateServerWindow->serverIsRunning()) {
-        auto serverIP = privateServerWindow->getServerIP();
+        auto serverIP = privateServerWindow->getServerExternalIP();
         auto serverPort = privateServerWindow->getServerPort();
         auto action = serversMenu->addAction(tr("Your private server (%1:%2)").arg(serverIP).arg(serverPort));
         connect(action, &QAction::triggered, [=](){
-            mainChat->sendServerInvite(userFullName, serverIP, serverPort);
+            mainChat->sendServerInvite(userFullName, serverIP, serverPort, true); // is private server
         });
 
         serversMenu->addSeparator();
@@ -1642,7 +1659,7 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
         auto action = groupMenu->addAction(actionText);
         action->setEnabled(!roomInfo.isFull());
         connect(action, &QAction::triggered, [=](){
-            mainChat->sendServerInvite(userFullName, roomInfo.getName(), roomInfo.getPort());
+            mainChat->sendServerInvite(userFullName, roomInfo.getName(), roomInfo.getPort(), false);
         });
     }
 

@@ -60,6 +60,7 @@ public:
 public slots:
     void setTopicMessage(const QString &topic);
     void updateUserLocation(const QString &ip, const geo::Location &location);
+    void createServerInviteButton(const QString &serverIP, quint16 serverPort);
 
 signals:
     void userSendingNewMessage(const QString &msg);
@@ -68,6 +69,7 @@ signals:
     void userConfirmingChordProgression(const ChordProgression &chordProgression);
     void userBlockingChatMessagesFrom(const QString &blockedUserName);
     void userUnblockingChatMessagesFrom(const QString &blockedUserName);
+    void userAcceptingServerInvite(const QString &serverIP, quint16 serverPort);
     void unreadedMessagesChanged(int unreadedMessages);
     void fontSizeOffsetEdited(qint8 newOffset); // font size offset edited by user
     void connectedUserContextMenuActivated(QMenu &menu, const QString &userFullName);
@@ -148,6 +150,37 @@ inline QString ChatPanel::getRemoteUserFullName() const
 inline void ChatPanel::setRemoteUserFullName(const QString &remoteUserFullName)
 {
     this->remoteUserFulName = remoteUserFullName;
+}
+
+class ServerInviteButton : public QPushButton
+{
+    Q_OBJECT
+
+public:
+    ServerInviteButton(const QString &serverIP, quint16 serverPort, QWidget *parent = nullptr) :
+        QPushButton(tr("Accept!"), parent),
+        serverIP(serverIP),
+        serverPort(serverPort)
+    {
+        //
+    }
+
+    QString getServerIP() const;
+    quint16 getServerPort() const;
+
+private:
+    QString serverIP;
+    quint16 serverPort;
+};
+
+inline quint16 ServerInviteButton::getServerPort() const
+{
+    return serverPort;
+}
+
+inline QString ServerInviteButton::getServerIP() const
+{
+    return serverIP;
 }
 
 class NinjamVoteButton : public QPushButton

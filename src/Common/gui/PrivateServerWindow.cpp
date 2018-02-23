@@ -54,12 +54,12 @@ quint16 PrivateServerWindow::getServerPort() const
     return server->getPort();
 }
 
-QString PrivateServerWindow::getServerIP() const
+QString PrivateServerWindow::getServerExternalIP() const
 {
     if (!serverIsRunning())
         return QString();
 
-    return server->getIP();
+    return upnpManager.getExternalIp();
 }
 
 void PrivateServerWindow::upnpError(const QString &error)

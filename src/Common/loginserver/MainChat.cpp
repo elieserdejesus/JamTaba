@@ -71,7 +71,7 @@ void MainChat::sendPublicMessage(const QString &content)
     }
 }
 
-void MainChat::sendServerInvite(const QString &destinationUserFullName, const QString &serverIP, quint16 serverPort)
+void MainChat::sendServerInvite(const QString &destinationUserFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer)
 {
     QJsonObject message;
     message["command"] = "SERVER_INVITE";
@@ -79,6 +79,7 @@ void MainChat::sendServerInvite(const QString &destinationUserFullName, const QS
     message["senderUser"] = userName;
     message["serverIP"] = serverIP;
     message["serverPort"] = serverPort;
+    message["isPrivateServer"] = isPrivateServer;
 
     webSocket.sendTextMessage(QJsonDocument(message).toJson());
 }
@@ -147,7 +148,7 @@ void MainChat::parseNewUsersList(const QJsonObject &data)
 
 void MainChat::parseServerInvite(const QJsonObject &data)
 {
-    QStringList expectedFields = QStringList() << "senderUser" << "serverIP" << "serverPort";
+    QStringList expectedFields = QStringList() << "senderUser" << "serverIP" << "serverPort" << "isPrivateServer";
     for (auto field : expectedFields) {
         if (!data.contains(field)) {
             qCritical() << QString("data not contain '%1' field").arg(field);
@@ -158,8 +159,9 @@ void MainChat::parseServerInvite(const QJsonObject &data)
     QString senderFullName = data["senderUser"].toString();
     QString serverIP = data["serverIP"].toString();
     quint16 serverPort = data["serverPort"].toInt();
+    bool isPrivateServer = data["isPrivateServer"].toBool();
 
-    emit serverInviteReceived(senderFullName, serverIP, serverPort);
+    emit serverInviteReceived(senderFullName, serverIP, serverPort, isPrivateServer);
 }
 
 void MainChat::parseReceivedData(const QJsonObject &data)
