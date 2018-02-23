@@ -1646,10 +1646,15 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
         auto roomInfo = jamRoomView->getRoomInfo();
 
         auto roomDescription = tr("%1 / %2 players ")
-                .arg(roomInfo.getUsers().size())
-                .arg(roomInfo.getMaxUsers());
+                .arg(roomInfo.getNonBotUsersCount())
+                .arg(roomInfo.getMaxUsers() - 1); // removing bot
 
-        auto actionText = QString("%1 (%2) [%3]")
+        if (roomInfo.isEmpty())
+            roomDescription = "empty";
+        else if (roomInfo.isFull())
+            roomDescription = "full";
+
+        auto actionText = QString("%1 (%2)   [%3]")
                 .arg(roomInfo.getName())
                 .arg(roomInfo.getPort())
                 .arg(roomDescription);
@@ -1661,6 +1666,8 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
         connect(action, &QAction::triggered, [=](){
             mainChat->sendServerInvite(userFullName, roomInfo.getName(), roomInfo.getPort(), false);
         });
+
+        action->setEnabled(!roomInfo.isFull());
     }
 
     menu.addMenu(serversMenu);
