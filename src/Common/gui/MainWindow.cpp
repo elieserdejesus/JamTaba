@@ -1609,6 +1609,26 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
 
     auto publicServersMenu = new QMenu(tr("Invite %1 to ...").arg(userName), &menu);
 
+    // build public servers list
+    for (auto jamRoomView : roomViewPanels.values()) {
+        auto roomInfo = jamRoomView->getRoomInfo();
+
+        auto roomDescription = tr("%1 / %2 players ")
+                .arg(roomInfo.getUsers().size())
+                .arg(roomInfo.getMaxUsers());
+
+        auto actionText = QString("%1 (%2) [%3]")
+                .arg(roomInfo.getName())
+                .arg(roomInfo.getPort())
+                .arg(roomDescription);
+
+        auto action = publicServersMenu->addAction(actionText);
+        action->setEnabled(!roomInfo.isFull());
+        connect(action, &QAction::triggered, [=](){
+            //mainChat->sendServerInvite(userFullName, roomInfo.getName(), roomInfo.getPort());
+        });
+    }
+
     menu.addMenu(publicServersMenu);
 
     menu.addSeparator();
