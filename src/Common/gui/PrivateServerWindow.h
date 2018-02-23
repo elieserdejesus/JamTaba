@@ -23,6 +23,9 @@ class PrivateServerWindow : public QDialog
 public:
     explicit PrivateServerWindow(QWidget *parent = 0);
     ~PrivateServerWindow();
+    bool serverIsRunning() const;
+    quint16 getServerPort() const;
+    QString getServerIP() const;
 
 protected:
     void timerEvent(QTimerEvent *) override;

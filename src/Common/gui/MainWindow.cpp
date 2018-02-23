@@ -1607,7 +1607,18 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
 {
     auto userName = ninjam::client::extractUserName(userFullName);
 
-    auto publicServersMenu = new QMenu(tr("Invite %1 to ...").arg(userName), &menu);
+    auto serversMenu = new QMenu(tr("Invite %1 to ...").arg(userName), &menu);
+
+    if (privateServerWindow && privateServerWindow->serverIsRunning()) {
+        auto serverIP = privateServerWindow->getServerIP();
+        auto serverPort = privateServerWindow->getServerPort();
+        auto action = serversMenu->addAction(tr("Your private server (%1:%2)").arg(serverIP).arg(serverPort));
+        connect(action, &QAction::triggered, [=](){
+            //mainChat->sendServerInvite(userFullName, serverIP, serverPort);
+        });
+
+        serversMenu->addSeparator();
+    }
 
     // build public servers list
     for (auto jamRoomView : roomViewPanels.values()) {
@@ -1622,14 +1633,14 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
                 .arg(roomInfo.getPort())
                 .arg(roomDescription);
 
-        auto action = publicServersMenu->addAction(actionText);
+        auto action = serversMenu->addAction(actionText);
         action->setEnabled(!roomInfo.isFull());
         connect(action, &QAction::triggered, [=](){
             //mainChat->sendServerInvite(userFullName, roomInfo.getName(), roomInfo.getPort());
         });
     }
 
-    menu.addMenu(publicServersMenu);
+    menu.addMenu(serversMenu);
 
     menu.addSeparator();
 

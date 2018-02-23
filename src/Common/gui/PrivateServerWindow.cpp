@@ -38,6 +38,30 @@ PrivateServerWindow::PrivateServerWindow(QWidget *parent) :
     ui->labelPortValue->setText(QString());
 }
 
+bool PrivateServerWindow::serverIsRunning() const
+{
+    if (!server)
+        return false;
+
+    return server->isStarted();
+}
+
+quint16 PrivateServerWindow::getServerPort() const
+{
+    if (!serverIsRunning())
+        return 0;
+
+    return server->getPort();
+}
+
+QString PrivateServerWindow::getServerIP() const
+{
+    if (!serverIsRunning())
+        return QString();
+
+    return server->getIP();
+}
+
 void PrivateServerWindow::upnpError(const QString &error)
 {
     //: The '%1' symbol will be replaced by the UPnP error description, please keep the '%1' symbol in your translation
