@@ -1361,14 +1361,22 @@ void MainWindow::setPrivateChatInputstatus(const QString userName, bool enabled)
 
 void MainWindow::handleUserLeaving(const QString &userName)
 {
-    auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
-    if (!chatPanel)
+    auto ninjamChat = ui.chatTabWidget->getNinjamServerChat();
+    if (!ninjamChat)
         return;
 
-    auto localUser = mainController->getUserName();
-    chatPanel->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has left the room.").arg(userName));
+    auto chatsToReport = QList<ChatPanel *>();
+    chatsToReport.append(ninjamChat);
 
-    setPrivateChatInputstatus(userName, false); // deactive the private chat when user leave
+    auto privateChat = ui.chatTabWidget->getPrivateChat(userName);
+    if (privateChat) {
+        chatsToReport.append(privateChat);
+        setPrivateChatInputstatus(userName, false); // deactive the private chat when user leave
+    }
+
+    auto localUser = mainController->getUserName();
+    for (auto chat : chatsToReport)
+        chat->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has left the room.").arg(userName));
 
     usersColorsPool->giveBack(userName); // reuse the color mapped to this 'leaving' user
 }
@@ -1379,10 +1387,19 @@ void MainWindow::handleUserEntering(const QString &userName)
     if (!chatPanel)
         return;
 
-    auto localUser = mainController->getUserName();
-    chatPanel->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(userName));
+    auto chatsToReport = QList<ChatPanel *>();
+    chatsToReport.append(chatPanel);
 
-    setPrivateChatInputstatus(userName, true); // activate the chat if user is entering again
+    auto privateChat = ui.chatTabWidget->getPrivateChat(userName);
+    if (privateChat) {
+        chatsToReport.append(privateChat);
+        setPrivateChatInputstatus(userName, true); // active the private chat when user enter
+    }
+
+    auto localUser = mainController->getUserName();
+    for (auto chat : chatsToReport)
+        chat->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(userName));
+
 }
 
 void MainWindow::showLastChordsInNinjamServerChat()
