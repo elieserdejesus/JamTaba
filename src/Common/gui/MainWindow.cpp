@@ -2749,7 +2749,7 @@ void MainWindow::setupSignals()
 
     connect(ui.menuLanguage, &QMenu::triggered, this, &MainWindow::setLanguage);
 
-    connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);
+    connect(ui.userNameLineEdit, &UserNameLineEdit::editingFinished, this, &MainWindow::updateUserName);
 
     connect(mainController, &MainController::themeChanged, this, &MainWindow::handleThemeChanged);
 

@@ -94,15 +94,13 @@ void MainChat::sendServerInvite(const QString &destinationUserFullName, const QS
 
 void MainChat::setUserName(const QString &userName)
 {
-    if (this->userName != userName) {
-        this->userName = userName;
+    this->userName = userName;
 
-        QJsonObject message;
-        message["command"] = "USERNAME";
-        message["userName"] = userName;
+    QJsonObject message;
+    message["command"] = "USERNAME";
+    message["userName"] = userName;
 
-        webSocket.sendTextMessage(QJsonDocument(message).toJson());
-    }
+    webSocket.sendTextMessage(QJsonDocument(message).toJson());
 }
 
 void MainChat::textMessageReceived(const QString &message)
