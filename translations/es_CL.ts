@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -105,15 +105,15 @@
     </message>
     <message>
         <source>Turn on/off this chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Encender/apagar este chat</translation>
     </message>
     <message>
         <source>chat is off</source>
-        <translation type="unfinished"></translation>
+        <translation>chat apagado</translation>
     </message>
     <message>
         <source>Connected Users (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuarios conectados (%1)</translation>
     </message>
 </context>
 <context>
@@ -124,7 +124,7 @@
     </message>
     <message>
         <source>Public chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat público</translation>
     </message>
 </context>
 <context>
@@ -840,43 +840,43 @@
     </message>
     <message>
         <source>Let&apos;s play in %1 : %2 ?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Vamos a tocar a %1 : %2 ?</translation>
     </message>
     <message>
         <source>Let&apos;s play in my private server?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Vamos a tocar a mi servidor privado?</translation>
     </message>
     <message>
         <source>Connected with public chat!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Conectado al chat público!</translation>
     </message>
     <message>
         <source>Connecting ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Conectando ...</translation>
     </message>
     <message>
         <source>Invite %1 to ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Invitar a %1 a ...</translation>
     </message>
     <message>
         <source>My private server (%1:%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Mi servidor privador (%1:%2)</translation>
     </message>
     <message>
         <source>%1 / %2 players </source>
-        <translation type="unfinished">%1 / %2 participantes </translation>
+        <translation>%1 / %2 participantes </translation>
     </message>
     <message>
         <source>Block %1 in chat</source>
-        <translation type="unfinished">Bloquear a %1 en el chat</translation>
+        <translation>Bloquear a %1 en el chat</translation>
     </message>
     <message>
         <source>Unblock %1 in chat</source>
-        <translation type="unfinished">Desbloquear a %1 en el chat</translation>
+        <translation>Desbloquear a %1 en el chat</translation>
     </message>
     <message>
         <source>Public chat disconnected!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Chat público desconectado!</translation>
     </message>
 </context>
 <context>
