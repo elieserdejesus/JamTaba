@@ -1637,7 +1637,7 @@ void MainWindow::createMainChat(bool turnedOn)
             mainChatPanel->setInputsStatus(false);
             auto localUserName = mainController->getUserName();
             auto author = JAMTABA_CHAT_BOT_NAME;
-            mainChatPanel->addMessage(localUserName, author, tr("Main chat disconnected!"), true, false);
+            mainChatPanel->addMessage(localUserName, author, tr("Public chat disconnected!"), true, false);
         }
     });
 
