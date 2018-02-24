@@ -10,21 +10,26 @@ ChatPanel QPushButton
     color: #58A9AA;
 }
 
-ChatPanel QPushButton#buttonAutoTranslate:checked
+ChatPanel QPushButton#buttonOnOff:!checked
+{
+    background-color: rgba(0, 255, 255, 50);
+}
+
+ChatPanel QPushButton#buttonAutoTranslate:enabled:checked
 {
     border: none;
     background-color: #146566;
     border-radius: 0px;
 }
 
-ChatPanel QPushButton#buttonAutoTranslate:!checked
+ChatPanel QPushButton#buttonAutoTranslate:enabled:!checked
 {
     border: none;
     background-color: rgba(0, 255, 255, 30);
     border-radius: 0px;
 }
 
-ChatPanel QPushButton#buttonAutoTranslate:hover,
+ChatPanel QPushButton#buttonAutoTranslate:enabled:hover,
 ChatPanel QPushButton:hover,
 ChatPanel #toolButtonPlus:hover,
 ChatPanel #toolButtonMinus:hover
@@ -35,8 +40,10 @@ ChatPanel #toolButtonMinus:hover
 }
 
 
-
-ChatPanel #chatText:!focus
+ChatPanel #chatText:!focus,
+ChatPanel #toolButtonPlus,
+ChatPanel #toolButtonMinus,
+ChatPanel #labelFontSize
 {                                           /* text input field used to send chat messages */
     background-color: #1E4346;
     border: none;
