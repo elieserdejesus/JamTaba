@@ -170,8 +170,11 @@ void ChatPanel::showContextMenu(const QPoint &pos)
     QMenu menu;
 
     emit connectedUserContextMenuActivated(menu, userFullName);
-    auto menuPos = ui->treeWidget->viewport()->mapToGlobal(pos);
-    menu.exec(menuPos);
+
+    if (!menu.isEmpty()) {
+        auto menuPos = ui->treeWidget->viewport()->mapToGlobal(pos);
+        menu.exec(menuPos);
+    }
 }
 
 void ChatPanel::showConnectedUsersWidget(bool show)

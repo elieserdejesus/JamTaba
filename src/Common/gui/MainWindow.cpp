@@ -1768,7 +1768,8 @@ void MainWindow::fillUserContextMenu(QMenu &menu, const QString &userFullName, b
 
 void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName)
 {
-    fillUserContextMenu(menu, userFullName, true); // send invitations in public chat
+    if (ninjam::client::extractUserName(userFullName) != mainController->getUserName()) // not generating context menu to local user (avoid user blocking yourself or inviting yourseld)
+        fillUserContextMenu(menu, userFullName, true); // send invitations in public chat
 }
 
 void MainWindow::blockUserInChat()
