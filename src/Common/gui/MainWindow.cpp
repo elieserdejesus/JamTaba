@@ -30,6 +30,7 @@
 #include "performance/PerformanceMonitor.h"
 #include "video/VideoFrameGrabber.h"
 #include "chat/NinjamVotingMessageParser.h"
+#include "loginserver/MainChat.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
@@ -37,6 +38,7 @@
 #include <QDateTime>
 #include <QImage>
 #include <QCameraInfo>
+#include <QToolTip>
 
 const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
@@ -55,6 +57,7 @@ using persistence::Channel;
 using persistence::SubChannel;
 using persistence::Preset;
 using login::LoginService;
+using login::MainChat;
 using controller::MainController;
 using controller::NinjamController;
 using audio::ChannelRange;
@@ -79,7 +82,7 @@ MainWindow::MainWindow(MainController *mainController, QWidget *parent) :
     xmitInactivityDetector(nullptr),
     screensaverBlocker(new ScreensaverBlocker()),
     usersColorsPool(new UsersColorsPool()),
-    chatTabWidget(nullptr),
+    mainChat(new MainChat()),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
     chordsPanel(nullptr),
@@ -401,11 +404,10 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     loadTranslationFile(locale);
     mainController->setTranslationLanguage(locale);
     updatePublicRoomsListLayout();
-    if (mainController->isPlayingInNinjamRoom()) {
-        if (chatTabWidget) {
-            chatTabWidget->setPreferredTranslationLanguage(locale);
-        }
 
+    ui.chatTabWidget->setPreferredTranslationLanguage(locale);
+
+    if (mainController->isPlayingInNinjamRoom()) {
         ninjamWindow->updateGeoLocations();
     }
 }
@@ -477,8 +479,7 @@ void MainWindow::setTintColor(const QColor &color)
     ui.speakerIconLeft->setPixmap(IconFactory::createLowLevelIcon(color));
     ui.speakerIconRight->setPixmap(IconFactory::createHighLevelIcon(color));
 
-    if (chatTabWidget)
-        chatTabWidget->setChatsTintColor(color);
+    ui.chatTabWidget->setChatsTintColor(color);
 
     // network usage icons
     transmitIcon->setPixmap(IconFactory::createTransmitPixmap(color));
@@ -617,6 +618,9 @@ void MainWindow::initialize()
 
     if (settings.isRememberingBottomSection())
         setBottomCollapsedStatus(settings.isBottomSectionCollapsed());
+
+    auto turnedOn = false;
+    createMainChat(turnedOn);
 
 }
 
@@ -1218,16 +1222,16 @@ void MainWindow::enterInRoom(const login::RoomInfo &roomInfo)
 
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
-    QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
-    int index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabName);
+
+    auto tabText = QString("%1 [%2]").arg(roomInfo.getName()).arg(roomInfo.getPort());
+    auto index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabText);
     ui.contentTabWidget->setCurrentIndex(index);
 
-    addMainChatPanel();
-
-    Q_ASSERT(chatTabWidget);
+    auto serverName = gui::sanitizeServerName(roomInfo.getName());
+    createNinjamServerChat(serverName);
 
     auto settings = mainController->getSettings();
-    chatTabWidget->collapse(settings.isRememberingChatSection() && settings.isChatSectionCollapsed());
+    ui.chatTabWidget->collapse(settings.isRememberingChatSection() && settings.isChatSectionCollapsed());
 
     addNinjamPanelsInBottom();
 
@@ -1325,16 +1329,12 @@ void MainWindow::wireNinjamControllerSignals()
     connect(controller, &NinjamController::userLeave, this, &MainWindow::handleUserLeaving);
     connect(controller, &NinjamController::userEnter, this, &MainWindow::handleUserEntering);
 
-    connect(controller, &NinjamController::userBlockedInChat, this, &MainWindow::showFeedbackAboutBlockedUserInChat);
-    connect(controller, &NinjamController::userUnblockedInChat, this, &MainWindow::showFeedbackAboutUnblockedUserInChat);
-
-    connect(controller, &NinjamController::publicChatMessageReceived, this, &MainWindow::addMainChatMessage); // main chat
+    connect(controller, &NinjamController::publicChatMessageReceived, this, &MainWindow::addNinjamServerChatMessage); // main chat
     connect(controller, &NinjamController::privateChatMessageReceived, this, &MainWindow::addPrivateChatMessage);
 
-    connect(controller, &NinjamController::topicMessageReceived, this, [=](const QString &message){
+    connect(controller, &NinjamController::topicMessageReceived, this, [=](const QString &message) {
 
-        if (chatTabWidget)
-            chatTabWidget->getMainChat()->setTopicMessage(message);
+        ui.chatTabWidget->getNinjamServerChat()->setTopicMessage(message);
     });
 
     connect(controller, &NinjamController::started, this, [=]() {
@@ -1354,7 +1354,7 @@ void MainWindow::setPrivateChatInputstatus(const QString userName, bool enabled)
     if (userName == JAMTABA_CHAT_BOT_NAME)
         return;
 
-    auto chat = chatTabWidget->getPrivateChat(userName);
+    auto chat = ui.chatTabWidget->getPrivateChat(userName);
     if (chat) {
         chat->setInputsStatus(enabled);
     }
@@ -1362,34 +1362,50 @@ void MainWindow::setPrivateChatInputstatus(const QString userName, bool enabled)
 
 void MainWindow::handleUserLeaving(const QString &userName)
 {
-    auto chatPanel = chatTabWidget->getFocusedChatPanel();
-    if (!chatPanel)
+    auto ninjamChat = ui.chatTabWidget->getNinjamServerChat();
+    if (!ninjamChat)
         return;
 
-    auto localUser = mainController->getUserName();
-    chatPanel->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has left the room.").arg(userName));
+    auto chatsToReport = QList<ChatPanel *>();
+    chatsToReport.append(ninjamChat);
 
-    setPrivateChatInputstatus(userName, false); // deactive the private chat when user leave
+    auto privateChat = ui.chatTabWidget->getPrivateChat(userName);
+    if (privateChat) {
+        chatsToReport.append(privateChat);
+        setPrivateChatInputstatus(userName, false); // deactive the private chat when user leave
+    }
+
+    auto localUser = mainController->getUserName();
+    for (auto chat : chatsToReport)
+        chat->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has left the room.").arg(userName));
 
     usersColorsPool->giveBack(userName); // reuse the color mapped to this 'leaving' user
 }
 
 void MainWindow::handleUserEntering(const QString &userName)
 {
-    auto chatPanel = chatTabWidget->getFocusedChatPanel();
+    auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
     if (!chatPanel)
         return;
 
-    auto localUser = mainController->getUserName();
-    chatPanel->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(userName));
+    auto chatsToReport = QList<ChatPanel *>();
+    chatsToReport.append(chatPanel);
 
-    setPrivateChatInputstatus(userName, true); // activate the chat if user is entering again
+    auto privateChat = ui.chatTabWidget->getPrivateChat(userName);
+    if (privateChat) {
+        chatsToReport.append(privateChat);
+        setPrivateChatInputstatus(userName, true); // active the private chat when user enter
+    }
+
+    auto localUser = mainController->getUserName();
+    for (auto chat : chatsToReport)
+        chat->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(userName));
+
 }
 
-void MainWindow::showLastChordsInMainChat()
+void MainWindow::showLastChordsInNinjamServerChat()
 {
     Q_ASSERT(ninjamWindow);
-    Q_ASSERT(chatTabWidget);
 
     auto loginService = mainController->getLoginService();
     auto roomInfo = ninjamWindow->getRoomInfo();
@@ -1400,7 +1416,7 @@ void MainWindow::showLastChordsInMainChat()
         ChordProgression progression = parser.parse(lastChordProgression);
         QString title = tr("Last chords used");
 
-        auto mainChatPanel = chatTabWidget->getMainChat();
+        auto mainChatPanel = ui.chatTabWidget->getNinjamServerChat();
         Q_ASSERT(mainChatPanel);
         mainChatPanel->addLastChordsMessage(title, progression.toString());
         mainChatPanel->addChordProgressionConfirmationMessage(progression);
@@ -1413,38 +1429,34 @@ void MainWindow::createVoteButton(const gui::chat::SystemVotingMessage &votingMe
     if (!votingMessage.isValidVotingMessage())
         return;
 
-    Q_ASSERT(chatTabWidget);
-
-    auto mainChatPanel = chatTabWidget->getMainChat();
-    Q_ASSERT(mainChatPanel);
+    auto ninjamChatPanel = ui.chatTabWidget->getNinjamServerChat();
+    Q_ASSERT(ninjamChatPanel);
 
     quint32 voteValue = votingMessage.getVoteValue();
     quint32 expireTime = votingMessage.getExpirationTime();
     if (votingMessage.isBpiVotingMessage())
-        mainChatPanel->addBpiVoteConfirmationMessage(voteValue, expireTime);
+        ninjamChatPanel->addBpiVoteConfirmationMessage(voteValue, expireTime);
     else
-        mainChatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
+        ninjamChatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
 }
 
 void MainWindow::handleChordProgressionMessage(const User &user, const QString &message)
 {
     Q_UNUSED(user)
 
-    Q_ASSERT(chatTabWidget);
-
     ChatChordsProgressionParser parser;
     try{
         ChordProgression chordProgression = parser.parse(message);
-        auto mainChatPanel = chatTabWidget->getMainChat();
-        Q_ASSERT(mainChatPanel);
-        mainChatPanel->addChordProgressionConfirmationMessage(chordProgression);
+        auto ninjamChatPanel = ui.chatTabWidget->getNinjamServerChat();
+        Q_ASSERT(ninjamChatPanel);
+        ninjamChatPanel->addChordProgressionConfirmationMessage(chordProgression);
     }
     catch (const std::runtime_error &e) {
         qCritical() << e.what();
     }
 }
 
-bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
+bool MainWindow::canShowBlockButtonInChatMessage(const QString &userFullName) const
 {
     /**
         Avoid the block button for bot and current user messages. Is not a good idea allow user
@@ -1454,39 +1466,54 @@ bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
 
     **/
 
+    auto userIsBot = false;
+
     auto ninjamController = mainController->getNinjamController();
-    bool userIsBot = ninjamController->userIsBot(userName) || userName == JAMTABA_CHAT_BOT_NAME;
-    bool currentUserIsPostingTheChatMessage = userName == mainController->getUserName(); // chat message author and the current user name are the same?
-    return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
+    if (ninjamController)
+        userIsBot = ninjamController->userIsBot(userFullName) || userFullName == JAMTABA_CHAT_BOT_NAME;
+
+    bool currentUserIsPostingTheChatMessage = ninjam::client::extractUserName(userFullName) == mainController->getUserName(); // chat message author and the current user name are the same?
+    return !userIsBot && !currentUserIsPostingTheChatMessage && !userFullName.isEmpty();
 }
+
+
 
 void MainWindow::addPrivateChatMessage(const User &remoteUser, const QString &message)
 {
-    if (!chatTabWidget->contains(remoteUser.getFullName())) {
+    if (!ui.chatTabWidget->contains(remoteUser.getFullName())) {
         createPrivateChat(remoteUser.getName(), remoteUser.getIp(), false); // create new private chat, but not focused
     }
     else {
-        auto privateChat = chatTabWidget->getPrivateChat(remoteUser.getFullName());
+        auto privateChat = ui.chatTabWidget->getPrivateChat(remoteUser.getFullName());
         if (privateChat && !privateChat->inputsAreEnabled())
             privateChat->setInputsStatus(true);
     }
     
-    Q_ASSERT(chatTabWidget->contains(remoteUser.getFullName()));
+    Q_ASSERT(ui.chatTabWidget->contains(remoteUser.getFullName()));
 
-    auto chatPanel = chatTabWidget->getPrivateChat(remoteUser.getFullName());
+    auto chatPanel = ui.chatTabWidget->getPrivateChat(remoteUser.getFullName());
     if (chatPanel) {
         auto localUser = mainController->getUserName();
-        chatPanel->addMessage(localUser, remoteUser.getName(), message, true, true);
+
+        if (!gui::chat::isServerInvitation(message)) {
+            chatPanel->addMessage(localUser, remoteUser.getFullName(), message, true, true);
+        }
+        else { // handling server invitation as private message
+            auto msg = gui::chat::parseServerInviteMessage(message);
+
+            chatPanel->addMessage(localUser, remoteUser.getFullName(), msg.message, true, true);
+
+            chatPanel->createServerInviteButton(msg.serverIP, msg.serverPort);
+        }
     }
 }
 
-void MainWindow::addMainChatMessage(const User &msgAuthor, const QString &message)
+void MainWindow::addNinjamServerChatMessage(const User &msgAuthor, const QString &message)
 {
-    Q_ASSERT(chatTabWidget);
     Q_ASSERT(ninjamWindow);
-    Q_ASSERT(chatTabWidget->getMainChat());
+    Q_ASSERT(ui.chatTabWidget->getNinjamServerChat());
 
-    QString remoteUserName = msgAuthor.getName();
+    QString remoteUserName = msgAuthor.getFullName();
 
     bool isSystemVoteMessage = gui::chat::parseSystemVotingMessage(message).isValidVotingMessage();
 
@@ -1499,7 +1526,7 @@ void MainWindow::addMainChatMessage(const User &msgAuthor, const QString &messag
     bool showBlockButton = canShowBlockButtonInChatMessage(remoteUserName);
     bool showTranslationButton = !isChordProgressionMessage;
 
-    auto mainChatPanel = chatTabWidget->getMainChat();
+    auto mainChatPanel = ui.chatTabWidget->getNinjamServerChat();
     Q_ASSERT(mainChatPanel);
 
     auto localUserName = mainController->getUserName();
@@ -1537,26 +1564,253 @@ void MainWindow::addMainChatMessage(const User &msgAuthor, const QString &messag
     localUserWasVotingInLastMessage = gui::chat::isLocalUserVotingMessage(message) && msgAuthor.getName() == mainController->getUserName();
 }
 
-void MainWindow::addMainChatPanel()
+QString MainWindow::buildServerInviteMessage(const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool showPrivateServerIpAndPort)
 {
-    qCDebug(jtGUI) << "adding ninjam chat panel...";
+    auto msg = tr("Let's play in %1 : %2 ?").arg(serverIP).arg(serverPort);
+    if (isPrivateServer) {
+        msg = tr("Let's play in my private server?");
+        if (showPrivateServerIpAndPort)
+            msg += QString("\n\n IP: %1 \n\n PORT: %2 \n").arg(serverIP).arg(serverPort);
+    }
 
-    auto mainChatPanel = chatTabWidget->createPublicChat(createTextEditorModifier());
+    return msg;
+}
+
+void MainWindow::createMainChat(bool turnedOn)
+{
+    qCDebug(jtGUI) << "adding main chat panel...";
+
+    auto mainChatPanel = ui.chatTabWidget->createMainChat(createTextEditorModifier());
 
     mainChatPanel->setTintColor(tintColor);
 
-    connect(mainChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
-    connect(mainChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendNewChatMessage);
-    connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
-    connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
-    connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
-    connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
+    connect(mainChatPanel, &ChatPanel::userSendingNewMessage, mainChat.data(), &MainChat::sendPublicMessage);
+
+    connect(mainChat.data(), &MainChat::messageReceived, [=](const QString &userFullName, const QString &content){
+        if (!mainController->userIsBlockedInChat(userFullName)) {
+            auto localUserName = mainController->getUserName();
+            bool showBlockButton = canShowBlockButtonInChatMessage(userFullName);
+            mainChatPanel->addMessage(localUserName, userFullName, content, true, showBlockButton);
+        }
+    });
+
+    connect(mainChat.data(), &MainChat::usersListChanged, ui.chatTabWidget, &ChatTabWidget::setConnectedUsersInMainChat);
+
+    connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
+    connect(mainChatPanel, &ChatPanel::userUnblockingChatMessagesFrom, mainController, &MainController::unblockUserInChat);
+    //connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
+
+    connect(mainChatPanel, &ChatPanel::connectedUserContextMenuActivated, this, &MainWindow::fillConnectedUserContextMenu);
+
+    connect(mainChat.data(), &MainChat::serverInviteReceived, [=](const QString &senderFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer){
+
+        auto localUserName = mainController->getUserName();
+        bool showBlockButton = true;
+        auto msg = buildServerInviteMessage(serverIP, serverPort, isPrivateServer, false);
+        mainChatPanel->addMessage(localUserName, senderFullName, msg, true, showBlockButton);
+
+        mainChatPanel->createServerInviteButton(serverIP, serverPort);
+    });
+
+    connect(mainChatPanel, &ChatPanel::userAcceptingServerInvite, [=](const QString &serverIP, quint16 serverPort){
+        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, login::RoomTYPE::NINJAM, 8));
+    });
+
+    updateCollapseButtons();
+
+    mainChatPanel->setInputsStatus(false);
+
+    connect(mainChat.data(), &MainChat::connected, [=](){
+
+        auto localUserName = mainController->getUserName();
+        mainChat->setUserName(localUserName);
+
+        auto msg = tr("Connected with public chat!");
+        mainChatPanel->addMessage(localUserName, JAMTABA_CHAT_BOT_NAME, msg);
+
+        mainChatPanel->turnOn();
+        mainChatPanel->showConnectedUsersWidget(true);
+    });
+
+    connect(mainChat.data(), &MainChat::disconnected, [=](){
+        if (mainController) { // if still running
+            mainChatPanel->setInputsStatus(false);
+            auto localUserName = mainController->getUserName();
+            auto author = JAMTABA_CHAT_BOT_NAME;
+            mainChatPanel->addMessage(localUserName, author, tr("Main chat disconnected!"), true, false);
+        }
+    });
+
+    connect(mainChat.data(), &MainChat::error, [=](const QString &errorMessage){
+        if (mainController) {
+            auto localUserName = mainController->getUserName();
+            auto author = JAMTABA_CHAT_BOT_NAME;
+            mainChatPanel->addMessage(localUserName, author, errorMessage, true, false);
+        }
+    });
+
+    connect(mainController, &MainController::userBlockedInChat, [=](const QString &userFullName){
+        mainChatPanel->setConnectedUserBlockedStatus(userFullName, true);
+    });
+
+    connect(mainController, &MainController::userUnblockedInChat, [=](const QString &userFullName){
+        mainChatPanel->setConnectedUserBlockedStatus(userFullName, false);
+    });
+
+    connect(mainChatPanel, &ChatPanel::turnedOn, this, &MainWindow::connectInMainChat);
+    connect(mainChatPanel, &ChatPanel::turnedOff, [=](){
+         mainChat->disconnectFromServer();
+         mainChatPanel->showConnectedUsersWidget(false);
+    });
+
+    if (turnedOn)
+        mainChatPanel->turnOn();
+    else
+        mainChatPanel->turnOff();
+}
+
+void MainWindow::connectInMainChat()
+{
+    auto publicChat = ui.chatTabWidget->getPublicChat();
+    Q_ASSERT(publicChat);
+
+    publicChat->addMessage(mainController->getUserName(), JAMTABA_CHAT_BOT_NAME, tr("Connecting ..."));
+
+    mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
+}
+
+void MainWindow::sendServerInvitation(const QString &userFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool sendInvitationInPublicChat)
+{
+    if (sendInvitationInPublicChat) {
+        mainChat->sendServerInvite(userFullName, serverIP, serverPort, isPrivateServer);
+    }
+    else {
+        auto ninjamController = mainController->getNinjamController();
+        if (ninjamController) {
+
+            // inviting as private message
+            auto text = QString("/msg %1 %2")
+                    .arg(userFullName)
+                    .arg(buildServerInviteMessage(serverIP, serverPort, isPrivateServer, true));
+
+            ninjamController->sendChatMessage(text);
+        }
+    }
+}
+
+void MainWindow::fillUserContextMenu(QMenu &menu, const QString &userFullName, bool sendInvitationsInPublicChat)
+{
+    auto userName = ninjam::client::extractUserName(userFullName);
+
+    auto serversMenu = new QMenu(tr("Invite %1 to ...").arg(userName), &menu);
+
+    if (privateServerWindow && privateServerWindow->serverIsRunning()) {
+        auto serverIP = privateServerWindow->getServerExternalIP();
+        auto serverPort = privateServerWindow->getServerPort();
+        auto action = serversMenu->addAction(tr("My private server (%1:%2)").arg(serverIP).arg(serverPort));
+        connect(action, &QAction::triggered, [=](){
+            sendServerInvitation(userFullName, serverIP, serverPort, true, sendInvitationsInPublicChat);
+        });
+
+        serversMenu->addSeparator();
+    }
+
+    // build public servers list
+    QMap<QString, QMenu *> groupMenus;
+    groupMenus.insert("ninbot.com", serversMenu->addMenu("Ninbot"));
+    groupMenus.insert("ninjamer.com", serversMenu->addMenu("Ninjamer"));
+
+    for (auto jamRoomView : roomViewPanels.values()) {
+        auto roomInfo = jamRoomView->getRoomInfo();
+
+        auto roomDescription = tr("%1 / %2 players ")
+                .arg(roomInfo.getNonBotUsersCount())
+                .arg(roomInfo.getMaxUsers() - 1); // removing bot
+
+        if (roomInfo.isEmpty())
+            roomDescription = "empty";
+        else if (roomInfo.isFull())
+            roomDescription = "full";
+
+        auto actionText = QString("%1 (%2)   [%3]")
+                .arg(roomInfo.getName())
+                .arg(roomInfo.getPort())
+                .arg(roomDescription);
+
+        auto isGroup = groupMenus.contains(roomInfo.getName());
+        auto groupMenu = isGroup ? groupMenus[roomInfo.getName()] : serversMenu;
+        auto action = groupMenu->addAction(actionText);
+        action->setEnabled(!roomInfo.isFull());
+        connect(action, &QAction::triggered, [=](){
+            bool isPrivateServer = false;
+            sendServerInvitation(userFullName, roomInfo.getName(), roomInfo.getPort(), isPrivateServer, sendInvitationsInPublicChat);
+        });
+
+        action->setEnabled(!roomInfo.isFull());
+    }
+
+    menu.addMenu(serversMenu);
+
+    menu.addSeparator();
+
+    auto userIsBlocked = mainController->userIsBlockedInChat(userFullName);
+
+    auto blockAction = menu.addAction(tr("Block %1 in chat").arg(userName));
+    blockAction->setData(userFullName);
+    blockAction->setEnabled(!userIsBlocked);
+    connect(blockAction, &QAction::triggered, this, &MainWindow::blockUserInChat);
+
+    auto unblockAction = menu.addAction(tr("Unblock %1 in chat").arg(userName));
+    connect(unblockAction, &QAction::triggered, this, &MainWindow::unblockUserInChat);
+    unblockAction->setData(userFullName);
+    unblockAction->setEnabled(userIsBlocked);
+}
+
+void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName)
+{
+    if (ninjam::client::extractUserName(userFullName) != mainController->getUserName()) // not generating context menu to local user (avoid user blocking yourself or inviting yourseld)
+        fillUserContextMenu(menu, userFullName, true); // send invitations in public chat
+}
+
+void MainWindow::blockUserInChat()
+{
+    auto action  = qobject_cast<QAction *>(QObject::sender());
+    if (action) {
+        auto userFullName = action->data().toString();
+        mainController->blockUserInChat(userFullName);
+    }
+}
+
+void MainWindow::unblockUserInChat()
+{
+    auto action  = qobject_cast<QAction *>(QObject::sender());
+    if (action) {
+        auto userFullName = action->data().toString();
+        mainController->unblockUserInChat(userFullName);
+    }
+}
+
+void MainWindow::createNinjamServerChat(const QString &serverName)
+{
+    qCDebug(jtGUI) << "adding ninjam chat panel...";
+
+    auto ninjamChatPanel = ui.chatTabWidget->createNinjamServerChat(serverName, createTextEditorModifier());
+
+    ninjamChatPanel->setTintColor(tintColor);
+    ninjamChatPanel->showConnectedUsersWidget(false);
+    ninjamChatPanel->turnOn();
+    ninjamChatPanel->hideOnOffButton();
+
+    connect(ninjamChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
+    connect(ninjamChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendChatMessageToNinjamServer);
+    connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
+    connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
+    connect(ninjamChatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
+    connect(ninjamChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 
     initializeVotingExpirationTimers();
 
-    showLastChordsInMainChat();
-
-    setChatsVisibility(true);
+    showLastChordsInNinjamServerChat();
 
     updateCollapseButtons();
 }
@@ -1565,13 +1819,16 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
 {
     QString userFullName = remoteUserName + "@" + remoteUserIP;
 
-    if (remoteUserIP.isEmpty() || chatTabWidget->contains(userFullName))
+    if (remoteUserIP.isEmpty() || ui.chatTabWidget->contains(userFullName))
         return;
 
-    auto chatPanel = chatTabWidget->createPrivateChat(remoteUserName, remoteUserIP, createTextEditorModifier(), focusNewChat);
+    auto chatPanel = ui.chatTabWidget->createPrivateChat(remoteUserName, remoteUserIP, createTextEditorModifier(), focusNewChat);
     Q_ASSERT(chatPanel);
 
     chatPanel->setTintColor(tintColor);
+    chatPanel->showConnectedUsersWidget(false);
+    chatPanel->turnOn();
+    chatPanel->hideOnOffButton();
 
     chatPanel->setTopicMessage(tr("Private chat with %1").arg(remoteUserName));
 
@@ -1590,7 +1847,11 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
 
     });
 
-    connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+    connect(chatPanel, &ChatPanel::userAcceptingServerInvite, [=](const QString &serverIP, quint16 serverPort){
+        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, login::RoomTYPE::NINJAM, 8));
+    });
+
+    connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
 
     connect(chatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 }
@@ -1598,14 +1859,6 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
 void MainWindow::addPrivateChat(const QString &remoteUserName, const QString &userIP)
 {
     createPrivateChat(remoteUserName, userIP, true);
-}
-
-void MainWindow::blockUserInChat(const QString &userNameToBlock)
-{
-    auto ninjamController = mainController->getNinjamController();
-    auto user = ninjamController->getUserByName(userNameToBlock);
-    if (user.getName() == userNameToBlock)
-        ninjamController->blockUserInChat(user);
 }
 
 void MainWindow::voteToChangeBpi(int newBpi)
@@ -1626,36 +1879,36 @@ void MainWindow::voteToChangeBpm(int newBpm)
     }
 }
 
-void MainWindow::sendNewChatMessage(const QString &msg)
+void MainWindow::sendChatMessageToNinjamServer(const QString &msg)
 {
     auto ninjamController = mainController->getNinjamController();
     if (ninjamController)
         ninjamController->sendChatMessage(msg);
 }
 
-void MainWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
+void MainWindow::showFeedbackAboutBlockedUserInChat(const QString &userFullName)
 {
-    Q_ASSERT(chatTabWidget);
-
-    auto chatPanel = chatTabWidget->getFocusedChatPanel();
+    // remote all blocked user messages
+    auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
     Q_ASSERT(chatPanel);
-    chatPanel->removeMessagesFrom(userName);
+    chatPanel->removeMessagesFrom(userFullName);
 
+    // add a message in chat about the blocked user
     auto localUserName = mainController->getUserName();
     auto msgAuthor = JAMTABA_CHAT_BOT_NAME;
-    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is blocked in the chat").arg(userName));
+    auto blockedUserName = ninjam::client::extractUserName(userFullName);
+    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is blocked in the chat").arg(blockedUserName));
 }
 
-void MainWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
+void MainWindow::showFeedbackAboutUnblockedUserInChat(const QString &userFullName)
 {
-    Q_ASSERT(chatTabWidget);
-
-    auto chatPanel = chatTabWidget->getFocusedChatPanel();
+    auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
     Q_ASSERT(chatPanel);
 
     auto localUserName = mainController->getUserName();
     auto msgAuthor = JAMTABA_CHAT_BOT_NAME;
-    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is unblocked in the chat").arg(userName));
+    auto unblockedUserName = ninjam::client::extractUserName(userFullName);
+    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is unblocked in the chat").arg(unblockedUserName));
 }
 
 void MainWindow::enableLooperButtonInLocalTracks(bool enable)
@@ -1740,8 +1993,6 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
         ninjamWindow.reset(nullptr);
     }
 
-    setChatsVisibility(false);
-
     setInputTracksPreparingStatus(false); /** reset the preparing status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
     if (!normalDisconnection) {
@@ -1775,6 +2026,8 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     if (xmitInactivityDetector)
         xmitInactivityDetector->deinitialize();
 
+    ui.chatTabWidget->closeNinjamChats();
+
 }
 
 void MainWindow::closeAllLooperWindows()
@@ -1787,39 +2040,6 @@ void MainWindow::closeAllLooperWindows()
         }
     }
     looperWindows.clear();
-}
-
-void MainWindow::toggleChatCollapseStatus()
-{
-    Q_ASSERT(chatTabWidget);
-    Q_ASSERT(mainController);
-
-    if (!mainController->isPlayingInNinjamRoom() || !chatTabWidget->isVisible())
-        return;
-
-    chatTabWidget->toggleCollapse();
-}
-
-void MainWindow::setChatsVisibility(bool chatVisible)
-{
-    if (!chatTabWidget)
-        return;
-
-    if (chatVisible) {
-        ui.gridLayout->addWidget(chatTabWidget, 0, 2);
-    }
-    else {
-        ui.gridLayout->removeWidget(chatTabWidget);
-        chatTabWidget->clear();
-    }
-
-    chatTabWidget->setVisible(chatVisible);
-
-    updateCollapseButtons();
-
-    // adjust bottom panel colspan
-    int colSpan = chatVisible ? 2 : 1;
-    ui.gridLayout->addWidget(ui.bottomPanel, 1, 1, 1, colSpan);
 }
 
 void MainWindow::setInputTracksPreparingStatus(bool preparing)
@@ -1952,8 +2172,7 @@ void MainWindow::changeEvent(QEvent *ev)
 
         translateCollapseButtonsToolTips();
 
-        if (ninjamWindow && chatTabWidget)
-            chatTabWidget->updatePublicChatTabTitle(); // translate the chat tab title
+        ui.chatTabWidget->retranslateUi(); // translate the main chat tab title
     }
 
     QMainWindow::changeEvent(ev);
@@ -2476,8 +2695,6 @@ void MainWindow::setupWidgets()
 {
     ui.masterMeter->setOrientation(Qt::Horizontal);
 
-    setChatsVisibility(false); // hide chat area until connect in a server to play
-
     if (ui.allRoomsContent->layout())
         delete ui.allRoomsContent->layout();
 
@@ -2493,18 +2710,14 @@ void MainWindow::setupWidgets()
 
     ui.masterTitleLabel->setVisible(false);
 
-    chatTabWidget = new ChatTabWidget(this, mainController, usersColorsPool.data());
-    connect(chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::chatCollapseChanged);
-
-    setChatsVisibility(false);
+    ui.chatTabWidget->initialize(mainController, usersColorsPool.data());
+    connect(ui.chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::chatCollapseChanged);
 
     // remember chat collapse status
     auto settings = mainController->getSettings();
     if (settings.isRememberingChatSection()) {
-        chatTabWidget->collapse(settings.isChatSectionCollapsed());
+        ui.chatTabWidget->collapse(settings.isChatSectionCollapsed());
     }
-
-    ui.gridLayout->addWidget(chatTabWidget, 0, 2, 1, 1);
 }
 
 void MainWindow::setupSignals()
@@ -2537,9 +2750,12 @@ void MainWindow::setupSignals()
 
     connect(ui.menuLanguage, &QMenu::triggered, this, &MainWindow::setLanguage);
 
-    connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);
+    connect(ui.userNameLineEdit, &UserNameLineEdit::editingFinished, this, &MainWindow::updateUserName);
 
-    connect(mainController, &controller::MainController::themeChanged, this, &MainWindow::handleThemeChanged);
+    connect(mainController, &MainController::themeChanged, this, &MainWindow::handleThemeChanged);
+
+    connect(mainController, &MainController::userBlockedInChat, this, &MainWindow::showFeedbackAboutBlockedUserInChat);
+    connect(mainController, &MainController::userUnblockedInChat, this, &MainWindow::showFeedbackAboutUnblockedUserInChat);
 
     ui.contentTabWidget->installEventFilter(this);
 
@@ -2549,6 +2765,8 @@ void MainWindow::updateUserName()
 {
     QString newUserName = ui.userNameLineEdit->text();
     mainController->setUserName(newUserName);
+
+    mainChat->setUserName(mainController->getUserName());
 }
 
 void MainWindow::initializeMasterFader()
@@ -2598,7 +2816,7 @@ void MainWindow::initializeCollapseButtons()
 
     connect(buttonCollapseBottomArea, &QPushButton::clicked, this, &MainWindow::toggleBottomAreaCollapseStatus);
 
-    connect(buttonCollapseChat, &QPushButton::clicked, this, &MainWindow::toggleChatCollapseStatus);
+    connect(buttonCollapseChat, &QPushButton::clicked, ui.chatTabWidget, &ChatTabWidget::toggleCollapse);
 
     updateCollapseButtons();
 }
@@ -2616,10 +2834,7 @@ void MainWindow::updateCollapseButtons()
 
     buttonCollapseBottomArea->setChecked(!bottomCollapsed);
 
-    if (chatTabWidget)
-        buttonCollapseChat->setChecked(!chatTabWidget->isCollapsed());
-
-    buttonCollapseChat->setEnabled(mainController->isPlayingInNinjamRoom());
+    buttonCollapseChat->setChecked(!ui.chatTabWidget->isCollapsed());
 
     buttonCollapseLocalChannels->setChecked(!ui.localControlsCollapseButton->isChecked());
 

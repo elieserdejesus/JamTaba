@@ -233,8 +233,6 @@ class NinjamController::InputChannelChangedEvent : public SchedulableEvent
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-QList<QString> NinjamController::chatBlockedUsers; // initializing the static member
-
 NinjamController::NinjamController(controller::MainController* mainController) :
     intervalPosition(0),
     samplesInInterval(0),
@@ -549,52 +547,17 @@ void NinjamController::start(const ServerInfo& server)
     qCDebug(jtNinjamCore) << "ninjam controller started!";
 }
 
-void NinjamController::blockUserInChat(const User &user)
-{
-    QString uniqueKey = getUniqueKeyForUser(user);
-    if (!chatBlockedUsers.contains(uniqueKey)) {
-        chatBlockedUsers.append(uniqueKey);
-        emit userBlockedInChat(user.getName());
-    }
-}
 
-void NinjamController::blockUserInChat(const QString &userNameToBlock)
-{
-    blockUserInChat(getUserByName(userNameToBlock));
-}
-
-void NinjamController::unblockUserInChat(const User &user)
-{
-    QString uniqueKey = getUniqueKeyForUser(user);
-    if (chatBlockedUsers.removeOne(uniqueKey))
-        emit userUnblockedInChat(user.getName());
-}
-
-void NinjamController::unblockUserInChat(const QString &userNameToBlock)
-{
-    unblockUserInChat(getUserByName(userNameToBlock));
-}
-
-bool NinjamController::userIsBlockedInChat(const User &user)
-{
-    QString uniqueKey = getUniqueKeyForUser(user);
-    return chatBlockedUsers.contains(uniqueKey);
-}
-
-bool NinjamController::userIsBlockedInChat(const QString &userName) const
-{
-    return userIsBlockedInChat(getUserByName(userName));
-}
 
 void NinjamController::handleReceivedPublicChatMessage(const User &user, const QString &message)
 {
-    if (!userIsBlockedInChat(user))
+    if (!mainController->userIsBlockedInChat(user.getFullName()))
         emit publicChatMessageReceived(user, message);
 }
 
 void NinjamController::handleReceivedPrivateChatMessage(const User &user, const QString &message)
 {
-    if (!userIsBlockedInChat(user))
+    if (!mainController->userIsBlockedInChat(user.getFullName()))
         emit privateChatMessageReceived(user, message);
 }
 
@@ -607,7 +570,8 @@ void NinjamController::sendChatMessage(const QString &msg)
     }
     else if (gui::chat::isPrivateMessage(msg)) {
         QString destUserName = gui::chat::extractDestinationUserNameFromPrivateMessage(msg);
-        service->sendPrivateChatMessage(QString(msg).replace(destUserName, ""), destUserName);
+        auto text = QString(msg).replace(destUserName + " ", ""); // remove the blank space after user name
+        service->sendPrivateChatMessage(text, destUserName);
     }
     else {
         service->sendPublicChatMessage(msg);
@@ -624,11 +588,6 @@ long NinjamController::generateNewTrackID()
 QString NinjamController::getUniqueKeyForChannel(const UserChannel &channel, const QString &userFullName)
 {
     return userFullName + QString::number(channel.getIndex());
-}
-
-QString NinjamController::getUniqueKeyForUser(const User &user)
-{
-    return user.getFullName(); // full name is 'user_name@IP'
 }
 
 bool NinjamController::userIsBot(const QString userName) const

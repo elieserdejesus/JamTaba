@@ -3,6 +3,7 @@
 
 /* Button ----------------------*/
 QPushButton,
+QPushButton#buttonOnOff, /* this button is not working with the QPushButton selector. Why?? */
 BoostSpinBox
 {
     color: rgb(20, 20, 20);
@@ -11,28 +12,32 @@ BoostSpinBox
     border: 1px solid black;
 }
 
-QPushButton:checked
+QPushButton:checked,
+QPushButton#buttonOnOff:checked
 {
     color: rgba(0, 0, 0, 160);
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(80, 80, 80), stop:1 rgb(50, 50, 50));
     border: 1px outset rgb(10, 10, 10);
 }
 
-QPushButton:hover
+QPushButton:hover,
+QPushButton#buttonOnOff:hover
 {
     color: rgb(40, 40, 40);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
     border: 1px outset rgb(20, 20, 20);
 }
 
-QPushButton:hover:checked
+QPushButton:hover:checked,
+QPushButton#buttonOnOff:hover:checked
 {
     color: rgba(0, 0, 0, 160);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
     border: 1px outset rgb(10, 10, 10);
 }
 
-QPushButton:disabled
+QPushButton:disabled,
+QPushButton#buttonOnOff:disabled
 {
     background-color: rgba(0, 0, 0, 40);
     color: rgba(0, 0, 0, 100);

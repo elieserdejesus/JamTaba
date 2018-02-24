@@ -1,4 +1,4 @@
-QT += core gui network widgets concurrent multimedia multimediawidgets
+QT += core gui network websockets widgets concurrent multimedia multimediawidgets
 
 mac:LIBS += -dead_strip
 
@@ -85,6 +85,7 @@ HEADERS += recorder/JamRecorder.h
 HEADERS += recorder/ReaperProjectGenerator.h
 HEADERS += recorder/ClipSortLogGenerator.h
 HEADERS += loginserver/LoginService.h
+HEADERS += loginserver/MainChat.h
 HEADERS += loginserver/natmap.h
 HEADERS += MainController.h
 HEADERS += NinjamController.h
@@ -280,6 +281,7 @@ SOURCES += geo/IpToLocationResolver.cpp
 SOURCES += log/logging.cpp
 SOURCES += geo/WebIpToLocationResolver.cpp
 SOURCES += loginserver/LoginService.cpp
+SOURCES += loginserver/MainChat.cpp
 SOURCES += Configurator.cpp
 SOURCES += persistence/UsersDataCache.cpp
 SOURCES += persistence/Settings.cpp

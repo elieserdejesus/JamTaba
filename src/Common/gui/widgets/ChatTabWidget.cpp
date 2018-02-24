@@ -5,6 +5,8 @@
 #include <QBoxLayout>
 #include <QStyle>
 #include <QRegularExpression>
+#include <QPainter>
+#include <QFont>
 
 #include "gui/chat/ChatPanel.h"
 #include "gui/UsersColorsPool.h"
@@ -12,14 +14,12 @@
 
 using controller::MainController;
 
-ChatTabWidget::ChatTabWidget(QWidget *parent, MainController *mainController, UsersColorsPool *colorsPool) :
+ChatTabWidget::ChatTabWidget(QWidget *parent) :
     QFrame(parent),
     tabBar(new QTabBar(this)),
     stackWidget(new QStackedWidget(this)),
-    botNames(mainController->getBotNames()),
-    colorsPool(colorsPool),
     mainChat(nullptr),
-    mainController(mainController)
+    ninjamServerChat(nullptr)
 {
 
     QBoxLayout *layout = new QVBoxLayout();
@@ -57,6 +57,17 @@ ChatTabWidget::ChatTabWidget(QWidget *parent, MainController *mainController, Us
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     stackWidget->setMinimumWidth(230); // TODO Refactoring: remove these 'Magic Numbers'
+    stackWidget->setMaximumWidth(250);
+}
+
+void ChatTabWidget::initialize(MainController *mainController, UsersColorsPool *colorsPool)
+{
+    this->colorsPool = colorsPool;
+    this->mainController = mainController;
+
+    connect(mainController, &MainController::ipResolved, [=](const QString &ip){
+        mainChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
+    });
 }
 
 void ChatTabWidget::changeCurrentTab(int tabIndex)
@@ -80,7 +91,7 @@ void ChatTabWidget::clear()
         widget->deleteLater();
     }
 
-    mainChat = nullptr;
+    ninjamServerChat = nullptr;
 
     for (auto chat : privateChats.values())
         chat->deleteLater();
@@ -88,27 +99,46 @@ void ChatTabWidget::clear()
     privateChats.clear();
 }
 
-ChatPanel *ChatTabWidget::createPublicChat(TextEditorModifier *textEditorModifier)
+void ChatTabWidget::retranslateUi()
 {
-    if (mainChat)
-        return mainChat;
+    tabBar->setTabText(0, tr("Chat"));
+    mainChat->setTopicMessage(tr("Public chat"));
+}
 
-    //add main chat
-    tabBar->addTab(tr("Chat")); // main tab
+void ChatTabWidget::closeNinjamChats()
+{
+    while (tabBar->count() > 1) {
+        closeChatTab(1);
+    }
+
+    privateChats.clear();
+    ninjamServerChat = nullptr;
+}
+
+ChatPanel *ChatTabWidget::createMainChat(TextEditorModifier *textEditorModifier)
+{
+    if (mainChat) {
+        return mainChat;
+    }
+
+    tabBar->addTab(tr("Chat")); // add main chat
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
     mainChat = new ChatPanel(botNames, colorsPool, textEditorModifier, emojiManager);
     stackWidget->addWidget(mainChat);
 
+
+    mainChat->setTopicMessage(tr("Public chat"));
+
     connect(mainChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
 
-        updatePublicChatTabTitle(unreaded);
+        updateMainChatTabTitle(unreaded);
     });
 
     removeTabCloseButton(0); // the main chat is not closable
 
-    updatePublicChatTabTitle(); // set and translate the chat tab title
+    updateMainChatTabTitle(); // set and translate the main tab title
 
     mainChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
 
@@ -116,14 +146,88 @@ ChatPanel *ChatTabWidget::createPublicChat(TextEditorModifier *textEditorModifie
 
 }
 
-void ChatTabWidget::updatePublicChatTabTitle(uint unreadedMessages)
+ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, TextEditorModifier *textEditorModifier)
+{
+    Q_ASSERT(!ninjamServerChat);
+
+    // add ninjam main chat
+    auto index = tabBar->addTab(serverName);
+
+    auto botNames = mainController->getBotNames();
+    auto emojiManager = mainController->getEmojiManager();
+    ninjamServerChat = new ChatPanel(botNames, colorsPool, textEditorModifier, emojiManager);
+    stackWidget->addWidget(ninjamServerChat);
+
+    connect(ninjamServerChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
+
+        updateNinjamChatTabTitle(unreaded);
+    });
+
+    removeTabCloseButton(1); // the ninjam server chat is not closable
+
+    ninjamServerChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
+
+    tabBar->setCurrentIndex(index); // auto change the chat focus no ninjam chat when enter in a server
+
+    return ninjamServerChat;
+}
+
+void ChatTabWidget::setConnectedUsersInMainChat(const QStringList &usersNames)
+{
+    Q_ASSERT(mainChat);
+
+    mainChat->setConnectedUsers(usersNames);
+
+    for (const QString &userFullName : usersNames) {
+        auto ip = ninjam::client::extractUserIP(userFullName);
+        mainChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
+    }
+}
+
+QIcon ChatTabWidget::createChatTabIcon(uint unreadedMessages)
+{
+    if (unreadedMessages <= 0)
+        return QIcon();
+
+    static const qreal SIZE = 16.0;
+
+    static const QSizeF size(SIZE, SIZE);
+
+    QPixmap pixmap(size.toSize());
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::TextAntialiasing);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+
+    QString text(QString::number(unreadedMessages));
+
+    auto font = QFont("Arial", 7, QFont::Normal);
+
+    QRectF textRect(QPointF(), size);
+
+    painter.setBrush(QColor(255, 0, 0, 180));
+    painter.setPen(Qt::black);
+    painter.drawEllipse(QRectF(QPointF(1, 1), QSizeF(SIZE - 2, SIZE - 2)));
+
+    painter.setPen(Qt::white);
+    painter.setFont(font);
+    painter.drawText(textRect, text, QTextOption(Qt::AlignCenter));
+
+    return QIcon(pixmap);
+}
+
+void ChatTabWidget::updateNinjamChatTabTitle(uint unreadedMessages)
+{
+    int chatTabIndex = 1; // assuming ninjam chat is always the second tab
+    tabBar->setTabIcon(chatTabIndex, createChatTabIcon(unreadedMessages));
+}
+
+void ChatTabWidget::updateMainChatTabTitle(uint unreadedMessages)
 {
     int chatTabIndex = 0; // assuming main chat is always the first tab
-    QString text = tr("Chat");
-    if (unreadedMessages > 0)
-        text = QString("(%1) %2").arg(unreadedMessages).arg(text);
-
-    tabBar->setTabText(chatTabIndex, text);
+    tabBar->setTabIcon(chatTabIndex, createChatTabIcon(unreadedMessages));
 }
 
 void ChatTabWidget::closeChatTab(int index)
@@ -203,7 +307,7 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
         stackWidget->addWidget(chatPanel);
 
         connect(chatPanel, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
-            updatePrivateChatTabTitle(tabIndex, unreaded, remoteUserName);
+            updatePrivateChatTabTitle(tabIndex, unreaded);
         });
 
         if (focusNewChat)
@@ -215,25 +319,26 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
     return chatPanel;
 }
 
-void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages, const QString &remoteUserName)
+void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages)
 {
-    Q_ASSERT(chatIndex > 0); // index ZERO is the public chat
+    Q_ASSERT(chatIndex > 1); // index 0 is the public chat, index 1 is the ninjam server chat
 
     auto chatPanel = static_cast<ChatPanel *>(stackWidget->widget(chatIndex));
     if (!chatPanel)
         return;
 
-    QString tabText = ninjam::client::extractUserName(remoteUserName);
-    if (unreadedMessages > 0)
-        tabText = QString("(%1) %2").arg(unreadedMessages).arg(tabText);
-
-    tabBar->setTabText(chatIndex, tabText);
+    tabBar->setTabIcon(chatIndex, createChatTabIcon(unreadedMessages));
 }
 
 
 bool ChatTabWidget::contains(const QString &userFullName) const
 {
     return (getPrivateChat(userFullName) != nullptr);
+}
+
+ChatPanel *ChatTabWidget::getPublicChat() const
+{
+    return mainChat;
 }
 
 ChatPanel *ChatTabWidget::getPrivateChat(const QString &userFullName) const
@@ -243,8 +348,8 @@ ChatPanel *ChatTabWidget::getPrivateChat(const QString &userFullName) const
 
 void ChatTabWidget::setChatsTintColor(const QColor &color)
 {
-    if(mainChat)
-        mainChat->setTintColor(color);
+    if(ninjamServerChat)
+        ninjamServerChat->setTintColor(color);
 
     for (auto chat : privateChats.values())
         chat->setTintColor(color);

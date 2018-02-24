@@ -114,16 +114,21 @@ QSize MainController::getVideoResolution() const
 
 void MainController::blockUserInChat(const QString &userNameToBlock)
 {
-    if (isPlayingInNinjamRoom()) {
-        ninjamController->blockUserInChat(userNameToBlock);
+    if (!chatBlockedUsers.contains(userNameToBlock)) {
+        chatBlockedUsers.insert(userNameToBlock);
+        emit userBlockedInChat(userNameToBlock);
     }
 }
 
 void MainController::unblockUserInChat(const QString &userNameToUnblock)
 {
-    if (isPlayingInNinjamRoom()) {
-        ninjamController->unblockUserInChat(userNameToUnblock);
-    }
+    if (chatBlockedUsers.remove(userNameToUnblock))
+        emit userUnblockedInChat(userNameToUnblock);
+}
+
+bool MainController::userIsBlockedInChat(const QString &userFullName) const
+{
+    return chatBlockedUsers.contains(userFullName);
 }
 
 void MainController::setSampleRate(int newSampleRate)
@@ -440,11 +445,10 @@ QStringList MainController::getBotNames()
 
 geo::Location MainController::getGeoLocation(const QString &ip)
 {
-    static QString ipMask(".x");
 
-    QString sanitizedIp(ip);
-    if (sanitizedIp.endsWith(ipMask))
-        sanitizedIp.replace(ipMask, ".128"); // replace .x with .128 to generate a valid IP
+    auto sanitizedIp = ninjam::client::maskIP(ip);
+
+    sanitizedIp.replace(ninjam::client::IP_MASK, ".128"); // replace .x (mask) with .128 to generate a valid IP
 
     return ipToLocationResolver->resolve(sanitizedIp, getTranslationLanguage());
 }

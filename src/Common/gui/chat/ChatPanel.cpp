@@ -6,6 +6,7 @@
 #include "gui/TextEditorModifier.h"
 #include "gui/UsersColorsPool.h"
 #include "ninjam/client/User.h"
+#include "geo/IpToLocationResolver.h"
 
 #include <QWidget>
 #include <QScrollBar>
@@ -13,6 +14,7 @@
 #include <QKeyEvent>
 #include <QWidget>
 #include <QGridLayout>
+#include <QMenu>
 #include "gui/IconFactory.h"
 
 const qint8 ChatPanel::MAX_FONT_OFFSET = 3;
@@ -32,7 +34,8 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     botNames(botNames),
     autoTranslating(false),
     colorsPool(colorsPool),
-    unreadedMessages(0)
+    unreadedMessages(0),
+    on(false)
 {
     ui->setupUi(this);
     QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
@@ -48,10 +51,10 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
 
     emojiWidget = new EmojiWidget(emojiManager, this);
     emojiWidget->setVisible(false);
-    layout()->addWidget(emojiWidget);
+    qobject_cast<QVBoxLayout *>(layout())->insertWidget(layout()->count()-2, emojiWidget);
     emojiWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
-    auto emojiIcon = IconFactory::createChatEmojiIcon(Qt::black);
+    auto emojiIcon = IconFactory::createChatEmojiIcon(Qt::black, on);
     emojiAction = ui->chatText->addAction(emojiIcon, QLineEdit::LeadingPosition);
 
     if (chatInputModifier) {
@@ -64,6 +67,185 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     setupSignals();
 
     instances.append(this);
+
+    auto root = new QTreeWidgetItem(ui->treeWidget, QStringList());
+    root->setFirstColumnSpanned(true); // the root col span
+    ui->treeWidget->addTopLevelItem(root);
+
+    connect(ui->treeWidget, &QTreeWidget::collapsed, [=](){
+        ui->treeWidget->setMaximumHeight(20);
+    });
+
+    connect(ui->treeWidget, &QTreeWidget::expanded, [=](){
+        auto root = ui->treeWidget->topLevelItem(0);
+        Q_ASSERT(root);
+        if (root->childCount() > 0)
+            ui->treeWidget->setMaximumHeight(150);
+    });
+
+    connect(ui->treeWidget, &QTreeWidget::clicked, [=](QModelIndex index){
+        auto root = ui->treeWidget->topLevelItem(0);
+        Q_ASSERT(root);
+        if (root->isExpanded())
+            ui->treeWidget->collapse(index);
+        else
+            ui->treeWidget->expand(index);
+    });
+
+    ui->treeWidget->setMaximumHeight(20);
+
+    ui->treeWidget->setVisible(false);
+
+    ui->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(ui->treeWidget, &QTreeWidget::customContextMenuRequested, this, &ChatPanel::showContextMenu);
+
+    ui->buttonOnOff->setIcon(IconFactory::createChatOnOffIcon(Qt::black));
+    ui->buttonOnOff->setChecked(on);
+    connect(ui->buttonOnOff, &QPushButton::toggled, this, &ChatPanel::toggleOnOff);
+
+    updatePlaceHolderText();
+    updateEmojiIcon();
+
+    showConnectedUsersWidget(false);
+}
+
+void ChatPanel::turnOn()
+{
+    if (!on)
+        toggleOnOff();
+}
+
+void ChatPanel::turnOff()
+{
+    if (on)
+        toggleOnOff();
+}
+
+void ChatPanel::toggleOnOff()
+{
+    on = !on;
+
+    setInputsStatus(on);
+
+    if (on)
+        emit turnedOn();
+    else
+        emit turnedOff();
+
+    updatePlaceHolderText();
+    updateEmojiIcon();
+}
+
+void ChatPanel::updatePlaceHolderText()
+{
+    if (on)
+        ui->chatText->setPlaceholderText(tr("type here ..."));
+    else
+        ui->chatText->setPlaceholderText(tr("chat is off"));
+}
+
+void ChatPanel::updateEmojiIcon()
+{
+    emojiAction->setIcon(IconFactory::createChatEmojiIcon(tintColor, on));
+}
+
+void ChatPanel::hideOnOffButton()
+{
+    ui->buttonOnOff->setVisible(false);
+}
+
+void ChatPanel::showContextMenu(const QPoint &pos)
+{
+    auto item = ui->treeWidget->itemAt(pos);
+    if (!item)
+        return;
+
+    auto userName = item->text(0);
+
+    auto userIp = item->data(0, Qt::UserRole + 1).toString();
+
+    auto userFullName = QString("%1@%2").arg(userName).arg(userIp);
+
+    QMenu menu;
+
+    emit connectedUserContextMenuActivated(menu, userFullName);
+
+    if (!menu.isEmpty()) {
+        auto menuPos = ui->treeWidget->viewport()->mapToGlobal(pos);
+        menu.exec(menuPos);
+    }
+}
+
+void ChatPanel::showConnectedUsersWidget(bool show)
+{
+    ui->verticalSpacerBottom->changeSize(0, show ? 12 : 0);
+    ui->treeWidget->setVisible(show);
+}
+
+void ChatPanel::updateUsersLocation(const QString &ip, const geo::Location &location)
+{
+    auto root = ui->treeWidget->topLevelItem(0);
+    for (int i = 0; i < root->childCount(); ++i) {
+        auto item = root->child(i);
+        auto itemIP = item->data(0, Qt::UserRole + 1).toString();
+        if (ninjam::client::maskIP(itemIP) == ninjam::client::maskIP(ip)) {
+            setItemCountryDetails(item, location);
+        }
+    }
+}
+
+void ChatPanel::setItemCountryDetails(QTreeWidgetItem *item, const geo::Location &location)
+{
+    auto icon = QIcon(QString(":/flags/flags/%1.png").arg(location.getCountryCode().toLower()));
+
+    auto countryCollumn = 1;
+
+    item->setIcon(countryCollumn, icon);
+    item->setText(countryCollumn, location.getCountryName());
+}
+
+void ChatPanel::setConnectedUserBlockedStatus(const QString &userFullName, bool blocked)
+{
+    auto root = ui->treeWidget->topLevelItem(0);
+    Q_ASSERT(root);
+
+    for (int i = 0; i < root->childCount(); ++i) {
+        auto item = root->child(i);
+        auto itemIp = item->data(0, Qt::UserRole + 1).toString();
+        auto userIp = ninjam::client::extractUserIP(userFullName);
+        auto userName = ninjam::client::extractUserName(userFullName);
+        if (itemIp == userIp && userName == item->text(0)) {
+            QIcon icon(blocked ? ":/images/chat_blocked.png" : QString());
+            item->setIcon(0, icon);
+            return;
+        }
+    }
+}
+
+void ChatPanel::setConnectedUsers(const QStringList &usersNames)
+{
+    auto root = ui->treeWidget->topLevelItem(0);
+
+    root->setText(0, tr("Connected Users (%1)").arg(usersNames.size()));
+
+    Q_ASSERT(root);
+
+    while (root->childCount() > 0) {
+        delete root->takeChild(0);
+    }
+
+    for (const auto &userFullName : usersNames) {
+        auto name = ninjam::client::extractUserName(userFullName);
+        auto ip = ninjam::client::extractUserIP(userFullName);
+        auto item = new QTreeWidgetItem(root, QStringList(name));
+        item->setData(0, Qt::UserRole + 1, ip);
+        setItemCountryDetails(item, geo::Location()); // unknown location
+        root->addChild(item);
+    }
+
+    //ui->treeWidget->setVisible(usersNames.size() > 1);
+    ui->treeWidget->setVisible(true);
 }
 
 void ChatPanel::setupSignals()
@@ -145,11 +327,15 @@ bool ChatPanel::eventFilter(QObject *o, QEvent *e)
 
 void ChatPanel::setTintColor(const QColor &color)
 {
-    emojiAction->setIcon(IconFactory::createChatEmojiIcon(color));
+    emojiAction->setIcon(IconFactory::createChatEmojiIcon(color, on));
 
     ui->toolButtonPlus->setIcon(IconFactory::createFontSizeIncreaseIcon(color));
     ui->toolButtonMinus->setIcon(IconFactory::createFontSizeDecreaseIcon(color));
     ui->labelFontSize->setPixmap(IconFactory::createFontSizePixmap(color));
+
+    ui->buttonOnOff->setIcon(IconFactory::createChatOnOffIcon(color));
+
+    tintColor = color;
 }
 
 bool ChatPanel::inputsAreEnabled() const
@@ -185,6 +371,18 @@ void ChatPanel::showEvent(QShowEvent *ev)
     Q_UNUSED(ev)
 
     setUnreadedMessages(0);
+}
+
+void ChatPanel::createServerInviteButton(const QString &serverIP, quint16 serverPort)
+{
+    auto inviteButton = new ServerInviteButton(serverIP, serverPort, this);
+
+    inviteButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    ui->scrollContent->layout()->addWidget(inviteButton);
+    ui->scrollContent->layout()->setAlignment(inviteButton, Qt::AlignRight);
+    connect(inviteButton, &QPushButton::clicked, [=](){
+        emit userAcceptingServerInvite(serverIP, serverPort);
+    });
 }
 
 void ChatPanel::createVoteButton(const QString &voteType, quint32 value, quint32 expireTime)
@@ -302,28 +500,28 @@ void ChatPanel::addLastChordsMessage(const QString &userName, const QString &mes
 
 }
 
-void ChatPanel::addMessage(const QString &localUserName, const QString &msgAuthor, const QString &msgText, bool showTranslationButton, bool showBlockButton)
+void ChatPanel::addMessage(const QString &localUserName, const QString &msgAuthorFullName, const QString &msgText, bool showTranslationButton, bool showBlockButton)
 {
 
-    QString name = !msgAuthor.isEmpty() ? msgAuthor : "JamTaba";
+    QString fullName = !msgAuthorFullName.isEmpty() ? msgAuthorFullName : "JamTaba";
 
-    QColor backgroundColor = getUserColor(name);
+    QColor backgroundColor = getUserColor(fullName);
 
     bool isBot = backgroundColor == BOT_COLOR;
-    bool isLocalUser = msgAuthor == ninjam::client::extractUserName(localUserName);
+    bool isLocalUser = ninjam::client::extractUserName(msgAuthorFullName) == localUserName;
 
     QColor textColor = Qt::black;
     QColor userNameBackgroundColor = backgroundColor;
 
-    ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, msgText,
+    ChatMessagePanel *msgPanel = new ChatMessagePanel(this, fullName, msgText,
                                                       userNameBackgroundColor, textColor, showTranslationButton, showBlockButton, emojiManager);
 
-    connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
-    connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
+    connect(msgPanel, &ChatMessagePanel::startingTranslation, this, &ChatPanel::showTranslationProgressFeedback);
+    connect(msgPanel, &ChatMessagePanel::translationFinished, this, &ChatPanel::hideTranslationProgressFeedback);
 
     connect(msgPanel, &ChatMessagePanel::blockingUser, this, &ChatPanel::userBlockingChatMessagesFrom);
 
-    msgPanel->setPrefferedTranslationLanguage(this->autoTranslationLanguage);
+    msgPanel->setPrefferedTranslationLanguage(autoTranslationLanguage);
     msgPanel->setShowArrow(!isBot);
     if (!isBot && isLocalUser) // local user messages are showed in right side
         msgPanel->setArrowSide(ChatMessagePanel::RightSide);
@@ -385,12 +583,12 @@ ChatPanel::~ChatPanel()
     delete ui;
 }
 
-void ChatPanel::removeMessagesFrom(const QString &userName)
+void ChatPanel::removeMessagesFrom(const QString &userFullName)
 {
     // remove message panels from user 'userName'
-    QList<ChatMessagePanel *> panels = ui->scrollContent->findChildren<ChatMessagePanel *>();
-    foreach (ChatMessagePanel *msgPanel, panels) {
-        if (msgPanel->getUserName() == userName ) {
+    auto panels = ui->scrollContent->findChildren<ChatMessagePanel *>();
+    for (auto msgPanel : panels) {
+        if (msgPanel->getUserFullName() == userFullName) {
             ui->scrollContent->layout()->removeWidget(msgPanel);
             msgPanel->deleteLater();
         }

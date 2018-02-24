@@ -14,6 +14,9 @@ const QRegularExpression gui::chat::ADMIN_COMMAND_REGEX("^/bpi|^/bpm|^/kick|^/to
 
 const QRegularExpression gui::chat::PRIVATE_MESSAGE_REGEX("^/msg");
 
+const QRegularExpression gui::chat::PUBLIC_SERVER_INVITE_REGEX("^(Let's play in ([A-Za-z\\.0-9]+) \\: ([0-9]{4}) \\?)");
+const QRegularExpression gui::chat::PRIVATE_SERVER_INVITE_REGEX("^(Let's play in my private server\\?)\\n\\n IP\\: ([A-Za-z\\.0-9]+) \\n\\n PORT\\: ([0-9]{4}) \\n");
+
 QString gui::chat::extractDestinationUserNameFromPrivateMessage(const QString &text)
 {
     QString t(text);
@@ -24,6 +27,41 @@ QString gui::chat::extractDestinationUserNameFromPrivateMessage(const QString &t
     }
 
     return text;
+}
+
+bool gui::chat::isServerInvitation(const QString &message)
+{
+    /**
+        Let's play in %1 : %2 ?
+        Let's play in my private server?
+        \n\n IP: %1 \n\n PORT: %2 \n
+    */
+
+    return PUBLIC_SERVER_INVITE_REGEX.match(message).hasMatch()
+            || PRIVATE_SERVER_INVITE_REGEX.match(message).hasMatch();
+}
+
+gui::chat::ServerInviteMessage gui::chat::parseServerInviteMessage(const QString &message)
+{
+    ServerInviteMessage msg;
+
+    QString text;
+    QString serverIP;
+    quint16 serverPort = 0;
+
+    auto matcher = PUBLIC_SERVER_INVITE_REGEX.match(message);
+    if (!matcher.hasMatch())
+        matcher = PRIVATE_SERVER_INVITE_REGEX.match(message);
+
+    text = matcher.captured(1);
+    serverIP = matcher.captured(2);
+    serverPort = matcher.captured(3).toInt();
+
+    msg.message = text;
+    msg.serverIP = serverIP;
+    msg.serverPort = serverPort;
+
+    return msg;
 }
 
 bool gui::chat::isPrivateMessage(const QString &message)

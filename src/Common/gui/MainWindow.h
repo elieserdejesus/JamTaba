@@ -19,7 +19,6 @@ class ChordProgression;
 class ChordsPanel;
 class ChatPanel;
 class InactivityDetector;
-class ChatTabWidget;
 class LocalTrackGroupView;
 class CameraFrameGrabber;
 class VideoWidget;
@@ -33,6 +32,7 @@ class PrivateServerWindow;
 
 namespace login {
 class RoomInfo;
+class MainChat;
 }
 
 namespace controller {
@@ -60,6 +60,7 @@ using persistence::Preset;
 using persistence::Channel;
 using persistence::SubChannel;
 using gui::chat::SystemVotingMessage;
+using login::MainChat;
 
 class MainWindow : public QMainWindow
 {
@@ -117,15 +118,17 @@ public:
     void setTintColor(const QColor &color);
     QColor getTintColor() const;
 
+    void fillUserContextMenu(QMenu &menu, const QString &userFullName, bool sendInvitationsInPublicChat);
+
 public slots:
     void enterInRoom(const login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
     void tryEnterInRoom(const login::RoomInfo &roomInfo, const QString &password = "");
 
-    void showFeedbackAboutBlockedUserInChat(const QString &userName);
-    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
+    void showFeedbackAboutBlockedUserInChat(const QString &userFullName);
+    void showFeedbackAboutUnblockedUserInChat(const QString &userFullName);
 
-    void addMainChatMessage(const User &, const QString &message);
+    void addNinjamServerChatMessage(const User &, const QString &message);
     void addPrivateChatMessage(const User &, const QString &message);
     void addPrivateChat(const QString &remoteUserName, const QString &userIP);
 
@@ -270,8 +273,6 @@ private slots:
 
     void hideChordsPanel();
 
-    void setChatsVisibility(bool chatVisible);
-    void toggleChatCollapseStatus();
     void chatCollapseChanged(bool chatCollapsed);
 
     // preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
@@ -302,10 +303,16 @@ private slots:
     void handleUserEntering(const QString &userName);
 
     void handleChordProgressionMessage(const User &user, const QString &message);
-    void sendNewChatMessage(const QString &msg);
+    void sendChatMessageToNinjamServer(const QString &msg);
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
-    void blockUserInChat(const QString &userNameToBlock);
+
+    void blockUserInChat();
+    void unblockUserInChat();
+
+    void fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName);
+
+    void connectInMainChat();
 
 private:
 
@@ -334,7 +341,7 @@ private:
 
     QScopedPointer<ScreensaverBlocker> screensaverBlocker;
 
-    ChatTabWidget *chatTabWidget;
+    QScopedPointer<MainChat> mainChat;
 
     QScopedPointer<PrivateServerWindow> privateServerWindow;
 
@@ -426,12 +433,13 @@ private:
 
     void restoreWindowPosition();
 
-    void addMainChatPanel();
+    void createMainChat(bool turnedOn);
+    void createNinjamServerChat(const QString &serverName);
     void addNinjamPanelsInBottom();
 
-    void showLastChordsInMainChat();
+    void showLastChordsInNinjamServerChat();
     void createVoteButton(const SystemVotingMessage &votingMessage);
-    bool canShowBlockButtonInChatMessage(const QString &userName) const;
+    bool canShowBlockButtonInChatMessage(const QString &userFullName) const;
 
     void loadTranslationFile(const QString &locale);
 
@@ -450,6 +458,9 @@ private:
     static QString getStripedThemeName(const QString &fullThemeName);
 
     void setupMainTabCornerWidgets();
+
+    static QString buildServerInviteMessage(const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool showPrivateServerIpAndPort);
+    void sendServerInvitation(const QString &userFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool sendInvitationsInPublicChat);
 
     QScopedPointer<PerformanceMonitor> performanceMonitor; // cpu and memmory usage
     qint64 lastPerformanceMonitorUpdate; // TODO move to PerformenceMonitor

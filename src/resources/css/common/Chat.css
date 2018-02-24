@@ -5,11 +5,21 @@
 
 /* Buttons used to auto translate and clear all chat messages
 --------------------------------------------------------------*/
-#buttonAutoTranslate,
-#buttonClear
+ChatPanel QPushButton:disabled
 {
-    max-height: 22px;
-    max-width: 14px;
+    border: none;
+    background: none;
+}
+
+#buttonAutoTranslate,
+#buttonClear,
+#buttonOnOff
+{
+    min-height: 20px;
+    max-height: 20px;
+    max-width: 20px;
+    padding: 0px;
+    margin: 0px;
 }
 
 #buttonClear
@@ -24,6 +34,8 @@
     background-image: url(:/images/translate.png);
     background-repeat: no-repeat;
     background-position: center;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 #topicLabel

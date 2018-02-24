@@ -7,11 +7,16 @@
 #include <QList>
 #include <QTimer>
 #include <QAction>
+#include <QTreeWidgetItem>
 
 #include "gui/chords/ChordProgression.h"
 
 namespace Ui {
 class ChatPanel;
+}
+
+namespace geo {
+class Location;
 }
 
 class ChatMessagePanel;
@@ -29,26 +34,38 @@ public:
 
     virtual ~ChatPanel();
 
-    void addMessage(const QString &localUserName, const QString &msgAuthor, const QString &msgText, bool showTranslationButton = true, bool showBlockButton = false);
+    void addMessage(const QString &localUserName, const QString &msgAuthorFullName, const QString &msgText, bool showTranslationButton = true, bool showBlockButton = false);
     void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));
     void addBpmVoteConfirmationMessage(quint32 newBpmValue, quint32 expireTime);
     void addBpiVoteConfirmationMessage(quint32 newBpiValue, quint32 expireTime);
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry(); // called when user switch from mini mode to full view
-    void removeMessagesFrom(const QString &userName);
+    void removeMessagesFrom(const QString &userFullName);
     void setInputsStatus(bool enabled);
     bool inputsAreEnabled() const;
+
+    void setConnectedUsers(const QStringList &usersNames);
+    void setConnectedUserBlockedStatus(const QString &usersFullName, bool blocked);
 
     void setTintColor(const QColor &color);
 
     void setRemoteUserFullName(const QString &remoteUserFullName);
     QString getRemoteUserFullName() const;
 
+    void showConnectedUsersWidget(bool show);
+
+    void hideOnOffButton();
+
+    void turnOn();
+    void turnOff();
+
     static void setFontSizeOffset(qint8 sizeOffset);
 
 public slots:
     void setTopicMessage(const QString &topic);
+    void updateUsersLocation(const QString &ip, const geo::Location &location);
+    void createServerInviteButton(const QString &serverIP, quint16 serverPort);
 
 signals:
     void userSendingNewMessage(const QString &msg);
@@ -56,8 +73,13 @@ signals:
     void userConfirmingVoteToBpmChange(int newBpm);
     void userConfirmingChordProgression(const ChordProgression &chordProgression);
     void userBlockingChatMessagesFrom(const QString &blockedUserName);
+    void userUnblockingChatMessagesFrom(const QString &blockedUserName);
+    void userAcceptingServerInvite(const QString &serverIP, quint16 serverPort);
     void unreadedMessagesChanged(int unreadedMessages);
     void fontSizeOffsetEdited(qint8 newOffset); // font size offset edited by user
+    void connectedUserContextMenuActivated(QMenu &menu, const QString &userFullName);
+    void turnedOn();
+    void turnedOff();
 
 private slots:
     void sendNewMessage();
@@ -73,6 +95,10 @@ private slots:
 
     void increaseFontSize();
     void decreaseFontSize();
+
+    void showContextMenu(const QPoint &pos);
+
+    void toggleOnOff();
 
 protected:
     void changeEvent(QEvent *) override;
@@ -102,12 +128,18 @@ private:
 
     uint unreadedMessages; // messages added when this widget is not focused
 
+    bool on;
+
+    QColor tintColor;
+
     static qint8 fontSizeOffset;
 
     static QList<ChatPanel *> instances;
 
     const static qint8 MAX_FONT_OFFSET;
     const static qint8 MIN_FONT_OFFSET;
+
+    static void setItemCountryDetails(QTreeWidgetItem *item, const geo::Location &location);
 
     QColor getUserColor(const QString &userName);
 
@@ -120,6 +152,9 @@ private:
     void setupSignals();
 
     void setMessagesFontSizeOffset(qint8 offset);
+
+    void updatePlaceHolderText();
+    void updateEmojiIcon();
 };
 
 inline QString ChatPanel::getRemoteUserFullName() const
@@ -130,6 +165,37 @@ inline QString ChatPanel::getRemoteUserFullName() const
 inline void ChatPanel::setRemoteUserFullName(const QString &remoteUserFullName)
 {
     this->remoteUserFulName = remoteUserFullName;
+}
+
+class ServerInviteButton : public QPushButton
+{
+    Q_OBJECT
+
+public:
+    ServerInviteButton(const QString &serverIP, quint16 serverPort, QWidget *parent = nullptr) :
+        QPushButton(tr("Accept!"), parent),
+        serverIP(serverIP),
+        serverPort(serverPort)
+    {
+        //
+    }
+
+    QString getServerIP() const;
+    quint16 getServerPort() const;
+
+private:
+    QString serverIP;
+    quint16 serverPort;
+};
+
+inline quint16 ServerInviteButton::getServerPort() const
+{
+    return serverPort;
+}
+
+inline QString ServerInviteButton::getServerIP() const
+{
+    return serverIP;
 }
 
 class NinjamVoteButton : public QPushButton

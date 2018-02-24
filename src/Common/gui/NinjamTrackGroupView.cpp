@@ -5,6 +5,7 @@
 #include "video/FFMpegDemuxer.h"
 #include "IconFactory.h"
 #include "ninjam/client/Service.h"
+#include "MainWindow.h"
 
 #include <QMenu>
 #include <QDateTime>
@@ -16,6 +17,7 @@ const uint NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT = 350;
 const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.64;
 
 using controller::MainController;
+using controller::NinjamController;
 using persistence::CacheEntry;
 
 NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long trackID,
@@ -46,14 +48,14 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     chatBlockIconLabel = new QLabel(this);
     chatBlockIconLabel->setPixmap(QPixmap(":/images/chat_blocked.png"));
 
-    QString userName = initialValues.getUserName();
-    chatBlockIconLabel->setVisible(mainController->getNinjamController()->userIsBlockedInChat(userName));
+    setGroupName(initialValues.getUserName());
+
+    auto blocked = mainController->userIsBlockedInChat(getUniqueName());
+    chatBlockIconLabel->setVisible(blocked);
 
     groupNameLayout->addWidget(chatBlockIconLabel);
     topPanelLayout->addLayout(groupNameLayout);
     topPanelLayout->setAlignment(groupNameLayout, Qt::AlignBottom);
-
-    setGroupName(userName);
 
     // country flag and label
     countryLabel = new QLabel();
@@ -97,13 +99,15 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
         }
     });
 
+    //connect(mainController, &MainController::ipResolved, this, &NinjamTrackGroupView::updateGeoLocation);
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
     // reacting to chat block/unblock events
+    connect(mainController, &MainController::userBlockedInChat, this, &NinjamTrackGroupView::showChatBlockIcon);
+    connect(mainController, &MainController::userUnblockedInChat, this, &NinjamTrackGroupView::hideChatBlockIcon);
+
     auto ninjamController = mainController->getNinjamController();
-    connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
-    connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
-    connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoStream()));
+    connect(ninjamController, &controller::NinjamController::startingNewInterval, this, &NinjamTrackGroupView::startVideoStream);
 
     setupVerticalLayout();
 }
@@ -159,24 +163,35 @@ void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
     intervalsWithoutReceiveVideo = 0;
 }
 
+QString NinjamTrackGroupView::getUniqueName() const
+{
+    QString userName = getGroupName();
+    if (!userName.contains("@")) {
+        return QString("%1@%2")
+                .arg(userName)
+                .arg(userIP);
+    }
+
+    return userName;
+}
+
 void NinjamTrackGroupView::hideChatBlockIcon(const QString &unblockedUserName)
 {
-    if (unblockedUserName == getGroupName())
+    if (unblockedUserName == getUniqueName())
         chatBlockIconLabel->hide();
 }
 
 void NinjamTrackGroupView::showChatBlockIcon(const QString &blockedUserName)
 {
-    if (blockedUserName == getGroupName())
+    if (blockedUserName == getUniqueName())
         chatBlockIconLabel->show();
 }
 
 void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
     QString userName = getGroupName();
-    auto ninjamController = mainController->getNinjamController();
 
-    bool userIsBlockedInChat = ninjamController->userIsBlockedInChat(userName);
+    //bool userIsBlockedInChat = mainController->userIsBlockedInChat(getUniqueName());
 
     QAction *privateChatAction = contextMenu.addAction(tr("Private chat with %1").arg(userName));
     connect(privateChatAction, &QAction::triggered, this, [=]() {
@@ -194,25 +209,23 @@ void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 
     contextMenu.addSeparator();
 
-    QAction *blockAction = contextMenu.addAction(tr("Block %1 in chat").arg(userName), this, SLOT(blockChatMessages()));
-    QAction *unblockAction = contextMenu.addAction(tr("Unblock %1 in chat").arg(userName), this, SLOT(unblockChatMessages()));
-
-    blockAction->setEnabled(!userIsBlockedInChat);
-    unblockAction->setEnabled(userIsBlockedInChat);
+    auto mainWindow = mainController->getMainWindow();
+    if (mainWindow) {
+        bool sendInvitationsInPublicChat = false;
+        mainWindow->fillUserContextMenu(contextMenu, getUniqueName(), sendInvitationsInPublicChat);
+    }
 
     TrackGroupView::populateContextMenu(contextMenu);
 }
 
 void NinjamTrackGroupView::blockChatMessages()
 {
-    QString userNameToBlock = getGroupName();
-    mainController->blockUserInChat(userNameToBlock);
+    mainController->blockUserInChat(getUniqueName());
 }
 
 void NinjamTrackGroupView::unblockChatMessages()
 {
-    QString userNameToUnblock = getGroupName();
-    mainController->unblockUserInChat(userNameToUnblock);
+    mainController->unblockUserInChat(getUniqueName());
 }
 
 void NinjamTrackGroupView::updateGeoLocation(const QString &ip)

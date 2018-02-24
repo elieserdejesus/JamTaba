@@ -89,6 +89,8 @@ private:
 
     void resetMainLayoutStretch();
 
+    QString getUniqueName() const;
+
 private slots:
     void updateGeoLocation(const QString &resolvedIp);
     void blockChatMessages();
