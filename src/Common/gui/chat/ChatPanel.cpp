@@ -179,7 +179,7 @@ void ChatPanel::showConnectedUsersWidget(bool show)
     ui->treeWidget->setVisible(show);
 }
 
-void ChatPanel::updateUserLocation(const QString &ip, const geo::Location &location)
+void ChatPanel::updateUsersLocation(const QString &ip, const geo::Location &location)
 {
     auto root = ui->treeWidget->topLevelItem(0);
     for (int i = 0; i < root->childCount(); ++i) {
@@ -187,7 +187,6 @@ void ChatPanel::updateUserLocation(const QString &ip, const geo::Location &locat
         auto itemIP = item->data(0, Qt::UserRole + 1).toString();
         if (ninjam::client::maskIP(itemIP) == ninjam::client::maskIP(ip)) {
             setItemCountryFlag(item, location.getCountryCode());
-            break;
         }
     }
 }

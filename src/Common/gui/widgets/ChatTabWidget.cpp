@@ -66,7 +66,7 @@ void ChatTabWidget::initialize(MainController *mainController, UsersColorsPool *
     this->mainController = mainController;
 
     connect(mainController, &MainController::ipResolved, [=](const QString &ip){
-        mainChat->updateUserLocation(ip, mainController->getGeoLocation(ip));
+        mainChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
     });
 }
 
@@ -180,7 +180,7 @@ void ChatTabWidget::setConnectedUsersInMainChat(const QStringList &usersNames)
 
     for (const QString &userFullName : usersNames) {
         auto ip = ninjam::client::extractUserIP(userFullName);
-        mainChat->updateUserLocation(ip, mainController->getGeoLocation(ip));
+        mainChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
     }
 }
 

@@ -64,7 +64,7 @@ public:
 
 public slots:
     void setTopicMessage(const QString &topic);
-    void updateUserLocation(const QString &ip, const geo::Location &location);
+    void updateUsersLocation(const QString &ip, const geo::Location &location);
     void createServerInviteButton(const QString &serverIP, quint16 serverPort);
 
 signals:
