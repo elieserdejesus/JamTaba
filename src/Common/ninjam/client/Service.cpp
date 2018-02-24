@@ -239,6 +239,7 @@ void Service::voteToChangeBPM(quint16 newBPM)
 
 void Service::sendPrivateChatMessage(const QString &message, const QString &destinationUser)
 {
+    qDebug() << "priv msg:" << message;
     sendMessageToServer(ClientToServerChatMessage::buildPrivateMessage(message, destinationUser));
 }
 

@@ -570,7 +570,10 @@ void NinjamController::sendChatMessage(const QString &msg)
     }
     else if (gui::chat::isPrivateMessage(msg)) {
         QString destUserName = gui::chat::extractDestinationUserNameFromPrivateMessage(msg);
-        service->sendPrivateChatMessage(QString(msg).replace(destUserName, ""), destUserName);
+        auto text = QString(msg).replace(destUserName + " ", ""); // remove the blank space after user name
+        qDebug() << text;
+        qDebug() << msg;
+        service->sendPrivateChatMessage(text, destUserName);
     }
     else {
         service->sendPublicChatMessage(msg);

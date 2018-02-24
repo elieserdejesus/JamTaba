@@ -13,6 +13,8 @@ namespace gui
         extern const QRegularExpression LOCAL_USER_VOTING_REGEX;
         extern const QRegularExpression ADMIN_COMMAND_REGEX;
         extern const QRegularExpression PRIVATE_MESSAGE_REGEX;
+        extern const QRegularExpression PUBLIC_SERVER_INVITE_REGEX;
+        extern const QRegularExpression PRIVATE_SERVER_INVITE_REGEX;
 
         class SystemVotingMessage
         {
@@ -36,6 +38,16 @@ namespace gui
             quint8 maxVotes;
             quint8 currentVote;
         };
+
+        struct ServerInviteMessage
+        {
+            QString serverIP;
+            quint16 serverPort;
+            QString message;
+        };
+
+        bool isServerInvitation(const QString &message);
+        ServerInviteMessage parseServerInviteMessage(const QString &message);
 
         bool isLocalUserVotingMessage(const QString &message);
 

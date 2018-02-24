@@ -1475,6 +1475,8 @@ bool MainWindow::canShowBlockButtonInChatMessage(const QString &userFullName) co
     return !userIsBot && !currentUserIsPostingTheChatMessage && !userFullName.isEmpty();
 }
 
+
+
 void MainWindow::addPrivateChatMessage(const User &remoteUser, const QString &message)
 {
     if (!ui.chatTabWidget->contains(remoteUser.getFullName())) {
@@ -1491,7 +1493,17 @@ void MainWindow::addPrivateChatMessage(const User &remoteUser, const QString &me
     auto chatPanel = ui.chatTabWidget->getPrivateChat(remoteUser.getFullName());
     if (chatPanel) {
         auto localUser = mainController->getUserName();
-        chatPanel->addMessage(localUser, remoteUser.getFullName(), message, true, true);
+
+        if (!gui::chat::isServerInvitation(message)) {
+            chatPanel->addMessage(localUser, remoteUser.getFullName(), message, true, true);
+        }
+        else { // handling server invitation as private message
+            auto msg = gui::chat::parseServerInviteMessage(message);
+
+            chatPanel->addMessage(localUser, remoteUser.getFullName(), msg.message, true, true);
+
+            chatPanel->createServerInviteButton(msg.serverIP, msg.serverPort);
+        }
     }
 }
 
@@ -1551,6 +1563,18 @@ void MainWindow::addNinjamServerChatMessage(const User &msgAuthor, const QString
     localUserWasVotingInLastMessage = gui::chat::isLocalUserVotingMessage(message) && msgAuthor.getName() == mainController->getUserName();
 }
 
+QString MainWindow::buildServerInviteMessage(const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool showPrivateServerIpAndPort)
+{
+    auto msg = tr("Let's play in %1 : %2 ?").arg(serverIP).arg(serverPort);
+    if (isPrivateServer) {
+        msg = tr("Let's play in my private server?");
+        if (showPrivateServerIpAndPort)
+            msg += QString("\n\n IP: %1 \n\n PORT: %2 \n").arg(serverIP).arg(serverPort);
+    }
+
+    return msg;
+}
+
 void MainWindow::createMainChat()
 {
     qCDebug(jtGUI) << "adding main chat panel...";
@@ -1578,12 +1602,10 @@ void MainWindow::createMainChat()
     connect(mainChatPanel, &ChatPanel::connectedUserContextMenuActivated, this, &MainWindow::fillConnectedUserContextMenu);
 
     connect(mainChat.data(), &MainChat::serverInviteReceived, [=](const QString &senderFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer){
+
         auto localUserName = mainController->getUserName();
         bool showBlockButton = true;
-        auto msg = tr("Let's play in %1:%2 ?").arg(serverIP).arg(serverPort);
-        if (isPrivateServer)
-            msg = tr("Let's play in my private server?");
-
+        auto msg = buildServerInviteMessage(serverIP, serverPort, isPrivateServer, false);
         mainChatPanel->addMessage(localUserName, senderFullName, msg, true, showBlockButton);
 
         mainChatPanel->createServerInviteButton(serverIP, serverPort);
@@ -1637,7 +1659,26 @@ void MainWindow::createMainChat()
     mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
 }
 
-void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName)
+void MainWindow::sendServerInvitation(const QString &userFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool sendInvitationInPublicChat)
+{
+    if (sendInvitationInPublicChat) {
+        mainChat->sendServerInvite(userFullName, serverIP, serverPort, isPrivateServer);
+    }
+    else {
+        auto ninjamController = mainController->getNinjamController();
+        if (ninjamController) {
+
+            // inviting as private message
+            auto text = QString("/msg %1 %2")
+                    .arg(userFullName)
+                    .arg(buildServerInviteMessage(serverIP, serverPort, isPrivateServer, true));
+
+            ninjamController->sendChatMessage(text);
+        }
+    }
+}
+
+void MainWindow::fillUserContextMenu(QMenu &menu, const QString &userFullName, bool sendInvitationsInPublicChat)
 {
     auto userName = ninjam::client::extractUserName(userFullName);
 
@@ -1646,9 +1687,9 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
     if (privateServerWindow && privateServerWindow->serverIsRunning()) {
         auto serverIP = privateServerWindow->getServerExternalIP();
         auto serverPort = privateServerWindow->getServerPort();
-        auto action = serversMenu->addAction(tr("Your private server (%1:%2)").arg(serverIP).arg(serverPort));
+        auto action = serversMenu->addAction(tr("My private server (%1:%2)").arg(serverIP).arg(serverPort));
         connect(action, &QAction::triggered, [=](){
-            mainChat->sendServerInvite(userFullName, serverIP, serverPort, true); // is private server
+            sendServerInvitation(userFullName, serverIP, serverPort, true, sendInvitationsInPublicChat);
         });
 
         serversMenu->addSeparator();
@@ -1681,7 +1722,8 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
         auto action = groupMenu->addAction(actionText);
         action->setEnabled(!roomInfo.isFull());
         connect(action, &QAction::triggered, [=](){
-            mainChat->sendServerInvite(userFullName, roomInfo.getName(), roomInfo.getPort(), false);
+            bool isPrivateServer = false;
+            sendServerInvitation(userFullName, roomInfo.getName(), roomInfo.getPort(), isPrivateServer, sendInvitationsInPublicChat);
         });
 
         action->setEnabled(!roomInfo.isFull());
@@ -1692,7 +1734,6 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
     menu.addSeparator();
 
     auto userIsBlocked = mainController->userIsBlockedInChat(userFullName);
-    qDebug() << userFullName << " blocked:" << userIsBlocked;
 
     auto blockAction = menu.addAction(tr("Block %1 in chat").arg(userName));
     blockAction->setData(userFullName);
@@ -1703,6 +1744,11 @@ void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFu
     connect(unblockAction, &QAction::triggered, this, &MainWindow::unblockUserInChat);
     unblockAction->setData(userFullName);
     unblockAction->setEnabled(userIsBlocked);
+}
+
+void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName)
+{
+    fillUserContextMenu(menu, userFullName, true); // send invitations in public chat
 }
 
 void MainWindow::blockUserInChat()
@@ -1774,6 +1820,10 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
         auto localUserName = mainController->getUserName();
         chatPanel->addMessage(localUserName, localUserName, message, false);
 
+    });
+
+    connect(chatPanel, &ChatPanel::userAcceptingServerInvite, [=](const QString &serverIP, quint16 serverPort){
+        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, login::RoomTYPE::NINJAM, 8));
     });
 
     connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);

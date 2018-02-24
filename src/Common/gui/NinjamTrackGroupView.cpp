@@ -5,6 +5,7 @@
 #include "video/FFMpegDemuxer.h"
 #include "IconFactory.h"
 #include "ninjam/client/Service.h"
+#include "MainWindow.h"
 
 #include <QMenu>
 #include <QDateTime>
@@ -190,7 +191,7 @@ void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
     QString userName = getGroupName();
 
-    bool userIsBlockedInChat = mainController->userIsBlockedInChat(getUniqueName());
+    //bool userIsBlockedInChat = mainController->userIsBlockedInChat(getUniqueName());
 
     QAction *privateChatAction = contextMenu.addAction(tr("Private chat with %1").arg(userName));
     connect(privateChatAction, &QAction::triggered, this, [=]() {
@@ -208,11 +209,11 @@ void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 
     contextMenu.addSeparator();
 
-    QAction *blockAction = contextMenu.addAction(tr("Block %1 in chat").arg(userName), this, SLOT(blockChatMessages()));
-    QAction *unblockAction = contextMenu.addAction(tr("Unblock %1 in chat").arg(userName), this, SLOT(unblockChatMessages()));
-
-    blockAction->setEnabled(!userIsBlockedInChat);
-    unblockAction->setEnabled(userIsBlockedInChat);
+    auto mainWindow = mainController->getMainWindow();
+    if (mainWindow) {
+        bool sendInvitationsInPublicChat = false;
+        mainWindow->fillUserContextMenu(contextMenu, getUniqueName(), sendInvitationsInPublicChat);
+    }
 
     TrackGroupView::populateContextMenu(contextMenu);
 }

@@ -4,6 +4,51 @@
 
 using namespace gui::chat;
 
+
+void TestChatVotingMessages::parsingServerInviteMessages_data()
+{
+    QTest::addColumn<QString>("fullMessage");
+    QTest::addColumn<QString>("message");
+    QTest::addColumn<QString>("serverIP");
+    QTest::addColumn<quint16>("serverPort");
+
+    /**
+        Let's play in %1 : %2 ?
+        Let's play in my private server?
+        \n\n IP: %1 \n\n PORT: %2 \n
+    */
+
+    QTest::newRow("Public server invitation")
+            << QString("Let's play in ninbot.com : 2049 ?")
+            << QString("Let's play in ninbot.com : 2049 ?")
+            << QString("ninbot.com")
+            << static_cast<quint16>(2049);
+
+    QTest::newRow("Private server invitation")
+            << QString("Let's play in my private server?\n\n IP: localhost \n\n PORT: 2049 \n")
+            << QString("Let's play in my private server?")
+            << QString("localhost")
+            << static_cast<quint16>(2049);
+
+}
+
+void TestChatVotingMessages::parsingServerInviteMessages()
+{
+    QFETCH(QString, fullMessage);
+    QFETCH(QString, serverIP);
+    QFETCH(quint16, serverPort);
+    QFETCH(QString, message);
+
+    QVERIFY(isServerInvitation(fullMessage));
+
+    auto msg = parseServerInviteMessage(fullMessage);
+
+    QCOMPARE(msg.message, message);
+    QCOMPARE(msg.serverIP, serverIP);
+    QCOMPARE(msg.serverPort, serverPort);
+}
+
+
 void TestChatVotingMessages::invalidLocalUserVotingMessage_data()
 {
     QTest::addColumn<QString>("message");
