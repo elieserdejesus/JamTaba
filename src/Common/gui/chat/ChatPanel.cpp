@@ -34,7 +34,8 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     botNames(botNames),
     autoTranslating(false),
     colorsPool(colorsPool),
-    unreadedMessages(0)
+    unreadedMessages(0),
+    on(false)
 {
     ui->setupUi(this);
     QVBoxLayout *contentLayout = new QVBoxLayout(ui->scrollContent);
@@ -53,7 +54,7 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     qobject_cast<QVBoxLayout *>(layout())->insertWidget(layout()->count()-2, emojiWidget);
     emojiWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
-    auto emojiIcon = IconFactory::createChatEmojiIcon(Qt::black);
+    auto emojiIcon = IconFactory::createChatEmojiIcon(Qt::black, on);
     emojiAction = ui->chatText->addAction(emojiIcon, QLineEdit::LeadingPosition);
 
     if (chatInputModifier) {
@@ -97,6 +98,60 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     ui->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui->treeWidget, &QTreeWidget::customContextMenuRequested, this, &ChatPanel::showContextMenu);
+
+    ui->buttonOnOff->setIcon(IconFactory::createChatOnOffIcon(Qt::black));
+    ui->buttonOnOff->setChecked(on);
+    connect(ui->buttonOnOff, &QPushButton::toggled, this, &ChatPanel::toggleOnOff);
+
+    updatePlaceHolderText();
+    updateEmojiIcon();
+
+    showConnectedUsersWidget(false);
+}
+
+void ChatPanel::turnOn()
+{
+    if (!on)
+        toggleOnOff();
+}
+
+void ChatPanel::turnOff()
+{
+    if (on)
+        toggleOnOff();
+}
+
+void ChatPanel::toggleOnOff()
+{
+    on = !on;
+
+    setInputsStatus(on);
+
+    if (on)
+        emit turnedOn();
+    else
+        emit turnedOff();
+
+    updatePlaceHolderText();
+    updateEmojiIcon();
+}
+
+void ChatPanel::updatePlaceHolderText()
+{
+    if (on)
+        ui->chatText->setPlaceholderText(tr("type here ..."));
+    else
+        ui->chatText->setPlaceholderText(tr("chat is off"));
+}
+
+void ChatPanel::updateEmojiIcon()
+{
+    emojiAction->setIcon(IconFactory::createChatEmojiIcon(tintColor, on));
+}
+
+void ChatPanel::hideOnOffButton()
+{
+    ui->buttonOnOff->setVisible(false);
 }
 
 void ChatPanel::showContextMenu(const QPoint &pos)
@@ -118,10 +173,10 @@ void ChatPanel::showContextMenu(const QPoint &pos)
     menu.exec(menuPos);
 }
 
-void ChatPanel::hideConnectedUsersWidget()
+void ChatPanel::showConnectedUsersWidget(bool show)
 {
-    ui->verticalSpacerBottom->changeSize(0, 0);
-    ui->treeWidget->setVisible(false);
+    ui->verticalSpacerBottom->changeSize(0, show ? 12 : 0);
+    ui->treeWidget->setVisible(show);
 }
 
 void ChatPanel::updateUserLocation(const QString &ip, const geo::Location &location)
@@ -272,11 +327,15 @@ bool ChatPanel::eventFilter(QObject *o, QEvent *e)
 
 void ChatPanel::setTintColor(const QColor &color)
 {
-    emojiAction->setIcon(IconFactory::createChatEmojiIcon(color));
+    emojiAction->setIcon(IconFactory::createChatEmojiIcon(color, on));
 
     ui->toolButtonPlus->setIcon(IconFactory::createFontSizeIncreaseIcon(color));
     ui->toolButtonMinus->setIcon(IconFactory::createFontSizeDecreaseIcon(color));
     ui->labelFontSize->setPixmap(IconFactory::createFontSizePixmap(color));
+
+    ui->buttonOnOff->setIcon(IconFactory::createChatOnOffIcon(color));
+
+    tintColor = color;
 }
 
 bool ChatPanel::inputsAreEnabled() const

@@ -31,12 +31,11 @@ public:
     void setPreferredTranslationLanguage(const QString locale);
 
     ChatPanel* getNinjamServerChat() const;
-
     ChatPanel *getFocusedChatPanel() const;
+    ChatPanel *getPrivateChat(const QString &userFullName) const;
+    ChatPanel *getPublicChat() const;
 
     bool contains(const QString &userFullName) const;
-
-    ChatPanel *getPrivateChat(const QString &userFullName) const;
 
     ChatPanel *createMainChat(TextEditorModifier *textEditorModifier);
     ChatPanel *createNinjamServerChat(const QString &serverName, TextEditorModifier *textEditorModifier);

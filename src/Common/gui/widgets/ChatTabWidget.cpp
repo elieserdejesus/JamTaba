@@ -336,6 +336,11 @@ bool ChatTabWidget::contains(const QString &userFullName) const
     return (getPrivateChat(userFullName) != nullptr);
 }
 
+ChatPanel *ChatTabWidget::getPublicChat() const
+{
+    return mainChat;
+}
+
 ChatPanel *ChatTabWidget::getPrivateChat(const QString &userFullName) const
 {
     return privateChats[userFullName];

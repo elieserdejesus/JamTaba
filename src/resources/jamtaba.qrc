@@ -1339,6 +1339,7 @@
         <file>emoji/icons/zzz.png</file>
         <file>emoji/emoji.json</file>
         <file>emoji/smile.png</file>
+        <file>emoji/sad.png</file>
     </qresource>
     <qresource prefix="/tiles">
         <file>map/0/0/0.png</file>

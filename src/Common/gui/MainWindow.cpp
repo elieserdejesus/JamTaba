@@ -619,7 +619,8 @@ void MainWindow::initialize()
     if (settings.isRememberingBottomSection())
         setBottomCollapsedStatus(settings.isBottomSectionCollapsed());
 
-    createMainChat();
+    auto turnedOn = false;
+    createMainChat(turnedOn);
 
 }
 
@@ -1575,7 +1576,7 @@ QString MainWindow::buildServerInviteMessage(const QString &serverIP, quint16 se
     return msg;
 }
 
-void MainWindow::createMainChat()
+void MainWindow::createMainChat(bool turnedOn)
 {
     qCDebug(jtGUI) << "adding main chat panel...";
 
@@ -1627,7 +1628,8 @@ void MainWindow::createMainChat()
         auto msg = tr("Connected with public chat!");
         mainChatPanel->addMessage(localUserName, JAMTABA_CHAT_BOT_NAME, msg);
 
-        mainChatPanel->setInputsStatus(true);
+        mainChatPanel->turnOn();
+        mainChatPanel->showConnectedUsersWidget(true);
     });
 
     connect(mainChat.data(), &MainChat::disconnected, [=](){
@@ -1655,7 +1657,25 @@ void MainWindow::createMainChat()
         mainChatPanel->setConnectedUserBlockedStatus(userFullName, false);
     });
 
-    mainChatPanel->addMessage(mainController->getUserName(), JAMTABA_CHAT_BOT_NAME, tr("Connecting ..."));
+    connect(mainChatPanel, &ChatPanel::turnedOn, this, &MainWindow::connectInMainChat);
+    connect(mainChatPanel, &ChatPanel::turnedOff, [=](){
+         mainChat->disconnectFromServer();
+         mainChatPanel->showConnectedUsersWidget(false);
+    });
+
+    if (turnedOn)
+        mainChatPanel->turnOn();
+    else
+        mainChatPanel->turnOff();
+}
+
+void MainWindow::connectInMainChat()
+{
+    auto publicChat = ui.chatTabWidget->getPublicChat();
+    Q_ASSERT(publicChat);
+
+    publicChat->addMessage(mainController->getUserName(), JAMTABA_CHAT_BOT_NAME, tr("Connecting ..."));
+
     mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
 }
 
@@ -1776,7 +1796,9 @@ void MainWindow::createNinjamServerChat(const QString &serverName)
     auto ninjamChatPanel = ui.chatTabWidget->createNinjamServerChat(serverName, createTextEditorModifier());
 
     ninjamChatPanel->setTintColor(tintColor);
-    ninjamChatPanel->hideConnectedUsersWidget();
+    ninjamChatPanel->showConnectedUsersWidget(false);
+    ninjamChatPanel->turnOn();
+    ninjamChatPanel->hideOnOffButton();
 
     connect(ninjamChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
     connect(ninjamChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendChatMessageToNinjamServer);
@@ -1803,7 +1825,9 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
     Q_ASSERT(chatPanel);
 
     chatPanel->setTintColor(tintColor);
-    chatPanel->hideConnectedUsersWidget();
+    chatPanel->showConnectedUsersWidget(false);
+    chatPanel->turnOn();
+    chatPanel->hideOnOffButton();
 
     chatPanel->setTopicMessage(tr("Private chat with %1").arg(remoteUserName));
 

@@ -85,9 +85,19 @@ QPixmap IconFactory::createStereoInputIcon(const QColor &tintColor)
     return QPixmap::fromImage(image);
 }
 
-QIcon IconFactory::createChatEmojiIcon(const QColor &tintColor)
+QIcon IconFactory::createChatEmojiIcon(const QColor &tintColor, bool happyFace)
 {
-    QImage image(":/emoji/smile.png");
+    auto path = QString(":/emoji/%1.png").arg(happyFace ? "smile" : "sad");
+    QImage image(path);
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QIcon(QPixmap::fromImage(image));
+}
+
+QIcon IconFactory::createChatOnOffIcon(const QColor &tintColor)
+{
+    QImage image(":/images/on.png");
 
     IconFactory::tintImage(image, tintColor, false);
 

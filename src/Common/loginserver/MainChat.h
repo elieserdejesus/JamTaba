@@ -22,7 +22,7 @@ public:
 
 public slots:
     void sendPublicMessage(const QString &content);
-
+    void disconnectFromServer();
 signals:
     void messageReceived(const QString &userName, const QString &content);
     void usersListChanged(const QStringList &userNames);

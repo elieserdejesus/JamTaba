@@ -312,6 +312,8 @@ private slots:
 
     void fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName);
 
+    void connectInMainChat();
+
 private:
 
     static const QString JAMTABA_CHAT_BOT_NAME;
@@ -431,7 +433,7 @@ private:
 
     void restoreWindowPosition();
 
-    void createMainChat();
+    void createMainChat(bool turnedOn);
     void createNinjamServerChat(const QString &serverName);
     void addNinjamPanelsInBottom();
 

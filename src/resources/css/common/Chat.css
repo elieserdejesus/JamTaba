@@ -6,10 +6,14 @@
 /* Buttons used to auto translate and clear all chat messages
 --------------------------------------------------------------*/
 #buttonAutoTranslate,
-#buttonClear
+#buttonClear,
+#buttonOnOff
 {
-    max-height: 22px;
-    max-width: 14px;
+    min-height: 20px;
+    max-height: 20px;
+    max-width: 20px;
+    padding: 0px;
+    margin: 0px;
 }
 
 #buttonClear
@@ -24,6 +28,8 @@
     background-image: url(:/images/translate.png);
     background-repeat: no-repeat;
     background-position: center;
+    padding-left: 1px;
+    padding-right: 1px;
 }
 
 #topicLabel

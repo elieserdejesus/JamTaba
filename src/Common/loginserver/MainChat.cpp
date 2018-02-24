@@ -34,6 +34,8 @@ MainChat::MainChat(QObject *parent) :
         if (sender->error() != QAbstractSocket::UnknownSocketError)
             qCritical() << sender->errorString();
 
+        pingTimer->stop();
+
         emit disconnected();
     });
 
@@ -54,6 +56,12 @@ MainChat::MainChat(QObject *parent) :
     connect(&webSocket, &QWebSocket::bytesWritten, [=](){
         pingTimer->start(); // restart the ping timer when some message is sended
     });
+}
+
+void MainChat::disconnectFromServer()
+{
+    if (webSocket.isValid())
+        webSocket.close();
 }
 
 void MainChat::sendPublicMessage(const QString &content)

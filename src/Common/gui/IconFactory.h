@@ -17,7 +17,8 @@ public:
     static QPixmap createNoInputIcon(const QColor &tintColor);
     static QPixmap createMonoInputIcon(const QColor &tintColor);
     static QPixmap createStereoInputIcon(const QColor &tintColor);
-    static QIcon createChatEmojiIcon(const QColor &tintColor);
+    static QIcon createChatEmojiIcon(const QColor &tintColor, bool happyFace);
+    static QIcon createChatOnOffIcon(const QColor &tintColor);
     static QIcon createLooperButtonIcon(const QColor &tintColor);
     static QIcon createStereoInversionIcon(const QColor &tintColor);
     static QIcon createReceiveIcon(const QColor &tintColor);

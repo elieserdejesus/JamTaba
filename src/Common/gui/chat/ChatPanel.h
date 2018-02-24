@@ -53,7 +53,12 @@ public:
     void setRemoteUserFullName(const QString &remoteUserFullName);
     QString getRemoteUserFullName() const;
 
-    void hideConnectedUsersWidget();
+    void showConnectedUsersWidget(bool show);
+
+    void hideOnOffButton();
+
+    void turnOn();
+    void turnOff();
 
     static void setFontSizeOffset(qint8 sizeOffset);
 
@@ -73,6 +78,8 @@ signals:
     void unreadedMessagesChanged(int unreadedMessages);
     void fontSizeOffsetEdited(qint8 newOffset); // font size offset edited by user
     void connectedUserContextMenuActivated(QMenu &menu, const QString &userFullName);
+    void turnedOn();
+    void turnedOff();
 
 private slots:
     void sendNewMessage();
@@ -90,6 +97,8 @@ private slots:
     void decreaseFontSize();
 
     void showContextMenu(const QPoint &pos);
+
+    void toggleOnOff();
 
 protected:
     void changeEvent(QEvent *) override;
@@ -119,6 +128,10 @@ private:
 
     uint unreadedMessages; // messages added when this widget is not focused
 
+    bool on;
+
+    QColor tintColor;
+
     static qint8 fontSizeOffset;
 
     static QList<ChatPanel *> instances;
@@ -140,6 +153,8 @@ private:
 
     void setMessagesFontSizeOffset(qint8 offset);
 
+    void updatePlaceHolderText();
+    void updateEmojiIcon();
 };
 
 inline QString ChatPanel::getRemoteUserFullName() const
