@@ -139,7 +139,7 @@ private:
     const static qint8 MAX_FONT_OFFSET;
     const static qint8 MIN_FONT_OFFSET;
 
-    static void setItemCountryFlag(QTreeWidgetItem *item, const QString &countryCode);
+    static void setItemCountryDetails(QTreeWidgetItem *item, const geo::Location &location);
 
     QColor getUserColor(const QString &userName);
 

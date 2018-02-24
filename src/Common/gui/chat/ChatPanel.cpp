@@ -69,6 +69,7 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool,
     instances.append(this);
 
     auto root = new QTreeWidgetItem(ui->treeWidget, QStringList());
+    root->setFirstColumnSpanned(true); // the root col span
     ui->treeWidget->addTopLevelItem(root);
 
     connect(ui->treeWidget, &QTreeWidget::collapsed, [=](){
@@ -186,17 +187,19 @@ void ChatPanel::updateUsersLocation(const QString &ip, const geo::Location &loca
         auto item = root->child(i);
         auto itemIP = item->data(0, Qt::UserRole + 1).toString();
         if (ninjam::client::maskIP(itemIP) == ninjam::client::maskIP(ip)) {
-            setItemCountryFlag(item, location.getCountryCode());
+            setItemCountryDetails(item, location);
         }
     }
 }
 
-void ChatPanel::setItemCountryFlag(QTreeWidgetItem *item, const QString &countryCode)
+void ChatPanel::setItemCountryDetails(QTreeWidgetItem *item, const geo::Location &location)
 {
-    auto icon = QIcon(QString(":/flags/flags/%1.png").arg(countryCode.toLower()));
-    item->setIcon(0, icon);
+    auto icon = QIcon(QString(":/flags/flags/%1.png").arg(location.getCountryCode().toLower()));
 
-    item->setData(0, Qt::UserRole + 2, countryCode);
+    auto countryCollumn = 1;
+
+    item->setIcon(countryCollumn, icon);
+    item->setText(countryCollumn, location.getCountryName());
 }
 
 void ChatPanel::setConnectedUserBlockedStatus(const QString &userFullName, bool blocked)
@@ -210,13 +213,8 @@ void ChatPanel::setConnectedUserBlockedStatus(const QString &userFullName, bool 
         auto userIp = ninjam::client::extractUserIP(userFullName);
         auto userName = ninjam::client::extractUserName(userFullName);
         if (itemIp == userIp && userName == item->text(0)) {
-            if (blocked) {
-                item->setIcon(0, QIcon(":/images/chat_blocked.png"));
-            }
-            else {
-                auto countryCode = item->data(0, Qt::UserRole + 2).toString();
-                setItemCountryFlag(item, countryCode);
-            }
+            QIcon icon(blocked ? ":/images/chat_blocked.png" : QString());
+            item->setIcon(0, icon);
             return;
         }
     }
@@ -239,7 +237,7 @@ void ChatPanel::setConnectedUsers(const QStringList &usersNames)
         auto ip = ninjam::client::extractUserIP(userFullName);
         auto item = new QTreeWidgetItem(root, QStringList(name));
         item->setData(0, Qt::UserRole + 1, ip);
-        setItemCountryFlag(item, geo::Location().getCountryCode()); // unknown location
+        setItemCountryDetails(item, geo::Location()); // unknown location
         root->addChild(item);
     }
 

@@ -326,13 +326,19 @@
       <enum>QAbstractScrollArea::AdjustToContents</enum>
      </property>
      <property name="indentation">
-      <number>12</number>
+      <number>6</number>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
      </property>
      <property name="uniformRowHeights">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="itemsExpandable">
       <bool>false</bool>
+     </property>
+     <property name="allColumnsShowFocus">
+      <bool>true</bool>
      </property>
      <property name="headerHidden">
       <bool>true</bool>
@@ -340,12 +346,23 @@
      <property name="expandsOnDoubleClick">
       <bool>false</bool>
      </property>
+     <property name="columnCount">
+      <number>2</number>
+     </property>
      <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="headerShowSortIndicator" stdset="0">
       <bool>false</bool>
      </attribute>
      <column>
       <property name="text">
        <string notr="true">1</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string notr="true">2</string>
       </property>
      </column>
     </widget>
