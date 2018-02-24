@@ -150,7 +150,7 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, Text
 {
     Q_ASSERT(!ninjamServerChat);
 
-    //add ninjam main chat
+    // add ninjam main chat
     auto index = tabBar->addTab(serverName);
 
     auto botNames = mainController->getBotNames();

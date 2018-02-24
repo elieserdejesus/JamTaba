@@ -27,7 +27,7 @@ QString gui::sanitizeServerName(const QString &serverName)
     if (serverName.contains(" "))
         return serverName.split(" ").first();
 
-    if (serverName.contains("."))
+    if (serverName.count(QChar('.')) == 1) // ninbot.com, ninjamer.com
         return serverName.split(".").first();
 
     return serverName;
