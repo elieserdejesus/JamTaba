@@ -108,12 +108,28 @@
         <source>Decrease chat font size</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Turn on/off this chat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>chat is off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected Users (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ChatTabWidget</name>
     <message>
         <source>Chat</source>
         <translation>チャット</translation>
+    </message>
+    <message>
+        <source>Public chat</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -829,6 +845,46 @@
         <source>Navy</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Let&apos;s play in %1 : %2 ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in my private server?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected with public chat!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connecting ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invite %1 to ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My private server (%1:%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 / %2 players </source>
+        <translation type="unfinished">参加者: %1 / %2</translation>
+    </message>
+    <message>
+        <source>Block %1 in chat</source>
+        <translation type="unfinished">%1の発言をブロック</translation>
+    </message>
+    <message>
+        <source>Unblock %1 in chat</source>
+        <translation type="unfinished">%1の発言をブロック解除</translation>
+    </message>
+    <message>
+        <source>Public chat disconnected!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
@@ -1101,14 +1157,6 @@
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
-    <message>
-        <source>Block %1 in chat</source>
-        <translation>%1の発言をブロック</translation>
-    </message>
-    <message>
-        <source>Unblock %1 in chat</source>
-        <translation>%1の発言をブロック解除</translation>
-    </message>
     <message>
         <source>Private chat with %1</source>
         <translation type="unfinished"></translation>
@@ -1639,6 +1687,13 @@
     </message>
 </context>
 <context>
+    <name>ServerInviteButton</name>
+    <message>
+        <source>Accept!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Slider</name>
     <message>
         <source>center</source>
@@ -1689,6 +1744,13 @@
     <message>
         <source>Selected Layer</source>
         <translation>選択されたレイヤー</translation>
+    </message>
+</context>
+<context>
+    <name>login::MainChat</name>
+    <message>
+        <source>You can&apos;t send messages using an empty user name!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

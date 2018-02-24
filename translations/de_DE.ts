@@ -103,12 +103,28 @@
         <source>Decrease chat font size</source>
         <translation>schrift kleiner</translation>
     </message>
+    <message>
+        <source>Turn on/off this chat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>chat is off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected Users (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ChatTabWidget</name>
     <message>
         <source>Chat</source>
         <translation>Unterhaltung</translation>
+    </message>
+    <message>
+        <source>Public chat</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -785,7 +801,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">privat chat mit %1</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
@@ -822,6 +838,46 @@
     <message>
         <source>Navy</source>
         <translation>navy</translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in %1 : %2 ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in my private server?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected with public chat!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connecting ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invite %1 to ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My private server (%1:%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 / %2 players </source>
+        <translation type="unfinished">%1/%2 musiker</translation>
+    </message>
+    <message>
+        <source>Block %1 in chat</source>
+        <translation type="unfinished">blockiere %1 im chat</translation>
+    </message>
+    <message>
+        <source>Unblock %1 in chat</source>
+        <translation type="unfinished">gebe frei %1 im chat</translation>
+    </message>
+    <message>
+        <source>Public chat disconnected!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1093,14 +1149,6 @@
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
-    <message>
-        <source>Block %1 in chat</source>
-        <translation>blockiere %1 im chat</translation>
-    </message>
-    <message>
-        <source>Unblock %1 in chat</source>
-        <translation>gebe frei %1 im chat</translation>
-    </message>
     <message>
         <source>Private chat with %1</source>
         <translation>privat chat mit %1</translation>
@@ -1630,6 +1678,13 @@
     </message>
 </context>
 <context>
+    <name>ServerInviteButton</name>
+    <message>
+        <source>Accept!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Slider</name>
     <message>
         <source>center</source>
@@ -1680,6 +1735,13 @@
     <message>
         <source>Selected Layer</source>
         <translation>Ausgewählte Layer</translation>
+    </message>
+</context>
+<context>
+    <name>login::MainChat</name>
+    <message>
+        <source>You can&apos;t send messages using an empty user name!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
