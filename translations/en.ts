@@ -103,11 +103,27 @@
         <source>Decrease chat font size</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Turn on/off this chat</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>chat is off</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connected Users (%1)</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ChatTabWidget</name>
     <message>
         <source>Chat</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Public chat</source>
         <translation></translation>
     </message>
 </context>
@@ -822,6 +838,46 @@
         <source>Navy</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Let&apos;s play in %1 : %2 ?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in my private server?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connected with public chat!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connecting ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Invite %1 to ...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>My private server (%1:%2)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1 / %2 players </source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block %1 in chat</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unblock %1 in chat</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Public chat disconnected!</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
@@ -1092,14 +1148,6 @@
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
-    <message>
-        <source>Block %1 in chat</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Unblock %1 in chat</source>
-        <translation></translation>
-    </message>
     <message>
         <source>Private chat with %1</source>
         <translation></translation>
@@ -1629,6 +1677,13 @@
     </message>
 </context>
 <context>
+    <name>ServerInviteButton</name>
+    <message>
+        <source>Accept!</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>Slider</name>
     <message>
         <source>center</source>
@@ -1678,6 +1733,13 @@
     </message>
     <message>
         <source>Selected Layer</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>login::MainChat</name>
+    <message>
+        <source>You can&apos;t send messages using an empty user name!</source>
         <translation></translation>
     </message>
 </context>
