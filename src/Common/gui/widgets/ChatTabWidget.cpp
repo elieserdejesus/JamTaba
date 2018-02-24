@@ -57,6 +57,7 @@ ChatTabWidget::ChatTabWidget(QWidget *parent) :
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     stackWidget->setMinimumWidth(230); // TODO Refactoring: remove these 'Magic Numbers'
+    stackWidget->setMaximumWidth(250);
 }
 
 void ChatTabWidget::initialize(MainController *mainController, UsersColorsPool *colorsPool)
