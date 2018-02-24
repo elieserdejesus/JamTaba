@@ -259,7 +259,12 @@ QScrollBar::sub-line
   background: none;
 }
 
-
+/* removing ugly background in VST */
+QScrollBar::add-page,
+QScrollBar::sub-page
+{
+    background: none;
+}
 
 QMenu
 {
