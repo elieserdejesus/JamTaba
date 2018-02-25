@@ -30,13 +30,6 @@ NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
 /* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
 
-QToolButton:hover,
-#licenceButton:hover
-{
-    border: 1px solid rgba(0, 0, 0, 50);
-    background-color: rgba(255, 255, 255, 80);
-}
-
 #buttonVerticalLayout,
 #buttonHorizontalLayout,
 #buttonGridLayout,
@@ -48,9 +41,24 @@ QToolButton:hover,
     background-color: rgba(255, 255, 255, 10);
 }
 
-NinjamRoomWindow QToolButton:checked
+#buttonVerticalLayout:hover,
+#buttonHorizontalLayout:hover,
+#buttonGridLayout:hover,
+#wide:hover,
+#narrow:hover,
+#licenceButton:hover
 {
-    background-color: rgba(255, 255, 255, 60);
+    border: 1px solid rgba(0, 0, 0, 50);
+    background-color: rgba(255, 255, 255, 80);
+}
+
+#buttonVerticalLayout:checked,
+#buttonHorizontalLayout:checked,
+#buttonGridLayout:checked,
+#wide:checked,
+#narrow:checked
+{
+    background-color: rgba(0, 0, 0, 30);
     border: 1px solid rgb(130, 130, 130);
 }
 

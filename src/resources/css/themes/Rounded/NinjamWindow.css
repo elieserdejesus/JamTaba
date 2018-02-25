@@ -98,13 +98,22 @@ NinjamTrackView[horizontal="true"]
     background-color: rgba(0, 0, 0, 8);
 }
 
-QToolButton:hover
+#buttonVerticalLayout:hover,
+#buttonHorizontalLayout:hover,
+#buttonGridLayout:hover,
+#wide:hover,
+#narrow:hover,
+#licenceButton:hover
 {
     border: 1px solid rgba(0, 0, 0, 50);
     background-color: rgba(255, 255, 255, 50);
 }
 
-NinjamRoomWindow QToolButton:checked
+#buttonVerticalLayout:checked,
+#buttonHorizontalLayout:checked,
+#buttonGridLayout:checked,
+#wide:checked,
+#narrow:checked
 {
     background-color: rgba(0, 0, 0, 30);
     border: 1px solid rgba(0, 0, 0, 40);
@@ -145,14 +154,6 @@ NinjamRoomWindow #licenceButton
     border: 1px solid rgba(0, 0,0, 12);
     border-radius: 2px;
 }
-
-NinjamRoomWindow #licenceButton:hover
-{
-    background-color: rgba(0, 0, 0, 30);
-    border: 1px solid rgba(0, 0, 0, 40);
-}
-
-
 
 /* slider in ninjam tracks (not the track group) */
 NinjamRoomWindow TrackGroupView BaseTrackView QSlider::groove:vertical
