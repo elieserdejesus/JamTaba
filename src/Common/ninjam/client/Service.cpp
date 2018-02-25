@@ -373,13 +373,12 @@ void Service::sendRemovedChannelIndex(int removedChannelIndex)
 {
     Q_ASSERT(removedChannelIndex >= 0 && removedChannelIndex < channels.size());
 
-    ClientSetChannel msg;
-    for (int i = 0; i < channels.size(); ++i) {
-        bool active = i == removedChannelIndex ? false  : true;
-        msg.addChannel(channels[i], active);
-    }
-
     channels.removeAt(removedChannelIndex);
+
+    // send only remaining channels to server, the removed channel will be excluded in the clients
+    ClientSetChannel msg;
+    for (const auto &channel : channels)
+        msg.addChannel(channel, true);
 
     sendMessageToServer(msg);
 }
