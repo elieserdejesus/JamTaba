@@ -150,6 +150,11 @@ void PrivateServerWindow::serverStarted()
         killTimer(networkUsageTimerID);
 
     networkUsageTimerID = startTimer(3000);
+
+
+    // UPnP
+    appendTextInLog(tr("Trying to open the port %1 in your router (UPnP) to allow external connections ...").arg(server->getPort()));
+    QtConcurrent::run(&upnpManager, &UPnPManager::openPort, server->getPort());
 }
 
 void PrivateServerWindow::serverStopped()
@@ -193,10 +198,6 @@ void PrivateServerWindow::startServer()
     if (!server->isStarted()) {
         quint16 port = PREFERRED_PORT;
         server->start(port);
-
-        appendTextInLog(tr("Trying to open the port %1 in your router (UPnP) to allow external connections ...").arg(port));
-
-        QtConcurrent::run(&upnpManager, &UPnPManager::openPort, port);
     }
 }
 
