@@ -801,7 +801,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation>privat chat mit %1</translation>
+        <translation>privater chat mit %1</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
