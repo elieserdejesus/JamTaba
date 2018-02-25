@@ -868,7 +868,7 @@
     </message>
     <message>
         <source>Invite %1 to play in %2 [%3]</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
