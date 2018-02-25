@@ -858,18 +858,6 @@
         <translation>Conectando ...</translation>
     </message>
     <message>
-        <source>Invite %1 to ...</source>
-        <translation>Convidar %1 para ...</translation>
-    </message>
-    <message>
-        <source>My private server (%1:%2)</source>
-        <translation>Meu Servidor Private (%1:%2)</translation>
-    </message>
-    <message>
-        <source>%1 / %2 players </source>
-        <translation>%1 / %2 músicos</translation>
-    </message>
-    <message>
         <source>Block %1 in chat</source>
         <translation>Bloquear %1 no bate papo</translation>
     </message>
@@ -880,6 +868,10 @@
     <message>
         <source>Public chat disconnected!</source>
         <translation>Bate papo público desconectado!</translation>
+    </message>
+    <message>
+        <source>Invite %1 to play in %2 [%3]</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_CL" sourcelanguage="en_US">
+<TS version="2.1" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -855,18 +855,6 @@
         <translation>Conectando ...</translation>
     </message>
     <message>
-        <source>Invite %1 to ...</source>
-        <translation>Invitar a %1 a ...</translation>
-    </message>
-    <message>
-        <source>My private server (%1:%2)</source>
-        <translation>Mi servidor privador (%1:%2)</translation>
-    </message>
-    <message>
-        <source>%1 / %2 players </source>
-        <translation>%1 / %2 participantes </translation>
-    </message>
-    <message>
         <source>Block %1 in chat</source>
         <translation>Bloquear a %1 en el chat</translation>
     </message>
@@ -877,6 +865,10 @@
     <message>
         <source>Public chat disconnected!</source>
         <translation>¡Chat público desconectado!</translation>
+    </message>
+    <message>
+        <source>Invite %1 to play in %2 [%3]</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -862,18 +862,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Invite %1 to ...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>My private server (%1:%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 / %2 players </source>
-        <translation type="unfinished">参加者: %1 / %2</translation>
-    </message>
-    <message>
         <source>Block %1 in chat</source>
         <translation type="unfinished">%1の発言をブロック</translation>
     </message>
@@ -883,6 +871,10 @@
     </message>
     <message>
         <source>Public chat disconnected!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invite %1 to play in %2 [%3]</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
