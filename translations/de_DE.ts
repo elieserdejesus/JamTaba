@@ -184,7 +184,7 @@
     <name>InactivityDetector</name>
     <message>
         <source>You are not transmiting for a long time! This is intentional?</source>
-        <translation type="unfinished"></translation>
+        <translation>du überträgst lange zeit nicht</translation>
     </message>
 </context>
 <context>
@@ -801,7 +801,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished">privat chat mit %1</translation>
+        <translation>privater chat mit %1</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
@@ -1576,7 +1576,7 @@
     <name>PrivateServerWindow</name>
     <message>
         <source>Your Private Server</source>
-        <translation type="unfinished"></translation>
+        <translation>dein privater server</translation>
     </message>
     <message>
         <source>Start</source>
