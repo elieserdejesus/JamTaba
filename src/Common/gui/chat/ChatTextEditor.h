@@ -18,6 +18,8 @@ private:
     quint32 computeBestWidth() const;
     quint32 bestWidth;
 
+    uint getEmojisCount() const;
+
 };
 
 #endif // CHATTEXTEDIT_H
