@@ -25,6 +25,18 @@ QString ninjam::client::extractUserIP(const QString &fullName)
     return QString();
 }
 
+QString ninjam::client::maskIpInUserFullName(const QString &userFullName)
+{
+    auto name = extractUserName(userFullName);
+    auto ip = extractUserIP(userFullName);
+
+    if (ipIsMasked(ip))
+        return userFullName;
+
+    return QString("%1@%2")
+            .arg(name)
+            .arg(maskIP(ip));
+}
 
 QString ninjam::client::maskIP(const QString &ip)
 {
@@ -88,6 +100,16 @@ void User::updateChannelReceiveStatus(quint8 channelIndex, bool receiving)
         channels[channelIndex].setActive(receiving);
     else
         qCritical() << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
+}
+
+bool User::hasActiveChannels() const
+{
+    for (const auto &channel : channels.values()) {
+        if (channel.isActive())
+            return true;
+    }
+
+    return false;
 }
 
 void User::removeChannel(quint8 channelIndex)

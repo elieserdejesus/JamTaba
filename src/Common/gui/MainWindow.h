@@ -118,7 +118,7 @@ public:
     void setTintColor(const QColor &color);
     QColor getTintColor() const;
 
-    void fillUserContextMenu(QMenu &menu, const QString &userFullName, bool sendInvitationsInPublicChat);
+    void fillUserContextMenu(QMenu &menu, const QString &userFullName, bool addInvitationEntry);
 
 public slots:
     void enterInRoom(const login::RoomInfo &roomInfo);
@@ -460,7 +460,6 @@ private:
     void setupMainTabCornerWidgets();
 
     static QString buildServerInviteMessage(const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool showPrivateServerIpAndPort);
-    void sendServerInvitation(const QString &userFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool sendInvitationsInPublicChat);
 
     QScopedPointer<PerformanceMonitor> performanceMonitor; // cpu and memmory usage
     qint64 lastPerformanceMonitorUpdate; // TODO move to PerformenceMonitor

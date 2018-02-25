@@ -211,8 +211,7 @@ void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 
     auto mainWindow = mainController->getMainWindow();
     if (mainWindow) {
-        bool sendInvitationsInPublicChat = false;
-        mainWindow->fillUserContextMenu(contextMenu, getUniqueName(), sendInvitationsInPublicChat);
+        mainWindow->fillUserContextMenu(contextMenu, getUniqueName(), false);
     }
 
     TrackGroupView::populateContextMenu(contextMenu);

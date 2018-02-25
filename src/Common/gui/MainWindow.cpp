@@ -3,6 +3,7 @@
 #include "LocalTrackView.h"
 #include "LocalTrackGroupView.h"
 #include "NinjamRoomWindow.h"
+#include "ninjam/client/Service.h"
 #include "UserNameDialog.h"
 #include "JamRoomViewPanel.h"
 #include "widgets/MapWidget.h"
@@ -1679,79 +1680,48 @@ void MainWindow::connectInMainChat()
     mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
 }
 
-void MainWindow::sendServerInvitation(const QString &userFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool sendInvitationInPublicChat)
-{
-    if (sendInvitationInPublicChat) {
-        mainChat->sendServerInvite(userFullName, serverIP, serverPort, isPrivateServer);
-    }
-    else {
-        auto ninjamController = mainController->getNinjamController();
-        if (ninjamController) {
-
-            // inviting as private message
-            auto text = QString("/msg %1 %2")
-                    .arg(userFullName)
-                    .arg(buildServerInviteMessage(serverIP, serverPort, isPrivateServer, true));
-
-            ninjamController->sendChatMessage(text);
-        }
-    }
-}
-
-void MainWindow::fillUserContextMenu(QMenu &menu, const QString &userFullName, bool sendInvitationsInPublicChat)
+void MainWindow::fillUserContextMenu(QMenu &menu, const QString &userFullName, bool addInvitationEntry)
 {
     auto userName = ninjam::client::extractUserName(userFullName);
 
-    auto serversMenu = new QMenu(tr("Invite %1 to ...").arg(userName), &menu);
+    if (addInvitationEntry && mainController->isPlayingInNinjamRoom()) {
 
-    if (privateServerWindow && privateServerWindow->serverIsRunning()) {
-        auto serverIP = privateServerWindow->getServerExternalIP();
-        auto serverPort = privateServerWindow->getServerPort();
-        auto action = serversMenu->addAction(tr("My private server (%1:%2)").arg(serverIP).arg(serverPort));
-        connect(action, &QAction::triggered, [=](){
-            sendServerInvitation(userFullName, serverIP, serverPort, true, sendInvitationsInPublicChat);
-        });
+        auto service = mainController->getNinjamService();
+        if (service) {
+            auto serverInfo = service->getCurrentServer();
+            if (serverInfo) {
+                bool userIsAlreadyConnected = false;
+                for (auto user : serverInfo->getUsers()) {
+                    if (ninjam::client::maskIpInUserFullName(user.getFullName()) == ninjam::client::maskIpInUserFullName(userFullName)) {
+                        if (user.hasActiveChannels()) {
+                            userIsAlreadyConnected = true;
+                            break;
+                        }
+                    }
+                }
 
-        serversMenu->addSeparator();
+                if (!userIsAlreadyConnected) { // skip the invite menu entry if user is already connected in the server
+
+                    QString inviteText = tr("Invite %1 to play in %2 [%3]")
+                                    .arg(userName)
+                                    .arg(serverInfo->getHostName())
+                                    .arg(serverInfo->getPort());
+
+                    bool isPrivateServer = false;
+                    if (privateServerWindow && privateServerWindow->serverIsRunning()) {
+                        isPrivateServer = serverInfo->getHostName() == privateServerWindow->getServerExternalIP();
+                    }
+
+                    auto action = menu.addAction(inviteText);
+                    connect(action, &QAction::triggered, [=](){
+                        mainChat->sendServerInvite(userFullName, serverInfo->getHostName(), serverInfo->getPort(), isPrivateServer);
+                    });
+
+                    menu.addSeparator();
+                }
+            }
+        }
     }
-
-    // build public servers list
-    QMap<QString, QMenu *> groupMenus;
-    groupMenus.insert("ninbot.com", serversMenu->addMenu("Ninbot"));
-    groupMenus.insert("ninjamer.com", serversMenu->addMenu("Ninjamer"));
-
-    for (auto jamRoomView : roomViewPanels.values()) {
-        auto roomInfo = jamRoomView->getRoomInfo();
-
-        auto roomDescription = tr("%1 / %2 players ")
-                .arg(roomInfo.getNonBotUsersCount())
-                .arg(roomInfo.getMaxUsers() - 1); // removing bot
-
-        if (roomInfo.isEmpty())
-            roomDescription = "empty";
-        else if (roomInfo.isFull())
-            roomDescription = "full";
-
-        auto actionText = QString("%1 (%2)   [%3]")
-                .arg(roomInfo.getName())
-                .arg(roomInfo.getPort())
-                .arg(roomDescription);
-
-        auto isGroup = groupMenus.contains(roomInfo.getName());
-        auto groupMenu = isGroup ? groupMenus[roomInfo.getName()] : serversMenu;
-        auto action = groupMenu->addAction(actionText);
-        action->setEnabled(!roomInfo.isFull());
-        connect(action, &QAction::triggered, [=](){
-            bool isPrivateServer = false;
-            sendServerInvitation(userFullName, roomInfo.getName(), roomInfo.getPort(), isPrivateServer, sendInvitationsInPublicChat);
-        });
-
-        action->setEnabled(!roomInfo.isFull());
-    }
-
-    menu.addMenu(serversMenu);
-
-    menu.addSeparator();
 
     auto userIsBlocked = mainController->userIsBlockedInChat(userFullName);
 
@@ -1769,7 +1739,7 @@ void MainWindow::fillUserContextMenu(QMenu &menu, const QString &userFullName, b
 void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName)
 {
     if (ninjam::client::extractUserName(userFullName) != mainController->getUserName()) // not generating context menu to local user (avoid user blocking yourself or inviting yourseld)
-        fillUserContextMenu(menu, userFullName, true); // send invitations in public chat
+        fillUserContextMenu(menu, userFullName, true);
 }
 
 void MainWindow::blockUserInChat()

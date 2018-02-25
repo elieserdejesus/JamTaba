@@ -13,6 +13,7 @@ namespace client
 
     QString extractUserName(const QString &userFullName);
     QString extractUserIP(const QString &userFullName);
+    QString maskIpInUserFullName(const QString &userFullName);
     QString maskIP(const QString& ip);
     bool ipIsMasked(const QString &ip);
 
@@ -27,6 +28,8 @@ namespace client
         {
             return !channels.isEmpty();
         }
+
+        bool hasActiveChannels() const;
 
         inline bool hasChannel(int channelIndex) const
         {
