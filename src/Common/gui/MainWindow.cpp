@@ -1385,12 +1385,12 @@ void MainWindow::handleUserLeaving(const QString &userName)
 
 void MainWindow::handleUserEntering(const QString &userName)
 {
-    auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
-    if (!chatPanel)
+    auto ninjamChat = ui.chatTabWidget->getNinjamServerChat();
+    if (!ninjamChat)
         return;
 
     auto chatsToReport = QList<ChatPanel *>();
-    chatsToReport.append(chatPanel);
+    chatsToReport.append(ninjamChat);
 
     auto privateChat = ui.chatTabWidget->getPrivateChat(userName);
     if (privateChat) {
