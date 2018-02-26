@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<TS version="2.0" language="de_DE">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -105,15 +105,15 @@
     </message>
     <message>
         <source>Turn on/off this chat</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Schalte diesen Chat ein oder aus</translation>
     </message>
     <message>
         <source>chat is off</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Der Chat ist ausgeschaltet</translation>
     </message>
     <message>
         <source>Connected Users (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verbundene Benutzer (%1)</translation>
     </message>
 </context>
 <context>
@@ -124,7 +124,7 @@
     </message>
     <message>
         <source>Public chat</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Öffentlicher Chat</translation>
     </message>
 </context>
 <context>
@@ -841,19 +841,19 @@
     </message>
     <message>
         <source>Let&apos;s play in %1 : %2 ?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lass uns in %1: %2 spielen?</translation>
     </message>
     <message>
         <source>Let&apos;s play in my private server?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lass uns auf meinem privaten Server spielen?</translation>
     </message>
     <message>
         <source>Connected with public chat!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verbunden mit öffentlichen Chat!</translation>
     </message>
     <message>
         <source>Connecting ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">verbindung ...</translation>
     </message>
     <message>
         <source>Block %1 in chat</source>
@@ -865,11 +865,11 @@
     </message>
     <message>
         <source>Public chat disconnected!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Öffentlicher Chat wurde getrennt!</translation>
     </message>
     <message>
         <source>Invite %1 to play in %2 [%3]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lade %1 ein, um in %2 zu spielen [%3]</translation>
     </message>
 </context>
 <context>
