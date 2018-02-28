@@ -417,6 +417,10 @@
 		2AEFF5641E18368F00843898 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */; };
 		2AEFF5671E1836EA00843898 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700F1E08116200A4B6C2 /* IOKit.framework */; };
 		2AEFF5681E1836F800843898 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700D1E08113100A4B6C2 /* Carbon.framework */; };
+		2AF562172047181A00D809D7 /* MainChat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF562152047181A00D809D7 /* MainChat.cpp */; };
+		2AF562182047181A00D809D7 /* MainChat.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF562162047181A00D809D7 /* MainChat.h */; };
+		2AF562192047185100D809D7 /* MainChat.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AF562162047181A00D809D7 /* MainChat.h */; };
+		2AF5621B204719A700D809D7 /* libQt5WebSockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF5621A204719A700D809D7 /* libQt5WebSockets.a */; };
 		2AF5A9311E76192F00D1150A /* FileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9281E76192F00D1150A /* FileReader.h */; };
 		2AF5A9321E76192F00D1150A /* FileReaderFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9291E76192F00D1150A /* FileReaderFactory.cpp */; };
 		2AF5A9331E76192F00D1150A /* FileReaderFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A92A1E76192F00D1150A /* FileReaderFactory.h */; };
@@ -835,6 +839,9 @@
 		2AEFF55E1E18362500843898 /* libcocoaprintersupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcocoaprintersupport.a; path = "../../../Qt-5.6/plugins/printsupport/libcocoaprintersupport.a"; sourceTree = "<group>"; };
 		2AEFF5601E18363800843898 /* libqtfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtfreetype.a; path = "../../../Qt-5.6/lib/libqtfreetype.a"; sourceTree = "<group>"; };
 		2AEFF5621E18364D00843898 /* libQt5PrintSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PrintSupport.a; path = "../../../Qt-5.6/lib/libQt5PrintSupport.a"; sourceTree = "<group>"; };
+		2AF562152047181A00D809D7 /* MainChat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainChat.cpp; sourceTree = "<group>"; };
+		2AF562162047181A00D809D7 /* MainChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainChat.h; sourceTree = "<group>"; };
+		2AF5621A204719A700D809D7 /* libQt5WebSockets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5WebSockets.a; path = "../../../Qt-5.6/lib/libQt5WebSockets.a"; sourceTree = "<group>"; };
 		2AF5A9281E76192F00D1150A /* FileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReader.h; sourceTree = "<group>"; };
 		2AF5A9291E76192F00D1150A /* FileReaderFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileReaderFactory.cpp; sourceTree = "<group>"; };
 		2AF5A92A1E76192F00D1150A /* FileReaderFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReaderFactory.h; sourceTree = "<group>"; };
@@ -939,6 +946,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AF5621B204719A700D809D7 /* libQt5WebSockets.a in Frameworks */,
 				2A1362B51F659642004953CF /* CoreVideo.framework in Frameworks */,
 				2A1362B31F6595D2004953CF /* AVFoundation.framework in Frameworks */,
 				2A1362B11F659589004953CF /* CoreMedia.framework in Frameworks */,
@@ -1012,6 +1020,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				2AF5621A204719A700D809D7 /* libQt5WebSockets.a */,
 				2A1362B41F659642004953CF /* CoreVideo.framework */,
 				2A1362B21F6595D2004953CF /* AVFoundation.framework */,
 				2A1362B01F659589004953CF /* CoreMedia.framework */,
@@ -1426,6 +1435,8 @@
 		2A0DBC051E0AF46900BEF1FF /* loginserver */ = {
 			isa = PBXGroup;
 			children = (
+				2AF562152047181A00D809D7 /* MainChat.cpp */,
+				2AF562162047181A00D809D7 /* MainChat.h */,
 				2A0DBC061E0AF46900BEF1FF /* GeneratedFiles */,
 				2A0DBC081E0AF46900BEF1FF /* LoginService.cpp */,
 				2A0DBC091E0AF46900BEF1FF /* LoginService.h */,
@@ -1771,6 +1782,7 @@
 				2AF5A9331E76192F00D1150A /* FileReaderFactory.h in Headers */,
 				2A0DBCDF1E0AF46900BEF1FF /* BpiUtils.h in Headers */,
 				2A0DBC631E0AF46900BEF1FF /* AudioPeak.h in Headers */,
+				2AF562182047181A00D809D7 /* MainChat.h in Headers */,
 				2A0DBE631E0AF46E00BEF1FF /* JamRecorder.h in Headers */,
 				2AAAA7BA2032462B0005C3F5 /* ServerInfo.h in Headers */,
 				2A73C8141E44F84900DF124A /* TopLevelTextEditorModifier.h in Headers */,
@@ -2111,6 +2123,7 @@
 				2A120A551E0BEF1900E0E596 /* IpToLocationResolver.h in Sources */,
 				2A120A561E0BEF1C00E0E596 /* WebIpToLocationResolver.h in Sources */,
 				2A120A811E0BF2C300E0E596 /* RoomStreamerNode.h in Sources */,
+				2AF562192047185100D809D7 /* MainChat.h in Sources */,
 				2AF5A94F1E761BC500D1150A /* LooperPersistence.cpp in Sources */,
 				2A1C7AAE1E0B5FBE00C7984D /* JamTaba_UIView.mm in Sources */,
 				2A1C7AAD1E0B5FBC00C7984D /* JamTaba_ViewFactory.mm in Sources */,
@@ -2177,6 +2190,7 @@
 				2A4E3FAD1F99882B00677E9C /* InactivityDetector.cpp in Sources */,
 				2A14FF702007A6DA00ADAEB0 /* IconFactory.cpp in Sources */,
 				2A1C7A651E0B5F2C00C7984D /* ThemeLoader.cpp in Sources */,
+				2AF562172047181A00D809D7 /* MainChat.cpp in Sources */,
 				2A1C7A661E0B5F2C00C7984D /* TrackGroupView.cpp in Sources */,
 				2A1C7A671E0B5F2C00C7984D /* UserNameDialog.cpp in Sources */,
 				2A1C7A681E0B5F2C00C7984D /* UsersColorsPool.cpp in Sources */,
