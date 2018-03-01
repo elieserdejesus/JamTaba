@@ -55,7 +55,7 @@ ChatPanel #toolButtonMinus
 
 ChatMessagePanel #labelUserName /* chat message author */
 {
-    font-size: 7.5pt;
+    font-size: 10px;
     font-weight: bold;
     margin: 0px;
 }
