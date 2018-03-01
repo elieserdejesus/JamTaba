@@ -1673,7 +1673,7 @@
     <name>ServerInviteButton</name>
     <message>
         <source>Accept!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">akzeptieren!</translation>
     </message>
 </context>
 <context>
@@ -1733,7 +1733,7 @@
     <name>login::MainChat</name>
     <message>
         <source>You can&apos;t send messages using an empty user name!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sie können keine Nachrichten mit einem leeren Benutzernamen senden!</translation>
     </message>
 </context>
 </TS>
