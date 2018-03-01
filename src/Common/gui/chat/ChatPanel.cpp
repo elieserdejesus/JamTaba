@@ -361,6 +361,7 @@ void ChatPanel::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
         ui->retranslateUi(this);
+        updatePlaceHolderText();
     }
 
     QWidget::changeEvent(e);
