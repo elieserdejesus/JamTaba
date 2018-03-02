@@ -1682,14 +1682,14 @@
     <name>ServerInviteButton</name>
     <message>
         <source>Accept!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">同意する!</translation>
     </message>
 </context>
 <context>
     <name>Slider</name>
     <message>
         <source>center</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">センター</translation>
     </message>
     <message>
         <source>L</source>
@@ -1742,7 +1742,7 @@
     <name>login::MainChat</name>
     <message>
         <source>You can&apos;t send messages using an empty user name!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">空のユーザー名を使用してメッセージを送信することはできません!</translation>
     </message>
 </context>
 </TS>
