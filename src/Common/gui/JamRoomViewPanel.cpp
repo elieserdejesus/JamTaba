@@ -116,7 +116,7 @@ void JamRoomViewPanel::updateUserLocation(const QString &userIP)
 {
     Q_UNUSED(userIP)
     for (const auto &user : roomInfo.getUsers()) {
-        if (user.getIp() == userIP) {
+        if (ninjam::client::maskIP(user.getIp()) == ninjam::client::maskIP(userIP)) {
             updateMap();
             update();
             break;
