@@ -154,6 +154,7 @@ private:
     void setMessagesFontSizeOffset(qint8 offset);
 
     void updatePlaceHolderText();
+    void updateConnectedUsersTitleString(quint32 connectedUsers);
     void updateEmojiIcon();
 };
 

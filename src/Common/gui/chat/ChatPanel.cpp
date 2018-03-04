@@ -225,10 +225,9 @@ void ChatPanel::setConnectedUserBlockedStatus(const QString &userFullName, bool 
 
 void ChatPanel::setConnectedUsers(const QStringList &usersNames)
 {
+    updateConnectedUsersTitleString(usersNames.count());
+
     auto root = ui->treeWidget->topLevelItem(0);
-
-    root->setText(0, tr("Connected Users (%1)").arg(usersNames.size()));
-
     Q_ASSERT(root);
 
     while (root->childCount() > 0) {
@@ -246,6 +245,14 @@ void ChatPanel::setConnectedUsers(const QStringList &usersNames)
 
     //ui->treeWidget->setVisible(usersNames.size() > 1);
     ui->treeWidget->setVisible(true);
+}
+
+void ChatPanel::updateConnectedUsersTitleString(quint32 connectedUsers)
+{
+    auto root = ui->treeWidget->topLevelItem(0);
+    Q_ASSERT(root);
+
+    root->setText(0, tr("Connected Users (%1)").arg(connectedUsers));
 }
 
 void ChatPanel::setupSignals()
@@ -362,6 +369,10 @@ void ChatPanel::changeEvent(QEvent *e)
     if (e->type() == QEvent::LanguageChange) {
         ui->retranslateUi(this);
         updatePlaceHolderText();
+
+        auto root = ui->treeWidget->topLevelItem(0);
+        if (root)
+            updateConnectedUsersTitleString(root->childCount());
     }
 
     QWidget::changeEvent(e);
