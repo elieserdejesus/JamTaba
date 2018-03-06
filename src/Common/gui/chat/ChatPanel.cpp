@@ -158,7 +158,8 @@ void ChatPanel::hideOnOffButton()
 void ChatPanel::showContextMenu(const QPoint &pos)
 {
     auto item = ui->treeWidget->itemAt(pos);
-    if (!item)
+    auto root = ui->treeWidget->topLevelItem(0);
+    if (!item || item == root)
         return;
 
     auto userName = item->text(0);
