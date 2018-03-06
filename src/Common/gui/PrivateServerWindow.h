@@ -27,6 +27,9 @@ public:
     quint16 getServerPort() const;
     QString getServerExternalIP() const;
 
+signals:
+    void userConnectingInPrivateServer(QString server, quint16 port);
+
 protected:
     void timerEvent(QTimerEvent *) override;
     void changeEvent(QEvent *) override;

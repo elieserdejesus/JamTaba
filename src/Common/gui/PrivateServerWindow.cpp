@@ -4,6 +4,7 @@
 
 #include <QDateTime>
 #include <QtConcurrent/QtConcurrent>
+#include <QMessageBox>
 
 const quint16 PrivateServerWindow::PREFERRED_PORT = 2049;
 
@@ -78,6 +79,15 @@ void PrivateServerWindow::portOpened(const QString &localIP, const QString &exte
     ui->labelPortValue->setText(QString::number(PREFERRED_PORT));
 
     setServerDetailsVisibility(true);
+
+    QString title = tr("Your Private Server");
+    QString text = tr("Connect with private server ...");
+    auto buttons = QMessageBox::StandardButtons(QMessageBox::Yes|QMessageBox::No);
+    auto standardButton = QMessageBox::StandardButtons(QMessageBox::Yes);
+    int result = QMessageBox::question(this, title, text, buttons);
+    if (result == QMessageBox::Yes) {
+        emit userConnectingInPrivateServer(externalIP, PREFERRED_PORT);
+    }
 }
 
 PrivateServerWindow::~PrivateServerWindow()

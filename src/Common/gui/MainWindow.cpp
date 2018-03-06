@@ -2238,6 +2238,11 @@ void MainWindow::showPrivateServerWindow()
 {
     if (!privateServerWindow) {
         privateServerWindow.reset(new PrivateServerWindow());
+
+        connect(privateServerWindow.data(), &PrivateServerWindow::userConnectingInPrivateServer, [=](QString server, quint16 port){
+            if (mainController)
+                connectInPrivateServer(server, port, mainController->getUserName(), QString());
+        });
     }
 
     if (!privateServerWindow->isVisible())
