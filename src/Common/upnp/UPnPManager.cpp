@@ -59,7 +59,7 @@ void UPnPManager::openPort(quint16 port)
     devlist = upnpDiscover(2000, 0, 0, localport, ipv6, ttl, &error);
 
     if(!devlist) {
-        emit(QString("Error discovering UpNp devices (code: %1)").arg(error));
+        emit errorDetected(QString("Error discovering UpNp devices (code: %1)").arg(error));
         return;
     }
 
