@@ -15,24 +15,23 @@ public:
     {
         QHBoxLayout *layout = new QHBoxLayout();
 
-        Slider *verticalSlider = new Slider();
+        AudioSlider *verticalSlider = new AudioSlider();
         verticalSlider->setValue(80);
         verticalSlider->setOrientation(Qt::Vertical);
         layout->addWidget(verticalSlider);
 
         layout->addSpacing(32);
 
-        Slider *horizontalSlider = new Slider();
+        AudioSlider *horizontalSlider = new AudioSlider();
         horizontalSlider->setValue(80);
         horizontalSlider->setOrientation(Qt::Horizontal);
         layout->addWidget(horizontalSlider, 1);
 
         layout->addSpacing(32);
 
-        Slider *panSlider = new Slider();
+        PanSlider *panSlider = new PanSlider();
         panSlider->setMaximumWidth(100);
         panSlider->setOrientation(Qt::Horizontal);
-        panSlider->setSliderType(Slider::PanSlider);
 
         QHBoxLayout *panLayout = new QHBoxLayout();
         panLayout->addWidget(new QLabel(QStringLiteral("L")));
