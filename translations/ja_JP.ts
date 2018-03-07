@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ja_JP">
+<TS version="2.1" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -1655,6 +1655,10 @@
     <message>
         <source>Hosting Ninjam Private Server</source>
         <translation type="unfinished">Ninjamプライベートサーバのホスティング</translation>
+    </message>
+    <message>
+        <source>Connect with private server ...</source>
+        <translation type="unfinished">プライベートサーバーと接続...</translation>
     </message>
 </context>
 <context>
