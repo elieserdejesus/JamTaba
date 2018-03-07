@@ -1647,6 +1647,10 @@
         <source>Hosting Ninjam Private Server</source>
         <translation>Hosting Ninjam Private Server</translation>
     </message>
+    <message>
+        <source>Connect with private server ...</source>
+        <translation type="unfinished">Połącz z prywatnym serwerem ...</translation>
+    </message>
 </context>
 <context>
     <name>Recorder::ClipSortLogGenerator</name>
