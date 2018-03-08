@@ -10,9 +10,24 @@ class AudioSlider : public QSlider
 public:
     explicit AudioSlider(QWidget *parent = nullptr);
 
+    void setMeterDecayTime(quint32 decayTimeInMiliseconds);
+
+    // these functions will affect all meters
+    static void setPaintMaxPeakMarker(bool paintMaxPeak);
+    static void paintRmsOnly();
+    static void paintPeaksOnly();
+    static void paintPeaksAndRms();
+    static bool isPaintingPeaksOnly();
+    static bool isPaintingRmsOnly();
+
+    inline static bool isPaintintMaxPeakMarker() { return paintingMaxPeakMarker; }
+    inline static bool isPaintingRMS() { return paintingRMS; }
+    inline static bool isPaintingPeaks() { return paintingPeaks; }
+
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void mouseDoubleClickEvent(QMouseEvent *ev) override;
+    void resizeEvent(QResizeEvent *ev) override;
 
 private slots:
     void showToolTip();
@@ -22,7 +37,83 @@ private:
     void drawMarker(QPainter &painter);
     qreal getMarkerPosition() const;
 
+    void recreateInterpolatedColors();
+
+    void paintSegments(QPainter &painter, const QRectF &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors, bool drawSegments = true);
+
+    bool isVertical() const;
+
+    static float limitFloatValue(float value, float minValue = 0.0f, float maxValue = 1.0f);
+
+    void rebuildDbMarkersPixmap();
+    void drawDbMarkers(QPainter &painter);
+    static std::vector<float> createDBValues();
+    static qreal getSmoothedLinearPeakValue(qreal linearValue);
+
+    void updateInternalValues();
+
+    uint getParallelSegments() const;
+
+    static qreal getPeakPosition(qreal linearPeak, qreal rectSize, qreal peakValueOffset);
+
+    void paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, const QRectF &rect);
+
+    QColor rmsColor;
+    QColor maxPeakColor;
+    QColor peakStartColor;  // start gradient color
+    QColor peakEndColor;    // end gradient color
+    QColor dBMarksColor;
+
+    bool drawSegments;
+
+    std::vector<QColor> peakColors;
+    std::vector<QColor> rmsColors;
+
+    // static painting flags. Turning on/off will affect all audio meters.
+    static bool paintingMaxPeakMarker;
+    static bool paintingPeaks;
+    static bool paintingRMS;
+
+    float currentPeak[2];
+    float maxPeak[2];
+    float currentRms[2];
+
+    qint64 lastMaxPeakTime[2];
+
+    bool stereo; // draw 2 meters?
+
+    QPixmap dbMarkersPixmap;
+    bool paintingDbMarkers;
+
+    qint64 lastUpdate;
+
+    int decayTime;
+
+    static const quint8 SEGMENTS_SIZE;
+
+    static const uint LINES_MARGIN;
+    static const uint DEFAULT_DECAY_TIME;
+
+    static const float MAX_SMOOTHED_LINEAR_VALUE;
+    static const float MIN_SMOOTHED_LINEAR_VALUE;
+    static const float MAX_LINEAR_VALUE;
+    static const float MIN_LINEAR_VALUE;
+    static const float MAX_DB_VALUE;
+    static const float MIN_DB_VALUE;
+
+    static const float RESIZE_FACTOR;
+
+    static const int MAX_PEAK_SHOW_TIME;
+    static const int MAX_PEAK_MARKER_SIZE;
+    static const int MIN_SIZE;
 };
+
+inline bool AudioSlider::isVertical() const
+{
+    return orientation() == Qt::Vertical;
+}
+
+// -----------------------------------------------------
 
 class PanSlider : public QSlider
 {
