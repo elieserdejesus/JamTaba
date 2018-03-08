@@ -77,6 +77,10 @@ public:
         auto stereoCheckBox = new QCheckBox("Stereo");
         stereoCheckBox->setChecked(true);
         buttonsLayout->addWidget(stereoCheckBox);
+        connect(stereoCheckBox, &QCheckBox::clicked, [=](){
+            for (auto slider : sliders)
+                slider->setStereo(!slider->isStereo());
+        });
 
         auto rmsCheckBox = new QCheckBox("RMS");
         rmsCheckBox->setChecked(AudioSlider::isPaintingRMS());

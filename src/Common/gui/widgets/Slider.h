@@ -32,6 +32,8 @@ public:
     inline static bool isPaintingRMS() { return paintingRMS; }
     inline static bool isPaintingPeaks() { return paintingPeaks; }
 
+    inline bool isStereo() const { return stereo; }
+
     void setPeak(float peak, float rms);
     void setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms);
 
@@ -41,6 +43,9 @@ public:
     void setPeaksEndColor(const QColor &newColor);
     void setDbMarksColor(const QColor &newColor);
     void setDrawSegments(bool drawSegments);
+
+public slots:
+    void setStereo(bool stereo);
 
 protected:
     void paintEvent(QPaintEvent *ev) override;

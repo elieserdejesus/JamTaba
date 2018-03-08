@@ -217,7 +217,7 @@ void AudioSlider::paintEvent(QPaintEvent *ev)
         updateInternalValues(); // compute decay and max peak
     }
 
-    QSlider::paintEvent(ev);
+    //QSlider::paintEvent(ev);
 }
 
 void AudioSlider::paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, const QRectF &rect)
@@ -229,6 +229,14 @@ void AudioSlider::paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, c
                    isVerticalMeter ? MAX_PEAK_MARKER_SIZE : rect.height());
 
     painter.fillRect(maxPeakRect, maxPeakColor);
+}
+
+void AudioSlider::setStereo(bool stereo)
+{
+    if (this->stereo != stereo) {
+        this->stereo = stereo;
+        update();
+    }
 }
 
 qreal AudioSlider::getPeakPosition(qreal linearPeak, qreal rectSize, qreal peakValueOffset)
