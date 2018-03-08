@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QFile>
+#include <QDateTime>
 
 #include "gui/widgets/Slider.h"
 #include "Utils.h"
@@ -108,19 +109,43 @@ public:
             }
         });
 
+        auto randomPeaksCheckBox = new QCheckBox("Random peaks");
+        randomPeaksCheckBox->setChecked(generatingRandomPeaks);
+        connect(randomPeaksCheckBox, &QCheckBox::clicked, [=](){
+            generatingRandomPeaks = !generatingRandomPeaks;
+        });
+        buttonsLayout->addWidget(randomPeaksCheckBox);
+
         layout->addLayout(buttonsLayout);
     }
 
 protected:
     void timerEvent(QTimerEvent *) override
     {
-        for (auto slider : sliders)
+        static auto lastPeakUpdate = QDateTime::currentMSecsSinceEpoch();
+
+        auto now = QDateTime::currentMSecsSinceEpoch();
+        auto canGeneratePeaks = (now - lastPeakUpdate) >= 500;
+        auto peak = 0.0;
+        if (canGeneratePeaks) {
+            peak = (qrand() % 100)/100.0;
+            if (peak < 0.35)
+                peak = 0.35;
+            lastPeakUpdate = now;
+        }
+
+        for (auto slider : sliders) {
+            if (generatingRandomPeaks) {
+                slider->setPeak(peak, peak, peak, peak);
+            }
             slider->update();
+        }
     }
 
 private:
     int refreshTimerID;
     QList<AudioSlider *> sliders;
+    bool generatingRandomPeaks = true;
 };
 
 
