@@ -603,11 +603,10 @@ void PanSlider::drawMarker(QPainter &painter)
 
     QLine line(x1, y1, x2, y2);
 
-    QStyleOptionSlider opt;
-    initStyleOption(&opt);
-    QRect rectHandle = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, NULL);
-
-    line.translate(-rectHandle.width()/2.0, 0.0);
+    //QStyleOptionSlider opt;
+    //initStyleOption(&opt);
+    //QRect rectHandle = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, NULL);
+    //line.translate(-rectHandle.width()/2.0, 0.0);
 
     painter.drawLine(line);
 }
