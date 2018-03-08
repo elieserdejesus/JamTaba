@@ -20,6 +20,7 @@ public:
     TestMainWindow()
         :QFrame()
     {
+
         auto layout = new QHBoxLayout();
 
         auto verticalSlider = new AudioSlider();
@@ -115,6 +116,13 @@ public:
             generatingRandomPeaks = !generatingRandomPeaks;
         });
         buttonsLayout->addWidget(randomPeaksCheckBox);
+
+        auto paintMaxPeaksCheckBox = new QCheckBox("Paint max peaks");
+        paintMaxPeaksCheckBox->setChecked(AudioSlider::isPaintintMaxPeakMarker());
+        connect(paintMaxPeaksCheckBox, &QCheckBox::clicked, [=](){
+            AudioSlider::setPaintMaxPeakMarker(!AudioSlider::isPaintintMaxPeakMarker());
+        });
+        buttonsLayout->addWidget(paintMaxPeaksCheckBox);
 
         layout->addLayout(buttonsLayout);
     }

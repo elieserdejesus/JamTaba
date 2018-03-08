@@ -542,7 +542,10 @@ void AudioSlider::setDrawSegments(bool drawSegments)
     update();
 }
 
-
+void AudioSlider::setPaintMaxPeakMarker(bool paintMaxPeak)
+{
+    AudioSlider::paintingMaxPeakMarker = paintMaxPeak;
+}
 // --------------------------------------------------------------------------
 
 PanSlider::PanSlider(QWidget *parent) :
