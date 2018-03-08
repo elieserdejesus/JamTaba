@@ -105,15 +105,15 @@
     </message>
     <message>
         <source>Turn on/off this chat</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Włącz / wyłącz ten czat</translation>
     </message>
     <message>
         <source>chat is off</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">czat jest wyłączony</translation>
     </message>
     <message>
         <source>Connected Users (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Połączeni użytkownicy (%1)</translation>
     </message>
 </context>
 <context>
@@ -124,7 +124,7 @@
     </message>
     <message>
         <source>Public chat</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Czat publiczny</translation>
     </message>
 </context>
 <context>
@@ -841,19 +841,19 @@
     </message>
     <message>
         <source>Let&apos;s play in %1 : %2 ?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zagrajmy w %1 : %2 ?</translation>
     </message>
     <message>
         <source>Let&apos;s play in my private server?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zagrajmy na moim prywatnym serwerze?</translation>
     </message>
     <message>
         <source>Connected with public chat!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Połączony z publicznym czatem!</translation>
     </message>
     <message>
         <source>Connecting ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Łączę ...</translation>
     </message>
     <message>
         <source>Block %1 in chat</source>
@@ -865,11 +865,11 @@
     </message>
     <message>
         <source>Public chat disconnected!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Czat publiczny został rozłączony!</translation>
     </message>
     <message>
         <source>Invite %1 to play in %2 [%3]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zaproś %1, aby zagrać w %2 [%3]</translation>
     </message>
 </context>
 <context>
@@ -1677,7 +1677,7 @@
     <name>ServerInviteButton</name>
     <message>
         <source>Accept!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zaakceptować!</translation>
     </message>
 </context>
 <context>
@@ -1737,7 +1737,7 @@
     <name>login::MainChat</name>
     <message>
         <source>You can&apos;t send messages using an empty user name!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nie możesz wysyłać wiadomości używając pustej nazwy użytkownika!</translation>
     </message>
 </context>
 </TS>
