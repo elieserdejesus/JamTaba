@@ -141,7 +141,7 @@ BoostSpinBox QToolButton:!enabled:!checked
 QSlider::handle
 {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0.0 rgb(115, 115, 115), stop: 1.0 rgb(89, 89, 89));
+                stop: 0.0 rgba(115, 115, 115, 180), stop: 1.0 rgba(89, 89, 89, 180));
 }
 
 QSlider::handle:hover
@@ -160,21 +160,21 @@ MetronomePanel QSlider::groove:horizontal
 
 QSlider::groove:vertical
 {
-    width: 6px;
+    width: 13px;
 }
 
 QSlider::groove:horizontal
 {
-    height: 5px;
+    height: 13px;
 }
 
 QSlider::handle:vertical
 {
-    margin-left: -8px;
-    margin-right: -8px;
+    margin-left: -4px;
+    margin-right: -4px;
     padding: 0px;
     height: 8px;
-    width: 17px;
+    width: 18px;
 }
 
 QSlider::handle:horizontal

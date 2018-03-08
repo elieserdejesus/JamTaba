@@ -207,7 +207,11 @@ void AudioSlider::paintEvent(QPaintEvent *)
 
         const uint channels = stereo ? 2 : 1;
         const qreal rectSize = isVertical() ? height() : width();
-        QRectF drawRect(rect().adjusted(1, 1, 0, 0));
+
+        QStyleOptionSlider optHandle;
+        initStyleOption(&optHandle);
+        auto grooveRect = style()->subControlRect(QStyle::CC_Slider, &optHandle, QStyle::SC_SliderGroove, this);
+        QRectF drawRect(isVertical() ? grooveRect.adjusted(3, 0, -2, -2) : grooveRect.adjusted(3, 3, 0, -2));
 
         const int parallelSegments = getParallelSegments();
 
