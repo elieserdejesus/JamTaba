@@ -82,6 +82,9 @@ private:
 
     void paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, const QRectF &rect);
 
+    void paintSliderHandler(QPainter &painter);
+    void paintSliderGroove(QPainter &painter);
+
     QColor rmsColor;
     QColor maxPeakColor;
     QColor peakStartColor;  // start gradient color

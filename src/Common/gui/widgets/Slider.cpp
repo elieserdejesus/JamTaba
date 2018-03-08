@@ -7,6 +7,7 @@
 #include <QToolTip>
 #include <QDateTime>
 #include <QDebug>
+#include <QObjectData>
 
 const quint8 AudioSlider::SEGMENTS_SIZE = 6;
 
@@ -164,60 +165,90 @@ void AudioSlider::showToolTip()
     }
 }
 
-void AudioSlider::paintEvent(QPaintEvent *ev)
+void AudioSlider::paintSliderGroove(QPainter &painter)
 {
-    {
-        QPainter painter(this);
-        drawMarker(painter);
+    // draw the slider handle only
+    QStyleOptionSlider optHandle;
+    initStyleOption(&optHandle);
 
-        const static qreal peakValuesOffset = MAX_SMOOTHED_LINEAR_VALUE - 1.0f; // peaks are not starting at 0dB, so we need a offset
+    optHandle.subControls = QStyle::SC_SliderGroove;
 
-        if (isEnabled()) {
+    style()->drawComplexControl(QStyle::CC_Slider, &optHandle, &painter, this);
+}
 
-            const uint channels = stereo ? 2 : 1;
-            const qreal rectSize = isVertical() ? height() : width();
-            QRectF drawRect(rect().adjusted(1, 1, 0, 0));
+void AudioSlider::paintSliderHandler(QPainter &painter)
+{
+    // draw the slider handle only
+    QStyleOptionSlider optHandle;
+    initStyleOption(&optHandle);
 
-            const int parallelSegments = getParallelSegments();
+    optHandle.subControls = QStyle::SC_SliderHandle; //QStyle::SC_SliderGroove | QStyle::SC_SliderHandle;
 
-            if (isVertical())
-                drawRect.setWidth(drawRect.width()/static_cast<qreal>(parallelSegments));
-            else
-                drawRect.setHeight(drawRect.height()/static_cast<qreal>(parallelSegments));
+    auto handleRect = style()->subControlRect(QStyle::CC_Slider, &optHandle, QStyle::SC_SliderHandle, this);
 
-            for (uint i = 0; i < channels; ++i) {
-                if (paintingPeaks && currentPeak[i]) {
-                    qreal peakPosition = getPeakPosition(currentPeak[i], rectSize, peakValuesOffset);
-                    paintSegments(painter, drawRect, peakPosition, peakColors, drawSegments);
-                }
+    auto pos = mapFromGlobal(QCursor::pos());
+    if (handleRect.contains(pos)) // hover ?
+        optHandle.activeSubControls = QStyle::SC_SliderHandle;
 
-                if (paintingMaxPeakMarker && maxPeak[i]) {
-                    qreal maxPeakPosition = getPeakPosition(maxPeak[i], rectSize, peakValuesOffset);
-                    paintMaxPeakMarker(painter, maxPeakPosition, drawRect);
-                }
+    style()->drawComplexControl(QStyle::CC_Slider, &optHandle, &painter, this);
+}
 
-                if (paintingRMS && currentRms[i]) {
-                    qreal rmsPosition = getPeakPosition(currentRms[i], rectSize, peakValuesOffset);
+void AudioSlider::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
 
-                    qreal rmsXOffset = (paintingPeaks && isVertical()) ? channels * drawRect.width() : 0;
-                    qreal rmsYOffset = (paintingPeaks && !isVertical()) ? channels * drawRect.height() : 0;
-                    paintSegments(painter, drawRect.translated(rmsXOffset, rmsYOffset), rmsPosition, rmsColors, drawSegments);
-                }
+    paintSliderGroove(painter);
 
-                if (isVertical())
-                    drawRect.translate(drawRect.width(), 0.0);
-                else
-                    drawRect.translate(0.0, drawRect.height());
+    drawMarker(painter);
+
+    const static qreal peakValuesOffset = MAX_SMOOTHED_LINEAR_VALUE - 1.0f; // peaks are not starting at 0dB, so we need a offset
+
+    if (isEnabled()) {
+
+        const uint channels = stereo ? 2 : 1;
+        const qreal rectSize = isVertical() ? height() : width();
+        QRectF drawRect(rect().adjusted(1, 1, 0, 0));
+
+        const int parallelSegments = getParallelSegments();
+
+        if (isVertical())
+            drawRect.setWidth(drawRect.width()/static_cast<qreal>(parallelSegments));
+        else
+            drawRect.setHeight(drawRect.height()/static_cast<qreal>(parallelSegments));
+
+        for (uint i = 0; i < channels; ++i) {
+            if (paintingPeaks && currentPeak[i]) {
+                qreal peakPosition = getPeakPosition(currentPeak[i], rectSize, peakValuesOffset);
+                paintSegments(painter, drawRect, peakPosition, peakColors, drawSegments);
             }
 
-            if (paintingDbMarkers)
-                painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
-       }
+            if (paintingMaxPeakMarker && maxPeak[i]) {
+                qreal maxPeakPosition = getPeakPosition(maxPeak[i], rectSize, peakValuesOffset);
+                paintMaxPeakMarker(painter, maxPeakPosition, drawRect);
+            }
 
-        updateInternalValues(); // compute decay and max peak
+            if (paintingRMS && currentRms[i]) {
+                qreal rmsPosition = getPeakPosition(currentRms[i], rectSize, peakValuesOffset);
+
+                qreal rmsXOffset = (paintingPeaks && isVertical()) ? channels * drawRect.width() : 0;
+                qreal rmsYOffset = (paintingPeaks && !isVertical()) ? channels * drawRect.height() : 0;
+                paintSegments(painter, drawRect.translated(rmsXOffset, rmsYOffset), rmsPosition, rmsColors, drawSegments);
+            }
+
+            if (isVertical())
+                drawRect.translate(drawRect.width(), 0.0);
+            else
+                drawRect.translate(0.0, drawRect.height());
+        }
+
+        if (paintingDbMarkers)
+            painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
     }
 
-    //QSlider::paintEvent(ev);
+    paintSliderHandler(painter);
+
+
+    updateInternalValues(); // compute decay and max peak
 }
 
 void AudioSlider::paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, const QRectF &rect)
