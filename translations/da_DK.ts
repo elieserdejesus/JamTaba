@@ -105,7 +105,7 @@
     </message>
     <message>
         <source>Turn on/off this chat</source>
-        <translation type="unfinished">Turn on/off this chat</translation>
+        <translation type="unfinished">Tænd / sluk denne chat</translation>
     </message>
     <message>
         <source>chat is off</source>
