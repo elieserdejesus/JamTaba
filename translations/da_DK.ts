@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="da_DK" sourcelanguage="en">
+<TS version="2.0" language="da_DK" sourcelanguage="en">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -58,7 +58,7 @@
     </message>
     <message>
         <source>Translation error!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Oversættelsesfejl!</translation>
     </message>
 </context>
 <context>
@@ -93,27 +93,27 @@
     </message>
     <message>
         <source>type here ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Skriv her ...</translation>
     </message>
     <message>
         <source>Increase chat font size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Forøg chat skriftstørrelse</translation>
     </message>
     <message>
         <source>Decrease chat font size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Reducer chat skrifttypestørrelse</translation>
     </message>
     <message>
         <source>Turn on/off this chat</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Turn on/off this chat</translation>
     </message>
     <message>
         <source>chat is off</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Chat er slukket</translation>
     </message>
     <message>
         <source>Connected Users (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tilsluttede brugere (%1)</translation>
     </message>
 </context>
 <context>
@@ -124,7 +124,7 @@
     </message>
     <message>
         <source>Public chat</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Offentlig chat</translation>
     </message>
 </context>
 <context>
@@ -184,7 +184,7 @@
     <name>InactivityDetector</name>
     <message>
         <source>You are not transmiting for a long time! This is intentional?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Du overfører ikke i lang tid! Dette er tilsigtet?</translation>
     </message>
 </context>
 <context>
@@ -293,7 +293,7 @@
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aktivér / deaktiver din lydoverførsel til andre</translation>
     </message>
 </context>
 <context>
@@ -660,15 +660,15 @@
     </message>
     <message>
         <source>Connect with private server ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Opret forbindelse til privat server ...</translation>
     </message>
     <message>
         <source>Remember ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Husk ...</translation>
     </message>
     <message>
         <source>Host a private server in your machine ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Host en privat server i din maskine ...</translation>
     </message>
 </context>
 <context>
@@ -800,7 +800,7 @@
     </message>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Privat chat med %1</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
@@ -812,47 +812,47 @@
     </message>
     <message>
         <source>Uploading</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">upload</translation>
     </message>
     <message>
         <source>Downloading</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Download</translation>
     </message>
     <message>
         <source>Collapse bottom area</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Skjul bundområde</translation>
     </message>
     <message>
         <source>Collapse chat</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Skjul chat</translation>
     </message>
     <message>
         <source>Collapse local channels</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Skjul lokale kanaler</translation>
     </message>
     <message>
         <source>Game</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Spil</translation>
     </message>
     <message>
         <source>Navy</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Flåde</translation>
     </message>
     <message>
         <source>Let&apos;s play in %1 : %2 ?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lad os spille i %1:%2?</translation>
     </message>
     <message>
         <source>Let&apos;s play in my private server?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lad os spille på min private server?</translation>
     </message>
     <message>
         <source>Connected with public chat!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Forbundet med offentlig chat!</translation>
     </message>
     <message>
         <source>Connecting ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tilslutning ...</translation>
     </message>
     <message>
         <source>Block %1 in chat</source>
@@ -864,11 +864,11 @@
     </message>
     <message>
         <source>Public chat disconnected!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Offentlig chat afbrudt!</translation>
     </message>
     <message>
         <source>Invite %1 to play in %2 [%3]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inviter %1 til at spille i %2 [%3]</translation>
     </message>
 </context>
 <context>
@@ -887,11 +887,11 @@
     </message>
     <message>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bredde</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Height</translation>
     </message>
 </context>
 <context>
@@ -1064,7 +1064,7 @@
     </message>
     <message>
         <source>Custom...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Brugerdefinerede...</translation>
     </message>
 </context>
 <context>
@@ -1107,7 +1107,7 @@
     </message>
     <message>
         <source>Set tracks layout to grid</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Indstil spor layout til gitter</translation>
     </message>
 </context>
 <context>
@@ -1142,7 +1142,7 @@
     <name>NinjamTrackGroupView</name>
     <message>
         <source>Private chat with %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Privat chat med %1</translation>
     </message>
 </context>
 <context>
@@ -1169,7 +1169,7 @@
     </message>
     <message>
         <source>Downloading</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Download</translation>
     </message>
     <message>
         <source>Stereo</source>
@@ -1207,15 +1207,15 @@
     </message>
     <message>
         <source>Found plugins:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fundne plugins:</translation>
     </message>
     <message>
         <source>This is the plugin found list box</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dette er den plugin-baserede liste</translation>
     </message>
     <message>
         <source>No plugins found!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ingen plugins blev grundlagt!</translation>
     </message>
 </context>
 <context>
@@ -1414,47 +1414,47 @@
     </message>
     <message>
         <source>Off Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Off Beat:</translation>
     </message>
     <message>
         <source>Accent Beat:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Accent Beat:</translation>
     </message>
     <message>
         <source>Remember</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Husk</translation>
     </message>
     <message>
         <source>Remember these options when a musician enters the jam:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Husk disse muligheder, når en musiker går ind i serveren:</translation>
     </message>
     <message>
         <source>The user channel level</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Brugerkanalniveauet</translation>
     </message>
     <message>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Niveau</translation>
     </message>
     <message>
         <source>The user channel mute status</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Brugerkanalen demper status</translation>
     </message>
     <message>
         <source>Mute</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Stum</translation>
     </message>
     <message>
         <source>The user channel pan</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Brugerkanal panpot status</translation>
     </message>
     <message>
         <source>Pan</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pan</translation>
     </message>
     <message>
         <source>The user channel boost</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Brugerkanalen Forøg status</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -1462,7 +1462,7 @@
     </message>
     <message>
         <source>The user channel low cut button status</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Brugerkanalen med lav cut-knap status</translation>
     </message>
     <message>
         <source>Low cut</source>
@@ -1470,27 +1470,27 @@
     </message>
     <message>
         <source>Remember collapsible sections when starting JamTaba:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Husk sammenklappelige sektioner, når du starter JamTaba:</translation>
     </message>
     <message>
         <source>Local Channels (left side)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lokale kanaler (venstre side)</translation>
     </message>
     <message>
         <source>Bottom Section (master fader and ninjam controls)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nederste sektion (master fader og ninjam kontroller)</translation>
     </message>
     <message>
         <source>Chat section (right side)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Chat section (right side)</translation>
     </message>
     <message>
         <source>Choosing Off beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">At vælge Off beat lydfil ...</translation>
     </message>
     <message>
         <source>Choosing Accent beat audio file...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Valg af Accent beat lydfil ...</translation>
     </message>
 </context>
 <context>
@@ -1567,88 +1567,88 @@
     <name>PrivateServerWindow</name>
     <message>
         <source>Your Private Server</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Din private server</translation>
     </message>
     <message>
         <source>Start</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Start</translation>
     </message>
     <message>
         <source>Stop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hold op</translation>
     </message>
     <message>
         <source>Server IP:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Server IP:</translation>
     </message>
     <message>
         <source>Server Port:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Serverport:</translation>
     </message>
     <message>
         <source>Upload (Kbps):</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Upload (Kbps):</translation>
     </message>
     <message>
         <source>Download (Kbps):</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Download (Kbps):</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Log</translation>
     </message>
     <message>
         <source>Connected Users</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tilsluttede brugere</translation>
     </message>
     <message>
         <source>Port closed in your router!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Port lukket i din router!</translation>
     </message>
     <message>
         <source>ERROR in UPnP protocol: %1</source>
         <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">FEJL i UPnP-protokol: %1</translation>
     </message>
     <message>
         <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Port åbnet i din router ved hjælp af UPnP-protokollen! Andre spillere kan oprette forbindelse til din server!</translation>
     </message>
     <message>
         <source>Your external IP is %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Din eksterne IP er %1</translation>
     </message>
     <message>
         <source>Incomming connection from %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Indgående forbindelse fra %1</translation>
     </message>
     <message>
         <source>%1 entered in the server</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 indtastet på serveren</translation>
     </message>
     <message>
         <source>%1 left the server</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 forlod serveren</translation>
     </message>
     <message>
         <source>Server started</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Server startet</translation>
     </message>
     <message>
         <source>Server stopped!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Server stoppet!</translation>
     </message>
     <message>
         <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Forsøger at åbne porten %1 i din router (UPnP) for at tillade eksterne forbindelser ...</translation>
     </message>
     <message>
         <source>Hosting Ninjam Private Server</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hosting Ninjam Private Server</translation>
     </message>
     <message>
         <source>Connect with private server ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Connect with private server ...</translation>
     </message>
 </context>
 <context>
@@ -1676,14 +1676,14 @@
     <name>ServerInviteButton</name>
     <message>
         <source>Accept!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Acceptere!</translation>
     </message>
 </context>
 <context>
     <name>Slider</name>
     <message>
         <source>center</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">centrum</translation>
     </message>
     <message>
         <source>L</source>
@@ -1736,7 +1736,7 @@
     <name>login::MainChat</name>
     <message>
         <source>You can&apos;t send messages using an empty user name!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Du kan ikke sende beskeder ved hjælp af et tomt brugernavn!</translation>
     </message>
 </context>
 </TS>
