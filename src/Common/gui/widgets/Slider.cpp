@@ -6,6 +6,7 @@
 #include <QStyleOptionSlider>
 #include <QToolTip>
 #include <QDateTime>
+#include <QDebug>
 
 const quint8 AudioSlider::SEGMENTS_SIZE = 6;
 
@@ -20,6 +21,8 @@ const int AudioSlider::MAX_PEAK_MARKER_SIZE = 2;
 const int AudioSlider::MAX_PEAK_SHOW_TIME = 1500;
 const int AudioSlider::MIN_SIZE = 12;
 
+const uint AudioSlider::DEFAULT_DECAY_TIME = 2000;
+
 const float AudioSlider::RESIZE_FACTOR = 1.0f/AudioSlider::MIN_SMOOTHED_LINEAR_VALUE;
 
 bool AudioSlider::paintingMaxPeakMarker = true;
@@ -27,11 +30,114 @@ bool AudioSlider::paintingPeaks = true;
 bool AudioSlider::paintingRMS = true;
 
 AudioSlider::AudioSlider(QWidget *parent) :
-    QSlider(parent)
+    QSlider(parent),
+    lastUpdate(QDateTime::currentMSecsSinceEpoch()),
+    decayTime(DEFAULT_DECAY_TIME),
+    rmsColor(QColor(255, 255, 255, 200)),
+    peakStartColor(Qt::darkGreen),
+    peakEndColor(Qt::red),
+    maxPeakColor(QColor(0, 0, 0, 80)),
+    dBMarksColor(Qt::lightGray),
+    stereo(true),
+    paintingDbMarkers(true),
+    drawSegments(true)
 {
     setMaximum(120);
 
     connect(this, &AudioSlider::valueChanged, this, &AudioSlider::showToolTip);
+}
+
+void AudioSlider::paintRmsOnly()
+{
+    paintingRMS = true;
+    paintingPeaks = false;
+}
+
+void AudioSlider::paintPeaksOnly()
+{
+    paintingRMS = false;
+    paintingPeaks = true;
+}
+
+void AudioSlider::paintPeaksAndRms()
+{
+    paintingRMS = true;
+    paintingPeaks = true;
+}
+
+bool AudioSlider::isPaintingPeaksOnly()
+{
+    return paintingPeaks && !paintingRMS;
+}
+
+bool AudioSlider::isPaintingRmsOnly()
+{
+    return paintingRMS && !paintingPeaks;
+}
+
+void AudioSlider::setPeak(float peak, float rms)
+{
+    peak = limitFloatValue(peak, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
+    rms = limitFloatValue(rms, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
+
+    if (peak > currentPeak[0] || peak > currentPeak[1]) {
+        currentPeak[0] = currentPeak[1] = peak;
+        if (peak > maxPeak[0] || peak > maxPeak[1]) {
+            maxPeak[0] = maxPeak[1] = peak;
+            lastMaxPeakTime[0] = lastMaxPeakTime[1] = QDateTime::currentMSecsSinceEpoch();
+        }
+    }
+
+    if (rms > currentRms[0] || rms > currentRms[1])
+        currentRms[0] = currentRms[1] = rms;
+
+    update();
+}
+
+
+void AudioSlider::setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms)
+{
+    leftPeak = limitFloatValue(leftPeak, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
+    rightPeak = limitFloatValue(rightPeak, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
+
+    leftRms = limitFloatValue(leftRms, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
+    rightRms = limitFloatValue(rightRms, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
+
+    float peaks[2] = {leftPeak, rightPeak};
+    for (int i = 0; i < 2; ++i) {
+        if (!stereo) // fixing #858
+            peaks[0] = peaks[1] = qMax(leftPeak, rightPeak);
+
+        if (peaks[i] > currentPeak[i]) {
+            currentPeak[i] = peaks[i];
+            if (peaks[i] > maxPeak[i]) {
+                maxPeak[i] = peaks[i];
+                lastMaxPeakTime[i] = QDateTime::currentMSecsSinceEpoch();
+            }
+        }
+    }
+
+    float rms[2] = {leftRms, rightRms};
+    for (int i = 0; i < 2; ++i) {
+        if (!stereo) // fixing #858
+            rms[0] = rms[1] = qMax(leftRms, rightRms);
+        if (rms[i] > currentRms[i])
+            currentRms[i] = rms[i];
+    }
+
+    update();
+}
+
+
+float AudioSlider::limitFloatValue(float value, float minValue, float maxValue)
+{
+    if (value < minValue)
+        return minValue;
+
+    if( value > maxValue)
+        return maxValue;
+
+    return value;
 }
 
 void AudioSlider::updateToolTipValue()
@@ -154,7 +260,7 @@ void AudioSlider::updateInternalValues()
 
     // decay
     long ellapsedTimeFromLastUpdate = now - lastUpdate;
-    float deltaTime = (float)ellapsedTimeFromLastUpdate/decayTime;
+    float deltaTime = static_cast<float>(ellapsedTimeFromLastUpdate)/decayTime;
 
     for (int i = 0; i < 2; ++i) {
         currentPeak[i] -= deltaTime;
@@ -175,6 +281,41 @@ void AudioSlider::updateInternalValues()
         if (ellapsedTimeFromLastMaxPeak >= MAX_PEAK_SHOW_TIME)
             maxPeak[i] = 0;
     }
+}
+
+void AudioSlider::recreateInterpolatedColors()
+{
+    // rebuild the peak and RMS colors vector
+    peakColors.clear();
+    rmsColors.clear();
+
+    const quint32 size = isVertical() ? height() : width();
+    const quint32 segments = size/SEGMENTS_SIZE;
+
+    if (segments == 0) // just in case
+        return;
+
+    const int rmsInitialAlpha = rmsColor.alpha() * 0.6; // interpolate rms colors alpha from 60% to 100%
+
+    for (quint32 i = 0; i < segments; ++i) {
+        float interpolationPosition = std::pow((static_cast<float>(i)/segments), 3.0);
+        peakColors.push_back(interpolateColor(peakStartColor, peakEndColor, interpolationPosition));
+
+        QColor newRmsColor(rmsColor);
+        int newAlpha = static_cast<float>(i)/segments * rmsColor.alpha();
+        rmsColor.setAlpha(qMin(newAlpha + rmsInitialAlpha, 255));
+        rmsColors.push_back(newRmsColor);
+    }
+}
+
+
+QColor AudioSlider::interpolateColor(const QColor &start, const QColor &end, float ratio)
+{
+    int r = static_cast<int>(ratio * end.red()   + (1 - ratio) * start.red());
+    int g = static_cast<int>(ratio * end.green() + (1 - ratio) * start.green());
+    int b = static_cast<int>(ratio * end.blue()  + (1 - ratio) * start.blue());
+
+    return QColor::fromRgb(r, g, b);
 }
 
 void AudioSlider::paintSegments(QPainter &painter, const QRectF &rect, float peakPosition, const std::vector<QColor> &segmentsColors, bool drawSegments)
@@ -207,6 +348,8 @@ void AudioSlider::resizeEvent(QResizeEvent *event)
     QSlider::resizeEvent(event);
 
     rebuildDbMarkersPixmap();
+
+    recreateInterpolatedColors();
 
     update();
 }
@@ -349,6 +492,49 @@ void AudioSlider::drawMarker(QPainter &painter)
     painter.drawLine(line);
 }
 
+
+void AudioSlider::setDbMarksColor(const QColor &newColor)
+{
+    this->dBMarksColor = newColor;
+
+    update();
+}
+
+void AudioSlider::setRmsColor(const QColor &newColor){
+    this->rmsColor = newColor;
+    recreateInterpolatedColors();
+    update();
+}
+
+void AudioSlider::setMaxPeakColor(const QColor &newColor)
+{
+    this->maxPeakColor = newColor;
+    recreateInterpolatedColors();
+    update();
+}
+
+void AudioSlider::setPeaksStartColor(const QColor &newColor)
+{
+    this->peakStartColor = newColor;
+    recreateInterpolatedColors();
+    update();
+}
+
+void AudioSlider::setPeaksEndColor(const QColor &newColor)
+{
+    this->peakEndColor = newColor;
+    recreateInterpolatedColors();
+    update();
+}
+
+void AudioSlider::setDrawSegments(bool drawSegments)
+{
+    this->drawSegments = drawSegments;
+
+    update();
+}
+
+
 // --------------------------------------------------------------------------
 
 PanSlider::PanSlider(QWidget *parent) :
@@ -429,3 +615,5 @@ void PanSlider::showToolTip()
         QToolTip::showText(pos, text, this);
     }
 }
+
+

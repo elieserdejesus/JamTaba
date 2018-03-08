@@ -9,5 +9,6 @@ VPATH += ../../../src/Common
 HEADERS += gui/widgets/Slider.h
 
 SOURCES += gui/widgets/Slider.cpp
+SOURCES += gui/ThemeLoader.cpp
 
 SOURCES += test_Sliders.cpp

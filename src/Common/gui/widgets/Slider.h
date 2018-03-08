@@ -7,6 +7,14 @@ class AudioSlider : public QSlider
 {
     Q_OBJECT
 
+    // custom properties defined in CSS files
+    Q_PROPERTY(QColor rmsColor MEMBER rmsColor WRITE setRmsColor)
+    Q_PROPERTY(QColor maxPeakColor MEMBER maxPeakColor WRITE setMaxPeakColor)
+    Q_PROPERTY(QColor peakStartColor MEMBER peakStartColor WRITE setPeaksStartColor)
+    Q_PROPERTY(QColor peakEndColor MEMBER peakEndColor WRITE setPeaksEndColor)
+    Q_PROPERTY(QColor dBMarksColor MEMBER dBMarksColor WRITE setDbMarksColor)
+    Q_PROPERTY(bool drawSegments MEMBER drawSegments WRITE setDrawSegments)
+
 public:
     explicit AudioSlider(QWidget *parent = nullptr);
 
@@ -24,6 +32,16 @@ public:
     inline static bool isPaintingRMS() { return paintingRMS; }
     inline static bool isPaintingPeaks() { return paintingPeaks; }
 
+    void setPeak(float peak, float rms);
+    void setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms);
+
+    void setRmsColor(const QColor &newColor);
+    void setMaxPeakColor(const QColor &newColor);
+    void setPeaksStartColor(const QColor &newColor);
+    void setPeaksEndColor(const QColor &newColor);
+    void setDbMarksColor(const QColor &newColor);
+    void setDrawSegments(bool drawSegments);
+
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void mouseDoubleClickEvent(QMouseEvent *ev) override;
@@ -38,6 +56,7 @@ private:
     qreal getMarkerPosition() const;
 
     void recreateInterpolatedColors();
+    QColor interpolateColor(const QColor &start, const QColor &end, float ratio);
 
     void paintSegments(QPainter &painter, const QRectF &rect, float rawPeakValue, const std::vector<QColor> &segmentsColors, bool drawSegments = true);
 
