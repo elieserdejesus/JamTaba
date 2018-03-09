@@ -11,12 +11,12 @@
 
 const quint8 AudioSlider::SEGMENTS_SIZE = 6;
 
-const float AudioSlider::MAX_DB_VALUE = 0.0f;
+//const float AudioSlider::MAX_DB_VALUE = 6.0f;
 const float AudioSlider::MIN_DB_VALUE = -60.0f;
-const float AudioSlider::MAX_LINEAR_VALUE = Utils::dbToLinear(AudioSlider::MAX_DB_VALUE);
+//const float AudioSlider::MAX_LINEAR_VALUE = Utils::dbToLinear(AudioSlider::MAX_DB_VALUE);
 const float AudioSlider::MIN_LINEAR_VALUE = Utils::dbToLinear(AudioSlider::MIN_DB_VALUE);
-const float AudioSlider::MIN_SMOOTHED_LINEAR_VALUE = AudioSlider::getSmoothedLinearPeakValue(AudioSlider::MIN_LINEAR_VALUE);
-const float AudioSlider::MAX_SMOOTHED_LINEAR_VALUE = AudioSlider::getSmoothedLinearPeakValue(AudioSlider::MAX_LINEAR_VALUE);
+//const float AudioSlider::MIN_SMOOTHED_LINEAR_VALUE = AudioSlider::getSmoothedLinearPeakValue(AudioSlider::MIN_LINEAR_VALUE);
+//const float AudioSlider::MAX_SMOOTHED_LINEAR_VALUE = AudioSlider::getSmoothedLinearPeakValue(AudioSlider::MAX_LINEAR_VALUE);
 
 const int AudioSlider::MAX_PEAK_MARKER_SIZE = 2;
 const int AudioSlider::MAX_PEAK_SHOW_TIME = 1500;
@@ -24,7 +24,7 @@ const int AudioSlider::MIN_SIZE = 12;
 
 const uint AudioSlider::DEFAULT_DECAY_TIME = 2000;
 
-const float AudioSlider::RESIZE_FACTOR = 1.0f/AudioSlider::MIN_SMOOTHED_LINEAR_VALUE;
+//const float AudioSlider::RESIZE_FACTOR = 1.0f/AudioSlider::MIN_SMOOTHED_LINEAR_VALUE;
 
 bool AudioSlider::paintingMaxPeakMarker = true;
 bool AudioSlider::paintingPeaks = true;
@@ -78,8 +78,10 @@ bool AudioSlider::isPaintingRmsOnly()
 
 void AudioSlider::setPeak(float peak, float rms)
 {
-    peak = limitFloatValue(peak, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
-    rms = limitFloatValue(rms, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
+    auto maxLinearValue = getMaxLinearValue();
+
+    peak = limitFloatValue(peak, 0.0f, maxLinearValue);
+    rms = limitFloatValue(rms, 0.0f, maxLinearValue);
 
     if (peak > currentPeak[0] || peak > currentPeak[1]) {
         currentPeak[0] = currentPeak[1] = peak;
@@ -98,11 +100,13 @@ void AudioSlider::setPeak(float peak, float rms)
 
 void AudioSlider::setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms)
 {
-    leftPeak = limitFloatValue(leftPeak, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
-    rightPeak = limitFloatValue(rightPeak, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
+    auto maxLinearValue = getMaxLinearValue();
 
-    leftRms = limitFloatValue(leftRms, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
-    rightRms = limitFloatValue(rightRms, 0.0f, AudioSlider::MAX_LINEAR_VALUE);
+    leftPeak = limitFloatValue(leftPeak, 0.0f, maxLinearValue);
+    rightPeak = limitFloatValue(rightPeak, 0.0f, maxLinearValue);
+
+    leftRms = limitFloatValue(leftRms, 0.0f, maxLinearValue);
+    rightRms = limitFloatValue(rightRms, 0.0f, maxLinearValue);
 
     float peaks[2] = {leftPeak, rightPeak};
     for (int i = 0; i < 2; ++i) {
@@ -199,9 +203,7 @@ void AudioSlider::paintEvent(QPaintEvent *)
 
     paintSliderGroove(painter);
 
-    drawMarker(painter);
-
-    const static qreal peakValuesOffset = MAX_SMOOTHED_LINEAR_VALUE - 1.0f; // peaks are not starting at 0dB, so we need a offset
+    const static qreal peakValuesOffset = 0;// AudioSlider::getSmoothedLinearPeakValue(getMaxLinearValue()) - 1.0f; // peaks are not starting at 0dB, so we need a offset
 
     if (isEnabled()) {
 
@@ -249,6 +251,8 @@ void AudioSlider::paintEvent(QPaintEvent *)
             painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
     }
 
+    drawMarker(painter);
+
     paintSliderHandler(painter);
 
 
@@ -276,8 +280,10 @@ void AudioSlider::setStereo(bool stereo)
 
 qreal AudioSlider::getPeakPosition(qreal linearPeak, qreal rectSize, qreal peakValueOffset)
 {
-    const qreal smoothedPeakValue = getSmoothedLinearPeakValue(linearPeak) - peakValueOffset;
-    const qreal peakPosition = (1 - ((MAX_SMOOTHED_LINEAR_VALUE - smoothedPeakValue) * RESIZE_FACTOR)) * rectSize;
+    const qreal maxSmoothedValue = getMaxLinearValue(); //  AudioSlider::getSmoothedLinearPeakValue(getMaxLinearValue());
+
+    const qreal smoothedPeakValue = linearPeak - peakValueOffset;// getSmoothedLinearPeakValue(linearPeak) - peakValueOffset;
+    const qreal peakPosition = (1 - (maxSmoothedValue - smoothedPeakValue)) * rectSize;
 
     return peakPosition;
 }
@@ -405,10 +411,20 @@ void AudioSlider::rebuildDbMarkersPixmap()
     drawDbMarkers(painter);
 }
 
+qreal AudioSlider::getMaxDbValue() const
+{
+    return Utils::linearToDb(getMaxLinearValue());
+}
+
+//qreal AudioSlider::getMaxSmoothedValue() const
+//{
+//    return AudioSlider::getSmoothedLinearPeakValue(getMaxLinearValue());
+//}
+
 std::vector<float> AudioSlider::createDBValues()
 {
     std::vector<float> values;
-    qreal db = AudioSlider::MAX_DB_VALUE;
+    qreal db = getMaxDbValue();
     while (db >= AudioSlider::MIN_DB_VALUE) {
         values.push_back(db);
         db -= db <= -24 ? 12 : 6;
@@ -429,22 +445,28 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
     const static qreal tickHeight = 2.5f;
     qreal tickY = height() - 1.0 - tickHeight;
 
+    const auto maxDbValue = getMaxDbValue();
+    const auto maxSmoothedValue = Utils::linearGainToPower(getMaxLinearValue());// getMaxSmoothedValue();
+
     static const std::vector<float> dbValues = createDBValues();
     qreal lastMarkPosition = -1;
     for (float db : dbValues) {
 
         // skipping the first DB value (Zero DB) to keep the UI more clean
-        if (db == AudioSlider::MAX_DB_VALUE) {
-            continue;
-        }
+        //if (db == maxDbValue) {
+        //    continue;
+        //}
 
-        QString text = QString::number(qAbs(db));
+        QString text = QString::number(static_cast<int>(db));
         int textWidth = metrics.width(text);
 
-        qreal linearValue = getSmoothedLinearPeakValue(Utils::dbToLinear(db));
 
-        qreal y = (isVertical() ? (MAX_SMOOTHED_LINEAR_VALUE - linearValue) * height() * RESIZE_FACTOR : center) + fontHeight/2.0 - fontAscent;
-        qreal x = (isVertical() ? center : (1 - ((MAX_SMOOTHED_LINEAR_VALUE - linearValue) * RESIZE_FACTOR)) * width()) - textWidth/2;
+        qreal linearValue = Utils::linearGainToPower(Utils::dbToLinear(db));//  getSmoothedLinearPeakValue(Utils::dbToLinear(db));
+
+        qreal y = (isVertical() ? (maxSmoothedValue - linearValue) * height() : center) + fontHeight/2.0 - fontAscent;
+        qreal x = (isVertical() ? center : (1 - ((maxSmoothedValue - linearValue))) * width()) - textWidth/2;
+
+        qDebug() << y << db;
 
         // check if current value can be showed or need be skiped because the widget is not big enough
         qreal currentMarkPosition = isVertical() ? y : x;
@@ -463,18 +485,20 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
         painter.drawText(x, y, text);
 
         if (drawTicks) {
-            float tickX = (1 - ((MAX_SMOOTHED_LINEAR_VALUE - linearValue) * RESIZE_FACTOR)) * width() - 1;
+            float tickX = (1 - (maxSmoothedValue - linearValue)) * width() - 1;
             painter.drawLine(tickX, tickY, tickX, tickY + tickHeight);
         }
     }
 }
 
-qreal AudioSlider::getSmoothedLinearPeakValue(qreal linearValue)
-{
-    const static qreal smoothFactor = 1.0/10.0f; // used to get more equally spaced markers
+//qreal AudioSlider::getSmoothedLinearPeakValue(qreal linearValue)
+//{
+//    //const static qreal smoothFactor = 1.0/10.0f; // used to get more equally spaced markers
 
-    return std::pow(linearValue, smoothFactor);
-}
+//    //return std::pow(linearValue, smoothFactor);
+
+//    return linearValue;
+//}
 
 void AudioSlider::mouseDoubleClickEvent(QMouseEvent *ev)
 {
@@ -496,10 +520,8 @@ qreal AudioSlider::getMarkerPosition() const
 
 void AudioSlider::drawMarker(QPainter &painter)
 {
-//    if (sliderType == Slider::AudioSlider && maximum() <= 100)
-//        return;
 
-    static const QColor MARKER_COLOR(0, 0, 0, 80);
+    static const QColor MARKER_COLOR(255, 255, 255, 120);
     painter.setPen(MARKER_COLOR);
 
     const static int markerPreferredSize = 13;

@@ -125,6 +125,9 @@ public:
         buttonsLayout->addWidget(paintMaxPeaksCheckBox);
 
         layout->addLayout(buttonsLayout);
+
+        rmsCheckBox->click();
+        stereoCheckBox->click();
     }
 
 protected:

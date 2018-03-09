@@ -71,19 +71,23 @@ private:
 
     void rebuildDbMarkersPixmap();
     void drawDbMarkers(QPainter &painter);
-    static std::vector<float> createDBValues();
-    static qreal getSmoothedLinearPeakValue(qreal linearValue);
+    std::vector<float> createDBValues();
+    //static qreal getSmoothedLinearPeakValue(qreal linearValue);
 
     void updateInternalValues();
 
     uint getParallelSegments() const;
 
-    static qreal getPeakPosition(qreal linearPeak, qreal rectSize, qreal peakValueOffset);
+    qreal getPeakPosition(qreal linearPeak, qreal rectSize, qreal peakValueOffset);
 
     void paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, const QRectF &rect);
 
     void paintSliderHandler(QPainter &painter);
     void paintSliderGroove(QPainter &painter);
+
+    qreal getMaxLinearValue() const;
+    qreal getMaxDbValue() const;
+    //qreal getMaxSmoothedValue() const;
 
     QColor rmsColor;
     QColor maxPeakColor;
@@ -121,19 +125,24 @@ private:
     static const uint LINES_MARGIN;
     static const uint DEFAULT_DECAY_TIME;
 
-    static const float MAX_SMOOTHED_LINEAR_VALUE;
-    static const float MIN_SMOOTHED_LINEAR_VALUE;
-    static const float MAX_LINEAR_VALUE;
+    //static const float MAX_SMOOTHED_LINEAR_VALUE;
+    //static const float MIN_SMOOTHED_LINEAR_VALUE;
+    //static const float MAX_LINEAR_VALUE;
     static const float MIN_LINEAR_VALUE;
-    static const float MAX_DB_VALUE;
+    //static const float MAX_DB_VALUE;
     static const float MIN_DB_VALUE;
 
-    static const float RESIZE_FACTOR;
+    //static const float RESIZE_FACTOR;
 
     static const int MAX_PEAK_SHOW_TIME;
     static const int MAX_PEAK_MARKER_SIZE;
     static const int MIN_SIZE;
 };
+
+inline qreal AudioSlider::getMaxLinearValue() const
+{
+    return maximum()/100.0;
+}
 
 inline bool AudioSlider::isVertical() const
 {
