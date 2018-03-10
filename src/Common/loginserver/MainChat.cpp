@@ -25,14 +25,10 @@ MainChat::MainChat(QObject *parent) :
         emit connected();
     });
 
-    connect(&webSocket, &QWebSocket::disconnected, this, [=](){
+    connect(&webSocket, &QWebSocket::disconnected, this, [&](){
 
-        auto sender = qobject_cast<QWebSocket *>(QObject::sender());
-        if (!sender)
-            return;
-
-        if (sender->error() != QAbstractSocket::UnknownSocketError)
-            qCritical() << sender->errorString();
+        if (webSocket.error() != QAbstractSocket::UnknownSocketError)
+            qCritical() << webSocket.errorString();
 
         pingTimer->stop();
 
@@ -41,10 +37,8 @@ MainChat::MainChat(QObject *parent) :
 
     connect(&webSocket, &QWebSocket::textMessageReceived, this, &MainChat::textMessageReceived);
 
-    connect(&webSocket, static_cast<void(QWebSocket::*)(QAbstractSocket::SocketError)>(&QWebSocket::error), [=]() {
-        auto sender = qobject_cast<QWebSocket *>(QObject::sender());
-        if (sender)
-            emit error(sender->errorString());
+    connect(&webSocket, static_cast<void(QWebSocket::*)(QAbstractSocket::SocketError)>(&QWebSocket::error), [&]() {
+        emit error(webSocket.errorString());
     });
 
     pingTimer->setInterval(SERVER_PING_PERIOD * 1000);
