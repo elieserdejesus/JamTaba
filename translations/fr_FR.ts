@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR">
 <context>
@@ -1654,7 +1654,9 @@
         <source>Hosting Ninjam Private Server</source>
         <translation>Ouverture d&apos;un serveur ninjam privé</translation>
     </message>
-</context>
+   <message>
+        <source>Connect with private server ...</source>
+        <translation>Connecté avec un serveur privé ...</translation>    </message></context>
 <context>
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
