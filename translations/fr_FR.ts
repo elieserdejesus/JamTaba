@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR">
 <context>
@@ -855,10 +855,6 @@
         <translation>Connexion en cours ...</translation>
     </message>
     <message>
-        <source>Invite %1 to ...</source>
-        <translation>Inviter %1 à ...</translation>
-    </message>
-    <message>
         <source>My private server (%1:%2)</source>
         <translation>Mon serveur privé (%1:%2)</translation>
     </message>
@@ -877,6 +873,10 @@
     <message>
         <source>Public chat disconnected!</source>
         <translation>Chat public déconnecté!</translation>
+    </message>
+    <message>
+        <source>Invite %1 to play in %2 [%3]</source>
+        <translation>Inviter %1 à jouer dans %2 [%3]</translation>
     </message>
 </context>
 <context>
