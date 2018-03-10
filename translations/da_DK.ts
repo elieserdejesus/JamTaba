@@ -1648,7 +1648,7 @@
     </message>
     <message>
         <source>Connect with private server ...</source>
-        <translation type="unfinished">Connect with private server ...</translation>
+        <translation type="unfinished">Opret forbindelse til privat server ...</translation>
     </message>
 </context>
 <context>
