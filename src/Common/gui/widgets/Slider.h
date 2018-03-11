@@ -3,6 +3,8 @@
 
 #include <QSlider>
 
+#include "Utils.h"
+
 class AudioSlider : public QSlider
 {
     Q_OBJECT
@@ -77,7 +79,7 @@ private:
 
     uint getParallelSegments() const;
 
-    qreal getPeakPosition(qreal linearPeak, qreal rectSize, qreal peakValueOffset);
+    qreal getPeakPosition(qreal linearPeak, qreal rectSize);
 
     void paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, const QRectF &rect);
 
@@ -132,6 +134,12 @@ private:
     static const int MAX_PEAK_MARKER_SIZE;
     static const int MIN_SIZE;
 };
+
+inline qreal AudioSlider::getPeakPosition(qreal linearPeak, qreal rectSize)
+{
+    qreal db = Utils::linearToDb(linearPeak) - getMaxDbValue();
+    return Utils::poweredGainToLinear(Utils::dbToLinear(db)) * rectSize;
+}
 
 inline qreal AudioSlider::getMaxLinearValue() const
 {

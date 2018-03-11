@@ -61,7 +61,7 @@ public:
         // --------------------------------------------
 
         auto buttonsLayout = new QVBoxLayout();
-        float dbValues[] = {0.0, -6.0, -12.0, -24, 6.0, 12.0};
+        float dbValues[] = {0.0, -6.0, -12.0, -24, 3.0, 6.0};
         for (float db : dbValues) {
             auto button = new QPushButton(QString::number(db) + " dB");
             connect(button, &QPushButton::clicked, [=](){

@@ -1,5 +1,4 @@
 #include "Slider.h"
-#include "Utils.h"
 
 #include <QPainter>
 #include <QStyle>
@@ -141,8 +140,8 @@ float AudioSlider::limitFloatValue(float value, float minValue, float maxValue)
 
 void AudioSlider::updateToolTipValue()
 {
-    double poweredGain = Utils::linearGainToPower(value()/100.0);// + getPeakOffset());
-    double faderDb = Utils::linearToDb(poweredGain);
+    qreal poweredGain = Utils::linearGainToPower(value()/100.0);
+    qreal faderDb = Utils::linearToDb(poweredGain);
     int precision = faderDb > -10 ? 1 : 0;
     QString text = QString::number(faderDb, 'f', precision) + " dB";
     if (faderDb > 0)
@@ -197,8 +196,6 @@ void AudioSlider::paintEvent(QPaintEvent *)
 
     paintSliderGroove(painter);
 
-    const static qreal peakValuesOffset = getPeakOffset();  // peaks are not starting at 0dB, so we need a offset
-
     if (isEnabled()) {
 
         const uint channels = stereo ? 2 : 1;
@@ -218,17 +215,17 @@ void AudioSlider::paintEvent(QPaintEvent *)
 
         for (uint i = 0; i < channels; ++i) {
             if (paintingPeaks && currentPeak[i]) {
-                qreal peakPosition = getPeakPosition(currentPeak[i], rectSize, peakValuesOffset);
+                qreal peakPosition = getPeakPosition(currentPeak[i], rectSize);
                 paintSegments(painter, drawRect, peakPosition, peakColors, drawSegments);
             }
 
             if (paintingMaxPeakMarker && maxPeak[i]) {
-                qreal maxPeakPosition = getPeakPosition(maxPeak[i], rectSize, peakValuesOffset);
+                qreal maxPeakPosition = getPeakPosition(maxPeak[i], rectSize);
                 paintMaxPeakMarker(painter, maxPeakPosition, drawRect);
             }
 
             if (paintingRMS && currentRms[i]) {
-                qreal rmsPosition = getPeakPosition(currentRms[i], rectSize, peakValuesOffset);
+                qreal rmsPosition = getPeakPosition(currentRms[i], rectSize);
 
                 qreal rmsXOffset = (paintingPeaks && isVertical()) ? channels * drawRect.width() : 0;
                 qreal rmsYOffset = (paintingPeaks && !isVertical()) ? channels * drawRect.height() : 0;
@@ -270,11 +267,6 @@ void AudioSlider::setStereo(bool stereo)
         this->stereo = stereo;
         update();
     }
-}
-
-qreal AudioSlider::getPeakPosition(qreal linearPeak, qreal rectSize, qreal peakValueOffset)
-{
-    return (Utils::poweredGainToLinear(linearPeak) - peakValueOffset) * rectSize;
 }
 
 uint AudioSlider::getParallelSegments() const
@@ -402,14 +394,8 @@ void AudioSlider::rebuildDbMarkersPixmap()
 
 qreal AudioSlider::getMaxDbValue() const
 {
-    //return Utils::linearToDb(Utils::linearGainToPower(getMaxLinearValue()));
-    return Utils::linearToDb(getMaxLinearValue());
+    return Utils::linearToDb(Utils::linearGainToPower(getMaxLinearValue()));
 }
-
-//qreal AudioSlider::getMaxSmoothedValue() const
-//{
-//    return AudioSlider::getSmoothedLinearPeakValue(getMaxLinearValue());
-//}
 
 std::vector<float> AudioSlider::createDBValues()
 {
@@ -456,9 +442,6 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
     qreal tickY = height() - 1.0 - tickHeight;
 
     const auto maxDbValue = getMaxDbValue();
-    //const auto maxSmoothedValue = Utils::linearGainToPower(getMaxLinearValue());// getMaxSmoothedValue();
-
-    const auto zeroDbOffset = getPeakOffset();
 
     static const std::vector<float> dbValues = createDBValues();
     qreal lastMarkPosition = -1;
@@ -472,7 +455,7 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
         QString text = QString::number(static_cast<int>(db));
         int textWidth = metrics.width(text);
 
-        qreal linearPos = (1.0 - Utils::poweredGainToLinear(Utils::dbToLinear(db))) + zeroDbOffset;
+        qreal linearPos = 1.0 - Utils::poweredGainToLinear(Utils::dbToLinear(db - maxDbValue));
 
         qreal y = (isVertical() ? (linearPos * height()) : center) + fontHeight/2.0 - fontAscent;
         qreal x = (isVertical() ? center : (1.0 - linearPos) * width()) - textWidth/2;
