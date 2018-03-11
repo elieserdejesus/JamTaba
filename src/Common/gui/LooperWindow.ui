@@ -230,7 +230,7 @@
         </widget>
        </item>
        <item>
-        <widget class="Slider" name="mainLevelSlider">
+        <widget class="AudioSlider" name="mainLevelSlider">
          <property name="maximum">
           <number>120</number>
          </property>
@@ -446,7 +446,7 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Slider</class>
+   <class>AudioSlider</class>
    <extends>QSlider</extends>
    <header>gui/widgets/Slider.h</header>
   </customwidget>

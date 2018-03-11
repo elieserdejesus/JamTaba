@@ -70,7 +70,7 @@
       </widget>
      </item>
      <item>
-      <widget class="Slider" name="levelSlider">
+      <widget class="AudioSlider" name="levelSlider">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -149,7 +149,7 @@
       </widget>
      </item>
      <item>
-      <widget class="Slider" name="panSlider">
+      <widget class="PanSlider" name="panSlider">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -346,7 +346,12 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Slider</class>
+   <class>AudioSlider</class>
+   <extends>QSlider</extends>
+   <header>gui/widgets/Slider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PanSlider</class>
    <extends>QSlider</extends>
    <header>gui/widgets/Slider.h</header>
   </customwidget>

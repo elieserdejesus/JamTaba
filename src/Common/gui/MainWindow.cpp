@@ -2734,7 +2734,7 @@ void MainWindow::setupSignals()
 
     connect(mainController->getRoomStreamer(), &AbstractMp3Streamer::error, this, &MainWindow::handlePublicRoomStreamError);
 
-    connect(ui.masterFader, &Slider::valueChanged, this, &MainWindow::setMasterGain);
+    connect(ui.masterFader, &QSlider::valueChanged, this, &MainWindow::setMasterGain);
 
     connect(ui.menuLanguage, &QMenu::triggered, this, &MainWindow::setLanguage);
 
@@ -2759,8 +2759,6 @@ void MainWindow::updateUserName()
 
 void MainWindow::initializeMasterFader()
 {
-    ui.masterFader->setSliderType(Slider::AudioSlider);
-
     float lastMasterGain = mainController->getSettings().getLastMasterGain();
     int faderPosition = lastMasterGain * 100;
     ui.masterFader->setValue(faderPosition);

@@ -9,9 +9,6 @@ MetronomePanel::MetronomePanel(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->levelSlider->setSliderType(Slider::AudioSlider);
-    ui->panSlider->setSliderType(Slider::PanSlider);
-
     ui->peakMeter->setOrientation(Qt::Horizontal);
 
     setupSignals();
@@ -35,8 +32,8 @@ void MetronomePanel::updateStyleSheet()
 
 void MetronomePanel::setupSignals()
 {
-    connect(ui->levelSlider, &Slider::valueChanged, this, &MetronomePanel::gainSliderChanged);
-    connect(ui->panSlider, &Slider::valueChanged, this, &MetronomePanel::panSliderChanged);
+    connect(ui->levelSlider, &QSlider::valueChanged, this, &MetronomePanel::gainSliderChanged);
+    connect(ui->panSlider, &QSlider::valueChanged, this, &MetronomePanel::panSliderChanged);
     connect(ui->muteButton, &QPushButton::clicked, this, &MetronomePanel::muteButtonClicked);
     connect(ui->soloButton, &QPushButton::clicked, this, &MetronomePanel::soloButtonClicked);
 

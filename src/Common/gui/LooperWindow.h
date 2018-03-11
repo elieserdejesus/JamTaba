@@ -80,8 +80,8 @@ private:
         void setMuteButtonVisibility(bool show);
         void enableMuteButton(bool enabled);
 
-        Slider *panSlider;
-        Slider *gainSlider;
+        PanSlider *panSlider;
+        AudioSlider *gainSlider;
         QLabel *labelPanL;
         QLabel *labelPanR;
         QLabel *highLevelIcon;

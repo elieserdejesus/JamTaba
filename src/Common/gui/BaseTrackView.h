@@ -100,11 +100,11 @@ protected:
     QBoxLayout *metersLayout; // used to group midi and audio meters
 
     // level slider
-    Slider *levelSlider;
+    AudioSlider *levelSlider;
     QBoxLayout *levelSliderLayout; // used to group the level slider and the two 'speaker' icons
 
     // pan slider
-    Slider *panSlider;
+    PanSlider *panSlider;
     QLabel *labelPanL;
     QLabel *labelPanR;
     QHBoxLayout *panWidgetsLayout;
