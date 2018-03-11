@@ -126,12 +126,12 @@ MetronomePanel QSlider::groove:horizontal
 
 QSlider::groove:vertical
 {
-    width: 2px;
+    /*width: 2px;*/
 }
 
 QSlider::groove:horizontal
 {
-    height: 2px;
+    /*height: 2px;*/
 }
 
 QSlider::handle:vertical,
@@ -451,7 +451,7 @@ LocalTrackView #inputSelectionButton
     color: #58A9AA;
 }
 
-AudioMeter
+AudioSlider
 {
 
     font-size: 7px;

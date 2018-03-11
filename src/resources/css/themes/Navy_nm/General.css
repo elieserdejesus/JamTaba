@@ -388,7 +388,7 @@ LocalTrackView #inputSelectionButton
     color: rgba(255, 255, 255, 100);
 }
 
-AudioMeter
+AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: rgb(110, 110, 110);

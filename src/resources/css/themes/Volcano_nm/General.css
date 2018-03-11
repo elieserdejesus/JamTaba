@@ -210,13 +210,11 @@ QSlider::groove:vertical
 QSlider::groove:horizontal
 {
     background-color: rgba(0, 0, 0, 50);
-    height: 2px;
     border: none;
 }
 QSlider::groove:vertical
 {
     background-color: rgba(0, 0, 0, 50);
-    width: 2px;
 }
 
 
@@ -333,7 +331,7 @@ QTabWidget::pane
     border-image: url('/images/bg.png') 0 0 0 0 stretch stretch;
 }
 
-AudioMeter
+AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: rgb(181, 37, 3);
@@ -342,13 +340,13 @@ AudioMeter
     qproperty-maxPeakColor: rgb(181, 37, 3);
 }
 
-AudioMeter#masterMeter
+AudioSlider#masterFader
 {
     qproperty-maxPeakColor: rgb(190, 90, 29);
     qproperty-rmsColor: rgb(190, 90, 29);
 }
 
-AudioMeter#masterMeter
+AudioSlider#masterFader,
 MetronomePanel #peakMeter
 {
     qproperty-peakStartColor: rgb(190, 90, 29);

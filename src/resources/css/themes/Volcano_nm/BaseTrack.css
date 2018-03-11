@@ -143,7 +143,7 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:hover
     background-color: rgb(217, 157, 116);
 }
 
-AudioMeter
+AudioSlider
 {
     qproperty-dBMarksColor: black;
 }

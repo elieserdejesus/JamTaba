@@ -209,7 +209,6 @@ QSlider::groove:vertical
 QSlider::groove:horizontal
 {
     background-color: rgba(0, 0, 0, 30);
-    height: 3px;
     border-radius: 2px;
     border: 1px inset rgb(140, 140, 140);
 }
@@ -227,7 +226,6 @@ QSlider::groove:vertical
             stop: 0     rgb(201, 201, 201),
             stop: 1.0   rgb(115, 115, 115)
             );
-    width: 5px;
 }
 
 QSlider::handle:horizontal

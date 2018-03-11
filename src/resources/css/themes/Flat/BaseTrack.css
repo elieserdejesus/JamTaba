@@ -127,7 +127,7 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
     width: 7px;
 }
 
-AudioMeter
+AudioSlider
 {
     qproperty-dBMarksColor: rgb(70, 70, 70);
 }

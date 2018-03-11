@@ -226,13 +226,14 @@ QSlider::groove:vertical
 QSlider::groove:horizontal
 {
     background-color: rgba(0, 0, 0, 50);
-    height: 2px;
+    /*height: 2px;*/
     border: none;
 }
+
 QSlider::groove:vertical
 {
     background-color: rgba(0, 0, 0, 50);
-    width: 2px;
+    /*width: 2px;*/
 }
 
 QSlider::handle:horizontal

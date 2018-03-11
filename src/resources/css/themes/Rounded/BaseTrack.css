@@ -95,7 +95,7 @@ BaseTrackView[unlighted="true"]
         stop:1 rgb(90, 90, 90));
 }
 
-AudioMeter
+AudioSlider
 {
     qproperty-dBMarksColor: rgb(60, 60, 60);
 }
