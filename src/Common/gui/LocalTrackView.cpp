@@ -202,7 +202,7 @@ QSize LocalTrackView::sizeHint() const
 
 void LocalTrackView::setupMetersLayout()
 {
-    metersLayout->addWidget(peakMeter);
+    //metersLayout->addWidget(peakMeter);
 }
 
 void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
@@ -214,7 +214,7 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
         gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
 
         if (peakMetersOnly) { // add the peak meters directly in main layout, so these meters are horizontally centered
-            mainLayout->addWidget(peakMeter, 0, 0);
+            mainLayout->addWidget(levelSlider, 0, 0);
         }
         else { // put the meter in the original layout
             setupMetersLayout();
@@ -224,9 +224,9 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
 
         mainLayout->setHorizontalSpacing(spacing);
 
-        peakMeter->setVisible(true); // peak meter are always visible
+        levelSlider->setVisible(true); // peak meter are always visible
 
-        peakMeter->setPaintingDbMarkers(!peakMetersOnly);
+        levelSlider->setPaintingDbMarkers(!peakMetersOnly);
 
         QMargins margins = layout()->contentsMargins();
         margins.setLeft(spacing);

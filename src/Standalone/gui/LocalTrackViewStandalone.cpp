@@ -130,12 +130,10 @@ void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin)
 
     const int rightMargin = 2;
 
-    int metersCenter = peakMeter->x() + peakMeter->width()/2.0;
-    if (midiPeakMeter->isVisible())
-        metersCenter = midiPeakMeter->x() + midiPeakMeter->width()/2.0;
+    int metersCenter = midiPeakMeter->x() + midiPeakMeter->width()/2.0;
 
     int x1 = metersCenter - 2;
-    int y = peakMeter->y() - 2;
+    int y = midiPeakMeter->y() - 2;
     int x2 = metersCenter + 2;
 
     // draw the vertical line
@@ -798,7 +796,7 @@ void LocalTrackViewStandalone::setToMono(QAction *action)
     int selectedInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
-    peakMeter->setStereo(false);
+    levelSlider->setStereo(false);
 
     emit trackInputChanged();
 }
@@ -812,7 +810,7 @@ void LocalTrackViewStandalone::setToStereo(QAction *action)
     controller->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
 
-    peakMeter->setStereo(true);
+    levelSlider->setStereo(true);
 
     emit trackInputChanged();
 }
@@ -834,7 +832,7 @@ void LocalTrackViewStandalone::setToMidi(QAction *action)
 
     controller->setInputTrackToMIDI(getTrackID(), midiDeviceIndex, midiChannel);
 
-    peakMeter->setStereo(true);
+    levelSlider->setStereo(true);
 
     emit trackInputChanged();
 }

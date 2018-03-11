@@ -207,7 +207,7 @@ void NinjamTrackView::updateGuiElements()
 
         auto trackNode = getTrackNode();
         if (trackNode)
-            peakMeter->setStereo(trackNode->isStereo());
+            levelSlider->setStereo(trackNode->isStereo());
     }
 
     // update network usage label
@@ -321,9 +321,8 @@ void NinjamTrackView::setupHorizontalLayout()
 
     levelSlider->setOrientation(Qt::Horizontal);
     levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
+    //peakMeter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
-    peakMeter->setOrientation(Qt::Horizontal);
-    peakMeter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
     metersLayout->setDirection(QBoxLayout::TopToBottom);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);

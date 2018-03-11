@@ -62,7 +62,7 @@ LooperWindow::LooperWindow(QWidget *parent, MainController *mainController) :
     ui->loadButton->setMenu(loadMenu);
     connect(loadMenu, &QMenu::aboutToShow, this, &LooperWindow::showLoadMenu);
 
-    ui->peakMeter->setOrientation(Qt::Vertical);
+    ui->mainLevelSlider->setOrientation(Qt::Vertical);
 
     connect(ui->mainLevelSlider, &QSlider::valueChanged, [=](int value){
         if (!looper)
@@ -214,8 +214,7 @@ void LooperWindow::updateDrawings()
 
     // update peak meters
     AudioPeak lastPeak = looper->getLastPeak();
-    ui->peakMeter->setPeak(lastPeak.getLeftPeak(), lastPeak.getRightPeak(),
-                                lastPeak.getLeftRMS(), lastPeak.getRightRMS());
+    ui->mainLevelSlider->setPeak(lastPeak.getLeftPeak(), lastPeak.getRightPeak(), lastPeak.getLeftRMS(), lastPeak.getRightRMS());
 }
 
 void LooperWindow::detachCurrentLooper()

@@ -377,17 +377,17 @@ QImage MainWindow::pickCameraFrame() const
 void MainWindow::initializeMeteringOptions()
 {
     const auto &settings = mainController->getSettings();
-    AudioMeter::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
+    AudioSlider::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
     quint8 meterOption = settings.getMeterOption();
     switch (meterOption) {
     case 0:
-        AudioMeter::paintPeaksAndRms();
+        AudioSlider::paintPeaksAndRms();
         break;
     case 1:
-        AudioMeter::paintPeaksOnly();
+        AudioSlider::paintPeaksOnly();
         break;
     case 2:
-        AudioMeter::paintRmsOnly();
+        AudioSlider::paintRmsOnly();
         break;
     }
 }
@@ -422,7 +422,7 @@ void MainWindow::handleThemeChanged()
     QString themeName = mainController->getTheme();
     MapWidget::setNightMode(MainWindow::themeCanUseNightModeWorldMaps(themeName));
 
-    ui.masterMeter->updateStyleSheet();
+    ui.masterFader->updateStyleSheet();
 
     for (auto groupChannels : localGroupChannels) {
         for (auto trackView : groupChannels->getTracks<LocalTrackView *>()) {
@@ -1278,12 +1278,12 @@ void MainWindow::collapseBottomArea(bool collapse)
         ui.masterControlsPanel->setVisible(false);
 
         if (!canHandleNinjamPanels) {
-            ui.bottomPanelLayout->addWidget(ui.masterMeter, 1, 1, 1, 1, Qt::AlignCenter);
-            ui.masterMeter->setVisible(true);
+            ui.bottomPanelLayout->addWidget(ui.masterFader, 1, 1, 1, 1, Qt::AlignCenter);
+            ui.masterFader->setVisible(true);
         }
         else {
-            ui.bottomPanelLayout->removeWidget(ui.masterMeter);
-            ui.masterMeter->setVisible(false);
+            ui.bottomPanelLayout->removeWidget(ui.masterFader);
+            ui.masterFader->setVisible(false);
 
             auto metronomePanel = ninjamWindow->getMetronomePanel();
             ui.bottomPanelLayout->removeWidget(metronomePanel);
@@ -1291,10 +1291,10 @@ void MainWindow::collapseBottomArea(bool collapse)
         }
     }
     else {
-        ui.bottomPanelLayout->removeWidget(ui.masterMeter);
+        ui.bottomPanelLayout->removeWidget(ui.masterFader);
 
-        ui.masterControlsLayout->addWidget(ui.masterMeter);
-        ui.masterMeter->setVisible(true);
+        ui.masterControlsLayout->addWidget(ui.masterFader);
+        ui.masterFader->setVisible(true);
 
         if (canHandleNinjamPanels)
             addNinjamPanelsInBottom();
@@ -2088,7 +2088,7 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update master peaks
     auto masterPeak = mainController->getMasterPeak();
-    ui.masterMeter->setPeak(masterPeak.getLeftPeak(), masterPeak.getRightPeak(),
+    ui.masterFader->setPeak(masterPeak.getLeftPeak(), masterPeak.getRightPeak(),
                             masterPeak.getLeftRMS(), masterPeak.getRightRMS());
 
     // update all blinkable buttons
@@ -2398,38 +2398,38 @@ void MainWindow::initializeViewMenu()
 void MainWindow::handleMenuMeteringAction(QAction *action)
 {
     if (action == ui.actionShowMaxPeaks){
-        AudioMeter::setPaintMaxPeakMarker(ui.actionShowMaxPeaks->isChecked());
+        AudioSlider::setPaintMaxPeakMarker(ui.actionShowMaxPeaks->isChecked());
     }
     else{
         if (action == ui.actionShowPeakAndRMS){
-            AudioMeter::paintPeaksAndRms();
+            AudioSlider::paintPeaksAndRms();
         }
         else if (action == ui.actionShowPeaksOnly){
-            AudioMeter::paintPeaksOnly();
+            AudioSlider::paintPeaksOnly();
         }
         else{ // RMS only
-            AudioMeter::paintRmsOnly();
+            AudioSlider::paintRmsOnly();
         }
     }
     quint8 meterOption = 0; // rms + peaks
-    if (AudioMeter::isPaintingPeaksOnly())
+    if (AudioSlider::isPaintingPeaksOnly())
         meterOption = 1;
-    else if (AudioMeter::isPaintingRmsOnly())
+    else if (AudioSlider::isPaintingRmsOnly())
         meterOption = 2;
 
-    mainController->storeMeteringSettings(AudioMeter::isPaintintMaxPeakMarker(), meterOption);
+    mainController->storeMeteringSettings(AudioSlider::isPaintintMaxPeakMarker(), meterOption);
 }
 
 void MainWindow::updateMeteringMenu()
 {
-    ui.actionShowMaxPeaks->setChecked(AudioMeter::isPaintintMaxPeakMarker());
-    bool showingPeakAndRms = AudioMeter::isPaintingRMS() && AudioMeter::isPaintingPeaks();
+    ui.actionShowMaxPeaks->setChecked(AudioSlider::isPaintintMaxPeakMarker());
+    bool showingPeakAndRms = AudioSlider::isPaintingRMS() && AudioSlider::isPaintingPeaks();
     if (showingPeakAndRms) {
         ui.actionShowPeakAndRMS->setChecked(true);
     }
     else{
-        ui.actionShowPeaksOnly->setChecked(AudioMeter::isPaintingPeaks());
-        ui.actionShowRmsOnly->setChecked(AudioMeter::isPaintingRMS());
+        ui.actionShowPeaksOnly->setChecked(AudioSlider::isPaintingPeaks());
+        ui.actionShowRmsOnly->setChecked(AudioSlider::isPaintingRMS());
     }
 }
 
@@ -2681,7 +2681,7 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
 
 void MainWindow::setupWidgets()
 {
-    ui.masterMeter->setOrientation(Qt::Horizontal);
+    ui.masterFader->setOrientation(Qt::Horizontal);
 
     if (ui.allRoomsContent->layout())
         delete ui.allRoomsContent->layout();

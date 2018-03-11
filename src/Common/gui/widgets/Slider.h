@@ -45,6 +45,9 @@ public:
     void setPeaksEndColor(const QColor &newColor);
     void setDbMarksColor(const QColor &newColor);
     void setDrawSegments(bool drawSegments);
+    void setPaintingDbMarkers(bool paintDbMarkers);
+
+    void updateStyleSheet();
 
 public slots:
     void setStereo(bool stereo);

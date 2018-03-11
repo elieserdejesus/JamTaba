@@ -66,9 +66,6 @@ void BaseTrackView::setupVerticalLayout()
     levelSlider->setOrientation(Qt::Vertical);
     levelSliderLayout->setDirection(QBoxLayout::TopToBottom);
 
-    peakMeter->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
-    peakMeter->setOrientation(Qt::Vertical);
-
     metersLayout->setDirection(QHBoxLayout::LeftToRight);
 
     muteSoloLayout->setDirection(QBoxLayout::TopToBottom);
@@ -128,13 +125,9 @@ void BaseTrackView::createLayoutStructure()
     levelSliderLayout->addWidget(levelSlider);
     levelSliderLayout->addWidget(lowLevelIcon);
 
-    peakMeter = new AudioMeter(this);
-    peakMeter->setObjectName(QStringLiteral("peakMeter"));
-
     metersLayout = new QHBoxLayout();
     metersLayout->setSpacing(1);
     metersLayout->setContentsMargins(0, 0, 0, 0);
-    metersLayout->addWidget(peakMeter);
 
     muteButton = new QPushButton();
     muteButton->setObjectName(QStringLiteral("muteButton"));
@@ -306,7 +299,7 @@ void BaseTrackView::updateStyleSheet()
     style()->unpolish(panSlider);
     style()->polish(panSlider);
 
-    peakMeter->updateStyleSheet();
+    //peakMeter->updateStyleSheet();
 
     style()->unpolish(muteButton);
     style()->polish(muteButton);
@@ -340,7 +333,7 @@ BaseTrackView *BaseTrackView::getTrackViewByID(long trackID)
 
 void BaseTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight)
 {
-    peakMeter->setPeak(peakLeft, peakRight, rmsLeft, rmsRight);
+    levelSlider->setPeak(peakLeft, peakRight, rmsLeft, rmsRight);
 }
 
 BaseTrackView::~BaseTrackView()

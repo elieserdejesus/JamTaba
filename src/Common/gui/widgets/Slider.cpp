@@ -586,6 +586,22 @@ void AudioSlider::setPaintMaxPeakMarker(bool paintMaxPeak)
 {
     AudioSlider::paintingMaxPeakMarker = paintMaxPeak;
 }
+
+void AudioSlider::setPaintingDbMarkers(bool paintDbMarkers)
+{
+    if (paintingDbMarkers != paintDbMarkers) {
+        paintingDbMarkers = paintDbMarkers;
+        update();
+    }
+}
+
+void AudioSlider::updateStyleSheet()
+{
+    rebuildDbMarkersPixmap();
+    update();
+    //BaseMeter::updateStyleSheet();
+}
+
 // --------------------------------------------------------------------------
 
 PanSlider::PanSlider(QWidget *parent) :

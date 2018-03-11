@@ -40,22 +40,22 @@ void TrackGroupView::showContextMenu(const QPoint &pos){
 
 void TrackGroupView::showPeakMeterOnly()
 {
-    AudioMeter::paintPeaksOnly();
+    AudioSlider::paintPeaksOnly();
 }
 
 void TrackGroupView::showRmsOnly()
 {
-    AudioMeter::paintRmsOnly();
+    AudioSlider::paintRmsOnly();
 }
 
 void TrackGroupView::showPeakAndRms()
 {
-    AudioMeter::paintPeaksAndRms();
+    AudioSlider::paintPeaksAndRms();
 }
 
 void TrackGroupView::showMaxPeakMarker(bool showMarker)
 {
-    AudioMeter::setPaintMaxPeakMarker(showMarker);
+    AudioSlider::setPaintMaxPeakMarker(showMarker);
 }
 
 void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)

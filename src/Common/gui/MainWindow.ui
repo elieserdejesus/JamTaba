@@ -261,7 +261,7 @@
              <x>0</x>
              <y>0</y>
              <width>960</width>
-             <height>302</height>
+             <height>318</height>
             </rect>
            </property>
           </widget>
@@ -315,7 +315,7 @@
            <height>16777215</height>
           </size>
          </property>
-         <layout class="QVBoxLayout" name="masterControlsLayout" stretch="0,0,0">
+         <layout class="QVBoxLayout" name="masterControlsLayout" stretch="0,0">
           <property name="spacing">
            <number>6</number>
           </property>
@@ -389,28 +389,6 @@
              </widget>
             </item>
            </layout>
-          </item>
-          <item>
-           <widget class="AudioMeter" name="masterMeter" native="true">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>180</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>180</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
@@ -694,12 +672,6 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>AudioMeter</class>
-   <extends>QWidget</extends>
-   <header>gui/widgets/PeakMeter.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>AudioSlider</class>
    <extends>QSlider</extends>
    <header>gui/widgets/Slider.h</header>
@@ -717,7 +689,6 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>
