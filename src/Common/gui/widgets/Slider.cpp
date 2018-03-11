@@ -43,7 +43,7 @@ AudioSlider::AudioSlider(QWidget *parent) :
     paintingDbMarkers(true),
     drawSegments(true)
 {
-    setMaximum(120);
+    setMaximum(100);
 
     connect(this, &AudioSlider::valueChanged, this, &AudioSlider::showToolTip);
 }
@@ -203,7 +203,7 @@ void AudioSlider::paintEvent(QPaintEvent *)
 
     paintSliderGroove(painter);
 
-    const static qreal peakValuesOffset = 0;// AudioSlider::getSmoothedLinearPeakValue(getMaxLinearValue()) - 1.0f; // peaks are not starting at 0dB, so we need a offset
+    const static qreal peakValuesOffset = 0; // AudioSlider::getSmoothedLinearPeakValue(getMaxLinearValue()) - 1.0f; // peaks are not starting at 0dB, so we need a offset
 
     if (isEnabled()) {
 
@@ -280,12 +280,10 @@ void AudioSlider::setStereo(bool stereo)
 
 qreal AudioSlider::getPeakPosition(qreal linearPeak, qreal rectSize, qreal peakValueOffset)
 {
-    const qreal maxSmoothedValue = getMaxLinearValue(); //  AudioSlider::getSmoothedLinearPeakValue(getMaxLinearValue());
 
-    const qreal smoothedPeakValue = linearPeak - peakValueOffset;// getSmoothedLinearPeakValue(linearPeak) - peakValueOffset;
-    const qreal peakPosition = (1 - (maxSmoothedValue - smoothedPeakValue)) * rectSize;
+    return Utils::poweredGainToLinear(linearPeak) * rectSize;
 
-    return peakPosition;
+    //return peakPosition;
 }
 
 uint AudioSlider::getParallelSegments() const
@@ -446,7 +444,7 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
     qreal tickY = height() - 1.0 - tickHeight;
 
     const auto maxDbValue = getMaxDbValue();
-    const auto maxSmoothedValue = Utils::linearGainToPower(getMaxLinearValue());// getMaxSmoothedValue();
+    //const auto maxSmoothedValue = Utils::linearGainToPower(getMaxLinearValue());// getMaxSmoothedValue();
 
     static const std::vector<float> dbValues = createDBValues();
     qreal lastMarkPosition = -1;
@@ -460,13 +458,10 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
         QString text = QString::number(static_cast<int>(db));
         int textWidth = metrics.width(text);
 
+        qreal linearPos = (1.0 - Utils::poweredGainToLinear(Utils::dbToLinear(db)));
 
-        qreal linearValue = Utils::linearGainToPower(Utils::dbToLinear(db));//  getSmoothedLinearPeakValue(Utils::dbToLinear(db));
-
-        qreal y = (isVertical() ? (maxSmoothedValue - linearValue) * height() : center) + fontHeight/2.0 - fontAscent;
-        qreal x = (isVertical() ? center : (1 - ((maxSmoothedValue - linearValue))) * width()) - textWidth/2;
-
-        qDebug() << y << db;
+        qreal y = (isVertical() ? (linearPos * height()) : center) + fontHeight/2.0 - fontAscent;
+        qreal x = (isVertical() ? center : (1.0 - linearPos) * width()) - textWidth/2;
 
         // check if current value can be showed or need be skiped because the widget is not big enough
         qreal currentMarkPosition = isVertical() ? y : x;
@@ -485,7 +480,7 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
         painter.drawText(x, y, text);
 
         if (drawTicks) {
-            float tickX = (1 - (maxSmoothedValue - linearValue)) * width() - 1;
+            float tickX = (1 - linearPos) * width() - 1;
             painter.drawLine(tickX, tickY, tickX, tickY + tickHeight);
         }
     }

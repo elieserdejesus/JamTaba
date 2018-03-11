@@ -141,7 +141,7 @@ private:
 
 inline qreal AudioSlider::getMaxLinearValue() const
 {
-    return maximum()/100.0;
+    return 1.0;//maximum()/100.0;
 }
 
 inline bool AudioSlider::isVertical() const
