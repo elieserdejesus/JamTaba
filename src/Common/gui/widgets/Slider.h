@@ -72,7 +72,6 @@ private:
     void rebuildDbMarkersPixmap();
     void drawDbMarkers(QPainter &painter);
     std::vector<float> createDBValues();
-    //static qreal getSmoothedLinearPeakValue(qreal linearValue);
 
     void updateInternalValues();
 
@@ -87,7 +86,6 @@ private:
 
     qreal getMaxLinearValue() const;
     qreal getMaxDbValue() const;
-    //qreal getMaxSmoothedValue() const;
 
     QColor rmsColor;
     QColor maxPeakColor;
@@ -125,14 +123,8 @@ private:
     static const uint LINES_MARGIN;
     static const uint DEFAULT_DECAY_TIME;
 
-    //static const float MAX_SMOOTHED_LINEAR_VALUE;
-    //static const float MIN_SMOOTHED_LINEAR_VALUE;
-    //static const float MAX_LINEAR_VALUE;
     static const float MIN_LINEAR_VALUE;
-    //static const float MAX_DB_VALUE;
     static const float MIN_DB_VALUE;
-
-    //static const float RESIZE_FACTOR;
 
     static const int MAX_PEAK_SHOW_TIME;
     static const int MAX_PEAK_MARKER_SIZE;
