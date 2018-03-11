@@ -114,10 +114,13 @@ void BaseTrackView::createLayoutStructure()
     levelSliderLayout = new QVBoxLayout();
     levelSliderLayout->setSpacing(2);
     levelSliderLayout->setContentsMargins(0, 0, 0, 0);
+
     highLevelIcon = new QLabel(this);
     lowLevelIcon = new QLabel(this);
+
     highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(getTintColor()));
     lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(getTintColor()));
+
     highLevelIcon->setAlignment(Qt::AlignCenter);
     lowLevelIcon->setAlignment(Qt::AlignCenter);
 
@@ -156,15 +159,15 @@ void BaseTrackView::createLayoutStructure()
     secondaryChildsLayout->setSpacing(6);
     secondaryChildsLayout->setContentsMargins(0, 0, 0, 0);
 
-    primaryChildsLayout->addLayout(panWidgetsLayout);
     primaryChildsLayout->addLayout(levelSliderLayout, 1);
 
     secondaryChildsLayout->addLayout(metersLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
     secondaryChildsLayout->addWidget(boostSpinBox, 0, Qt::AlignCenter);
 
-    mainLayout->addLayout(primaryChildsLayout, 0, 0);
-    mainLayout->addLayout(secondaryChildsLayout, 0, 1);
+    mainLayout->addLayout(panWidgetsLayout, 0, 0, 1, 2);
+    mainLayout->addLayout(primaryChildsLayout, 1, 0);
+    mainLayout->addLayout(secondaryChildsLayout, 1, 1, 1, 1, Qt::AlignBottom);
 
     translateUI();
 }

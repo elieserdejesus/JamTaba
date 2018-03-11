@@ -112,12 +112,12 @@ QMenu::item::enabled:selected
 
 QSlider::groove:vertical
 {
-    width: 13px;
+    width: 15px;
 }
 
 QSlider::groove:horizontal
 {
-    height: 13px;
+    height: 15px;
 }
 
 QSlider::handle:vertical

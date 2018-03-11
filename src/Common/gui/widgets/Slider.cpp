@@ -201,9 +201,9 @@ void AudioSlider::paintEvent(QPaintEvent *)
         const uint channels = stereo ? 2 : 1;
         const qreal rectSize = isVertical() ? height() : width();
 
-        QStyleOptionSlider optHandle;
-        initStyleOption(&optHandle);
-        auto grooveRect = style()->subControlRect(QStyle::CC_Slider, &optHandle, QStyle::SC_SliderGroove, this);
+        QStyleOptionSlider opt;
+        initStyleOption(&opt);
+        auto grooveRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
         QRectF drawRect(isVertical() ? grooveRect.adjusted(3, 0, -2, -2) : grooveRect.adjusted(3, 3, 0, -2));
 
         const int parallelSegments = getParallelSegments();
@@ -453,6 +453,9 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
         //}
 
         QString text = QString::number(static_cast<int>(db));
+        if (db > 0)
+            text = "+" + text;
+
         int textWidth = metrics.width(text);
 
         qreal linearPos = 1.0 - Utils::poweredGainToLinear(Utils::dbToLinear(db - maxDbValue));
