@@ -87,6 +87,8 @@ private:
     qreal getMaxLinearValue() const;
     qreal getMaxDbValue() const;
 
+    qreal getPeakOffset() const;
+
     QColor rmsColor;
     QColor maxPeakColor;
     QColor peakStartColor;  // start gradient color
@@ -133,7 +135,7 @@ private:
 
 inline qreal AudioSlider::getMaxLinearValue() const
 {
-    return 1.0;//maximum()/100.0;
+    return maximum()/100.0;
 }
 
 inline bool AudioSlider::isVertical() const
