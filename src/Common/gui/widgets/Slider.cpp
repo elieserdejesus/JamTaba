@@ -447,10 +447,10 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
     qreal lastMarkPosition = -1;
     for (float db : dbValues) {
 
-        // skipping the first DB value (Zero DB) to keep the UI more clean
-        //if (db == maxDbValue) {
-        //    continue;
-        //}
+        // skipping the max DB value and Zero DB to keep the UI more clean
+        if (db == maxDbValue || db == 0.0) {
+            continue;
+        }
 
         QString text = QString::number(static_cast<int>(db));
         if (db > 0)
