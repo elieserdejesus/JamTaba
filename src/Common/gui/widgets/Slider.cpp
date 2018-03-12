@@ -438,8 +438,8 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
     qreal center = isVertical() ? width()/2.0 : height()/2.0;
 
     const bool drawTicks = !isVertical();
-    const static qreal tickHeight = 2.5f;
-    qreal tickY = height() - 1.0 - tickHeight;
+    const static qreal tickHeight = 1.5f;
+    qreal tickY = height() - 3.0 - tickHeight;
 
     const auto maxDbValue = getMaxDbValue();
 
