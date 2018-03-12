@@ -98,13 +98,6 @@ BaseMeter
     background-color: rgba(0, 0, 0, 20);
 }
 
-AudioSlider
-{
-    qproperty-dBMarksColor: black;
-    border: 1px solid rgb(0, 0, 0, 30);
-    font-size: 8px;
-}
-
 /*
 Peak meter color when the tracks are "disabled". For local tracks this color is
 used when xmit is off, and for remote tracks (ninjam tracks) this color is used when

@@ -145,6 +145,12 @@ AudioSlider
     qproperty-maxPeakColor: rgb(90, 90, 90);
 
     qproperty-drawSegments: true; /* By default all themes will draw segments in peak meters */
+
+    qproperty-dBMarksColor: black;
+
+    background-color: transparent;
+    border: none;
+    font-size: 8px;
 }
 
 PanSlider::groove:horizontal
