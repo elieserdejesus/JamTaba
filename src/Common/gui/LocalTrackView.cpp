@@ -203,6 +203,7 @@ QSize LocalTrackView::sizeHint() const
 void LocalTrackView::setupMetersLayout()
 {
     //metersLayout->addWidget(peakMeter);
+    levelSliderLayout->addWidget(levelSlider);
 }
 
 void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
