@@ -122,18 +122,25 @@ QSlider::groove:horizontal
 
 QSlider::handle:vertical
 {
-    margin-left: -4px;
-    margin-right: -4px;
+    margin-left: -3px;
+    margin-right: -3px;
     padding: 0px;
-    height: 8px;
-    width: 18px;
+    height: 9px;
 }
 
-QSlider::handle:horizontal
+PanSlider::handle:horizontal
 {
-    margin-top: -4px;
-    margin-bottom: -4px;
+    margin-top: -5px;
+    margin-bottom: -5px;
     width: 9px;
+}
+
+AudioSlider::handle:horizontal
+{
+    margin-top: -2px;
+    margin-bottom: -2px;
+    padding: 0px;
+    width: 8px;
 }
 
 AudioSlider
@@ -151,6 +158,11 @@ AudioSlider
     background-color: transparent;
     border: none;
     font-size: 8px;
+}
+
+AudioSlider:horizontal
+{
+    min-height: 20px;
 }
 
 PanSlider::groove:horizontal
