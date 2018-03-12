@@ -204,7 +204,7 @@ QLineEdit#chatText-topLevel
 
 QSlider::groove
 {
-    background-color: rgba(0, 0, 0, 50);
+    background-color: rgba(0, 0, 0, 25);
 }
 
 QSlider::handle
@@ -234,6 +234,29 @@ AudioSlider::handle {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
             stop: 0.0 rgba(253, 229, 169, 180),
             stop: 1.0 rgba(255, 179, 1, 180));
+}
+
+AudioSlider
+{
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(181, 37, 3);
+    qproperty-peakStartColor: orange;
+    qproperty-peakEndColor: red;
+    qproperty-maxPeakColor: rgb(181, 37, 3);
+
+    qproperty-dBMarksColor: rgba(0, 0, 0, 120);
+}
+
+AudioSlider#masterFader
+{
+    qproperty-maxPeakColor: rgb(190, 90, 29);
+    qproperty-rmsColor: rgb(190, 90, 29);
+}
+
+AudioSlider#masterFader,
+MetronomePanel #peakMeter
+{
+    qproperty-peakStartColor: rgb(190, 90, 29);
 }
 
 
@@ -311,27 +334,6 @@ QTabWidget::pane
 {
     background-color: transparent;
     border-image: url('/images/bg.png') 0 0 0 0 stretch stretch;
-}
-
-AudioSlider
-{
-    /* changing Audio Peak meter custom CSS properties */
-    qproperty-rmsColor: rgb(181, 37, 3);
-    qproperty-peakStartColor: orange;
-    qproperty-peakEndColor: red;
-    qproperty-maxPeakColor: rgb(181, 37, 3);
-}
-
-AudioSlider#masterFader
-{
-    qproperty-maxPeakColor: rgb(190, 90, 29);
-    qproperty-rmsColor: rgb(190, 90, 29);
-}
-
-AudioSlider#masterFader,
-MetronomePanel #peakMeter
-{
-    qproperty-peakStartColor: rgb(190, 90, 29);
 }
 
 

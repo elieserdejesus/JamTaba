@@ -547,7 +547,6 @@ void AudioSlider::drawMarker(QPainter &painter)
 void AudioSlider::setDbMarksColor(const QColor &newColor)
 {
     this->dBMarksColor = newColor;
-
     update();
 }
 
