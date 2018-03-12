@@ -448,7 +448,7 @@ void AudioSlider::drawDbMarkers(QPainter &painter)
     for (float db : dbValues) {
 
         // skipping the max DB value and Zero DB to keep the UI more clean
-        if (db == maxDbValue || db == 0.0) {
+        if (db >= maxDbValue || db == 0.0) {
             continue;
         }
 
