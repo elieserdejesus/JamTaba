@@ -641,12 +641,13 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 
     if (cameraView) {
         cameraCombo->setVisible(cameraView->isVisible() && cameraCombo->count() > 1);
-    }
-    if (!showPeakMetersOnly) {
+        
+        if (!showPeakMetersOnly) {
             cameraView->setMaximumHeight(90);
-    }
-    else {
+        }
+        else {
         cameraView->setMaximumHeight(32);
+        }
     }
     
     updateLocalInputChannelsGeometry();
