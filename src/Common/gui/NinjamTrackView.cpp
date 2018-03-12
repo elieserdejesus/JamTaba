@@ -288,7 +288,7 @@ void NinjamTrackView::setupVerticalLayout()
 
     mainLayout->addWidget(channelNameLabel, 0, 0, 1, 2);// insert channel name label in top
     mainLayout->addLayout(primaryChildsLayout, 1, 0);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 1);
+    mainLayout->addLayout(secondaryChildsLayout, 1, 1, 1, 1, Qt::AlignBottom);
     mainLayout->addWidget(chunksDisplay, 2, 0, 1, 2); // append chunks display in bottom
 
     primaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
