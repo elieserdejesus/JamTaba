@@ -169,11 +169,11 @@ QSlider::groove:horizontal
     background-color: rgba(0, 0, 0, 50);
     border: none;
 }
+
 QSlider::groove:vertical
 {
     background-color: rgba(0, 0, 0, 50);
 }
-
 
 QSlider::handle
 {
@@ -190,23 +190,20 @@ QSlider::handle:hover
 
 QSlider::handle:horizontal
 {
-    margin-top: -6px;
-    margin-bottom: -7px;
     padding: 0px;
     width: 8px;
-    height: 15px;
 }
 
 QSlider::handle:vertical
 {
-    margin-left: -9px;
-    margin-right: -9px;
     padding: 0px;
     height: 9px;
-    width: 24px;
 }
 
-
+AudioSlider
+{
+    qproperty-dBMarksColor: rgb(70, 70, 70);
+}
 
 
 /* TabBar ----------------------*/

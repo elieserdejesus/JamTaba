@@ -127,11 +127,6 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
     width: 7px;
 }
 
-AudioSlider
-{
-    qproperty-dBMarksColor: rgb(70, 70, 70);
-}
-
 /* TrackGroup - used as container for subchannels
 ---------------------------------------------------*/
 

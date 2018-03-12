@@ -235,8 +235,7 @@ QSlider::handle:horizontal
         stop: 0.8    rgb(120, 120, 120),
         stop: 1      rgba(0, 0, 0, 20));
 
-    margin-top: -5px;
-    margin-bottom: -5px;
+
     padding: 0px;
     width: 11px;
     border-radius: 5px;
@@ -273,6 +272,11 @@ QSlider::handle:vertical:hover
         stop: 0.9    rgb(200, 200, 200),
         stop: 1      rgba(0, 0, 0, 20)
     );
+}
+
+AudioSlider
+{
+    qproperty-dBMarksColor: rgb(60, 60, 60);
 }
 
 

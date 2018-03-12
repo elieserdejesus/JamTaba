@@ -152,11 +152,6 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:hover
     background-color: rgb(51, 158, 255);
 }
 
-AudioSlider
-{
-    qproperty-dBMarksColor: rgb(206, 233, 255);
-}
-
 
 /* TrackGroup - used as container for subchannels
 ---------------------------------------------------*/

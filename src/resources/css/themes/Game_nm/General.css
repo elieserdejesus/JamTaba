@@ -124,16 +124,6 @@ MetronomePanel QSlider::groove:horizontal
     border-radius: 0px;
 }
 
-QSlider::groove:vertical
-{
-    /*width: 2px;*/
-}
-
-QSlider::groove:horizontal
-{
-    /*height: 2px;*/
-}
-
 QSlider::handle:vertical,
 QSlider::handle:horizontal
 {
@@ -465,7 +455,7 @@ AudioSlider
 
     qproperty-drawSegments: false;
 
-    background-color: rgba(0, 255, 255, 20);
+
 }
 
 BaseTrackView[unlighted="true"]

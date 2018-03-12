@@ -188,18 +188,14 @@ QSlider::groove:horizontal
 {
     border-radius: 2px;
     background-color: rgba(0, 0, 0, 50);
-    /*height: 3px;*/
 }
 QSlider::groove:vertical
 {
     background-color: rgba(0, 0, 0, 50);
-    /*width: 5px;*/
 }
-
 
 QSlider::handle
 {
-
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 rgb(190,217,255),
         stop: 1.0 rgb(180,207,250));
@@ -215,8 +211,6 @@ QSlider::handle:hover
 QSlider::handle:horizontal
 {
     border-radius: 4px;
-    margin-top: -6px;
-    margin-bottom: -6px;
     padding: 0px;
     width: 8px;
 }
@@ -224,10 +218,12 @@ QSlider::handle:horizontal
 QSlider::handle:vertical
 {
     border-radius: 4px;
-    margin-left: -3px;
-    margin-right: -3px;
     padding: 0px;
-    height: 13px;
+}
+
+AudioSlider
+{
+    qproperty-dBMarksColor: rgb(206, 233, 255);
 }
 
 /* TabBar ----------------------*/
