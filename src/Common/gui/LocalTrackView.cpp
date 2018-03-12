@@ -213,8 +213,12 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
         gui::setLayoutItemsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
         gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
 
+        levelSlider->setShowMeterOnly(peakMetersOnly);
+
+        gui::setLayoutItemsVisibility(panWidgetsLayout, !this->peakMetersOnly);
+
         if (peakMetersOnly) { // add the peak meters directly in main layout, so these meters are horizontally centered
-            mainLayout->addWidget(levelSlider, 0, 0);
+            mainLayout->addWidget(levelSlider, 0, 0, mainLayout->rowCount(), mainLayout->columnCount());
         }
         else { // put the meter in the original layout
             setupMetersLayout();

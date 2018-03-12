@@ -49,6 +49,9 @@ public:
 
     void updateStyleSheet();
 
+    void setShowMeterOnly(bool showMeterOnly);
+    void toggleShowMeterOnly();
+
 public slots:
     void setStereo(bool stereo);
 
@@ -124,6 +127,8 @@ private:
     qint64 lastUpdate;
 
     int decayTime;
+
+    bool showMeterOnly;
 
     static const quint8 SEGMENTS_SIZE;
 

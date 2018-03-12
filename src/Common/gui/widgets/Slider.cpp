@@ -34,11 +34,26 @@ AudioSlider::AudioSlider(QWidget *parent) :
     dBMarksColor(Qt::lightGray),
     stereo(true),
     paintingDbMarkers(true),
-    drawSegments(true)
+    drawSegments(true),
+    showMeterOnly(false)
 {
     setMaximum(120);
 
     connect(this, &AudioSlider::valueChanged, this, &AudioSlider::showToolTip);
+}
+
+void AudioSlider::setShowMeterOnly(bool showMeterOnly)
+{
+    if (this->showMeterOnly != showMeterOnly) {
+        this->showMeterOnly = showMeterOnly;
+
+        update();
+    }
+}
+
+void AudioSlider::toggleShowMeterOnly()
+{
+    setShowMeterOnly(!showMeterOnly);
 }
 
 void AudioSlider::paintRmsOnly()
@@ -242,10 +257,12 @@ void AudioSlider::paintEvent(QPaintEvent *)
             painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
     }
 
-    drawMarker(painter);
+    if (!showMeterOnly) {
 
-    paintSliderHandler(painter);
+        drawMarker(painter);
 
+        paintSliderHandler(painter);
+    }
 
     updateInternalValues(); // compute decay and max peak
 }
