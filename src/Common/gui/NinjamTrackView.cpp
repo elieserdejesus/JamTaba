@@ -48,6 +48,7 @@ NinjamTrackView::NinjamTrackView(controller::MainController *mainController, lon
     networkUsageLayout->addWidget(buttonReceive);
     networkUsageLayout->addWidget(networkUsageLabel);
     secondaryChildsLayout->addLayout(networkUsageLayout);
+    secondaryChildsLayout->setAlignment(networkUsageLayout, Qt::AlignCenter);
 
     connect(buttonReceive, &QPushButton::toggled, this, &NinjamTrackView::setReceiveState);
 
@@ -282,16 +283,22 @@ void NinjamTrackView::setupVerticalLayout()
     BaseTrackView::setupVerticalLayout();
 
     mainLayout->removeWidget(channelNameLabel);
-    mainLayout->removeItem(primaryChildsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
+    mainLayout->removeItem(panWidgetsLayout);
+    mainLayout->removeItem(levelSliderLayout);
 
-    mainLayout->addWidget(channelNameLabel, 0, 0, 1, 2);// insert channel name label in top
-    mainLayout->addLayout(primaryChildsLayout, 1, 0);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 1, 1, 1, Qt::AlignBottom);
-    mainLayout->addWidget(chunksDisplay, 2, 0, 1, 2); // append chunks display in bottom
+    // reset collumn stretch
+    for (int c = 0; c < mainLayout->columnCount(); ++c) {
+        mainLayout->setColumnStretch(c, 0);
+    }
 
-    primaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
+    mainLayout->addWidget(channelNameLabel, 0, 0, 1, mainLayout->columnCount());// insert channel name label in top
+    mainLayout->addLayout(panWidgetsLayout, 1, 0, 1, mainLayout->columnCount());
+    mainLayout->addLayout(levelSliderLayout, 2, 0);
+    mainLayout->addLayout(secondaryChildsLayout, 2, 1, 1, 1, Qt::AlignBottom);
+    mainLayout->addWidget(chunksDisplay, 3, 0, 1, mainLayout->columnCount()); // append chunks display in bottom
+
     secondaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
 
     boostSpinBox->setOrientation(Qt::Vertical);
@@ -304,27 +311,33 @@ void NinjamTrackView::setupHorizontalLayout()
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     mainLayout->removeWidget(channelNameLabel);
-    mainLayout->removeItem(primaryChildsLayout);
+    mainLayout->removeItem(levelSliderLayout);
+    mainLayout->removeItem(panWidgetsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
-    mainLayout->removeItem(panWidgetsLayout);
-
-    primaryChildsLayout->insertLayout(0, panWidgetsLayout);
 
     mainLayout->addWidget(channelNameLabel, 0, 0);
-    mainLayout->addLayout(primaryChildsLayout, 0, 1);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 1, 1, 1, Qt::AlignRight);
-    mainLayout->addWidget(chunksDisplay, 1, 0, 1, 1); // append chunks display in bottom
+    mainLayout->addLayout(levelSliderLayout, 0, 1);
+    mainLayout->addLayout(panWidgetsLayout, 0, 2);
+    mainLayout->addLayout(secondaryChildsLayout, 1, 0, 1, mainLayout->columnCount(), Qt::AlignRight);
+    mainLayout->addWidget(chunksDisplay, 2, 0, 1, mainLayout->columnCount()); // append chunks display in bottom
+
+    mainLayout->setColumnStretch(0, 1);
+    mainLayout->setColumnStretch(1, 2);
+    mainLayout->setColumnStretch(2, 1);
 
     mainLayout->setContentsMargins(6, 3, 6, 3);
     mainLayout->setVerticalSpacing(6);
 
-    primaryChildsLayout->setDirection(QBoxLayout::RightToLeft);
     secondaryChildsLayout->setDirection(QBoxLayout::LeftToRight);
 
     levelSlider->setOrientation(Qt::Horizontal);
-    levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
     levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
+
+    channelNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+
+    panSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     metersLayout->setDirection(QBoxLayout::TopToBottom);
 

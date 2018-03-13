@@ -212,7 +212,7 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly)
         this->peakMetersOnly = peakMetersOnly;
 
         gui::setLayoutItemsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
-        gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
+        //gui::setLayoutItemsVisibility(primaryChildsLayout, !this->peakMetersOnly);
 
         levelSlider->setShowMeterOnly(peakMetersOnly);
 

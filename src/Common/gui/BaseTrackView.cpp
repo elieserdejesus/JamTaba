@@ -64,6 +64,7 @@ void BaseTrackView::setupVerticalLayout()
     setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
 
     levelSlider->setOrientation(Qt::Vertical);
+    levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     levelSliderLayout->setDirection(QBoxLayout::TopToBottom);
 
     metersLayout->setDirection(QHBoxLayout::LeftToRight);
@@ -151,22 +152,16 @@ void BaseTrackView::createLayoutStructure()
 
     boostSpinBox = new BoostSpinBox(this);
 
-    primaryChildsLayout = new QVBoxLayout();
-    primaryChildsLayout->setSpacing(12);
-    primaryChildsLayout->setContentsMargins(0, 0, 0, 0);
-
     secondaryChildsLayout = new QVBoxLayout();
     secondaryChildsLayout->setSpacing(6);
     secondaryChildsLayout->setContentsMargins(0, 0, 0, 0);
-
-    primaryChildsLayout->addLayout(levelSliderLayout, 1);
 
     secondaryChildsLayout->addLayout(metersLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
     secondaryChildsLayout->addWidget(boostSpinBox, 0, Qt::AlignCenter);
 
     mainLayout->addLayout(panWidgetsLayout, 0, 0, 1, 2);
-    mainLayout->addLayout(primaryChildsLayout, 1, 0);
+    mainLayout->addLayout(levelSliderLayout, 1, 0);
     mainLayout->addLayout(secondaryChildsLayout, 1, 1, 1, 1, Qt::AlignBottom);
 
     translateUI();
