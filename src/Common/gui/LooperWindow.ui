@@ -213,22 +213,6 @@
      </item>
      <item>
       <layout class="QVBoxLayout" name="mainVolumeLayout">
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QLabel" name="labelSpeakerHigh">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string notr="true"/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="AudioSlider" name="mainLevelSlider">
          <property name="maximum">
@@ -251,22 +235,6 @@
          </property>
          <property name="tickInterval">
           <number>10</number>
-         </property>
-        </widget>
-       </item>
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QLabel" name="labelSpeakerLow">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string notr="true"/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
          </property>
         </widget>
        </item>

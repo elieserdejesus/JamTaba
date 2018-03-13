@@ -54,9 +54,6 @@ BaseTrackView::BaseTrackView(MainController *mainController, long trackID) :
 void BaseTrackView::setTintColor(const QColor &color)
 {
     this->tintColor = color;
-
-    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(getTintColor()));
-    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(getTintColor()));
 }
 
 void BaseTrackView::setupVerticalLayout()
@@ -65,7 +62,6 @@ void BaseTrackView::setupVerticalLayout()
 
     levelSlider->setOrientation(Qt::Vertical);
     levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    levelSliderLayout->setDirection(QBoxLayout::TopToBottom);
 
     metersLayout->setDirection(QHBoxLayout::LeftToRight);
 
@@ -112,23 +108,6 @@ void BaseTrackView::createLayoutStructure()
     levelSlider->setValue(100);
     levelSlider->setTickPosition(QSlider::NoTicks);
 
-    levelSliderLayout = new QVBoxLayout();
-    levelSliderLayout->setSpacing(2);
-    levelSliderLayout->setContentsMargins(0, 0, 0, 0);
-
-    highLevelIcon = new QLabel(this);
-    lowLevelIcon = new QLabel(this);
-
-    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(getTintColor()));
-    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(getTintColor()));
-
-    highLevelIcon->setAlignment(Qt::AlignCenter);
-    lowLevelIcon->setAlignment(Qt::AlignCenter);
-
-    levelSliderLayout->addWidget(highLevelIcon);
-    levelSliderLayout->addWidget(levelSlider);
-    levelSliderLayout->addWidget(lowLevelIcon);
-
     metersLayout = new QHBoxLayout();
     metersLayout->setSpacing(1);
     metersLayout->setContentsMargins(0, 0, 0, 0);
@@ -161,7 +140,7 @@ void BaseTrackView::createLayoutStructure()
     secondaryChildsLayout->addWidget(boostSpinBox, 0, Qt::AlignCenter);
 
     mainLayout->addLayout(panWidgetsLayout, 0, 0, 1, 2);
-    mainLayout->addLayout(levelSliderLayout, 1, 0);
+    mainLayout->addWidget(levelSlider, 1, 0);
     mainLayout->addLayout(secondaryChildsLayout, 1, 1, 1, 1, Qt::AlignBottom);
 
     translateUI();

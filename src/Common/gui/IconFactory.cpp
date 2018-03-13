@@ -185,20 +185,6 @@ QIcon IconFactory::createLocalControlsIcon(const QColor &tintColor)
     return icon;
 }
 
-QPixmap IconFactory::createHighLevelIcon(const QColor &tintColor)
-{
-    QImage image(":/images/level high.png");
-    IconFactory::tintImage(image, tintColor, false);
-    return QPixmap::fromImage(image);
-}
-
-QPixmap IconFactory::createLowLevelIcon(const QColor &tintColor)
-{
-    QImage image(":/images/level low.png");
-    IconFactory::tintImage(image, tintColor, false);
-    return QPixmap::fromImage(image);
-}
-
 QIcon IconFactory::createReceiveIcon(const QColor &tintColor)
 {
     auto image = IconFactory::createReceivePixmap(tintColor);

@@ -77,14 +77,6 @@ void LooperWindow::setTintColor(const QColor &color)
 {
     this->tintColor = color;
 
-    ui->labelSpeakerLow->setPixmap(IconFactory::createLowLevelIcon(color));
-    ui->labelSpeakerHigh->setPixmap(IconFactory::createHighLevelIcon(color));
-
-    for(auto view : layerViews.values()) {
-        view.controlsLayout->lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(color));
-        view.controlsLayout->highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(color));
-    }
-
     ui->buttonRec->setIcon(IconFactory::createLooperRecordIcon(color));
     ui->buttonPlay->setIcon(IconFactory::createLooperPlayIcon(color));
 
@@ -396,10 +388,6 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     const int mainLayoutSpacing = 12;
     setSpacing(mainLayoutSpacing);
 
-    QLayout *levelFaderLayout = new QHBoxLayout();
-    levelFaderLayout->setSpacing(2);
-    levelFaderLayout->setContentsMargins(0, 0, 0, 0);
-
     gainSlider = new AudioSlider();
     gainSlider->setObjectName(QStringLiteral("levelSlider"));
     gainSlider->setOrientation(Qt::Horizontal);
@@ -414,18 +402,7 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
         looper->setLayerGain(layerIndex, gain);
     });
 
-    highLevelIcon = new QLabel();
-    lowLevelIcon = new QLabel();
-    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(tintColor));
-    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(tintColor));
-    highLevelIcon->setAlignment(Qt::AlignCenter);
-    lowLevelIcon->setAlignment(Qt::AlignCenter);
-
-    levelFaderLayout->addWidget(lowLevelIcon);
-    levelFaderLayout->addWidget(gainSlider);
-    levelFaderLayout->addWidget(highLevelIcon);
-
-    QHBoxLayout *panFaderLayout = new QHBoxLayout();
+    auto panFaderLayout = new QHBoxLayout();
     panFaderLayout->setSpacing(0);
     panFaderLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -459,7 +436,7 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     panFaderLayout->addWidget(panSlider);
     panFaderLayout->addWidget(labelPanR);
 
-    addLayout(levelFaderLayout);
+    addWidget(gainSlider);
     addLayout(panFaderLayout);
 }
 

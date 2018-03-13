@@ -95,9 +95,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const RoomInfo &roomI
 
 void NinjamRoomWindow::setTintColor(const QColor &color)
 {
-    if (metronomePanel)
-        metronomePanel->setTintColor(color);
-
+    //
 }
 
 void NinjamRoomWindow::setBpiComboPendingStatus(bool status)

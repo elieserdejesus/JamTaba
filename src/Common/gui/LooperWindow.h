@@ -84,8 +84,6 @@ private:
         AudioSlider *gainSlider;
         QLabel *labelPanL;
         QLabel *labelPanR;
-        QLabel *highLevelIcon;
-        QLabel *lowLevelIcon;
         BlinkableButton *muteButton;
     };
 

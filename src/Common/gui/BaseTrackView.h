@@ -100,7 +100,6 @@ protected:
 
     // level slider
     AudioSlider *levelSlider;
-    QBoxLayout *levelSliderLayout; // used to group the level slider and the two 'speaker' icons
 
     // pan slider
     PanSlider *panSlider;
@@ -129,9 +128,6 @@ protected:
 private:
     static QMap<long, BaseTrackView *> trackViews;
     audio::AudioPeak maxPeak;
-
-    QLabel *highLevelIcon;
-    QLabel *lowLevelIcon;
 
 protected slots:
     virtual void toggleMuteStatus();

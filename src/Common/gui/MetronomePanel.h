@@ -25,8 +25,6 @@ public:
 
     void setMetronomePeaks(float left, float right, float rmsLeft, float rmsRight);
 
-    void setTintColor(const QColor &color);
-
 signals:
     void gainSliderChanged(int value);
     void panSliderChanged(int value);

@@ -19,12 +19,6 @@ MetronomePanel::~MetronomePanel()
     delete ui;
 }
 
-void MetronomePanel::setTintColor(const QColor &color)
-{
-    ui->labelHighVolume->setPixmap(IconFactory::createHighLevelIcon(color));
-    ui->labelLowVolume->setPixmap(IconFactory::createLowLevelIcon(color));
-}
-
 void MetronomePanel::updateStyleSheet()
 {
     ui->levelSlider->updateStyleSheet();

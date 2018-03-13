@@ -286,7 +286,7 @@ void NinjamTrackView::setupVerticalLayout()
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
     mainLayout->removeItem(panWidgetsLayout);
-    mainLayout->removeItem(levelSliderLayout);
+    mainLayout->removeWidget(levelSlider);
 
     // reset collumn stretch
     for (int c = 0; c < mainLayout->columnCount(); ++c) {
@@ -295,7 +295,7 @@ void NinjamTrackView::setupVerticalLayout()
 
     mainLayout->addWidget(channelNameLabel, 0, 0, 1, mainLayout->columnCount());// insert channel name label in top
     mainLayout->addLayout(panWidgetsLayout, 1, 0, 1, mainLayout->columnCount());
-    mainLayout->addLayout(levelSliderLayout, 2, 0);
+    mainLayout->addWidget(levelSlider, 2, 0);
     mainLayout->addLayout(secondaryChildsLayout, 2, 1, 1, 1, Qt::AlignBottom);
     mainLayout->addWidget(chunksDisplay, 3, 0, 1, mainLayout->columnCount()); // append chunks display in bottom
 
@@ -311,13 +311,13 @@ void NinjamTrackView::setupHorizontalLayout()
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     mainLayout->removeWidget(channelNameLabel);
-    mainLayout->removeItem(levelSliderLayout);
+    mainLayout->removeWidget(levelSlider);
     mainLayout->removeItem(panWidgetsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
 
     mainLayout->addWidget(channelNameLabel, 0, 0);
-    mainLayout->addLayout(levelSliderLayout, 0, 1);
+    mainLayout->addWidget(levelSlider, 0, 1);
     mainLayout->addLayout(panWidgetsLayout, 0, 2);
     mainLayout->addLayout(secondaryChildsLayout, 1, 0, 1, mainLayout->columnCount(), Qt::AlignRight);
     mainLayout->addWidget(chunksDisplay, 2, 0, 1, mainLayout->columnCount()); // append chunks display in bottom
@@ -333,7 +333,6 @@ void NinjamTrackView::setupHorizontalLayout()
 
     levelSlider->setOrientation(Qt::Horizontal);
     levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
-    levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
 
     channelNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 

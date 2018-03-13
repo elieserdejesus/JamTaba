@@ -347,16 +347,6 @@
           <item>
            <layout class="QHBoxLayout" name="masterFaderLayout">
             <item alignment="Qt::AlignVCenter">
-             <widget class="QLabel" name="speakerIconLeft">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item alignment="Qt::AlignVCenter">
              <widget class="AudioSlider" name="masterFader">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -375,16 +365,6 @@
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item alignment="Qt::AlignVCenter">
-             <widget class="QLabel" name="speakerIconRight">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
               </property>
              </widget>
             </item>

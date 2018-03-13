@@ -480,10 +480,6 @@ void MainWindow::setTintColor(const QColor &color)
     for (auto looperWindow : looperWindows)
         looperWindow->setTintColor(color);
 
-    // master
-    ui.speakerIconLeft->setPixmap(IconFactory::createLowLevelIcon(color));
-    ui.speakerIconRight->setPixmap(IconFactory::createHighLevelIcon(color));
-
     ui.chatTabWidget->setChatsTintColor(color);
 
     // network usage icons
