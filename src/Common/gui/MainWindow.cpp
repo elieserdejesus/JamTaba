@@ -207,6 +207,10 @@ void MainWindow::setCameraComboVisibility(bool show)
     }
 
     cameraCombo->setVisible(show && cameraCombo->count() > 1);
+
+    if (ui.localControlsCollapseButton->isChecked()) {
+        cameraCombo->setVisible(false);
+    }
 }
 
 void MainWindow::initializeCamera(const QString &cameraDeviceName)
@@ -646,7 +650,8 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
             cameraView->setMaximumHeight(90);
         }
         else {
-        cameraView->setMaximumHeight(32);
+            cameraView->setMaximumHeight(32);
+            cameraCombo->setVisible(false);
         }
     }
     
