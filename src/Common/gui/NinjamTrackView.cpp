@@ -307,11 +307,14 @@ void NinjamTrackView::setupHorizontalLayout()
     mainLayout->removeItem(primaryChildsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
+    mainLayout->removeItem(panWidgetsLayout);
+
+    primaryChildsLayout->insertLayout(0, panWidgetsLayout);
 
     mainLayout->addWidget(channelNameLabel, 0, 0);
     mainLayout->addLayout(primaryChildsLayout, 0, 1);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 0, 1, 2);
-    mainLayout->addWidget(chunksDisplay, 2, 0, 1, 2); // append chunks display in bottom
+    mainLayout->addLayout(secondaryChildsLayout, 1, 1, 1, 1, Qt::AlignRight);
+    mainLayout->addWidget(chunksDisplay, 1, 0, 1, 1); // append chunks display in bottom
 
     mainLayout->setContentsMargins(6, 3, 6, 3);
     mainLayout->setVerticalSpacing(6);
@@ -321,7 +324,7 @@ void NinjamTrackView::setupHorizontalLayout()
 
     levelSlider->setOrientation(Qt::Horizontal);
     levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
-    //peakMeter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+    levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
     metersLayout->setDirection(QBoxLayout::TopToBottom);
 
