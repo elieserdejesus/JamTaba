@@ -205,9 +205,26 @@ void AudioSlider::paintSliderHandler(QPainter &painter)
     style()->drawComplexControl(QStyle::CC_Slider, &optHandle, &painter, this);
 }
 
+QRectF AudioSlider::getGrooveRect() const
+{
+    QStyleOptionSlider opt;
+    initStyleOption(&opt);
+
+    auto grooveRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
+
+    if (isVertical() )
+        grooveRect.adjust(1, 0, -1, -2);
+    else
+        grooveRect.adjust(1, 1, 0, -1);
+
+    return grooveRect;
+}
+
 void AudioSlider::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
+
+    painter.setRenderHint(QPainter::Antialiasing);
 
     paintSliderGroove(painter);
 
@@ -216,10 +233,7 @@ void AudioSlider::paintEvent(QPaintEvent *)
         const uint channels = stereo ? 2 : 1;
         const qreal rectSize = isVertical() ? height() : width();
 
-        QStyleOptionSlider opt;
-        initStyleOption(&opt);
-        auto grooveRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
-        QRectF drawRect(isVertical() ? grooveRect.adjusted(3, 0, -2, -2) : grooveRect.adjusted(3, 3, 0, -2));
+        QRectF drawRect(getGrooveRect());
 
         const int parallelSegments = getParallelSegments();
 

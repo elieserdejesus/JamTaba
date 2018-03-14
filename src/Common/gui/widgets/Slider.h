@@ -97,6 +97,8 @@ private:
 
     qreal getPeakOffset() const;
 
+    QRectF getGrooveRect() const;
+
     QColor rmsColor;
     QColor maxPeakColor;
     QColor peakStartColor;  // start gradient color

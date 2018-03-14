@@ -112,12 +112,12 @@ QMenu::item::enabled:selected
 
 QSlider::groove:vertical
 {
-    width: 15px;
+    width: 16px; /* important: use odd values to avoid a 1 pixel margin in dB meters */
 }
 
 QSlider::groove:horizontal
 {
-    height: 15px;
+    height: 16px; /* important: use odd values to avoid a 1 pixel margin in dB meters */
 }
 
 QSlider::handle:vertical
