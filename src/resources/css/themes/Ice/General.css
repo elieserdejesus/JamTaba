@@ -322,7 +322,7 @@ QTabWidget::pane
 
 
 
-AudioMeter
+AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: rgb(40, 90, 130);
