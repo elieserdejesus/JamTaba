@@ -1254,8 +1254,6 @@ void MainWindow::enterInRoom(const login::RoomInfo &roomInfo)
 
 void MainWindow::collapseBottomArea(bool collapse)
 {
-    gui::setLayoutItemsVisibility(ui.masterControlsLayout, !collapse);
-
     bool canHandleNinjamPanels = mainController->isPlayingInNinjamRoom() && ninjamWindow && ninjamWindow->getNinjamPanel() && ninjamWindow->getMetronomePanel();
 
     if (canHandleNinjamPanels) {
@@ -1264,22 +1262,15 @@ void MainWindow::collapseBottomArea(bool collapse)
         ninjamPanel->setCollapseMode(collapse);
 
         if (collapse)
-            ui.bottomPanelLayout->addWidget(ninjamPanel, 1, 0, 1, 3); // re-add ninjamPanel using 3 cols for colspan
+            ui.bottomPanelLayout->addWidget(ninjamPanel, 1, 0, ui.bottomPanelLayout->rowCount(), ui.bottomPanelLayout->columnCount()); // re-add ninjamPanel using 3 cols for colspan
     }
 
-    ui.masterTitleLabel->setVisible(canHandleNinjamPanels);
+    ui.masterTitleLabel->setVisible(!collapse);
 
     if (collapse) {
-        ui.bottomPanelLayout->removeWidget(ui.masterControlsPanel);
-        ui.masterControlsPanel->setVisible(false);
+        if (canHandleNinjamPanels) {
 
-        if (!canHandleNinjamPanels) {
-            ui.bottomPanelLayout->addWidget(ui.masterFader, 1, 1, 1, 1, Qt::AlignCenter);
-            ui.masterFader->setVisible(true);
-        }
-        else {
-            ui.bottomPanelLayout->removeWidget(ui.masterFader);
-            ui.masterFader->setVisible(false);
+            ui.masterControlsPanel->setVisible(false);
 
             auto metronomePanel = ninjamWindow->getMetronomePanel();
             ui.bottomPanelLayout->removeWidget(metronomePanel);
@@ -1290,14 +1281,10 @@ void MainWindow::collapseBottomArea(bool collapse)
         ui.bottomPanelLayout->removeWidget(ui.masterFader);
 
         ui.masterControlsLayout->addWidget(ui.masterFader);
-        ui.masterFader->setVisible(true);
+        ui.masterControlsPanel->setVisible(true);
 
         if (canHandleNinjamPanels)
             addNinjamPanelsInBottom();
-        else
-            ui.bottomPanelLayout->addWidget(ui.masterControlsPanel, 1, 1, 1, 1, Qt::AlignCenter);
-
-        ui.masterControlsPanel->setVisible(true);
     }
 }
 
@@ -2692,7 +2679,7 @@ void MainWindow::setupWidgets()
     if (!lastUserName.isEmpty())
         ui.userNameLineEdit->setText(lastUserName);
 
-    ui.masterTitleLabel->setVisible(false);
+    ui.masterTitleLabel->setVisible(true);
 
     ui.chatTabWidget->initialize(mainController, usersColorsPool.data());
     connect(ui.chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::chatCollapseChanged);
