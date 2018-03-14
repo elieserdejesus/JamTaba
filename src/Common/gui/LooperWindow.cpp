@@ -247,7 +247,7 @@ void LooperWindow::setLooper(audio::Looper *looper)
         auto gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
         for (quint8 layerIndex = 0; layerIndex < MAX_LOOP_LAYERS; ++layerIndex) {
             auto layerWavePanel = new LooperWavePanel(looper, layerIndex);
-            auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex, tintColor);
+            auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex);
 
             layerWavePanel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
 
@@ -382,7 +382,7 @@ void LooperWindow::LayerControlsLayout::setMuteButtonVisibility(bool show)
     }
 }
 
-LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 layerIndex, const QColor &tintColor)
+LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 layerIndex)
     : QHBoxLayout()
 {
     const int mainLayoutSpacing = 12;
@@ -391,11 +391,12 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     gainSlider = new AudioSlider();
     gainSlider->setObjectName(QStringLiteral("levelSlider"));
     gainSlider->setOrientation(Qt::Horizontal);
-    gainSlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    gainSlider->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
     gainSlider->setMaximum(120);
     gainSlider->setValue(Utils::poweredGainToLinear(looper->getLayerGain(layerIndex)) * 100);
     gainSlider->setTickPosition(QSlider::NoTicks);
-    gainSlider->setMaximumWidth(80);
+    gainSlider->setMaximumWidth(150);
+    gainSlider->setMinimumWidth(150);
 
     connect(gainSlider, &QSlider::valueChanged, [looper, layerIndex](int value){
         float gain = Utils::linearGainToPower(value/100.0);

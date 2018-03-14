@@ -76,7 +76,7 @@ private:
     class LayerControlsLayout : public QHBoxLayout
     {
     public:
-        LayerControlsLayout(Looper *looper, quint8 layerIndex, const QColor &tintColor);
+        LayerControlsLayout(Looper *looper, quint8 layerIndex);
         void setMuteButtonVisibility(bool show);
         void enableMuteButton(bool enabled);
 
