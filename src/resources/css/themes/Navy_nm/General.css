@@ -154,7 +154,7 @@ QSlider::handle:hover
 QSlider::groove,
 MetronomePanel QSlider::groove:horizontal
 {
-    background-color: rgb(38, 38, 38);
+    background-color: rgb(52, 52, 52);
     border: 1px solid rgb(30, 30, 30);
     border-radius: 3px;
 }
