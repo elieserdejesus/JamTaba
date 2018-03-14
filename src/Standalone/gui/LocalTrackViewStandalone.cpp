@@ -103,13 +103,13 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSiz
     y = topMargin;
     painter.drawLine(x-1, y, leftMargin + arrowSize, y);
 
-    if (drawMidiWord) { // the MIDI word is not drawd when local tracks are collapsed
+    if (drawMidiWord) { // the MIDI word is not drawed when local tracks are collapsed
         // draw MIDI word
         QString text("MIDI");
         static const QFont smallFont(font().family(), 5);
         setFont(smallFont);
-        int textX = leftMargin + arrowSize + 1;
-        painter.drawText(textX, fontMetrics().height() + 1, text);
+        int textX = midiPeakMeter->x() - fontMetrics().width(text) - 3;
+        painter.drawText(textX, y + fontMetrics().height() + 1, text);
     }
 
     // draw arrow in left side
@@ -132,6 +132,8 @@ void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin)
     const int rightMargin = 2;
 
     int metersCenter = midiPeakMeter->x() + midiPeakMeter->width()/2.0;
+    if (peakMetersOnly)
+        metersCenter = levelSlider->x() + levelSlider->width()/2.0;
 
     int x1 = metersCenter - 2;
     int y = midiPeakMeter->y() - 2;
@@ -151,7 +153,7 @@ void LocalTrackViewStandalone::paintEvent(QPaintEvent *ev)
 {
     LocalTrackView::paintEvent(ev);
 
-    const int topMargin = isShowingPeakMetersOnly() ? 4 : 2;
+    const int topMargin = levelSlider->y() - 6;
     static const int arrowSize = 4;
 
     if (inputNode->isRoutingMidiInput()) {
@@ -508,7 +510,7 @@ void LocalTrackViewStandalone::setupMetersLayout()
 {
     LocalTrackView::setupMetersLayout();
     if (midiPeakMeter) {
-        midiPeakMeter->setVisible(isMidi());
+        midiPeakMeter->setVisible(inputNode->isMidi() || inputNode->isRoutingMidiInput() || inputNode->isReceivingRoutedMidiInput());
     }
 }
 
@@ -701,7 +703,7 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
     updateInputText();
     updateInputIcon();
 
-    setMidiPeakMeterVisibility(inputNode->isMidi());
+    setMidiPeakMeterVisibility(inputNode->isMidi() || inputNode->isRoutingMidiInput() || inputNode->isReceivingRoutedMidiInput());
 
     midiToolsButton->setVisible( canShowMidiToolsButton() );
     inputTypeIconLabel->setVisible(canShowInputTypeIcon());
