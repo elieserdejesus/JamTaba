@@ -389,14 +389,15 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     setSpacing(mainLayoutSpacing);
 
     gainSlider = new AudioSlider();
+    gainSlider->setSliderOnly(true);
     gainSlider->setObjectName(QStringLiteral("levelSlider"));
     gainSlider->setOrientation(Qt::Horizontal);
     gainSlider->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
     gainSlider->setMaximum(120);
     gainSlider->setValue(Utils::poweredGainToLinear(looper->getLayerGain(layerIndex)) * 100);
     gainSlider->setTickPosition(QSlider::NoTicks);
-    gainSlider->setMaximumWidth(150);
-    gainSlider->setMinimumWidth(150);
+    gainSlider->setMaximumWidth(140);
+    gainSlider->setMinimumWidth(140);
 
     connect(gainSlider, &QSlider::valueChanged, [looper, layerIndex](int value){
         float gain = Utils::linearGainToPower(value/100.0);

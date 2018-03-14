@@ -52,6 +52,8 @@ public:
     void setShowMeterOnly(bool showMeterOnly);
     void toggleShowMeterOnly();
 
+    void setSliderOnly(bool showSliderOnly); // slider only?
+
 public slots:
     void setStereo(bool stereo);
 
@@ -130,7 +132,9 @@ private:
 
     int decayTime;
 
-    bool showMeterOnly;
+    bool showMeterOnly; // only meter
+
+    bool showSliderOnly; // slider only, no meters
 
     static const quint8 SEGMENTS_SIZE;
 

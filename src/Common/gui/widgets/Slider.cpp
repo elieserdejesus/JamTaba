@@ -35,7 +35,8 @@ AudioSlider::AudioSlider(QWidget *parent) :
     stereo(true),
     paintingDbMarkers(true),
     drawSegments(true),
-    showMeterOnly(false)
+    showMeterOnly(false),
+    showSliderOnly(false)
 {
     setMaximum(120);
 
@@ -223,13 +224,20 @@ QRectF AudioSlider::getGrooveRect() const
     return grooveRect;
 }
 
+void AudioSlider::setSliderOnly(bool showSliderOnly)
+{
+    this->showSliderOnly = showSliderOnly;
+
+    update();
+}
+
 void AudioSlider::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
     paintSliderGroove(painter);
 
-    if (isEnabled()) {
+    if (isEnabled() && !showSliderOnly) {
 
         const uint channels = stereo ? 2 : 1;
         const qreal rectSize = isVertical() ? height() : width();
@@ -267,10 +275,10 @@ void AudioSlider::paintEvent(QPaintEvent *)
             else
                 drawRect.translate(0.0, drawRect.height());
         }
-
-        if (paintingDbMarkers)
-            painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
     }
+
+    if (isEnabled() && paintingDbMarkers)
+        painter.drawPixmap(0.0, 0.0, dbMarkersPixmap);
 
     if (!showMeterOnly) {
 
@@ -279,7 +287,8 @@ void AudioSlider::paintEvent(QPaintEvent *)
         paintSliderHandler(painter);
     }
 
-    updateInternalValues(); // compute decay and max peak
+    if (!showSliderOnly)
+        updateInternalValues(); // compute decay and max peak
 }
 
 void AudioSlider::paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, const QRectF &rect)
