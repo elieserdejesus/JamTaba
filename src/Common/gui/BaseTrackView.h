@@ -95,9 +95,6 @@ protected:
 
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 
-    // meters
-    QBoxLayout *metersLayout; // used to group midi and audio meters
-
     // level slider
     AudioSlider *levelSlider;
 

@@ -45,7 +45,8 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(controller::MainControllerSta
     midiPeakMeter->setSolidColor(QColor(180, 0, 0));
     midiPeakMeter->setDecayTime(1000);// 1000 ms
     midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
-    metersLayout->insertWidget(1, midiPeakMeter);
+    secondaryChildsLayout->insertWidget(0, midiPeakMeter, 1, Qt::AlignHCenter);
+    secondaryChildsLayout->insertSpacerItem(1, new QSpacerItem(1, 6, QSizePolicy::Maximum, QSizePolicy::MinimumExpanding)); // keep the buttons in bottom when midiActivityMeter is not visible
 
     inputSelectionButton->installEventFilter(this);
 
@@ -506,8 +507,9 @@ void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly)
 void LocalTrackViewStandalone::setupMetersLayout()
 {
     LocalTrackView::setupMetersLayout();
-    if (midiPeakMeter)
-        metersLayout->insertWidget(1, midiPeakMeter);
+    if (midiPeakMeter) {
+        midiPeakMeter->setVisible(isMidi());
+    }
 }
 
 QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)

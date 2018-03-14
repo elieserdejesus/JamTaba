@@ -63,8 +63,6 @@ void BaseTrackView::setupVerticalLayout()
     levelSlider->setOrientation(Qt::Vertical);
     levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
-    metersLayout->setDirection(QHBoxLayout::LeftToRight);
-
     muteSoloLayout->setDirection(QBoxLayout::TopToBottom);
 
     mainLayout->setVerticalSpacing(9);
@@ -109,10 +107,6 @@ void BaseTrackView::createLayoutStructure()
     levelSlider->setValue(100);
     levelSlider->setTickPosition(QSlider::NoTicks);
 
-    metersLayout = new QHBoxLayout();
-    metersLayout->setSpacing(1);
-    metersLayout->setContentsMargins(0, 0, 0, 0);
-
     muteButton = new QPushButton();
     muteButton->setObjectName(QStringLiteral("muteButton"));
     muteButton->setEnabled(true);
@@ -136,7 +130,6 @@ void BaseTrackView::createLayoutStructure()
     secondaryChildsLayout->setSpacing(6);
     secondaryChildsLayout->setContentsMargins(0, 0, 0, 0);
 
-    secondaryChildsLayout->addLayout(metersLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
     secondaryChildsLayout->addWidget(boostSpinBox, 0, Qt::AlignCenter);
 

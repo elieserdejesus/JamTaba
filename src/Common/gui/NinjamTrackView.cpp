@@ -338,8 +338,6 @@ void NinjamTrackView::setupHorizontalLayout()
 
     panSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-    metersLayout->setDirection(QBoxLayout::TopToBottom);
-
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
 
     boostSpinBox->setOrientation(Qt::Horizontal);
