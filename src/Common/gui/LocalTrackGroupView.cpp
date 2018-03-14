@@ -382,7 +382,7 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
         this->peakMeterOnly = peakMeterOnly;
         topPanel->setVisible(!this->peakMeterOnly);
 
-        for (LocalTrackView *view : getTracks<LocalTrackView *>()) {
+        for (auto view : getTracks<LocalTrackView *>()) {
             view->setPeakMetersOnlyMode(peakMeterOnly);
         }
 

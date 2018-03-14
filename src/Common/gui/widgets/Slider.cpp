@@ -47,6 +47,9 @@ void AudioSlider::setShowMeterOnly(bool showMeterOnly)
     if (this->showMeterOnly != showMeterOnly) {
         this->showMeterOnly = showMeterOnly;
 
+        if (isVertical())
+            setMinimumWidth(showMeterOnly ? 0 : 22);
+
         update();
     }
 }
@@ -223,8 +226,6 @@ QRectF AudioSlider::getGrooveRect() const
 void AudioSlider::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-
-    painter.setRenderHint(QPainter::Antialiasing);
 
     paintSliderGroove(painter);
 

@@ -165,6 +165,11 @@ AudioSlider:horizontal
     min-height: 20px;
 }
 
+AudioSlider:vertical
+{
+    /*min-width: 22px;*/  /* important: this minimum width is setted programatically in AudioSlider::setShowMeterOnly*/
+}
+
 PanSlider::groove:horizontal
 {
     height: 2px;

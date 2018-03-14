@@ -69,6 +69,7 @@ void BaseTrackView::setupVerticalLayout()
 
     mainLayout->setVerticalSpacing(9);
     mainLayout->setContentsMargins(3, 0, 3, 3);
+    mainLayout->setColumnStretch(0, 1);
 }
 
 void BaseTrackView::createLayoutStructure()
