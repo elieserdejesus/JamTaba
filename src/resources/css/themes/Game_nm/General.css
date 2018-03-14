@@ -144,8 +144,8 @@ QSlider::handle:vertical
 {
     margin-top: -2px;
     margin-bottom: -2px;
-    margin-left: -7px;
-    margin-right: -7px;
+    margin-left: -3px;
+    margin-right: -3px;
     height: 8px;
 }
 
