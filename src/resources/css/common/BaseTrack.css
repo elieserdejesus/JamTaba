@@ -98,19 +98,6 @@ BaseMeter
     background-color: rgba(0, 0, 0, 20);
 }
 
-/*
-Peak meter color when the tracks are "disabled". For local tracks this color is
-used when xmit is off, and for remote tracks (ninjam tracks) this color is used when
-user is not transmiting.
------------------------------------------------------------------------------------*/
-
-BaseTrackView[unlighted="true"] AudioSlider
-{
-    background-color: rgba(0, 0, 0, 15);
-}
-
-
-
 /* TrackGroupView is the 'container' for tracks/subchannels in local tracks or ninjam tracks.
 ----------------------------------------------------------------------------------------------*/
 
