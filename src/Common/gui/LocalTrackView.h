@@ -63,6 +63,8 @@ protected:
     QPushButton *buttonStereoInversion;
     QPushButton *buttonLooper;
 
+    bool peakMetersOnly;
+
     virtual void setupMetersLayout();
 
     void bindThisViewWithTrackNodeSignals() override;
@@ -74,7 +76,6 @@ private:
     QPushButton *createLooperButton();
 
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
-    bool peakMetersOnly;
     void deleteWidget(QWidget *widget);
 
     class LooperIconFactory;

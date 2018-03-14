@@ -9,10 +9,7 @@ MetronomePanel::MetronomePanel(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->levelSlider->setSliderType(Slider::AudioSlider);
-    ui->panSlider->setSliderType(Slider::PanSlider);
-
-    ui->peakMeter->setOrientation(Qt::Horizontal);
+    ui->levelSlider->setOrientation(Qt::Horizontal);
 
     setupSignals();
 }
@@ -22,21 +19,15 @@ MetronomePanel::~MetronomePanel()
     delete ui;
 }
 
-void MetronomePanel::setTintColor(const QColor &color)
-{
-    ui->labelHighVolume->setPixmap(IconFactory::createHighLevelIcon(color));
-    ui->labelLowVolume->setPixmap(IconFactory::createLowLevelIcon(color));
-}
-
 void MetronomePanel::updateStyleSheet()
 {
-    ui->peakMeter->updateStyleSheet();
+    ui->levelSlider->updateStyleSheet();
 }
 
 void MetronomePanel::setupSignals()
 {
-    connect(ui->levelSlider, &Slider::valueChanged, this, &MetronomePanel::gainSliderChanged);
-    connect(ui->panSlider, &Slider::valueChanged, this, &MetronomePanel::panSliderChanged);
+    connect(ui->levelSlider, &QSlider::valueChanged, this, &MetronomePanel::gainSliderChanged);
+    connect(ui->panSlider, &QSlider::valueChanged, this, &MetronomePanel::panSliderChanged);
     connect(ui->muteButton, &QPushButton::clicked, this, &MetronomePanel::muteButtonClicked);
     connect(ui->soloButton, &QPushButton::clicked, this, &MetronomePanel::soloButtonClicked);
 
@@ -77,5 +68,5 @@ void MetronomePanel::setGainSliderValue(int value)
 
 void MetronomePanel::setMetronomePeaks(float left, float right, float rmsLeft, float rmsRight)
 {
-    ui->peakMeter->setPeak(left, right, rmsLeft, rmsRight);
+    ui->levelSlider->setPeak(left, right, rmsLeft, rmsRight);
 }

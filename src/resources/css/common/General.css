@@ -109,7 +109,41 @@ QMenu::item::enabled:selected
 }
 
 
-AudioMeter
+
+QSlider::groove:vertical
+{
+    width: 16px; /* important: use odd values to avoid a 1 pixel margin in dB meters */
+}
+
+QSlider::groove:horizontal
+{
+    height: 16px; /* important: use odd values to avoid a 1 pixel margin in dB meters */
+}
+
+QSlider::handle:vertical
+{
+    margin-left: -3px;
+    margin-right: -3px;
+    padding: 0px;
+    height: 9px;
+}
+
+PanSlider::handle:horizontal
+{
+    margin-top: -5px;
+    margin-bottom: -5px;
+    width: 9px;
+}
+
+AudioSlider::handle:horizontal
+{
+    margin-top: -2px;
+    margin-bottom: -2px;
+    padding: 0px;
+    width: 8px;
+}
+
+AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: rgb(90, 90, 90);
@@ -118,6 +152,32 @@ AudioMeter
     qproperty-maxPeakColor: rgb(90, 90, 90);
 
     qproperty-drawSegments: true; /* By default all themes will draw segments in peak meters */
+
+    qproperty-dBMarksColor: black;
+
+    background-color: transparent;
+    border: none;
+    font-size: 8px;
+}
+
+AudioSlider:horizontal
+{
+    min-height: 20px;
+}
+
+AudioSlider:vertical
+{
+    /*min-width: 22px;*/  /* important: this minimum width is setted programatically in AudioSlider::setShowMeterOnly*/
+}
+
+PanSlider::groove:horizontal
+{
+    height: 2px;
+}
+
+PanSlider::groove:vertical
+{
+    width: 2px;
 }
 
 #chatTabWidget QTabBar::tab:!selected

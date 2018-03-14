@@ -124,16 +124,6 @@ MetronomePanel QSlider::groove:horizontal
     border-radius: 0px;
 }
 
-QSlider::groove:vertical
-{
-    width: 2px;
-}
-
-QSlider::groove:horizontal
-{
-    height: 2px;
-}
-
 QSlider::handle:vertical,
 QSlider::handle:horizontal
 {
@@ -154,8 +144,8 @@ QSlider::handle:vertical
 {
     margin-top: -2px;
     margin-bottom: -2px;
-    margin-left: -7px;
-    margin-right: -7px;
+    margin-left: -3px;
+    margin-right: -3px;
     height: 8px;
 }
 
@@ -451,7 +441,7 @@ LocalTrackView #inputSelectionButton
     color: #58A9AA;
 }
 
-AudioMeter
+AudioSlider
 {
 
     font-size: 7px;
@@ -465,7 +455,7 @@ AudioMeter
 
     qproperty-drawSegments: false;
 
-    background-color: rgba(0, 255, 255, 20);
+
 }
 
 BaseTrackView[unlighted="true"]

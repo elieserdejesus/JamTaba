@@ -45,7 +45,8 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(controller::MainControllerSta
     midiPeakMeter->setSolidColor(QColor(180, 0, 0));
     midiPeakMeter->setDecayTime(1000);// 1000 ms
     midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
-    metersLayout->insertWidget(1, midiPeakMeter);
+    secondaryChildsLayout->insertWidget(0, midiPeakMeter, 1, Qt::AlignHCenter);
+    secondaryChildsLayout->insertSpacerItem(1, new QSpacerItem(1, 6, QSizePolicy::Maximum, QSizePolicy::MinimumExpanding)); // keep the buttons in bottom when midiActivityMeter is not visible
 
     inputSelectionButton->installEventFilter(this);
 
@@ -102,13 +103,13 @@ void LocalTrackViewStandalone::paintRoutingMidiArrow(int topMargin, int arrowSiz
     y = topMargin;
     painter.drawLine(x-1, y, leftMargin + arrowSize, y);
 
-    if (drawMidiWord) { // the MIDI word is not drawd when local tracks are collapsed
+    if (drawMidiWord) { // the MIDI word is not drawed when local tracks are collapsed
         // draw MIDI word
         QString text("MIDI");
         static const QFont smallFont(font().family(), 5);
         setFont(smallFont);
-        int textX = leftMargin + arrowSize + 1;
-        painter.drawText(textX, fontMetrics().height() + 1, text);
+        int textX = midiPeakMeter->x() - fontMetrics().width(text) - 3;
+        painter.drawText(textX, y + fontMetrics().height() + 1, text);
     }
 
     // draw arrow in left side
@@ -130,12 +131,12 @@ void LocalTrackViewStandalone::paintReceivingRoutedMidiIndicator(int topMargin)
 
     const int rightMargin = 2;
 
-    int metersCenter = peakMeter->x() + peakMeter->width()/2.0;
-    if (midiPeakMeter->isVisible())
-        metersCenter = midiPeakMeter->x() + midiPeakMeter->width()/2.0;
+    int metersCenter = midiPeakMeter->x() + midiPeakMeter->width()/2.0;
+    if (peakMetersOnly)
+        metersCenter = levelSlider->x() + levelSlider->width()/2.0;
 
     int x1 = metersCenter - 2;
-    int y = peakMeter->y() - 2;
+    int y = midiPeakMeter->y() - 2;
     int x2 = metersCenter + 2;
 
     // draw the vertical line
@@ -152,7 +153,7 @@ void LocalTrackViewStandalone::paintEvent(QPaintEvent *ev)
 {
     LocalTrackView::paintEvent(ev);
 
-    const int topMargin = isShowingPeakMetersOnly() ? 4 : 2;
+    const int topMargin = levelSlider->y() - 6;
     static const int arrowSize = 4;
 
     if (inputNode->isRoutingMidiInput()) {
@@ -508,8 +509,9 @@ void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly)
 void LocalTrackViewStandalone::setupMetersLayout()
 {
     LocalTrackView::setupMetersLayout();
-    if (midiPeakMeter)
-        metersLayout->insertWidget(1, midiPeakMeter);
+    if (midiPeakMeter) {
+        midiPeakMeter->setVisible(inputNode->isMidi() || inputNode->isRoutingMidiInput() || inputNode->isReceivingRoutedMidiInput());
+    }
 }
 
 QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
@@ -701,7 +703,7 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
     updateInputText();
     updateInputIcon();
 
-    setMidiPeakMeterVisibility(inputNode->isMidi());
+    setMidiPeakMeterVisibility(inputNode->isMidi() || inputNode->isRoutingMidiInput() || inputNode->isReceivingRoutedMidiInput());
 
     midiToolsButton->setVisible( canShowMidiToolsButton() );
     inputTypeIconLabel->setVisible(canShowInputTypeIcon());
@@ -798,7 +800,7 @@ void LocalTrackViewStandalone::setToMono(QAction *action)
     int selectedInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
-    peakMeter->setStereo(false);
+    levelSlider->setStereo(false);
 
     emit trackInputChanged();
 }
@@ -812,7 +814,7 @@ void LocalTrackViewStandalone::setToStereo(QAction *action)
     controller->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
 
-    peakMeter->setStereo(true);
+    levelSlider->setStereo(true);
 
     emit trackInputChanged();
 }
@@ -834,7 +836,7 @@ void LocalTrackViewStandalone::setToMidi(QAction *action)
 
     controller->setInputTrackToMIDI(getTrackID(), midiDeviceIndex, midiChannel);
 
-    peakMeter->setStereo(true);
+    levelSlider->setStereo(true);
 
     emit trackInputChanged();
 }

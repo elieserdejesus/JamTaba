@@ -261,7 +261,7 @@
              <x>0</x>
              <y>0</y>
              <width>960</width>
-             <height>302</height>
+             <height>320</height>
             </rect>
            </property>
           </widget>
@@ -293,7 +293,7 @@
         <number>24</number>
        </property>
        <property name="verticalSpacing">
-        <number>12</number>
+        <number>6</number>
        </property>
        <item row="0" column="0">
         <widget class="QFrame" name="masterControlsPanel">
@@ -311,11 +311,11 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>180</width>
+           <width>220</width>
            <height>16777215</height>
           </size>
          </property>
-         <layout class="QVBoxLayout" name="masterControlsLayout" stretch="0,0,0">
+         <layout class="QVBoxLayout" name="masterControlsLayout" stretch="0,0">
           <property name="spacing">
            <number>6</number>
           </property>
@@ -334,7 +334,7 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item alignment="Qt::AlignVCenter">
+          <item>
            <widget class="QLabel" name="masterTitleLabel">
             <property name="text">
              <string>master</string>
@@ -345,70 +345,24 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="masterFaderLayout">
-            <item alignment="Qt::AlignVCenter">
-             <widget class="QLabel" name="speakerIconLeft">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item alignment="Qt::AlignVCenter">
-             <widget class="Slider" name="masterFader">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximum">
-               <number>140</number>
-              </property>
-              <property name="singleStep">
-               <number>10</number>
-              </property>
-              <property name="value">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item alignment="Qt::AlignVCenter">
-             <widget class="QLabel" name="speakerIconRight">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="AudioMeter" name="masterMeter" native="true">
+           <widget class="AudioSlider" name="masterFader">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>180</width>
-              <height>0</height>
-             </size>
+            <property name="maximum">
+             <number>140</number>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>180</width>
-              <height>16777215</height>
-             </size>
+            <property name="singleStep">
+             <number>10</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
@@ -694,13 +648,7 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>AudioMeter</class>
-   <extends>QWidget</extends>
-   <header>gui/widgets/PeakMeter.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Slider</class>
+   <class>AudioSlider</class>
    <extends>QSlider</extends>
    <header>gui/widgets/Slider.h</header>
   </customwidget>
@@ -717,7 +665,6 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

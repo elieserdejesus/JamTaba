@@ -48,6 +48,7 @@ NinjamTrackView::NinjamTrackView(controller::MainController *mainController, lon
     networkUsageLayout->addWidget(buttonReceive);
     networkUsageLayout->addWidget(networkUsageLabel);
     secondaryChildsLayout->addLayout(networkUsageLayout);
+    secondaryChildsLayout->setAlignment(networkUsageLayout, Qt::AlignCenter);
 
     connect(buttonReceive, &QPushButton::toggled, this, &NinjamTrackView::setReceiveState);
 
@@ -207,7 +208,7 @@ void NinjamTrackView::updateGuiElements()
 
         auto trackNode = getTrackNode();
         if (trackNode)
-            peakMeter->setStereo(trackNode->isStereo());
+            levelSlider->setStereo(trackNode->isStereo());
     }
 
     // update network usage label
@@ -282,16 +283,22 @@ void NinjamTrackView::setupVerticalLayout()
     BaseTrackView::setupVerticalLayout();
 
     mainLayout->removeWidget(channelNameLabel);
-    mainLayout->removeItem(primaryChildsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
+    mainLayout->removeItem(panWidgetsLayout);
+    mainLayout->removeWidget(levelSlider);
 
-    mainLayout->addWidget(channelNameLabel, 0, 0, 1, 2);// insert channel name label in top
-    mainLayout->addLayout(primaryChildsLayout, 1, 0);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 1);
-    mainLayout->addWidget(chunksDisplay, 2, 0, 1, 2); // append chunks display in bottom
+    // reset collumn stretch
+    for (int c = 0; c < mainLayout->columnCount(); ++c) {
+        mainLayout->setColumnStretch(c, 0);
+    }
 
-    primaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
+    mainLayout->addWidget(channelNameLabel, 0, 0, 1, mainLayout->columnCount());// insert channel name label in top
+    mainLayout->addLayout(panWidgetsLayout, 1, 0, 1, mainLayout->columnCount());
+    mainLayout->addWidget(levelSlider, 2, 0);
+    mainLayout->addLayout(secondaryChildsLayout, 2, 1, 1, mainLayout->columnCount() - 1, Qt::AlignBottom);
+    mainLayout->addWidget(chunksDisplay, 3, 0, 1, mainLayout->columnCount()); // append chunks display in bottom
+
     secondaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
 
     boostSpinBox->setOrientation(Qt::Vertical);
@@ -304,27 +311,32 @@ void NinjamTrackView::setupHorizontalLayout()
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     mainLayout->removeWidget(channelNameLabel);
-    mainLayout->removeItem(primaryChildsLayout);
+    mainLayout->removeWidget(levelSlider);
+    mainLayout->removeItem(panWidgetsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
 
     mainLayout->addWidget(channelNameLabel, 0, 0);
-    mainLayout->addLayout(primaryChildsLayout, 0, 1);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 0, 1, 2);
-    mainLayout->addWidget(chunksDisplay, 2, 0, 1, 2); // append chunks display in bottom
+    mainLayout->addWidget(levelSlider, 0, 1);
+    mainLayout->addLayout(panWidgetsLayout, 0, 2);
+    mainLayout->addLayout(secondaryChildsLayout, 1, 0, 1, mainLayout->columnCount(), Qt::AlignRight);
+    mainLayout->addWidget(chunksDisplay, 2, 0, 1, mainLayout->columnCount()); // append chunks display in bottom
+
+    mainLayout->setColumnStretch(0, 1);
+    mainLayout->setColumnStretch(1, 2);
+    mainLayout->setColumnStretch(2, 1);
 
     mainLayout->setContentsMargins(6, 3, 6, 3);
     mainLayout->setVerticalSpacing(6);
 
-    primaryChildsLayout->setDirection(QBoxLayout::RightToLeft);
     secondaryChildsLayout->setDirection(QBoxLayout::LeftToRight);
 
     levelSlider->setOrientation(Qt::Horizontal);
-    levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
+    levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
-    peakMeter->setOrientation(Qt::Horizontal);
-    peakMeter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-    metersLayout->setDirection(QBoxLayout::TopToBottom);
+    channelNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+
+    panSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
 

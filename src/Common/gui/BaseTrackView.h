@@ -95,16 +95,11 @@ protected:
 
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 
-    // meters
-    AudioMeter *peakMeter;
-    QBoxLayout *metersLayout; // used to group midi and audio meters
-
     // level slider
-    Slider *levelSlider;
-    QBoxLayout *levelSliderLayout; // used to group the level slider and the two 'speaker' icons
+    AudioSlider *levelSlider;
 
     // pan slider
-    Slider *panSlider;
+    PanSlider *panSlider;
     QLabel *labelPanL;
     QLabel *labelPanR;
     QHBoxLayout *panWidgetsLayout;
@@ -120,7 +115,6 @@ protected:
     // main layout buildind blocks
     QGridLayout *mainLayout;
     QBoxLayout *secondaryChildsLayout; // right side widgets in vertical layout, bottom widgets (2nd row) in horizontal layout
-    QBoxLayout *primaryChildsLayout;   // left side widgets in vertical layout, top widgets (2nd row) in horizontal layout
 
     virtual void setupVerticalLayout();
 
@@ -131,9 +125,6 @@ protected:
 private:
     static QMap<long, BaseTrackView *> trackViews;
     audio::AudioPeak maxPeak;
-
-    QLabel *highLevelIcon;
-    QLabel *lowLevelIcon;
 
 protected slots:
     virtual void toggleMuteStatus();

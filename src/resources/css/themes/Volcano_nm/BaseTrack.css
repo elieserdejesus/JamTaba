@@ -143,11 +143,6 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:hover
     background-color: rgb(217, 157, 116);
 }
 
-AudioMeter
-{
-    qproperty-dBMarksColor: black;
-}
-
 /* TrackGroup - used as container for subchannels
 ---------------------------------------------------*/
 

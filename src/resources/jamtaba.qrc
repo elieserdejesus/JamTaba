@@ -169,8 +169,6 @@
         <file>preset-save.png</file>
         <file>preset-delete.png</file>
         <file>discard.png</file>
-        <file>level high.png</file>
-        <file>level low.png</file>
         <file>horizontal_layout.png</file>
         <file>vertical_layout.png</file>
         <file>grid_layout.png</file>

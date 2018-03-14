@@ -95,12 +95,6 @@ BaseTrackView[unlighted="true"]
         stop:1 rgb(90, 90, 90));
 }
 
-AudioMeter
-{
-    qproperty-dBMarksColor: rgb(60, 60, 60);
-}
-
-
 /* SLIDERS ---------------- */
 #panSlider::handle
 {

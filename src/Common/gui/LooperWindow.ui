@@ -213,24 +213,8 @@
      </item>
      <item>
       <layout class="QVBoxLayout" name="mainVolumeLayout">
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QLabel" name="labelSpeakerHigh">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string notr="true"/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
-         </property>
-        </widget>
-       </item>
        <item>
-        <widget class="Slider" name="mainLevelSlider">
+        <widget class="AudioSlider" name="mainLevelSlider">
          <property name="maximum">
           <number>120</number>
          </property>
@@ -254,33 +238,7 @@
          </property>
         </widget>
        </item>
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QLabel" name="labelSpeakerLow">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string notr="true"/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
-         </property>
-        </widget>
-       </item>
       </layout>
-     </item>
-     <item>
-      <widget class="AudioMeter" name="peakMeter" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
@@ -440,13 +398,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>AudioMeter</class>
-   <extends>QWidget</extends>
-   <header>gui/widgets/PeakMeter.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Slider</class>
+   <class>AudioSlider</class>
    <extends>QSlider</extends>
    <header>gui/widgets/Slider.h</header>
   </customwidget>
@@ -457,7 +409,6 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

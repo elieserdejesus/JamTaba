@@ -202,59 +202,62 @@ QLineEdit#chatText-topLevel
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
 
-QSlider::groove:vertical
+QSlider::groove
 {
-    border: none;
+    background-color: rgba(0, 0, 0, 25);
 }
-
-QSlider::groove:horizontal
-{
-    background-color: rgba(0, 0, 0, 50);
-    height: 2px;
-    border: none;
-}
-QSlider::groove:vertical
-{
-    background-color: rgba(0, 0, 0, 50);
-    width: 2px;
-}
-
 
 QSlider::handle
 {
-
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-stop: 0.0 #FDE5A9,
-stop: 1.0 #FFB301);
-
     border: 1px outset #68300F;
     border-radius: 2px;
 }
 
+/* pan slider using solid background color */
+PanSlider::handle
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #FDE5A9,
+        stop: 1.0 #FFB301);
+}
+
 QSlider::handle:hover
 {
-background-color: #FDE5A9;
+    background-color: #FDE5A9;
+    border: 1px outset #68300F;
 }
 
-QSlider::handle:horizontal
+
+/* transparent handle */
+AudioSlider::handle {
+
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop: 0.0 rgba(253, 229, 169, 180),
+            stop: 1.0 rgba(255, 179, 1, 180));
+}
+
+AudioSlider
 {
-    margin-top: -6px;
-    margin-bottom: -7px;
-    padding: 0px;
-    width: 8px;
-    height: 14px;
+    /* changing Audio Peak meter custom CSS properties */
+    qproperty-rmsColor: rgb(181, 37, 3);
+    qproperty-peakStartColor: orange;
+    qproperty-peakEndColor: red;
+    qproperty-maxPeakColor: rgb(181, 37, 3);
+
+    qproperty-dBMarksColor: rgba(0, 0, 0, 120);
 }
 
-QSlider::handle:vertical
+AudioSlider#masterFader
 {
-    margin-left: -9px;
-    margin-right: -9px;
-    padding: 0px;
-    height: 9px;
-    width: 24px;
+    qproperty-maxPeakColor: rgb(190, 90, 29);
+    qproperty-rmsColor: rgb(190, 90, 29);
 }
 
-
+AudioSlider#masterFader,
+MetronomePanel #peakMeter
+{
+    qproperty-peakStartColor: rgb(190, 90, 29);
+}
 
 
 /* TabBar ----------------------*/
@@ -331,27 +334,6 @@ QTabWidget::pane
 {
     background-color: transparent;
     border-image: url('/images/bg.png') 0 0 0 0 stretch stretch;
-}
-
-AudioMeter
-{
-    /* changing Audio Peak meter custom CSS properties */
-    qproperty-rmsColor: rgb(181, 37, 3);
-    qproperty-peakStartColor: orange;
-    qproperty-peakEndColor: red;
-    qproperty-maxPeakColor: rgb(181, 37, 3);
-}
-
-AudioMeter#masterMeter
-{
-    qproperty-maxPeakColor: rgb(190, 90, 29);
-    qproperty-rmsColor: rgb(190, 90, 29);
-}
-
-AudioMeter#masterMeter
-MetronomePanel #peakMeter
-{
-    qproperty-peakStartColor: rgb(190, 90, 29);
 }
 
 

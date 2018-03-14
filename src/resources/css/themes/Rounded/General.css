@@ -209,7 +209,6 @@ QSlider::groove:vertical
 QSlider::groove:horizontal
 {
     background-color: rgba(0, 0, 0, 30);
-    height: 3px;
     border-radius: 2px;
     border: 1px inset rgb(140, 140, 140);
 }
@@ -227,7 +226,6 @@ QSlider::groove:vertical
             stop: 0     rgb(201, 201, 201),
             stop: 1.0   rgb(115, 115, 115)
             );
-    width: 5px;
 }
 
 QSlider::handle:horizontal
@@ -237,8 +235,7 @@ QSlider::handle:horizontal
         stop: 0.8    rgb(120, 120, 120),
         stop: 1      rgba(0, 0, 0, 20));
 
-    margin-top: -5px;
-    margin-bottom: -5px;
+
     padding: 0px;
     width: 11px;
     border-radius: 5px;
@@ -275,6 +272,11 @@ QSlider::handle:vertical:hover
         stop: 0.9    rgb(200, 200, 200),
         stop: 1      rgba(0, 0, 0, 20)
     );
+}
+
+AudioSlider
+{
+    qproperty-dBMarksColor: rgb(60, 60, 60);
 }
 
 

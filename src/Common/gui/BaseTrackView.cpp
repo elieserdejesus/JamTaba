@@ -54,9 +54,6 @@ BaseTrackView::BaseTrackView(MainController *mainController, long trackID) :
 void BaseTrackView::setTintColor(const QColor &color)
 {
     this->tintColor = color;
-
-    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(getTintColor()));
-    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(getTintColor()));
 }
 
 void BaseTrackView::setupVerticalLayout()
@@ -64,17 +61,13 @@ void BaseTrackView::setupVerticalLayout()
     setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
 
     levelSlider->setOrientation(Qt::Vertical);
-    levelSliderLayout->setDirection(QBoxLayout::TopToBottom);
-
-    peakMeter->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
-    peakMeter->setOrientation(Qt::Vertical);
-
-    metersLayout->setDirection(QHBoxLayout::LeftToRight);
+    levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     muteSoloLayout->setDirection(QBoxLayout::TopToBottom);
 
     mainLayout->setVerticalSpacing(9);
     mainLayout->setContentsMargins(3, 0, 3, 3);
+    mainLayout->setColumnStretch(0, 1);
 }
 
 void BaseTrackView::createLayoutStructure()
@@ -97,46 +90,22 @@ void BaseTrackView::createLayoutStructure()
     labelPanR->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     labelPanR->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-    panSlider = new Slider();
+    panSlider = new PanSlider();
     panSlider->setObjectName(QStringLiteral("panSlider"));
     panSlider->setMinimum(-4);
     panSlider->setMaximum(4);
     panSlider->setOrientation(Qt::Horizontal);
-    panSlider->setSliderType(Slider::PanSlider);
 
     panWidgetsLayout->addWidget(labelPanL);
     panWidgetsLayout->addWidget(panSlider);
     panWidgetsLayout->addWidget(labelPanR);
 
-    levelSlider = new Slider();
+    levelSlider = new AudioSlider();
     levelSlider->setObjectName(QStringLiteral("levelSlider"));
     levelSlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     levelSlider->setMaximum(120);
     levelSlider->setValue(100);
     levelSlider->setTickPosition(QSlider::NoTicks);
-    levelSlider->setSliderType(Slider::AudioSlider);
-
-    levelSliderLayout = new QVBoxLayout();
-    levelSliderLayout->setSpacing(2);
-    levelSliderLayout->setContentsMargins(0, 0, 0, 0);
-    highLevelIcon = new QLabel(this);
-    lowLevelIcon = new QLabel(this);
-    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(getTintColor()));
-    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(getTintColor()));
-    highLevelIcon->setAlignment(Qt::AlignCenter);
-    lowLevelIcon->setAlignment(Qt::AlignCenter);
-
-    levelSliderLayout->addWidget(highLevelIcon);
-    levelSliderLayout->addWidget(levelSlider);
-    levelSliderLayout->addWidget(lowLevelIcon);
-
-    peakMeter = new AudioMeter(this);
-    peakMeter->setObjectName(QStringLiteral("peakMeter"));
-
-    metersLayout = new QHBoxLayout();
-    metersLayout->setSpacing(1);
-    metersLayout->setContentsMargins(0, 0, 0, 0);
-    metersLayout->addWidget(peakMeter);
 
     muteButton = new QPushButton();
     muteButton->setObjectName(QStringLiteral("muteButton"));
@@ -157,23 +126,16 @@ void BaseTrackView::createLayoutStructure()
 
     boostSpinBox = new BoostSpinBox(this);
 
-    primaryChildsLayout = new QVBoxLayout();
-    primaryChildsLayout->setSpacing(12);
-    primaryChildsLayout->setContentsMargins(0, 0, 0, 0);
-
     secondaryChildsLayout = new QVBoxLayout();
     secondaryChildsLayout->setSpacing(6);
     secondaryChildsLayout->setContentsMargins(0, 0, 0, 0);
 
-    primaryChildsLayout->addLayout(panWidgetsLayout);
-    primaryChildsLayout->addLayout(levelSliderLayout, 1);
-
-    secondaryChildsLayout->addLayout(metersLayout);
     secondaryChildsLayout->addLayout(muteSoloLayout);
     secondaryChildsLayout->addWidget(boostSpinBox, 0, Qt::AlignCenter);
 
-    mainLayout->addLayout(primaryChildsLayout, 0, 0);
-    mainLayout->addLayout(secondaryChildsLayout, 0, 1);
+    mainLayout->addLayout(panWidgetsLayout, 0, 0, 1, 2);
+    mainLayout->addWidget(levelSlider, 1, 0);
+    mainLayout->addLayout(secondaryChildsLayout, 1, 1, 1, 1, Qt::AlignBottom);
 
     translateUI();
 }
@@ -308,7 +270,7 @@ void BaseTrackView::updateStyleSheet()
     style()->unpolish(panSlider);
     style()->polish(panSlider);
 
-    peakMeter->updateStyleSheet();
+    //peakMeter->updateStyleSheet();
 
     style()->unpolish(muteButton);
     style()->polish(muteButton);
@@ -342,7 +304,7 @@ BaseTrackView *BaseTrackView::getTrackViewByID(long trackID)
 
 void BaseTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight)
 {
-    peakMeter->setPeak(peakLeft, peakRight, rmsLeft, rmsRight);
+    levelSlider->setPeak(peakLeft, peakRight, rmsLeft, rmsRight);
 }
 
 BaseTrackView::~BaseTrackView()
