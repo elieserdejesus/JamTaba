@@ -94,7 +94,7 @@ MainWindow::MainWindow(MainController *mainController, QWidget *parent) :
 
     ui.setupUi(this);
 
-    setWindowTitle("JamTaba");
+    setWindowTitle(QString("JamTaba (%1 bits)").arg(QSysInfo::WordSize));
 
     initializeLoginService();
     initializeMainTabWidget();
@@ -2524,6 +2524,8 @@ void MainWindow::showJamtabaCurrentVersion()
 {
     QString title = tr("About Jamtaba");
     QString text = tr("Jamtaba version is %1").arg(QApplication::applicationVersion());
+    text += QString(" (%1 bits)").arg(QSysInfo::WordSize);
+
     QMessageBox *box = new QMessageBox();
     box->setWindowIcon(this->windowIcon());
     box->setWindowTitle(title);
