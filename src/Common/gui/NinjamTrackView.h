@@ -58,6 +58,7 @@ private:
     QLabel *networkUsageLabel;
     persistence::CacheEntry cacheEntry; // used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay; // display downloaded interval chunks
+    QWidget *instrumentWidget;
 
     // used to send channel receive on/off messages
     QString userFullName;
@@ -79,6 +80,8 @@ private:
     QPushButton *createReceiveButton() const;
 
     NinjamTrackNode *getTrackNode() const;
+
+    QWidget *createInstrumentWidget();
 
     static const int WIDE_HEIGHT;
 
