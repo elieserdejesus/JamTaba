@@ -8,7 +8,7 @@ InstrumentsButton::InstrumentsButton(const QIcon &defaultIcon, const QList<QIcon
     QToolButton(parent)
 {
     setPopupMode(QToolButton::InstantPopup);
-    setObjectName("instrumentButton");
+    setObjectName("instrumentsButton");
 
     const QSize iconSize(32, 32);
 

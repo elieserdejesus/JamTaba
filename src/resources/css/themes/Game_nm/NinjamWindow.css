@@ -82,7 +82,9 @@ IntervalProgressDisplay
 #buttonGridLayout:enabled:hover,
 #wide:enabled:hover,
 #narrow:enabled:hover,
-#licenceButton:hover
+#licenceButton:hover,
+#instrumentsButton:hover,
+#instrumentsMenu QToolButton:hover
 {
     border: 1px solid #368788;
     background-color: #0B4B49;
@@ -169,3 +171,9 @@ MetronomePanel QPushButton
     margin-bottom: 3px;
 }
 */
+
+#instrumentsMenu QToolButton:enabled:!hover
+{
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 50);
+}

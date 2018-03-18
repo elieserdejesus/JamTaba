@@ -11,7 +11,8 @@ MidiToolsDialog,
 UserNameDialog,
 PrivateServerDialog,
 LooperWindow,
-PrivateServerWindow
+PrivateServerWindow,
+QWidget#instrumentsMenu
 {
     border-color: rgb(20, 20, 20);
     color: rgb(40, 40, 40);
