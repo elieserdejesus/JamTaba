@@ -10,6 +10,7 @@
 #include <QStyle>
 #include <QDateTime>
 #include <QMenu>
+#include <QWidgetAction>
 
 #include "BaseTrackView.h"
 #include "MainController.h"
@@ -18,6 +19,7 @@
 #include "audio/NinjamTrackNode.h"
 #include "widgets/BoostSpinBox.h"
 #include "widgets/PeakMeter.h"
+#include "widgets/InstrumentsMenu.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
@@ -53,7 +55,7 @@ NinjamTrackView::NinjamTrackView(controller::MainController *mainController, lon
 
     connect(buttonReceive, &QPushButton::toggled, this, &NinjamTrackView::setReceiveState);
 
-    instrumentWidget = createInstrumentWidget();
+    instrumentsButton = createInstrumentsButton();
 
     setupVerticalLayout();
 
@@ -290,7 +292,7 @@ void NinjamTrackView::setupVerticalLayout()
     mainLayout->removeWidget(chunksDisplay);
     mainLayout->removeItem(panWidgetsLayout);
     mainLayout->removeWidget(levelSlider);
-    mainLayout->removeWidget(instrumentWidget);
+    mainLayout->removeWidget(instrumentsButton);
 
     // reset collumn stretch
     for (int c = 0; c < mainLayout->columnCount(); ++c) {
@@ -300,7 +302,7 @@ void NinjamTrackView::setupVerticalLayout()
     auto columnCount = mainLayout->columnCount();
 
     mainLayout->addWidget(channelNameLabel, 0, 0, 1, columnCount); // insert channel name label in top
-    mainLayout->addWidget(instrumentWidget, 1, 0, 1, columnCount, Qt::AlignCenter);
+    mainLayout->addWidget(instrumentsButton, 1, 0, 1, columnCount, Qt::AlignCenter);
     mainLayout->addLayout(panWidgetsLayout, 2, 0, 1, columnCount);
     mainLayout->addWidget(levelSlider, 3, 0);
     mainLayout->addLayout(secondaryChildsLayout, 3, 1, 1, columnCount - 1, Qt::AlignBottom);
@@ -322,11 +324,11 @@ void NinjamTrackView::setupHorizontalLayout()
     mainLayout->removeItem(panWidgetsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
-    mainLayout->removeWidget(instrumentWidget);
+    mainLayout->removeWidget(instrumentsButton);
 
     auto rowCount = mainLayout->rowCount();
 
-    mainLayout->addWidget(instrumentWidget, 0, 0, rowCount, 1, Qt::AlignCenter);
+    mainLayout->addWidget(instrumentsButton, 0, 0, rowCount, 1, Qt::AlignCenter);
     mainLayout->addWidget(channelNameLabel, 0, 1);
     mainLayout->addWidget(levelSlider, 0, 2);
     mainLayout->addLayout(panWidgetsLayout, 0, 3);
@@ -334,8 +336,8 @@ void NinjamTrackView::setupHorizontalLayout()
     mainLayout->addLayout(secondaryChildsLayout, 1, 2, rowCount, 2, Qt::AlignRight | Qt::AlignBottom);
 
     mainLayout->setColumnStretch(0, 0); // instrument widget
-    mainLayout->setColumnStretch(1, 1); // channel name
-    mainLayout->setColumnStretch(2, 2); // fader
+    mainLayout->setColumnStretch(1, 0); // channel name
+    mainLayout->setColumnStretch(2, 3); // fader
     mainLayout->setColumnStretch(3, 1); // pan
 
     auto vMargin = narrowed ? 3 : 6;
@@ -349,7 +351,7 @@ void NinjamTrackView::setupHorizontalLayout()
 
     channelNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
-    panSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    panSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
 
@@ -471,20 +473,16 @@ void NinjamTrackView::setLowCutToNextState()
     }
 }
 
-QWidget *NinjamTrackView::createInstrumentWidget()
+InstrumentsButton *NinjamTrackView::createInstrumentsButton()
 {
-    auto toolButton = new QToolButton(this);
+    QDir instrumentsDir(":/instruments");
 
-    toolButton->setPopupMode(QToolButton::InstantPopup);
-    toolButton->setObjectName("instrumentButton");
-    toolButton->setIcon(QIcon(":/images/chat.png"));
-    toolButton->setIconSize(QSize(32, 32));
+    QIcon defaultIcon(instrumentsDir.filePath("jtba.png"));
 
-    auto menu = new QMenu(this);
-    menu->addAction(QIcon(":/images/chat.png"), "");
-    menu->addAction(QIcon(":/images/discard.png"), "");
+    auto fileInfos = instrumentsDir.entryInfoList();
+    QList<QIcon> icons;
+    for (auto iconInfo : fileInfos)
+        icons.append(QIcon(instrumentsDir.filePath(iconInfo.completeBaseName())));
 
-    toolButton->setMenu(menu);
-
-    return toolButton;
+    return new InstrumentsButton(defaultIcon, icons, this);
 }

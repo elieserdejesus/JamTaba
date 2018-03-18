@@ -222,9 +222,10 @@ NinjamTrackView QProgressBar                /* The progress bar in bottom of nin
     max-height: 3px;
 }
 
-NinjamTrackView #instrumentButton
-{
-    padding-right: 8px;
+/* instruments menu */
+QMenu::item QLabel {
+    padding: 6px;
+    margin: 3px;
 }
 
 /* Ninjam track groups

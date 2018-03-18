@@ -5,6 +5,7 @@
 #include "BaseTrackView.h"
 #include "widgets/IntervalChunksDisplay.h"
 #include "widgets/MarqueeLabel.h"
+
 #include "widgets/MultiStateButton.h"
 #include "persistence/UsersDataCache.h"
 #include "audio/NinjamTrackNode.h"
@@ -14,6 +15,7 @@ class MainController;
 }
 
 class QLabel;
+class InstrumentsButton;
 
 class NinjamTrackView : public BaseTrackView
 {
@@ -58,7 +60,7 @@ private:
     QLabel *networkUsageLabel;
     persistence::CacheEntry cacheEntry; // used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay; // display downloaded interval chunks
-    QWidget *instrumentWidget;
+    InstrumentsButton *instrumentsButton;
 
     // used to send channel receive on/off messages
     QString userFullName;
@@ -81,7 +83,7 @@ private:
 
     NinjamTrackNode *getTrackNode() const;
 
-    QWidget *createInstrumentWidget();
+    InstrumentsButton *createInstrumentsButton();
 
     static const int WIDE_HEIGHT;
 
