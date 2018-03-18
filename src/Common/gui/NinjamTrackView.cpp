@@ -25,7 +25,9 @@ const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout
 
 quint32 NinjamTrackView::networkUsageUpdatePeriod = 4000;
 
-NinjamTrackView::NinjamTrackView(controller::MainController *mainController, long trackID) :
+using controller::MainController;
+
+NinjamTrackView::NinjamTrackView(MainController *mainController, long trackID) :
     BaseTrackView(mainController, trackID),
     orientation(Qt::Vertical),
     downloadingFirstInterval(true),
@@ -56,10 +58,21 @@ NinjamTrackView::NinjamTrackView(controller::MainController *mainController, lon
     connect(buttonReceive, &QPushButton::toggled, this, &NinjamTrackView::setReceiveState);
 
     instrumentsButton = createInstrumentsButton();
+    connect(instrumentsButton, &InstrumentsButton::iconSelected, this, &NinjamTrackView::instrumentIconChanged);
 
     setupVerticalLayout();
 
     setActivatedStatus(true); // disabled/grayed until receive the first bytes.
+}
+
+void NinjamTrackView::instrumentIconChanged(quint8 instrumentIndex)
+{
+    if (mainController) {
+        cacheEntry.setInstrumentIndex(instrumentIndex);
+        auto cache = mainController->getUsersDataCache();
+        if (cache)
+            cache->updateUserCacheEntry(cacheEntry);
+    }
 }
 
 void NinjamTrackView::setTintColor(const QColor &color)
@@ -203,6 +216,10 @@ void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialVal
             }
         }
     }
+
+    if (initialValues.hasValidInstrumentIndex())
+        instrumentsButton->setInstrumentIcon(initialValues.getInstrumentIndex());
+
 }
 
 void NinjamTrackView::updateGuiElements()

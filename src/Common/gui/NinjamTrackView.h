@@ -102,6 +102,7 @@ protected slots:
 
 private slots:
     void setReceiveState(bool receive);
+    void instrumentIconChanged(quint8 instrumentIndex);
 
 };
 

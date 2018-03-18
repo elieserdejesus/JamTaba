@@ -5,7 +5,8 @@
 #include <QHBoxLayout>
 
 InstrumentsButton::InstrumentsButton(const QIcon &defaultIcon, const QList<QIcon> &icons, QWidget *parent) :
-    QToolButton(parent)
+    QToolButton(parent),
+    icons(icons)
 {
     setPopupMode(QToolButton::InstantPopup);
     setObjectName("instrumentsButton");
@@ -18,6 +19,12 @@ InstrumentsButton::InstrumentsButton(const QIcon &defaultIcon, const QList<QIcon
     toolBar = createToolBar(icons, iconSize);
 
     connect(this, &InstrumentsButton::clicked, this, &InstrumentsButton::showInstrumentIcons);
+}
+
+void InstrumentsButton::setInstrumentIcon(quint8 instrumentIcon)
+{
+    if (instrumentIcon < icons.size())
+        setIcon(icons.at(instrumentIcon));
 }
 
 QWidget *InstrumentsButton::createToolBar(const QList<QIcon> &icons, const QSize &iconSize)

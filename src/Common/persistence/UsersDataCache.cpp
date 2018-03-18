@@ -11,7 +11,11 @@ using persistence::CacheEntry;
 using persistence::UsersDataCache;
 using persistence::UsersDataCacheHeader;
 
-const quint32 UsersDataCacheHeader::REVISION = 3; // added 3 low cut states (off, normal and drastic) in revision 3
+/**
+   - Added 3 low cut states (off, normal and drastic) in revision 3
+   - Added instrument index in revision 4
+*/
+const quint32 UsersDataCacheHeader::REVISION = 4;
 
 const bool CacheEntry::DEFAULT_MUTED = false;
 const quint8 CacheEntry::DEFAULT_LOW_CUT_STATE = 0; // OFF state is default
@@ -20,6 +24,7 @@ const float CacheEntry::DEFAULT_PAN = 0.0f;
 const float CacheEntry::DEFAULT_BOOST = 1.0f;
 const float CacheEntry::PAN_MAX = 4.0f;
 const float CacheEntry::PAN_MIN = -4.0f;
+const qint8 CacheEntry::DEFAULT_INSTRUMENT_INDEX = -1;
 
 // well formed address is an acceptable.
 // no need to validate the number within 8 bits.
@@ -36,7 +41,8 @@ QDataStream &operator<<(QDataStream &stream, const CacheEntry &entry)
            << entry.getGain()
            << entry.getPan()
            << entry.getBoost()
-           << entry.getLowCutState();
+           << entry.getLowCutState()
+           << entry.getInstrumentIndex();
 }
 
 QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
@@ -44,10 +50,11 @@ QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
     QString userIp, userName;
     quint8 channelID;
     bool muted;
-    int lowCutState;
+    quint8 lowCutState;
     float gain, pan, boost;
+    qint8 instrumentIndex;
 
-    stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost >> lowCutState;
+    stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost >> lowCutState >> instrumentIndex;
 
     entry.setUserIP(userIp);
     entry.setUserName(userName);
@@ -57,6 +64,7 @@ QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
     entry.setPan(pan);
     entry.setBoost(boost);
     entry.setLowCutState(lowCutState);
+    entry.setInstrumentIndex(instrumentIndex);
 
     return stream;
 }
@@ -73,6 +81,17 @@ CacheEntry::CacheEntry(const QString &userIp, const QString &userName, quint8 ch
     setPan(DEFAULT_PAN);
     setBoost(DEFAULT_BOOST);
     setLowCutState(DEFAULT_LOW_CUT_STATE);
+    setInstrumentIndex(DEFAULT_INSTRUMENT_INDEX);
+}
+
+void CacheEntry::setInstrumentIndex(qint8 index)
+{
+    instrumentIndex = index;
+}
+
+bool CacheEntry::hasValidInstrumentIndex() const
+{
+    return instrumentIndex >= 0;
 }
 
 void CacheEntry::setLowCutState(quint8 state)
