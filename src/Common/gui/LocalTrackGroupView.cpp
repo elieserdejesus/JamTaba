@@ -388,7 +388,6 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
 
         updateXmitButtonText();
         updateGeometry();
-        adjustSize();
     }
 }
 
