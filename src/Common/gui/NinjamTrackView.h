@@ -85,11 +85,34 @@ private:
 
     InstrumentsButton *createInstrumentsButton();
 
+    qint8 guessInstrumentIcon() const;
+
     static const int WIDE_HEIGHT;
 
     qint64 lastNetworkUsageUpdate;
 
     static quint32 networkUsageUpdatePeriod;
+
+    enum class InstrumentsIndexes : qint8 {
+        // the order of enums are the same of the instrument icons in resources file
+        AcousticGuitar,
+        Banjo,
+        ElectricBass,
+        DoubleBass,
+        Drums,
+        DrumStick,
+        Gramophone,
+        Guitar,
+        JamTabaIcon,
+        Keys,
+        Mandolin,
+        Mic,
+        Piano,
+        Triangle,
+        TrollFace,
+        Trumpet,
+        Violin
+    };
 
 protected slots:
     // overriding the base class slots

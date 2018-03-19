@@ -26,6 +26,7 @@ const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout
 quint32 NinjamTrackView::networkUsageUpdatePeriod = 4000;
 
 using controller::MainController;
+using persistence::CacheEntry;
 
 NinjamTrackView::NinjamTrackView(MainController *mainController, long trackID) :
     BaseTrackView(mainController, trackID),
@@ -217,9 +218,46 @@ void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialVal
         }
     }
 
-    if (initialValues.hasValidInstrumentIndex())
-        instrumentsButton->setInstrumentIcon(initialValues.getInstrumentIndex());
+    auto instrumentIconIndex = initialValues.hasValidInstrumentIndex() ? initialValues.getInstrumentIndex() : guessInstrumentIcon();
+    instrumentsButton->setInstrumentIcon(instrumentIconIndex);
 
+}
+
+qint8 NinjamTrackView::guessInstrumentIcon() const
+{
+    auto channelName = channelNameLabel->text().toLower();
+
+    if (channelName.contains("guitar"))
+        return static_cast<qint8>(InstrumentsIndexes::Guitar);
+
+    if (channelName.contains("key"))
+        return static_cast<qint8>(InstrumentsIndexes::Keys);
+
+    if (channelName.contains("piano"))
+        return static_cast<qint8>(InstrumentsIndexes::Piano);
+
+    if (channelName.contains("voice") || channelName.contains("sing"))
+        return static_cast<qint8>(InstrumentsIndexes::Mic);
+
+    if (channelName.contains("drum"))
+        return static_cast<qint8>(InstrumentsIndexes::DrumStick);
+
+    if (channelName.contains("mandolin"))
+        return static_cast<qint8>(InstrumentsIndexes::Mandolin);
+
+    if (channelName.contains("violin"))
+        return static_cast<qint8>(InstrumentsIndexes::Violin);
+
+    if (channelName.contains("double"))
+        return static_cast<qint8>(InstrumentsIndexes::DoubleBass);
+
+    if (channelName.contains("bass"))
+        return static_cast<qint8>(InstrumentsIndexes::ElectricBass);
+
+    if (channelName.contains("trumpet"))
+        return static_cast<qint8>(InstrumentsIndexes::Trumpet);
+
+    return CacheEntry::DEFAULT_INSTRUMENT_INDEX;
 }
 
 void NinjamTrackView::updateGuiElements()
