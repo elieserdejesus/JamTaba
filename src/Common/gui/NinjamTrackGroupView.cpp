@@ -14,7 +14,7 @@
 #include <QtConcurrent>
 
 const uint NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT = 350;
-const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.64;
+const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.78;
 
 using controller::MainController;
 using controller::NinjamController;
