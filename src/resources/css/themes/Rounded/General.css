@@ -22,7 +22,8 @@ QPushButton:checked
     background-color: rgba(0, 0, 0, 70);
 }
 
-QPushButton:hover
+QPushButton:hover,
+#instrumentsMenu QToolButton:hover
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop:0 rgb(240, 240, 240),

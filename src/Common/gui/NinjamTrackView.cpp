@@ -9,6 +9,8 @@
 #include <QSlider>
 #include <QStyle>
 #include <QDateTime>
+#include <QMenu>
+#include <QWidgetAction>
 
 #include "BaseTrackView.h"
 #include "MainController.h"
@@ -17,12 +19,16 @@
 #include "audio/NinjamTrackNode.h"
 #include "widgets/BoostSpinBox.h"
 #include "widgets/PeakMeter.h"
+#include "widgets/InstrumentsMenu.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
 quint32 NinjamTrackView::networkUsageUpdatePeriod = 4000;
 
-NinjamTrackView::NinjamTrackView(controller::MainController *mainController, long trackID) :
+using controller::MainController;
+using persistence::CacheEntry;
+
+NinjamTrackView::NinjamTrackView(MainController *mainController, long trackID) :
     BaseTrackView(mainController, trackID),
     orientation(Qt::Vertical),
     downloadingFirstInterval(true),
@@ -52,9 +58,22 @@ NinjamTrackView::NinjamTrackView(controller::MainController *mainController, lon
 
     connect(buttonReceive, &QPushButton::toggled, this, &NinjamTrackView::setReceiveState);
 
+    instrumentsButton = createInstrumentsButton();
+    connect(instrumentsButton, &InstrumentsButton::iconSelected, this, &NinjamTrackView::instrumentIconChanged);
+
     setupVerticalLayout();
 
     setActivatedStatus(true); // disabled/grayed until receive the first bytes.
+}
+
+void NinjamTrackView::instrumentIconChanged(quint8 instrumentIndex)
+{
+    if (mainController) {
+        cacheEntry.setInstrumentIndex(instrumentIndex);
+        auto cache = mainController->getUsersDataCache();
+        if (cache)
+            cache->updateUserCacheEntry(cacheEntry);
+    }
 }
 
 void NinjamTrackView::setTintColor(const QColor &color)
@@ -198,6 +217,47 @@ void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialVal
             }
         }
     }
+
+    auto instrumentIconIndex = initialValues.hasValidInstrumentIndex() ? initialValues.getInstrumentIndex() : guessInstrumentIcon();
+    instrumentsButton->setInstrumentIcon(instrumentIconIndex);
+
+}
+
+qint8 NinjamTrackView::guessInstrumentIcon() const
+{
+    auto channelName = channelNameLabel->text().toLower();
+
+    if (channelName.contains("guitar"))
+        return static_cast<qint8>(InstrumentsIndexes::Guitar);
+
+    if (channelName.contains("key"))
+        return static_cast<qint8>(InstrumentsIndexes::Keys);
+
+    if (channelName.contains("piano"))
+        return static_cast<qint8>(InstrumentsIndexes::Piano);
+
+    if (channelName.contains("voice") || channelName.contains("sing"))
+        return static_cast<qint8>(InstrumentsIndexes::Mic);
+
+    if (channelName.contains("drum"))
+        return static_cast<qint8>(InstrumentsIndexes::DrumStick);
+
+    if (channelName.contains("mandolin"))
+        return static_cast<qint8>(InstrumentsIndexes::Mandolin);
+
+    if (channelName.contains("violin"))
+        return static_cast<qint8>(InstrumentsIndexes::Violin);
+
+    if (channelName.contains("double"))
+        return static_cast<qint8>(InstrumentsIndexes::DoubleBass);
+
+    if (channelName.contains("bass"))
+        return static_cast<qint8>(InstrumentsIndexes::ElectricBass);
+
+    if (channelName.contains("trumpet"))
+        return static_cast<qint8>(InstrumentsIndexes::Trumpet);
+
+    return CacheEntry::DEFAULT_INSTRUMENT_INDEX;
 }
 
 void NinjamTrackView::updateGuiElements()
@@ -287,17 +347,21 @@ void NinjamTrackView::setupVerticalLayout()
     mainLayout->removeWidget(chunksDisplay);
     mainLayout->removeItem(panWidgetsLayout);
     mainLayout->removeWidget(levelSlider);
+    mainLayout->removeWidget(instrumentsButton);
 
     // reset collumn stretch
     for (int c = 0; c < mainLayout->columnCount(); ++c) {
         mainLayout->setColumnStretch(c, 0);
     }
 
-    mainLayout->addWidget(channelNameLabel, 0, 0, 1, mainLayout->columnCount());// insert channel name label in top
-    mainLayout->addLayout(panWidgetsLayout, 1, 0, 1, mainLayout->columnCount());
-    mainLayout->addWidget(levelSlider, 2, 0);
-    mainLayout->addLayout(secondaryChildsLayout, 2, 1, 1, mainLayout->columnCount() - 1, Qt::AlignBottom);
-    mainLayout->addWidget(chunksDisplay, 3, 0, 1, mainLayout->columnCount()); // append chunks display in bottom
+    auto columnCount = mainLayout->columnCount();
+
+    mainLayout->addWidget(channelNameLabel, 0, 0, 1, columnCount); // insert channel name label in top
+    mainLayout->addWidget(instrumentsButton, 1, 0, 1, columnCount, Qt::AlignCenter);
+    mainLayout->addLayout(panWidgetsLayout, 2, 0, 1, columnCount);
+    mainLayout->addWidget(levelSlider, 3, 0);
+    mainLayout->addLayout(secondaryChildsLayout, 3, 1, 1, columnCount - 1, Qt::AlignBottom);
+    mainLayout->addWidget(chunksDisplay, 4, 0, 1, columnCount); // append chunks display in bottom
 
     secondaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
 
@@ -315,19 +379,25 @@ void NinjamTrackView::setupHorizontalLayout()
     mainLayout->removeItem(panWidgetsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
+    mainLayout->removeWidget(instrumentsButton);
 
-    mainLayout->addWidget(channelNameLabel, 0, 0);
-    mainLayout->addWidget(levelSlider, 0, 1);
-    mainLayout->addLayout(panWidgetsLayout, 0, 2);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 0, 1, mainLayout->columnCount(), Qt::AlignRight);
-    mainLayout->addWidget(chunksDisplay, 2, 0, 1, mainLayout->columnCount()); // append chunks display in bottom
+    auto rowCount = mainLayout->rowCount();
 
-    mainLayout->setColumnStretch(0, 1);
-    mainLayout->setColumnStretch(1, 2);
-    mainLayout->setColumnStretch(2, 1);
+    mainLayout->addWidget(instrumentsButton, 0, 0, rowCount, 1, Qt::AlignCenter);
+    mainLayout->addWidget(channelNameLabel, 0, 1);
+    mainLayout->addWidget(levelSlider, 0, 2);
+    mainLayout->addLayout(panWidgetsLayout, 0, 3);
+    mainLayout->addWidget(chunksDisplay, 1, 1, rowCount, 1);
+    mainLayout->addLayout(secondaryChildsLayout, 1, 2, rowCount, 2, Qt::AlignRight | Qt::AlignBottom);
 
-    mainLayout->setContentsMargins(6, 3, 6, 3);
-    mainLayout->setVerticalSpacing(6);
+    mainLayout->setColumnStretch(0, 0); // instrument widget
+    mainLayout->setColumnStretch(1, 0); // channel name
+    mainLayout->setColumnStretch(2, 3); // fader
+    mainLayout->setColumnStretch(3, 1); // pan
+
+    auto vMargin = narrowed ? 3 : 6;
+    mainLayout->setContentsMargins(vMargin, 3, vMargin, 3);
+    mainLayout->setVerticalSpacing(vMargin);
 
     secondaryChildsLayout->setDirection(QBoxLayout::LeftToRight);
 
@@ -336,7 +406,7 @@ void NinjamTrackView::setupHorizontalLayout()
 
     channelNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
-    panSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    panSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
 
@@ -456,4 +526,18 @@ void NinjamTrackView::setLowCutToNextState()
         buttonLowCut->style()->unpolish(this);
         buttonLowCut->style()->polish(this);
     }
+}
+
+InstrumentsButton *NinjamTrackView::createInstrumentsButton()
+{
+    QDir instrumentsDir(":/instruments");
+
+    QIcon defaultIcon(instrumentsDir.filePath("jtba.png"));
+
+    auto fileInfos = instrumentsDir.entryInfoList();
+    QList<QIcon> icons;
+    for (auto iconInfo : fileInfos)
+        icons.append(QIcon(instrumentsDir.filePath(iconInfo.completeBaseName())));
+
+    return new InstrumentsButton(defaultIcon, icons, this);
 }

@@ -5,6 +5,7 @@
 #include "BaseTrackView.h"
 #include "widgets/IntervalChunksDisplay.h"
 #include "widgets/MarqueeLabel.h"
+
 #include "widgets/MultiStateButton.h"
 #include "persistence/UsersDataCache.h"
 #include "audio/NinjamTrackNode.h"
@@ -14,6 +15,7 @@ class MainController;
 }
 
 class QLabel;
+class InstrumentsButton;
 
 class NinjamTrackView : public BaseTrackView
 {
@@ -58,6 +60,7 @@ private:
     QLabel *networkUsageLabel;
     persistence::CacheEntry cacheEntry; // used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay; // display downloaded interval chunks
+    InstrumentsButton *instrumentsButton;
 
     // used to send channel receive on/off messages
     QString userFullName;
@@ -80,11 +83,36 @@ private:
 
     NinjamTrackNode *getTrackNode() const;
 
+    InstrumentsButton *createInstrumentsButton();
+
+    qint8 guessInstrumentIcon() const;
+
     static const int WIDE_HEIGHT;
 
     qint64 lastNetworkUsageUpdate;
 
     static quint32 networkUsageUpdatePeriod;
+
+    enum class InstrumentsIndexes : qint8 {
+        // the order of enums are the same of the instrument icons in resources file
+        AcousticGuitar,
+        Banjo,
+        ElectricBass,
+        DoubleBass,
+        Drums,
+        DrumStick,
+        Gramophone,
+        Guitar,
+        JamTabaIcon,
+        Keys,
+        Mandolin,
+        Mic,
+        Piano,
+        Triangle,
+        TrollFace,
+        Trumpet,
+        Violin
+    };
 
 protected slots:
     // overriding the base class slots
@@ -97,6 +125,7 @@ protected slots:
 
 private slots:
     void setReceiveState(bool receive);
+    void instrumentIconChanged(quint8 instrumentIndex);
 
 };
 

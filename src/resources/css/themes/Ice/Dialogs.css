@@ -13,7 +13,8 @@ QMessageBox,
 QInputDialog,
 MidiToolsDialog,
 UserNameDialog,
-LooperWindow
+LooperWindow,
+QWidget#instrumentsMenu
 {
     border-color: rgb(20, 20, 20);
     color: white;

@@ -14,7 +14,7 @@
 #include <QtConcurrent>
 
 const uint NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT = 350;
-const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.64;
+const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.78;
 
 using controller::MainController;
 using controller::NinjamController;
@@ -410,7 +410,7 @@ QSize NinjamTrackGroupView::sizeHint() const
             height += trackView->minimumSizeHint().height();
         }
 
-        return QSize(1, qMax(height, 58));
+        return QSize(1, qMax(height, 64)); // 64 is the minimum height of a horizontal narrowed track
     }
 
     // grid layout

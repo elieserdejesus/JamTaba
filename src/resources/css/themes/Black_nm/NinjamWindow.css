@@ -415,3 +415,16 @@ LooperWindow #muteButton:disabled
     color: rgba(0, 0, 0, 100);
     border-color: rgba(0, 0, 0, 20);
 }
+
+InstrumentsButton:hover,
+#instrumentsMenu QToolButton:enabled:hover
+{
+    background: rgba(255, 255, 255, 80);
+    border: gray;
+}
+
+#instrumentsMenu QToolButton:enabled
+{
+    background-color: rgba(255, 255, 255, 20);
+    border: none;
+}

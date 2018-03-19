@@ -95,7 +95,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const RoomInfo &roomI
 
 void NinjamRoomWindow::setTintColor(const QColor &color)
 {
-    //
+    Q_UNUSED(color);
 }
 
 void NinjamRoomWindow::setBpiComboPendingStatus(bool status)

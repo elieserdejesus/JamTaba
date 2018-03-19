@@ -210,3 +210,13 @@ LooperWindow QGroupBox
 {
     selection-color: black;
 }
+
+#instrumentsMenu QToolButton
+{
+    border: none;
+}
+
+QWidget#instrumentsMenu QToolButton:hover
+{
+    border: 1px solid gray;
+}

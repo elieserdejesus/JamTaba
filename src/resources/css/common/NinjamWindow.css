@@ -222,6 +222,13 @@ NinjamTrackView QProgressBar                /* The progress bar in bottom of nin
     max-height: 3px;
 }
 
+/* instruments menu */
+InstrumentsButton:enabled:!hover
+{
+    border: none;
+    background: none;
+}
+
 /* Ninjam track groups
 ------------------------*/
 
