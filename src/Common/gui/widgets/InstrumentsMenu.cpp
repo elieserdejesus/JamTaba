@@ -33,35 +33,27 @@ QWidget *InstrumentsButton::createToolBar(const QList<QIcon> &icons, const QSize
     toolBar->setWindowFlags(Qt::Popup);
     toolBar->setObjectName("instrumentsMenu");
 
-    auto vLayout = new QVBoxLayout();
-    vLayout->setContentsMargins(QMargins(3, 3, 3, 3));
-    vLayout->setSpacing(3);
+    auto gridLayout = new QGridLayout();
+    gridLayout->setContentsMargins(QMargins(3, 3, 3, 3));
+    gridLayout->setSpacing(3);
 
-    toolBar->setLayout(vLayout);
+    toolBar->setLayout(gridLayout);
 
-    auto rows = 4;
-    auto i = 0;
-    for (int r = 0; r < rows; ++r) {
-        auto widget = new QWidget(toolBar);
-        auto hLayout = new QHBoxLayout();
-        hLayout->setContentsMargins(QMargins(0, 0, 0, 0));
-        widget->setLayout(hLayout);
-        toolBar->layout()->addWidget(widget);
+    const auto columns = 6;
+    for (int i = 0; i < icons.size(); ++i) {
+        auto button = new QToolButton();
+        button->setIconSize(iconSize);
+        button->setIcon(icons.at(i));
 
-        for (auto c = 0; c < icons.size()/rows; ++c) {
-            auto button = new QToolButton();
-            button->setIconSize(iconSize);
-            button->setIcon(icons.at(i));
-            connect(button, &QToolButton::clicked, [=](){
-                toolBar->close();
-                setIcon(icons.at(i));
-                emit iconSelected(i);
-            });
+        connect(button, &QToolButton::clicked, [=](){
+            toolBar->close();
+            setIcon(icons.at(i));
+            emit iconSelected(i);
+        });
 
-            widget->layout()->addWidget(button);
-
-            i++;
-        }
+        auto rowIndex = i / columns;
+        auto colIndex = i % columns;
+        gridLayout->addWidget(button, rowIndex, colIndex);
     }
 
     return toolBar;
