@@ -102,7 +102,8 @@ void ChatTabWidget::clear()
 void ChatTabWidget::retranslateUi()
 {
     tabBar->setTabText(0, tr("Chat"));
-    mainChat->setTopicMessage(tr("Public chat"));
+    if (mainChat)
+        mainChat->setTopicMessage(tr("Public chat"));
 }
 
 void ChatTabWidget::closeNinjamChats()
