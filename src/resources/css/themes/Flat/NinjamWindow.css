@@ -24,7 +24,7 @@ NinjamTrackView[horizontal="true"][unlighted="true"]
 
 NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
  {
-     background: rgb(180, 180, 180);
+     background: rgba(180, 180, 180, 200);
  }
 
 /* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons

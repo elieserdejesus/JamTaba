@@ -177,14 +177,14 @@ QSlider::groove:vertical
 
 QSlider::handle
 {
-    background: rgb(245, 245, 245);
+    background: rgba(245, 245, 245, 150);
     border: 1px outset rgb(120, 120, 120);
     border-radius: 2px;
 }
 
 QSlider::handle:hover
 {
-    background: rgb(250, 250, 250);
+    background: rgb(245, 245, 245);
     border: 1px outset rgb(90, 90, 90);
 }
 

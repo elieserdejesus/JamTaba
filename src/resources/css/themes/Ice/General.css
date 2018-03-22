@@ -197,15 +197,16 @@ QSlider::groove:vertical
 QSlider::handle
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop: 0.0 rgb(190,217,255),
-        stop: 1.0 rgb(180,207,250));
+        stop: 0.0 rgba(190, 217, 255, 125),
+        stop: 1.0 rgba(180, 207, 250, 125));
 
-    border: 1px outset rgba(0, 0, 0, 180);
+    border: 1px outset rgba(0, 0, 0, 80);
 }
 
 QSlider::handle:hover
 {
-    background-color: rgb(221, 235, 255);
+    background-color: rgb(190, 217, 255);
+     border: 1px outset rgba(0, 0, 0, 180);
 }
 
 QSlider::handle:horizontal

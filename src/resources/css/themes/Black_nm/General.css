@@ -227,10 +227,10 @@ QSlider::groove
 QSlider::handle:horizontal
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
-        stop:0 rgba(120, 120, 120, 180),
-        stop:1 rgba(60, 60, 60, 180));
+        stop:0 rgba(120, 120, 120, 140),
+        stop:1 rgba(60, 60, 60, 140));
 
-    border: 1px outset rgb(10, 10, 10);
+    border: 1px outset rgba(10, 10, 10, 140);
     border-radius: 2px;
     padding: 0px;
     width: 8px;
@@ -239,10 +239,10 @@ QSlider::handle:horizontal
 QSlider::handle:vertical
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
-        stop:0 rgba(180, 180, 180, 180),
-        stop:1 rgba(120, 120, 120, 180));
+        stop:0 rgba(180, 180, 180, 140),
+        stop:1 rgba(120, 120, 120, 140));
 
-    border: 1px outset rgb(30, 30, 30);
+    border: 1px outset rgba(30, 30, 30, 140);
     border-radius: 2px;
     padding: 0px;
     height: 9px;
@@ -250,12 +250,20 @@ QSlider::handle:vertical
 
 QSlider::handle:horizontal:hover
 {
-    background-color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(120, 120, 120, 180),
+        stop:1 rgba(60, 60, 60, 180));
+
+    border: 1px outset rgb(10, 10, 10);
 }
 
 QSlider::handle:vertical:hover
 {
-    background-color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+    stop:0 rgba(180, 180, 180, 180),
+    stop:1 rgba(120, 120, 120, 180));
+
+    border: 1px outset rgb(30, 30, 30);
 }
 
 
