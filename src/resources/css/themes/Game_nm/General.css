@@ -137,7 +137,7 @@ QSlider::handle:vertical:hover,
 QSlider::handle:horizontal:hover
 {
     background: #519987;
-    border: none;
+    border: 1px solid #77E5E5;
 }
 
 QSlider::handle:vertical
