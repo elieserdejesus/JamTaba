@@ -45,6 +45,20 @@ NinjamTrackView[horizontal="true"] #panSlider
     max-width: 50px;
 }
 
+NinjamTrackView[horizontal="true"] #levelSlider::handle:horizontal:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(180, 180, 180, 180),
+        stop:1 rgba(120, 120, 120, 180));
+
+    border: 1px outset rgb(30, 30, 30);
+}
+
+NinjamTrackView[horizontal="true"][unlighted="true"] #levelSlider::handle:horizontal:hover
+{
+    background-color: rgb(120, 120, 120);
+}
+
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#receiveButton:checked,
 NinjamTrackView QPushButton#lowCutButton:hover:checked,
@@ -72,10 +86,10 @@ NinjamTrackView[unlighted="true"][horizontal="true"] #levelSlider::handle:horizo
 NinjamTrackView[horizontal="true"] #levelSlider::handle:horizontal
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
-        stop:0 rgba(180, 180, 180, 180),
-        stop:1 rgba(120, 120, 120, 180));
+        stop:0 rgba(180, 180, 180, 140),
+        stop:1 rgba(120, 120, 120, 140));
 
-    border: 1px outset rgba(30, 30, 30, 200);
+    border: 1px outset rgba(30, 30, 30, 140);
 }
 
 /* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
