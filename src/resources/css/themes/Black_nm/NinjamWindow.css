@@ -72,8 +72,8 @@ NinjamTrackView[unlighted="true"][horizontal="true"] #levelSlider::handle:horizo
 NinjamTrackView[horizontal="true"] #levelSlider::handle:horizontal
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
-        stop:0 rgba(180, 180, 180, 220),
-        stop:1 rgba(120, 120, 120, 220));
+        stop:0 rgba(180, 180, 180, 180),
+        stop:1 rgba(120, 120, 120, 180));
 
     border: 1px outset rgba(30, 30, 30, 200);
 }
