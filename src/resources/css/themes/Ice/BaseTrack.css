@@ -135,8 +135,8 @@ BaseTrackView[unlighted="true"] QSlider::handle:vertical,    /* track fader hand
 #panSlider::handle:disabled,
 QSlider::handle:vertical:disabled
 {
-    background: rgba(0, 107, 206, 155);
-    border: 1px outset rgba(0, 80, 151, 180);
+    background: rgba(0, 107, 206, 180);
+    border: 1px outset rgba(0, 80, 151, 200);
 }
 
 BaseTrackView[unlighted="true"],                            /* the track */

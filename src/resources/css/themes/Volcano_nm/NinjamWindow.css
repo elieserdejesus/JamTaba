@@ -25,7 +25,7 @@ NinjamTrackView[horizontal="true"][unlighted="true"]
 
 NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
  {
- background: rgb(179, 89, 37);
+ background: rgba(179, 89, 37, 200);
  Border: none;
  }
 

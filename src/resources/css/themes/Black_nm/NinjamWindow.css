@@ -65,14 +65,17 @@ NinjamTrackView[horizontal="true"]
 
 NinjamTrackView[unlighted="true"][horizontal="true"] #levelSlider::handle:horizontal
 {
-    border: rgb(140, 140, 140);
-    background: rgb(80, 80, 80);
+    border: rgba(140, 140, 140, 180);
+    background: rgba(80, 80, 80, 180);
 }
 
 NinjamTrackView[horizontal="true"] #levelSlider::handle:horizontal
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
-    border: 1px outset rgb(30, 30, 30);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(180, 180, 180, 220),
+        stop:1 rgba(120, 120, 120, 220));
+
+    border: 1px outset rgba(30, 30, 30, 200);
 }
 
 /* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons

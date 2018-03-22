@@ -127,7 +127,7 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:vertical,    /* track fader
 #levelSlider::handle:vertical:disabled
 {
     border: 1px outset rgba(60, 60, 60, 180);
-    background: rgb(80, 80, 80, 180);
+    background: rgb(80, 80, 80, 200);
 }
 
 
