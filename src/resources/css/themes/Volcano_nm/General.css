@@ -209,7 +209,7 @@ QSlider::groove
 
 QSlider::handle
 {
-    border: 1px outset #68300F;
+    border: 1px outset rgba(104, 48, 15, 140);
     border-radius: 2px;
 }
 
@@ -217,13 +217,15 @@ QSlider::handle
 PanSlider::handle
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop: 0.0 #FDE5A9,
-        stop: 1.0 #FFB301);
+        stop: 0.0 rgb(253, 229, 169, 140),
+        stop: 1.0 rgb(255, 179, 1, 140));
 }
 
 QSlider::handle:hover
 {
-    background-color: #FDE5A9;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop: 0.0 #FDE5A9,
+    stop: 1.0 #FFB301);
     border: 1px outset #68300F;
 }
 
@@ -232,8 +234,8 @@ QSlider::handle:hover
 AudioSlider::handle {
 
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop: 0.0 rgba(253, 229, 169, 180),
-            stop: 1.0 rgba(255, 179, 1, 180));
+            stop: 0.0 rgba(253, 229, 169, 140),
+            stop: 1.0 rgba(255, 179, 1, 140));
 }
 
 AudioSlider

@@ -126,8 +126,8 @@ BaseTrackView[unlighted="true"] #levelSlider::handle:vertical,    /* track fader
 #panSlider::handle:disabled,
 #levelSlider::handle:vertical:disabled
 {
-    border: 1px outset rgb(60, 60, 60);
-    background: rgb(80, 80, 80);
+    border: 1px outset rgba(60, 60, 60, 180);
+    background: rgb(80, 80, 80, 180);
 }
 
 
@@ -148,15 +148,22 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
 #panSlider::handle,
 #levelSlider::handle
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
-    border: 1px outset rgb(30, 30, 30);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(180, 180, 180, 140),
+        stop:1 rgba(120, 120, 120, 140));
+
+    border: 1px outset rgba(30, 30, 30, 140);
 
 }
 
 #panSlider::handle:hover,
 #levelSlider::handle:hover
 {
-    background-color: rgb(180, 180, 180);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(180, 180, 180, 180),
+        stop:1 rgba(120, 120, 120, 180));
+
+    border: 1px outset rgb(30, 30, 30);
 }
 
 AudioMeter

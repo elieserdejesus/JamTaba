@@ -127,17 +127,17 @@ MetronomePanel QSlider::groove:horizontal
 QSlider::handle:vertical,
 QSlider::handle:horizontal
 {
-    background: #519987;
+    background: rgba(81,153,135,160);
 
     padding: 0px;
-    border: none;
+    border: #77E5E5;
 }
 
 QSlider::handle:vertical:hover,
 QSlider::handle:horizontal:hover
 {
-    background: #58A996;
-    border: 1px solid #77E5E5;
+    background: #519987;
+    border: none;
 }
 
 QSlider::handle:vertical
