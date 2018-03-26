@@ -68,7 +68,7 @@ public:
         return lowCutState;
     }
 
-    inline qint8 getInstrumentIndex() const
+    inline int getInstrumentIndex() const
     {
         return instrumentIndex;
     }

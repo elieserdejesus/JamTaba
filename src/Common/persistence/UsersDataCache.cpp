@@ -50,9 +50,9 @@ QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
     QString userIp, userName;
     quint8 channelID;
     bool muted;
-    quint8 lowCutState;
+    int lowCutState;
     float gain, pan, boost;
-    qint8 instrumentIndex;
+    int instrumentIndex;
 
     stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost >> lowCutState >> instrumentIndex;
 
