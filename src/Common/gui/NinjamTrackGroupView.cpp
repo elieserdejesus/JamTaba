@@ -149,7 +149,7 @@ void NinjamTrackGroupView::startVideoStream()
         if (intervalsWithoutReceiveVideo > 1) {
             videoWidget->setVisible(false); // hide the video widget when transmition is stopped
             mainLayout->removeWidget(videoWidget);
-            updateGeometry();
+            setTracksLayout(tracksLayoutEnum);
         }
     }
 }
@@ -261,9 +261,6 @@ QString NinjamTrackGroupView::getRgbaColorString(const QColor &color, int alpha)
 
 void NinjamTrackGroupView::setTracksLayout(TracksLayout newLayout)
 {
-    if (newLayout == tracksLayoutEnum)
-        return;
-
     tracksLayoutEnum = newLayout;
     auto tracks = getTracks<NinjamTrackView *>();
     Qt::Orientation orientation = getTracksOrientation();
@@ -464,6 +461,9 @@ void NinjamTrackGroupView::updateGuiElements()
             auto &currentImages = decodedImages.first();
             if (!currentImages.isEmpty()) {
                 updateVideoFrame(currentImages.takeFirst());
+            }
+            else {
+                decodedImages.removeFirst(); // avoid show the last received frame forever
             }
         }
     }
