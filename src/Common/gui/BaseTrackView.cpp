@@ -266,11 +266,10 @@ void BaseTrackView::updateStyleSheet()
 
     style()->unpolish(levelSlider);
     style()->polish(levelSlider);
+    levelSlider->updateStyleSheet();
 
     style()->unpolish(panSlider);
     style()->polish(panSlider);
-
-    //peakMeter->updateStyleSheet();
 
     style()->unpolish(muteButton);
     style()->polish(muteButton);
