@@ -19,7 +19,9 @@ ChatTabWidget::ChatTabWidget(QWidget *parent) :
     tabBar(new QTabBar(this)),
     stackWidget(new QStackedWidget(this)),
     mainChat(nullptr),
-    ninjamServerChat(nullptr)
+    ninjamServerChat(nullptr),
+    privateChatColorsPool(new UsersColorsPool()),
+    mainChatColorsPool(new UsersColorsPool())
 {
 
     QBoxLayout *layout = new QVBoxLayout();
@@ -62,7 +64,7 @@ ChatTabWidget::ChatTabWidget(QWidget *parent) :
 
 void ChatTabWidget::initialize(MainController *mainController, UsersColorsPool *colorsPool)
 {
-    this->colorsPool = colorsPool;
+    this->ninjamColorsPool = colorsPool;
     this->mainController = mainController;
 
     connect(mainController, &MainController::ipResolved, [=](const QString &ip){
@@ -126,7 +128,8 @@ ChatPanel *ChatTabWidget::createMainChat(TextEditorModifier *textEditorModifier)
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
-    mainChat = new ChatPanel(botNames, colorsPool, textEditorModifier, emojiManager);
+    mainChatColorsPool->giveBackAllColors();
+    mainChat = new ChatPanel(botNames, mainChatColorsPool, textEditorModifier, emojiManager);
     stackWidget->addWidget(mainChat);
 
 
@@ -156,7 +159,8 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, Text
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
-    ninjamServerChat = new ChatPanel(botNames, colorsPool, textEditorModifier, emojiManager);
+    ninjamColorsPool->giveBackAllColors();
+    ninjamServerChat = new ChatPanel(botNames, ninjamColorsPool, textEditorModifier, emojiManager);
     stackWidget->addWidget(ninjamServerChat);
 
     connect(ninjamServerChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
@@ -302,7 +306,8 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
     if (!chatPanel) {     // create new chat
         auto botNames = mainController->getBotNames();
         auto emojiManager = mainController->getEmojiManager();
-        chatPanel = new ChatPanel(botNames, colorsPool, textModifider, emojiManager);
+        privateChatColorsPool->giveBackAllColors();
+        chatPanel = new ChatPanel(botNames, privateChatColorsPool, textModifider, emojiManager);
         chatPanel->setRemoteUserFullName(remoteUserFullName);
         int tabIndex = tabBar->addTab(remoteUserName);
         stackWidget->addWidget(chatPanel);

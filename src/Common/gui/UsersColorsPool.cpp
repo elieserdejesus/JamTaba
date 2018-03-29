@@ -34,6 +34,14 @@ void UsersColorsPool::giveBack(const QString &userName)
     }
 }
 
+void UsersColorsPool::giveBackAllColors()
+{
+    for (auto userName: pool.keys())
+        availableColors.append(pool[userName]);
+
+    pool.clear();
+}
+
 QList<QColor> UsersColorsPool::createColors(int totalColors) const
 {
     QList<QColor> colors;

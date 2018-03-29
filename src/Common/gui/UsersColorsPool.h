@@ -14,6 +14,8 @@ public:
     QColor get(const QString &userName); // used to get a 'almost unique' color for each user
     void giveBack(const QString &userName); // give back the user color to the pool, this color will be reused
 
+    void giveBackAllColors();
+
 private:
     QList<QColor> availableColors;
     QMap<QString, QColor> pool;

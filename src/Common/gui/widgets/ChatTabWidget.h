@@ -20,7 +20,7 @@ class ChatTabWidget : public QFrame
 
 public:
     ChatTabWidget(QWidget *parent);
-    void initialize(controller::MainController *mainController, UsersColorsPool *colorsPool);
+    void initialize(controller::MainController *mainController, UsersColorsPool *ninjamColorsPool);
 
     void collapse(bool collapse);
 
@@ -66,7 +66,9 @@ private:
     QTabBar *tabBar;
     QStackedWidget *stackWidget;
 
-    UsersColorsPool *colorsPool;
+    UsersColorsPool *ninjamColorsPool;
+    UsersColorsPool *mainChatColorsPool;
+    UsersColorsPool *privateChatColorsPool;
 
     ChatPanel *ninjamServerChat;
     ChatPanel *mainChat;
