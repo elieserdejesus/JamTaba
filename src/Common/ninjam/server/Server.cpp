@@ -788,8 +788,8 @@ void Server::processReceivedBytes()
             break;
 
         default:
-            qFatal(QString("not handled message code: %1")
-                   .arg(QString::number(static_cast<quint8>(header.getMessageType())), 16).toStdString().c_str());
+            qFatal("not handled message code: %s",
+                   QString::number(static_cast<quint8>(header.getMessageType()), 16).toStdString().c_str());
         }
 
         user.setCurrentHeader(MessageHeader()); // invalidate header to force a new parsing in next loop iteration
