@@ -11,7 +11,7 @@ class SamplesBufferRecorder
 public:
     SamplesBufferRecorder(const QString &fileName, quint32 sampleRate);
     ~SamplesBufferRecorder();
-    void addSamples(const Audio::SamplesBuffer &buffer);
+    void addSamples(const audio::SamplesBuffer &buffer);
 
 private:
     void writeSamplesToFile();

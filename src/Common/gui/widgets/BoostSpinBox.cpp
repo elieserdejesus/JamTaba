@@ -14,7 +14,7 @@ BoostSpinBox::BoostSpinBox(QWidget *parent) :
 
     auto vLayout = new QBoxLayout(QHBoxLayout::TopToBottom);
     vLayout->setContentsMargins(0, 0, 0, 0);
-    vLayout->setSpacing(1);
+    vLayout->setSpacing(0);
     setLayout(vLayout);
 
     vLayout->addWidget(buttonIncrease, 0, Qt::AlignCenter);
@@ -26,7 +26,7 @@ BoostSpinBox::BoostSpinBox(QWidget *parent) :
     connect(buttonIncrease, &QToolButton::clicked, this, &BoostSpinBox::increaseBoost);
     connect(buttonDecrease, &QToolButton::clicked, this, &BoostSpinBox::decreaseBoost);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     setOrientation(Qt::Vertical);
 }

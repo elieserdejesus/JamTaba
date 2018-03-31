@@ -42,7 +42,6 @@
 #include <QGuiApplication>
 #include <QGridLayout>
 #include <QHBoxLayout>
-#include <QHostAddress>
 #include <QInputDialog>
 #include <QJsonArray>
 #include <QJsonDocument>

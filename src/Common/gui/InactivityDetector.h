@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-namespace Controller {
+namespace controller {
     class NinjamController;
 }
 
@@ -18,7 +18,7 @@ public:
 
 public slots:
     void reset();
-    void initialize(Controller::NinjamController *controller);
+    void initialize(controller::NinjamController *controller);
     void deinitialize();
 
 signals:
@@ -35,7 +35,7 @@ private:
 
     BlinkableButton *button;
 
-    Controller::NinjamController *controller;
+    controller::NinjamController *controller;
 
 };
 

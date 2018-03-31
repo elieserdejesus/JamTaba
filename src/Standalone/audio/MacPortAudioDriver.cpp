@@ -1,9 +1,10 @@
 #include "PortAudioDriver.h"
 #include "pa_mac_core.h"
-#include "../log/Logging.h"
+#include "log/Logging.h"
 
-namespace Audio {
-PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int deviceIndex,
+namespace audio {
+
+PortAudioDriver::PortAudioDriver(controller::MainController *mainController, int deviceIndex,
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
     AudioDriver(mainController),

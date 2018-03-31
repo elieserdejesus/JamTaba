@@ -13,7 +13,6 @@ public:
     virtual ~BaseMeter();
     void setDecayTime(quint32 decayTimeInMiliseconds);
     virtual void setOrientation(Qt::Orientation orientation);
-    QSize minimumSizeHint() const override;
     virtual void updateStyleSheet();
 
 protected:
@@ -37,7 +36,6 @@ protected:
     static const quint8 SEGMENTS_SIZE;
 
     static const int LINES_MARGIN;
-    static const int MIN_SIZE;
     static const int DEFAULT_DECAY_TIME;
 };
 
@@ -90,6 +88,8 @@ public:
 
     void setDrawSegments(bool drawSegments);
 
+    QSize minimumSizeHint() const override;
+
 public slots:
     void setStereo(bool stereo);
 
@@ -102,6 +102,7 @@ protected:
 private:
     static const int MAX_PEAK_SHOW_TIME;
     static const int MAX_PEAK_MARKER_SIZE;
+    static const int MIN_SIZE;
 
     QColor rmsColor;
     QColor maxPeakColor;
@@ -173,6 +174,8 @@ public:
     void setSolidColor(const QColor &color);
     void setActivityValue(float value);
 
+    QSize minimumSizeHint() const override;
+
 protected:
     void paintEvent(QPaintEvent *event) override;
     void recreateInterpolatedColors() override;
@@ -183,6 +186,8 @@ private:
     float activityValue;
 
     void updateInternalValues();
+
+    static const int MIN_SIZE;
 };
 
 #endif

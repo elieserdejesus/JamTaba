@@ -4,12 +4,12 @@
 
 SonarTextEditorModifier::SonarTextEditorModifier()
 {
-    KeyboardHook::installLowLevelKeyboardHook();
+    keyboardHook::installLowLevelKeyboardHook();
 }
 
 SonarTextEditorModifier::~SonarTextEditorModifier()
 {
-    KeyboardHook::uninstallLowLevelKeyboardKook();
+    keyboardHook::uninstallLowLevelKeyboardKook();
 }
 
 void SonarTextEditorModifier::modify(QLineEdit *lineEdit, bool finishOnReturnKeyPressed)

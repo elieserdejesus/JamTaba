@@ -9,7 +9,7 @@
 #include <QFile>
 #include <QDir>
 
-namespace Geo {
+namespace geo {
 
 class WebIpToLocationResolver : public IpToLocationResolver
 {
@@ -18,7 +18,7 @@ class WebIpToLocationResolver : public IpToLocationResolver
 public:
     explicit WebIpToLocationResolver(const QDir &cacheDir);
     ~WebIpToLocationResolver();
-    Geo::Location resolve(const QString &ip, const QString &languageCode) override;
+    geo::Location resolve(const QString &ip, const QString &languageCode) override;
 
 private:
     QMap<QString, QString> countryCodesCache; // IP -> country code (2 upper case letters)

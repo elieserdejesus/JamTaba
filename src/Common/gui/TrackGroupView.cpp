@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QMenu>
 #include <QActionGroup>
-#include "PeakMeter.h"
+#include "widgets/PeakMeter.h"
 
 TrackGroupView::TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *parent) :
     QFrame(parent)
@@ -40,28 +40,28 @@ void TrackGroupView::showContextMenu(const QPoint &pos){
 
 void TrackGroupView::showPeakMeterOnly()
 {
-    AudioMeter::paintPeaksOnly();
+    AudioSlider::paintPeaksOnly();
 }
 
 void TrackGroupView::showRmsOnly()
 {
-    AudioMeter::paintRmsOnly();
+    AudioSlider::paintRmsOnly();
 }
 
 void TrackGroupView::showPeakAndRms()
 {
-    AudioMeter::paintPeaksAndRms();
+    AudioSlider::paintPeaksAndRms();
 }
 
 void TrackGroupView::showMaxPeakMarker(bool showMarker)
 {
-    AudioMeter::setPaintMaxPeakMarker(showMarker);
+    AudioSlider::setPaintMaxPeakMarker(showMarker);
 }
 
 void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
 {
     setObjectName(QStringLiteral("TrackGroupView"));
-    setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
 
     mainLayout = new QGridLayout(this);
     mainLayout->setSpacing(0);

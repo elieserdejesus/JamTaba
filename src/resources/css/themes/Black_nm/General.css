@@ -3,6 +3,7 @@
 
 /* Button ----------------------*/
 QPushButton,
+QPushButton#buttonOnOff, /* this button is not working with the QPushButton selector. Why?? */
 BoostSpinBox
 {
     color: rgb(20, 20, 20);
@@ -11,28 +12,32 @@ BoostSpinBox
     border: 1px solid black;
 }
 
-QPushButton:checked
+QPushButton:checked,
+QPushButton#buttonOnOff:checked
 {
     color: rgba(0, 0, 0, 160);
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(80, 80, 80), stop:1 rgb(50, 50, 50));
     border: 1px outset rgb(10, 10, 10);
 }
 
-QPushButton:hover
+QPushButton:hover,
+QPushButton#buttonOnOff:hover
 {
     color: rgb(40, 40, 40);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
     border: 1px outset rgb(20, 20, 20);
 }
 
-QPushButton:hover:checked
+QPushButton:hover:checked,
+QPushButton#buttonOnOff:hover:checked
 {
     color: rgba(0, 0, 0, 160);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
     border: 1px outset rgb(10, 10, 10);
 }
 
-QPushButton:disabled
+QPushButton:disabled,
+QPushButton#buttonOnOff:disabled
 {
     background-color: rgba(0, 0, 0, 40);
     color: rgba(0, 0, 0, 100);
@@ -213,55 +218,52 @@ QLineEdit#chatText-topLevel
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
 
-QSlider::groove:vertical
+QSlider::groove
 {
+    background-color: rgba(255, 255, 255, 15);
     border: none;
-}
-
-QSlider::groove:horizontal
-{
-    background-color: rgba(0, 0, 0, 50);
-    height: 2px;
-    border: none;
-}
-QSlider::groove:vertical
-{
-    background-color: rgba(0, 0, 0, 50);
-    width: 2px;
 }
 
 QSlider::handle:horizontal
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
-    border: 1px outset rgb(10, 10, 10);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(120, 120, 120, 140),
+        stop:1 rgba(60, 60, 60, 140));
+
+    border: 1px outset rgba(10, 10, 10, 140);
     border-radius: 2px;
-    margin-top: -7px;
-    margin-bottom: -7px;
     padding: 0px;
     width: 8px;
-    height: 15px;
 }
 
 QSlider::handle:vertical
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
-    border: 1px outset rgb(30, 30, 30);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(180, 180, 180, 140),
+        stop:1 rgba(120, 120, 120, 140));
+
+    border: 1px outset rgba(30, 30, 30, 140);
     border-radius: 2px;
-    margin-left: -9px;
-    margin-right: -9px;
     padding: 0px;
     height: 9px;
-    width: 24px;
 }
 
 QSlider::handle:horizontal:hover
 {
-    background-color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(120, 120, 120, 180),
+        stop:1 rgba(60, 60, 60, 180));
+
+    border: 1px outset rgb(10, 10, 10);
 }
 
 QSlider::handle:vertical:hover
 {
-    background-color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+    stop:0 rgba(180, 180, 180, 180),
+    stop:1 rgba(120, 120, 120, 180));
+
+    border: 1px outset rgb(30, 30, 30);
 }
 
 
@@ -350,7 +352,7 @@ QTabWidget::pane
 
 
 
-AudioMeter
+AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: rgb(110, 110, 110);

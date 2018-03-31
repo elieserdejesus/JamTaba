@@ -7,7 +7,8 @@
 #include <QDataStream>
 #include <memory>
 
-using namespace Audio;
+using audio::SamplesBuffer;
+using audio::WaveFileReader;
 
 class SampleExtractor
 {
@@ -131,7 +132,7 @@ public:
     }
 };
 
-bool WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffer, quint32 &sampleRate)
+bool WaveFileReader::read(const QString &filePath, audio::SamplesBuffer &outBuffer, quint32 &sampleRate)
 {
     // Open the wave file
     QFile wavFile(filePath);

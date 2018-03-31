@@ -34,13 +34,21 @@ void UsersColorsPool::giveBack(const QString &userName)
     }
 }
 
+void UsersColorsPool::giveBackAllColors()
+{
+    for (auto userName: pool.keys())
+        availableColors.append(pool[userName]);
+
+    pool.clear();
+}
+
 QList<QColor> UsersColorsPool::createColors(int totalColors) const
 {
     QList<QColor> colors;
     for (int x = 0; x < totalColors; ++x) {
         QColor color;
         qreal h = (qreal)x/totalColors;
-        color.setHsvF(h, 0.25, 0.95);
+        color.setHsvF(h, 0.25, 0.95, 0.85);
         colors.append(color);
     }
     srand(QDateTime::currentMSecsSinceEpoch());

@@ -3,10 +3,11 @@
 #include "NinjamController.h"
 #include "MainWindow.h"
 #include "MainController.h"
+#include "widgets/BlinkableButton.h"
 
 #include <QToolTip>
 
-using namespace Controller;
+using controller::NinjamController;
 
 InactivityDetector::InactivityDetector(QWidget *parent, BlinkableButton *button, uint intervalsBeforeWarning) :
     QObject(parent),

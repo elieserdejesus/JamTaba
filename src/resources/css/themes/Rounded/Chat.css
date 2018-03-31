@@ -25,12 +25,6 @@ ChatPanel #chatText                     /* chat input field */
 }
 
 /* chat messages */
-ChatMessagePanel
-{
-    border: 1px solid rgb(0, 0, 0, 80);
-    border-radius: 2px;
-    padding: 3px;
-}
 
 ChatMessagePanel #labelMessage
 {

@@ -4,9 +4,9 @@
 #include "geo/IpToLocationResolver.h"
 #include <QDebug>
 
-using namespace Geo;
+using namespace geo;
 
-class TestGeoLocation: public QObject
+class TestGeoLocation : public QObject
 {
     Q_OBJECT
 

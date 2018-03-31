@@ -1,9 +1,11 @@
 #include "LocalInputGroup.h"
 #include "LocalInputNode.h"
 
-using namespace Audio;
+using audio::LocalInputGroup;
+using audio::LocalInputNode;
+using audio::SamplesBuffer;
 
-LocalInputGroup::LocalInputGroup(int groupIndex, Audio::LocalInputNode *firstInput) :
+LocalInputGroup::LocalInputGroup(int groupIndex, LocalInputNode *firstInput) :
     groupIndex(groupIndex),
     transmiting(true)
 {
@@ -15,7 +17,7 @@ LocalInputGroup::~LocalInputGroup()
     groupedInputs.clear();
 }
 
-void LocalInputGroup::addInputNode(Audio::LocalInputNode *input)
+void LocalInputGroup::addInputNode(LocalInputNode *input)
 {
     groupedInputs.append(input);
 }
@@ -30,22 +32,20 @@ LocalInputNode *LocalInputGroup::getInputNode(quint8 index) const
 }
 
 
-void LocalInputGroup::mixGroupedInputs(Audio::SamplesBuffer &out)
+void LocalInputGroup::mixGroupedInputs(SamplesBuffer &out)
 {
     for (auto inputTrack : groupedInputs) {
-        if (!inputTrack->isMuted()) {
-            auto lastBuffer = inputTrack->getLastBuffer();
-            if (lastBuffer.getChannels() == out.getChannels()) {
-                out.add(lastBuffer);
-            }
-            else {
-                out.add(inputTrack->getLastBufferMixedToMono());
-            }
+        auto lastBuffer = inputTrack->getLastBuffer();
+        if (lastBuffer.getChannels() == out.getChannels()) {
+            out.add(lastBuffer);
+        }
+        else {
+            out.add(inputTrack->getLastBufferMixedToMono());
         }
     }
 }
 
-void LocalInputGroup::removeInput(Audio::LocalInputNode *input)
+void LocalInputGroup::removeInput(LocalInputNode *input)
 {
     if (!groupedInputs.removeOne(input))
         qCritical() << "the input track was not removed!";

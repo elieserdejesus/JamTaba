@@ -3,7 +3,7 @@
 #include <CoreAudio/CoreAudio.h>
 #include <QDebug>
 
-using namespace AU;
+using au::AudioUnitHost;
 
 QScopedPointer<AudioUnitHost> AudioUnitHost::instance;
 
@@ -27,9 +27,9 @@ AudioUnitHost::AudioUnitHost()
 
 }
 
-std::vector<Midi::MidiMessage> AudioUnitHost::pullReceivedMidiMessages()
+std::vector<midi::MidiMessage> AudioUnitHost::pullReceivedMidiMessages()
 {
-    return std::vector<Midi::MidiMessage>();
+    return std::vector<midi::MidiMessage>();
 }
 
 void AudioUnitHost::setSampleRate(int sampleRate)

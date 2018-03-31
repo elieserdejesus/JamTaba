@@ -11,9 +11,9 @@
 #include <QStringList>
 #include <QSettings>
 #include "log/Logging.h"
-#include "audio/vorbis/VorbisEncoder.h"
+#include "audio/vorbis/Vorbis.h"
 
-using namespace Persistence;
+using namespace persistence;
 
 #if defined(Q_OS_WIN64) || defined(Q_OS_MAC64)
 QString Settings::fileName = "Jamtaba64.json";
@@ -213,7 +213,7 @@ AudioSettings::AudioSettings() :
     SettingsObject("audio"),
     sampleRate(44100),
     bufferSize(128),
-    encodingQuality(VorbisEncoder::QUALITY_NORMAL),
+    encodingQuality(vorbis::EncoderQualityNormal),
     firstIn(-1),
     firstOut(-1),
     lastIn(-1),
@@ -232,13 +232,13 @@ void AudioSettings::read(const QJsonObject &in)
     lastOut = getValueFromJson(in, "lastOut", 0);
     audioDevice = getValueFromJson(in, "audioDevice", -1);
 
-    encodingQuality = getValueFromJson(in, "encodingQuality", VorbisEncoder::QUALITY_NORMAL); // using VorbisEncoder.QUALITY_NORMAL as fallback value.
+    encodingQuality = getValueFromJson(in, "encodingQuality", vorbis::EncoderQualityNormal); // using normal quality as fallback value.
 
     // ensure vorbis quality is in accepted range
-    if (encodingQuality < VorbisEncoder::QUALITY_LOW)
-        encodingQuality = VorbisEncoder::QUALITY_LOW;
-    else if(encodingQuality > VorbisEncoder::QUALITY_HIGH)
-        encodingQuality = VorbisEncoder::QUALITY_HIGH;
+    if (encodingQuality < vorbis::EncoderQualityLow)
+        encodingQuality = vorbis::EncoderQualityLow;
+    else if(encodingQuality > vorbis::EncoderQualityHigh)
+        encodingQuality = vorbis::EncoderQualityHigh;
 }
 
 void AudioSettings::write(QJsonObject &out) const
@@ -384,6 +384,31 @@ void MetronomeSettings::write(QJsonObject &out) const
 
 // +++++++++++++++++++++++++++
 
+CollapseSettings::CollapseSettings() :
+    SettingsObject("Collapse"),
+    localChannelsCollapsed(false),
+    bottomSectionCollapsed(false),
+    chatSectionCollapsed(false)
+{
+
+}
+
+void CollapseSettings::read(const QJsonObject &in)
+{
+    localChannelsCollapsed = getValueFromJson(in, "localChannels", false);
+    bottomSectionCollapsed = getValueFromJson(in, "bottomSection", false);
+    chatSectionCollapsed = getValueFromJson(in, "chatSection", false);
+}
+
+void CollapseSettings::write(QJsonObject &out) const
+{
+    out["localChannels"] = localChannelsCollapsed;
+    out["bottomSection"] = bottomSectionCollapsed;
+    out["chatSection"] = chatSectionCollapsed;
+}
+
+// ++++++++++++++++++++++
+
 WindowSettings::WindowSettings() :
     SettingsObject("window"),
     maximized(false),
@@ -515,7 +540,7 @@ Channel::Channel(const QString &name) :
 {
 }
 
-Plugin::Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data) :
+Plugin::Plugin(const audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data) :
     name(descriptor.getName()),
     path(descriptor.getPath()),
     manufacturer(descriptor.getManufacturer()),
@@ -526,7 +551,7 @@ Plugin::Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const Q
 
 }
 
-Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel,
+SubChannel::SubChannel(int firstInput, int channelsCount, int midiDevice, int midiChannel,
                        float gain, int boost, float pan, bool muted, bool stereoInverted,
                        qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote, bool routingMidiToFirstSubchannel) :
     firstInput(firstInput),
@@ -565,7 +590,7 @@ LocalInputTrackSettings::LocalInputTrackSettings(bool createOneTrack) :
         bool muted = false;
         bool stereoInverted = false;
         bool routingMidi = false;
-        Subchannel subchannel(firstInput, channelsCount, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote, routingMidi);
+        SubChannel subchannel(firstInput, channelsCount, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote, routingMidi);
         channel.subChannels.append(subchannel);
         this->channels.append(channel);
     }
@@ -579,7 +604,7 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
         channelObject["name"] = channel.name;
         QJsonArray subchannelsArrays;
         int subchannelsCount = 0;
-        for (const Subchannel &sub : channel.subChannels) {
+        for (const SubChannel &sub : channel.subChannels) {
             QJsonObject subChannelObject;
             subChannelObject["firstInput"]       = sub.firstInput;
             subChannelObject["channelsCount"]    = sub.channelsCount;
@@ -598,7 +623,7 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
                 subChannelObject["routingMidiInput"] = sub.routingMidiToFirstSubchannel;
 
             QJsonArray pluginsArray;
-            for (const Persistence::Plugin &plugin : sub.getPlugins()) {
+            for (const auto &plugin : sub.getPlugins()) {
                 QJsonObject pluginObject;
                 pluginObject["name"]     = plugin.name;
 
@@ -639,15 +664,15 @@ Plugin LocalInputTrackSettings::jsonObjectToPlugin(QJsonObject pluginObject)
 
     QString dataString = getValueFromJson(pluginObject, "data", QString());
 
-    Audio::PluginDescriptor::Category category = static_cast<Audio::PluginDescriptor::Category>(getValueFromJson(pluginObject, "category", quint8(1))); // 1 is the VST enum value
+    auto category = static_cast<audio::PluginDescriptor::Category>(getValueFromJson(pluginObject, "category", quint8(1))); // 1 is the VST enum value
 
     QByteArray rawByteArray(dataString.toStdString().c_str());
 
     QString manufacturer = getValueFromJson(pluginObject, "manufacturer", QString());
 
-    Audio::PluginDescriptor descriptor(name, category, manufacturer, path);
+    audio::PluginDescriptor descriptor(name, category, manufacturer, path);
 
-    return Persistence::Plugin(descriptor, bypassed, QByteArray::fromBase64(rawByteArray));
+    return persistence::Plugin(descriptor, bypassed, QByteArray::fromBase64(rawByteArray));
 }
 
 void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
@@ -657,7 +682,7 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
         for (int i = 0; i < channelsArray.size(); ++i) {
 
             QJsonObject channelObject = channelsArray.at(i).toObject();
-            Persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
+            persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
 
             if (channelObject.contains("subchannels")) {
 
@@ -690,14 +715,14 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
                             QJsonObject pluginObject = pluginsArray.at(p).toObject();
                             Plugin plugin = jsonObjectToPlugin(pluginObject);
                             bool pathIsValid = !plugin.path.isEmpty();
-                            if (plugin.category == Audio::PluginDescriptor::VST_Plugin)
+                            if (plugin.category == audio::PluginDescriptor::VST_Plugin)
                                 pathIsValid = QFile(plugin.path).exists();
 
                             if (pathIsValid)
                                 plugins.append(plugin);
                         }
                     }
-                    Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,
+                    persistence::SubChannel subChannel(firstInput, channelsCount, midiDevice,
                                                        midiChannel, gain, boost, pan, muted, stereoInverted, transpose, lowerNote, higherNote, routingMidi);
                     subChannel.setPlugins(plugins);
                     channel.subChannels.append(subChannel);
@@ -912,12 +937,7 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         else
             this->ninjamIntervalProgressShape = 0;
 
-        if (root.contains("tracksLayoutOrientation")) {
-            int value = root["tracksLayoutOrientation"].toInt(2); // 2 is the Qt::Vertical value
-            this->tracksLayoutOrientation = value == 2 ? Qt::Vertical : Qt::Horizontal;
-        } else {
-            this->tracksLayoutOrientation = Qt::Vertical;
-        }
+        tracksLayoutOrientation = root["tracksLayoutOrientation"].toInt(0); // vertical as fallback value;
 
         if (root.contains("usingNarrowTracks"))
             this->usingNarrowedTracks = root["usingNarrowTracks"].toBool(false);
@@ -932,6 +952,18 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
             intervalsBeforeInactivityWarning = root["intervalsBeforeInactivityWarning"].toInt();
             if (intervalsBeforeInactivityWarning < 1)
                 intervalsBeforeInactivityWarning = 1;
+        }
+
+        if (root.contains("recentEmojis")) {
+            QJsonArray array = root["recentEmojis"].toArray();
+            for (int i = 0; i < array.count(); ++i) {
+                recentEmojis << array.at(i).toString();
+            }
+
+        }
+
+        if (root.contains("chatFontSizeOffset")) {
+            chatFontSizeOffset = root["chatFontSizeOffset"].toInt();
         }
 
         return true;
@@ -975,6 +1007,11 @@ bool Settings::writeFile(const QList<SettingsObject *> &sections) // io ops ...
         root["usingNarrowTracks"] = usingNarrowedTracks;
         root["masterGain"] = masterFaderGain;
         root["intervalsBeforeInactivityWarning"] = static_cast<int>(intervalsBeforeInactivityWarning);
+        root["chatFontSizeOffset"] = static_cast<int>(chatFontSizeOffset);
+
+        if (!recentEmojis.isEmpty()) {
+            root["recentEmojis"] = QJsonArray::fromStringList(recentEmojis);
+        }
 
         // write settings sections
         for (SettingsObject *so : sections) {
@@ -1045,7 +1082,7 @@ Preset Settings::readPresetFromFile(const QString &presetFileName, bool allowMul
 
 void Settings::load()
 {
-    QList<Persistence::SettingsObject *> sections;
+    QList<persistence::SettingsObject *> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
     sections.append(&windowSettings);
@@ -1060,6 +1097,7 @@ void Settings::load()
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
     sections.append(&rememberSettings);
+    sections.append(&collapseSettings);
 
     readFile(sections);
 }
@@ -1071,7 +1109,8 @@ Settings::Settings() :
     theme("Flat"), // flat as default theme,
     ninjamIntervalProgressShape(0),
     usingNarrowedTracks(false),
-    intervalsBeforeInactivityWarning(5) // 5 intervals by default
+    intervalsBeforeInactivityWarning(5), // 5 intervals by default,
+    chatFontSizeOffset(0)
 {
     // qDebug() << "Settings in " << fileDir;
 }
@@ -1079,7 +1118,7 @@ Settings::Settings() :
 void Settings::save(const LocalInputTrackSettings &localInputsSettings)
 {
     this->inputsSettings = localInputsSettings;
-    QList<Persistence::SettingsObject *> sections;
+    QList<persistence::SettingsObject *> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
     sections.append(&windowSettings);
@@ -1094,6 +1133,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&meteringSettings);
     sections.append(&looperSettings);
     sections.append(&rememberSettings);
+    sections.append(&collapseSettings);
 
     writeFile(sections);
 }
@@ -1119,13 +1159,20 @@ QString Settings::getTranslation() const
     return translation;
 }
 
-void Settings::setRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
+void Settings::setRemoteUserRememberingSettings(bool boost, bool level, bool pan, bool mute, bool lowCut)
 {
     rememberSettings.rememberBoost   = boost;
     rememberSettings.rememberLevel   = level;
     rememberSettings.rememberPan     = pan;
     rememberSettings.rememberLowCut  = lowCut;
     rememberSettings.rememberMute    = mute;
+}
+
+void Settings::setCollapsileSectionsRememberingSettings(bool localChannels, bool bottomSection, bool chatSection)
+{
+    rememberSettings.rememberLocalChannels = localChannels;
+    rememberSettings.rememberBottomSection = bottomSection;
+    rememberSettings.rememberChatSection = chatSection;
 }
 
 //__________________________________________________________
@@ -1158,31 +1205,42 @@ void MeteringSettings::write(QJsonObject &out) const
 
 //________________________________________________________________
 
-RememberUsersSettings::RememberUsersSettings() :
+RememberSettings::RememberSettings() :
     SettingsObject(QStringLiteral("Remember")),
     rememberBoost(true),
     rememberLevel(true),
     rememberPan(true),
     rememberMute(true),
-    rememberLowCut(true)
+    rememberLowCut(true),
+    rememberLocalChannels(true),
+    rememberBottomSection(true),
+    rememberChatSection(true)
 {
 
 }
 
-void RememberUsersSettings::write(QJsonObject &out) const
+void RememberSettings::write(QJsonObject &out) const
 {
     out["boost"] = rememberBoost;
     out["level"] = rememberLevel;
     out["pan"] = rememberPan;
     out["mute"] = rememberMute;
     out["lowCut"] = rememberLowCut;
+
+    out["localChannels"] = rememberLocalChannels;
+    out["bottomSection"] = rememberBottomSection;
+    out["chatSection"] = rememberChatSection;
 }
 
-void RememberUsersSettings::read(const QJsonObject &in)
+void RememberSettings::read(const QJsonObject &in)
 {
     rememberBoost = getValueFromJson(in, "boost", true);
     rememberLevel = getValueFromJson(in, "level", true);
     rememberPan = getValueFromJson(in, "pan", true);
     rememberMute = getValueFromJson(in, "mute", true);
     rememberLowCut = getValueFromJson(in, "lowCut", true);
+
+    rememberLocalChannels = getValueFromJson(in, "localChannels", true);
+    rememberBottomSection = getValueFromJson(in, "bottomSection", false);
+    rememberChatSection = getValueFromJson(in, "chatSection", false);
 }

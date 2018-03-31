@@ -4,13 +4,13 @@
 #include "audio/core/AudioDriver.h"
 #include "portaudio.h"
 
-namespace Audio {
+namespace audio {
 
 class PortAudioDriver : public AudioDriver
 {
 
 public:
-    PortAudioDriver(Controller::MainController *mainController, int audioDeviceIndex,
+    PortAudioDriver(controller::MainController *mainController, int audioDeviceIndex,
                     int firstInputIndex, int lastInputIndex, int firstOutputIndex,
                     int lastOutputIndex, int sampleRate, int bufferSize);
     virtual ~PortAudioDriver();

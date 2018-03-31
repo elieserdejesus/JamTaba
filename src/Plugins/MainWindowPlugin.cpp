@@ -2,7 +2,8 @@
 #include "NinjamRoomWindowPlugin.h"
 #include "MainControllerPlugin.h"
 #include "PreferencesDialogPlugin.h"
-#include "LocalTrackView.h"
+#include "gui/LocalTrackView.h"
+#include "gui/LocalTrackGroupView.h"
 #include "audio/core/LocalInputNode.h"
 #include "TopLevelTextEditorModifier.h"
 
@@ -11,7 +12,6 @@
 const QSize MainWindowPlugin::PLUGIN_WINDOW_MIN_SIZE = QSize(990, 600);
 
 const quint32 MainWindowPlugin::ZOOM_STEP = 70;
-
 
 MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
@@ -88,7 +88,7 @@ void MainWindowPlugin::updateWindowSizeMenu()
     decreaseWindowHeightAction->setEnabled(canDecreaseWindowHeight());
 }
 
-NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const Login::RoomInfo &roomInfo, Controller::MainController *mainController)
+NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const login::RoomInfo &roomInfo, controller::MainController *mainController)
 {
     return new NinjamRoomWindowPlugin(this, roomInfo, dynamic_cast<MainControllerPlugin*>(mainController));
 }
@@ -100,13 +100,13 @@ void MainWindowPlugin::removeAllInputLocalTracks()
     firstChannelIsInitialized = false; // prepare for the next local input tracks initialization (loading presets)
 }
 
-void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel)
+void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView, const persistence::SubChannel &subChannel)
 {
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
 
     // VST plugin always use stereo audio input. We need ensure this when loading presets.
-    Audio::LocalInputNode *inputTrackNode = mainController->getInputTrack(subChannelView->getInputIndex());
+    auto inputTrackNode = mainController->getInputTrack(subChannelView->getInputIndex());
     if (inputTrackNode) {
         int channelIndex = !firstChannelIsInitialized ?  0 : 1;
         int firstInputIndex = channelIndex * 2; // using inputs 0 & 1 for the 1st channel and inputs 2 & 3 for the 2nd channel. Vst allow up to 2 channels and no subchannels.

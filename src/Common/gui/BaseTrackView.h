@@ -1,11 +1,12 @@
 #ifndef TRACKVIEW_H
 #define TRACKVIEW_H
 
-#include <QWidget>
+#include "audio/core/AudioPeak.h"
+#include "widgets/Slider.h"
+
+#include <QFrame>
 #include <QGridLayout>
 #include <QToolButton>
-#include "audio/core/AudioPeak.h"
-#include "Slider.h"
 
 class AudioMeter;
 class QLabel;
@@ -18,16 +19,16 @@ class QBoxLayout;
 class QGridLayout;
 class BoostSpinBox;
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
 
-class BaseTrackView : public QWidget
+class BaseTrackView : public QFrame
 {
     Q_OBJECT
 
 public:
-    BaseTrackView(Controller::MainController *mainController, long trackID);
+    BaseTrackView(controller::MainController *mainController, long trackID);
     virtual ~BaseTrackView();
 
     enum Boost {
@@ -60,7 +61,7 @@ public:
 
     virtual void updateGuiElements();
 
-    Controller::MainController *getMainController() const;
+    controller::MainController *getMainController() const;
 
     virtual void setActivatedStatus(bool deactivated);
 
@@ -74,9 +75,8 @@ public:
 
 protected:
 
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
 
-    void paintEvent(QPaintEvent *) override;
     void changeEvent(QEvent *e) override;
 
     virtual void translateUI();
@@ -95,16 +95,11 @@ protected:
 
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 
-    // meters
-    AudioMeter *peakMeter;
-    QBoxLayout *metersLayout; // used to group midi and audio meters
-
     // level slider
-    Slider *levelSlider;
-    QBoxLayout *levelSliderLayout; // used to group the level slider and the two 'speaker' icons
+    AudioSlider *levelSlider;
 
     // pan slider
-    Slider *panSlider;
+    PanSlider *panSlider;
     QLabel *labelPanL;
     QLabel *labelPanR;
     QHBoxLayout *panWidgetsLayout;
@@ -120,20 +115,16 @@ protected:
     // main layout buildind blocks
     QGridLayout *mainLayout;
     QBoxLayout *secondaryChildsLayout; // right side widgets in vertical layout, bottom widgets (2nd row) in horizontal layout
-    QBoxLayout *primaryChildsLayout;   // left side widgets in vertical layout, top widgets (2nd row) in horizontal layout
 
     virtual void setupVerticalLayout();
 
-    static const int FADER_HEIGHT;
+    static const uint FADER_HEIGHT;
+
+    QColor tintColor;
 
 private:
     static QMap<long, BaseTrackView *> trackViews;
-    Audio::AudioPeak maxPeak;
-
-    QLabel *highLevelIcon;
-    QLabel *lowLevelIcon;
-
-    QColor tintColor;
+    audio::AudioPeak maxPeak;
 
 protected slots:
     virtual void toggleMuteStatus();
@@ -156,7 +147,7 @@ inline QColor BaseTrackView::getTintColor() const
     return tintColor;
 }
 
-inline Controller::MainController* BaseTrackView::getMainController() const
+inline controller::MainController* BaseTrackView::getMainController() const
 {
     return mainController;
 }

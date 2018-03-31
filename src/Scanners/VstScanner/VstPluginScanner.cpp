@@ -16,29 +16,29 @@ VstPluginScanner::VstPluginScanner()
     qCDebug(jtStandalonePluginFinder) << "Creating vst plugin scanner!";
 }
 
-Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &pluginFile)
+audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &pluginFile)
 {
     try{
         // PluginChecker is implemented in WindowsVstPluginChecker and MacVstPluginChecker files. Only the correct file is include in VstScanner.pro
         if (!Vst::PluginChecker::isValidPluginFile(pluginFile.absoluteFilePath()))
-            return Audio::PluginDescriptor(); // invalid descriptor
+            return audio::PluginDescriptor(); // invalid descriptor
 
-        Vst::VstHost *host = Vst::VstHost::getInstance();
-        AEffect *effect = Vst::VstLoader::load(pluginFile.absoluteFilePath(), host);
+        auto host = vst::VstHost::getInstance();
+        auto effect = vst::VstLoader::load(pluginFile.absoluteFilePath(), host);
         if (effect) {
-            QString name = Audio::PluginDescriptor::getVstPluginNameFromPath(pluginFile.absoluteFilePath());
-            QString manufacturer = Vst::utils::getPluginVendor(effect);
-            Vst::VstLoader::unload(effect); // delete the AEffect instance
+            QString name = audio::PluginDescriptor::getVstPluginNameFromPath(pluginFile.absoluteFilePath());
+            QString manufacturer = vst::utils::getPluginVendor(effect);
+            vst::VstLoader::unload(effect); // delete the AEffect instance
             QLibrary lib(pluginFile.absoluteFilePath());
             lib.unload(); // try unload the shared lib
 
-            return Audio::PluginDescriptor(name, Audio::PluginDescriptor::VST_Plugin, manufacturer, pluginFile.absoluteFilePath());
+            return audio::PluginDescriptor(name, audio::PluginDescriptor::VST_Plugin, manufacturer, pluginFile.absoluteFilePath());
         }
     }
     catch (...) {
         qCritical() << "Error loading " << pluginFile.absoluteFilePath();
     }
-    return Audio::PluginDescriptor(); // invalid descriptor
+    return audio::PluginDescriptor(); // invalid descriptor
 }
 
 void VstPluginScanner::scan()

@@ -2,10 +2,10 @@
 #include "RtMidi.h"
 
 #include "MidiMessage.h"
-
-using namespace Midi;
-
 #include "log/Logging.h"
+
+using midi::RtMidiDriver;
+using midi::MidiMessage;
 
 RtMidiDriver::RtMidiDriver(const QList<bool> &deviceStatuses){
 
@@ -43,7 +43,6 @@ void RtMidiDriver::setInputDevicesStatus(const QList<bool> &statuses){
     }
 
     MidiDriver::setInputDevicesStatus(validStatuses);
-
     for (int s = 0; s < validStatuses.size(); ++s) {
         midiStreams.append(new RtMidiIn());
     }
@@ -116,7 +115,7 @@ QString RtMidiDriver::getInputDeviceName(uint index) const{
     return "";
 }
 
-void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<Midi::MidiMessage> &outBuffer)
+void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<midi::MidiMessage> &outBuffer)
 {
     //qCDebug(jtMidi) << "consuming messages from stream - RtMidiDriver";
     std::vector<unsigned char> messageBytes;
@@ -124,7 +123,7 @@ void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, 
         messageBytes.clear();
         stream->getMessage(&messageBytes);
         if (messageBytes.size() == 3) { // Jamtaba is handling only the 3 bytes common midi messages. Uncommon midi messages will be ignored.
-            outBuffer.push_back(Midi::MidiMessage::fromVector(messageBytes, deviceIndex));
+            outBuffer.push_back(midi::MidiMessage::fromVector(messageBytes, deviceIndex));
         }
         else{
             if (!messageBytes.empty())
@@ -134,10 +133,11 @@ void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, 
     while(!messageBytes.empty());
 }
 
-std::vector<MidiMessage> RtMidiDriver::getBuffer(){
-    std::vector<Midi::MidiMessage> buffer;
+std::vector<MidiMessage> RtMidiDriver::getBuffer()
+{
+    std::vector<midi::MidiMessage> buffer;
     int deviceIndex = 0;
-    foreach (RtMidiIn* stream, midiStreams) {
+    for (auto stream : midiStreams) {
         consumeMessagesFromStream(stream, deviceIndex, buffer);
         deviceIndex++;
     }

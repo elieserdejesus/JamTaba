@@ -9,10 +9,10 @@ FFMpegDemuxer::FFMpegDemuxer(QObject *parent, const QByteArray &encodedData) :
     QObject(parent),
     formatContext(nullptr),
     avioContext(nullptr),
+    codecContext(nullptr),
+    swsContext(nullptr),
     frame(nullptr),
     frameRGB(nullptr),
-    swsContext(nullptr),
-    codecContext(nullptr),
     rgbBuffer(nullptr),
     buffer(nullptr),
     encodedData(encodedData)
@@ -114,13 +114,13 @@ bool FFMpegDemuxer::open()
 
     int ret = avformat_open_input(&formatContext, nullptr, nullptr, nullptr);
     if (ret != 0) {
-        qCritical() << "Decoder Error while opening input:" << av_err2str(ret) << ret;
+        qCritical() << "Decoder Error while opening input:" << av_error_to_qt_string(ret) << ret;
         return false;
     }
 
     ret = avformat_find_stream_info(formatContext, nullptr);
     if (ret < 0) {
-        qCritical() << "Decoder Error while finding stream info:" << av_err2str(ret);
+        qCritical() << "Decoder Error while finding stream info:" << av_error_to_qt_string(ret);
         return false;
     }
 
@@ -145,7 +145,7 @@ bool FFMpegDemuxer::open()
 
     ret = avcodec_open2(codecContext, codec, nullptr);
     if (ret < 0) {
-        qCritical() << av_err2str(ret);
+        qCritical() << av_error_to_qt_string(ret);
         return false;
     }
 

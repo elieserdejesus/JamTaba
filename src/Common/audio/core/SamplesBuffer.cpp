@@ -4,7 +4,8 @@
 #include <algorithm>
 #include <cstring>
 
-using namespace Audio;
+using audio::SamplesBuffer;
+using audio::AudioPeak;
 
 const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
@@ -32,10 +33,10 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
 SamplesBuffer::SamplesBuffer(const SamplesBuffer &other) :
       channels(other.channels),
       frameLenght(other.frameLenght),
-      samples(other.samples),
       rmsRunningSum(other.rmsRunningSum),
       summedSamples(other.summedSamples),
-      rmsWindowSize(other.rmsWindowSize)
+      rmsWindowSize(other.rmsWindowSize),
+      samples(other.samples)
 {
     // qWarning() << "Samples Buffer copy constructor!";
     squaredSums[0] = other.squaredSums[0];

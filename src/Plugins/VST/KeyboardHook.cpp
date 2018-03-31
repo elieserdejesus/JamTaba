@@ -6,8 +6,8 @@
 #include <QComboBox>
 #include <QDebug>
 
-HHOOK KeyboardHook::globalKeyboardHook = nullptr;
-bool KeyboardHook::lastImeKeyUpWasReturn = false;
+HHOOK keyboardHook::globalKeyboardHook = nullptr;
+bool keyboardHook::lastImeKeyUpWasReturn = false;
 
 /**
     This is a callback function to hook VST host key pressing. In general VST hosts are
@@ -41,9 +41,9 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
             bool usingIME = ImmGetOpenStatus(ImmGetContext(GetActiveWindow())); // detect if japanese input (IME) is activated - issue #472
             if (usingIME) {
                 // we need detect if user is pressing VK_RETURN 2 times: 1 time to finish IME notation window and the second time to send the message in ninjam chat.
-                bool hookingReturnKey = KeyboardHook::lastImeKeyUpWasReturn && keyData->vkCode == VK_RETURN;
+                bool hookingReturnKey = keyboardHook::lastImeKeyUpWasReturn && keyData->vkCode == VK_RETURN;
                 if (wParam == WM_KEYUP) // we need "remember" if the last key was VK_RETURN
-                    KeyboardHook::lastImeKeyUpWasReturn = !hookingReturnKey && keyData->vkCode == VK_RETURN;
+                    keyboardHook::lastImeKeyUpWasReturn = !hookingReturnKey && keyData->vkCode == VK_RETURN;
 
                 if (!hookingReturnKey)
                     return CallNextHookEx(NULL, nCode, wParam, lParam);
@@ -61,7 +61,7 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
             bool typingInNumPad = keyData->vkCode >= VK_NUMPAD0 && keyData->vkCode <= VK_NUMPAD9;
             bool typingQuestionMark = keyData->vkCode == Qt::Key_questiondown || keyData->vkCode == Qt::Key_Question;
             if (typingLetters || typingNumbers || typingInNumPad || typingQuestionMark) {
-                QString keyText = KeyboardHook::vkCodeToText(keyData->vkCode, keyData->scanCode);
+                QString keyText = keyboardHook::vkCodeToText(keyData->vkCode, keyData->scanCode);
                 Qt::KeyboardModifiers modifiers;
                 if (controlIsPressed)
                     modifiers |= Qt::ControlModifier;
@@ -108,7 +108,7 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
     return CallNextHookEx(NULL, nCode, wParam, lParam); // Forward the event to VST host
 }
 
-QString KeyboardHook::vkCodeToText(DWORD vkCode, DWORD scanCode)
+QString keyboardHook::vkCodeToText(DWORD vkCode, DWORD scanCode)
 {
     BYTE keyState[256] = {0};
 
@@ -121,7 +121,7 @@ QString KeyboardHook::vkCodeToText(DWORD vkCode, DWORD scanCode)
     return "";
 }
 
-void KeyboardHook::installLowLevelKeyboardHook()
+void keyboardHook::installLowLevelKeyboardHook()
 {
     if (!globalKeyboardHook) { // not installed?
         globalKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, globalKeyboardHookProcedure,
@@ -132,7 +132,7 @@ void KeyboardHook::installLowLevelKeyboardHook()
     }
 }
 
-void KeyboardHook::uninstallLowLevelKeyboardKook()
+void keyboardHook::uninstallLowLevelKeyboardKook()
 {
     if (globalKeyboardHook) {
         UnhookWindowsHookEx(globalKeyboardHook);

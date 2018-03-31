@@ -13,19 +13,19 @@
 
 struct VstEvents;
 
-namespace Vst {
+namespace vst {
 
 class VstHost;
 
 typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host); // Plugin's entry point
 
-class VstPlugin : public Audio::Plugin
+class VstPlugin : public audio::Plugin
 {
 public:
-    explicit VstPlugin(Vst::VstHost *host, const QString &pluginPath);
+    explicit VstPlugin(vst::VstHost *host, const QString &pluginPath);
     ~VstPlugin();
 
-    void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer, std::vector<Midi::MidiMessage> &midiBuffer) override;
+    void process(const audio::SamplesBuffer &vstInputArray, audio::SamplesBuffer &outBuffer, std::vector<midi::MidiMessage> &midiBuffer) override;
     void openEditor(const QPoint &centerOfScreen) override;
 
     void closeEditor() override;
@@ -67,10 +67,10 @@ private:
 
     AEffect *effect;
 
-    std::unique_ptr<Audio::SamplesBuffer> internalOutputBuffer;
-    std::unique_ptr<Audio::SamplesBuffer> internalInputBuffer;
+    std::unique_ptr<audio::SamplesBuffer> internalOutputBuffer;
+    std::unique_ptr<audio::SamplesBuffer> internalInputBuffer;
 
-    Vst::VstHost *host;
+    vst::VstHost *host;
 
     bool wantMidi;
 
@@ -81,7 +81,7 @@ private:
 
     bool loaded;
 
-    void fillVstEventsList(const std::vector<Midi::MidiMessage> &midiBuffer);
+    void fillVstEventsList(const std::vector<midi::MidiMessage> &midiBuffer);
 
     template<int N>
     struct VSTEventBlock

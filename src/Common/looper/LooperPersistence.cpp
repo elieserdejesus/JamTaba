@@ -10,7 +10,11 @@
 #include <QJsonDocument>
 #include <QFileInfo>
 
-using namespace Audio;
+using audio::LoopInfo;
+using audio::LoopSaver;
+using audio::LoopLoader;
+using audio::Looper;
+using audio::SamplesBuffer;
 
 LoopInfo::LoopInfo(quint32 bpm, quint16 bpi, const QString &name, bool audioIsEncoded, quint8 mode) :
     bpm(bpm),
@@ -138,7 +142,7 @@ void LoopSaver::saveSamplesToDisk(const QString &savePath, const QString &loopFi
         waveFileWriter.write(filePath, buffer, sampleRate, bitDepth);
     }
     else {
-        VorbisEncoder encoder(2, sampleRate, vorbisQuality);
+        vorbis::Encoder encoder(2, sampleRate, vorbisQuality);
         QByteArray encodedData = encoder.encode(buffer);
         encodedData.append(encoder.finishIntervalEncoding());
         QString filePath = QDir(savePath).absoluteFilePath(loopFileName +"/layer_" + QString::number(layerIndex) + ".ogg");

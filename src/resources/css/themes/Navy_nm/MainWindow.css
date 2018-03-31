@@ -31,7 +31,9 @@ QMainWindow
             stop: 0.5 rgb(70, 70, 70), stop: 0.6 rgb(24, 24, 24));
 }
 
-QLabel#labelPerformanceMonitor
+#labelPerformanceMonitor,
+#transmitTransferRateLabel,
+#receiveTransferRateLabel
 {
     color: rgba(255, 255, 255, 50);
     background-color: transparent;

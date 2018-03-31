@@ -5,7 +5,7 @@
 #include <QProcess>
 #include <QFileInfo>
 
-namespace Audio {
+namespace audio {
 class PluginDescriptor;
 }
 

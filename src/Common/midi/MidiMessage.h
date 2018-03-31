@@ -4,7 +4,7 @@
 #include <QtGlobal>
 #include <vector>
 
-namespace Midi {
+namespace midi {
 
 class MidiMessage
 {

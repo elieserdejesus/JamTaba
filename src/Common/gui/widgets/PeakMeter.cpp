@@ -7,13 +7,14 @@
 #include <QStyle>
 
 const int BaseMeter::LINES_MARGIN = 3;
-const int BaseMeter::MIN_SIZE = 1;
 const int BaseMeter::DEFAULT_DECAY_TIME = 2000;
 const quint8 BaseMeter::SEGMENTS_SIZE = 6;
 
+const int MidiActivityMeter::MIN_SIZE = 1;
 
 const int AudioMeter::MAX_PEAK_MARKER_SIZE = 2;
 const int AudioMeter::MAX_PEAK_SHOW_TIME = 1500;
+const int AudioMeter::MIN_SIZE = 12;
 
 const float AudioMeter::MAX_DB_VALUE = 0.0f;
 const float AudioMeter::MIN_DB_VALUE = -60.0f;
@@ -80,15 +81,6 @@ void BaseMeter::paintSegments(QPainter &painter, const QRectF &rect, float peakP
         else
             x += SEGMENTS_SIZE;
     }
-}
-
-QSize BaseMeter::minimumSizeHint() const
-{
-    bool isVerticalMeter = isVertical();
-    int w = isVerticalMeter ? MIN_SIZE : width();
-    int h = isVerticalMeter ? height() : MIN_SIZE;
-
-    return QSize(w, h);
 }
 
 void BaseMeter::setOrientation(Qt::Orientation orientation)
@@ -340,6 +332,15 @@ void AudioMeter::paintEvent(QPaintEvent *)
     updateInternalValues(); // compute decay and max peak
 }
 
+QSize AudioMeter::minimumSizeHint() const
+{
+    bool isVerticalMeter = isVertical();
+    int w = isVerticalMeter ? AudioMeter::MIN_SIZE : width();
+    int h = isVerticalMeter ? height() : AudioMeter::MIN_SIZE;
+
+    return QSize(w, h);
+}
+
 void AudioMeter::setPaintingDbMarkers(bool paintDbMarkers)
 {
     if (paintingDbMarkers != paintDbMarkers) {
@@ -576,4 +577,13 @@ void MidiActivityMeter::setSolidColor(const QColor &color)
 void MidiActivityMeter::setActivityValue(float value)
 {
     this->activityValue = limitFloatValue(value);
+}
+
+QSize MidiActivityMeter::minimumSizeHint() const
+{
+    bool isVerticalMeter = isVertical();
+    int w = isVerticalMeter ? MidiActivityMeter::MIN_SIZE : width();
+    int h = isVerticalMeter ? height() : MidiActivityMeter::MIN_SIZE;
+
+    return QSize(w, h);
 }

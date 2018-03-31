@@ -12,7 +12,7 @@
 
 #include <cmath>
 
-using namespace AU;
+using namespace au;
 
 class ViewContainer : public QMacCocoaViewContainer
 {
@@ -121,7 +121,7 @@ quint8 AudioUnitPlugin::getBusCount(AudioUnit comp, AudioUnitScope scope)
     return static_cast<quint8> (count);
 }
 
-Audio::PluginDescriptor AU::createPluginDescriptor(const QString &name, const QString &path)
+audio::PluginDescriptor au::createPluginDescriptor(const QString &name, const QString &path)
 {
     // name is formatted as MANUFACTURER: AU plugin name
     QString manufacturer = "";
@@ -131,12 +131,12 @@ Audio::PluginDescriptor AU::createPluginDescriptor(const QString &name, const QS
         manufacturer = name.left(index);
         pluginName = name.right(name.size() - (index + 1)).trimmed();
     }
-    auto category = Audio::PluginDescriptor::AU_Plugin;
-    return Audio::PluginDescriptor(pluginName, category, manufacturer, path);
+    auto category = audio::PluginDescriptor::AU_Plugin;
+    return audio::PluginDescriptor(pluginName, category, manufacturer, path);
 }
 
-AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, AudioUnitHost *host) :
-    Audio::Plugin(AU::createPluginDescriptor(name, path)),
+AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, au::AudioUnitHost *host) :
+    audio::Plugin(au::createPluginDescriptor(name, path)),
     audioUnit(au),
     path(path),
     bufferList(nullptr),
@@ -405,8 +405,8 @@ OSStatus AudioUnitPlugin::inputCallback (void* hostRef, AudioUnitRenderActionFla
     return noErr;
 }
 
-void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::SamplesBuffer &outBuffer,
-                     std::vector<Midi::MidiMessage> &midiBuffer)
+void AudioUnitPlugin::process(const audio::SamplesBuffer &inBuffer, audio::SamplesBuffer &outBuffer,
+                     std::vector<midi::MidiMessage> &midiBuffer)
 {
 
     AudioUnitRenderActionFlags flags = 0;
@@ -430,7 +430,7 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
 
     if (wantsMidiMessages && !midiBuffer.empty()) {
         UInt32 midiEventPosition = 0; // in jamtaba all MIDI messages are real time
-        for (const Midi::MidiMessage &message : midiBuffer) {
+        for (const midi::MidiMessage &message : midiBuffer) {
             MusicDeviceMIDIEvent(audioUnit, message.getStatus(), message.getData1(),
                                                             message.getData2(), midiEventPosition);
         }
@@ -469,7 +469,7 @@ bool AudioUnitPlugin::isVirtualInstrument() const
     return wantsMidiMessages;
 }
 
-void AudioUnitPlugin::copyBufferContent(const Audio::SamplesBuffer *input, AudioBufferList *abl, quint32 frames)
+void AudioUnitPlugin::copyBufferContent(const audio::SamplesBuffer *input, AudioBufferList *abl, quint32 frames)
 {
     const quint8 channels = qMin((int)abl->mNumberBuffers, input->getChannels());
     const size_t bytesToCopy = sizeof(float) * frames;
@@ -530,7 +530,7 @@ void AudioUnitPlugin::setSampleRate(int newSampleRate)
 
 
 
-AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path)
+AudioUnitPlugin *au::audioUnitPluginfromPath(const QString &path)
 {
     AudioComponentDescription auDescription;
     if (!getComponentDescriptionFromPath(path, auDescription))
@@ -544,7 +544,7 @@ AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path)
             CFStringRef name;
             status = AudioComponentCopyName(component, &name);
             if (status == noErr) {
-                AU::AudioUnitHost *host = AU::AudioUnitHost::getInstance();
+                au::AudioUnitHost *host = au::AudioUnitHost::getInstance();
                 return new AudioUnitPlugin(QString::fromCFString(name), path, audioUnit, host);
             }
             else {
@@ -566,7 +566,7 @@ AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path)
 }
 
 // this piece of code was stoled from JUCE :) https://searchcode.com/codesearch/view/12071132/
-OSType AU::stringToOSType (const QString& string)
+OSType au::stringToOSType (const QString& string)
 {
     if (string.size() < 4)
         return OSType(0);
@@ -578,7 +578,7 @@ OSType AU::stringToOSType (const QString& string)
          | ((OSType) (unsigned char) s[3]);
 }
 
-bool AU::getComponentDescriptionFromPath(const QString &path, AudioComponentDescription &desc)
+bool au::getComponentDescriptionFromPath(const QString &path, AudioComponentDescription &desc)
 {
     QStringList parts = path.split(":");
     if (parts.size() != 3) {
@@ -586,9 +586,9 @@ bool AU::getComponentDescriptionFromPath(const QString &path, AudioComponentDesc
         return false;
     }
 
-    OSType type = AU::stringToOSType(parts.at(0));
-    OSType subType = AU::stringToOSType(parts.at(1));
-    OSType manufacturer = AU::stringToOSType(parts.at(2));
+    OSType type = au::stringToOSType(parts.at(0));
+    OSType subType = au::stringToOSType(parts.at(1));
+    OSType manufacturer = au::stringToOSType(parts.at(2));
 
     desc.componentType = type;
     desc.componentSubType = subType;

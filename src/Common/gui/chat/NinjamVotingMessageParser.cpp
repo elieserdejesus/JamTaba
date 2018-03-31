@@ -2,35 +2,84 @@
 #include <QRegularExpression>
 #include <QDebug>
 
-using namespace Gui::Chat;
+using gui::chat::SystemVotingMessage;
 
 /** System voting format is: [voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s] */
-const QRegularExpression Gui::Chat::SYSTEM_VOTING_REGEX("\\[voting system\\] leading candidate: (\\d{1,2})\\/(\\d{1,2}) votes for (\\d{1,3}) (\\bBPI|\\bBPM) \\[each vote expires in (\\d{1,3})s\\]");
+const QRegularExpression gui::chat::SYSTEM_VOTING_REGEX("\\[voting system\\] leading candidate: (\\d{1,2})\\/(\\d{1,2}) votes for (\\d{1,3}) (\\bBPI|\\bBPM) \\[each vote expires in (\\d{1,3})s\\]");
 
 /** Local user voting format is: !vote bpi/bpm 120, always in lower case */
-const QRegularExpression Gui::Chat::LOCAL_USER_VOTING_REGEX("!vote (\\bbpi|\\bbpm) \\d{1,3}");
+const QRegularExpression gui::chat::LOCAL_USER_VOTING_REGEX("!vote (\\bbpi|\\bbpm) \\d{1,3}");
 
-const QRegularExpression Gui::Chat::ADMIN_COMMAND_REGEX("^/bpi|^/bpm|^/kick|^/topic");
+const QRegularExpression gui::chat::ADMIN_COMMAND_REGEX("^/bpi|^/bpm|^/kick|^/topic");
 
-const QRegularExpression Gui::Chat::PRIVATE_MESSAGE_REGEX("^/msg");
+const QRegularExpression gui::chat::PRIVATE_MESSAGE_REGEX("^/msg");
 
+const QRegularExpression gui::chat::PUBLIC_SERVER_INVITE_REGEX("^(Let's play in ([A-Za-z\\.0-9]+) \\: ([0-9]{4}) \\?)");
+const QRegularExpression gui::chat::PRIVATE_SERVER_INVITE_REGEX("^(Let's play in my private server\\?)\\n\\n IP\\: ([A-Za-z\\.0-9]+) \\n\\n PORT\\: ([0-9]{4}) \\n");
 
-bool Gui::Chat::isPrivateMessage(const QString &message)
+QString gui::chat::extractDestinationUserNameFromPrivateMessage(const QString &text)
+{
+    QString t(text);
+    t.replace("/msg ", "");
+    int index = t.indexOf(QChar(' '));
+    if (index > 0) {
+        return t.left(index);
+    }
+
+    return text;
+}
+
+bool gui::chat::isServerInvitation(const QString &message)
+{
+    /**
+        Let's play in %1 : %2 ?
+        Let's play in my private server?
+        \n\n IP: %1 \n\n PORT: %2 \n
+    */
+
+    return PUBLIC_SERVER_INVITE_REGEX.match(message).hasMatch()
+            || PRIVATE_SERVER_INVITE_REGEX.match(message).hasMatch();
+}
+
+gui::chat::ServerInviteMessage gui::chat::parseServerInviteMessage(const QString &message)
+{
+    ServerInviteMessage msg;
+
+    QString text;
+    QString serverIP;
+    quint16 serverPort = 0;
+
+    auto matcher = PUBLIC_SERVER_INVITE_REGEX.match(message);
+    if (!matcher.hasMatch())
+        matcher = PRIVATE_SERVER_INVITE_REGEX.match(message);
+
+    text = matcher.captured(1);
+    serverIP = matcher.captured(2);
+    serverPort = matcher.captured(3).toInt();
+
+    msg.message = text;
+    msg.serverIP = serverIP;
+    msg.serverPort = serverPort;
+
+    return msg;
+}
+
+bool gui::chat::isPrivateMessage(const QString &message)
 {
     return PRIVATE_MESSAGE_REGEX.match(message).hasMatch();
 }
 
-bool Gui::Chat::isAdminCommand(const QString &message)
+bool gui::chat::isAdminCommand(const QString &message)
 {
     return ADMIN_COMMAND_REGEX.match(message).hasMatch();
 }
 
-bool Gui::Chat::isLocalUserVotingMessage(const QString &message)
+bool gui::chat::isLocalUserVotingMessage(const QString &message)
 {
     return LOCAL_USER_VOTING_REGEX.match(message).hasMatch();
 }
 
-bool Gui::Chat::isFirstSystemVotingMessage(const QString &userName, const QString &message)
+bool gui::chat::isFirstSystemVotingMessage(const QString &userName, const QString &message)
 {
     if (!userName.isEmpty())
         return false; // the user name in system voting message is always empty. If we have a valid user name somebody it trying to inpersonate the "server" :)
@@ -39,7 +88,7 @@ bool Gui::Chat::isFirstSystemVotingMessage(const QString &userName, const QStrin
     return msg.isValidVotingMessage() && msg.isFirstVotingMessage();
 }
 
-SystemVotingMessage Gui::Chat::parseSystemVotingMessage(const QString &message)
+SystemVotingMessage gui::chat::parseSystemVotingMessage(const QString &message)
 {
     QRegularExpressionMatch match = SYSTEM_VOTING_REGEX.match(message);
 
@@ -70,7 +119,7 @@ SystemVotingMessage Gui::Chat::parseSystemVotingMessage(const QString &message)
     return SystemVotingMessage::newBpmVotingMessage(voteValue, expirationTime, currentVote, maxVotes);
 }
 
-bool Gui::Chat::SystemVotingMessage::isValidVotingMessage() const
+bool gui::chat::SystemVotingMessage::isValidVotingMessage() const
 {
     if (voteType != "BPI" && voteType != "BPM")
         return false;

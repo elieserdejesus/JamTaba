@@ -36,7 +36,7 @@
       debugAsWhichUser = "root"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Development"
+      buildConfiguration = "Deployment"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">

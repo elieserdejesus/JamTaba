@@ -3,7 +3,8 @@
 #include "audio/core/AudioDriver.h"
 #include "audio/core/SamplesBuffer.h"
 
-using namespace Audio;
+using audio::MetronomeTrackNode;
+using audio::SamplesBuffer;
 
 MetronomeTrackNode::MetronomeTrackNode(const SamplesBuffer &firstBeatSamples, const SamplesBuffer &offBeatSamples, const SamplesBuffer &accentBeatSamples) :
     firstBeatBuffer(firstBeatSamples),
@@ -64,7 +65,7 @@ void MetronomeTrackNode::resetInterval()
 
 void MetronomeTrackNode::setBeatsPerAccent(int beatsPerAccent, int currentBpi)
 {
-    setAccentBeats(MetronomeUtils::getAccentBeats(beatsPerAccent, currentBpi));
+    setAccentBeats(metronomeUtils::getAccentBeats(beatsPerAccent, currentBpi));
 }
 
 void MetronomeTrackNode::setIntervalPosition(long intervalPosition)
@@ -89,7 +90,7 @@ SamplesBuffer *MetronomeTrackNode::getSamplesBuffer(int beat)
 }
 
 void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
-                                          int SampleRate, std::vector<Midi::MidiMessage> &midiBuffer)
+                                          int SampleRate, std::vector<midi::MidiMessage> &midiBuffer)
 {
     if (samplesPerBeat <= 0)
         return;
@@ -97,7 +98,7 @@ void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer
     internalInputBuffer.setFrameLenght(out.getFrameLenght());
     internalInputBuffer.zero();
 
-    SamplesBuffer *samplesBuffer = getSamplesBuffer(currentBeat);
+    auto samplesBuffer = getSamplesBuffer(currentBeat);
     uint samplesToCopy = qMin(static_cast<uint>(samplesBuffer->getFrameLenght() - beatPosition), out.getFrameLenght());
     int nextBeatSample = beatPosition + out.getFrameLenght();
     int internalOffset = 0;

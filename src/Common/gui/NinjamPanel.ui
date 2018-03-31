@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>320</width>
-    <height>129</height>
+    <height>141</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -172,7 +172,7 @@
   <customwidget>
    <class>IntervalProgressDisplay</class>
    <extends>QWidget</extends>
-   <header>intervalProgress/IntervalProgressDisplay.h</header>
+   <header>gui/intervalProgress/IntervalProgressDisplay.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

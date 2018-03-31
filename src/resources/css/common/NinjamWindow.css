@@ -146,18 +146,6 @@ MetronomePanel #floatingWindowButton           /* The button used to open the me
     padding-right: 0px;
 }
 
-MetronomePanel #preferencesButton,
-MetronomePanel #floatingWindowButton,
-MetronomePanel #soloButton,
-MetronomePanel #muteButton
-{
-    max-width: 20px;
-    max-height: 16px;
-    min-height: 16px;
-    padding-top: 1px;
-    padding-bottom: 1px;
-}
-
 /* metronome, pan (L & R) labels, BPI and BPM labels */
 NinjamPanel QLabel,
 MetronomePanel QLabel
@@ -180,6 +168,12 @@ NinjamTrackView
     border: none;
 }
 
+NinjamTrackView #receiveLabel
+{
+    color: rgba(0, 0, 0, 120);
+    font-size: 9px;
+}
+
 NinjamTrackView #soloButton,
 NinjamTrackView #muteButton,
 NinjamTrackView #lowCutButton,
@@ -190,23 +184,9 @@ NinjamTrackView BoostSpinBox
    color: rgb(40,40,40);
 }
 
-NinjamTrackView[horizontal="true"] BoostSpinBox
-{
-    max-height: 12px;
-    max-width: 25px;
-}
-
-NinjamTrackView[horizontal="true"] BoostSpinBox QToolButton
-{
-    padding: 0px;
-    padding-top: 2px;
-}
-
 NinjamTrackView #lowCutButton,
 NinjamTrackView #receiveButton
 {
-    max-width: 8px;
-    max-height: 8px;
     background-position: center center;
     background-repeat: none;
     border-style: inset;
@@ -217,39 +197,10 @@ NinjamTrackView #receiveButton::hover
     border-style: solid;
 }
 
-/*
-NinjamTrackView #lowCutButton[state="0"]
-{
-   background-image: url(':/images/low_cut_off.png');
-}
-
-NinjamTrackView #lowCutButton[state="1"]
-{
-   background-image: url(':/images/low_cut_normal.png');
-}
-
-NinjamTrackView #lowCutButton[state="2"]
-{
-   background-image: url(':/images/low_cut_drastic.png');
-}
-*/
-
 NinjamTrackView #lowCutButton::hover
 {
     border-style: solid;
     border-color: rgb(80, 80, 80);
-}
-
-NinjamTrackView[horizontal="false"] #lowCutButton,
-NinjamTrackView[horizontal="false"] #receiveButton
-{
-    min-height: 8px;
-}
-
-NinjamTrackView[horizontal="true"] #lowCutButton,
-NinjamTrackView[horizontal="true"] #receiveButton
-{
-    max-height: 6px;
 }
 
 NinjamTrackView QPushButton#lowCutButton:!checked
@@ -262,13 +213,6 @@ NinjamTrackView QPushButton#receiveButton:!checked
     background-color:red;
 }
 
-/*
-NinjamTrackView QPushButton#receiveButton
-{
-    background-image: url(':/images/receive.png');
-}
-*/
-
 
 NinjamTrackView QProgressBar                /* The progress bar in bottom of ninjam tracks showing downloaded interval */
 {
@@ -278,11 +222,11 @@ NinjamTrackView QProgressBar                /* The progress bar in bottom of nin
     max-height: 3px;
 }
 
-NinjamTrackView[horizontal="true"] #soloButton, /* custom stylesheet for solo and mute buttons in horizontal ninjam tracks */
-NinjamTrackView[horizontal="true"] #muteButton
+/* instruments menu */
+InstrumentsButton:enabled:!hover
 {
-    padding-top: 0px;
-    padding-bottom: 0px;
+    border: none;
+    background: none;
 }
 
 /* Ninjam track groups

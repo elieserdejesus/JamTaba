@@ -31,8 +31,8 @@ protected:
     //int sampleRate;
     QScopedPointer<MainControllerPlugin> controller;
     bool running;
-    Audio::SamplesBuffer inputBuffer;
-    Audio::SamplesBuffer outputBuffer;
+    audio::SamplesBuffer inputBuffer;
+    audio::SamplesBuffer outputBuffer;
     bool hostWasPlayingInLastAudioCallBack;
 
     
@@ -45,7 +45,7 @@ protected:
     
     virtual qint32 getStartPositionForHostSync() const = 0;
 
-    virtual MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const = 0;
+    virtual MainControllerPlugin *createPluginMainController(const persistence::Settings &settings, JamTabaPlugin *plugin) const = 0;
 
 };
 

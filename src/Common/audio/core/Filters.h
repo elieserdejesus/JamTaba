@@ -3,7 +3,7 @@
 
 #include <QtGlobal>
 
-namespace Audio
+namespace audio
 {
 
 /** Biquad Filter - Adapted from Ardour code: http://ardour.org/ */

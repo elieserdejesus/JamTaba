@@ -3,16 +3,18 @@
 
 #include <QString>
 
-namespace Gui
+namespace gui
 {
 
-    namespace Chat
+    namespace chat
     {
 
         extern const QRegularExpression SYSTEM_VOTING_REGEX;
         extern const QRegularExpression LOCAL_USER_VOTING_REGEX;
         extern const QRegularExpression ADMIN_COMMAND_REGEX;
         extern const QRegularExpression PRIVATE_MESSAGE_REGEX;
+        extern const QRegularExpression PUBLIC_SERVER_INVITE_REGEX;
+        extern const QRegularExpression PRIVATE_SERVER_INVITE_REGEX;
 
         class SystemVotingMessage
         {
@@ -37,6 +39,16 @@ namespace Gui
             quint8 currentVote;
         };
 
+        struct ServerInviteMessage
+        {
+            QString serverIP;
+            quint16 serverPort;
+            QString message;
+        };
+
+        bool isServerInvitation(const QString &message);
+        ServerInviteMessage parseServerInviteMessage(const QString &message);
+
         bool isLocalUserVotingMessage(const QString &message);
 
         bool isFirstSystemVotingMessage(const QString &userName, const QString &message);
@@ -45,6 +57,7 @@ namespace Gui
 
         bool isAdminCommand(const QString &message);
         bool isPrivateMessage(const QString &message);
+        QString extractDestinationUserNameFromPrivateMessage(const QString &text);
 
     } // Chat namespace
 

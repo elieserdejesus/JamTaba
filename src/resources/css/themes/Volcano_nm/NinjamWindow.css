@@ -3,39 +3,19 @@ NinjamTrackView[horizontal="true"] #panSlider
     max-width: 50px;
 }
 
-NinjamTrackView[horizontal="true"] #buttonBoost
-{
-    padding: 1px;
-    border: 1px solid rgba(0, 0, 0, 30);
-    min-width: 12px;
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoost
-{
-   border-left: 1px solid rgba(0, 0, 0, 10);
-   border-right: 1px solid rgba(0, 0, 0, 10);
-   margin: 0px;
-}
-
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoost:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#receiveButton:hover:checked,
 NinjamTrackView QPushButton#lowCutButton:hover:checked,
 NinjamTrackView QPushButton#receiveButton:hover:checked
 
 {
-    margin-top: -1px;
     background-color: rgb(229, 99, 24);
     border: none;
 }
 
 NinjamTrackView[horizontal="true"]
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop: 0.0 #FFD470,
-        stop: 0.15 #FDE09B,
-        stop: 0.9 #FDE5A9,
-        stop: 1.0 #EF820D);
+    background-color: rgba(255, 255, 255, 10);
 }
 
 NinjamTrackView[horizontal="true"][unlighted="true"]
@@ -45,7 +25,7 @@ NinjamTrackView[horizontal="true"][unlighted="true"]
 
 NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
  {
- background: rgb(179, 89, 37);
+ background: rgba(179, 89, 37, 200);
  Border: none;
  }
 
@@ -69,18 +49,32 @@ NinjamRoomWindow QToolButton:hover:checked
 #buttonGridLayout,
 #wide,
 #narrow,
-#licenceButton
+#licenceButton,
+#instrumentsMenu QToolButton:!hover
 {
     border: 1px solid rgba(0, 0, 0, 50);
     background-color: rgba(255, 255, 255, 10);
 }
 
-
-
-NinjamRoomWindow QToolButton:checked
+#buttonVerticalLayout:checked,
+#buttonHorizontalLayout:checked,
+#buttonGridLayout:checked,
+#wide:checked,
+#narrow:checked
 {
     background-color: rgba(255, 255, 255, 60);
     border: 1px solid rgba(0, 0, 0, 100);
+}
+
+#buttonVerticalLayout:hover,
+#buttonHorizontalLayout:hover,
+#buttonGridLayout:hover,
+#wide:hover,
+#narrow:hover,
+#licenceButton:hover
+{
+    background-color: rgba(255, 255, 255, 120);
+    border: 1px solid rgba(0, 0, 0, 130);
 }
 
 
@@ -148,10 +142,20 @@ NinjamTrackView  #channelName               /* channel name for ninjamers */
     max-width: 130px;
 }
 
+NinjamTrackGroupView[horizontal="true"]
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop: 0.0 #FFD470,
+        stop: 0.15 #FDE09B,
+        stop: 0.9 #FDE5A9,
+        stop: 1.0 #FFA45F
+    );
+}
+
 NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
- {
-     background: rgba(255, 255, 255, 100);
- }
+{
+    background: rgba(255, 255, 255, 100);
+}
 
 
 /* NinjamPanel is the widget where the ninjam controls are showed (in bottom when we are connected in a server)

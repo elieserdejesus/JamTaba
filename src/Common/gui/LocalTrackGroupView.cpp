@@ -4,10 +4,11 @@
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "MainController.h"
-#include "BlinkableButton.h"
+#include "widgets/BlinkableButton.h"
 
 #include <QInputDialog>
 #include <QToolTip>
+#include <QDateTime>
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindow) :
     TrackGroupView(mainWindow->createTextEditorModifier()),
@@ -315,9 +316,9 @@ void LocalTrackGroupView::removeChannel()
 // PRESETS
 void LocalTrackGroupView::loadPreset(QAction *action)
 {
-    Controller::MainController *mainController = mainFrame->getMainController();
+    auto mainController = mainFrame->getMainController();
     QString presetFileName = action->data().toString();
-    Persistence::Preset preset = mainController->loadPreset(presetFileName);
+    auto preset = mainController->loadPreset(presetFileName);
     if (preset.isValid()) {
         mainFrame->loadPreset(preset);
 
@@ -364,19 +365,29 @@ void LocalTrackGroupView::deletePreset(QAction *action)
 }
 
 // +++++++++++++++++++++++++++++
+
+// fixing #962
+
+QSize LocalTrackGroupView::sizeHint() const
+{
+    if (peakMeterOnly)
+        return QFrame::sizeHint();
+
+    return TrackGroupView::sizeHint();
+}
+
 void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
 {
     if (this->peakMeterOnly != peakMeterOnly) {
         this->peakMeterOnly = peakMeterOnly;
         topPanel->setVisible(!this->peakMeterOnly);
 
-        for (LocalTrackView *view : getTracks<LocalTrackView *>()) {
+        for (auto view : getTracks<LocalTrackView *>()) {
             view->setPeakMetersOnlyMode(peakMeterOnly);
         }
 
         updateXmitButtonText();
         updateGeometry();
-        adjustSize();
     }
 }
 

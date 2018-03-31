@@ -6,7 +6,7 @@
 class QSlider;
 class QLineEdit;
 
-namespace Audio {
+namespace audio {
 class JamtabaDelay;
 class Plugin;
 }
@@ -17,13 +17,13 @@ class PluginGui : public QWidget
     Q_OBJECT
 
 public:
-    explicit PluginGui(Audio::Plugin *plugin);
+    explicit PluginGui(audio::Plugin *plugin);
 
     QString getPluginName() const;
-    Audio::Plugin *getPlugin() const;
+    audio::Plugin *getPlugin() const;
 
 protected:
-    Audio::Plugin *plugin;
+    audio::Plugin *plugin;
 
 };
 
@@ -33,7 +33,7 @@ class DelayGui : public PluginGui
     Q_OBJECT
 
 public:
-    explicit DelayGui(Audio::JamtabaDelay *delayPlugin);
+    explicit DelayGui(audio::JamtabaDelay *delayPlugin);
     ~DelayGui();
 
 private slots:

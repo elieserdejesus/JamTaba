@@ -69,7 +69,8 @@ QToolButton,
 QScrollBar::handle,
 QToolTip,
 QMenu,
-QDialog
+QDialog,
+QWidget#instrumentsMenu
 {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                     stop: 0.0 rgb(75, 75, 75), stop: 1.0 rgb(59, 59, 59));
@@ -141,46 +142,32 @@ BoostSpinBox QToolButton:!enabled:!checked
 QSlider::handle
 {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0.0 rgb(115, 115, 115), stop: 1.0 rgb(89, 89, 89));
+                stop: 0.0 rgba(115, 115, 115, 150),
+                stop: 1.0 rgba(89, 89, 89, 150));
 }
 
 QSlider::handle:hover
 {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0.0 rgb(155, 155, 155), stop: 1.0 rgb(119, 119, 119));
+                stop: 0.0 rgb(115, 115, 115), stop: 1.0 rgb(89, 89, 89));
 }
 
 QSlider::groove,
 MetronomePanel QSlider::groove:horizontal
 {
-    background-color: rgb(38, 38, 38);
+    background-color: rgb(52, 52, 52);
     border: 1px solid rgb(30, 30, 30);
     border-radius: 3px;
 }
 
-QSlider::groove:vertical
-{
-    width: 6px;
-}
-
-QSlider::groove:horizontal
-{
-    height: 5px;
-}
-
 QSlider::handle:vertical
 {
-    margin-left: -8px;
-    margin-right: -8px;
     padding: 0px;
     height: 8px;
-    width: 17px;
 }
 
 QSlider::handle:horizontal
 {
-    margin-top: -4px;
-    margin-bottom: -4px;
     width: 9px;
 }
 
@@ -259,7 +246,12 @@ QScrollBar::sub-line
   background: none;
 }
 
-
+/* removing ugly background in VST */
+QScrollBar::add-page,
+QScrollBar::sub-page
+{
+    background: none;
+}
 
 QMenu
 {
@@ -383,7 +375,7 @@ LocalTrackView #inputSelectionButton
     color: rgba(255, 255, 255, 100);
 }
 
-AudioMeter
+AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: rgb(110, 110, 110);

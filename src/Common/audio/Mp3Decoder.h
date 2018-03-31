@@ -8,12 +8,12 @@ extern "C" { // this give me a error in linux
 #include <QByteArray>
 #include "audio/core/SamplesBuffer.h"
 
-namespace Audio {
+namespace audio {
 
 class Mp3Decoder
 {
 public:
-    virtual const Audio::SamplesBuffer decode(char *inputBuffer, int bytesToDecode) = 0;
+    virtual const SamplesBuffer decode(char *inputBuffer, int bytesToDecode) = 0;
     virtual void reset() = 0;
     virtual int getSampleRate() const = 0;
     virtual ~Mp3Decoder();
@@ -32,7 +32,7 @@ class Mp3DecoderMiniMp3 : public Mp3Decoder
 public:
     Mp3DecoderMiniMp3();
     ~Mp3DecoderMiniMp3();
-    const Audio::SamplesBuffer decode(char *inputBuffer, int inputBufferLenght) override;
+    const SamplesBuffer decode(char *inputBuffer, int inputBufferLenght) override;
     void reset() override;
     int getSampleRate() const override;
 
@@ -44,7 +44,7 @@ private:
     mp3_decoder_t mp3Decoder;
     mp3_info_t mp3Info;
     signed short internalShortBuffer[INTERNAL_SHORT_BUFFER_SIZE];
-    Audio::SamplesBuffer buffer;
+    SamplesBuffer buffer;
     QByteArray array;
 };
 

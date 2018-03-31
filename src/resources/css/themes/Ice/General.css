@@ -188,35 +188,30 @@ QSlider::groove:horizontal
 {
     border-radius: 2px;
     background-color: rgba(0, 0, 0, 50);
-    height: 3px;
 }
 QSlider::groove:vertical
 {
     background-color: rgba(0, 0, 0, 50);
-    width: 5px;
 }
-
 
 QSlider::handle
 {
-
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop: 0.0 rgb(190,217,255),
-        stop: 1.0 rgb(180,207,250));
+        stop: 0.0 rgba(190, 217, 255, 125),
+        stop: 1.0 rgba(180, 207, 250, 125));
 
-    border: 1px outset rgba(0, 0, 0, 180);
+    border: 1px outset rgba(0, 0, 0, 80);
 }
 
 QSlider::handle:hover
 {
-    background-color: rgb(221, 235, 255);
+    background-color: rgb(190, 217, 255);
+     border: 1px outset rgba(0, 0, 0, 180);
 }
 
 QSlider::handle:horizontal
 {
     border-radius: 4px;
-    margin-top: -6px;
-    margin-bottom: -6px;
     padding: 0px;
     width: 8px;
 }
@@ -224,10 +219,12 @@ QSlider::handle:horizontal
 QSlider::handle:vertical
 {
     border-radius: 4px;
-    margin-left: -3px;
-    margin-right: -3px;
     padding: 0px;
-    height: 13px;
+}
+
+AudioSlider
+{
+    qproperty-dBMarksColor: rgb(206, 233, 255);
 }
 
 /* TabBar ----------------------*/
@@ -321,11 +318,12 @@ QMenu::item::enabled:selected
 QTabWidget::pane
 {
     background-color: transparent;
+    border-image: url('/images/bg.png') 0 0 0 0 stretch stretch;
 }
 
 
 
-AudioMeter
+AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: rgb(40, 90, 130);

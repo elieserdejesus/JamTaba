@@ -2,6 +2,7 @@
 #define FFMPEGCOMMON_H
 
 #include <string>
+#include <QString>
 
 extern "C" {
     #include <libavformat/avformat.h>
@@ -28,16 +29,19 @@ extern "C" {
     #include <libswresample/swresample.h>
 }
 
+
 // a little workaround to use the FFMpeg av_err2str macro
-static const std::string av_make_error_string(int errnum)
+inline const QString av_error_to_qt_string(int errnum)
 {
     char errbuf[AV_ERROR_MAX_STRING_SIZE];
     av_strerror(errnum, errbuf, AV_ERROR_MAX_STRING_SIZE);
-    return (std::string)errbuf;
+
+    return QString(av_make_error_string(errbuf, AV_ERROR_MAX_STRING_SIZE, errnum));
 }
 
-#undef av_err2str
-#define av_err2str(errnum) av_make_error_string(errnum).c_str()
+#undef av_err2str // undefining the libav macro to avoid compilation errors in c++
+//#define av_err2str(errnum) av_make_error_string(errnum).c_str()
+
 
 // we are using Buffered I/O in FFMpeg functions. This is the buffer size.
 #define FFMPEG_BUFFER_SIZE 4096// 32768

@@ -1,21 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="da_DK" sourcelanguage="en">
-<context>
-    <name>Audio::Looper</name>
-    <message>
-        <source>Sequence</source>
-        <translation>Sekvens</translation>
-    </message>
-    <message>
-        <source>All Layers</source>
-        <translation>Alle lag</translation>
-    </message>
-    <message>
-        <source>Selected Layer</source>
-        <translation>Valgte lag</translation>
-    </message>
-</context>
+<TS version="2.0" language="da_DK" sourcelanguage="en">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -34,6 +19,9 @@
         <source>S</source>
         <translation>S</translation>
     </message>
+</context>
+<context>
+    <name>BoostSpinBox</name>
     <message>
         <source>Boost</source>
         <translation>Forøg</translation>
@@ -68,6 +56,10 @@
         <source>B</source>
         <translation>B</translation>
     </message>
+    <message>
+        <source>Translation error!</source>
+        <translation type="unfinished">Oversættelsesfejl!</translation>
+    </message>
 </context>
 <context>
     <name>ChatPanel</name>
@@ -98,6 +90,41 @@
     <message>
         <source>Use/load the chords above</source>
         <translation>Brug / indlæse akkorderne ovenfor</translation>
+    </message>
+    <message>
+        <source>type here ...</source>
+        <translation type="unfinished">Skriv her ...</translation>
+    </message>
+    <message>
+        <source>Increase chat font size</source>
+        <translation type="unfinished">Forøg chat skriftstørrelse</translation>
+    </message>
+    <message>
+        <source>Decrease chat font size</source>
+        <translation type="unfinished">Reducer chat skrifttypestørrelse</translation>
+    </message>
+    <message>
+        <source>Turn on/off this chat</source>
+        <translation type="unfinished">Tænd / sluk denne chat</translation>
+    </message>
+    <message>
+        <source>chat is off</source>
+        <translation type="unfinished">Chat er slukket</translation>
+    </message>
+    <message>
+        <source>Connected Users (%1)</source>
+        <translation type="unfinished">Tilsluttede brugere (%1)</translation>
+    </message>
+</context>
+<context>
+    <name>ChatTabWidget</name>
+    <message>
+        <source>Chat</source>
+        <translation>Chat</translation>
+    </message>
+    <message>
+        <source>Public chat</source>
+        <translation type="unfinished">Offentlig chat</translation>
     </message>
 </context>
 <context>
@@ -154,6 +181,13 @@
     </message>
 </context>
 <context>
+    <name>InactivityDetector</name>
+    <message>
+        <source>You are not transmiting for a long time! This is intentional?</source>
+        <translation type="unfinished">Du overfører ikke i lang tid! Dette er tilsigtet?</translation>
+    </message>
+</context>
+<context>
     <name>IntervalChunksDisplay</name>
     <message>
         <source>Downloaded intervals</source>
@@ -206,10 +240,6 @@
         <translation>Forbereder</translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission to others</source>
-        <translation>Aktivér / deaktiver din lydoverførsel til andre</translation>
-    </message>
-    <message>
         <source>Add or remove channels...</source>
         <translation>Tilføj eller fjern kanaler...</translation>
     </message>
@@ -260,6 +290,10 @@
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
         <translation>Vil du gerne slette forudinstilling &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>Enable/disable your audio transmission for others</source>
+        <translation type="unfinished">Aktivér / deaktiver din lydoverførsel til andre</translation>
     </message>
 </context>
 <context>
@@ -517,10 +551,6 @@
         <translation>Optagelse ...</translation>
     </message>
     <message>
-        <source>Private Server ...</source>
-        <translation>Privat Server ...</translation>
-    </message>
-    <message>
         <source>Ninjam community (Ninbot) ...</source>
         <translation>Ninjam forum (Ninbot) ...</translation>
     </message>
@@ -628,6 +658,18 @@
         <source>Looper ...</source>
         <translation>Looper ...</translation>
     </message>
+    <message>
+        <source>Connect with private server ...</source>
+        <translation type="unfinished">Opret forbindelse til privat server ...</translation>
+    </message>
+    <message>
+        <source>Remember ...</source>
+        <translation type="unfinished">Husk ...</translation>
+    </message>
+    <message>
+        <source>Host a private server in your machine ...</source>
+        <translation type="unfinished">Host en privat server i din maskine ...</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -700,10 +742,6 @@
         <translation>Kun bogstaver, tal, bindestreg og understregning tilladt! Spaces vil blive erstattet af en understregning.</translation>
     </message>
     <message>
-        <source>Chat</source>
-        <translation>Chat</translation>
-    </message>
-    <message>
         <source>Black</source>
         <translation>Sort</translation>
     </message>
@@ -748,6 +786,90 @@
         <source>Channel %1</source>
         <translation>Kanal %1</translation>
     </message>
+    <message>
+        <source>%1 has left the room.</source>
+        <translation>%1 har forladt lokalet.</translation>
+    </message>
+    <message>
+        <source>%1 has joined the room.</source>
+        <translation>%1 har sluttet sig til værelset.</translation>
+    </message>
+    <message>
+        <source>Last chords used</source>
+        <translation>Sidst brugte akkorder</translation>
+    </message>
+    <message>
+        <source>Private chat with %1</source>
+        <translation type="unfinished">Privat chat med %1</translation>
+    </message>
+    <message>
+        <source>%1 is blocked in the chat</source>
+        <translation>%1 er blokeret i chatten</translation>
+    </message>
+    <message>
+        <source>%1 is unblocked in the chat</source>
+        <translation>%1 er ikke blokeret i chatten</translation>
+    </message>
+    <message>
+        <source>Uploading</source>
+        <translation type="unfinished">upload</translation>
+    </message>
+    <message>
+        <source>Downloading</source>
+        <translation type="unfinished">Download</translation>
+    </message>
+    <message>
+        <source>Collapse bottom area</source>
+        <translation type="unfinished">Skjul bundområde</translation>
+    </message>
+    <message>
+        <source>Collapse chat</source>
+        <translation type="unfinished">Skjul chat</translation>
+    </message>
+    <message>
+        <source>Collapse local channels</source>
+        <translation type="unfinished">Skjul lokale kanaler</translation>
+    </message>
+    <message>
+        <source>Game</source>
+        <translation type="unfinished">Spil</translation>
+    </message>
+    <message>
+        <source>Navy</source>
+        <translation type="unfinished">Flåde</translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in %1 : %2 ?</source>
+        <translation type="unfinished">Lad os spille i %1:%2?</translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in my private server?</source>
+        <translation type="unfinished">Lad os spille på min private server?</translation>
+    </message>
+    <message>
+        <source>Connected with public chat!</source>
+        <translation type="unfinished">Forbundet med offentlig chat!</translation>
+    </message>
+    <message>
+        <source>Connecting ...</source>
+        <translation type="unfinished">Tilslutning ...</translation>
+    </message>
+    <message>
+        <source>Block %1 in chat</source>
+        <translation type="unfinished">Bloker %1 i chat</translation>
+    </message>
+    <message>
+        <source>Unblock %1 in chat</source>
+        <translation type="unfinished">Fjern blokering af %1 i chat</translation>
+    </message>
+    <message>
+        <source>Public chat disconnected!</source>
+        <translation type="unfinished">Offentlig chat afbrudt!</translation>
+    </message>
+    <message>
+        <source>Invite %1 to play in %2 [%3]</source>
+        <translation type="unfinished">Inviter %1 til at spille i %2 [%3]</translation>
+    </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
@@ -762,6 +884,14 @@
     <message>
         <source>Decrease</source>
         <translation>Formindsk</translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation type="unfinished">Bredde</translation>
+    </message>
+    <message>
+        <source>Height</source>
+        <translation type="unfinished">Height</translation>
     </message>
 </context>
 <context>
@@ -781,6 +911,49 @@
     <message>
         <source>The audio device can&apos;t be started! Please check your audio device and try restart Jamtaba!</source>
         <translation>Lydenheden kan ikke startes! Tjek venligst din lydenhed og prøv at genstarte Jamtaba!</translation>
+    </message>
+</context>
+<context>
+    <name>MetronomePanel</name>
+    <message>
+        <source>metronome</source>
+        <translation>metronom</translation>
+    </message>
+    <message>
+        <source>Slider to change the BPM of the metronome</source>
+        <translation>Skyder til at ændre metronomens slag pr. minut</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>R</translation>
+    </message>
+    <message>
+        <source>Solo metronome</source>
+        <translation>Solo metronom</translation>
+    </message>
+    <message>
+        <source>Button to soloing the metronome</source>
+        <translation>Knap til at solo metronomen</translation>
+    </message>
+    <message>
+        <source>mute metronome</source>
+        <translation>Dæmp metronomen</translation>
+    </message>
+    <message>
+        <source>Button to mute the metronome</source>
+        <translation>Knap til at dæmpe metronomen</translation>
+    </message>
+    <message>
+        <source>open a metronome floating window</source>
+        <translation>Åbn et metronom flydende vindue</translation>
+    </message>
+    <message>
+        <source>open metronome preferences</source>
+        <translation>Åbn metronome præferencer</translation>
     </message>
 </context>
 <context>
@@ -824,46 +997,6 @@
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
         <translation>Synkroniser med %1</translation>
-    </message>
-    <message>
-        <source>metronome</source>
-        <translation>metronom</translation>
-    </message>
-    <message>
-        <source>Slider to change the BPM of the metronome</source>
-        <translation>Skyder til at ændre metronomens slag pr. minut</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <translation>L</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <translation>R</translation>
-    </message>
-    <message>
-        <source>Solo metronome</source>
-        <translation>Solo metronom</translation>
-    </message>
-    <message>
-        <source>Button to soloing the metronome</source>
-        <translation>Knap til at solo metronomen</translation>
-    </message>
-    <message>
-        <source>mute metronome</source>
-        <translation>Dæmp metronomen</translation>
-    </message>
-    <message>
-        <source>Button to mute the metronome</source>
-        <translation>Knap til at dæmpe metronomen</translation>
-    </message>
-    <message>
-        <source>open metronome preferences</source>
-        <translation>Åbn metronome præferencer</translation>
-    </message>
-    <message>
-        <source>open a metronome floating window</source>
-        <translation>Åbn et metronom flydende vindue</translation>
     </message>
     <message>
         <source>Change the shape here</source>
@@ -929,6 +1062,10 @@
         <source>Pie</source>
         <translation>Tærte</translation>
     </message>
+    <message>
+        <source>Custom...</source>
+        <translation type="unfinished">Brugerdefinerede...</translation>
+    </message>
 </context>
 <context>
     <name>NinjamRoomWindow</name>
@@ -969,24 +1106,8 @@
         <translation>Serverlicens</translation>
     </message>
     <message>
-        <source>Last chords used</source>
-        <translation>Sidst brugte akkorder</translation>
-    </message>
-    <message>
-        <source>%1 is blocked in the chat</source>
-        <translation>%1 er blokeret i chatten</translation>
-    </message>
-    <message>
-        <source>%1 is unblocked in the chat</source>
-        <translation>%1 er ikke blokeret i chatten</translation>
-    </message>
-    <message>
-        <source>%1 has left the room.</source>
-        <translation>%1 har forladt lokalet.</translation>
-    </message>
-    <message>
-        <source>%1 has joined the room.</source>
-        <translation>%1 har sluttet sig til værelset.</translation>
+        <source>Set tracks layout to grid</source>
+        <translation type="unfinished">Indstil spor layout til gitter</translation>
     </message>
 </context>
 <context>
@@ -1020,12 +1141,8 @@
 <context>
     <name>NinjamTrackGroupView</name>
     <message>
-        <source>Block %1 in chat</source>
-        <translation>Bloker %1 i chat</translation>
-    </message>
-    <message>
-        <source>Unblock %1 in chat</source>
-        <translation>Fjern blokering af %1 i chat</translation>
+        <source>Private chat with %1</source>
+        <translation type="unfinished">Privat chat med %1</translation>
     </message>
 </context>
 <context>
@@ -1050,6 +1167,18 @@
         <source>Drastic</source>
         <translation> Drastisk</translation>
     </message>
+    <message>
+        <source>Downloading</source>
+        <translation type="unfinished">Download</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation>Stereo</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation>Mono</translation>
+    </message>
 </context>
 <context>
     <name>NinjamVoteButton</name>
@@ -1073,20 +1202,20 @@
         <translation>Scanner plugins...</translation>
     </message>
     <message>
+        <source>scanning %1</source>
+        <translation>Scanner %1</translation>
+    </message>
+    <message>
         <source>Found plugins:</source>
-        <translation>Fundne plugins:</translation>
+        <translation type="unfinished">Fundne plugins:</translation>
     </message>
     <message>
         <source>This is the plugin found list box</source>
-        <translation>Dette er den plugin-baserede liste</translation>
+        <translation type="unfinished">Dette er den plugin-baserede liste</translation>
     </message>
     <message>
         <source>No plugins found!</source>
-        <translation>Ingen plugins blev grundlagt!</translation>
-    </message>
-    <message>
-        <source>scanning %1</source>
-        <translation>Scanner %1</translation>
+        <translation type="unfinished">Ingen plugins blev grundlagt!</translation>
     </message>
 </context>
 <context>
@@ -1098,10 +1227,6 @@
     <message>
         <source>Audio Files</source>
         <translation>Lydfiler</translation>
-    </message>
-    <message>
-        <source>Choosing Secondary beat audio file...</source>
-        <translation>Valg af sekundær beat lydfil...</translation>
     </message>
     <message>
         <source>Choosing recording path ...</source>
@@ -1204,20 +1329,12 @@
         <translation>Metronom</translation>
     </message>
     <message>
-        <source>Metronome Sound:</source>
-        <translation>Metronom lyde:</translation>
-    </message>
-    <message>
         <source>Custom Metronome Sounds</source>
         <translation>Brugervalgt Metronom</translation>
     </message>
     <message>
         <source>Primary Beat:</source>
         <translation>Primært beat:</translation>
-    </message>
-    <message>
-        <source>Secondary Beat:</source>
-        <translation>Sekundært beat:</translation>
     </message>
     <message>
         <source>Browse ...</source>
@@ -1291,6 +1408,90 @@
         <source>Choosing loops folder ...</source>
         <translation>Vælg mappen til loops ...</translation>
     </message>
+    <message>
+        <source>Metronome Sound:</source>
+        <translation>Metronom lyde:</translation>
+    </message>
+    <message>
+        <source>Off Beat:</source>
+        <translation type="unfinished">Off Beat:</translation>
+    </message>
+    <message>
+        <source>Accent Beat:</source>
+        <translation type="unfinished">Accent Beat:</translation>
+    </message>
+    <message>
+        <source>Remember</source>
+        <translation type="unfinished">Husk</translation>
+    </message>
+    <message>
+        <source>Remember these options when a musician enters the jam:</source>
+        <translation type="unfinished">Husk disse muligheder, når en musiker går ind i serveren:</translation>
+    </message>
+    <message>
+        <source>The user channel level</source>
+        <translation type="unfinished">Brugerkanalniveauet</translation>
+    </message>
+    <message>
+        <source>Level</source>
+        <translation type="unfinished">Niveau</translation>
+    </message>
+    <message>
+        <source>The user channel mute status</source>
+        <translation type="unfinished">Brugerkanalen demper status</translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation type="unfinished">Stum</translation>
+    </message>
+    <message>
+        <source>The user channel pan</source>
+        <translation type="unfinished">Brugerkanal panpot status</translation>
+    </message>
+    <message>
+        <source>Pan</source>
+        <translation type="unfinished">Pan</translation>
+    </message>
+    <message>
+        <source>The user channel boost</source>
+        <translation type="unfinished">Brugerkanalen Forøg status</translation>
+    </message>
+    <message>
+        <source>Boost</source>
+        <translation>Forøg</translation>
+    </message>
+    <message>
+        <source>The user channel low cut button status</source>
+        <translation type="unfinished">Brugerkanalen med lav cut-knap status</translation>
+    </message>
+    <message>
+        <source>Low cut</source>
+        <translation type="unfinished">Low cut</translation>
+    </message>
+    <message>
+        <source>Remember collapsible sections when starting JamTaba:</source>
+        <translation type="unfinished">Husk sammenklappelige sektioner, når du starter JamTaba:</translation>
+    </message>
+    <message>
+        <source>Local Channels (left side)</source>
+        <translation type="unfinished">Lokale kanaler (venstre side)</translation>
+    </message>
+    <message>
+        <source>Bottom Section (master fader and ninjam controls)</source>
+        <translation type="unfinished">Nederste sektion (master fader og ninjam kontroller)</translation>
+    </message>
+    <message>
+        <source>Chat section (right side)</source>
+        <translation type="unfinished">Chat section (right side)</translation>
+    </message>
+    <message>
+        <source>Choosing Off beat audio file...</source>
+        <translation type="unfinished">At vælge Off beat lydfil ...</translation>
+    </message>
+    <message>
+        <source>Choosing Accent beat audio file...</source>
+        <translation type="unfinished">Valg af Accent beat lydfil ...</translation>
+    </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
@@ -1363,6 +1564,94 @@
     </message>
 </context>
 <context>
+    <name>PrivateServerWindow</name>
+    <message>
+        <source>Your Private Server</source>
+        <translation type="unfinished">Din private server</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished">Start</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="unfinished">Hold op</translation>
+    </message>
+    <message>
+        <source>Server IP:</source>
+        <translation type="unfinished">Server IP:</translation>
+    </message>
+    <message>
+        <source>Server Port:</source>
+        <translation type="unfinished">Serverport:</translation>
+    </message>
+    <message>
+        <source>Upload (Kbps):</source>
+        <translation type="unfinished">Upload (Kbps):</translation>
+    </message>
+    <message>
+        <source>Download (Kbps):</source>
+        <translation type="unfinished">Download (Kbps):</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+        <source>Connected Users</source>
+        <translation type="unfinished">Tilsluttede brugere</translation>
+    </message>
+    <message>
+        <source>Port closed in your router!</source>
+        <translation type="unfinished">Port lukket i din router!</translation>
+    </message>
+    <message>
+        <source>ERROR in UPnP protocol: %1</source>
+        <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
+        <translation type="unfinished">FEJL i UPnP-protokol: %1</translation>
+    </message>
+    <message>
+        <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
+        <translation type="unfinished">Port åbnet i din router ved hjælp af UPnP-protokollen! Andre spillere kan oprette forbindelse til din server!</translation>
+    </message>
+    <message>
+        <source>Your external IP is %1</source>
+        <translation type="unfinished">Din eksterne IP er %1</translation>
+    </message>
+    <message>
+        <source>Incomming connection from %1</source>
+        <translation type="unfinished">Indgående forbindelse fra %1</translation>
+    </message>
+    <message>
+        <source>%1 entered in the server</source>
+        <translation type="unfinished">%1 indtastet på serveren</translation>
+    </message>
+    <message>
+        <source>%1 left the server</source>
+        <translation type="unfinished">%1 forlod serveren</translation>
+    </message>
+    <message>
+        <source>Server started</source>
+        <translation type="unfinished">Server startet</translation>
+    </message>
+    <message>
+        <source>Server stopped!</source>
+        <translation type="unfinished">Server stoppet!</translation>
+    </message>
+    <message>
+        <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
+        <translation type="unfinished">Forsøger at åbne porten %1 i din router (UPnP) for at tillade eksterne forbindelser ...</translation>
+    </message>
+    <message>
+        <source>Hosting Ninjam Private Server</source>
+        <translation type="unfinished">Hosting Ninjam Private Server</translation>
+    </message>
+    <message>
+        <source>Connect with private server ...</source>
+        <translation type="unfinished">Opret forbindelse til privat server ...</translation>
+    </message>
+</context>
+<context>
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
@@ -1381,6 +1670,28 @@
     <message>
         <source>Remove this folder from scanning</source>
         <translation>Fjern denne mappe fra scanningen</translation>
+    </message>
+</context>
+<context>
+    <name>ServerInviteButton</name>
+    <message>
+        <source>Accept!</source>
+        <translation type="unfinished">Acceptere!</translation>
+    </message>
+</context>
+<context>
+    <name>Slider</name>
+    <message>
+        <source>center</source>
+        <translation type="unfinished">centrum</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>R</translation>
     </message>
 </context>
 <context>
@@ -1404,6 +1715,28 @@
     <message>
         <source>Press this button if you are ok</source>
         <translation>Tryk På denne knap hvis du er ok</translation>
+    </message>
+</context>
+<context>
+    <name>audio::Looper</name>
+    <message>
+        <source>Sequence</source>
+        <translation>Sekvens</translation>
+    </message>
+    <message>
+        <source>All Layers</source>
+        <translation>Alle lag</translation>
+    </message>
+    <message>
+        <source>Selected Layer</source>
+        <translation>Valgte lag</translation>
+    </message>
+</context>
+<context>
+    <name>login::MainChat</name>
+    <message>
+        <source>You can&apos;t send messages using an empty user name!</source>
+        <translation type="unfinished">Du kan ikke sende beskeder ved hjælp af et tomt brugernavn!</translation>
     </message>
 </context>
 </TS>

@@ -47,10 +47,10 @@ private slots:
     void monitoringWhenPlayLockedAndHearAllAreChecked(); // second problem in issue #823
 
 private:
-    Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
-    void checkExpectedValues(QString comaSeparatedExpectedValues, const Audio::SamplesBuffer &buffer);
+    audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
+    void checkExpectedValues(QString comaSeparatedExpectedValues, const audio::SamplesBuffer &buffer);
 };
 
-Q_DECLARE_METATYPE(Audio::Looper::RecordingOption)
+Q_DECLARE_METATYPE(audio::Looper::RecordingOption)
 
 #endif // TESTLOOPER_H

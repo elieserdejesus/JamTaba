@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="emoji/smile.png">../../../src/resources/emoji/smile.png</file>
+    </qresource>
+</RCC>

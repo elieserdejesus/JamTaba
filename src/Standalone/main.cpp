@@ -18,7 +18,7 @@ int main(int argc, char* args[] ){
     if (!configurator->setUp())
         qCritical() << "JTBConfig->setUp() FAILED !" ;
 
-    Persistence::Settings settings;
+    persistence::Settings settings;
     settings.load();
 
 // SingleApplication is not working in mac. Using a dirty ifdef until have time to solve the SingleApplication issue in Mac
@@ -30,7 +30,7 @@ int main(int argc, char* args[] ){
 
     application.setStyle("fusion"); // same visual in all plataforms
 
-    Controller::MainControllerStandalone mainController(settings, &application);
+    controller::MainControllerStandalone mainController(settings, &application);
     mainController.start();
 
     if (mainController.isUsingNullAudioDriver()) {

@@ -4,7 +4,7 @@
 #include <QKeyEvent>
 #include <QMimeData>
 
-LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex) :
+LooperWavePanel::LooperWavePanel(audio::Looper *looper, quint8 layerIndex) :
       beatsPerInterval(16),
       lastMaxPeak(0),
       accumulatedSamples(0),
@@ -30,7 +30,7 @@ LooperWavePanel::LooperWavePanel(Audio::Looper *looper, quint8 layerIndex) :
    const qreal discardIconHeight = miniLockIconHeight * 0.6;
    discardIcon = createDiscardIcon(discardIconTopMargin, rightMargin, discardIconHeight);
 
-   connect(looper, &Audio::Looper::layerChanged, this, &LooperWavePanel::updateMiniLockIconPainterPath);
+   connect(looper, &audio::Looper::layerChanged, this, &LooperWavePanel::updateMiniLockIconPainterPath);
 
    setMouseTracking(true);
 
@@ -150,7 +150,7 @@ bool LooperWavePanel::canUseHighlightPainting() const
     const bool drawingCurrentLayer = looper->getCurrentLayerIndex() == layerID;
 
     if (looper->isPlaying() || looper->isRecording()) {
-        return drawingCurrentLayer || looper->getMode() == Audio::Looper::AllLayers;
+        return drawingCurrentLayer || looper->getMode() == audio::Looper::AllLayers;
     }
     else if (looper->isStopped()) {
         return drawingCurrentLayer;

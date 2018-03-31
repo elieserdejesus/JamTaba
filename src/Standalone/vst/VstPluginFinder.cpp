@@ -5,7 +5,7 @@
 
 #include "log/Logging.h"
 
-using namespace audio;
+using audio::VSTPluginFinder;
 
 VSTPluginFinder::VSTPluginFinder()
 {
@@ -17,11 +17,11 @@ VSTPluginFinder::~VSTPluginFinder()
     //
 }
 
-Audio::PluginDescriptor VSTPluginFinder::getPluginDescriptor(const QFileInfo &f)
+audio::PluginDescriptor VSTPluginFinder::getPluginDescriptor(const QFileInfo &f)
 {
-    QString name = Audio::PluginDescriptor::getVstPluginNameFromPath(f.absoluteFilePath());
-    Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
-    return Audio::PluginDescriptor(name, category, f.absoluteFilePath());
+    QString name = audio::PluginDescriptor::getVstPluginNameFromPath(f.absoluteFilePath());
+    auto category = audio::PluginDescriptor::VST_Plugin;
+    return audio::PluginDescriptor(name, category, f.absoluteFilePath());
 }
 
 QString VSTPluginFinder::getScannerExecutablePath() const
@@ -60,6 +60,6 @@ void VSTPluginFinder::handleScanningFinished(const QString &scannedLine)
     }
 
     QString pluginPath = parts.at(1);
-    QString pluginName = Audio::PluginDescriptor::getVstPluginNameFromPath(pluginPath);
+    QString pluginName = audio::PluginDescriptor::getVstPluginNameFromPath(pluginPath);
     emit pluginScanFinished(pluginName, pluginPath);
 }

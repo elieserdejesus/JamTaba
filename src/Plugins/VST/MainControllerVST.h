@@ -8,7 +8,7 @@ class JamTabaVSTPlugin;
 class MainControllerVST : public MainControllerPlugin
 {
 public:
-    MainControllerVST(const Persistence::Settings &settings, JamTabaVSTPlugin *plugin);
+    MainControllerVST(const persistence::Settings &settings, JamTabaVSTPlugin *plugin);
 
     inline QString getJamtabaFlavor() const override
     {

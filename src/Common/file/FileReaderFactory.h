@@ -4,7 +4,7 @@
 #include <memory>
 #include <QString>
 
-namespace Audio {
+namespace audio {
 
 class FileReader;
 
@@ -12,7 +12,7 @@ class FileReaderFactory
 {
 
 public:
-    static std::unique_ptr<Audio::FileReader> createFileReader(const QString &filePath);
+    static std::unique_ptr<audio::FileReader> createFileReader(const QString &filePath);
 };
 
 } // namespace

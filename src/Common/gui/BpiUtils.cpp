@@ -1,6 +1,8 @@
 #include "BpiUtils.h"
 
-QList<uint> BpiUtils::getBpiDividers(uint targetBpi)
+#include <QtGlobal>
+
+QList<uint> bpiUtils::getBpiDividers(uint targetBpi)
 {
     QList<uint> foundedDividers;
     uint divider = 2;

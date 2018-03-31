@@ -6,20 +6,20 @@
 
 class QString;
 
-namespace Audio {
+namespace audio {
 
 class SamplesBuffer;
 
-class MetronomeUtils
+class metronomeUtils
 {
 
 public:
-    static void createBuiltInSounds(const QString &alias, Audio::SamplesBuffer &firstBeat, Audio::SamplesBuffer &offBeatBuffer, SamplesBuffer &accentBeatBuffer, quint32 localSampleRate);
+    static void createBuiltInSounds(const QString &alias, SamplesBuffer &firstBeat, SamplesBuffer &offBeatBuffer, SamplesBuffer &accentBeatBuffer, quint32 localSampleRate);
 
     static void createCustomSounds(const QString &firstBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile,
-                                   Audio::SamplesBuffer &firstBeat, Audio::SamplesBuffer &offBeat, SamplesBuffer &accentBeatBuffer, quint32 localSampleRate);
+                                   SamplesBuffer &firstBeat, SamplesBuffer &offBeat, SamplesBuffer &accentBeatBuffer, quint32 localSampleRate);
 
-    static void removeSilenceInBufferStart(Audio::SamplesBuffer &buffer);
+    static void removeSilenceInBufferStart(SamplesBuffer &buffer);
 
     static QList<QString> getBuiltInMetronomeAliases();
 
@@ -28,13 +28,12 @@ public:
     static QList<int> getAccentBeatsFromString(QString value);
 
 private:
-    static void createBuffer(const QString &audioFilePath, Audio::SamplesBuffer &outBuffer, quint32 localSampleRate);
-    static void createResampledBuffer(const Audio::SamplesBuffer &buffer, Audio::SamplesBuffer &outBuffer, int originalSampleRate,
-                                         int finalSampleRate);
+    static void createBuffer(const QString &audioFilePath, SamplesBuffer &outBuffer, quint32 localSampleRate);
+    static void createResampledBuffer(const SamplesBuffer &buffer, SamplesBuffer &outBuffer, int originalSampleRate, int finalSampleRate);
 
     static QString buildMetronomeFileNameFromAlias(const QString &alias, const QString &Beat);
 
-    static void createBuiltInSound(const QString &alias, const QString &beat, Audio::SamplesBuffer &beatBuffer, quint32 localSampleRate);
+    static void createBuiltInSound(const QString &alias, const QString &beat, SamplesBuffer &beatBuffer, quint32 localSampleRate);
 
     static const QString DEFAULT_BUILT_IN_METRONOME_ALIAS;
     static const QString DEFAULT_BUILT_IN_METRONOME_DIR;

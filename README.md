@@ -1,13 +1,16 @@
 
 **JamTaba 2** is a software to play online music jam sessions. At moment you can use JamTaba to play with musicians around the world using [ninjam ](http://www.cockos.com/ninjam/) servers.
 
-![JamTaba](http://jamtaba-music-web-site.appspot.com/img/Jamtaba_2_0_19.png)
+![JamTaba](http://jamtaba-music-web-site.appspot.com/img/Jamtaba_2_1_0_jamming.png)
 
-JamTaba can be used as a **standalone** software, **VST** *(Windows)* or **AU** *(Mac OSX)* plugin. Using the standalone version you can use your audio and MIDI devices and load VST/AU plugins inside JamTaba (JamTaba standalone is a VST/AU host). Using the VST/AU plugin you can use JamTaba in your preferred DAW and send your audio tracks to JamTaba, and Jamtaba will stream these audio tracks to *ninjam servers*. Off course JamTaba will receive and play the other musicians audio streams, so you can play with others and have some fun playing online!
+JamTaba can be used as a **standalone** software, **VST** *(Windows)* or **AU** *(Mac OSX)* plugin. Using the standalone version you can use your camera, audio and MIDI devices and load VST/AU plugins inside JamTaba (JamTaba standalone is a VST/AU host). Using the VST/AU plugin you can use JamTaba in your preferred DAW and send your audio/video to JamTaba, and Jamtaba will stream these contents to *ninjam servers*. Off course JamTaba will receive and play the other musicians audio/video streams, so you can play with others and have some fun playing online!
 
-At moment JamTaba standalone works for Windows, Mac OSX (10.7+) and Linux. The VST plugin is available for windows only (32 and 64 bits) and since version 2.0.19 an Audio Unit (AU) plugin is available for Mac OSX users. 
+## User Manual
 More information and User's manual are here : https://github.com/elieserdejesus/JamTaba/wiki      
-***
+
+
+## Compatibility
+At moment JamTaba standalone works for Windows (*Windows XP is not supported since v. 2.1.0*), Mac OSX (10.7+) and Linux. The **VST plugin** is available for windows only (32 and 64 bits) and an **Audio Unit (AU) plugin** is available for Mac OSX users. 
 
 ## Tools and dependencies
 JamTaba is builded using **Qt framework**. We are using Qt for GUI, threads, sockets, json, http requests, file handling, etc. 
@@ -83,10 +86,11 @@ Detailed instructions on how to build a **static compiled Qt** to compile the Vs
 	2 - qtbase-opensource-src-5.5.1.zip
 	3 - qtmultimedia-opensource-src-5.5.1.zip
 	4 - qttools-opensource-src-5.5.1.zip
+	5 - qtwebsockets-opensource-src-5.5.1.zip
 
-**2** - Extract the dowloaded files in your preferred Qt folder, for example C:/MyQt. All files will be extracted inside 4 subfolders.
+**2** - Extract the dowloaded files in your preferred Qt folder, for example C:/MyQt. All files will be extracted inside 5 subfolders.
 
-**3** - Rename the extracted subfolders removing the suffix -opensource-src-5.5.1. The renamed folders will be qtbase, qtmultimedia and qttools. It's not necessary rename the folder qt-everywhere-opensource-src-5.5.1 (see the next step).
+**3** - Rename the extracted subfolders removing the suffix -opensource-src-5.5.1. The renamed folders will be qtbase, qtmultimedia, qtwebsockets and qttools. It's not necessary rename the folder qt-everywhere-opensource-src-5.5.1 (see the next step).
 
 **4** - Move all files inside the folder qt-everywhere-opensource-src-5.5.1 the your Qt folder and delete the folder qt-everywhere-opensource-src-5.5.1. The final folders/files layout will be:
 

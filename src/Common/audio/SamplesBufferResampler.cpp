@@ -13,7 +13,7 @@ SamplesBufferResampler::~SamplesBufferResampler()
 
 }
 
-const Audio::SamplesBuffer &SamplesBufferResampler::resample(const Audio::SamplesBuffer &in,
+const audio::SamplesBuffer &SamplesBufferResampler::resample(const audio::SamplesBuffer &in,
                                                              int desiredOutLenght)
 {
     outBuffer.zero();

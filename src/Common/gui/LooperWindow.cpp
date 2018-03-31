@@ -7,6 +7,7 @@
 #include "persistence/Settings.h"
 #include "file/FileUtils.h"
 #include "IconFactory.h"
+//#include "looper/LooperPersistence.h"
 
 #include <QGridLayout>
 #include <QSpinBox>
@@ -18,10 +19,13 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-using namespace Controller;
-using namespace Audio;
+using controller::MainController;
+using controller::NinjamController;
+using audio::LoopInfo;
+using audio::LoopLoader;
+using audio::SamplesBuffer;
 
-LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainController) :
+LooperWindow::LooperWindow(QWidget *parent, MainController *mainController) :
     QDialog(parent),
     ui(new Ui::LooperWindow),
     mainController(mainController),
@@ -36,15 +40,13 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
 
     ui->setupUi(this);
 
-    ui->mainLevelSlider->setSliderType(Slider::AudioSlider);
-
     QGridLayout *layout = new QGridLayout();
     layout->setSpacing(12);
     layout->setContentsMargins(6, 6, 6, 6);
     ui->layersWidget->setLayout(layout);
 
     // set as non resizable
-    setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setMinimumSize(size());
     setMaximumSize(size());
     setSizeGripEnabled(false);
@@ -60,7 +62,7 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
     ui->loadButton->setMenu(loadMenu);
     connect(loadMenu, &QMenu::aboutToShow, this, &LooperWindow::showLoadMenu);
 
-    ui->peakMeter->setOrientation(Qt::Vertical);
+    ui->mainLevelSlider->setOrientation(Qt::Vertical);
 
     connect(ui->mainLevelSlider, &QSlider::valueChanged, [=](int value){
         if (!looper)
@@ -74,14 +76,6 @@ LooperWindow::LooperWindow(QWidget *parent, Controller::MainController *mainCont
 void LooperWindow::setTintColor(const QColor &color)
 {
     this->tintColor = color;
-
-    ui->labelSpeakerLow->setPixmap(IconFactory::createLowLevelIcon(color));
-    ui->labelSpeakerHigh->setPixmap(IconFactory::createHighLevelIcon(color));
-
-    for(auto view : layerViews.values()) {
-        view.controlsLayout->lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(color));
-        view.controlsLayout->highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(color));
-    }
 
     ui->buttonRec->setIcon(IconFactory::createLooperRecordIcon(color));
     ui->buttonPlay->setIcon(IconFactory::createLooperPlayIcon(color));
@@ -212,8 +206,7 @@ void LooperWindow::updateDrawings()
 
     // update peak meters
     AudioPeak lastPeak = looper->getLastPeak();
-    ui->peakMeter->setPeak(lastPeak.getLeftPeak(), lastPeak.getRightPeak(),
-                                lastPeak.getLeftRMS(), lastPeak.getRightRMS());
+    ui->mainLevelSlider->setPeak(lastPeak.getLeftPeak(), lastPeak.getRightPeak(), lastPeak.getLeftRMS(), lastPeak.getRightRMS());
 }
 
 void LooperWindow::detachCurrentLooper()
@@ -225,7 +218,7 @@ void LooperWindow::detachCurrentLooper()
     }
 }
 
-void LooperWindow::setLooper(Audio::Looper *looper)
+void LooperWindow::setLooper(audio::Looper *looper)
 {
     Q_ASSERT(looper);
     Q_ASSERT(mainController);
@@ -245,18 +238,18 @@ void LooperWindow::setLooper(Audio::Looper *looper)
 
         this->looper = looper;
 
-        QMenu *resetMenu = new QMenu();
+        auto resetMenu = new QMenu();
         connect(resetMenu, &QMenu::aboutToShow, this, &LooperWindow::showResetMenu);
         ui->resetButton->setMenu(resetMenu);
 
         // create wave panels and layer controls (layers view)
         quint8 currentLayers = looper->getLayers();
-        QGridLayout *gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
+        auto gridLayout = qobject_cast<QGridLayout *>(ui->layersWidget->layout());
         for (quint8 layerIndex = 0; layerIndex < MAX_LOOP_LAYERS; ++layerIndex) {
             auto layerWavePanel = new LooperWavePanel(looper, layerIndex);
-            auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex, tintColor);
+            auto layerControlsLayout = new LooperWindow::LayerControlsLayout(looper, layerIndex);
 
-            layerWavePanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding));
+            layerWavePanel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
 
             gridLayout->addWidget(layerWavePanel, layerIndex, 0);
             gridLayout->addLayout(layerControlsLayout, layerIndex, 1);
@@ -389,43 +382,29 @@ void LooperWindow::LayerControlsLayout::setMuteButtonVisibility(bool show)
     }
 }
 
-LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 layerIndex, const QColor &tintColor)
+LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 layerIndex)
     : QHBoxLayout()
 {
     const int mainLayoutSpacing = 12;
     setSpacing(mainLayoutSpacing);
 
-    QLayout *levelFaderLayout = new QHBoxLayout();
-    levelFaderLayout->setSpacing(2);
-    levelFaderLayout->setContentsMargins(0, 0, 0, 0);
-
-    gainSlider = new Slider();
+    gainSlider = new AudioSlider();
+    gainSlider->setSliderOnly(true);
     gainSlider->setObjectName(QStringLiteral("levelSlider"));
     gainSlider->setOrientation(Qt::Horizontal);
-    gainSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+    gainSlider->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
     gainSlider->setMaximum(120);
     gainSlider->setValue(Utils::poweredGainToLinear(looper->getLayerGain(layerIndex)) * 100);
     gainSlider->setTickPosition(QSlider::NoTicks);
-    gainSlider->setMaximumWidth(80);
-    gainSlider->setSliderType(Slider::AudioSlider);
+    gainSlider->setMaximumWidth(140);
+    gainSlider->setMinimumWidth(140);
 
     connect(gainSlider, &QSlider::valueChanged, [looper, layerIndex](int value){
         float gain = Utils::linearGainToPower(value/100.0);
         looper->setLayerGain(layerIndex, gain);
     });
 
-    highLevelIcon = new QLabel();
-    lowLevelIcon = new QLabel();
-    highLevelIcon->setPixmap(IconFactory::createHighLevelIcon(tintColor));
-    lowLevelIcon->setPixmap(IconFactory::createLowLevelIcon(tintColor));
-    highLevelIcon->setAlignment(Qt::AlignCenter);
-    lowLevelIcon->setAlignment(Qt::AlignCenter);
-
-    levelFaderLayout->addWidget(lowLevelIcon);
-    levelFaderLayout->addWidget(gainSlider);
-    levelFaderLayout->addWidget(highLevelIcon);
-
-    QHBoxLayout *panFaderLayout = new QHBoxLayout();
+    auto panFaderLayout = new QHBoxLayout();
     panFaderLayout->setSpacing(0);
     panFaderLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -435,14 +414,13 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     labelPanR = new QLabel(tr("R"));
     labelPanR->setObjectName(QStringLiteral("labelPanR"));
 
-    panSlider = new Slider();
+    panSlider = new PanSlider();
     panSlider->setObjectName(QStringLiteral("panSlider"));
     panSlider->setMinimum(-4);
     panSlider->setMaximum(4);
     panSlider->setOrientation(Qt::Horizontal);
     panSlider->setMaximumWidth(50);
     panSlider->setValue(looper->getLayerPan(layerIndex) * panSlider->maximum());
-    panSlider->setSliderType(Slider::PanSlider);
 
     connect(panSlider, &QSlider::valueChanged, [looper, layerIndex, this](int value){
         float panValue = value/(float)panSlider->maximum();
@@ -460,7 +438,7 @@ LooperWindow::LayerControlsLayout::LayerControlsLayout(Looper *looper, quint8 la
     panFaderLayout->addWidget(panSlider);
     panFaderLayout->addWidget(labelPanR);
 
-    addLayout(levelFaderLayout);
+    addWidget(gainSlider);
     addLayout(panFaderLayout);
 }
 
@@ -491,10 +469,10 @@ void LooperWindow::resetLayersControls()
 void LooperWindow::updateLayersVisibility(quint8 newMaxLayers)
 {
     for (quint8 layerIndex = 0; layerIndex < MAX_LOOP_LAYERS; ++layerIndex) {
-        LooperWavePanel *wavePanel = layerViews[layerIndex].wavePanel;
+        auto wavePanel = layerViews[layerIndex].wavePanel;
         bool layerIsVisible = layerIndex < newMaxLayers;
         wavePanel->setVisible(layerIsVisible);
-        Gui::setLayoutItemsVisibility(layerViews[layerIndex].controlsLayout, layerIsVisible);
+        gui::setLayoutItemsVisibility(layerViews[layerIndex].controlsLayout, layerIsVisible);
     }
 }
 
@@ -829,7 +807,7 @@ QString LooperWindow::getOptionName(Looper::PlayingOption option)
     return "Error!";
 }
 
-QString LooperWindow::getOptionToolTip(Audio::Looper::RecordingOption option)
+QString LooperWindow::getOptionToolTip(audio::Looper::RecordingOption option)
 {
     switch (option) {
     case Looper::HearAllLayers:   return tr("Hear all layers while recording");
@@ -839,7 +817,7 @@ QString LooperWindow::getOptionToolTip(Audio::Looper::RecordingOption option)
     return QString();
 }
 
-QString LooperWindow::getOptionToolTip(Audio::Looper::PlayingOption option)
+QString LooperWindow::getOptionToolTip(audio::Looper::PlayingOption option)
 {
     switch (option) {
     case Looper::RandomizeLayers:   return tr("Randomize layers while playing");
@@ -859,18 +837,18 @@ void LooperWindow::createPlayingOptionsCheckBoxes()
     createOptionsCheckBoxes(ui->playingPropertiesLayout, getAllPlayingOptions(), playingCheckBoxes);
 }
 
-QList<Audio::Looper::RecordingOption> LooperWindow::getAllRecordingOptions()
+QList<audio::Looper::RecordingOption> LooperWindow::getAllRecordingOptions()
 {
-    QList<Audio::Looper::RecordingOption> options;
+    QList<audio::Looper::RecordingOption> options;
     options << Looper::Overdub;
     options << Looper::HearAllLayers;
 
     return options;
 }
 
-QList<Audio::Looper::PlayingOption> LooperWindow::getAllPlayingOptions()
+QList<audio::Looper::PlayingOption> LooperWindow::getAllPlayingOptions()
 {
-    QList<Audio::Looper::PlayingOption> options;
+    QList<audio::Looper::PlayingOption> options;
     options << Looper::RandomizeLayers;
     options << Looper::PlayLockedLayers;
     // options << Looper::PlayNonEmptyLayers; // no implemented yet

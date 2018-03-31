@@ -1,14 +1,14 @@
 #ifndef STANDALONE_PREFERENCES_DIALOG_H
 #define STANDALONE_PREFERENCES_DIALOG_H
 
-#include "PreferencesDialog.h"
+#include "gui/PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
-namespace Audio {
+namespace audio {
 class AudioDriver;
 }
 
-namespace Midi {
+namespace midi {
 class MidiDriver;
 }
 
@@ -17,8 +17,8 @@ class PreferencesDialogStandalone : public PreferencesDialog
     Q_OBJECT
 
 public:
-    PreferencesDialogStandalone(QWidget *parent, bool showAudioControlPanelButton, Audio::AudioDriver *audioDriver, Midi::MidiDriver *midiDriver);
-    void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders) override;
+    PreferencesDialogStandalone(QWidget *parent, bool showAudioControlPanelButton, audio::AudioDriver *audioDriver, midi::MidiDriver *midiDriver);
+    void initialize(PreferencesTab initialTab, const persistence::Settings *settings, const QMap<QString, QString> &jamRecorders) override;
 
 public slots:
     void accept() override;
@@ -71,8 +71,8 @@ protected:
 
 private:
 
-    Audio::AudioDriver *audioDriver;
-    Midi::MidiDriver *midiDriver;
+    audio::AudioDriver *audioDriver;
+    midi::MidiDriver *midiDriver;
 
     void selectAudioTab();
     void selectMidiTab();

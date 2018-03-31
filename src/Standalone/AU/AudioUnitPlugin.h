@@ -13,13 +13,13 @@
 #include <AudioUnit/AudioUnit.h>
 #include "PublicUtility/CABufferList.h"
 
-namespace AU {
+namespace au {
 
-    class AudioUnitPlugin : public Audio::Plugin
+    class AudioUnitPlugin : public audio::Plugin
     {
 
     public:
-        AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, AudioUnitHost *host);
+        AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, au::AudioUnitHost *host);
         virtual ~AudioUnitPlugin();
 
         void openEditor(const QPoint &centerOfScreen) override;
@@ -32,8 +32,8 @@ namespace AU {
 
         void setSampleRate(int newSampleRate) override;
 
-        void process(const Audio::SamplesBuffer &inBuffer, Audio::SamplesBuffer &outBuffer,
-                             std::vector<Midi::MidiMessage> &midiBuffer) override;
+        void process(const audio::SamplesBuffer &inBuffer, audio::SamplesBuffer &outBuffer,
+                             std::vector<midi::MidiMessage> &midiBuffer) override;
 
         void suspend() override;
         void resume() override;
@@ -48,15 +48,15 @@ namespace AU {
         QString path;
 
         AudioBufferList *bufferList;
-        const Audio::SamplesBuffer *currentInputBuffer;
-        Audio::SamplesBuffer internalOutBuffer;
+        const audio::SamplesBuffer *currentInputBuffer;
+        audio::SamplesBuffer internalOutBuffer;
 
         const bool hasInputs;
         const bool hasOutputs;
 
         const bool wantsMidiMessages;
 
-        AudioUnitHost *host;
+        au::AudioUnitHost *host;
         AudioTimeStamp timeStamp;
 
         QMacCocoaViewContainer *viewContainer;
@@ -84,7 +84,7 @@ namespace AU {
         void initializeSampleRate(Float64 initialSampleRate);
         void initializeChannelLayout(AudioUnitScope scope);
 
-        void copyBufferContent(const Audio::SamplesBuffer *input, AudioBufferList *buffer, quint32 frames);
+        void copyBufferContent(const audio::SamplesBuffer *input, AudioBufferList *buffer, quint32 frames);
 
         static bool audioUnitWantsMidi(AudioUnit audioUnit);
 
@@ -100,7 +100,7 @@ namespace AU {
 
     AudioUnitPlugin *audioUnitPluginfromPath(const QString &path);
 
-    Audio::PluginDescriptor createPluginDescriptor(const QString &name, const QString &path);
+    audio::PluginDescriptor createPluginDescriptor(const QString &name, const QString &path);
 
 } // namespace
 

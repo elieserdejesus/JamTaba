@@ -20,9 +20,9 @@ IntervalProgressWindow::IntervalProgressWindow(QWidget *parent, IntervalProgress
     progressDisplay->setShowAccents(showingAccents);
     setIntervalProgressShape(paintShape);
 
-    progressDisplay->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
+    progressDisplay->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum));
+    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(progressDisplay, 1);

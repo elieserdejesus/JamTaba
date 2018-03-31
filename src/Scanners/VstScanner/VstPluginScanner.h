@@ -17,7 +17,7 @@ private:
 
     void initialize(int argc, char *argv[]) override;
 
-    Audio::PluginDescriptor getPluginDescriptor(const QFileInfo &pluginFile);
+    audio::PluginDescriptor getPluginDescriptor(const QFileInfo &pluginFile);
 
 protected:
 

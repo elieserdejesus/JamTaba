@@ -1,16 +1,27 @@
 #include "ChatTabWidget.h"
 
+#include "MainController.h"
+
 #include <QBoxLayout>
+#include <QStyle>
+#include <QRegularExpression>
+#include <QPainter>
+#include <QFont>
 
-#include "ChatPanel.h"
+#include "gui/chat/ChatPanel.h"
+#include "gui/UsersColorsPool.h"
+#include "ninjam/client/User.h"
 
-ChatTabWidget::ChatTabWidget(QWidget *parent, const QStringList &botNames, UsersColorsPool *colorsPool) :
+using controller::MainController;
+
+ChatTabWidget::ChatTabWidget(QWidget *parent) :
     QFrame(parent),
-    botNames(botNames),
-    colorsPool(colorsPool),
-    mainChat(nullptr),
     tabBar(new QTabBar(this)),
-    stackWidget(new QStackedWidget(this))
+    stackWidget(new QStackedWidget(this)),
+    mainChat(nullptr),
+    ninjamServerChat(nullptr),
+    privateChatColorsPool(new UsersColorsPool()),
+    mainChatColorsPool(new UsersColorsPool())
 {
 
     QBoxLayout *layout = new QVBoxLayout();
@@ -28,22 +39,47 @@ ChatTabWidget::ChatTabWidget(QWidget *parent, const QStringList &botNames, Users
 
     layout->setAlignment(tabBar, Qt::AlignTop | Qt::AlignLeft);
 
-    connect(tabBar, &QTabBar::currentChanged, this, [=](int index) {
+    connect(tabBar, &QTabBar::currentChanged, this, &ChatTabWidget::changeCurrentTab);
 
-        if (!stackWidget->isVisible())
-            collapse(false);
-
-        stackWidget->setCurrentIndex(index);
-
+    connect(tabBar, &QTabBar::tabBarClicked, [=](int index){
+        if (tabBar->count() < 2) { // just onde tab?
+            toggleCollapse();
+        }
+        else {
+            changeCurrentTab(index);
+            if (isCollapsed()) // user clicking in a collapsed tab
+                toggleCollapse();
+        }
     });
 
     connect(tabBar, &QTabBar::tabCloseRequested, this, &ChatTabWidget::closeChatTab);
 
     setObjectName(QStringLiteral("chatTabWidget"));
 
-    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     stackWidget->setMinimumWidth(230); // TODO Refactoring: remove these 'Magic Numbers'
+    stackWidget->setMaximumWidth(250);
+}
+
+void ChatTabWidget::initialize(MainController *mainController, UsersColorsPool *colorsPool)
+{
+    this->ninjamColorsPool = colorsPool;
+    this->mainController = mainController;
+
+    connect(mainController, &MainController::ipResolved, [=](const QString &ip){
+        mainChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
+    });
+}
+
+void ChatTabWidget::changeCurrentTab(int tabIndex)
+{
+    if (tabBar->currentIndex() != tabIndex) {
+        tabBar->setCurrentIndex(tabIndex);
+        return;
+    }
+
+    stackWidget->setCurrentIndex(tabIndex);
 }
 
 void ChatTabWidget::clear()
@@ -57,43 +93,146 @@ void ChatTabWidget::clear()
         widget->deleteLater();
     }
 
-    mainChat = nullptr;
+    ninjamServerChat = nullptr;
+
+    for (auto chat : privateChats.values())
+        chat->deleteLater();
+
+    privateChats.clear();
 }
 
-ChatPanel *ChatTabWidget::createPublicChat(const QString &jamTabaChatBotName, const QString &preferredLanguage, TextEditorModifier *textEditorModifier)
+void ChatTabWidget::retranslateUi()
 {
+    tabBar->setTabText(0, tr("Chat"));
     if (mainChat)
+        mainChat->setTopicMessage(tr("Public chat"));
+}
+
+void ChatTabWidget::closeNinjamChats()
+{
+    while (tabBar->count() > 1) {
+        closeChatTab(1);
+    }
+
+    privateChats.clear();
+    ninjamServerChat = nullptr;
+}
+
+ChatPanel *ChatTabWidget::createMainChat(TextEditorModifier *textEditorModifier)
+{
+    if (mainChat) {
         return mainChat;
+    }
 
-    //add main chat
-    tabBar->addTab(tr("Chat")); // main tab
+    tabBar->addTab(tr("Chat")); // add main chat
 
-    mainChat = new ChatPanel(jamTabaChatBotName, botNames, colorsPool, textEditorModifier);
+    auto botNames = mainController->getBotNames();
+    auto emojiManager = mainController->getEmojiManager();
+    mainChatColorsPool->giveBackAllColors();
+    mainChat = new ChatPanel(botNames, mainChatColorsPool, textEditorModifier, emojiManager);
     stackWidget->addWidget(mainChat);
+
+
+    mainChat->setTopicMessage(tr("Public chat"));
 
     connect(mainChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
 
-        updatePublicChatTabTitle(unreaded);
+        updateMainChatTabTitle(unreaded);
     });
 
     removeTabCloseButton(0); // the main chat is not closable
 
-    updatePublicChatTabTitle(); // set and translate the chat tab title
+    updateMainChatTabTitle(); // set and translate the main tab title
 
-    mainChat->setPreferredTranslationLanguage(preferredLanguage);
+    mainChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
 
     return mainChat;
 
 }
 
-void ChatTabWidget::updatePublicChatTabTitle(uint unreadedMessages)
+ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, TextEditorModifier *textEditorModifier)
+{
+    Q_ASSERT(!ninjamServerChat);
+
+    // add ninjam main chat
+    auto index = tabBar->addTab(serverName);
+
+    auto botNames = mainController->getBotNames();
+    auto emojiManager = mainController->getEmojiManager();
+    ninjamColorsPool->giveBackAllColors();
+    ninjamServerChat = new ChatPanel(botNames, ninjamColorsPool, textEditorModifier, emojiManager);
+    stackWidget->addWidget(ninjamServerChat);
+
+    connect(ninjamServerChat, &ChatPanel::unreadedMessagesChanged, this, [=](uint unreaded) {
+
+        updateNinjamChatTabTitle(unreaded);
+    });
+
+    removeTabCloseButton(1); // the ninjam server chat is not closable
+
+    ninjamServerChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
+
+    tabBar->setCurrentIndex(index); // auto change the chat focus no ninjam chat when enter in a server
+
+    return ninjamServerChat;
+}
+
+void ChatTabWidget::setConnectedUsersInMainChat(const QStringList &usersNames)
+{
+    Q_ASSERT(mainChat);
+
+    mainChat->setConnectedUsers(usersNames);
+
+    for (const QString &userFullName : usersNames) {
+        auto ip = ninjam::client::extractUserIP(userFullName);
+        mainChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
+    }
+}
+
+QIcon ChatTabWidget::createChatTabIcon(uint unreadedMessages)
+{
+    if (unreadedMessages <= 0)
+        return QIcon();
+
+    static const qreal SIZE = 16.0;
+
+    static const QSizeF size(SIZE, SIZE);
+
+    QPixmap pixmap(size.toSize());
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::TextAntialiasing);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+
+    QString text(QString::number(unreadedMessages));
+
+    auto font = QFont("Arial", 7, QFont::Normal);
+
+    QRectF textRect(QPointF(), size);
+
+    painter.setBrush(QColor(255, 0, 0, 180));
+    painter.setPen(Qt::black);
+    painter.drawEllipse(QRectF(QPointF(1, 1), QSizeF(SIZE - 2, SIZE - 2)));
+
+    painter.setPen(Qt::white);
+    painter.setFont(font);
+    painter.drawText(textRect, text, QTextOption(Qt::AlignCenter));
+
+    return QIcon(pixmap);
+}
+
+void ChatTabWidget::updateNinjamChatTabTitle(uint unreadedMessages)
+{
+    int chatTabIndex = 1; // assuming ninjam chat is always the second tab
+    tabBar->setTabIcon(chatTabIndex, createChatTabIcon(unreadedMessages));
+}
+
+void ChatTabWidget::updateMainChatTabTitle(uint unreadedMessages)
 {
     int chatTabIndex = 0; // assuming main chat is always the first tab
-    QString text = tr("Chat");
-    if (unreadedMessages > 0)
-        text = QString("(%1) %2").arg(unreadedMessages).arg(text);
-
-    tabBar->setTabText(chatTabIndex, text);
+    tabBar->setTabIcon(chatTabIndex, createChatTabIcon(unreadedMessages));
 }
 
 void ChatTabWidget::closeChatTab(int index)
@@ -104,9 +243,15 @@ void ChatTabWidget::closeChatTab(int index)
     tabBar->removeTab(index);
 
     if (index < stackWidget->count()) {
-        auto widget = stackWidget->widget(index);
-        stackWidget->removeWidget(widget);
-        widget->deleteLater();
+        auto chatPanel = static_cast<ChatPanel *>(stackWidget->widget(index));
+        if (chatPanel) {
+            stackWidget->removeWidget(chatPanel);
+            privateChats.remove(chatPanel->getRemoteUserFullName());
+            chatPanel->deleteLater();
+        }
+        else {
+            qCritical() << "Error deleting chatPanel!";
+        }
     }
 
 }
@@ -154,12 +299,16 @@ void ChatTabWidget::collapse(bool collapse)
 
 ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const QString &userIP, TextEditorModifier *textModifider, bool focusNewChat)
 {
-    QString userFullName = remoteUserName + "@" + userIP;
+    QString remoteUserFullName = remoteUserName + "@" + userIP;
 
-    auto chatPanel = getPrivateChat(userFullName);
+    auto chatPanel = getPrivateChat(remoteUserFullName);
 
     if (!chatPanel) {     // create new chat
-        chatPanel = new ChatPanel(userFullName, botNames, colorsPool, textModifider);
+        auto botNames = mainController->getBotNames();
+        auto emojiManager = mainController->getEmojiManager();
+        privateChatColorsPool->giveBackAllColors();
+        chatPanel = new ChatPanel(botNames, privateChatColorsPool, textModifider, emojiManager);
+        chatPanel->setRemoteUserFullName(remoteUserFullName);
         int tabIndex = tabBar->addTab(remoteUserName);
         stackWidget->addWidget(chatPanel);
 
@@ -169,6 +318,8 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
 
         if (focusNewChat)
             tabBar->setCurrentIndex(tabIndex);
+
+        privateChats.insert(remoteUserFullName, chatPanel);
     }
 
     return chatPanel;
@@ -176,47 +327,38 @@ ChatPanel *ChatTabWidget::createPrivateChat(const QString &remoteUserName, const
 
 void ChatTabWidget::updatePrivateChatTabTitle(int chatIndex, uint unreadedMessages)
 {
-    Q_ASSERT(chatIndex > 0); // index ZERO is the public chat
+    Q_ASSERT(chatIndex > 1); // index 0 is the public chat, index 1 is the ninjam server chat
 
     auto chatPanel = static_cast<ChatPanel *>(stackWidget->widget(chatIndex));
     if (!chatPanel)
         return;
 
-    QString text = chatPanel->getUserFullName().replace(QRegularExpression("@.+"), "");
-    if (unreadedMessages > 0)
-        text = QString("(%1) %2").arg(unreadedMessages).arg(text);
-
-    tabBar->setTabText(chatIndex, text);
+    tabBar->setTabIcon(chatIndex, createChatTabIcon(unreadedMessages));
 }
 
 
 bool ChatTabWidget::contains(const QString &userFullName) const
 {
-    for (auto chat : getChats())
-        if (chat->getUserFullName() == userFullName)
-            return true;
-
-    return false;
+    return (getPrivateChat(userFullName) != nullptr);
 }
 
-ChatPanel *ChatTabWidget::getPrivateChat(const QString &userFullName)
+ChatPanel *ChatTabWidget::getPublicChat() const
 {
-    for (auto chat : getChats())
-        if (chat->getUserFullName() == userFullName)
-            return chat;
-
-    return nullptr;
+    return mainChat;
 }
 
-
-QList<ChatPanel *>ChatTabWidget::getChats() const
+ChatPanel *ChatTabWidget::getPrivateChat(const QString &userFullName) const
 {
-    QList<ChatPanel *> chats;
-    for (int i = 0; i < stackWidget->count(); ++i) {
-        chats << static_cast<ChatPanel *>(stackWidget->widget(i));
-    }
+    return privateChats[userFullName];
+}
 
-    return chats;
+void ChatTabWidget::setChatsTintColor(const QColor &color)
+{
+    if(ninjamServerChat)
+        ninjamServerChat->setTintColor(color);
+
+    for (auto chat : privateChats.values())
+        chat->setTintColor(color);
 }
 
 ChatPanel *ChatTabWidget::getFocusedChatPanel() const

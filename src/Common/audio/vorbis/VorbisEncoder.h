@@ -8,23 +8,22 @@
 
 #include <QByteArray>
 
-class VorbisEncoder : public AudioEncoder
+namespace vorbis
+{
+
+class Encoder : public AudioEncoder
 {
 
 public:
-    VorbisEncoder();
-    VorbisEncoder(uint channels, uint sampleRate, float quality);
-    ~VorbisEncoder();
+    Encoder();
+    Encoder(uint channels, uint sampleRate, float quality);
+    ~Encoder();
 
-    QByteArray encode(const Audio::SamplesBuffer &audioBuffer) override;
+    QByteArray encode(const audio::SamplesBuffer &audioBuffer) override;
     QByteArray finishIntervalEncoding() override;
 
     int getChannels() const;
     int getSampleRate() const;
-
-    static const float QUALITY_LOW;
-    static const float QUALITY_NORMAL;
-    static const float QUALITY_HIGH;
 
 private:
 
@@ -52,14 +51,16 @@ private:
 };
 
 
-inline int VorbisEncoder::getChannels() const
+inline int Encoder::getChannels() const
 {
     return info.channels;
 }
 
-inline int VorbisEncoder::getSampleRate() const
+inline int Encoder::getSampleRate() const
 {
     return info.rate;
 }
+
+} // namespace
 
 #endif // VORBISENCODER_H

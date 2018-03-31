@@ -4,7 +4,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include "../log/Logging.h"
 
-using namespace Recorder;
+using namespace recorder;
 
 const quint8 JamRecorder::VIDEO_CHANNEL_KEY = 255;
 

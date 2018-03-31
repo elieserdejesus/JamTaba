@@ -1,29 +1,61 @@
 #include "ChatTextEditor.h"
 #include <QDebug>
+#include <QTextBlock>
+#include <QLayout>
+#include <QRegularExpression>
 
 ChatTextEditor::ChatTextEditor(QWidget *parent) :
-    QTextBrowser(parent)
+    QTextBrowser(parent),
+    bestWidth(50)
 {
-    setSizeAdjustPolicy(QTextEdit::AdjustToContentsOnFirstShow);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+
     setReadOnly(true);
     setFrameShape(QFrame::NoFrame);
     setOpenExternalLinks(true);
+    viewport()->setAutoFillBackground(false); // transparent
+
+    connect(this, &ChatTextEditor::textChanged, this, &ChatTextEditor::updateWidth);
 }
 
-int ChatTextEditor::getMinimumHeight() const
+void ChatTextEditor::updateWidth()
 {
-    int documentHeight = document()->size().height();
-    return documentHeight + contentsMargins().top() + contentsMargins().bottom();
+    bestWidth = computeBestWidth();
+
+    document()->setTextWidth(bestWidth);
+
+    updateGeometry();
+}
+
+uint ChatTextEditor::getEmojisCount() const
+{
+    const static QRegularExpression REGEX("<img src=\":/emoji/icons");
+
+    return document()->toHtml().count(REGEX);
+}
+
+quint32 ChatTextEditor::computeBestWidth() const
+{
+    int maxBlockWidth = 0;
+    auto block = document()->begin();
+    while (block != document()->end()) {
+        int w = fontMetrics().width(block.text()) + 30;
+
+        w += getEmojisCount() * 22; // add emoji width (22 pixels) because emoji icon is larger than a simple character
+
+        if (w > maxBlockWidth)
+            maxBlockWidth = w;
+
+        block = block.next();
+    }
+
+    return qMin(maxBlockWidth, maximumWidth());
 }
 
 QSize ChatTextEditor::sizeHint() const
 {
-    QSize minimumSize = QTextBrowser::sizeHint();
-    int h = getMinimumHeight();
-    int w = minimumSize.width();
-    return QSize(w, h);
+    return QSize(bestWidth, document()->size().height());
 }
 
 QSize ChatTextEditor::minimumSizeHint() const
