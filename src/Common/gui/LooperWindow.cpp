@@ -822,6 +822,7 @@ QString LooperWindow::getOptionToolTip(audio::Looper::PlayingOption option)
     switch (option) {
     case Looper::RandomizeLayers:   return tr("Randomize layers while playing");
     case Looper::PlayLockedLayers:  return tr("Play locked layers only");
+    case Looper::PlayNonEmptyLayers:  return tr("Play non empty layers");
     }
 
     return QString();
