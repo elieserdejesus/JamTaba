@@ -32,7 +32,7 @@ public:
     void finishCurrentDownload(); // called when the interval is fully downloaded
     void setEstimatedChunksPerInterval(int estimatedChunks); // how many download chunks per interval?
 
-    void setActivatedStatus(bool deactivated);
+    void setActivatedStatus(bool deactivated) override;
 
     void updateGuiElements() override;
 

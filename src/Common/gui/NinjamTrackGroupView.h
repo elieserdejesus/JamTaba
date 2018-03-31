@@ -34,9 +34,9 @@ public:
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
-    void setGroupName(const QString &groupName);
+    void setGroupName(const QString &groupName) override;
     QString getGroupName() const override;
-    void updateGuiElements();
+    void updateGuiElements() override;
     void setEstimatedChunksPerInterval(int estimatedChunks);
 
     NinjamTrackView *addTrackView(long trackID) override;

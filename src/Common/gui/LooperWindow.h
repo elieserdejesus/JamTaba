@@ -50,7 +50,7 @@ public:
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void keyPressEvent(QKeyEvent *ev) override;
-    void changeEvent(QEvent *ev);
+    void changeEvent(QEvent *ev) override;
 
 private slots:
     void updateBeatsPerInterval();

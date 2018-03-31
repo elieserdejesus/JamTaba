@@ -141,7 +141,7 @@ protected:
 
     virtual NinjamRoomWindow *createNinjamWindow(const login::RoomInfo &, controller::MainController *) = 0;
 
-    bool eventFilter(QObject *target, QEvent *event);
+    bool eventFilter(QObject *target, QEvent *event) override;
 
     LocalTrackGroupView *addLocalChannel(int channelGroupIndex, const QString &channelName,
                                          bool createFirstSubchannel);

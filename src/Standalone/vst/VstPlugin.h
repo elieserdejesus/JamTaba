@@ -32,7 +32,7 @@ public:
 
     bool load(const QString &path);
 
-    inline QString getPath() const
+    inline QString getPath() const override
     {
         return path;
     }
@@ -41,13 +41,13 @@ public:
 
     void restoreFromSerializedData(const QByteArray &dataToRestore) override;
 
-    void start();
+    void start() override;
 
-    void updateGui();
+    void updateGui() override;
 
-    void setSampleRate(int newSampleRate);
+    void setSampleRate(int newSampleRate) override;
 
-    void setBypass(bool state);
+    void setBypass(bool state) override;
 
     static QDialog *getPluginEditorWindow(const QString &pluginName);
 
@@ -59,8 +59,8 @@ public:
 
 protected:
     void unload();
-    void resume();
-    void suspend();
+    void resume() override;
+    void suspend() override;
 
 private:
     bool initPlugin();

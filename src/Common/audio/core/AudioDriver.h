@@ -195,39 +195,39 @@ public:
 
     bool start() override;
 
-    void release();
+    void release() override;
 
-    QList<int> getValidBufferSizes(int) const;
+    QList<int> getValidBufferSizes(int) const override;
 
-    QList<int> getValidSampleRates(int) const;
+    QList<int> getValidSampleRates(int) const override;
 
-    int getMaxInputs() const;
+    int getMaxInputs() const  override;
 
-    int getMaxOutputs() const;
+    int getMaxOutputs() const  override;
 
-    QString getInputChannelName(const unsigned int) const;
+    QString getInputChannelName(const unsigned int) const override;
 
-    QString getOutputChannelName(const unsigned int) const;
+    QString getOutputChannelName(const unsigned int) const override;
 
-    QString getAudioInputDeviceName(int) const;
+    QString getAudioInputDeviceName(int) const override;
 
-    QString getAudioInputDeviceName() const;
+    QString getAudioInputDeviceName() const override;
 
-    QString getAudioOutputDeviceName(int) const;
+    QString getAudioOutputDeviceName(int) const override;
 
-    QString getAudioOutputDeviceName() const;
+    QString getAudioOutputDeviceName() const override;
 
-    int getAudioDeviceIndex() const;
+    int getAudioDeviceIndex() const override;
 
-    void setAudioDeviceIndex(int);
+    void setAudioDeviceIndex(int) override;
 
-    int getDevicesCount() const;
+    int getDevicesCount() const override;
 
-    bool canBeStarted() const;
+    bool canBeStarted() const override;
 
-    bool hasControlPanel() const;
+    bool hasControlPanel() const override;
 
-    void openControlPanel(void *);
+    void openControlPanel(void *) override;
 };
 
 
