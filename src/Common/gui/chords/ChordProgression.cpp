@@ -19,7 +19,7 @@ bool ChordProgression::canBeUsed(int bpi) const
 {
     auto dividers = bpiUtils::getBpiDividers(bpi);
     for (uint divider : dividers) {
-        if (divider == measures.size())
+        if (divider == (uint) measures.size())
             return true;
     }
 
