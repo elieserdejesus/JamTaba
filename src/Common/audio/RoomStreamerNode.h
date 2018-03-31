@@ -74,7 +74,7 @@ public:
     int getBufferingPercentage() const override;
 
 protected:
-    void initialize(const QString &streamPath);
+    void initialize(const QString &streamPath) override;
 
 private:
     QNetworkAccessManager httpClient;
@@ -98,7 +98,7 @@ class AudioFileStreamerNode : public AbstractMp3Streamer
 
 {
 protected:
-    void initialize(const QString &streamPath);
+    void initialize(const QString &streamPath) override;
 
 public:
     explicit AudioFileStreamerNode(const QString &file);

@@ -77,7 +77,7 @@ public:
         return midiDriver.data();
     }
 
-    void stopNinjamController();
+    void stopNinjamController() override;
 
     QString getJamtabaFlavor() const override;
 

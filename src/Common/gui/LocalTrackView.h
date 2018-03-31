@@ -37,14 +37,14 @@ public:
 
     audio::LocalInputNode *getInputNode() const;
 
-    virtual void setActivatedStatus(bool unlighted);
+    virtual void setActivatedStatus(bool unlighted) override;
 
     virtual void setPeakMetersOnlyMode(bool peakMetersOnly);
     void togglePeakMetersOnlyMode();
 
     bool isShowingPeakMetersOnly() const;
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     virtual void reset();
 

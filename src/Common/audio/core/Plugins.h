@@ -76,7 +76,7 @@ public:
     void updateGui() override;
 
     void start() override;
-    QString getPath() const;
+    QString getPath() const override;
 
     QByteArray getSerializedData() const override;
     void restoreFromSerializedData(const QByteArray &data) override;
@@ -86,7 +86,7 @@ public:
     void resume() override;
 
 private:
-    void setSampleRate(int newSampleRate);
+    void setSampleRate(int newSampleRate) override;
 
     static const int MAX_DELAY_IN_SECONDS;
     int delayTimeInSamples;

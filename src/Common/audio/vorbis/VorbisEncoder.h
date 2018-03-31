@@ -22,8 +22,8 @@ public:
     QByteArray encode(const audio::SamplesBuffer &audioBuffer) override;
     QByteArray finishIntervalEncoding() override;
 
-    int getChannels() const;
-    int getSampleRate() const;
+    int getChannels() const override;
+    int getSampleRate() const override;
 
 private:
 

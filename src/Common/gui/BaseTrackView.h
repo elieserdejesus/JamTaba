@@ -56,8 +56,8 @@ public:
 
     virtual void updateStyleSheet();
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
 
     virtual void updateGuiElements();
 
