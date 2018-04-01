@@ -13,6 +13,7 @@
 #include <QDesktopWidget>
 #include <QSharedPointer>
 #include <QShortcut>
+#include <QSettings>
 
 using persistence::SubChannel;
 using persistence::Channel;
@@ -108,9 +109,8 @@ void MainWindowStandalone::doWindowInitialization()
         if (settings.windowWasMaximized()) {
             qCDebug(jtGUI)<< "setting window state to maximized";
             showMaximized();
-        } else {
-            restoreWindowPosition();
         }
+        readWindowSettings(settings.windowWasMaximized()); // restore saved position, size and state settings for standalone app.
     }
 
 }
@@ -346,6 +346,8 @@ NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(const login::RoomInfo
 
 void MainWindowStandalone::closeEvent(QCloseEvent *e)
 {
+    writeWindowSettings(); // save windows pos, size and state using qt high level API for the standalone
+
     MainWindow::closeEvent(e);
     hide(); // hide before stop main controller and disconnect from login server
 
@@ -479,3 +481,25 @@ void MainWindowStandalone::addChannelsGroup(const QString &groupName)
     MainWindow::addChannelsGroup(groupName);
     controller->updateInputTracksRange();
 }
+
+void MainWindowStandalone::readWindowSettings(bool isWindowMaximized) {
+    QSettings settings;
+    QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
+    QSize size = settings.value("size", QSize(400, 400)).toSize();
+    QByteArray state = settings.value("state", QByteArray())
+                                                   .toByteArray();
+    restoreState(state);
+    if (!isWindowMaximized) {
+        resize(size);
+        move(pos);
+    }
+}
+
+void MainWindowStandalone::writeWindowSettings() {
+    /* Save postion/size of main window */
+    QSettings settings;
+    settings.setValue("pos", pos());
+    settings.setValue("size", size());
+    settings.setValue("state", saveState());
+}
+

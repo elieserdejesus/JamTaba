@@ -446,7 +446,8 @@ void MainControllerStandalone::start()
 
     auPluginFinder.reset(new audio::AudioUnitPluginFinder());
 
-    connect(auPluginFinder.data(), &audio::AudioUnitPluginFinder::pluginScanFinished, this, &MainControllerStandalone::addFoundedAudioUnitPlugin);
+    connect(auPluginFinder.data(), &audio::AudioUnitPluginFinder::pluginScanFinished, this,
+                                                &MainControllerStandalone::addFoundedAudioUnitPlugin);
 
 #endif
 
