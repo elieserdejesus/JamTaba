@@ -486,7 +486,7 @@ void MainWindowStandalone::readWindowSettings(bool isWindowMaximized) {
     QSettings settings(QCoreApplication::organizationName(),
                        QCoreApplication::applicationName());
 
-    QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
+    QPoint pos = settings.value("pos", QPoint(50, 50)).toPoint();
     QSize size = settings.value("size", QSize(400, 400)).toSize();
     QByteArray state = settings.value("state", QByteArray())
                                                    .toByteArray();
@@ -501,8 +501,6 @@ void MainWindowStandalone::writeWindowSettings() {
     /* Save position/size of main window */
     QSettings settings(QCoreApplication::organizationName(),
                        QCoreApplication::applicationName());
-
-    QSettings settings(orgName, aName);
 
     settings.setValue("pos", pos());
     settings.setValue("size", size());
