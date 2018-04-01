@@ -89,7 +89,30 @@ FFMpegMuxer::FFMpegMuxer() :
       initialized(false),
       startNewIntervalRequested(false)
 {
+
+      /* register all the codecs */
+    avcodec_register_all();
+
     av_register_all();
+
+    av_log_set_level(AV_LOG_DEBUG);
+
+    /* Enumerate the codecs*/
+    AVCodec * codec = av_codec_next(NULL);
+    qDebug() << "Codecs:";
+    while(codec != NULL)
+    {
+        qDebug() << codec->long_name;
+        codec = av_codec_next(codec);
+    }
+
+    qDebug() << "Formats:" << endl;
+    AVOutputFormat * oformat = av_oformat_next(NULL);
+    while(oformat != NULL)
+    {
+        qDebug() << oformat->long_name;
+        oformat = av_oformat_next(oformat);
+    }
 
     threadPool.setMaxThreadCount(1);
 }
@@ -170,7 +193,7 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
     initialize();
 
-    AVOutputFormat *format = av_guess_format("avi", nullptr, nullptr);
+    AVOutputFormat *format = av_guess_format("mp4", nullptr, nullptr);
     if (!format) {
         qCritical() << "Can't guess the format!";
         return false;
@@ -191,6 +214,9 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
     avioContext->seekable = 0; // no seek
     formatContext->pb = avioContext;
+
+    com 27 parece que funciona, mas h264 é 28 ??
+    format->video_codec = static_cast<AVCodecID>(27);//  AV_CODEC_ID_H264;
 
     // Add the audio and video streams using the default format codecs and initialize the codecs.
     encodeVideo = addVideoStream(format->video_codec);
@@ -364,6 +390,9 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID)
         return false;
     }
     videoStream->stream->codec = codecContext;
+
+    avcodec_get_context_defaults3(codecContext, codec);
+    codecContext->coder_type = AVMEDIA_TYPE_VIDEO;
 
     codecContext->codec_id = codecID;
     codecContext->bit_rate = videoBitRate;
@@ -561,6 +590,8 @@ AVFrame *FFMpegMuxer::allocPicture(enum AVPixelFormat pixelFormat, int width, in
 
 bool FFMpegMuxer::openVideoCodec(AVCodec *codec)
 {
+    if (codec)
+        qDebug() << "opening codec " << codec->name;
 
     Q_ASSERT(videoStream && videoStream->stream && videoStream->stream->codec);
 

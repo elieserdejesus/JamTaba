@@ -8,9 +8,17 @@ Open a common prompt (not the power shell) and run the MSVC shell:
 
 Compiling 64 bits
 
-./configure --toolchain=msvc --enable-stripping --prefix="E:/ffmpeg-release-64bits" --enable-static --disable-shared --disable-everything --disable-programs --disable-doc --disable-avdevice --disable-postproc --disable-avfilter --disable-debug --enable-network --enable-decoder=flv,h264,mjpeg,mp3,mpeg4,ppm,vorbis,vp8,vp9 --enable-encoder=mpeg4,vorbis,flv,mjpeg --enable-parser=flac,h264,mjpeg,vorbis,vp8,vp9 --enable-demuxer=flv,mjpeg,mp3,h264,ogg,rtp,rtsp,avi --enable-muxer=mjpeg,rtp,rtsp,mp3,flv,ogg,webm,h264,avi --enable-protocol=httpproxy,rtmpt,https,rtmpts,rtp,tcp,file,pipe,rtmp,udp,rtmps,http --extra-cflags="-MD" --extra-cxxflags="-MD" --extra-ldflags="/NODEFAULTLIB:libcmt"
+Compiling libx264: 
+
+CC=cl ./configure --enable-static --prefix=. --extra-cflags="-DNO_PREFIX"
+
+
+Compiling FFmpeg
+
+./configure --toolchain=msvc --enable-stripping --prefix="E:/ffmpeg-release-64bits" --enable-static --disable-shared --disable-everything --disable-programs --disable-doc --disable-avdevice --disable-postproc --disable-avfilter --disable-debug --enable-network --enable-gpl --enable-libx264 --enable-decoder=h264,mp3,mpeg4,vorbis --enable-encoder=h264,mpeg4,vorbis --enable-parser=h264,vorbis,mp4 --enable-demuxer=mp3,h264,ogg,rtp,rtsp,avi,mp4 --enable-muxer=rtp,rtsp,mp3,flv,ogg,h264,avi,mp4 --enable-protocol=httpproxy,rtmpt,https,rtmpts,rtp,tcp,file,rtmp,rtmps,http --enable-libx264 --enable-encoder=libx264 --enable-decoder=h264 --extra-cflags="-MD -DNO_PREFIX" --extra-cxxflags="-MD" --extra-ldflags="/NODEFAULTLIB:libcmt"
 
 The generated libs (with .a extension) need be renamed to .lib
+
 ------------------------------------------------
 
 Compilig 64 bits DEBUG version
