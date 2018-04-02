@@ -11,6 +11,7 @@
 
 int main(int argc, char* args[] ){
 
+    QApplication::setOrganizationName("Jamtaba");
     QApplication::setApplicationName("JamTaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 

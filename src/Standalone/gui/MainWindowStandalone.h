@@ -94,6 +94,9 @@ private:
 
     void initializePluginFinder();
 
+    // standalone settings persistency management
+    void readWindowSettings(bool isWindowMaximized);
+    void writeWindowSettings();
 };
 
 #endif // MAINFRAMEVST_H
