@@ -32,10 +32,10 @@ public:
 
     enum VideoQuality
     {
-        LOW_VIDEO_QUALITY = 32000,    // 32 kbps
-        MEDIUM_VIDEO_QUALITY = 64000, // 64 kbps
-        HIGHT_VIDEO_QUALITY = 128000, // 128 kbps
-        BEST_VIDEO_QUALITY = 400000   // 400 kbps (default value in ffmpeg examples)
+        VideoQualityLow    = 32000,     // 32 kbps
+        VideoQualityMedium = 64000,     // 64 kbps
+        VideoQualityHigh   = 128000,    // 128 kbps
+        VideoQualityBest   = 400000     // 400 kbps (default value in ffmpeg examples)
     };
 
 
@@ -49,6 +49,7 @@ public:
 
 signals:
     void dataEncoded(const QByteArray &data, bool isFirstPacket);
+    void encodingFinished();
 
 public slots:
     void startNewInterval();
@@ -58,16 +59,13 @@ private:
     void finishCurrentInterval();
     bool prepareToEncodeNewInterval();
 
-    void addAudioStream(AVCodecID codecID);
-    bool addVideoStream(AVCodecID codecID);
+    bool addVideoStream(AVCodecID codecID, AVDictionary **opts);
 
-    bool openVideoCodec(AVCodec *codec);
+    bool openVideoCodec(AVCodec *codec, AVDictionary **opts);
     void openAudioCodec(AVCodec *codec);
 
     bool doEncodeVideoFrame(const QImage &image);
     bool doEncodeAudioFrame(); // TODO add a SamplesBuffer parameter
-
-    int writeFrame(const AVRational *time_base, AVStream *stream, AVPacket *packet);
 
     AVFrame *allocAudioFrame(enum AVSampleFormat sampleFormat, uint64_t channelLayout, int sampleRate, int nbSamples);
     AVFrame *allocPicture(enum AVPixelFormat pixelFormat, int width, int height);
@@ -76,9 +74,6 @@ private:
     void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint rgbIncrement, bool swapRGB, int width, int height);
 
     void initialize();
-
-    // avio callback
-    static int writeCallback(void *instancePointer, uint8_t *buffer, int bufferSize);
 
     bool encodeVideo;
     bool encodeAudio;
@@ -89,13 +84,14 @@ private:
     class VideoOutputStream;
     class AudioOutputStream;
 
-    std::unique_ptr<VideoOutputStream> videoStream;
+    //std::unique_ptr<VideoOutputStream> videoStream;
     std::unique_ptr<AudioOutputStream> audioStream;
 
-    AVFormatContext *formatContext;
-    AVIOContext *avioContext;
-
-    unsigned char *buffer; // avio buffer used in callback
+    AVCodec *codec;
+    AVCodecContext *codecContext;
+    AVFrame *frame;
+    AVFrame *tempFrame;
+    SwsContext *swsContext;
 
     QSize videoResolution;
     qreal videoFrameRate;

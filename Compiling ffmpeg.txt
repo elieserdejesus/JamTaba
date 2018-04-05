@@ -15,7 +15,7 @@ CC=cl ./configure --enable-static --prefix=. --extra-cflags="-DNO_PREFIX"
 
 Compiling FFmpeg
 
-./configure --toolchain=msvc --enable-stripping --prefix="E:/ffmpeg-release-64bits" --enable-static --disable-shared --disable-everything --disable-programs --disable-doc --disable-avdevice --disable-postproc --disable-avfilter --disable-debug --enable-network --enable-gpl --enable-libx264 --enable-decoder=h264,mp3,mpeg4,vorbis --enable-encoder=h264,mpeg4,vorbis --enable-parser=h264,vorbis,mp4 --enable-demuxer=mp3,h264,ogg,rtp,rtsp,avi,mp4 --enable-muxer=rtp,rtsp,mp3,flv,ogg,h264,avi,mp4 --enable-protocol=httpproxy,rtmpt,https,rtmpts,rtp,tcp,file,rtmp,rtmps,http --enable-libx264 --enable-encoder=libx264 --enable-decoder=h264 --extra-cflags="-MD -DNO_PREFIX" --extra-cxxflags="-MD" --extra-ldflags="/NODEFAULTLIB:libcmt"
+./configure --toolchain=msvc --enable-stripping --prefix="E:/ffmpeg-release-64bits" --enable-static --disable-shared --disable-everything --disable-programs --disable-doc --disable-avdevice --disable-postproc --disable-avfilter --disable-debug --enable-network --enable-gpl --enable-libx264 --enable-decoder=h264,mp3,mpeg4 --enable-encoder=h264,mpeg4 --enable-parser=h264,mp4 --enable-demuxer=mp3,h264,rtp,rtsp,avi,mp4 --enable-muxer=rtp,rtsp,mp3,flv,h264,avi,mp4 --enable-protocol=httpproxy,rtmpt,https,rtmpts,rtp,tcp,file,rtmp,rtmps,http --enable-libx264 --enable-encoder=libx264 --enable-decoder=h264 --extra-cflags="-MD -DNO_PREFIX" --extra-cxxflags="-MD" --extra-ldflags="/NODEFAULTLIB:libcmt"
 
 The generated libs (with .a extension) need be renamed to .lib
 

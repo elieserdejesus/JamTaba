@@ -376,8 +376,6 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, qui
 {
     if (isFirstPart) {
 
-        Q_ASSERT(encodedData.left(4) ==  "RIFF");
-
         if (!videoIntervalToUpload.isEmpty()) {
 
             // flush the end of previous interval
@@ -398,11 +396,11 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, qui
     }
 
     // disabling the video recording
-//    if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
-//        for (auto jamRecorder : getActiveRecorders()) {
-//            jamRecorder->appendLocalUserVideo(encodedData, isFirstPart);
-//        }
-//    }
+    if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
+        for (auto jamRecorder : getActiveRecorders()) {
+            jamRecorder->appendLocalUserVideo(encodedData, isFirstPart);
+        }
+    }
 }
 
 void MainController::enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart)

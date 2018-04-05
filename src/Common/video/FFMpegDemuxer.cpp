@@ -9,7 +9,7 @@ FFMpegDemuxer::FFMpegDemuxer(QObject *parent, const QByteArray &encodedData) :
     QObject(parent),
     formatContext(nullptr),
     avioContext(nullptr),
-    codecContext(nullptr),
+    //codecContext(nullptr),
     swsContext(nullptr),
     frame(nullptr),
     frameRGB(nullptr),
@@ -34,7 +34,7 @@ void FFMpegDemuxer::close()
         avformat_close_input(&formatContext);
         formatContext = nullptr;
         avioContext = nullptr;
-        codecContext = nullptr;
+        //codecContext = nullptr;
         swsContext = nullptr;
     }
 
@@ -62,36 +62,56 @@ void FFMpegDemuxer::close()
 
 //int64_t FFMpegDemuxer::seekCallback(void *opaque, int64_t offset, int whence)
 //{
-//    qDebug() << "\tSeek callback ...";
-
-//    if (whence == AVSEEK_SIZE)
-//        return -1; // I don't know "size of my handle in bytes"
-
 //    QIODevice *stream = (QIODevice *)opaque;
 
-//    if (stream->isSequential())
-//            return -1; // cannot seek a sequential stream
+//    if (stream->seek(offset)) {
+//        return stream->pos();
+//    }
 
-//    if (offset < 0 || !stream->seek(offset))
-//        return -1;
-
-//    return stream->pos();
+//    // handling AVSEEK_SIZE doesn't seem mandatory
+//    return -1;
 //}
+
+int64_t FFMpegDemuxer::seekCallback(void *opaque, int64_t offset, int whence)
+{
+
+    QString w = "";
+    if (whence == SEEK_SET)
+        w = "SEEK_SET";
+    if (whence == SEEK_CUR)
+        w = "SEEK_CUR";
+    if (whence == SEEK_END)
+        w = "SEEK_END";
+    if (whence == AVSEEK_SIZE)
+        w = "AVSEEK_SIZE";
+
+    qDebug() << "Seek:" << offset << whence << w;
+
+
+    QBuffer *stream = (QBuffer *)opaque;
+
+    switch (whence) {
+        case AVSEEK_SIZE:
+            return stream->size();
+        case SEEK_SET:
+            stream->seek(0); // begin
+        break;
+    }
+
+    if (whence == AVSEEK_SIZE)
+        return stream->size();
+
+    if (!stream->seek(stream->pos() + offset))
+        return -1;
+
+    qDebug() << "stream->pos" << stream->pos();
+    return stream->pos();
+}
 
 int FFMpegDemuxer::readCallback(void *stream, uint8_t *buffer, int bufferSize)
 {
     QIODevice *st = (QIODevice *)stream;
     return st->read((char *)buffer, bufferSize);
-}
-
-AVInputFormat *FFMpegDemuxer::probeInputFormat()
-{
-    AVProbeData probeData;
-    probeData.buf = reinterpret_cast<unsigned char*>(encodedData.data());
-    probeData.buf_size = encodedData.size();
-    probeData.filename = nullptr;
-
-    return av_probe_input_format(&probeData, 1);
 }
 
 bool FFMpegDemuxer::open()
@@ -107,20 +127,15 @@ bool FFMpegDemuxer::open()
     formatContext = avformat_alloc_context();
 
     //avio_op
-    avioContext = avio_alloc_context(buffer, FFMPEG_BUFFER_SIZE, 0, &(this->encodedBuffer), readCallback, nullptr, nullptr);
+    avioContext = avio_alloc_context(buffer, FFMPEG_BUFFER_SIZE, 0, &(this->encodedBuffer), readCallback, nullptr, seekCallback);
     avioContext->seekable = 0; // no seek
 
     formatContext->pb = avioContext;
+    formatContext->flags = AVFMT_FLAG_CUSTOM_IO;
 
     int ret = avformat_open_input(&formatContext, nullptr, nullptr, nullptr);
     if (ret != 0) {
         qCritical() << "Decoder Error while opening input:" << av_error_to_qt_string(ret) << ret;
-        return false;
-    }
-
-    ret = avformat_find_stream_info(formatContext, nullptr);
-    if (ret < 0) {
-        qCritical() << "Decoder Error while finding stream info:" << av_error_to_qt_string(ret);
         return false;
     }
 
@@ -132,18 +147,23 @@ bool FFMpegDemuxer::open()
 
     AVMediaType type = AVMEDIA_TYPE_VIDEO;
 
+    if (formatContext->nb_streams <= 0) {
+        qCritical() << "Error opening the demuxer: nb_streams <= 0";
+        return false;
+    }
+
     AVStream *stream = formatContext->streams[0]; // first stream
 
-    codecContext = stream->codec;
+    auto codecContext = stream->codec;
 
     /* find decoder for the stream */
-    AVCodec *codec= avcodec_find_decoder(codecContext->codec_id);
-    if (!codec) {
+    AVCodec *decoder = avcodec_find_decoder(stream->codecpar->codec_id);
+    if (!decoder) {
         qCritical() << "Failed to find the codec" << av_get_media_type_string(type);
         return false;
     }
 
-    ret = avcodec_open2(codecContext, codec, nullptr);
+    ret = avcodec_open2(codecContext, decoder, nullptr);
     if (ret < 0) {
         qCritical() << av_error_to_qt_string(ret);
         return false;
@@ -179,10 +199,15 @@ bool FFMpegDemuxer::open()
 
 uint FFMpegDemuxer::getFrameRate() const
 {
-    if (codecContext)
-        return codecContext->framerate.num;
+    if (formatContext && formatContext->nb_streams > 0) {
+        auto firstStream = formatContext->streams[0];
+        if (firstStream->codec) {
+            auto codecContext = formatContext->streams[0]->codec;
+            return codecContext->framerate.num;
+        }
+    }
 
-    return 1;
+    return 0;
 }
 
 void FFMpegDemuxer::decode()
@@ -203,15 +228,21 @@ void FFMpegDemuxer::decode()
 
     int gotFrame = 0;
 
-    /* read frames from the file */
-    while (av_read_frame(formatContext, &packet) == 0) {
+    if (!formatContext || formatContext->nb_streams <= 0)
+        return;
 
-        int ret = avcodec_decode_video2(codecContext, frame, &gotFrame, &packet);
+    auto codecContext = formatContext->streams[0]->codec;
+
+    /* read frames */
+    int ret = 0;
+    while ((ret = av_read_frame(formatContext, &packet)) == 0) {
+
+        ret = avcodec_decode_video2(codecContext, frame, &gotFrame, &packet);
 
         av_free_packet(&packet);
 
         if (ret < 0) { // error
-            qCritical() << "error decoding video frame";
+            qCritical() << "error decoding video frame" << av_error_to_qt_string(ret) << ret;
             emit imagesDecoded(decodedImages, getFrameRate());
             return;
         }
@@ -244,6 +275,8 @@ void FFMpegDemuxer::decode()
             decodedImages << img;
         }
     }
+
+    qDebug() << av_error_to_qt_string(ret) << ret;
 
     emit imagesDecoded(decodedImages, getFrameRate());
 }

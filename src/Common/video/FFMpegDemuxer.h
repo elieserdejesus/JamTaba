@@ -24,7 +24,7 @@ signals:
 private:
     AVFormatContext *formatContext;
     AVIOContext *avioContext;
-    AVCodecContext *codecContext;
+    //AVCodecContext *codecContext;
     SwsContext *swsContext;
     AVFrame *frame;
     AVFrame *frameRGB;
@@ -37,8 +37,6 @@ private:
 
     static int readCallback(void *stream, uint8_t *buffer, int bufferSize);
     static int64_t seekCallback(void *opaque, int64_t offset, int whence);
-
-    AVInputFormat *probeInputFormat();
 
     void close();
     bool open();
