@@ -80,7 +80,7 @@ FFMpegMuxer::FFMpegMuxer() :
       videoPts(0),
       encodedFrames(0),
       audioStream(nullptr),
-      videoResolution(QSize(352, 288)),
+      videoResolution(QSize(320, 240)),
       videoFrameRate(25),
       videoBitRate(static_cast<uint>(FFMpegMuxer::VideoQualityLow)),
       initialized(false),
@@ -158,27 +158,12 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
     AVCodecID codecID = AV_CODEC_ID_H264;
     encodeVideo = addVideoStream(codecID, &opts);
 
-    //if (format->audio_codec != AV_CODEC_ID_NONE) {
-        //add_stream(&audio_st, &audio_codec, fmt->audio_codec);
-        encodeAudio = false;
-    //}
+    encodeAudio = false;
 
     // Now that all the parameters are set, we can open the audio and video codecs and allocate the necessary encode buffers.
     if (encodeVideo)
         if(!openVideoCodec(codec, &opts))
             return false;
-
-    //if (encodeAudio && audioStream)
-    //    openAudioCodec(formatContext->audio_codec);
-
-     //av_dump_format(formatContext, 0, nullptr, 1);
-
-//    writeCallbackCounter = 0; // reset the counter before start writing header
-//    ret = avformat_write_header(formatContext, &opts); // Write the stream header, if any.
-//    if (ret < 0) {
-//        qCritical() << "Error occurred when opening output file: " << ret;
-//        return false;
-//    }
 
     initialized = true;
 
@@ -239,37 +224,18 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID, AVDictionary **opts)
          * of which frame timestamps are represented. For fixed-fps content,
          * timebase should be 1/framerate and timestamp increments should be
          * identical to 1. */
-    //videoStream->stream->time_base = AVRational{ 1, static_cast<int>(videoFrameRate) };
-    codecContext->time_base       = AVRational{ 1, static_cast<int>(videoFrameRate) };
+    codecContext->time_base = AVRational{ 1, static_cast<int>(videoFrameRate) };
 
-    codecContext->gop_size      = 12; // emit one intra frame every twelve frames at most
-    codecContext->pix_fmt       = AV_PIX_FMT_YUV420P;
-
-    if (codecContext->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
-        codecContext->max_b_frames = 2; /* just for testing, we also add B-frames */
-    }
-
-    if (codecContext->codec_id == AV_CODEC_ID_MPEG1VIDEO) {
-        /** Needed to avoid using macroblocks in which some coeffs overflow.
-             * This does not happen with normal video, it just happens here as
-             * the motion of the chroma plane does not match the luma plane. */
-        codecContext->mb_decision = 2;
-    }
+    codecContext->gop_size = 30; // emit one intra frame every N frames at most
+    codecContext->pix_fmt = AV_PIX_FMT_YUV420P;
 
     if (codecContext->codec_id == AV_CODEC_ID_H264) {
-        int ret =  av_dict_set(opts, "movflags", "frag_keyframe+empty_moov", 0); // necessary to avoid the "muxer + seek problem"
-            ret |= av_dict_set(opts, "preset", "veryslow", 0); //slow encoding, better compression and small videos
-            //ret |= av_dict_set(opts, "crf", "27", 0);
-
+        int ret = av_dict_set(opts, "preset", "faster", 0);
         if (ret != 0) {
             qCritical() << "Error setting h264 preset" << av_error_to_qt_string(ret) << ret;
             return false;
         }
     }
-
-    // Some formats want stream headers to be separate.
-//    if (formatContext->oformat->flags & AVFMT_GLOBALHEADER)
-//        codecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
     return true;
 }
@@ -588,8 +554,11 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
 
     // get the encoded packet
     AVPacket packet = AVPacket();// avoiding {0} initializer because GCC is emitting warning;
-    av_init_packet(&packet);
+    packet.size = 0;
+    packet.data = nullptr;
     packet.stream_index = 0; // always using the first stream
+
+    av_init_packet(&packet);
 
     ret = avcodec_receive_packet(codecContext, &packet);
 
@@ -599,10 +568,13 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
             bool isFirstPacket = encodedFrames == 0;
             emit dataEncoded(encodedBytes, isFirstPacket);
             encodedFrames++;
+            av_packet_unref(&packet);
         }
+        av_free_packet(&packet);
 
         return false;
     }
+    av_free_packet(&packet);
 
     return true;
 }

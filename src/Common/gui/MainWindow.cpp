@@ -238,13 +238,13 @@ void MainWindow::initializeCamera(const QString &cameraDeviceName)
     QList<QSize> resolutions = camera->supportedViewfinderResolutions();
     if (!resolutions.isEmpty()) {
         QCameraViewfinderSettings settings;
-        QSize lowResolution = resolutions.first();
-        settings.setResolution(lowResolution);
+        QSize bestResolution = getBestCameraResolution(resolutions);
+        settings.setResolution(bestResolution);
         camera->setViewfinderSettings(settings);
 
         //getBestSupportedFrameRate();
 
-        mainController->setVideoProperties(lowResolution);
+        mainController->setVideoProperties(bestResolution);
     }
     else {
         qCritical() << "Camera resolutions list is empty!";
@@ -259,6 +259,31 @@ void MainWindow::initializeCamera(const QString &cameraDeviceName)
             break;
         }
     }
+}
+
+QSize MainWindow::getBestCameraResolution(const QList<QSize> resolutions) const
+{
+    const static quint16 PREFERRED_WIDTH = 320;
+
+    auto bestResolution = QSize(PREFERRED_WIDTH, 240);
+
+    if (!resolutions.isEmpty()) {
+        auto lowestResolution = resolutions.first();
+        if (lowestResolution.width() > PREFERRED_WIDTH) { // using the lowest resolution in big resolution cams
+            bestResolution = lowestResolution;
+        }
+        else { // pick the first resolution where width < 320
+            for (int i = resolutions.size() - 1; i >= 0;  --i) {
+                if (resolutions.at(i).width() <= PREFERRED_WIDTH) {
+                    bestResolution = resolutions.at(i);
+                    break;
+                }
+            }
+            //bestResolution = resolutions.first();
+        }
+    }
+
+    return bestResolution;
 }
 
 void MainWindow::changeCameraStatus(bool activated)

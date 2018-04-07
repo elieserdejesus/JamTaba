@@ -415,6 +415,7 @@ private:
     void initializeCameraWidget();
 
     QCamera::FrameRateRange getBestSupportedFrameRate() const;
+    QSize getBestCameraResolution(const QList<QSize> resolutions) const;
 
     void updateUserNameLabel();
 
