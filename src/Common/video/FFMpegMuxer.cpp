@@ -78,6 +78,7 @@ FFMpegMuxer::FFMpegMuxer() :
       encodeVideo(false),
       encodeAudio(false),
       videoPts(0),
+      encodedFrames(0),
       audioStream(nullptr),
       videoResolution(QSize(352, 288)),
       videoFrameRate(25),
@@ -98,6 +99,7 @@ void FFMpegMuxer::initialize()
     audioStream = nullptr;
 
     videoPts = 0;
+    encodedFrames = 0;
 }
 
 FFMpegMuxer::~FFMpegMuxer()
@@ -105,11 +107,11 @@ FFMpegMuxer::~FFMpegMuxer()
     finishCurrentInterval();
 }
 
-void FFMpegMuxer::encodeImage(const QImage &image)
+void FFMpegMuxer::encodeImage(const QImage &image, bool async)
 {
     // encoding in a separated thread
 
-    //auto lambda = [=](){
+    auto lambda = [=](){
 
         if (startNewIntervalRequested) {
             if (prepareToEncodeNewInterval())
@@ -118,9 +120,12 @@ void FFMpegMuxer::encodeImage(const QImage &image)
 
         if (encodeVideo && !image.isNull())
             encodeVideo = !doEncodeVideoFrame(image);
-    //};
+    };
 
-    //QtConcurrent::run(&threadPool, lambda);
+    if (async)
+        QtConcurrent::run(&threadPool, lambda);
+    else
+        lambda();
 }
 
 void FFMpegMuxer::encodeAudioFrame()
@@ -194,6 +199,7 @@ void FFMpegMuxer::finishCurrentInterval()
         }
     }
 
+    // drain non encoded frames in last interval
     bool finished = false;
     do {
         finished = doEncodeVideoFrame(QImage());
@@ -203,6 +209,7 @@ void FFMpegMuxer::finishCurrentInterval()
     audioStream.reset(nullptr);
 
     initialized = false;
+    encodedFrames = 0;
 
     emit encodingFinished();
 
@@ -587,10 +594,11 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
     ret = avcodec_receive_packet(codecContext, &packet);
 
     if (ret == 0 || ret == AVERROR(EAGAIN)) {
-        if (ret == 0) {
+        if (ret == 0) { // we have a decoded frame?
             QByteArray encodedBytes(reinterpret_cast<const char*>(packet.data), packet.size);
-            bool isFirstPacket = videoPts == 0;
+            bool isFirstPacket = encodedFrames == 0;
             emit dataEncoded(encodedBytes, isFirstPacket);
+            encodedFrames++;
         }
 
         return false;

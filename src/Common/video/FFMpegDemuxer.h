@@ -24,7 +24,6 @@ signals:
 private:
     AVFormatContext *formatContext;
     AVIOContext *avioContext;
-    //AVCodecContext *codecContext;
     SwsContext *swsContext;
     AVFrame *frame;
     AVFrame *frameRGB;
@@ -36,7 +35,6 @@ private:
     QBuffer encodedBuffer;
 
     static int readCallback(void *stream, uint8_t *buffer, int bufferSize);
-    static int64_t seekCallback(void *opaque, int64_t offset, int whence);
 
     void close();
     bool open();

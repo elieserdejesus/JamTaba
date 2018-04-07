@@ -22,7 +22,7 @@ public:
     FFMpegMuxer();
     ~FFMpegMuxer();
 
-    void encodeImage(const QImage &image);
+    void encodeImage(const QImage &image, bool async = true);
     void encodeAudioFrame();
 
     void setVideoResolution(const QSize &resolution);
@@ -79,6 +79,7 @@ private:
     bool encodeAudio;
 
     int64_t videoPts; // pts (presentation time stamp) of the next frame that will be generated
+    quint64 encodedFrames;
 
     // internal streams
     class VideoOutputStream;

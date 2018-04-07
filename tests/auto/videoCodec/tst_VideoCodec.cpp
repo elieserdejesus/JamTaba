@@ -16,63 +16,55 @@ private slots:
 void TestVideoCodec::encodeDecode()
 {
     const QSize resolution(320, 180);
-    const qreal frameRate = 25;
-    const quint8 videoTime = 10; // in seconds
+    const qreal frameRate = 10;
+    const quint8 videoTime = 3; // in seconds
+    const quint64 framesToEncode = videoTime * frameRate;
 
     QByteArray encodedData;
 
     bool encoding = true;
 
-    FFMpegMuxer muxer;
+    FFMpegMuxer *muxer = new FFMpegMuxer();
 
-    QObject::connect(&muxer, &FFMpegMuxer::encodingFinished, [&]() {
+    QObject::connect(muxer, &FFMpegMuxer::encodingFinished, [&]() {
         encoding = false;
+
+        //    QFile file("C:/Users/Elieser/Documents/build-TestLibx264-Qt_MSVC_64bits-Debug/teste.h264");
+        //    if(!file.open(QIODevice::WriteOnly))
+        //        qCritical() << file.errorString();
+        //    file.write(encodedData);
+        //    file.close();
+
+        FFMpegDemuxer demuxer(nullptr, encodedData);
+        QObject::connect(&demuxer, &FFMpegDemuxer::imagesDecoded, [&](QList<QImage> images, uint fps){
+            qDebug() << "images decoded:" << images.size() << " fps:" << fps;
+            QCOMPARE((uint)frameRate, fps);
+            QCOMPARE((quint64)images.size(), framesToEncode);
+        });
+
+        demuxer.decode();
     });
 
-    QObject::connect(&muxer, &FFMpegMuxer::dataEncoded, [&](const QByteArray &data, bool isFirstPacket) {
+    QObject::connect(muxer, &FFMpegMuxer::dataEncoded, [&](const QByteArray &data, bool isFirstPacket) {
 
         if (encoding)
             encodedData.append(data);
 
     });
 
-    muxer.setVideoFrameRate(frameRate);
-    muxer.setVideoResolution(resolution);
-    muxer.startNewInterval();
+    muxer->setVideoFrameRate(frameRate);
+    muxer->setVideoResolution(resolution);
+    muxer->startNewInterval();
 
-    const quint64 framesToEncode = videoTime * frameRate;
     for (int i = 0; i < framesToEncode; ++i) {
         QImage img(resolution, QImage::Format_RGB32);
         img.fill(QColor(rand() % 255, rand() % 255, rand() % 255));
-        muxer.encodeImage(img);
+        muxer->encodeImage(img, false); // encoding without threads
     }
 
     // finish the interval
-    muxer.startNewInterval();
-    muxer.encodeImage(QImage());
-
-//    QFile mp4("C:/Users/Elieser/Downloads/jellyfish-25-mbps-hd-hevc.mp4");
-//    QVERIFY(mp4.open(QIODevice::ReadOnly));
-//    encodedData.append(mp4.readAll());
-
-    qDebug() << "Encoded data:" << encodedData.size();
-    QFile mp4("C:/Users/Elieser/Documents/build-TestLibx264-Qt_MSVC_64bits-Debug/teste.mp4");
-    if(!mp4.open(QIODevice::WriteOnly))
-        qCritical() << mp4.errorString();
-    mp4.write(encodedData);
-    mp4.close();
-
-//    FFMpegDemuxer demuxer(nullptr, encodedData);
-
-//    QObject::connect(&demuxer, &FFMpegDemuxer::imagesDecoded, [&](QList<QImage> images, uint fps){
-//        //qDebug() << "frames decoded:" << images.size();
-//        //QCOMPARE(fps, (quint32)30);
-//        QCOMPARE(fps, (uint)frameRate);
-//        QCOMPARE(framesToEncode, (quint64)images.size());
-//    });
-
-//    demuxer.decode();
-
+    muxer->startNewInterval();
+    muxer->encodeImage(QImage(), false); // encoding without threads
 }
 
 
