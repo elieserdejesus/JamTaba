@@ -230,7 +230,7 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID, AVDictionary **opts)
     codecContext->pix_fmt = AV_PIX_FMT_YUV420P;
 
     if (codecContext->codec_id == AV_CODEC_ID_H264) {
-        int ret = av_dict_set(opts, "preset", "faster", 0);
+        int ret = av_dict_set(opts, "preset", "veryfast", 0);
         if (ret != 0) {
             qCritical() << "Error setting h264 preset" << av_error_to_qt_string(ret) << ret;
             return false;
