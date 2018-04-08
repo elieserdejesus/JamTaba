@@ -105,6 +105,11 @@ void FFMpegMuxer::initialize()
 
 FFMpegMuxer::~FFMpegMuxer()
 {
+    finish();
+}
+
+void FFMpegMuxer::finish()
+{
     finishCurrentInterval();
 }
 
@@ -174,7 +179,6 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 void FFMpegMuxer::finishCurrentInterval()
 {
     if (!codecContext || !avcodec_is_open(codecContext)) {
-        qCritical() << "video codec is null or not opened!";
         return;
     }
 
@@ -202,6 +206,9 @@ void FFMpegMuxer::finishCurrentInterval()
 
     if (tempFrame)
         av_frame_free(&tempFrame);
+
+    if (codecContext)
+        avcodec_free_context(&codecContext);
 
     emit encodingFinished();
 }
@@ -550,7 +557,7 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
 
     if (!image.isNull()) {
         // releasing the allocated memory - fix https://github.com/elieserdejesus/JamTaba/issues/951
-        avpicture_free((AVPicture *)frame);
+        av_freep(frame);
 
         if (ret != 0 && ret != AVERROR_EOF) {
             qCritical() << "Error encoding video frame: " << av_error_to_qt_string(ret) << ret;

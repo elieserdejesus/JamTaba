@@ -22,6 +22,8 @@ public:
     FFMpegMuxer(QObject *parent = nullptr);
     ~FFMpegMuxer();
 
+    void finish();
+
     void encodeImage(const QImage &image, bool async = true);
     void encodeAudioFrame();
 

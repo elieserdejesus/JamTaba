@@ -1108,6 +1108,8 @@ void MainController::stopNinjamController()
     }
 
     audioIntervalsToUpload.clear();
+
+    videoEncoder.finish(); // release memory used by video encoder
 }
 
 void MainController::setTranslationLanguage(const QString &languageCode)
