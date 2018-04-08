@@ -304,6 +304,10 @@
 		2A1C7AAD1E0B5FBC00C7984D /* JamTaba_ViewFactory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.mm */; };
 		2A1C7AAE1E0B5FBE00C7984D /* JamTaba_UIView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADD1073EB19800A2709A /* JamTaba_UIView.mm */; };
 		2A1C7AB41E0B66AC00C7984D /* JamTaba.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1C7AB21E0B66AC00C7984D /* JamTaba.h */; };
+		2A2093B1207AB579001219DF /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2093B0207AB579001219DF /* libx264.a */; };
+		2A2093B4207AB66A001219DF /* InstrumentsMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2093B2207AB66A001219DF /* InstrumentsMenu.cpp */; };
+		2A2093B5207AB66A001219DF /* InstrumentsMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A2093B3207AB66A001219DF /* InstrumentsMenu.h */; };
+		2A2093B6207AB695001219DF /* InstrumentsMenu.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A2093B3207AB66A001219DF /* InstrumentsMenu.h */; };
 		2A2D725D1EABC04E00979920 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A2D725B1EABC04E00979920 /* Slider.h */; };
 		2A2D725E1EABC04E00979920 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2D725C1EABC04E00979920 /* Slider.cpp */; };
 		2A2D725F1EABC06400979920 /* Slider.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A2D725B1EABC04E00979920 /* Slider.h */; };
@@ -755,6 +759,9 @@
 		2A14FF6E2007A6DA00ADAEB0 /* IconFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IconFactory.cpp; sourceTree = "<group>"; };
 		2A14FF6F2007A6DA00ADAEB0 /* IconFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconFactory.h; sourceTree = "<group>"; };
 		2A1C7AB21E0B66AC00C7984D /* JamTaba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamTaba.h; sourceTree = "<group>"; };
+		2A2093B0207AB579001219DF /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libx264.a; path = ../../libs/static/mac64/libx264.a; sourceTree = "<group>"; };
+		2A2093B2207AB66A001219DF /* InstrumentsMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InstrumentsMenu.cpp; sourceTree = "<group>"; };
+		2A2093B3207AB66A001219DF /* InstrumentsMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstrumentsMenu.h; sourceTree = "<group>"; };
 		2A2D725B1EABC04E00979920 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Slider.h; sourceTree = "<group>"; };
 		2A2D725C1EABC04E00979920 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Slider.cpp; sourceTree = "<group>"; };
 		2A2F70051E08094500A4B6C2 /* libcups.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcups.dylib; path = usr/lib/libcups.dylib; sourceTree = SDKROOT; };
@@ -962,6 +969,7 @@
 				2A1C7AAA1E0B5F6600C7984D /* AudioToolbox.framework in Frameworks */,
 				2A1362AF1F658D3E004953CF /* libqavfcamera.a in Frameworks */,
 				2A13629E1F658714004953CF /* libavcodec.a in Frameworks */,
+				2A2093B1207AB579001219DF /* libx264.a in Frameworks */,
 				2A13629F1F658714004953CF /* libavformat.a in Frameworks */,
 				2A1362A01F658714004953CF /* libavutil.a in Frameworks */,
 				2A1362A11F658714004953CF /* libswresample.a in Frameworks */,
@@ -1020,6 +1028,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				2A2093B0207AB579001219DF /* libx264.a */,
 				2AF5621A204719A700D809D7 /* libQt5WebSockets.a */,
 				2A1362B41F659642004953CF /* CoreVideo.framework */,
 				2A1362B21F6595D2004953CF /* AVFoundation.framework */,
@@ -1378,6 +1387,8 @@
 		2A0DBBE71E0AF46900BEF1FF /* widgets */ = {
 			isa = PBXGroup;
 			children = (
+				2A2093B2207AB66A001219DF /* InstrumentsMenu.cpp */,
+				2A2093B3207AB66A001219DF /* InstrumentsMenu.h */,
 				2A4E3FA71F99881700677E9C /* BoostSpinBox.cpp */,
 				2A4E3FA81F99881700677E9C /* BoostSpinBox.h */,
 				2A4E3FA31F9987E900677E9C /* ChatTabWidget.cpp */,
@@ -1893,6 +1904,7 @@
 				2A0DBE111E0AF46D00BEF1FF /* MidiDriver.h in Headers */,
 				2A0DBDF91E0AF46C00BEF1FF /* WavePeakPanel.h in Headers */,
 				2A0DBDFD1E0AF46C00BEF1FF /* Logging.h in Headers */,
+				2A2093B5207AB66A001219DF /* InstrumentsMenu.h in Headers */,
 				2AAAA7C22032462B0005C3F5 /* User.h in Headers */,
 				2A1362921F6586A4004953CF /* FFMpegDemuxer.h in Headers */,
 				2A67BDA91E410FE400A8FFF1 /* ScreensaverBlocker.h in Headers */,
@@ -2039,6 +2051,7 @@
 				2A3AE1E01E80863800D391C5 /* BlinkableButton.h in Sources */,
 				2A4E3FA11F99879800677E9C /* MetronomePanel.h in Sources */,
 				2A4E3FAF1F99885600677E9C /* InactivityDetector.h in Sources */,
+				2A2093B6207AB695001219DF /* InstrumentsMenu.h in Sources */,
 				2A4E3FB11F99889200677E9C /* BoostSpinBox.h in Sources */,
 				2A14FF722007A6FC00ADAEB0 /* EmojiWidget.h in Sources */,
 				2AAAA7A1203245AE0005C3F5 /* UPnPManager.h in Sources */,
@@ -2096,6 +2109,7 @@
 				2A120A771E0BF0F100E0E596 /* PeakMeter.h in Sources */,
 				2A120A781E0BF0F400E0E596 /* WavePeakPanel.h in Sources */,
 				2A120A6B1E0BEF8D00E0E596 /* UserNameDialog.h in Sources */,
+				2A2093B4207AB66A001219DF /* InstrumentsMenu.cpp in Sources */,
 				2A120A641E0BEF5C00E0E596 /* MainWindow.h in Sources */,
 				2A120A5E1E0BEF4800E0E596 /* Highligther.h in Sources */,
 				2A120A681E0BEF6400E0E596 /* NinjamTrackView.h in Sources */,
