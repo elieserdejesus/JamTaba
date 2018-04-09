@@ -19,7 +19,7 @@ class FFMpegMuxer : public QObject
     Q_OBJECT
 
 public:
-    FFMpegMuxer();
+    FFMpegMuxer(QObject *parent = nullptr);
     ~FFMpegMuxer();
 
     void encodeImage(const QImage &image, bool async = true);

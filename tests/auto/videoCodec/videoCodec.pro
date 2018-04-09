@@ -9,7 +9,8 @@ INCLUDEPATH += ../../../src/Common/video
 
 VPATH += ../../../src/Common
 
-LIBS += -L"$$PWD/../../../libs/static/win64-msvc/" -lavcodec -lavutil -lavformat -lswscale -lswresample -lx264
+win:LIBS += -L"$$PWD/../../../libs/static/win64-msvc/" -lavcodec -lavutil -lavformat -lswscale -lswresample -lx264
+linux:LIBS += -L"$$PWD/../../../libs/static/linux64/"  -lavformat -lavcodec -lswscale -lavutil -lswresample -lx264
 
 TEMPLATE = app
 

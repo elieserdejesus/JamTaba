@@ -9,8 +9,18 @@ class TestVideoCodec: public QObject
 {
     Q_OBJECT
 
+public:
+    TestVideoCodec() :
+        muxer(new FFMpegMuxer(this))
+    {
+
+    }
+
 private slots:
     void encodeDecode();
+
+private:
+    FFMpegMuxer *muxer;
 };
 
 void TestVideoCodec::encodeDecode()
@@ -24,25 +34,25 @@ void TestVideoCodec::encodeDecode()
 
     bool encoding = true;
 
-    FFMpegMuxer *muxer = new FFMpegMuxer();
-
     QObject::connect(muxer, &FFMpegMuxer::encodingFinished, [&]() {
-        encoding = false;
+        if (encoding) {
+            encoding = false;
 
-        //    QFile file("C:/Users/Elieser/Documents/build-TestLibx264-Qt_MSVC_64bits-Debug/teste.h264");
-        //    if(!file.open(QIODevice::WriteOnly))
-        //        qCritical() << file.errorString();
-        //    file.write(encodedData);
-        //    file.close();
+            //    QFile file("C:/Users/Elieser/Documents/build-TestLibx264-Qt_MSVC_64bits-Debug/teste.h264");
+            //    if(!file.open(QIODevice::WriteOnly))
+            //        qCritical() << file.errorString();
+            //    file.write(encodedData);
+            //    file.close();
 
-        FFMpegDemuxer demuxer(nullptr, encodedData);
-        QObject::connect(&demuxer, &FFMpegDemuxer::imagesDecoded, [&](QList<QImage> images, uint fps){
-            qDebug() << "images decoded:" << images.size() << " fps:" << fps;
-            QCOMPARE((uint)frameRate, fps);
-            QCOMPARE((quint64)images.size(), framesToEncode);
-        });
+            FFMpegDemuxer demuxer(nullptr, encodedData);
+            QObject::connect(&demuxer, &FFMpegDemuxer::imagesDecoded, [&](QList<QImage> images, uint fps){
+                qDebug() << "images decoded:" << images.size() << " fps:" << fps;
+                QCOMPARE((uint)frameRate, fps);
+                QCOMPARE((quint64)images.size(), framesToEncode);
+            });
 
-        demuxer.decode();
+            demuxer.decode();
+        }
     });
 
     QObject::connect(muxer, &FFMpegMuxer::dataEncoded, [&](const QByteArray &data, bool isFirstPacket) {

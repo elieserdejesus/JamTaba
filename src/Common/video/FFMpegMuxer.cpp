@@ -74,7 +74,8 @@ public:
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-FFMpegMuxer::FFMpegMuxer() :
+FFMpegMuxer::FFMpegMuxer(QObject *parent) :
+      QObject(parent),
       encodeVideo(false),
       encodeAudio(false),
       videoPts(0),
@@ -196,8 +197,13 @@ void FFMpegMuxer::finishCurrentInterval()
     initialized = false;
     encodedFrames = 0;
 
-    emit encodingFinished();
+    if (frame)
+        av_frame_free(&frame);
 
+    if (tempFrame)
+        av_frame_free(&tempFrame);
+
+    emit encodingFinished();
 }
 
 bool FFMpegMuxer::addVideoStream(AVCodecID codecID, AVDictionary **opts)
