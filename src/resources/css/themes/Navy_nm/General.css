@@ -373,6 +373,23 @@ LocalTrackView #inputSelectionButton
     background-color: #353535;
 
     color: rgba(255, 255, 255, 100);
+    
+    selection-background-color: #353535;
+}
+
+QComboBox:hover
+{
+    background-color: #454545;
+}
+
+QComboBox::drop-down
+{
+    border: 0px;
+}
+
+QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
 }
 
 AudioSlider
