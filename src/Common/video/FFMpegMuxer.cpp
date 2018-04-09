@@ -110,7 +110,8 @@ FFMpegMuxer::~FFMpegMuxer()
 
 void FFMpegMuxer::finish()
 {
-    finishCurrentInterval();
+    QtConcurrent::run(&threadPool, this, &FFMpegMuxer::finishCurrentInterval);
+
 }
 
 void FFMpegMuxer::encodeImage(const QImage &image, bool async)
@@ -178,7 +179,10 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
 void FFMpegMuxer::finishCurrentInterval()
 {
-    if (!codecContext || !avcodec_is_open(codecContext)) {
+    if (!initialized)
+        return;
+
+    if (!codecContext || (codecContext && !avcodec_is_open(codecContext))) {
         return;
     }
 
