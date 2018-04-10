@@ -51,6 +51,7 @@ protected:
     QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const override;
 
     void setupVerticalLayout() override;
+    void resizeEvent(QResizeEvent *ev) override;
 
 private:
     MarqueeLabel *channelNameLabel;
@@ -69,6 +70,8 @@ private:
     Qt::Orientation orientation;
 
     void setupHorizontalLayout();
+
+    void updateExtraWidgetsVisibility();
 
     bool downloadingFirstInterval;
     void setDownloadedChunksDisplayVisibility(bool visible);

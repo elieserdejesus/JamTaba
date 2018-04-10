@@ -336,6 +336,8 @@ void NinjamTrackView::setOrientation(Qt::Orientation newOrientation)
 
     setProperty("horizontal", newOrientation == Qt::Horizontal ? true : false);
     updateStyleSheet();
+
+    updateExtraWidgetsVisibility();
 }
 
 void NinjamTrackView::setupVerticalLayout()
@@ -463,6 +465,7 @@ void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible)
 
 void NinjamTrackView::setChannelName(const QString &name)
 {
+    instrumentsButton->setToolTip(name);
     this->channelNameLabel->setText(name);
     int nameWidth = this->channelNameLabel->fontMetrics().width(name);
     if (nameWidth <= this->channelNameLabel->contentsRect().width())
@@ -540,4 +543,21 @@ InstrumentsButton *NinjamTrackView::createInstrumentsButton()
         icons.append(QIcon(instrumentsDir.filePath(iconInfo.completeBaseName())));
 
     return new InstrumentsButton(defaultIcon, icons, this);
+}
+
+void NinjamTrackView::resizeEvent(QResizeEvent *ev)
+{
+    BaseTrackView::resizeEvent(ev);
+
+    updateExtraWidgetsVisibility();
+}
+
+void NinjamTrackView::updateExtraWidgetsVisibility()
+{
+    bool showExtraWidgets = orientation == Qt::Horizontal || height() >= 260; // hide channel name label and network usage if the height is small (VST/AU plugin small window with camera activated);
+
+    mainLayout->setVerticalSpacing(showExtraWidgets ? 6 : 3);
+
+    channelNameLabel->setVisible(showExtraWidgets);
+    networkUsageLabel->setVisible(showExtraWidgets);
 }
