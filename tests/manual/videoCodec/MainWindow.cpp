@@ -46,12 +46,13 @@ MainWindow::MainWindow() :
                 qDebug() << "decoded images:" << images.size() << " rate:" << frameRate;
                 decodedImages << images;
 
-                timer->setInterval(1000/frameRate);
-                timer->start();
+                if (frameRate > 0) {
+                    timer->setInterval(1000/frameRate);
+                    timer->start();
+                }
             });
 
             demuxer->decode();
-
             encodedData.clear();
         }
 
@@ -111,7 +112,7 @@ void MainWindow::initializeEncodingStuff()
     muxer = new FFMpegMuxer();
     muxer->setVideoResolution(camera->viewfinderSettings().resolution());
     muxer->setVideoFrameRate(fps);
-    muxer->setVideoQuality(FFMpegMuxer::LOW_VIDEO_QUALITY);
+    muxer->setVideoQuality(FFMpegMuxer::VideoQualityMedium);
 }
 
 void MainWindow::initializeCamera(QGridLayout *layout)

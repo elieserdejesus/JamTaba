@@ -376,8 +376,6 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, qui
 {
     if (isFirstPart) {
 
-        Q_ASSERT(encodedData.left(4) ==  "RIFF");
-
         if (!videoIntervalToUpload.isEmpty()) {
 
             // flush the end of previous interval
@@ -1110,6 +1108,8 @@ void MainController::stopNinjamController()
     }
 
     audioIntervalsToUpload.clear();
+
+    videoEncoder.finish(); // release memory used by video encoder
 }
 
 void MainController::setTranslationLanguage(const QString &languageCode)
