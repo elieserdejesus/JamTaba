@@ -282,7 +282,8 @@ void AudioSlider::paintEvent(QPaintEvent *)
 
     if (!showMeterOnly) {
 
-        drawMarker(painter);
+        if (value() != 100) // only paint the zero dB marker if the slider is not in the zero dB marker
+            drawMarker(painter);
 
         paintSliderHandler(painter);
     }
@@ -680,7 +681,7 @@ void PanSlider::mouseDoubleClickEvent(QMouseEvent *ev)
 
 void PanSlider::paintEvent(QPaintEvent *ev)
 {
-    {
+    if (value() != 0){ // painting the center marker only when the slider is not in the center marker
         QPainter painter(this);
         drawMarker(painter);
     }
