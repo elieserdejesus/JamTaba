@@ -1,7 +1,3 @@
-NinjamTrackView[horizontal="true"] #panSlider
-{
-    max-width: 50px;
-}
 
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#receiveButton:hover:checked,

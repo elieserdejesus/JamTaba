@@ -11,11 +11,6 @@ NinjamTrackView QProgressBar
     border-radius: 2px;
 }
 
-NinjamTrackView[horizontal="true"] #panSlider
-{
-    max-width: 50px;
-}
-
 NinjamTrackGroupView[horizontal="true"] #topPanel
 {
     border-top-left-radius: 2px;

@@ -40,11 +40,6 @@ NinjamTrackView[unlighted="true"] #receiveButton:hover:!checked
     border-color: rgba(0, 0, 0, 90);
 }
 
-NinjamTrackView[horizontal="true"] #panSlider
-{
-    max-width: 50px;
-}
-
 NinjamTrackView[horizontal="true"] #levelSlider::handle:horizontal:hover
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
