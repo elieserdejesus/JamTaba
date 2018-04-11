@@ -34,7 +34,6 @@ NinjamTrackView::NinjamTrackView(MainController *mainController, long trackID) :
     downloadingFirstInterval(true),
     lastNetworkUsageUpdate(0)
 {
-    channelNameLabel = createChannelNameLabel();
 
     chunksDisplay = new IntervalChunksDisplay(this);
     chunksDisplay->setVisible(false);
@@ -120,17 +119,6 @@ QPushButton *NinjamTrackView::createReceiveButton() const
     return button;
 }
 
-MarqueeLabel *NinjamTrackView::createChannelNameLabel() const
-{
-    MarqueeLabel *label = new MarqueeLabel();
-    label->setObjectName("channelName");
-    label->setText("");
-    label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-    label->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
-
-    return label;
-}
-
 MultiStateButton *NinjamTrackView::createLowCutButton(bool checked)
 {
     auto icons = IconFactory::createLowCutIcons(getTintColor());
@@ -171,9 +159,6 @@ QString NinjamTrackView::getLowCutStateText() const
 
 void NinjamTrackView::updateStyleSheet()
 {
-    style()->unpolish(channelNameLabel);
-    style()->polish(channelNameLabel);
-
     style()->unpolish(buttonLowCut);
     style()->polish(buttonLowCut);
 
@@ -225,7 +210,7 @@ void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialVal
 
 qint8 NinjamTrackView::guessInstrumentIcon() const
 {
-    auto channelName = channelNameLabel->text().toLower();
+    auto channelName = instrumentsButton->toolTip().toLower();
 
     if (channelName.contains("guitar"))
         return static_cast<qint8>(InstrumentsIndexes::Guitar);
@@ -264,7 +249,6 @@ void NinjamTrackView::updateGuiElements()
 {
     if (isActivated()) {
         BaseTrackView::updateGuiElements();
-        channelNameLabel->updateMarquee();
 
         auto trackNode = getTrackNode();
         if (trackNode)
@@ -344,7 +328,6 @@ void NinjamTrackView::setupVerticalLayout()
 {
     BaseTrackView::setupVerticalLayout();
 
-    mainLayout->removeWidget(channelNameLabel);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
     mainLayout->removeItem(panWidgetsLayout);
@@ -358,12 +341,11 @@ void NinjamTrackView::setupVerticalLayout()
 
     auto columnCount = mainLayout->columnCount();
 
-    mainLayout->addWidget(channelNameLabel, 0, 0, 1, columnCount); // insert channel name label in top
-    mainLayout->addWidget(instrumentsButton, 1, 0, 1, columnCount, Qt::AlignCenter);
-    mainLayout->addLayout(panWidgetsLayout, 2, 0, 1, columnCount);
-    mainLayout->addWidget(levelSlider, 3, 0);
-    mainLayout->addLayout(secondaryChildsLayout, 3, 1, 1, columnCount - 1, Qt::AlignBottom);
-    mainLayout->addWidget(chunksDisplay, 4, 0, 1, columnCount); // append chunks display in bottom
+    mainLayout->addWidget(instrumentsButton, 0, 0, 1, columnCount, Qt::AlignCenter);
+    mainLayout->addLayout(panWidgetsLayout, 1, 0, 1, columnCount);
+    mainLayout->addWidget(levelSlider, 2, 0);
+    mainLayout->addLayout(secondaryChildsLayout, 2, 1, 1, columnCount - 1, Qt::AlignBottom);
+    mainLayout->addWidget(chunksDisplay, 3, 0, 1, columnCount); // append chunks display in bottom
 
     secondaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
 
@@ -376,7 +358,6 @@ void NinjamTrackView::setupHorizontalLayout()
 {
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
-    mainLayout->removeWidget(channelNameLabel);
     mainLayout->removeWidget(levelSlider);
     mainLayout->removeItem(panWidgetsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
@@ -386,35 +367,31 @@ void NinjamTrackView::setupHorizontalLayout()
     auto rowCount = mainLayout->rowCount();
 
     mainLayout->addWidget(instrumentsButton, 0, 0, rowCount, 1, Qt::AlignCenter);
-    mainLayout->addWidget(channelNameLabel, 0, 1);
+    mainLayout->addLayout(panWidgetsLayout, 0, 1, 1, 1);
     mainLayout->addWidget(levelSlider, 0, 2);
-    mainLayout->addLayout(panWidgetsLayout, 0, 3);
-    mainLayout->addWidget(chunksDisplay, 1, 1, rowCount, 1);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 2, rowCount, 2, Qt::AlignRight | Qt::AlignBottom);
+    mainLayout->addWidget(chunksDisplay, 1, 1, rowCount-1, 1);
+    mainLayout->addLayout(secondaryChildsLayout, 1, 2, rowCount-1, 1, Qt::AlignRight | Qt::AlignBottom);
 
-    mainLayout->setColumnStretch(0, 0); // instrument widget
-    mainLayout->setColumnStretch(1, 0); // channel name
-    mainLayout->setColumnStretch(2, 3); // fader
-    mainLayout->setColumnStretch(3, 1); // pan
+    mainLayout->setColumnStretch(0, 0); // instrument button
+    mainLayout->setColumnStretch(1, 1); // pan slider
+    mainLayout->setColumnStretch(2, 3); // level slider
 
     auto vMargin = narrowed ? 3 : 6;
     mainLayout->setContentsMargins(vMargin, 3, vMargin, 3);
     mainLayout->setVerticalSpacing(vMargin);
 
-    secondaryChildsLayout->setDirection(QBoxLayout::LeftToRight);
+    secondaryChildsLayout->setDirection(QBoxLayout::RightToLeft);
 
     levelSlider->setOrientation(Qt::Horizontal);
     levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
-    channelNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
-
     panSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
-    muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
+    muteSoloLayout->setDirection(QHBoxLayout::RightToLeft);
 
     boostSpinBox->setOrientation(Qt::Horizontal);
 
-    networkUsageLayout->setDirection(QBoxLayout::LeftToRight);
+    networkUsageLayout->setDirection(QBoxLayout::RightToLeft);
 }
 
 QPoint NinjamTrackView::getDbValuePosition(const QString &dbValueText,
@@ -466,13 +443,6 @@ void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible)
 void NinjamTrackView::setChannelName(const QString &name)
 {
     instrumentsButton->setToolTip(name);
-    this->channelNameLabel->setText(name);
-    int nameWidth = this->channelNameLabel->fontMetrics().width(name);
-    if (nameWidth <= this->channelNameLabel->contentsRect().width())
-        this->channelNameLabel->setAlignment(Qt::AlignCenter);
-    else
-        this->channelNameLabel->setAlignment(Qt::AlignLeft);
-    this->channelNameLabel->setToolTip(name);
 }
 
 void NinjamTrackView::setPan(int value)
@@ -558,6 +528,5 @@ void NinjamTrackView::updateExtraWidgetsVisibility()
 
     mainLayout->setVerticalSpacing(showExtraWidgets ? 6 : 3);
 
-    channelNameLabel->setVisible(showExtraWidgets);
     networkUsageLabel->setVisible(showExtraWidgets);
 }
