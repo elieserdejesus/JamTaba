@@ -98,8 +98,8 @@ signals:
     void channelXmitChanged(long channelID, bool transmiting);
     void channelAudioChunkDownloaded(long channelID);
     void channelAudioFullyDownloaded(long channelID);
-    void userLeave(const QString &userName);
-    void userEnter(const QString &userName);
+    void userLeave(const QString &userFullName);
+    void userEnter(const QString &userFullName);
 
     void publicChatMessageReceived(const User &user, const QString &message);
     void privateChatMessageReceived(const User &user, const QString &message);

@@ -299,7 +299,7 @@ private slots:
 
     void selectNewCamera(int cameraIndex);
 
-    void handleUserLeaving(const QString &userName);
+    void handleUserLeaving(const QString &userFullName);
     void handleUserEntering(const QString &userName);
 
     void handleChordProgressionMessage(const User &user, const QString &message);

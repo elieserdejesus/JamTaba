@@ -743,7 +743,7 @@ long NinjamController::computeTotalSamplesInInterval()
 //ninjam slots
 void NinjamController::handleNinjamUserEntering(const User &user)
 {
-    emit userEnter(user.getName());
+    emit userEnter(user.getFullName());
 }
 
 void NinjamController::handleNinjamUserExiting(const User &user)
@@ -751,7 +751,7 @@ void NinjamController::handleNinjamUserExiting(const User &user)
      for (const auto &channel : user.getChannels()) {
         removeTrack(user, channel);
      }
-     emit userLeave(user.getName());
+     emit userLeave(user.getFullName());
 }
 
 void NinjamController::addNinjamRemoteChannel(const User &user, const UserChannel &channel)
