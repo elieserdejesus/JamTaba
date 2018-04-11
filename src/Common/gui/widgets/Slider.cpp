@@ -298,7 +298,7 @@ void AudioSlider::paintMaxPeakMarker(QPainter &painter, qreal maxPeakPosition, c
     QRectF maxPeakRect(isVerticalMeter ? rect.left() : (rect.left() + maxPeakPosition - MAX_PEAK_MARKER_SIZE),
                    isVerticalMeter ? (height() - maxPeakPosition) : rect.top(),
                    isVerticalMeter ? rect.width() - 1 : MAX_PEAK_MARKER_SIZE,
-                   isVerticalMeter ? MAX_PEAK_MARKER_SIZE : rect.height());
+                   isVerticalMeter ? MAX_PEAK_MARKER_SIZE : rect.height() - 1);
 
     painter.fillRect(maxPeakRect, maxPeakColor);
 }
