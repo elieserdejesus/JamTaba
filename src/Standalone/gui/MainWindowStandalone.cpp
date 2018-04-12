@@ -483,8 +483,7 @@ void MainWindowStandalone::addChannelsGroup(const QString &groupName)
 }
 
 void MainWindowStandalone::readWindowSettings(bool isWindowMaximized) {
-    QSettings settings(QCoreApplication::organizationName(),
-                       QCoreApplication::applicationName());
+    QSettings settings(QCoreApplication::applicationName());
 
     QPoint pos = settings.value("pos", QPoint(50, 50)).toPoint();
     QSize size = settings.value("size", QSize(400, 400)).toSize();
@@ -499,8 +498,7 @@ void MainWindowStandalone::readWindowSettings(bool isWindowMaximized) {
 
 void MainWindowStandalone::writeWindowSettings() {
     /* Save position/size of main window */
-    QSettings settings(QCoreApplication::organizationName(),
-                       QCoreApplication::applicationName());
+    QSettings settings(QCoreApplication::applicationName());
 
     settings.setValue("pos", pos());
     settings.setValue("size", size());

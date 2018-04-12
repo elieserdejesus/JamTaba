@@ -11,7 +11,6 @@
 
 int main(int argc, char* args[] ){
 
-    QApplication::setOrganizationName("Jamtaba");
     QApplication::setApplicationName("JamTaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 
@@ -29,7 +28,7 @@ int main(int argc, char* args[] ){
     QApplication application(argc, args);
 #endif
 
-    application.setStyle("fusion"); // same visual in all plataforms
+    application.setStyle("fusion"); // same visual in all platforms
 
     controller::MainControllerStandalone mainController(settings, &application);
     mainController.start();
