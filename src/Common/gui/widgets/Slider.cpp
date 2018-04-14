@@ -38,7 +38,7 @@ AudioSlider::AudioSlider(QWidget *parent) :
     showMeterOnly(false),
     showSliderOnly(false)
 {
-    setMaximum(120);
+    setMaximum(129); // up to +6dB
 
     connect(this, &AudioSlider::valueChanged, this, &AudioSlider::showToolTip);
 }
@@ -90,7 +90,7 @@ bool AudioSlider::isPaintingRmsOnly()
 
 void AudioSlider::setPeak(float peak, float rms)
 {
-    auto maxLinearValue = getMaxLinearValue();
+    auto maxLinearValue = Utils::linearGainToPower(getMaxLinearValue());
 
     peak = limitFloatValue(peak, 0.0f, maxLinearValue);
     rms = limitFloatValue(rms, 0.0f, maxLinearValue);
@@ -112,7 +112,7 @@ void AudioSlider::setPeak(float peak, float rms)
 
 void AudioSlider::setPeak(float leftPeak, float rightPeak, float leftRms, float rightRms)
 {
-    auto maxLinearValue = getMaxLinearValue();
+    auto maxLinearValue = Utils::linearGainToPower(getMaxLinearValue());
 
     leftPeak = limitFloatValue(leftPeak, 0.0f, maxLinearValue);
     rightPeak = limitFloatValue(rightPeak, 0.0f, maxLinearValue);
@@ -357,12 +357,15 @@ void AudioSlider::updateInternalValues()
 
 void AudioSlider::recreateInterpolatedColors()
 {
+    if (maximum() < 100)
+        return;
+
     // rebuild the peak and RMS colors vector
     peakColors.clear();
     rmsColors.clear();
 
     const quint32 size = isVertical() ? height() : width();
-    const quint32 segments = size/SEGMENTS_SIZE;
+    const quint32 segments = (size - (size * (maximum() - 100.0)/maximum()))/SEGMENTS_SIZE; // segments from -inf to 0 dB
 
     if (segments == 0) // just in case
         return;
@@ -394,9 +397,6 @@ void AudioSlider::paintSegments(QPainter &painter, const QRectF &rect, float pea
 {
     const quint32 segmentsToPaint = (quint32)peakPosition/SEGMENTS_SIZE;
 
-    if (segmentsColors.size() < segmentsToPaint)
-        return;
-
     const bool isVerticalMeter = isVertical();
 
     const qreal pad = drawSegments ? 1.0 : 0;
@@ -407,7 +407,8 @@ void AudioSlider::paintSegments(QPainter &painter, const QRectF &rect, float pea
     const qreal h = isVerticalMeter ? (SEGMENTS_SIZE - pad) : rect.height() - pad;
 
     for (quint32 i = 0; i < segmentsToPaint; ++i) {
-        painter.fillRect(x, y, w, h, segmentsColors[i]);
+        auto color = (i < segmentsColors.size()) ? segmentsColors[i] : segmentsColors.back(); // always use the last color (red) when painting big peak values
+        painter.fillRect(x, y, w, h, color);
         if (isVerticalMeter)
             y -= SEGMENTS_SIZE;
         else

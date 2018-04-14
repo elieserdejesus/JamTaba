@@ -103,7 +103,6 @@ void BaseTrackView::createLayoutStructure()
     levelSlider = new AudioSlider();
     levelSlider->setObjectName(QStringLiteral("levelSlider"));
     levelSlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    levelSlider->setMaximum(120);
     levelSlider->setValue(100);
     levelSlider->setTickPosition(QSlider::NoTicks);
 
