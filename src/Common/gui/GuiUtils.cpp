@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QString>
+#include <QDir>
 
 QString gui::capitalize(const QString &string)
 {
@@ -32,3 +33,4 @@ QString gui::sanitizeServerName(const QString &serverName)
 
     return serverName;
 }
+

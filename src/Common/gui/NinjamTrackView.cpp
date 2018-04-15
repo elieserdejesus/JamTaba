@@ -20,6 +20,7 @@
 #include "widgets/BoostSpinBox.h"
 #include "widgets/PeakMeter.h"
 #include "widgets/InstrumentsMenu.h"
+#include "IconFactory.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
@@ -503,14 +504,8 @@ void NinjamTrackView::setLowCutToNextState()
 
 InstrumentsButton *NinjamTrackView::createInstrumentsButton()
 {
-    QDir instrumentsDir(":/instruments");
-
-    QIcon defaultIcon(instrumentsDir.filePath("jtba.png"));
-
-    auto fileInfos = instrumentsDir.entryInfoList();
-    QList<QIcon> icons;
-    for (auto iconInfo : fileInfos)
-        icons.append(QIcon(instrumentsDir.filePath(iconInfo.completeBaseName())));
+    auto defaultIcon = IconFactory::getDefaultInstrumentIcon();
+    auto icons = IconFactory::getInstrumentIcons();
 
     return new InstrumentsButton(defaultIcon, icons, this);
 }
