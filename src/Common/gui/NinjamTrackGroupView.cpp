@@ -407,7 +407,8 @@ QSize NinjamTrackGroupView::sizeHint() const
             height += trackView->minimumSizeHint().height();
         }
 
-        return QSize(1, qMax(height, 64)); // 64 is the minimum height of a horizontal narrowed track
+        auto margins = mainLayout->contentsMargins();
+        return QSize(1, qMax(height, 64) + margins.top() + margins.bottom()); // 64 is the minimum height of a horizontal narrowed track
     }
 
     // grid layout
