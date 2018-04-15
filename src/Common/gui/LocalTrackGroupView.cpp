@@ -5,6 +5,8 @@
 #include "log/Logging.h"
 #include "MainController.h"
 #include "widgets/BlinkableButton.h"
+#include "IconFactory.h"
+#include "widgets/InstrumentsMenu.h"
 
 #include <QInputDialog>
 #include <QToolTip>
@@ -18,8 +20,11 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     preparingToTransmit(false),
     usingSmallSpacingInLayouts(false)
 {
+    instrumentsButton = createInstrumentsButton();
+    topPanelLayout->addWidget(instrumentsButton, 1, Qt::AlignCenter);
+
     toolButton = createToolButton();
-    topPanel->layout()->addWidget(toolButton);
+    topPanelLayout->addWidget(toolButton, 0, Qt::AlignTop | Qt::AlignRight);
 
     xmitButton = createXmitButton();
     layout()->addWidget(xmitButton);
@@ -29,6 +34,14 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     connect(xmitButton, &QPushButton::toggled, this, &LocalTrackGroupView::toggleTransmitingStatus);
 
     translateUi();
+}
+
+InstrumentsButton *LocalTrackGroupView::createInstrumentsButton()
+{
+    auto defaultIcon = IconFactory::getDefaultInstrumentIcon();
+    auto icons = IconFactory::getInstrumentIcons();
+
+    return new InstrumentsButton(defaultIcon, icons, this);
 }
 
 QString LocalTrackGroupView::getChannelGroupName() const
@@ -96,6 +109,7 @@ QPushButton *LocalTrackGroupView::createToolButton()
     QPushButton *toolButton = new QPushButton();
     toolButton->setObjectName(QStringLiteral("toolButton"));
     toolButton->setText(QStringLiteral(""));
+    toolButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     return toolButton;
 }

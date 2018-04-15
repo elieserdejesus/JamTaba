@@ -72,8 +72,8 @@ void TrackGroupView::setupUI()
 
     topPanelLayout = new QHBoxLayout();
     topPanelLayout->setObjectName(QStringLiteral("topPanelLayout"));
-    topPanelLayout->setSpacing(3);
-    topPanelLayout->setContentsMargins(6, 12, 6, 12);
+    topPanelLayout->setSpacing(0);
+    topPanelLayout->setContentsMargins(0, 3, 0, 0);
 
     tracksLayout = new QHBoxLayout();
     tracksLayout->setContentsMargins(0, 3, 0, 0); // adding a small top margin to fix #861

@@ -7,6 +7,7 @@
 class MainWindow;
 class QPushButton;
 class BlinkableButton;
+class InstrumentsButton;
 
 class LocalTrackGroupView : public TrackGroupView
 {
@@ -61,8 +62,8 @@ protected:
 
 private:
     QPushButton *toolButton;
-
     BlinkableButton *xmitButton;
+    InstrumentsButton *instrumentsButton;
 
     bool preparingToTransmit;
     bool usingSmallSpacingInLayouts;
@@ -78,6 +79,8 @@ private:
     QMenu* createPresetsDeletingSubMenu();
     void createPresetsActions(QMenu &menu);
     void createChannelsActions(QMenu &menu);
+
+    InstrumentsButton *createInstrumentsButton();
 
     void updateXmitButtonText();
 
