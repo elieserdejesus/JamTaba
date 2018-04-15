@@ -225,6 +225,11 @@ void LocalTrackGroupView::addSubChannel()
 {
     if (!trackViews.isEmpty()) {
         addTrackView(getChannelIndex());
+
+        auto firstSubchannel = trackViews.first();
+        auto lastSubchannel = trackViews.last();
+
+        lastSubchannel->setTintColor(firstSubchannel->getTintColor());
     }
 }
 

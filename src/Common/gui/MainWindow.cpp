@@ -888,6 +888,8 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
          localChannel->addTrackView(channelGroupIndex);
     }
 
+    localChannel->setTintColor(tintColor);
+
     ui.localTracksWidget->updateGeometry();
 
     return localChannel;

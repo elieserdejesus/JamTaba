@@ -21,7 +21,7 @@ TrackGroupView::TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *
 
 void TrackGroupView::setTintColor(const QColor &color)
 {
-    for(auto trackGroup : trackViews) {
+    for (auto trackGroup : trackViews) {
         trackGroup->setTintColor(color);
     }
 }
