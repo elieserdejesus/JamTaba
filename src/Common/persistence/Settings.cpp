@@ -535,9 +535,10 @@ void AudioUnitSettings::read(const QJsonObject &in)
 
 // +++++++++++++++++++++++++++++++++++++++
 
-Channel::Channel(const QString &name) :
-    name(name)
+Channel::Channel(int instrumentIndex) :
+    instrumentIndex(instrumentIndex)
 {
+
 }
 
 Plugin::Plugin(const audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data) :
@@ -576,7 +577,7 @@ LocalInputTrackSettings::LocalInputTrackSettings(bool createOneTrack) :
 {
     if (createOneTrack) {
         // create a default channel
-        Channel channel("my channel");
+        Channel channel(-1); // default instrument icon
         qint8 transpose = 0;
         quint8 lowerNote = 0;
         quint8 higherNote = 127;
@@ -601,7 +602,7 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
     QJsonArray channelsArray;
     for (const Channel &channel : channels) {
         QJsonObject channelObject;
-        channelObject["name"] = channel.name;
+        channelObject["instrument"] = channel.instrumentIndex;
         QJsonArray subchannelsArrays;
         int subchannelsCount = 0;
         for (const SubChannel &sub : channel.subChannels) {
@@ -682,7 +683,7 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowSubchannels)
         for (int i = 0; i < channelsArray.size(); ++i) {
 
             QJsonObject channelObject = channelsArray.at(i).toObject();
-            persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
+            persistence::Channel channel(getValueFromJson(channelObject, "instrument", static_cast<int>(-1)));
 
             if (channelObject.contains("subchannels")) {
 

@@ -24,7 +24,7 @@ public:
 
     persistence::LocalInputTrackSettings getInputsSettings() const override;
 
-    void addChannelsGroup(const QString &groupName) override;
+    void addChannelsGroup(int instrumentIndex) override;
 
     void refreshTrackInputSelection(int inputTrackIndex);
 

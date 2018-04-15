@@ -6,8 +6,6 @@
 #include <QBoxLayout>
 #include <QGridLayout>
 
-#include "TextEditorModifier.h"
-
 namespace Ui {
 class TrackGroupView;
 }
@@ -20,10 +18,8 @@ class TrackGroupView : public QFrame
     Q_OBJECT
 
 public:
-    explicit TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *parent = 0);
+    explicit TrackGroupView(QWidget *parent = 0);
     virtual ~TrackGroupView();
-    virtual void setGroupName(const QString &groupName);
-    virtual QString getGroupName() const;
 
     virtual BaseTrackView *addTrackView(long trackID);
 
@@ -65,7 +61,6 @@ protected:
 
     virtual BaseTrackView *createTrackView(long trackID) = 0;
 
-    QLineEdit *groupNameField;
     QWidget *topPanel;
     QBoxLayout *tracksLayout;
     QBoxLayout *topPanelLayout;
@@ -81,7 +76,7 @@ private slots:
     void showMaxPeakMarker(bool showMarker);
 
 private:
-    void setupUI(TextEditorModifier *textEditorFactory);
+    void setupUI();
 };
 
 

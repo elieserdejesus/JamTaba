@@ -34,8 +34,7 @@ public:
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
-    void setGroupName(const QString &groupName) override;
-    QString getGroupName() const override;
+    void setUserName(const QString &groupName);
     void updateGuiElements() override;
     void setEstimatedChunksPerInterval(int estimatedChunks);
 
@@ -67,7 +66,7 @@ private:
     controller::MainController *mainController;
     QLabel *countryLabel;
     QLabel *countryFlag;
-    MarqueeLabel *groupNameLabel;
+    MarqueeLabel *userNameLabel;
     QLabel *chatBlockIconLabel;
     QString userIP;
     TracksLayout tracksLayoutEnum;

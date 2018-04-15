@@ -11,7 +11,7 @@
 #include <QDateTime>
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindow) :
-    TrackGroupView(mainWindow->createTextEditorModifier()),
+    TrackGroupView(mainWindow),
     index(channelIndex),
     mainFrame(mainWindow),
     peakMeterOnly(false),
@@ -26,21 +26,14 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
 
     connect(toolButton, &QPushButton::clicked, this, &LocalTrackGroupView::showMenu);
 
-    connect(groupNameField, &QLineEdit::editingFinished, this, &LocalTrackGroupView::nameChanged);
-
     connect(xmitButton, &QPushButton::toggled, this, &LocalTrackGroupView::toggleTransmitingStatus);
-
-    groupNameField->setAlignment(Qt::AlignHCenter);
 
     translateUi();
 }
 
-void LocalTrackGroupView::refreshStyleSheet()
+QString LocalTrackGroupView::getChannelGroupName() const
 {
-    TrackGroupView::refreshStyleSheet();
-
-    style()->unpolish(groupNameField);
-    style()->polish(groupNameField);
+    return "";
 }
 
 void LocalTrackGroupView::translateUi()
@@ -52,8 +45,6 @@ void LocalTrackGroupView::translateUi()
 
     toolButton->setToolTip(tr("Add or remove channels..."));
     toolButton->setAccessibleDescription(toolButton->toolTip());
-
-    groupNameField->setPlaceholderText(tr("channel name"));
 }
 
 void LocalTrackGroupView::updateXmitButtonText()
@@ -118,7 +109,17 @@ void LocalTrackGroupView::closePluginsWindows()
 
 void LocalTrackGroupView::addChannel()
 {
-    mainFrame->addChannelsGroup("");
+    mainFrame->addChannelsGroup(-1); // using default instrument icon
+}
+
+void LocalTrackGroupView::setInstrumentIcon(int instrumentIndex)
+{
+
+}
+
+int LocalTrackGroupView::getInstrumentIcon() const
+{
+    return -1;
 }
 
 void LocalTrackGroupView::resetTracks()

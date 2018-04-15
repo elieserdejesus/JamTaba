@@ -42,6 +42,11 @@ public:
 
     QSize sizeHint() const override; // fixing #962
 
+    QString getChannelGroupName() const;
+
+    void setInstrumentIcon(int instrumentIndex);
+    int getInstrumentIcon() const;
+
 protected:
 
     LocalTrackView *createTrackView(long trackID) override;
@@ -49,8 +54,6 @@ protected:
     void translateUi() override;
 
     virtual void populateMenu(QMenu &menu);
-
-    void refreshStyleSheet() override;
 
     static const int MAX_SUB_CHANNELS = 2;
 
