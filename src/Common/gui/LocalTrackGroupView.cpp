@@ -23,6 +23,9 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     instrumentsButton = createInstrumentsButton();
     topPanelLayout->addWidget(instrumentsButton, 1, Qt::AlignCenter);
 
+    connect(instrumentsButton, &InstrumentsButton::iconSelected, this, &LocalTrackGroupView::instrumentIconChanged);
+
+
     toolButton = createToolButton();
     topPanelLayout->addWidget(toolButton, 0, Qt::AlignTop | Qt::AlignRight);
 
@@ -46,7 +49,7 @@ InstrumentsButton *LocalTrackGroupView::createInstrumentsButton()
 
 QString LocalTrackGroupView::getChannelGroupName() const
 {
-    return "";
+    return instrumentIndexToString(static_cast<InstrumentIndex>(getInstrumentIcon()));
 }
 
 void LocalTrackGroupView::translateUi()
@@ -128,12 +131,12 @@ void LocalTrackGroupView::addChannel()
 
 void LocalTrackGroupView::setInstrumentIcon(int instrumentIndex)
 {
-
+    instrumentsButton->setInstrumentIcon(instrumentIndex);
 }
 
 int LocalTrackGroupView::getInstrumentIcon() const
 {
-    return -1;
+    return instrumentsButton->getSelectedIcon();
 }
 
 void LocalTrackGroupView::resetTracks()

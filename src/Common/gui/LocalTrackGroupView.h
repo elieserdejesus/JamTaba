@@ -87,7 +87,7 @@ private:
     static QString getStripedPresetName(const QString &presetName);
 
 signals:
-    void nameChanged();
+    void instrumentIconChanged();
     void trackRemoved();
     void trackAdded();
     void presetLoaded();

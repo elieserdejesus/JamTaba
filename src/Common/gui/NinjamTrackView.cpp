@@ -211,39 +211,9 @@ void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialVal
 
 qint8 NinjamTrackView::guessInstrumentIcon() const
 {
-    auto channelName = instrumentsButton->toolTip().toLower();
+    auto channelName = instrumentsButton->toolTip();
 
-    if (channelName.contains("guitar"))
-        return static_cast<qint8>(InstrumentsIndexes::Guitar);
-
-    if (channelName.contains("key"))
-        return static_cast<qint8>(InstrumentsIndexes::Keys);
-
-    if (channelName.contains("piano"))
-        return static_cast<qint8>(InstrumentsIndexes::Piano);
-
-    if (channelName.contains("voice") || channelName.contains("sing"))
-        return static_cast<qint8>(InstrumentsIndexes::Mic);
-
-    if (channelName.contains("drum"))
-        return static_cast<qint8>(InstrumentsIndexes::DrumStick);
-
-    if (channelName.contains("mandolin"))
-        return static_cast<qint8>(InstrumentsIndexes::Mandolin);
-
-    if (channelName.contains("violin"))
-        return static_cast<qint8>(InstrumentsIndexes::Violin);
-
-    if (channelName.contains("double"))
-        return static_cast<qint8>(InstrumentsIndexes::DoubleBass);
-
-    if (channelName.contains("bass"))
-        return static_cast<qint8>(InstrumentsIndexes::ElectricBass);
-
-    if (channelName.contains("trumpet"))
-        return static_cast<qint8>(InstrumentsIndexes::Trumpet);
-
-    return CacheEntry::DEFAULT_INSTRUMENT_INDEX;
+    return static_cast<qint8>(stringToInstrumentIndex(channelName));
 }
 
 void NinjamTrackView::updateGuiElements()
@@ -444,6 +414,8 @@ void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible)
 void NinjamTrackView::setChannelName(const QString &name)
 {
     instrumentsButton->setToolTip(name);
+
+    instrumentsButton->setInstrumentIcon(guessInstrumentIcon());
 }
 
 void NinjamTrackView::setPan(int value)
