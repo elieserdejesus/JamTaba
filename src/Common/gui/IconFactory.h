@@ -31,6 +31,9 @@ public:
     static QIcon createLooperLoadIcon(const QColor &tintColor);
     static QIcon createLooperResetIcon(const QColor &tintColor);
 
+    static QIcon getDefaultInstrumentIcon();
+    static QList<QIcon> getInstrumentIcons();
+
 private:
     static void tintImage(QImage &image, const QColor &tint, bool maximizeAlpha = true);
 

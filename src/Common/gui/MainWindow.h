@@ -84,7 +84,7 @@ public:
 
     void highlightChannelGroup(int index) const;
 
-    virtual void addChannelsGroup(const QString &name);
+    virtual void addChannelsGroup(int instrumentIndex);
     void removeChannelsGroup(int channelGroupIndex);
 
     void exitFromRoom(bool normalDisconnection, QString disconnectionMessage = "");
@@ -143,7 +143,7 @@ protected:
 
     bool eventFilter(QObject *target, QEvent *event) override;
 
-    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, const QString &channelName,
+    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, int instrumentIndex,
                                          bool createFirstSubchannel);
 
     // this factory method is overrided in derived classes to create more specific views

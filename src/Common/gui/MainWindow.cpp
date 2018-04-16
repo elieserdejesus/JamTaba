@@ -32,6 +32,7 @@
 #include "video/VideoFrameGrabber.h"
 #include "chat/NinjamVotingMessageParser.h"
 #include "loginserver/MainChat.h"
+#include "TextEditorModifier.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
@@ -728,7 +729,7 @@ persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
 {
     LocalInputTrackSettings settings;
     for (auto trackGroupView : localGroupChannels) {
-        Channel channel(trackGroupView->getGroupName());
+        Channel channel(trackGroupView->getInstrumentIcon());
         int subchannelsCount = 0;
         for (auto trackView : trackGroupView->getTracks<LocalTrackView *>()) {
             auto inputNode = trackView->getInputNode();
@@ -814,10 +815,10 @@ void MainWindow::highlightChannelGroup(int index) const
         Highligther::getInstance()->highlight(localGroupChannels.at(index));
 }
 
-void MainWindow::addChannelsGroup(const QString &name)
+void MainWindow::addChannelsGroup(int instrumentIndex)
 {
     int channelIndex = localGroupChannels.size();
-    addLocalChannel(channelIndex, name, true);
+    addLocalChannel(channelIndex, instrumentIndex, true);
 
     if (mainController->isPlayingInNinjamRoom()) {
         mainController->sendNewChannelsNames(getChannelsNames());
@@ -865,12 +866,12 @@ LocalTrackGroupView *MainWindow::createLocalTrackGroupView(int channelGroupIndex
     return new LocalTrackGroupView(channelGroupIndex, this);
 }
 
-LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QString &channelName,
+LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, int instrumentIndex,
                                                  bool createFirstSubchannel)
 {
     auto localChannel = createLocalTrackGroupView(channelGroupIndex);
 
-    connect(localChannel, &LocalTrackGroupView::nameChanged, this, &MainWindow::updateChannelsNames);
+    connect(localChannel, &LocalTrackGroupView::instrumentIconChanged, this, &MainWindow::updateChannelsNames);
 
     connect(localChannel, &LocalTrackGroupView::trackAdded, this, &MainWindow::updateLocalInputChannelsGeometry);
 
@@ -881,7 +882,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
 
     localGroupChannels.append(localChannel);
 
-    localChannel->setGroupName(channelName);
+    localChannel->setInstrumentIcon(instrumentIndex);
     ui.localTracksLayout->addWidget(localChannel);
 
     if (createFirstSubchannel) {
@@ -949,7 +950,7 @@ void MainWindow::openLooperWindow(uint trackID)
         Q_ASSERT(channel);
 
         int subchannelInternalIndex = channel->getSubchannelInternalIndex(trackID);
-        QString channelName = channel->getGroupName();
+        QString channelName = channel->getChannelGroupName();
         if (channelName.isEmpty())
             channelName = tr("Channel %1").arg(QString::number(channel->getChannelIndex() + 1));
         else
@@ -980,10 +981,9 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
 
     int channelIndex = 0;
     for (const auto &channel : inputsSettings.channels) {
-        qCDebug(jtGUI) << "\tCreating channel "<< channel.name;
+        qCDebug(jtGUI) << "\tCreating channel "<< channelIndex;
         bool createFirstSubChannel = channel.subChannels.isEmpty();
-        auto channelView = addLocalChannel(channelIndex, channel.name,
-                                                           createFirstSubChannel);
+        auto channelView = addLocalChannel(channelIndex, channel.instrumentIndex, createFirstSubChannel);
         for (const auto &subChannel : channel.subChannels) {
             qCDebug(jtGUI) << "\t\tCreating sub-channel ";
             auto subChannelView = channelView->addTrackView(channelIndex);
@@ -992,7 +992,7 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
         channelIndex++;
     }
     if (channelIndex == 0) // no channels in settings file or no settings file...
-        addLocalChannel(0, "", true); // create a channel using an empty name
+        addLocalChannel(0, -1, true); // create a channel using an empty instrument icon
 
     qCDebug(jtGUI) << "Initializing local inputs done!";
 
@@ -1199,8 +1199,8 @@ void MainWindow::stopPublicRoomStream(const login::RoomInfo &roomInfo)
 QStringList MainWindow::getChannelsNames() const
 {
     QStringList channelsNames;
-    for (LocalTrackGroupView *channel : localGroupChannels)
-        channelsNames.append(channel->getGroupName());
+    for (auto channelGroup : localGroupChannels)
+        channelsNames.append(channelGroup->getChannelGroupName());
 
     return channelsNames;
 }
@@ -2840,5 +2840,9 @@ void MainWindow::updateCollapseButtons()
 
 QString MainWindow::getChannelGroupName(int index) const
 {
-    return localGroupChannels.at(index)->getGroupName();
+    if (index >= 0 && index < localGroupChannels.size()) {
+        return localGroupChannels.at(index)->getChannelGroupName();
+    }
+
+    return QString();
 }

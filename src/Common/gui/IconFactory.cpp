@@ -3,6 +3,26 @@
 #include <QBitmap>
 #include <QImage>
 #include <QPushButton>
+#include <QDir>
+
+QList<QIcon> IconFactory::getInstrumentIcons()
+{
+    QDir instrumentsDir(":/instruments");
+
+    auto fileInfos = instrumentsDir.entryInfoList();
+    QList<QIcon> icons;
+    for (auto iconInfo : fileInfos)
+        icons.append(QIcon(instrumentsDir.filePath(iconInfo.completeBaseName())));
+
+    return icons;
+}
+
+QIcon IconFactory::getDefaultInstrumentIcon()
+{
+    QDir instrumentsDir(":/instruments");
+
+    return QIcon(instrumentsDir.filePath("jtba.png"));
+}
 
 QPixmap IconFactory::createFontSizePixmap(const QColor &tintColor)
 {
