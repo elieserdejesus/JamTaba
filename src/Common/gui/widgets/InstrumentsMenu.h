@@ -11,7 +11,6 @@ enum class InstrumentIndex : qint8
     ElectricBass,
     DoubleBass,
     Drums,
-    DrumStick,
     Gramophone,
     Guitar,
     JamTabaIcon,

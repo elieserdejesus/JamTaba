@@ -23,7 +23,7 @@ InstrumentIndex stringToInstrumentIndex(const QString &string)
         return InstrumentIndex::Mic;
 
     if (str.contains("drum"))
-        return InstrumentIndex::DrumStick;
+        return InstrumentIndex::Drums;
 
     if (str.contains("mandolin"))
         return InstrumentIndex::Mandolin;
@@ -65,8 +65,7 @@ QString instrumentIndexToString(InstrumentIndex index)
     case InstrumentIndex::Banjo:            return "Banjo";
     case InstrumentIndex::ElectricBass:     return "Bass";
     case InstrumentIndex::DoubleBass:       return "Double Bass";
-    case InstrumentIndex::Drums:            // drums
-    case InstrumentIndex::DrumStick:        return "Drums";
+    case InstrumentIndex::Drums:            return "Drums";
     case InstrumentIndex::Gramophone:       return "Loops";
     case InstrumentIndex::Guitar:           return "Guitar";
     case InstrumentIndex::JamTabaIcon:      return "";
