@@ -59,7 +59,7 @@ NinjamTrackView::NinjamTrackView(MainController *mainController, long trackID) :
     connect(buttonReceive, &QPushButton::toggled, this, &NinjamTrackView::setReceiveState);
 
     instrumentsButton = createInstrumentsButton();
-    connect(instrumentsButton, &InstrumentsButton::iconSelected, this, &NinjamTrackView::instrumentIconChanged);
+    connect(instrumentsButton, &InstrumentsButton::iconChanged, this, &NinjamTrackView::instrumentIconChanged);
 
     setupVerticalLayout();
 

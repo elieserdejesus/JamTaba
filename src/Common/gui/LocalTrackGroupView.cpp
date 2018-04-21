@@ -23,7 +23,7 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     instrumentsButton = createInstrumentsButton();
     topPanelLayout->addWidget(instrumentsButton, 1, Qt::AlignCenter);
 
-    connect(instrumentsButton, &InstrumentsButton::iconSelected, this, &LocalTrackGroupView::instrumentIconChanged);
+    connect(instrumentsButton, &InstrumentsButton::iconChanged, this, &LocalTrackGroupView::instrumentIconChanged);
 
 
     toolButton = createToolButton();
