@@ -382,7 +382,7 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, boo
 
         videoIntervalToUpload.reset(new UploadIntervalData()); // generate a new GUID
 
-        static const auto videoChannelIndex = 0;
+        static const auto videoChannelIndex = 1; // always sending video in 2nd channel to avoid drop intervals in first channel
         ninjamService->sendIntervalBegin(videoIntervalToUpload->getGUID(), videoChannelIndex, false); // starting a new video interval
     }
 
