@@ -17,9 +17,9 @@ const QList<ChordProgressionMeasure *> ChordProgression::getMeasures() const
 
 bool ChordProgression::canBeUsed(int bpi) const
 {
-    QList<uint> dividers = BpiUtils::getBpiDividers(bpi);
+    auto dividers = bpiUtils::getBpiDividers(bpi);
     for (uint divider : dividers) {
-        if (divider == measures.size())
+        if (static_cast<int>(divider) == measures.size())
             return true;
     }
 

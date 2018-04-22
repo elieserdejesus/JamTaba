@@ -4,7 +4,7 @@
 #include "JamRecorder.h"
 #include "QCoreApplication"
 
-namespace Recorder {
+namespace recorder {
 
 class ClipSortLogGenerator : public JamMetadataWriter
 {

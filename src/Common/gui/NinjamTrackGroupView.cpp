@@ -4,6 +4,8 @@
 #include "NinjamController.h"
 #include "video/FFMpegDemuxer.h"
 #include "IconFactory.h"
+#include "ninjam/client/Service.h"
+#include "MainWindow.h"
 
 #include <QMenu>
 #include <QDateTime>
@@ -11,11 +13,12 @@
 #include <QStackedLayout>
 #include <QtConcurrent>
 
-using namespace Controller;
-using namespace Persistence;
-
 const uint NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT = 350;
-const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.64;
+const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.78;
+
+using controller::MainController;
+using controller::NinjamController;
+using persistence::CacheEntry;
 
 NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long trackID,
                                            const QString &channelName, const QColor &userColor,
@@ -24,7 +27,8 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     mainController(mainController),
     userIP(initialValues.getUserIP()),
     tracksLayoutEnum(TracksLayout::VerticalLayout),
-    videoFrameRate(10)
+    videoFrameRate(10),
+    intervalsWithoutReceiveVideo(0)
 {
 
     // change the top panel layout to vertical (original is horizontal)
@@ -32,26 +36,23 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     topPanelLayout->setContentsMargins(0, 0, 0, 0);
     topPanelLayout->setSpacing(3);
 
-    // replace the original QLineEdit with a MarqueeLabel
-    topPanelLayout->removeWidget(groupNameField);
-    delete groupNameField;
-    groupNameLabel = new MarqueeLabel();
-    groupNameLabel->setObjectName("groupNameField");
-    groupNameLabel->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum));
+    userNameLabel = new MarqueeLabel();
+    userNameLabel->setObjectName("groupNameField");
+    userNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     QHBoxLayout *groupNameLayout = new QHBoxLayout();
-    groupNameLayout->addWidget(groupNameLabel, 1);
+    groupNameLayout->addWidget(userNameLabel, 1);
     chatBlockIconLabel = new QLabel(this);
     chatBlockIconLabel->setPixmap(QPixmap(":/images/chat_blocked.png"));
 
-    QString userName = initialValues.getUserName();
-    chatBlockIconLabel->setVisible(mainController->getNinjamController()->userIsBlockedInChat(userName));
+    setUserName(initialValues.getUserName());
+
+    auto blocked = mainController->userIsBlockedInChat(getUniqueName());
+    chatBlockIconLabel->setVisible(blocked);
 
     groupNameLayout->addWidget(chatBlockIconLabel);
     topPanelLayout->addLayout(groupNameLayout);
     topPanelLayout->setAlignment(groupNameLayout, Qt::AlignBottom);
-
-    setGroupName(userName);
 
     // country flag and label
     countryLabel = new QLabel();
@@ -77,7 +78,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     styleSheet += "stop: 0.35 " + userColor.name() + ", ";
     styleSheet += "stop: 0.65" + userColor.name() + ", ";
     styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
-    groupNameLabel->setStyleSheet(styleSheet);
+    userNameLabel->setStyleSheet(styleSheet);
 
     QIcon webcamIcon = IconFactory::createWebcamIcon(getTintColor());
     videoWidget = new VideoWidget(this, webcamIcon);
@@ -95,13 +96,15 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
         }
     });
 
+    //connect(mainController, &MainController::ipResolved, this, &NinjamTrackGroupView::updateGeoLocation);
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
     // reacting to chat block/unblock events
-    Controller::NinjamController *ninjamController = mainController->getNinjamController();
-    connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
-    connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
-    connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(startVideoStream()));
+    connect(mainController, &MainController::userBlockedInChat, this, &NinjamTrackGroupView::showChatBlockIcon);
+    connect(mainController, &MainController::userUnblockedInChat, this, &NinjamTrackGroupView::hideChatBlockIcon);
+
+    auto ninjamController = mainController->getNinjamController();
+    connect(ninjamController, &controller::NinjamController::startingNewInterval, this, &NinjamTrackGroupView::startVideoStream);
 
     setupVerticalLayout();
 }
@@ -132,14 +135,19 @@ void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)
 
 void NinjamTrackGroupView::startVideoStream()
 {
+    lastVideoRender = 0;
+
     if (!decodedImages.isEmpty()) {
         while (decodedImages.size() > 1)
             decodedImages.removeFirst(); // keep just the last decoded interval
     }
     else {
-        videoWidget->setVisible(false); // hide the video widget when transmition is stopped
-        mainLayout->removeWidget(videoWidget);
-        updateGeometry();
+        intervalsWithoutReceiveVideo++;
+        if (intervalsWithoutReceiveVideo > 1) {
+            videoWidget->setVisible(false); // hide the video widget when transmition is stopped
+            mainLayout->removeWidget(videoWidget);
+            setTracksLayout(tracksLayoutEnum);
+        }
     }
 }
 
@@ -148,26 +156,39 @@ void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
     videoWidget->setCurrentFrame(frame);
 
     videoWidget->setVisible(true);
+
+    intervalsWithoutReceiveVideo = 0;
+}
+
+QString NinjamTrackGroupView::getUniqueName() const
+{
+    QString userName = userNameLabel->text();
+    if (!userName.contains("@")) {
+        return QString("%1@%2")
+                .arg(userName)
+                .arg(userIP);
+    }
+
+    return userName;
 }
 
 void NinjamTrackGroupView::hideChatBlockIcon(const QString &unblockedUserName)
 {
-    if (unblockedUserName == getGroupName())
+    if (unblockedUserName == getUniqueName())
         chatBlockIconLabel->hide();
 }
 
 void NinjamTrackGroupView::showChatBlockIcon(const QString &blockedUserName)
 {
-    if (blockedUserName == getGroupName())
+    if (blockedUserName == getUniqueName())
         chatBlockIconLabel->show();
 }
 
 void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
-    QString userName = getGroupName();
-    auto ninjamController = mainController->getNinjamController();
+    QString userName = userNameLabel->text();
 
-    bool userIsBlockedInChat = ninjamController->userIsBlockedInChat(userName);
+    //bool userIsBlockedInChat = mainController->userIsBlockedInChat(getUniqueName());
 
     QAction *privateChatAction = contextMenu.addAction(tr("Private chat with %1").arg(userName));
     connect(privateChatAction, &QAction::triggered, this, [=]() {
@@ -179,31 +200,28 @@ void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
     QString localIP;
     auto service = mainController->getNinjamService();
     if (service) {
-        localIP = Ninjam::extractUserIP(service->getConnectedUserName());
+        localIP = ninjam::client::extractUserIP(service->getConnectedUserName());
     }
     privateChatAction->setEnabled(!userIP.isEmpty() && !localIP.isEmpty()); // admin IPs are empty
 
     contextMenu.addSeparator();
 
-    QAction *blockAction = contextMenu.addAction(tr("Block %1 in chat").arg(userName), this, SLOT(blockChatMessages()));
-    QAction *unblockAction = contextMenu.addAction(tr("Unblock %1 in chat").arg(userName), this, SLOT(unblockChatMessages()));
-
-    blockAction->setEnabled(!userIsBlockedInChat);
-    unblockAction->setEnabled(userIsBlockedInChat);
+    auto mainWindow = mainController->getMainWindow();
+    if (mainWindow) {
+        mainWindow->fillUserContextMenu(contextMenu, getUniqueName(), false);
+    }
 
     TrackGroupView::populateContextMenu(contextMenu);
 }
 
 void NinjamTrackGroupView::blockChatMessages()
 {
-    QString userNameToBlock = getGroupName();
-    mainController->blockUserInChat(userNameToBlock);
+    mainController->blockUserInChat(getUniqueName());
 }
 
 void NinjamTrackGroupView::unblockChatMessages()
 {
-    QString userNameToUnblock = getGroupName();
-    mainController->unblockUserInChat(userNameToUnblock);
+    mainController->unblockUserInChat(getUniqueName());
 }
 
 void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
@@ -211,7 +229,7 @@ void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
     if (ip != this->userIP)
         return;
 
-    Geo::Location location = mainController->getGeoLocation(ip);
+    auto location = mainController->getGeoLocation(ip);
     QString countryCode = location.getCountryCode().toLower();
     QString flagImage = ":/flags/flags/" + countryCode +".png";
     countryFlag->setPixmap(QPixmap(flagImage));
@@ -240,9 +258,6 @@ QString NinjamTrackGroupView::getRgbaColorString(const QColor &color, int alpha)
 
 void NinjamTrackGroupView::setTracksLayout(TracksLayout newLayout)
 {
-    if (newLayout == tracksLayoutEnum)
-        return;
-
     tracksLayoutEnum = newLayout;
     auto tracks = getTracks<NinjamTrackView *>();
     Qt::Orientation orientation = getTracksOrientation();
@@ -268,7 +283,7 @@ void NinjamTrackGroupView::setTracksLayout(TracksLayout newLayout)
         qCritical() << "Invalid layout " << static_cast<quint8>(newLayout);
     }
 
-    topPanel->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum));
+    topPanel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     setProperty("horizontal", orientation == Qt::Horizontal ? true : false);
     refreshStyleSheet();
@@ -300,7 +315,7 @@ void NinjamTrackGroupView::setupGridLayout()
 
     tracksLayout->setDirection(QBoxLayout::LeftToRight);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
 }
 
 void NinjamTrackGroupView::setupHorizontalLayout()
@@ -323,7 +338,7 @@ void NinjamTrackGroupView::setupHorizontalLayout()
 
     topPanel->setVisible(true);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 }
 
 void NinjamTrackGroupView::setupVerticalLayout()
@@ -347,7 +362,7 @@ void NinjamTrackGroupView::setupVerticalLayout()
     tracksLayout->setDirection(QBoxLayout::LeftToRight);
     topPanelLayout->setDirection(QBoxLayout::TopToBottom);
 
-    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 }
 
 void NinjamTrackGroupView::resetMainLayoutStretch()
@@ -368,14 +383,9 @@ NinjamTrackView *NinjamTrackGroupView::createTrackView(long trackID)
     return new NinjamTrackView(mainController, trackID);
 }
 
-void NinjamTrackGroupView::setGroupName(const QString &groupName)
+void NinjamTrackGroupView::setUserName(const QString &userName)
 {
-    groupNameLabel->setText(groupName);
-}
-
-QString NinjamTrackGroupView::getGroupName() const
-{
-    return groupNameLabel->text();
+    userNameLabel->setText(userName);
 }
 
 QSize NinjamTrackGroupView::sizeHint() const
@@ -389,7 +399,8 @@ QSize NinjamTrackGroupView::sizeHint() const
             height += trackView->minimumSizeHint().height();
         }
 
-        return QSize(1, qMax(height, 58));
+        auto margins = mainLayout->contentsMargins();
+        return QSize(1, qMax(height, 64) + margins.top() + margins.bottom()); // 64 is the minimum height of a horizontal narrowed track
     }
 
     // grid layout
@@ -430,7 +441,7 @@ void NinjamTrackGroupView::setNarrowStatus(bool narrow)
 void NinjamTrackGroupView::updateGuiElements()
 {
     TrackGroupView::updateGuiElements();
-    groupNameLabel->updateMarquee();
+    userNameLabel->updateMarquee();
 
     // video
     if (!decodedImages.isEmpty()) {
@@ -443,6 +454,9 @@ void NinjamTrackGroupView::updateGuiElements()
             auto &currentImages = decodedImages.first();
             if (!currentImages.isEmpty()) {
                 updateVideoFrame(currentImages.takeFirst());
+            }
+            else {
+                decodedImages.removeFirst(); // avoid show the last received frame forever
             }
         }
     }

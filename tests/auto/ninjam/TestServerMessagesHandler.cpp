@@ -1,11 +1,12 @@
 #include "TestServerMessagesHandler.h"
-#include "ninjam/ServerMessagesHandler.h"
-#include "ninjam/ServerMessages.h"
+#include "ninjam/client/ServerMessagesHandler.h"
+#include "ninjam/client/ServerMessages.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
 
-using namespace Ninjam;
+using namespace ninjam::client;
+using namespace ninjam;
 
 /**
 Simulate the connection in a full server using data collected with Wireshark. The sequence of received message are a
@@ -22,14 +23,14 @@ public:
 
     void handleAllMessages() override
     {
-        currentHeader.reset(extractNextMessageHeader());
-        ServerAuthChallengeMessage authChallenge(currentHeader->payload);
-        stream >> authChallenge;
+        currentHeader = MessageHeader::from(device);
+        auto authChallenge = AuthChallengeMessage::from(device, currentHeader.getPayload());
+
         QVERIFY(authChallenge.serverHasLicenceAgreement());//just a simple check
 
-        currentHeader.reset(extractNextMessageHeader());
-        ServerAuthReplyMessage replyMessage(currentHeader->payload);
-        stream >> replyMessage;
+        currentHeader = MessageHeader::from(device);
+        auto replyMessage = AuthReplyMessage::from(device, currentHeader.getPayload());
+
         QCOMPARE(replyMessage.getErrorMessage(), QString("server full"));
     }
 };
@@ -64,30 +65,29 @@ public:
     void handleAllMessages() override
     {
         //auth challenge
-        currentHeader.reset(extractNextMessageHeader());
-        ServerAuthChallengeMessage authChallenge(currentHeader->payload);
-        stream >> authChallenge;
+        currentHeader = MessageHeader::from(device);
+        auto authChallenge = AuthChallengeMessage::from(device, currentHeader.getPayload());
+
         QVERIFY(authChallenge.serverHasLicenceAgreement());//just a simple check
 
         //auth reply
-        currentHeader.reset(extractNextMessageHeader());
-        ServerAuthReplyMessage replyMessage(currentHeader->payload);
-        stream >> replyMessage;
+        currentHeader = MessageHeader::from(device);
+        auto replyMessage = AuthReplyMessage::from(device,currentHeader.getPayload());
+
         QVERIFY(replyMessage.getNewUserName().startsWith("wiresharker"));
         QVERIFY(replyMessage.getMaxChannels() == 2);
         QVERIFY(replyMessage.userIsAuthenticated());
 
         //serverConfigChangeNotify
-        currentHeader.reset(extractNextMessageHeader());
-        ServerConfigChangeNotifyMessage serverConfig(currentHeader->payload);
-        stream >> serverConfig;
+        currentHeader = MessageHeader::from(device);
+        auto serverConfig = ConfigChangeNotifyMessage::from(device, currentHeader.getPayload());
+
         QVERIFY(serverConfig.getBpi() == 16);
         QVERIFY(serverConfig.getBpm() == 125);
 
         //userInfoChangeNotify
-        currentHeader.reset(extractNextMessageHeader());
-        UserInfoChangeNotifyMessage userInfo(currentHeader->payload);
-        stream >> userInfo;
+        currentHeader = MessageHeader::from(device);
+        auto userInfo = UserInfoChangeNotifyMessage::from(device, currentHeader.getPayload());
 
         //check if all expected users and the user channels are in the list
         QMap<QString, QStringList> expectedUsersChannels;
@@ -111,9 +111,8 @@ public:
 
 
         //check the topic message
-        currentHeader.reset(extractNextMessageHeader());
-        ServerChatMessage topicMessage(currentHeader->payload);
-        stream >> topicMessage;
+        currentHeader = MessageHeader::from(device);
+        auto topicMessage = ServerToClientChatMessage::from(device, currentHeader.getPayload());
 
         QVERIFY(topicMessage.getCommand() == ChatCommandType::TOPIC);
         QCOMPARE(topicMessage.getArguments().at(1), QString("\"Happy New Year 2016 ALL!!\""));

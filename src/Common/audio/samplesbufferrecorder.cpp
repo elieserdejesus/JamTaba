@@ -20,7 +20,7 @@ SamplesBufferRecorder::~SamplesBufferRecorder()
     writeSamplesToFile();
 }
 
-void SamplesBufferRecorder::addSamples(const Audio::SamplesBuffer &buffer)
+void SamplesBufferRecorder::addSamples(const audio::SamplesBuffer &buffer)
 {
     QDataStream stream(&array, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);

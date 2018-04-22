@@ -4,24 +4,24 @@
 #include "AudioNode.h"
 #include "looper/Looper.h"
 
-namespace Midi {
+namespace midi {
     class MidiMessage;
 }
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
 
-namespace Audio {
+namespace audio {
 
 class LocalInputNode : public AudioNode
 {
     Q_OBJECT
 
 public:
-    LocalInputNode(Controller::MainController *controller, int parentChannelIndex, bool isMono = true);
+    LocalInputNode(controller::MainController *controller, int parentChannelIndex, bool isMono = true);
     ~LocalInputNode();
-    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<Midi::MidiMessage> &midiBuffer) override;
+    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<midi::MidiMessage> &midiBuffer) override;
     virtual int getSampleRate() const;
 
     int getChannels() const;
@@ -52,13 +52,13 @@ public:
 
     bool isReceivingAllMidiChannels() const;
 
-    std::vector<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const override;
+    std::vector<midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const override;
 
     ChannelRange getAudioInputRange() const;
 
     int getChanneGrouplIndex() const;
 
-    const Audio::SamplesBuffer &getLastBuffer() const;
+    const audio::SamplesBuffer &getLastBuffer() const;
     SamplesBuffer getLastBufferMixedToMono() const;
 
     void setProcessorsSampleRate(int newSampleRate);
@@ -101,15 +101,15 @@ public:
     void startNewLoopCycle(uint intervalLenght);
     void stopLooper();
 
-    Audio::Looper *getLooper() const;
+    audio::Looper *getLooper() const;
 
 signals:
     void midiNoteLearned(quint8 midiNote) const;
     void stereoInversionChanged(bool stereoInverted);
 
 protected:
-    void preFaderProcess(Audio::SamplesBuffer &out) override;
-    void postFaderProcess(Audio::SamplesBuffer &out) override;
+    void preFaderProcess(audio::SamplesBuffer &out) override;
+    void postFaderProcess(audio::SamplesBuffer &out) override;
 
 private:
 
@@ -126,8 +126,8 @@ private:
         void setHigherNote(quint8 higherNote);
         void setLowerNote(quint8 lowerNote);
         bool isReceivingAllMidiChannels() const;
-        void updateActivity(const Midi::MidiMessage &message);
-        bool accept(const Midi::MidiMessage &message) const;
+        void updateActivity(const midi::MidiMessage &message);
+        bool accept(const midi::MidiMessage &message) const;
         void setTranspose(quint8 newTranspose);
         inline bool isLearning() const { return learning; }
 
@@ -152,7 +152,7 @@ private:
     bool receivingRoutedMidiInput; // true when this is the first subchannel and is receiving midi input from second subchannel (rounted midi input)? issue #102
     bool routingMidiInput; // true when this is the second channel and is sending midi messages to the first channel
 
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
 
     enum InputMode {
         AUDIO, MIDI, DISABLED
@@ -160,17 +160,17 @@ private:
 
     InputMode inputMode = DISABLED;
 
-    bool canProcessMidiMessage(const Midi::MidiMessage &msg) const;
+    bool canProcessMidiMessage(const midi::MidiMessage &msg) const;
 
-    void processIncommingMidi(std::vector<Midi::MidiMessage> &inBuffer, std::vector<Midi::MidiMessage> &outBuffer);
+    void processIncommingMidi(std::vector<midi::MidiMessage> &inBuffer, std::vector<midi::MidiMessage> &outBuffer);
 
-    Audio::Looper* looper;
+    audio::Looper* looper;
 
-    static Audio::Looper *createLooper(Controller::MainController *controller);
+    static audio::Looper *createLooper(controller::MainController *controller);
 
 };
 
-inline Audio::Looper *LocalInputNode::getLooper() const
+inline audio::Looper *LocalInputNode::getLooper() const
 {
     return looper;
 }
@@ -230,7 +230,7 @@ inline int LocalInputNode::getChanneGrouplIndex() const
     return channelGroupIndex;
 }
 
-inline const Audio::SamplesBuffer &LocalInputNode::getLastBuffer() const
+inline const audio::SamplesBuffer &LocalInputNode::getLastBuffer() const
 {
     return internalOutputBuffer;
 }

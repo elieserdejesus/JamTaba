@@ -35,8 +35,8 @@ private slots:
     void copy_data();
 
 private:
-    Audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
-    void checkExpectedValues(QString comaSeparatedExpectedValues, const Audio::SamplesBuffer &buffer);
+    audio::SamplesBuffer createBuffer(QString comaSeparatedValues);
+    void checkExpectedValues(QString comaSeparatedExpectedValues, const audio::SamplesBuffer &buffer);
 };
 
 #endif // TESTSAMPLESBUFFER_H

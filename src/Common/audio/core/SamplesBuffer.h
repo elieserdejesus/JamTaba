@@ -6,7 +6,7 @@
 
 #include <QtGlobal>
 
-namespace Audio {
+namespace audio {
 
 class SamplesBuffer
 {
@@ -23,7 +23,7 @@ private:
     int rmsWindowSize; // how many samples until have enough data to compute rms?
     float lastRmsValues[2];
 
-    std::vector< std::vector<float> > samples;
+    std::vector<std::vector<float>> samples;
 
 public:
     explicit SamplesBuffer(unsigned int channels);
@@ -61,7 +61,7 @@ public:
 
     void invertStereo();
 
-    Audio::AudioPeak computePeak();
+    audio::AudioPeak computePeak();
 
     void add(const SamplesBuffer &buffer);
 

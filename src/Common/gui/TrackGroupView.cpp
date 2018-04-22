@@ -7,12 +7,12 @@
 #include <QDebug>
 #include <QMenu>
 #include <QActionGroup>
-#include "PeakMeter.h"
+#include "widgets/PeakMeter.h"
 
-TrackGroupView::TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *parent) :
+TrackGroupView::TrackGroupView(QWidget *parent) :
     QFrame(parent)
 {
-    setupUI(TextEditorModifier);
+    setupUI();
 
     // context menu
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -21,7 +21,7 @@ TrackGroupView::TrackGroupView(TextEditorModifier *TextEditorModifier, QWidget *
 
 void TrackGroupView::setTintColor(const QColor &color)
 {
-    for(auto trackGroup : trackViews) {
+    for (auto trackGroup : trackViews) {
         trackGroup->setTintColor(color);
     }
 }
@@ -40,28 +40,28 @@ void TrackGroupView::showContextMenu(const QPoint &pos){
 
 void TrackGroupView::showPeakMeterOnly()
 {
-    AudioMeter::paintPeaksOnly();
+    AudioSlider::paintPeaksOnly();
 }
 
 void TrackGroupView::showRmsOnly()
 {
-    AudioMeter::paintRmsOnly();
+    AudioSlider::paintRmsOnly();
 }
 
 void TrackGroupView::showPeakAndRms()
 {
-    AudioMeter::paintPeaksAndRms();
+    AudioSlider::paintPeaksAndRms();
 }
 
 void TrackGroupView::showMaxPeakMarker(bool showMarker)
 {
-    AudioMeter::setPaintMaxPeakMarker(showMarker);
+    AudioSlider::setPaintMaxPeakMarker(showMarker);
 }
 
-void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
+void TrackGroupView::setupUI()
 {
     setObjectName(QStringLiteral("TrackGroupView"));
-    setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
 
     mainLayout = new QGridLayout(this);
     mainLayout->setSpacing(0);
@@ -70,21 +70,10 @@ void TrackGroupView::setupUI(TextEditorModifier *textEditorModifier)
     topPanel = new QWidget(this);
     topPanel->setObjectName(QStringLiteral("topPanel"));
 
-    groupNameField = new QLineEdit(topPanel);
-    groupNameField->setObjectName(QStringLiteral("groupNameField"));
-    groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0); // disable blue border when QLineEdit has focus in mac
-
     topPanelLayout = new QHBoxLayout();
     topPanelLayout->setObjectName(QStringLiteral("topPanelLayout"));
-    topPanelLayout->setSpacing(3);
-    topPanelLayout->setContentsMargins(6, 12, 6, 12);
-
-    topPanelLayout->addWidget(groupNameField);
-
-    if (textEditorModifier) {
-        bool finishEditorPressingReturnKey = true;
-        textEditorModifier->modify(groupNameField, finishEditorPressingReturnKey);
-    }
+    topPanelLayout->setSpacing(0);
+    topPanelLayout->setContentsMargins(0, 3, 0, 0);
 
     tracksLayout = new QHBoxLayout();
     tracksLayout->setContentsMargins(0, 3, 0, 0); // adding a small top margin to fix #861
@@ -166,16 +155,6 @@ BaseTrackView *TrackGroupView::addTrackView(long trackID)
         }
     }
     return newTrackView;
-}
-
-void TrackGroupView::setGroupName(const QString &groupName)
-{
-    groupNameField->setText(groupName);
-}
-
-QString TrackGroupView::getGroupName() const
-{
-    return groupNameField->text();
 }
 
 void TrackGroupView::removeTrackView(BaseTrackView *trackView)

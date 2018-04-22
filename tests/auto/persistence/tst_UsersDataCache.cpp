@@ -5,7 +5,7 @@
 #include "persistence/UsersDataCache.h"
 #include "persistence/CacheHeader.h"
 
-using namespace Persistence;
+using namespace persistence;
 
 class TestCacheHeader: public QObject
 {

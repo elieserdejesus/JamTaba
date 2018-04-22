@@ -1,6 +1,5 @@
 #include "NinjamTrackView.h"
-#include "BaseTrackView.h"
-#include "PeakMeter.h"
+
 #include <QLineEdit>
 #include <QLabel>
 #include <QDebug>
@@ -9,21 +8,33 @@
 #include <QGridLayout>
 #include <QSlider>
 #include <QStyle>
+#include <QDateTime>
+#include <QMenu>
+#include <QWidgetAction>
+
+#include "BaseTrackView.h"
 #include "MainController.h"
 #include "Utils.h"
+#include "IconFactory.h"
 #include "audio/NinjamTrackNode.h"
-#include "BoostSpinBox.h"
+#include "widgets/BoostSpinBox.h"
+#include "widgets/PeakMeter.h"
+#include "widgets/InstrumentsMenu.h"
 #include "IconFactory.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
+quint32 NinjamTrackView::networkUsageUpdatePeriod = 4000;
 
-NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID) :
+using controller::MainController;
+using persistence::CacheEntry;
+
+NinjamTrackView::NinjamTrackView(MainController *mainController, long trackID) :
     BaseTrackView(mainController, trackID),
     orientation(Qt::Vertical),
-    downloadingFirstInterval(true)
+    downloadingFirstInterval(true),
+    lastNetworkUsageUpdate(0)
 {
-    channelNameLabel = createChannelNameLabel();
 
     chunksDisplay = new IntervalChunksDisplay(this);
     chunksDisplay->setVisible(false);
@@ -32,13 +43,37 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     updateLowCutButtonToolTip();
 
     buttonReceive = createReceiveButton();
-    buttonReceive->setChecked(true); // receiving by default
-    buttonReceive->setEnabled(false); // disabled until receive the first interval
+
+    networkUsageLabel = new QLabel();
+    networkUsageLabel->setObjectName("receiveLabel");
+    networkUsageLabel->setAlignment(Qt::AlignCenter);
+
+    networkUsageLayout = new QHBoxLayout();
+    networkUsageLayout->setContentsMargins(0, 0, 0, 0);
+    networkUsageLayout->setSpacing(2);
+    networkUsageLayout->addWidget(buttonReceive);
+    networkUsageLayout->addWidget(networkUsageLabel);
+    secondaryChildsLayout->addLayout(networkUsageLayout);
+    secondaryChildsLayout->setAlignment(networkUsageLayout, Qt::AlignCenter);
+
     connect(buttonReceive, &QPushButton::toggled, this, &NinjamTrackView::setReceiveState);
+
+    instrumentsButton = createInstrumentsButton();
+    connect(instrumentsButton, &InstrumentsButton::iconSelected, this, &NinjamTrackView::instrumentIconChanged);
 
     setupVerticalLayout();
 
     setActivatedStatus(true); // disabled/grayed until receive the first bytes.
+}
+
+void NinjamTrackView::instrumentIconChanged(quint8 instrumentIndex)
+{
+    if (mainController) {
+        cacheEntry.setInstrumentIndex(instrumentIndex);
+        auto cache = mainController->getUsersDataCache();
+        if (cache)
+            cache->updateUserCacheEntry(cacheEntry);
+    }
 }
 
 void NinjamTrackView::setTintColor(const QColor &color)
@@ -63,8 +98,14 @@ void NinjamTrackView::setReceiveState(bool receive)
     mainController->setChannelReceiveStatus(userFullName, channelIndex, receive);
 
     // stop rendering downloaded audio
-    NinjamTrackNode *trackNode = dynamic_cast<NinjamTrackNode*>(mainController->getTrackNode(getTrackID()));
-    trackNode->stopDecoding();
+    auto trackNode = getTrackNode();
+    if (trackNode)
+        trackNode->stopDecoding();
+}
+
+NinjamTrackNode *NinjamTrackView::getTrackNode() const
+{
+    return dynamic_cast<NinjamTrackNode*>(mainController->getTrackNode(getTrackID()));
 }
 
 QPushButton *NinjamTrackView::createReceiveButton() const
@@ -74,19 +115,9 @@ QPushButton *NinjamTrackView::createReceiveButton() const
     button->setToolTip(tr("Receive"));
     button->setObjectName(QStringLiteral("receiveButton"));
     button->setCheckable(true);
-    secondaryChildsLayout->addWidget(button, 0, Qt::AlignCenter);
+    button->setChecked(true); // receiving by default
+    button->setEnabled(false); // disabled until receive the first interval
     return button;
-}
-
-MarqueeLabel *NinjamTrackView::createChannelNameLabel() const
-{
-    MarqueeLabel *label = new MarqueeLabel();
-    label->setObjectName("channelName");
-    label->setText("");
-    label->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
-    label->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
-
-    return label;
 }
 
 MultiStateButton *NinjamTrackView::createLowCutButton(bool checked)
@@ -113,9 +144,9 @@ QString NinjamTrackView::getLowCutStateText() const
 {
     Q_ASSERT(mainController);
 
-    NinjamTrackNode* trackNode = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
+    auto trackNode = getTrackNode();
 
-    if (trackNode != nullptr) {
+    if (trackNode) {
         switch(trackNode->getLowCutState())
         {
         case NinjamTrackNode::OFF: return tr("Off");
@@ -129,9 +160,6 @@ QString NinjamTrackView::getLowCutStateText() const
 
 void NinjamTrackView::updateStyleSheet()
 {
-    style()->unpolish(channelNameLabel);
-    style()->polish(channelNameLabel);
-
     style()->unpolish(buttonLowCut);
     style()->polish(buttonLowCut);
 
@@ -141,7 +169,7 @@ void NinjamTrackView::updateStyleSheet()
     BaseTrackView::updateStyleSheet();
 }
 
-void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialValues)
+void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialValues)
 {
     cacheEntry = initialValues;
 
@@ -175,18 +203,54 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
             }
         }
     }
+
+    auto instrumentIconIndex = initialValues.hasValidInstrumentIndex() ? initialValues.getInstrumentIndex() : guessInstrumentIcon();
+    instrumentsButton->setInstrumentIcon(instrumentIconIndex);
+
+}
+
+qint8 NinjamTrackView::guessInstrumentIcon() const
+{
+    auto channelName = instrumentsButton->toolTip();
+
+    return static_cast<qint8>(stringToInstrumentIndex(channelName));
 }
 
 void NinjamTrackView::updateGuiElements()
 {
-    if (!isActivated())
-        return;
+    if (isActivated()) {
+        BaseTrackView::updateGuiElements();
 
-    BaseTrackView::updateGuiElements();
-    channelNameLabel->updateMarquee();
+        auto trackNode = getTrackNode();
+        if (trackNode)
+            levelSlider->setStereo(trackNode->isStereo());
+    }
 
-    auto trackNode = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
-    peakMeter->setStereo(trackNode->isStereo());
+    // update network usage label
+    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    const qint64 ellapsedTime = now - lastNetworkUsageUpdate;
+    if (ellapsedTime >= NinjamTrackView::networkUsageUpdatePeriod) {
+        lastNetworkUsageUpdate = now;
+
+        auto bytesDownloaded = mainController->getDownloadTransferRate(userFullName, channelIndex);
+        long downloadTransferRate = (bytesDownloaded > 0) ? (bytesDownloaded / 1024 * 8) : 0;
+        networkUsageLabel->setText(QString::number(downloadTransferRate).leftJustified(3, QChar(' ')));
+
+        QString toolTipText = QString("%1 %2 Kbps").arg(tr("Downloading")).arg(downloadTransferRate);
+        auto trackNode = getTrackNode();
+        if (trackNode) {
+            toolTipText += QString(" (%1, %2 KHz)")
+                    .arg(trackNode->isStereo() ? tr("Stereo") : tr("Mono"))
+                    .arg(QString::number(trackNode->getSampleRate()/1000.0, 'f', 1));
+        }
+
+        networkUsageLabel->setToolTip(toolTipText);
+    }
+}
+
+void NinjamTrackView::setNetworkUsageUpdatePeriod(quint32 periodInMilliseconds)
+{
+    NinjamTrackView::networkUsageUpdatePeriod = periodInMilliseconds;
 }
 
 void NinjamTrackView::setActivatedStatus(bool deactivated)
@@ -194,7 +258,7 @@ void NinjamTrackView::setActivatedStatus(bool deactivated)
     BaseTrackView::setActivatedStatus(deactivated);
 
     if (deactivated) { // remote user stop xmiting and the track is greyed/unlighted?
-        Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
+        auto trackNode = getTrackNode();
         if (trackNode)
             trackNode->resetLastPeak(); // reset the internal node last peak to avoid getting the last peak calculated when the remote user was transmiting.
 
@@ -227,60 +291,79 @@ void NinjamTrackView::setOrientation(Qt::Orientation newOrientation)
 
     setProperty("horizontal", newOrientation == Qt::Horizontal ? true : false);
     updateStyleSheet();
+
+    updateExtraWidgetsVisibility();
 }
 
 void NinjamTrackView::setupVerticalLayout()
 {
     BaseTrackView::setupVerticalLayout();
 
-    mainLayout->removeWidget(channelNameLabel);
-    mainLayout->removeItem(primaryChildsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
+    mainLayout->removeItem(panWidgetsLayout);
+    mainLayout->removeWidget(levelSlider);
+    mainLayout->removeWidget(instrumentsButton);
 
-    mainLayout->addWidget(channelNameLabel, 0, 0, 1, 2);// insert channel name label in top
-    mainLayout->addLayout(primaryChildsLayout, 1, 0);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 1);
-    mainLayout->addWidget(chunksDisplay, 2, 0, 1, 2); // append chunks display in bottom
+    // reset collumn stretch
+    for (int c = 0; c < mainLayout->columnCount(); ++c) {
+        mainLayout->setColumnStretch(c, 0);
+    }
 
-    primaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
+    auto columnCount = mainLayout->columnCount();
+
+    mainLayout->addWidget(instrumentsButton, 0, 0, 1, columnCount, Qt::AlignCenter);
+    mainLayout->addLayout(panWidgetsLayout, 1, 0, 1, columnCount);
+    mainLayout->addWidget(levelSlider, 2, 0);
+    mainLayout->addLayout(secondaryChildsLayout, 2, 1, 1, columnCount - 1, Qt::AlignBottom);
+    mainLayout->addWidget(chunksDisplay, 3, 0, 1, columnCount); // append chunks display in bottom
+
     secondaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
 
     boostSpinBox->setOrientation(Qt::Vertical);
+
+    networkUsageLayout->setDirection(QBoxLayout::TopToBottom);
 }
 
 void NinjamTrackView::setupHorizontalLayout()
 {
-    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
-    mainLayout->removeWidget(channelNameLabel);
-    mainLayout->removeItem(primaryChildsLayout);
+    mainLayout->removeWidget(levelSlider);
+    mainLayout->removeItem(panWidgetsLayout);
     mainLayout->removeItem(secondaryChildsLayout);
     mainLayout->removeWidget(chunksDisplay);
+    mainLayout->removeWidget(instrumentsButton);
 
-    mainLayout->addWidget(channelNameLabel, 0, 0);
-    mainLayout->addLayout(primaryChildsLayout, 0, 1);
-    mainLayout->addLayout(secondaryChildsLayout, 1, 0, 1, 2);
-    mainLayout->addWidget(chunksDisplay, 2, 0, 1, 2); // append chunks display in bottom
+    auto rowCount = mainLayout->rowCount();
 
-    mainLayout->setContentsMargins(6, 3, 6, 3);
-    mainLayout->setVerticalSpacing(6);
+    mainLayout->addWidget(instrumentsButton, 0, 0, rowCount, 1, Qt::AlignCenter);
+    mainLayout->addLayout(panWidgetsLayout, 0, 1, 1, 1);
+    mainLayout->addWidget(levelSlider, 0, 2);
+    mainLayout->addWidget(chunksDisplay, 1, 1, rowCount-1, 1);
+    mainLayout->addLayout(secondaryChildsLayout, 1, 2, rowCount-1, 1, Qt::AlignRight | Qt::AlignBottom);
 
-    primaryChildsLayout->setDirection(QBoxLayout::RightToLeft);
-    secondaryChildsLayout->setDirection(QBoxLayout::LeftToRight);
+    mainLayout->setColumnStretch(0, 0); // instrument button
+    mainLayout->setColumnStretch(1, 1); // pan slider
+    mainLayout->setColumnStretch(2, 3); // level slider
+
+    auto vMargin = narrowed ? 3 : 6;
+    mainLayout->setContentsMargins(vMargin, 3, vMargin, 3);
+    mainLayout->setVerticalSpacing(vMargin);
+
+    secondaryChildsLayout->setDirection(QBoxLayout::RightToLeft);
 
     levelSlider->setOrientation(Qt::Horizontal);
-    levelSliderLayout->setDirection(QBoxLayout::RightToLeft);
+    levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
-    peakMeter->setOrientation(Qt::Horizontal);
-    peakMeter->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
-    metersLayout->setDirection(QBoxLayout::TopToBottom);
+    panSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
-    muteSoloLayout->setDirection(QHBoxLayout::LeftToRight);
+    muteSoloLayout->setDirection(QHBoxLayout::RightToLeft);
 
     boostSpinBox->setOrientation(Qt::Horizontal);
-}
 
+    networkUsageLayout->setDirection(QBoxLayout::RightToLeft);
+}
 
 QPoint NinjamTrackView::getDbValuePosition(const QString &dbValueText,
                                            const QFontMetrics &metrics) const
@@ -330,19 +413,19 @@ void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible)
 
 void NinjamTrackView::setChannelName(const QString &name)
 {
-    this->channelNameLabel->setText(name);
-    int nameWidth = this->channelNameLabel->fontMetrics().width(name);
-    if (nameWidth <= this->channelNameLabel->contentsRect().width())
-        this->channelNameLabel->setAlignment(Qt::AlignCenter);
-    else
-        this->channelNameLabel->setAlignment(Qt::AlignLeft);
-    this->channelNameLabel->setToolTip(name);
+    instrumentsButton->setToolTip(name);
+
+    instrumentsButton->setInstrumentIcon(guessInstrumentIcon());
 }
 
 void NinjamTrackView::setPan(int value)
 {
     BaseTrackView::setPan(value);
-    cacheEntry.setPan(mainController->getTrackNode(getTrackID())->getPan());
+
+    auto trackNode = getTrackNode();
+    if (trackNode)
+        cacheEntry.setPan(trackNode->getPan());
+
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
@@ -356,7 +439,11 @@ void NinjamTrackView::setGain(int value)
 void NinjamTrackView::toggleMuteStatus()
 {
     BaseTrackView::toggleMuteStatus();
-    cacheEntry.setMuted(mainController->getTrackNode(getTrackID())->isMuted());
+
+    auto trackNode = getTrackNode();
+    if (trackNode)
+        cacheEntry.setMuted(trackNode->isMuted());
+
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
@@ -364,7 +451,7 @@ void NinjamTrackView::updateBoostValue(int index)
 {
     BaseTrackView::updateBoostValue(index);
 
-    Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
+    auto trackNode = getTrackNode();
     if (trackNode) {
         cacheEntry.setBoost(trackNode->getBoost());
         mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
@@ -373,7 +460,7 @@ void NinjamTrackView::updateBoostValue(int index)
 
 void NinjamTrackView::setLowCutToNextState()
 {
-    NinjamTrackNode* node = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
+    auto node = getTrackNode();
     if (node) {
         NinjamTrackNode::LowCutState newState = node->setLowCutToNextState();
 
@@ -385,4 +472,28 @@ void NinjamTrackView::setLowCutToNextState()
         buttonLowCut->style()->unpolish(this);
         buttonLowCut->style()->polish(this);
     }
+}
+
+InstrumentsButton *NinjamTrackView::createInstrumentsButton()
+{
+    auto defaultIcon = IconFactory::getDefaultInstrumentIcon();
+    auto icons = IconFactory::getInstrumentIcons();
+
+    return new InstrumentsButton(defaultIcon, icons, this);
+}
+
+void NinjamTrackView::resizeEvent(QResizeEvent *ev)
+{
+    BaseTrackView::resizeEvent(ev);
+
+    updateExtraWidgetsVisibility();
+}
+
+void NinjamTrackView::updateExtraWidgetsVisibility()
+{
+    bool showExtraWidgets = orientation == Qt::Horizontal || height() >= 260; // hide channel name label and network usage if the height is small (VST/AU plugin small window with camera activated);
+
+    mainLayout->setVerticalSpacing(showExtraWidgets ? 6 : 3);
+
+    networkUsageLabel->setVisible(showExtraWidgets);
 }

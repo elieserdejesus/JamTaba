@@ -4,42 +4,52 @@
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "MainController.h"
-#include "BlinkableButton.h"
+#include "widgets/BlinkableButton.h"
+#include "IconFactory.h"
+#include "widgets/InstrumentsMenu.h"
 
 #include <QInputDialog>
 #include <QToolTip>
+#include <QDateTime>
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindow) :
-    TrackGroupView(mainWindow->createTextEditorModifier()),
+    TrackGroupView(mainWindow),
     index(channelIndex),
     mainFrame(mainWindow),
     peakMeterOnly(false),
     preparingToTransmit(false),
     usingSmallSpacingInLayouts(false)
 {
+    instrumentsButton = createInstrumentsButton();
+    topPanelLayout->addWidget(instrumentsButton, 1, Qt::AlignCenter);
+
+    connect(instrumentsButton, &InstrumentsButton::iconSelected, this, &LocalTrackGroupView::instrumentIconChanged);
+
+
     toolButton = createToolButton();
-    topPanel->layout()->addWidget(toolButton);
+    topPanelLayout->addWidget(toolButton, 0, Qt::AlignTop | Qt::AlignRight);
 
     xmitButton = createXmitButton();
     layout()->addWidget(xmitButton);
 
     connect(toolButton, &QPushButton::clicked, this, &LocalTrackGroupView::showMenu);
 
-    connect(groupNameField, &QLineEdit::editingFinished, this, &LocalTrackGroupView::nameChanged);
-
     connect(xmitButton, &QPushButton::toggled, this, &LocalTrackGroupView::toggleTransmitingStatus);
-
-    groupNameField->setAlignment(Qt::AlignHCenter);
 
     translateUi();
 }
 
-void LocalTrackGroupView::refreshStyleSheet()
+InstrumentsButton *LocalTrackGroupView::createInstrumentsButton()
 {
-    TrackGroupView::refreshStyleSheet();
+    auto defaultIcon = IconFactory::getDefaultInstrumentIcon();
+    auto icons = IconFactory::getInstrumentIcons();
 
-    style()->unpolish(groupNameField);
-    style()->polish(groupNameField);
+    return new InstrumentsButton(defaultIcon, icons, this);
+}
+
+QString LocalTrackGroupView::getChannelGroupName() const
+{
+    return instrumentIndexToString(static_cast<InstrumentIndex>(getInstrumentIcon()));
 }
 
 void LocalTrackGroupView::translateUi()
@@ -51,8 +61,6 @@ void LocalTrackGroupView::translateUi()
 
     toolButton->setToolTip(tr("Add or remove channels..."));
     toolButton->setAccessibleDescription(toolButton->toolTip());
-
-    groupNameField->setPlaceholderText(tr("channel name"));
 }
 
 void LocalTrackGroupView::updateXmitButtonText()
@@ -104,6 +112,7 @@ QPushButton *LocalTrackGroupView::createToolButton()
     QPushButton *toolButton = new QPushButton();
     toolButton->setObjectName(QStringLiteral("toolButton"));
     toolButton->setText(QStringLiteral(""));
+    toolButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     return toolButton;
 }
@@ -117,7 +126,17 @@ void LocalTrackGroupView::closePluginsWindows()
 
 void LocalTrackGroupView::addChannel()
 {
-    mainFrame->addChannelsGroup("");
+    mainFrame->addChannelsGroup(-1); // using default instrument icon
+}
+
+void LocalTrackGroupView::setInstrumentIcon(int instrumentIndex)
+{
+    instrumentsButton->setInstrumentIcon(instrumentIndex);
+}
+
+int LocalTrackGroupView::getInstrumentIcon() const
+{
+    return instrumentsButton->getSelectedIcon();
 }
 
 void LocalTrackGroupView::resetTracks()
@@ -224,6 +243,11 @@ void LocalTrackGroupView::addSubChannel()
 {
     if (!trackViews.isEmpty()) {
         addTrackView(getChannelIndex());
+
+        auto firstSubchannel = trackViews.first();
+        auto lastSubchannel = trackViews.last();
+
+        lastSubchannel->setTintColor(firstSubchannel->getTintColor());
     }
 }
 
@@ -315,9 +339,9 @@ void LocalTrackGroupView::removeChannel()
 // PRESETS
 void LocalTrackGroupView::loadPreset(QAction *action)
 {
-    Controller::MainController *mainController = mainFrame->getMainController();
+    auto mainController = mainFrame->getMainController();
     QString presetFileName = action->data().toString();
-    Persistence::Preset preset = mainController->loadPreset(presetFileName);
+    auto preset = mainController->loadPreset(presetFileName);
     if (preset.isValid()) {
         mainFrame->loadPreset(preset);
 
@@ -364,19 +388,29 @@ void LocalTrackGroupView::deletePreset(QAction *action)
 }
 
 // +++++++++++++++++++++++++++++
+
+// fixing #962
+
+QSize LocalTrackGroupView::sizeHint() const
+{
+    if (peakMeterOnly)
+        return QFrame::sizeHint();
+
+    return TrackGroupView::sizeHint();
+}
+
 void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
 {
     if (this->peakMeterOnly != peakMeterOnly) {
         this->peakMeterOnly = peakMeterOnly;
         topPanel->setVisible(!this->peakMeterOnly);
 
-        for (LocalTrackView *view : getTracks<LocalTrackView *>()) {
+        for (auto view : getTracks<LocalTrackView *>()) {
             view->setPeakMetersOnlyMode(peakMeterOnly);
         }
 
         updateXmitButtonText();
         updateGeometry();
-        adjustSize();
     }
 }
 

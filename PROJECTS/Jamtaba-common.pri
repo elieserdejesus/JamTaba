@@ -1,26 +1,24 @@
-VST_SDK_PATH = "$$PWD/../VST_SDK"
-
-message("VST PATH: " $$VST_SDK_PATH)
-
-#TEMPLATE = lib
+QT += core gui network websockets widgets concurrent multimedia multimediawidgets
 
 mac:LIBS += -dead_strip
 
-ROOT_PATH = "../.."
+ROOT_PATH = "$$PWD/.."
 SOURCE_PATH = "$$ROOT_PATH/src"
+VST_SDK_PATH = "$$ROOT_PATH/VST_SDK"
 
 INCLUDEPATH += $$SOURCE_PATH/Common
-INCLUDEPATH += $$SOURCE_PATH/Common/gui
-INCLUDEPATH += $$SOURCE_PATH/Common/gui/widgets
-INCLUDEPATH += $$SOURCE_PATH/Common/gui/chords
-INCLUDEPATH += $$SOURCE_PATH/Common/gui/chat
-INCLUDEPATH += $$SOURCE_PATH/Common/gui/screensaver
-INCLUDEPATH += $$SOURCE_PATH/Libs/RtMidi
+
+INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
+INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
+INCLUDEPATH += $$ROOT_PATH/libs/includes/minimp3
+INCLUDEPATH += $$ROOT_PATH/libs/includes/ffmpeg
+INCLUDEPATH += $$ROOT_PATH/libs/includes/miniupnp
+
+DEFINES += MINIUPNP_STATICLIB
 
 win32:INCLUDEPATH += $$ROOT_PATH/libs/includes/stackwalker
 
-VPATH       += $$SOURCE_PATH/Common
-VPATH       += $$SOURCE_PATH
+VPATH += $$SOURCE_PATH/Common
 
 DEFINES += VST_FORCE_DEPRECATED=0#enable VST 2.3 features
 DEFINES += OV_EXCLUDE_STATIC_CALLBACKS  #avoid ogg static callback warnings
@@ -87,16 +85,19 @@ HEADERS += recorder/JamRecorder.h
 HEADERS += recorder/ReaperProjectGenerator.h
 HEADERS += recorder/ClipSortLogGenerator.h
 HEADERS += loginserver/LoginService.h
+HEADERS += loginserver/MainChat.h
 HEADERS += loginserver/natmap.h
 HEADERS += MainController.h
 HEADERS += NinjamController.h
 HEADERS += MetronomeUtils.h
-HEADERS += ninjam/User.h
-HEADERS += ninjam/Service.h
-HEADERS += ninjam/Server.h
-HEADERS += ninjam/ServerMessages.h
-HEADERS += ninjam/ClientMessages.h
-HEADERS += ninjam/ServerMessagesHandler.h
+HEADERS += ninjam/client/User.h
+HEADERS += ninjam/client/UserChannel.h
+HEADERS += ninjam/client/Service.h
+HEADERS += ninjam/client/ServerInfo.h
+HEADERS += ninjam/client/ServerMessages.h
+HEADERS += ninjam/client/ClientMessages.h
+HEADERS += ninjam/client/ServerMessagesHandler.h
+HEADERS += ninjam/server/Server.h
 HEADERS += gui/plugins/Guis.h
 HEADERS += gui/PluginScanDialog.h
 HEADERS += gui/PreferencesDialog.h
@@ -113,6 +114,8 @@ HEADERS += gui/chat/ChatPanel.h
 HEADERS += gui/chat/ChatMessagePanel.h
 HEADERS += gui/chat/NinjamVotingMessageParser.h
 HEADERS += gui/chat/ChatTextEditor.h
+HEADERS += gui/chat/EmojiWidget.h
+HEADERS += gui/chat/EmojiManager.h
 HEADERS += gui/screensaver/ScreensaverBlocker.h
 HEADERS += gui/Highligther.h
 HEADERS += gui/InactivityDetector.h
@@ -121,8 +124,8 @@ HEADERS += gui/LocalTrackGroupView.h
 HEADERS += gui/intervalProgress/IntervalProgressDisplay.h
 HEADERS += gui/intervalProgress/IntervalProgressWindow.h
 HEADERS += gui/PrivateServerDialog.h
+HEADERS += gui/PrivateServerWindow.h
 HEADERS += gui/UserNameDialog.h
-HEADERS += gui/CrashReportDialog.h
 HEADERS += gui/MainWindow.h
 HEADERS += gui/IconFactory.h
 HEADERS += gui/widgets/IntervalChunksDisplay.h
@@ -137,6 +140,7 @@ HEADERS += gui/widgets/BlinkableButton.h
 HEADERS += gui/widgets/Slider.h
 HEADERS += gui/widgets/BoostSpinBox.h
 HEADERS += gui/widgets/ChatTabWidget.h
+HEADERS += gui/widgets/InstrumentsMenu.h
 HEADERS += gui/BpiUtils.h
 HEADERS += gui/chords/ChordLabel.h
 HEADERS += gui/chords/ChordsPanel.h
@@ -150,7 +154,6 @@ HEADERS += gui/JamRoomViewPanel.h
 HEADERS += gui/UsersColorsPool.h
 HEADERS += gui/GuiUtils.h
 HEADERS += gui/ThemeLoader.h
-HEADERS += ninjam/UserChannel.h
 HEADERS += geo/IpToLocationResolver.h
 HEADERS += geo/WebIpToLocationResolver.h
 HEADERS += Utils.h
@@ -161,6 +164,7 @@ HEADERS += persistence/CacheHeader.h
 HEADERS += log/Logging.h
 HEADERS += UploadIntervalData.h
 HEADERS += performance/PerformanceMonitor.h
+HEADERS += upnp/UPnPManager.h
 
 SOURCES += MainController.cpp
 SOURCES += NinjamController.cpp
@@ -203,13 +207,15 @@ SOURCES += file/FileUtils.cpp
 SOURCES += recorder/JamRecorder.cpp
 SOURCES += recorder/ReaperProjectGenerator.cpp
 SOURCES += recorder/ClipSortLogGenerator.cpp
-SOURCES += ninjam/Server.cpp
-SOURCES += ninjam/Service.cpp
-SOURCES += ninjam/User.cpp
-SOURCES += ninjam/ServerMessages.cpp
-SOURCES += ninjam/ClientMessages.cpp
-SOURCES += ninjam/ServerMessagesHandler.cpp
-SOURCES += ninjam/UserChannel.cpp
+SOURCES += ninjam/Ninjam.cpp
+SOURCES += ninjam/client/ServerInfo.cpp
+SOURCES += ninjam/client/Service.cpp
+SOURCES += ninjam/client/User.cpp
+SOURCES += ninjam/client/ServerMessages.cpp
+SOURCES += ninjam/client/ClientMessages.cpp
+SOURCES += ninjam/client/ServerMessagesHandler.cpp
+SOURCES += ninjam/client/UserChannel.cpp
+SOURCES += ninjam/server/Server.cpp
 SOURCES += gui/widgets/PeakMeter.cpp
 SOURCES += gui/widgets/WavePeakPanel.cpp
 SOURCES += gui/widgets/ChatTabWidget.cpp
@@ -232,6 +238,8 @@ SOURCES += gui/widgets/LooperWavePanel.cpp
 SOURCES += gui/chat/ChatPanel.cpp
 SOURCES += gui/chat/ChatMessagePanel.cpp
 SOURCES += gui/chat/ChatTextEditor.cpp
+SOURCES += gui/chat/EmojiWidget.cpp
+SOURCES += gui/chat/EmojiManager.cpp
 SOURCES += gui/chat/NinjamVotingMessageParser.cpp
 win32:SOURCES += gui/screensaver/WindowsScreensaverBlocker.cpp
 linux:SOURCES += gui/screensaver/LinuxScreensaverBlocker.cpp
@@ -248,8 +256,8 @@ SOURCES += gui/intervalProgress/EllipticalPaintStrategy.cpp
 SOURCES += gui/intervalProgress/CircularPaintStrategy.cpp
 SOURCES += gui/intervalProgress/PiePaintStrategy.cpp
 SOURCES += gui/PrivateServerDialog.cpp
+SOURCES += gui/PrivateServerWindow.cpp
 SOURCES += gui/UserNameDialog.cpp
-SOURCES += gui/CrashReportDialog.cpp
 SOURCES += gui/MainWindow.cpp
 SOURCES += gui/widgets/UserNameLineEdit.cpp
 SOURCES += gui/widgets/IntervalChunksDisplay.cpp
@@ -260,6 +268,7 @@ SOURCES += gui/widgets/MultiStateButton.cpp
 SOURCES += gui/widgets/BlinkableButton.cpp
 SOURCES += gui/widgets/BoostSpinBox.cpp
 SOURCES += gui/widgets/Slider.cpp
+SOURCES += gui/widgets/InstrumentsMenu.cpp
 SOURCES += gui/BpiUtils.cpp
 SOURCES += gui/chords/ChordsPanel.cpp
 SOURCES += gui/chords/ChordProgression.cpp
@@ -274,11 +283,13 @@ SOURCES += geo/IpToLocationResolver.cpp
 SOURCES += log/logging.cpp
 SOURCES += geo/WebIpToLocationResolver.cpp
 SOURCES += loginserver/LoginService.cpp
+SOURCES += loginserver/MainChat.cpp
 SOURCES += Configurator.cpp
 SOURCES += persistence/UsersDataCache.cpp
 SOURCES += persistence/Settings.cpp
 SOURCES += persistence/CacheHeader.cpp
 SOURCES += UploadIntervalData.cpp
+SOURCES += upnp/UPnPManager.cpp
 
 #multiplatform implementations
 win32:SOURCES += performance/WindowsPerformanceMonitor.cpp
@@ -296,10 +307,10 @@ FORMS += gui/chat/ChatPanel.ui
 FORMS += gui/chat/ChatMessagePanel.ui
 FORMS += gui/JamRoomViewPanel.ui
 FORMS += gui/PrivateServerDialog.ui
+FORMS += gui/PrivateServerWindow.ui
 FORMS += gui/UserNameDialog.ui
 FORMS += gui/MainWindow.ui
 FORMS += gui/chords/ChordsPanel.ui
-FORMS += gui/CrashReportDialog.ui
 
 RESOURCES += ../resources/jamtaba.qrc
 

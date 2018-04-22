@@ -7,7 +7,7 @@
 class MainControllerAU : public MainControllerPlugin
 {
 public:
-    MainControllerAU(const Persistence::Settings &settings, JamTabaPlugin *plugin)
+    MainControllerAU(const persistence::Settings &settings, JamTabaPlugin *plugin)
         : MainControllerPlugin(settings, plugin)
     {
 
@@ -140,7 +140,7 @@ void JamTabaAUPlugin::processAudio(Float32 **inputs, Float32 **outputs, UInt16 i
     hostWasPlayingInLastAudioCallBack = hostIsPlaying();
 }
 
-MainControllerPlugin * JamTabaAUPlugin::createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const
+MainControllerPlugin * JamTabaAUPlugin::createPluginMainController(const persistence::Settings &settings, JamTabaPlugin *plugin) const
 {
     return new MainControllerAU(settings, plugin);
 }

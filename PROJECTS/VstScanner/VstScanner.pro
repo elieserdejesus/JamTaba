@@ -20,7 +20,8 @@ win32{
         DESTDIR = $$OUT_PWD/../Standalone/release
     }
 }
-message("Generating VstScanner executable in" $$DESTDIR)
+
+#message("Generating VstScanner executable in" $$DESTDIR)
 
 TEMPLATE = app
 
@@ -76,7 +77,7 @@ win32{
 
 
 macx{
-    message("VstScanner Mac build")
+    # message("VstScanner Mac build")
 
     QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
     LIBS+= -dead_strip

@@ -30,7 +30,7 @@ public:
 
     };
 
-    virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders);
+    virtual void initialize(PreferencesTab initialTab, const persistence::Settings *settings, const QMap<QString, QString> &jamRecorders);
 
 signals:
     void customMetronomeSelected(const QString &primaryBeatAudioFile, const QString &offBeatAudioFile, const QString &accentBeatAudioFile);
@@ -42,7 +42,8 @@ signals:
     void looperAudioEncodingFlagChanged(bool savingEncodedAudio);
     void looperWaveFilesBitDepthChanged(quint8 bitDepth);
     void looperFolderChanged(const QString &newLoopsFolder);
-    void rememberSettingsChanged(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    void rememberRemoteUserSettingsChanged(bool boost, bool level, bool pan, bool mute, bool lowCut);
+    void rememberCollapsibleSectionsSettingsChanged(bool localChannels, bool bottomSection, bool chatSection);
 
 public slots:
     void accept() override;
@@ -91,7 +92,7 @@ protected:
     virtual void setupSignals();
     virtual void populateAllTabs();
 
-    const Persistence::Settings *settings;
+    const persistence::Settings *settings;
     QMap<QString, QString> jamRecorders;
 
 };

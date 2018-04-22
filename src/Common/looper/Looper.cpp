@@ -9,7 +9,10 @@
 #include <vector>
 #include <QThread>
 
-using namespace Audio;
+using audio::Looper;
+using audio::AudioPeak;
+using audio::SamplesBuffer;
+using audio::LooperState;
 
 Looper::Looper()
     : Looper(Mode::Sequence, 4) // calling overloaded constructor
@@ -17,21 +20,21 @@ Looper::Looper()
 
 }
 
-Looper::Looper(Looper::Mode initialMode, quint8 maxLayers)
-    : currentLayerIndex(0),
-      focusedLayerIndex(0),
-      intervalLenght(0),
-      intervalPosition(0),
-      changed(false),
-      maxLayers(maxLayers),
-      state(new StoppedState()),
-      mode(initialMode),
-      resetRequested(false),
-      newMaxLayersRequested(0),
-      mainGain(1.0),
-      loading(false),
-      waitingToStop(false),
-      activated(true)
+Looper::Looper(Looper::Mode initialMode, quint8 maxLayers) :
+    intervalLenght(0),
+    intervalPosition(0),
+    changed(false),
+    loading(false),
+    waitingToStop(false),
+    activated(true),
+    currentLayerIndex(0),
+    focusedLayerIndex(0),
+    maxLayers(maxLayers),
+    mainGain(1.0),
+    resetRequested(false),
+    newMaxLayersRequested(0),
+    state(new StoppedState()),
+    mode(initialMode)
 {
     // initialize
     for (int l = 0; l < MAX_LOOP_LAYERS; ++l) { // create all possible layers

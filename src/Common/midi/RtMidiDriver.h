@@ -4,7 +4,8 @@
 #include "MidiDriver.h"
 #include "RtMidi.h"
 
-namespace Midi {
+namespace midi {
+
 class RtMidiDriver : public MidiDriver
 {
 public:
@@ -20,7 +21,7 @@ public:
     bool hasInputDevices() const override;
     int getMaxInputDevices() const override;
     QString getInputDeviceName(uint index) const override;
-    std::vector<Midi::MidiMessage> getBuffer() override;
+    std::vector<midi::MidiMessage> getBuffer() override;
 
 private:
     QList<RtMidiIn *> midiStreams;

@@ -2,12 +2,13 @@
 #define LOCAL_TRACK_VIEW_H
 
 #include "BaseTrackView.h"
-#include "PeakMeter.h"
+#include "gui/widgets/PeakMeter.h"
+
 #include <QPushButton>
 
 class FxPanel;
 
-namespace Audio {
+namespace audio {
 class LocalInputNode;
 }
 
@@ -18,7 +19,7 @@ class LocalTrackView : public BaseTrackView
     Q_OBJECT
 
 public:
-    LocalTrackView(Controller::MainController *mainController, int channelIndex);
+    LocalTrackView(controller::MainController *mainController, int channelIndex);
 
     void setInitialValues(float initialGain, BaseTrackView::Boost boostValue, float initialPan, bool muted, bool stereoInverted);
 
@@ -34,16 +35,16 @@ public:
 
     int getInputIndex() const;
 
-    Audio::LocalInputNode *getInputNode() const;
+    audio::LocalInputNode *getInputNode() const;
 
-    virtual void setActivatedStatus(bool unlighted);
+    virtual void setActivatedStatus(bool unlighted) override;
 
     virtual void setPeakMetersOnlyMode(bool peakMetersOnly);
     void togglePeakMetersOnlyMode();
 
     bool isShowingPeakMetersOnly() const;
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     virtual void reset();
 
@@ -57,10 +58,12 @@ signals:
     void openLooperEditor(uint trackIndex);
 
 protected:
-    Audio::LocalInputNode *inputNode;
+    audio::LocalInputNode *inputNode;
 
     QPushButton *buttonStereoInversion;
     QPushButton *buttonLooper;
+
+    bool peakMetersOnly;
 
     virtual void setupMetersLayout();
 
@@ -73,7 +76,6 @@ private:
     QPushButton *createLooperButton();
 
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
-    bool peakMetersOnly;
     void deleteWidget(QWidget *widget);
 
     class LooperIconFactory;

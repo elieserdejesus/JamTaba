@@ -10,7 +10,7 @@ BoostSpinBox
 {
     font-size: 9px;
     border-color: rgb(110,110,110);
-    padding: 2px;
+    /*padding: 2px;*/
     color: rgb(50,50,50);
 }
 
@@ -25,7 +25,7 @@ BoostSpinBox
 {
     border-style: outset;
     border-width: 1px;
-    max-width: 16px;
+    /*max-width: 16px;*/
 }
 
 QPushButton#buttonStereoInversion:checked
@@ -111,7 +111,7 @@ BaseTrackView[unlighted="true"] QSlider::handle:vertical,    /* track fader hand
 #panSlider::handle:disabled,
 QSlider::handle:vertical:disabled
 {
-    background: rgb(180, 180, 180);
+    background: rgba(180, 180, 180, 200);
 }
 
 BaseTrackView[unlighted="true"],                            /* the track */
@@ -125,11 +125,6 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
 #panSlider::handle
 {
     width: 7px;
-}
-
-AudioMeter
-{
-    qproperty-dBMarksColor: rgb(70, 70, 70);
 }
 
 /* TrackGroup - used as container for subchannels

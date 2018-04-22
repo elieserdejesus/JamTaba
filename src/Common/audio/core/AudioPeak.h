@@ -1,7 +1,7 @@
 #ifndef AUDIOPEAK_H
 #define AUDIOPEAK_H
 
-namespace Audio
+namespace audio
 {
 
 class AudioPeak

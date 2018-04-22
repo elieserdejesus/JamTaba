@@ -6,7 +6,7 @@ CrashReportDialog::CrashReportDialog(QWidget *parent) :
     ui(new Ui::CrashReportDialog)
 {
     ui->setupUi(this);
-    setWindowTitle(tr("Crash report!"));
+    setWindowTitle("Crash report!");
 }
 
 CrashReportDialog::~CrashReportDialog()

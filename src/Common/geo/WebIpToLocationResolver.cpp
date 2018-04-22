@@ -16,7 +16,7 @@
 #include "log/Logging.h"
 #include "persistence/CacheHeader.h"
 
-using namespace Geo;
+using geo::WebIpToLocationResolver;
 
 const QString WebIpToLocationResolver::COUNTRY_CODES_FILE = "country_codes_cache.bin";
 const QString WebIpToLocationResolver::COUNTRY_NAMES_FILE_PREFIX = "country_names_cache"; //the language code will be concatenated
@@ -217,7 +217,7 @@ QString WebIpToLocationResolver::sanitizeLanguageCode(const QString &languageCod
     return languageCode;
 }
 
-Geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString &languageCode)
+geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString &languageCode)
 {
 
     //check for language changes

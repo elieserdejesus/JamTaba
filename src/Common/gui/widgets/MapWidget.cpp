@@ -393,6 +393,7 @@ QList<MapWidget::Position> MapWidget::getEmptyPositions( const QMap<int, QList<M
 
 void MapWidget::drawPlayersMarkers(QPainter &p)
 {
+
     if (mapPositions.isEmpty() && !markers.isEmpty())
         updateMapPositionsCache();
 
@@ -410,8 +411,6 @@ void MapWidget::drawPlayersMarkers(QPainter &p)
             if (newEmptyPosition.index != i) { // avoid append the Position in same index and create an infinite loop
                 if (map[newEmptyPosition.index].isEmpty()) // new position is really empty?
                     map[newEmptyPosition.index].append(marker);
-                else
-                    qCritical() << " new marker position is not empty: position " << newEmptyPosition.index;
             }
             else{
                 qCritical() << "Warning! The newPosition.index is not really a new position!";

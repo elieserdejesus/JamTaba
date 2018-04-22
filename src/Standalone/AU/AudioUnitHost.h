@@ -6,7 +6,7 @@
 
 #include <QScopedPointer>
 
-namespace AU {
+namespace au {
 
 class AudioUnitHost : public Host
 {
@@ -17,7 +17,7 @@ public:
     int getSampleRate() const override;
     int getBufferSize() const override;
 
-    std::vector<Midi::MidiMessage> pullReceivedMidiMessages() override;
+    std::vector<midi::MidiMessage> pullReceivedMidiMessages() override;
 
     void setSampleRate(int sampleRate) override;
     void setBlockSize(int blockSize) override;

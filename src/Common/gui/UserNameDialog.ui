@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>140</height>
+    <height>145</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -92,7 +92,7 @@
   <customwidget>
    <class>UserNameLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>UserNameLineEdit.h</header>
+   <header>gui/widgets/UserNameLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

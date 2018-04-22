@@ -1,7 +1,7 @@
 #include "Utils.h"
 
 
-QString Vst::utils::getPluginVendor(AEffect *plugin)
+QString vst::utils::getPluginVendor(AEffect *plugin)
 {
     if (!plugin)
         return QString();
@@ -12,7 +12,7 @@ QString Vst::utils::getPluginVendor(AEffect *plugin)
     return QString::fromUtf8(temp);
 }
 
-QString Vst::utils::getPluginName(AEffect *plugin)
+QString vst::utils::getPluginName(AEffect *plugin)
 {
     if (!plugin)
         return QString();
@@ -24,11 +24,11 @@ QString Vst::utils::getPluginName(AEffect *plugin)
 }
 
 
-Audio::PluginDescriptor Vst::utils::createDescriptor(AEffect *plugin, const QString &pluginPath)
+audio::PluginDescriptor vst::utils::createDescriptor(AEffect *plugin, const QString &pluginPath)
 {
-    auto pluginName = Vst::utils::getPluginName(plugin);
-    auto manufacturer = Vst::utils::getPluginVendor(plugin);
-    auto category = Audio::PluginDescriptor::VST_Plugin;
-    return Audio::PluginDescriptor(pluginName, category, manufacturer, pluginPath);
+    auto pluginName = vst::utils::getPluginName(plugin);
+    auto manufacturer = vst::utils::getPluginVendor(plugin);
+    auto category = audio::PluginDescriptor::VST_Plugin;
+    return audio::PluginDescriptor(pluginName, category, manufacturer, pluginPath);
 }
 

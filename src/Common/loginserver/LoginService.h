@@ -4,12 +4,12 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include "ninjam/Server.h"
+#include "ninjam/client/ServerInfo.h"
 
 class NatMap;
 class QTimer;
 
-namespace Login {
+namespace login {
 
 class UserInfo
 {
@@ -167,11 +167,11 @@ public:
     virtual void disconnectFromServer();
     bool isConnected() const;
 
-    QString getChordProgressionFor(const Login::RoomInfo &roomInfo) const;
+    QString getChordProgressionFor(const login::RoomInfo &roomInfo) const;
     void sendChordProgressionToServer(const QString &userName, const QString &serverName, quint32 serverPort, const QString &chordProgression);
 
 signals:
-    void roomsListAvailable(const QList<Login::RoomInfo> &publicRooms);
+    void roomsListAvailable(const QList<login::RoomInfo> &publicRooms);
     void incompatibilityWithServerDetected();
     void newVersionAvailableForDownload(const QString &latestVersionDetails);
     void errorWhenConnectingToServer(const QString &error);
@@ -201,7 +201,7 @@ private:
 
     RoomInfo buildRoomInfoFromJson(const QJsonObject &json);
 
-    static QString getRoomInfoUniqueName(const Login::RoomInfo &roomInfo);
+    static QString getRoomInfoUniqueName(const login::RoomInfo &roomInfo);
 
 private slots:
     void connectedSlot();

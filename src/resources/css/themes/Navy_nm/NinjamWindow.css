@@ -104,12 +104,3 @@ NinjamTrackView #receiveButton:!checked
 {
     background-color: transparent;
 }
-
-
-MetronomePanel #soloButton,
-MetronomePanel #muteButton
-{
-    width: 14px;
-}
-
-

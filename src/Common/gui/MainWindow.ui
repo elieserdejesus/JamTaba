@@ -33,153 +33,6 @@
     <property name="spacing">
      <number>6</number>
     </property>
-    <item row="1" column="1" colspan="2">
-     <widget class="QWidget" name="bottomPanel" native="true">
-      <layout class="QGridLayout" name="bottomPanelLayout">
-       <property name="sizeConstraint">
-        <enum>QLayout::SetDefaultConstraint</enum>
-       </property>
-       <property name="leftMargin">
-        <number>6</number>
-       </property>
-       <property name="topMargin">
-        <number>6</number>
-       </property>
-       <property name="rightMargin">
-        <number>6</number>
-       </property>
-       <property name="bottomMargin">
-        <number>6</number>
-       </property>
-       <property name="horizontalSpacing">
-        <number>24</number>
-       </property>
-       <property name="verticalSpacing">
-        <number>12</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="QFrame" name="masterControlsPanel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>180</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>180</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <layout class="QVBoxLayout" name="masterControlsLayout" stretch="0,0,0">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item alignment="Qt::AlignVCenter">
-           <widget class="QLabel" name="masterTitleLabel">
-            <property name="text">
-             <string>master</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="masterFaderLayout">
-            <item alignment="Qt::AlignVCenter">
-             <widget class="QLabel" name="speakerIconLeft">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item alignment="Qt::AlignVCenter">
-             <widget class="Slider" name="masterFader">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximum">
-               <number>140</number>
-              </property>
-              <property name="singleStep">
-               <number>10</number>
-              </property>
-              <property name="value">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item alignment="Qt::AlignVCenter">
-             <widget class="QLabel" name="speakerIconRight">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="AudioMeter" name="masterMeter" native="true">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>180</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>180</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="0" column="0" rowspan="2">
      <widget class="QWidget" name="leftPanel" native="true">
       <property name="sizePolicy">
@@ -295,6 +148,9 @@
            <verstretch>1</verstretch>
           </sizepolicy>
          </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -404,8 +260,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>970</width>
-             <height>302</height>
+             <width>960</width>
+             <height>320</height>
             </rect>
            </property>
           </widget>
@@ -414,6 +270,110 @@
        </layout>
       </widget>
      </widget>
+    </item>
+    <item row="1" column="1" colspan="2">
+     <widget class="QWidget" name="bottomPanel" native="true">
+      <layout class="QGridLayout" name="bottomPanelLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <property name="leftMargin">
+        <number>6</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>6</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <property name="horizontalSpacing">
+        <number>24</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>6</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QFrame" name="masterControlsPanel">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>180</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>220</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <layout class="QVBoxLayout" name="masterControlsLayout" stretch="0,0">
+          <property name="spacing">
+           <number>6</number>
+          </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="masterTitleLabel">
+            <property name="text">
+             <string>master</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="AudioSlider" name="masterFader">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximum">
+             <number>148</number>
+            </property>
+            <property name="singleStep">
+             <number>10</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="ChatTabWidget" name="chatTabWidget"/>
     </item>
    </layout>
   </widget>
@@ -450,7 +410,9 @@
     <property name="title">
      <string>Ninjam</string>
     </property>
-    <addaction name="actionPrivate_Server"/>
+    <addaction name="actionConnectWithPrivateServer"/>
+    <addaction name="actionHostPrivateServer"/>
+    <addaction name="separator"/>
     <addaction name="actionNinjam_community_forum"/>
     <addaction name="actionNinjam_Official_Site"/>
    </widget>
@@ -527,9 +489,9 @@
     <string>Recording ...</string>
    </property>
   </action>
-  <action name="actionPrivate_Server">
+  <action name="actionConnectWithPrivateServer">
    <property name="text">
-    <string>Private Server ...</string>
+    <string>Connect with private server ...</string>
    </property>
   </action>
   <action name="actionNinjam_community_forum">
@@ -677,28 +639,32 @@
     <string>Remember ...</string>
    </property>
   </action>
+  <action name="actionHostPrivateServer">
+   <property name="text">
+    <string>Host a private server in your machine ...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>AudioMeter</class>
-   <extends>QWidget</extends>
-   <header>PeakMeter.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Slider</class>
+   <class>AudioSlider</class>
    <extends>QSlider</extends>
-   <header>Slider.h</header>
+   <header>gui/widgets/Slider.h</header>
   </customwidget>
   <customwidget>
    <class>UserNameLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>UserNameLineEdit.h</header>
+   <header>gui/widgets/UserNameLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ChatTabWidget</class>
+   <extends>QFrame</extends>
+   <header>gui/widgets/ChatTabWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

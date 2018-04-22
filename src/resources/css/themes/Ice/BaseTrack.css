@@ -6,7 +6,8 @@
 
 #soloButton,
 #muteButton,
-BoostSpinBox
+BoostSpinBox,
+#instrumentsMenu QToolButton:!hover
 {
     font-size: 9px;
     padding: 2px;
@@ -21,11 +22,6 @@ BoostSpinBox
 {
     background-color: rgb(180, 207, 250);
     border-radius: 6px;
-}
-
-BoostSpinBox
-{
-    max-width: 16px;
 }
 
 QPushButton#buttonStereoInversion:checked
@@ -139,8 +135,8 @@ BaseTrackView[unlighted="true"] QSlider::handle:vertical,    /* track fader hand
 #panSlider::handle:disabled,
 QSlider::handle:vertical:disabled
 {
-    background: rgba(0, 107, 206);
-    border: 1px outset rgb(0, 80, 151);
+    background: rgba(0, 107, 206, 180);
+    border: 1px outset rgba(0, 80, 151, 200);
 }
 
 BaseTrackView[unlighted="true"],                            /* the track */
@@ -155,11 +151,6 @@ BaseTrackView[unlighted="true"] #panSlider::handle:hover,
 BaseTrackView[unlighted="true"] #levelSlider::handle:hover
 {
     background-color: rgb(51, 158, 255);
-}
-
-AudioMeter
-{
-    qproperty-dBMarksColor: rgb(206, 233, 255);
 }
 
 

@@ -1,6 +1,7 @@
 /* Dialogs in Volcano theme
 -------------------------------------*/
 
+PrivateServerWindow,
 PreferencesDialog
 {
     background-color: #BD5A1D;
@@ -10,7 +11,8 @@ QMessageBox,
 QInputDialog,
 MidiToolsDialog,
 UserNameDialog,
-PrivateServerDialog
+PrivateServerDialog,
+#instrumentsMenu
 {
     border-color: rgb(20, 20, 20);
     color: rgb(220, 220, 220);

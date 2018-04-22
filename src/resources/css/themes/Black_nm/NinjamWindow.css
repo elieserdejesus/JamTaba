@@ -1,3 +1,8 @@
+NinjamTrackView #receiveLabel
+{
+    color: rgba(255, 255, 255, 70);
+}
+
 NinjamTrackView #lowCutButton:checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(80, 80, 80));
@@ -35,9 +40,18 @@ NinjamTrackView[unlighted="true"] #receiveButton:hover:!checked
     border-color: rgba(0, 0, 0, 90);
 }
 
-NinjamTrackView[horizontal="true"] #panSlider
+NinjamTrackView[horizontal="true"] #levelSlider::handle:horizontal:hover
 {
-    max-width: 50px;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(180, 180, 180, 180),
+        stop:1 rgba(120, 120, 120, 180));
+
+    border: 1px outset rgb(30, 30, 30);
+}
+
+NinjamTrackView[horizontal="true"][unlighted="true"] #levelSlider::handle:horizontal:hover
+{
+    background-color: rgb(120, 120, 120);
 }
 
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
@@ -45,7 +59,7 @@ NinjamTrackView[horizontal="true"] QPushButton#receiveButton:checked,
 NinjamTrackView QPushButton#lowCutButton:hover:checked,
 NinjamTrackView QPushButton#receiveButton:checked
 {
-    margin-top: -1px;
+    /*margin-top: -1px;*/
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(80, 80, 80));
     color: rgba(0, 0, 0, 160);
     border: none;
@@ -60,14 +74,17 @@ NinjamTrackView[horizontal="true"]
 
 NinjamTrackView[unlighted="true"][horizontal="true"] #levelSlider::handle:horizontal
 {
-    border: rgb(140, 140, 140);
-    background: rgb(80, 80, 80);
+    border: rgba(140, 140, 140, 180);
+    background: rgba(80, 80, 80, 180);
 }
 
 NinjamTrackView[horizontal="true"] #levelSlider::handle:horizontal
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
-    border: 1px outset rgb(30, 30, 30);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(180, 180, 180, 140),
+        stop:1 rgba(120, 120, 120, 140));
+
+    border: 1px outset rgba(30, 30, 30, 140);
 }
 
 /* Tool buttons: track vertical/horizontal/grid, wide/narrow and server licence buttons
@@ -409,4 +426,17 @@ LooperWindow #muteButton:disabled
     background-color: rgba(0, 0, 0, 40);
     color: rgba(0, 0, 0, 100);
     border-color: rgba(0, 0, 0, 20);
+}
+
+InstrumentsButton:hover,
+#instrumentsMenu QToolButton:enabled:hover
+{
+    background: rgba(255, 255, 255, 80);
+    border: gray;
+}
+
+#instrumentsMenu QToolButton:enabled
+{
+    background-color: rgba(255, 255, 255, 20);
+    border: none;
 }

@@ -6,7 +6,7 @@ IntervalChunksDisplay::IntervalChunksDisplay(QWidget *parent) :
     downloadedChunks(0),
     totalChunks(0)
 {
-    setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
     setToolTip(tr("Downloaded intervals"));
     setAccessibleDescription(toolTip());
     setValue(totalChunks);

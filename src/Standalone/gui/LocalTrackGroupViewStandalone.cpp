@@ -18,9 +18,9 @@ void LocalTrackGroupViewStandalone::populateMenu(QMenu &menu)
 void LocalTrackGroupViewStandalone::removeSubchannel()
 {
     if (trackViews.size() > 1) { // only the second subchannel can be removed
-         LocalTrackViewStandalone *secondTrack = getTracks<LocalTrackViewStandalone *>().at(1);
+         auto secondTrack = getTracks<LocalTrackViewStandalone *>().at(1);
          if (secondTrack) {
-             Audio::LocalInputNode *inputNode = secondTrack->getInputNode();
+             auto inputNode = secondTrack->getInputNode();
              if (inputNode->isRoutingMidiInput()) {
                  secondTrack->setMidiRouting(false); // deactivate midi routing before delete the subchannel
              }
@@ -50,9 +50,9 @@ void LocalTrackGroupViewStandalone::createSubChannelActions(QMenu &menu)
 //overrided factory method
 LocalTrackViewStandalone* LocalTrackGroupViewStandalone::createTrackView(long trackID)
 {
-    MainControllerStandalone* controller = dynamic_cast<MainWindowStandalone *>(mainFrame)->getMainController();
+    auto controller = dynamic_cast<MainWindowStandalone *>(mainFrame)->getMainController();
 
-    LocalTrackViewStandalone *trackView = new LocalTrackViewStandalone(controller, trackID );
+    auto trackView = new LocalTrackViewStandalone(controller, trackID );
 
     connect(trackView, &LocalTrackViewStandalone::trackInputChanged, this, &LocalTrackGroupViewStandalone::repaintLocalTracks);
 
@@ -61,7 +61,7 @@ LocalTrackViewStandalone* LocalTrackGroupViewStandalone::createTrackView(long tr
 
 void LocalTrackGroupViewStandalone::repaintLocalTracks()
 {
-    for (BaseTrackView *trackView : this->trackViews) {
+    for (auto trackView : this->trackViews) {
         trackView->update();
     }
 }

@@ -1,10 +1,12 @@
 #include "PortAudioDriver.h"
-#include "../log/Logging.h"
+#include "log/Logging.h"
 #include "pa_linux_alsa.h"
 
-namespace Audio {
+using controller::MainController;
 
-PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int deviceIndex,
+namespace audio {
+
+PortAudioDriver::PortAudioDriver(MainController *mainController, int deviceIndex,
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
     AudioDriver(mainController),

@@ -4,9 +4,11 @@
 #include <QFrame>
 #include <QLabel>
 #include <QPushButton>
-#include "ninjam/Server.h"
+
+#include "gui/widgets/WavePeakPanel.h"
+
+#include "ninjam/client/ServerInfo.h"
 #include "loginserver/LoginService.h"
-#include "WavePeakPanel.h"
 
 class MapWidget;
 
@@ -14,16 +16,16 @@ namespace Ui {
 class JamRoomViewPanel;
 }
 
-namespace Geo {
+namespace geo {
 class Location;
 }
 
-namespace Login {
+namespace login {
 class AbstractJamRoom;
 class RoomInfo;
 }
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
 
@@ -32,22 +34,22 @@ class JamRoomViewPanel : public QFrame
     Q_OBJECT
 
 public:
-    JamRoomViewPanel(const Login::RoomInfo &roomInfo, Controller::MainController *mainController);
+    JamRoomViewPanel(const login::RoomInfo &roomInfo, controller::MainController *mainController);
     ~JamRoomViewPanel();
     void addPeak(float peak);
     void clear(bool resetListenButton);
-    void refresh(const Login::RoomInfo &roomInfo);
+    void refresh(const login::RoomInfo &roomInfo);
 
     void setShowBufferingState(bool showBuffering);
     void setBufferingPercentage(int percentage);
     void setWaveDrawingMode(WavePeakPanel::WaveDrawingMode mode);
 
-    Login::RoomInfo getRoomInfo() const;
+    login::RoomInfo getRoomInfo() const;
 
 signals:
-    void startingListeningTheRoom(const Login::RoomInfo &roomInfo);
-    void finishingListeningTheRoom(const Login::RoomInfo &roomInfo);
-    void enteringInTheRoom(const Login::RoomInfo &roomInfo);
+    void startingListeningTheRoom(const login::RoomInfo &roomInfo);
+    void finishingListeningTheRoom(const login::RoomInfo &roomInfo);
+    void enteringInTheRoom(const login::RoomInfo &roomInfo);
 
 protected:
     void changeEvent(QEvent *) override;
@@ -59,8 +61,8 @@ private slots:
 
 private:
     Ui::JamRoomViewPanel *ui;
-    Controller::MainController *mainController;
-    Login::RoomInfo roomInfo;
+    controller::MainController *mainController;
+    login::RoomInfo roomInfo;
     MapWidget *map;
 
     QLayout *waveDrawingButtonsLayout;
@@ -68,12 +70,12 @@ private:
     void createWaveDrawingButtonsLayout(QLayout *layout);
     void setWaveDrawingButtonsVisibility(bool showButtons);
 
-    void initialize(const Login::RoomInfo &roomInfo);
-    bool roomContainsBotsOnly(const Login::RoomInfo &roomInfo);
-    bool userIsBot(const Login::UserInfo &userInfo);
+    void initialize(const login::RoomInfo &roomInfo);
+    bool roomContainsBotsOnly(const login::RoomInfo &roomInfo);
+    bool userIsBot(const login::UserInfo &userInfo);
     void updateButtonListen();
 
-    static bool userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2);
+    static bool userInfoLessThan(const login::UserInfo &u1, const login::UserInfo &u2);
     QString buildRoomDescriptionString();
 
     void translateUi();
@@ -85,7 +87,7 @@ private:
 
 };
 
-inline Login::RoomInfo JamRoomViewPanel::getRoomInfo() const
+inline login::RoomInfo JamRoomViewPanel::getRoomInfo() const
 {
     return roomInfo;
 }

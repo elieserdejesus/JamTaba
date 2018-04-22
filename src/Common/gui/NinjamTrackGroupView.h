@@ -2,21 +2,23 @@
 #define NINJAMTRACKGROUPVIEW_H
 
 #include "TrackGroupView.h"
-#include <QLabel>
-#include <QBoxLayout>
-#include "MarqueeLabel.h"
 #include "NinjamTrackView.h"
+#include "widgets/MarqueeLabel.h"
 #include "video/VideoWidget.h"
 
-namespace Controller {
+#include <QLabel>
+#include <QBoxLayout>
+
+namespace controller {
 class MainController;
 }
 
-namespace Persistence {
+namespace persistence {
 class CacheEntry;
 }
 
-enum class TracksLayout {
+enum class TracksLayout
+{
     VerticalLayout,
     HorizontalLayout,
     GridLayout
@@ -27,14 +29,13 @@ class NinjamTrackGroupView : public TrackGroupView
     Q_OBJECT
 
 public:
-    NinjamTrackGroupView(Controller::MainController *mainController, long trackID,
-                         const QString &channelName, const QColor &userColor, const Persistence::CacheEntry &initialValues);
+    NinjamTrackGroupView(controller::MainController *mainController, long trackID,
+                         const QString &channelName, const QColor &userColor, const persistence::CacheEntry &initialValues);
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
-    void setGroupName(const QString &groupName);
-    QString getGroupName() const override;
-    void updateGuiElements();
+    void setUserName(const QString &groupName);
+    void updateGuiElements() override;
     void setEstimatedChunksPerInterval(int estimatedChunks);
 
     NinjamTrackView *addTrackView(long trackID) override;
@@ -62,10 +63,10 @@ protected:
     void populateContextMenu(QMenu &contextMenu) override;
 
 private:
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
     QLabel *countryLabel;
     QLabel *countryFlag;
-    MarqueeLabel *groupNameLabel;
+    MarqueeLabel *userNameLabel;
     QLabel *chatBlockIconLabel;
     QString userIP;
     TracksLayout tracksLayoutEnum;
@@ -75,6 +76,7 @@ private:
     quint64 lastVideoRender;
     QList<QList<QImage>> decodedImages;
     uint videoFrameRate;
+    uint intervalsWithoutReceiveVideo;
 
     void setupHorizontalLayout();
     void setupVerticalLayout();
@@ -85,6 +87,8 @@ private:
     Qt::Orientation getTracksOrientation() const;
 
     void resetMainLayoutStretch();
+
+    QString getUniqueName() const;
 
 private slots:
     void updateGeoLocation(const QString &resolvedIp);

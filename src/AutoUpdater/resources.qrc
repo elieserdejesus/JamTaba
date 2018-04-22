@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>resources/logo.png</file>
-        <file>resources/log.ini</file>
-    </qresource>
-</RCC>

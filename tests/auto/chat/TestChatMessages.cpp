@@ -2,7 +2,7 @@
 #include "gui/chat/NinjamVotingMessageParser.h"
 #include <QTest>
 
-using namespace Gui::Chat;
+using namespace gui::chat;
 
 void TestAdminCommands::invalidPrivateMessage_data()
 {

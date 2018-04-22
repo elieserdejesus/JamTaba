@@ -5,13 +5,13 @@
 #include "audio/core/PluginDescriptor.h"
 #include "aeffectx.h"
 
-namespace Vst {
+namespace vst {
 
     namespace utils {
 
         QString getPluginVendor(AEffect *plugin);
         QString getPluginName(AEffect *plugin);
-        Audio::PluginDescriptor createDescriptor(AEffect *plugin, const QString &pluginPath);
+        audio::PluginDescriptor createDescriptor(AEffect *plugin, const QString &pluginPath);
 
     }
 }

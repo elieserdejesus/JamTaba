@@ -6,6 +6,8 @@
 #include <QLineEdit>
 #include <QTimer>
 #include <QSharedPointer>
+#include <QApplication>
+#include <QAction>
 
 QList<QSharedPointer<TopLevelTextEditorModifier>> TopLevelTextEditorModifier::createdModifiers;
 
@@ -70,6 +72,9 @@ void TopLevelTextEditorModifier::doInstall(QLineEdit *lineEdit)
         hackedLineEdit->returnPressed();
 
     });
+
+    for (auto action : hackedLineEdit->actions())
+        topLevelLineEdit->addAction(action, QLineEdit::LeadingPosition);
 }
 
 void TopLevelTextEditorModifier::modify(QComboBox *comboBox)
@@ -163,7 +168,8 @@ bool TopLevelTextEditorModifier::isValidFocusInEvent(QEvent *ev) const
 
 bool TopLevelTextEditorModifier::eventFilter(QObject *obj, QEvent *ev)
 {
-    if (ev->type() != QEvent::FocusIn && ev->type() != QEvent::FocusOut && ev->type() != QEvent::MouseButtonPress)
+    if (ev->type() != QEvent::FocusIn && ev->type() != QEvent::FocusOut && ev->type() != QEvent::MouseButtonPress &&
+            ev->type() != QEvent::Move && ev->type() != QEvent::Resize)
         return false; // skip all other events
 
     // clear focus when mouse is pressed in non top level LineEdit area
@@ -187,6 +193,18 @@ bool TopLevelTextEditorModifier::eventFilter(QObject *obj, QEvent *ev)
         transferTextToHackedLineEdit();
         hackedLineEdit->clearFocus();
         return true;
+    }
+    else if (obj == hackedLineEdit) { // the hacked line edit is moved or resized?
+        if (ev->type() == QEvent::Move || ev->type() == QEvent::Resize) {
+            QPoint pos = hackedLineEdit->pos();
+            QSize size = hackedLineEdit->size();
+
+            if (hackedLineEdit->parentWidget())
+                pos = hackedLineEdit->parentWidget()->mapToGlobal(pos);
+
+            topLevelLineEdit->move(pos);
+            topLevelLineEdit->resize(size);
+        }
     }
 
     return false;

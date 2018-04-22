@@ -6,7 +6,7 @@
 #include <QFileDialog>
 #include "persistence/Settings.h"
 #include "MetronomeUtils.h"
-#include "audio/vorbis/VorbisEncoder.h"
+#include "audio/vorbis/Vorbis.h"
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
@@ -68,14 +68,14 @@ void PreferencesDialog::refreshMetronomeControlsStyleSheet()
     style()->polish(ui->browseAccentBeatButton);
 }
 
-void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
+void PreferencesDialog::initialize(PreferencesTab initialTab, const persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
 {
     Q_UNUSED(initialTab);
     this->settings = settings;
     this->jamRecorders = jamRecorders;
     this->jamRecorderCheckBoxes = QMap<QCheckBox *, QString>();
 
-    for (const QString &jamRecorder : jamRecorders.keys()) {
+    for (const auto &jamRecorder : jamRecorders.keys()) {
         QCheckBox *myCheckBox = new QCheckBox(this);
         myCheckBox->setObjectName(jamRecorder);
         myCheckBox->setText(jamRecorders.value(jamRecorder));
@@ -157,7 +157,12 @@ void PreferencesDialog::accept()
     bool rememberingPan = ui->checkBoxRememberPan->isChecked();
     bool rememberingMute = ui->checkBoxRememberMute->isChecked();
     bool rememberingLowCut = ui->checkBoxRememberLowCut->isChecked();
-    emit rememberSettingsChanged(rememberingBoost, rememberingLevel, rememberingPan, rememberingMute, rememberingLowCut);
+    emit rememberRemoteUserSettingsChanged(rememberingBoost, rememberingLevel, rememberingPan, rememberingMute, rememberingLowCut);
+
+    bool rememberLocalChannels = ui->checkBoxRememberLocalChannels->isChecked();
+    bool rememberBottomSection = ui->checkBoxRememberBottomSection->isChecked();
+    bool rememberChatSection = ui->checkBoxRememberChatSection->isChecked();
+    emit rememberCollapsibleSectionsSettingsChanged(rememberLocalChannels, rememberBottomSection, rememberChatSection);
 
     QDialog::accept();
 }
@@ -165,9 +170,9 @@ void PreferencesDialog::accept()
 void PreferencesDialog::populateEncoderQualityComboBox()
 {
     ui->comboBoxEncoderQuality->clear();
-    ui->comboBoxEncoderQuality->addItem(tr("Low (good for slow internet connections)"), VorbisEncoder::QUALITY_LOW);
-    ui->comboBoxEncoderQuality->addItem(tr("Normal (default)"), VorbisEncoder::QUALITY_NORMAL);
-    ui->comboBoxEncoderQuality->addItem(tr("High (for good internet connections only)"), VorbisEncoder::QUALITY_HIGH);
+    ui->comboBoxEncoderQuality->addItem(tr("Low (good for slow internet connections)"), vorbis::EncoderQualityLow);
+    ui->comboBoxEncoderQuality->addItem(tr("Normal (default)"), vorbis::EncoderQualityNormal);
+    ui->comboBoxEncoderQuality->addItem(tr("High (for good internet connections only)"), vorbis::EncoderQualityHigh);
 
     bool usingCustomQuality = usingCustomEncodingQuality();
     if (usingCustomQuality)
@@ -176,11 +181,11 @@ void PreferencesDialog::populateEncoderQualityComboBox()
     //select the correct item in combobox
     if (!usingCustomQuality) {
         float quality = settings->getEncodingQuality();
-        if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_LOW))
+        if (qFuzzyCompare(quality, vorbis::EncoderQualityLow))
             ui->comboBoxEncoderQuality->setCurrentIndex(0);
-        else if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_NORMAL))
+        else if (qFuzzyCompare(quality, vorbis::EncoderQualityNormal))
             ui->comboBoxEncoderQuality->setCurrentIndex(1);
-        else if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_HIGH))
+        else if (qFuzzyCompare(quality, vorbis::EncoderQualityHigh))
                     ui->comboBoxEncoderQuality->setCurrentIndex(2);
     }
     else {
@@ -192,13 +197,13 @@ bool PreferencesDialog::usingCustomEncodingQuality()
 {
     float currentQuality = settings->getEncodingQuality();
 
-    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_LOW))
+    if (qFuzzyCompare(currentQuality, vorbis::EncoderQualityLow))
         return false;
 
-    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_NORMAL))
+    if (qFuzzyCompare(currentQuality, vorbis::EncoderQualityNormal))
         return false;
 
-    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_HIGH))
+    if (qFuzzyCompare(currentQuality, vorbis::EncoderQualityHigh))
         return false;
 
     return true;
@@ -220,6 +225,10 @@ void PreferencesDialog::populateRememberTab()
     ui->checkBoxRememberPan->setChecked(settings->isRememberingPan());
     ui->checkBoxRememberMute->setChecked(settings->isRememberingMute());
     ui->checkBoxRememberLowCut->setChecked(settings->isRememberingLowCut());
+
+    ui->checkBoxRememberLocalChannels->setChecked(settings->isRememberingLocalChannels());
+    ui->checkBoxRememberBottomSection->setChecked(settings->isRememberingBottomSection());
+    ui->checkBoxRememberChatSection->setChecked(settings->isRememberingChatSection());
 }
 
 void PreferencesDialog::populateLooperTab()
@@ -259,9 +268,9 @@ void PreferencesDialog::populateMetronomeTab()
     ui->textFieldOffBeat->setText(settings->getMetronomeOffBeatFile());
 
     // combo embedded metronome sounds
-    QList<QString> metronomeAliases = Audio::MetronomeUtils::getBuiltInMetronomeAliases();
+    auto metronomeAliases = audio::metronomeUtils::getBuiltInMetronomeAliases();
     ui->comboBuiltInMetronomes->clear();
-    foreach (QString alias, metronomeAliases) {
+    for (QString alias : metronomeAliases) {
         ui->comboBuiltInMetronomes->addItem(alias, alias);
     }
 
@@ -274,10 +283,10 @@ void PreferencesDialog::populateMetronomeTab()
 void PreferencesDialog::populateMultiTrackRecordingTab()
 {
     Q_ASSERT(settings);
-    Persistence::MultiTrackRecordingSettings recordingSettings = settings->getMultiTrackRecordingSettings();
+    auto recordingSettings = settings->getMultiTrackRecordingSettings();
     ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
 
-    for (QCheckBox *myCheckBox : jamRecorderCheckBoxes.keys()) {
+    for (auto myCheckBox : jamRecorderCheckBoxes.keys()) {
         myCheckBox->setChecked(recordingSettings.isJamRecorderActivated(jamRecorderCheckBoxes[myCheckBox]));
     }
 

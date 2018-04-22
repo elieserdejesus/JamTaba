@@ -2,19 +2,6 @@
 #define MAIN_WINDOW_H
 
 #include "ui_MainWindow.h"
-#include "BusyDialog.h"
-#include "persistence/Settings.h"
-#include "LocalTrackGroupView.h"
-#include "ScreensaverBlocker.h"
-#include "TextEditorModifier.h"
-#include "performance/PerformanceMonitor.h"
-#include "LooperWindow.h"
-#include "UsersColorsPool.h"
-
-#include "chat/NinjamVotingMessageParser.h"
-
-#include "ninjam/User.h"
-#include "ninjam/Server.h"
 
 #include <QTranslator>
 #include <QMainWindow>
@@ -22,11 +9,7 @@
 #include <QCamera>
 #include <QCameraInfo>
 #include <QVideoFrame>
-
-#include "video/VideoFrameGrabber.h"
-#include "video/VideoWidget.h"
-
-#include "ChatTabWidget.h"
+#include <QComboBox>
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -36,14 +19,48 @@ class ChordProgression;
 class ChordsPanel;
 class ChatPanel;
 class InactivityDetector;
+class LocalTrackGroupView;
+class CameraFrameGrabber;
+class VideoWidget;
+class BusyDialog;
+class LooperWindow;
+class UsersColorsPool;
+class ScreensaverBlocker;
+class PerformanceMonitor;
+class TextEditorModifier;
+class PrivateServerWindow;
 
-namespace Login {
+namespace login {
 class RoomInfo;
+class MainChat;
 }
 
-namespace Controller {
+namespace controller {
 class MainController;
 }
+
+namespace ninjam { namespace client {
+class User;
+}}
+
+namespace gui { namespace chat {
+class SystemVotingMessage;
+}}
+
+namespace persistence {
+class LocalInputTrackSettings;
+class Preset;
+class SubChannel;
+class Channel;
+}
+
+using ninjam::client::User;
+using persistence::LocalInputTrackSettings;
+using persistence::Preset;
+using persistence::Channel;
+using persistence::SubChannel;
+using gui::chat::SystemVotingMessage;
+using login::MainChat;
 
 class MainWindow : public QMainWindow
 {
@@ -52,14 +69,14 @@ class MainWindow : public QMainWindow
     Q_PROPERTY(QColor tintColor MEMBER tintColor WRITE setTintColor)
 
 public:
-    MainWindow(Controller::MainController *mainController, QWidget *parent = 0);
+    MainWindow(controller::MainController *mainController, QWidget *parent = 0);
     virtual ~MainWindow();
 
-    void initialize();
+    virtual void initialize();
 
     void detachMainController();
 
-    virtual Persistence::LocalInputTrackSettings getInputsSettings() const;
+    virtual LocalInputTrackSettings getInputsSettings() const;
 
     int getChannelGroupsCount() const;
 
@@ -67,14 +84,14 @@ public:
 
     void highlightChannelGroup(int index) const;
 
-    virtual void addChannelsGroup(const QString &name);
+    virtual void addChannelsGroup(int instrumentIndex);
     void removeChannelsGroup(int channelGroupIndex);
 
     void exitFromRoom(bool normalDisconnection, QString disconnectionMessage = "");
 
-    virtual Controller::MainController *getMainController() const;
+    virtual controller::MainController *getMainController() const;
 
-    virtual void loadPreset(const Persistence::Preset &preset);
+    virtual void loadPreset(const Preset &preset);
     void resetLocalChannels();
 
     bool isTransmiting(int channelID) const;
@@ -101,38 +118,38 @@ public:
     void setTintColor(const QColor &color);
     QColor getTintColor() const;
 
+    void fillUserContextMenu(QMenu &menu, const QString &userFullName, bool addInvitationEntry);
+
 public slots:
-    void enterInRoom(const Login::RoomInfo &roomInfo);
+    void enterInRoom(const login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
-    void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
+    void tryEnterInRoom(const login::RoomInfo &roomInfo, const QString &password = "");
 
-    void showFeedbackAboutBlockedUserInChat(const QString &userName);
-    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
+    void showFeedbackAboutBlockedUserInChat(const QString &userFullName);
+    void showFeedbackAboutUnblockedUserInChat(const QString &userFullName);
 
-    void addMainChatMessage(const Ninjam::User &, const QString &message);
-    void addPrivateChatMessage(const Ninjam::User &, const QString &message);
+    void addNinjamServerChatMessage(const User &, const QString &message);
+    void addPrivateChatMessage(const User &, const QString &message);
     void addPrivateChat(const QString &remoteUserName, const QString &userIP);
 
 protected:
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
     Ui::MainFrameClass ui;
     QList<LocalTrackGroupView *> localGroupChannels;
 
     void centerDialog(QWidget *dialog);
 
-    virtual NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &,
-                                                 Controller::MainController *) = 0;
+    virtual NinjamRoomWindow *createNinjamWindow(const login::RoomInfo &, controller::MainController *) = 0;
 
-    bool eventFilter(QObject *target, QEvent *event);
+    bool eventFilter(QObject *target, QEvent *event) override;
 
-    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, const QString &channelName,
+    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, int instrumentIndex,
                                          bool createFirstSubchannel);
 
     // this factory method is overrided in derived classes to create more specific views
     virtual LocalTrackGroupView *createLocalTrackGroupView(int channelGroupIndex);
 
-    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView,
-                                           const Persistence::Subchannel &subChannel);
+    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView, const SubChannel &subChannel);
 
     void stopCurrentRoomStream();
 
@@ -142,8 +159,10 @@ protected:
     QList<T> getLocalChannels() const
     {
         QList<T> localChannels;
-        foreach (LocalTrackGroupView *trackGroupView, localGroupChannels)
+
+        for (auto trackGroupView : localGroupChannels)
             localChannels.append(dynamic_cast<T>(trackGroupView));
+
         return localChannels;
     }
 
@@ -185,7 +204,8 @@ protected slots:
     void showNinjamCommunityWebPage();
     void showNinjamOfficialWebPage();
 
-    void showPrivateServerDialog();
+    void showConnectWithPrivateServerDialog();
+    void showPrivateServerWindow();
 
     // view menu
     void updateMeteringMenu();
@@ -208,15 +228,16 @@ protected slots:
     void showNewVersionAvailableMessage(const QString &latestVersionDetails);
     static QString sanitizeLatestVersionDetails(const QString &details);
     void handleIncompatiblity();
-    virtual void handleServerConnectionError(const QString &errorMsg);
+    void handleServerConnectionError(const QString &errorMsg);
 
     // +++++  ROOM FEATURES ++++++++
-    void playPublicRoomStream(const Login::RoomInfo &roomInfo);
-    void stopPublicRoomStream(const Login::RoomInfo &roomInfo);
+    void playPublicRoomStream(const login::RoomInfo &roomInfo);
+    void stopPublicRoomStream(const login::RoomInfo &roomInfo);
 
     // collapse areas
     void toggleLocalTracksCollapseStatus();
     void toggleBottomAreaCollapseStatus();
+    void setBottomCollapsedStatus(bool collapsed);
     void collapseBottomArea(bool collapse);
 
     // channel name changed
@@ -242,16 +263,17 @@ protected slots:
 
     virtual void updateLocalInputChannelsGeometry();
 
+    void setNetworkUsageUpdatePeriod(quint32 periodInMilliseconds);
+
 private slots:
 
     void showJamtabaCurrentVersion();
 
-    void refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms);
+    void refreshPublicRoomsList(const QList<login::RoomInfo> &publicRooms);
 
     void hideChordsPanel();
 
-    void setChatsVisibility(bool chatVisible);
-    void toggleChatCollapseStatus();
+    void chatCollapseChanged(bool chatCollapsed);
 
     // preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
@@ -277,14 +299,20 @@ private slots:
 
     void selectNewCamera(int cameraIndex);
 
-    void handleUserLeaving(const QString &userName);
+    void handleUserLeaving(const QString &userFullName);
     void handleUserEntering(const QString &userName);
 
-    void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
-    void sendNewChatMessage(const QString &msg);
+    void handleChordProgressionMessage(const User &user, const QString &message);
+    void sendChatMessageToNinjamServer(const QString &msg);
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
-    void blockUserInChat(const QString &userNameToBlock);
+
+    void blockUserInChat();
+    void unblockUserInChat();
+
+    void fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName);
+
+    void connectInMainChat();
 
 private:
 
@@ -292,7 +320,7 @@ private:
 
     bool bottomCollapsed;
 
-    BusyDialog busyDialog;
+    BusyDialog *busyDialog;
     QTranslator jamtabaTranslator; // used to translate jamtaba texts
     QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
 
@@ -309,18 +337,20 @@ private:
 
     InactivityDetector *xmitInactivityDetector;
 
-    UsersColorsPool usersColorsPool;
+    QScopedPointer<UsersColorsPool> usersColorsPool;
 
-    ScreensaverBlocker screensaverBlocker;
+    QScopedPointer<ScreensaverBlocker> screensaverBlocker;
 
-    ChatTabWidget *chatTabWidget;
+    QScopedPointer<MainChat> mainChat;
+
+    QScopedPointer<PrivateServerWindow> privateServerWindow;
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();
     void hideBusyDialog();
     void centerBusyDialog();
 
-    void createPrivateChat(const QString &remoteUserName, const QString &userIP, bool focusNewChat);
+    void createPrivateChat(const QString &remoteUserName, const QString &remoteUserIP, bool focusNewChat);
     void setPrivateChatInputstatus(const QString userName, bool enabled);
 
     void closeAllLooperWindows();
@@ -348,17 +378,25 @@ private:
 
     QScopedPointer<NinjamRoomWindow> ninjamWindow;
 
-    QScopedPointer<Login::RoomInfo> roomToJump; // store the next room reference when jumping from on room to another
+    QScopedPointer<login::RoomInfo> roomToJump; // store the next room reference when jumping from on room to another
     QString passwordToJump;
 
-    static bool jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2);
+    QLabel *transmitTransferRateLabel;
+    QLabel *transmitIcon;
+    QLabel *receiveTransferRateLabel;
+    QLabel *receiveIcon;
+
+    quint32 networkUsageUpdatePeriod;
+    const static quint32 DEFAULT_NETWORK_USAGE_UPDATE_PERIOD;
+
+    static bool jamRoomLessThan(const login::RoomInfo &r1, const login::RoomInfo &r2);
 
     void setCameraComboVisibility(bool show);
 
     void initializeCamera(const QString &cameraDeviceName);
 
     void initializeLoginService();
-    void initializeLocalInputChannels(const Persistence::LocalInputTrackSettings &localInputSettings);
+    void initializeLocalInputChannels(const persistence::LocalInputTrackSettings &localInputSettings);
 
     void initializeMainTabWidget();
     void initializeViewMenu();
@@ -377,6 +415,7 @@ private:
     void initializeCameraWidget();
 
     QCamera::FrameRateRange getBestSupportedFrameRate() const;
+    QSize getBestCameraResolution(const QList<QSize> resolutions) const;
 
     void updateUserNameLabel();
 
@@ -388,19 +427,20 @@ private:
 
     ChordsPanel *createChordsPanel();
 
-    JamRoomViewPanel *createJamRoomViewPanel(const Login::RoomInfo &roomInfo);
+    JamRoomViewPanel *createJamRoomViewPanel(const login::RoomInfo &roomInfo);
 
     void setupSignals();
     void setupWidgets();
 
     void restoreWindowPosition();
 
-    void addMainChatPanel();
+    void createMainChat(bool turnedOn);
+    void createNinjamServerChat(const QString &serverName);
     void addNinjamPanelsInBottom();
 
-    void showLastChordsInMainChat();
-    void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
-    bool canShowBlockButtonInChatMessage(const QString &userName) const;
+    void showLastChordsInNinjamServerChat();
+    void createVoteButton(const SystemVotingMessage &votingMessage);
+    bool canShowBlockButtonInChatMessage(const QString &userFullName) const;
 
     void loadTranslationFile(const QString &locale);
 
@@ -420,8 +460,10 @@ private:
 
     void setupMainTabCornerWidgets();
 
-    PerformanceMonitor performanceMonitor; // cpu and memmory usage
-    qint64 lastPerformanceMonitorUpdate;
+    static QString buildServerInviteMessage(const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool showPrivateServerIpAndPort);
+
+    QScopedPointer<PerformanceMonitor> performanceMonitor; // cpu and memmory usage
+    qint64 lastPerformanceMonitorUpdate; // TODO move to PerformenceMonitor
     static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
     static const QString NIGHT_MODE_SUFFIX;
@@ -435,7 +477,7 @@ inline QColor MainWindow::getTintColor() const
 
 inline UsersColorsPool *MainWindow::getUsersColorsPool() const
 {
-    return const_cast<UsersColorsPool *>(&usersColorsPool);
+    return usersColorsPool.data();
 }
 
 inline NinjamRoomWindow* MainWindow::getNinjamRomWindow() const
@@ -443,7 +485,7 @@ inline NinjamRoomWindow* MainWindow::getNinjamRomWindow() const
     return this->ninjamWindow.data();
 }
 
-inline Controller::MainController *MainWindow::getMainController() const
+inline controller::MainController *MainWindow::getMainController() const
 {
     return mainController;
 }
@@ -451,11 +493,6 @@ inline Controller::MainController *MainWindow::getMainController() const
 inline int MainWindow::getChannelGroupsCount() const
 {
     return localGroupChannels.size();
-}
-
-inline QString MainWindow::getChannelGroupName(int index) const
-{
-    return localGroupChannels.at(index)->getGroupName();
 }
 
 #endif

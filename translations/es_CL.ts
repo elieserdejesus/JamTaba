@@ -1,21 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
-<context>
-    <name>Audio::Looper</name>
-    <message>
-        <source>Sequence</source>
-        <translation>Secuencial</translation>
-    </message>
-    <message>
-        <source>All Layers</source>
-        <translation>Todas las pistas</translation>
-    </message>
-    <message>
-        <source>Selected Layer</source>
-        <translation>Pista Seleccionada</translation>
-    </message>
-</context>
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -34,6 +19,9 @@
         <source>S</source>
         <translation>S</translation>
     </message>
+</context>
+<context>
+    <name>BoostSpinBox</name>
     <message>
         <source>Boost</source>
         <translation>Ganancia</translation>
@@ -68,6 +56,10 @@
         <source>B</source>
         <translation>B</translation>
     </message>
+    <message>
+        <source>Translation error!</source>
+        <translation>¡Error de traducción!</translation>
+    </message>
 </context>
 <context>
     <name>ChatPanel</name>
@@ -98,6 +90,41 @@
     <message>
         <source>Use/load the chords above</source>
         <translation>Usar/cargar los acordes que aparecen arriba</translation>
+    </message>
+    <message>
+        <source>type here ...</source>
+        <translation>escribe aquí ...</translation>
+    </message>
+    <message>
+        <source>Increase chat font size</source>
+        <translation>Aumentar el tamaño de letra</translation>
+    </message>
+    <message>
+        <source>Decrease chat font size</source>
+        <translation>Reducir el tamaño de letra</translation>
+    </message>
+    <message>
+        <source>Turn on/off this chat</source>
+        <translation>Encender/apagar este chat</translation>
+    </message>
+    <message>
+        <source>chat is off</source>
+        <translation>chat apagado</translation>
+    </message>
+    <message>
+        <source>Connected Users (%1)</source>
+        <translation>Usuarios conectados (%1)</translation>
+    </message>
+</context>
+<context>
+    <name>ChatTabWidget</name>
+    <message>
+        <source>Chat</source>
+        <translation>Chat</translation>
+    </message>
+    <message>
+        <source>Public chat</source>
+        <translation>Chat público</translation>
     </message>
 </context>
 <context>
@@ -154,6 +181,13 @@
     </message>
 </context>
 <context>
+    <name>InactivityDetector</name>
+    <message>
+        <source>You are not transmiting for a long time! This is intentional?</source>
+        <translation>No estás transmitiendo por bastante tiempo. ¿Es esto intencional?</translation>
+    </message>
+</context>
+<context>
     <name>IntervalChunksDisplay</name>
     <message>
         <source>Downloaded intervals</source>
@@ -206,10 +240,6 @@
         <translation>Preparando</translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission to others</source>
-        <translation>Activar/desactivar la transmisión hacia otros</translation>
-    </message>
-    <message>
         <source>Add or remove channels...</source>
         <translation>Agregar o eliminar canales...</translation>
     </message>
@@ -260,6 +290,10 @@
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
         <translation>Desea eliminar el programa &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>Enable/disable your audio transmission for others</source>
+        <translation>Habilitar/deshabilitar la transmisión de audio a otros</translation>
     </message>
 </context>
 <context>
@@ -517,10 +551,6 @@
         <translation>Grabación ...</translation>
     </message>
     <message>
-        <source>Private Server ...</source>
-        <translation>Servidor Privado ...</translation>
-    </message>
-    <message>
         <source>Ninjam community (Ninbot) ...</source>
         <translation>Comunidad Ninjam (Ninbot.com) ...</translation>
     </message>
@@ -628,6 +658,18 @@
         <source>Looper ...</source>
         <translation>Looper ...</translation>
     </message>
+    <message>
+        <source>Connect with private server ...</source>
+        <translation>Conectar con servidor privado ...</translation>
+    </message>
+    <message>
+        <source>Remember ...</source>
+        <translation>Recordar ...</translation>
+    </message>
+    <message>
+        <source>Host a private server in your machine ...</source>
+        <translation>Alojar servidior privado en esta máquina ...</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -700,10 +742,6 @@
         <translation>¡Solo son aceptadas letras, guiones, números y guiones bajos! Los espacios se reemplazarán por guiones bajos.</translation>
     </message>
     <message>
-        <source>Chat</source>
-        <translation>Chat</translation>
-    </message>
-    <message>
         <source>Error connecting with Jamtaba server!
 </source>
         <translation>¡Error al conectar con el servidor de Jamtaba!</translation>
@@ -748,6 +786,90 @@
         <source>Channel %1</source>
         <translation>Canal %1</translation>
     </message>
+    <message>
+        <source>%1 has left the room.</source>
+        <translation>%1 se ha retirado de la sala.</translation>
+    </message>
+    <message>
+        <source>%1 has joined the room.</source>
+        <translation>%1 ha ingresado a la sala.</translation>
+    </message>
+    <message>
+        <source>Last chords used</source>
+        <translation>Últimos acordes utilizados</translation>
+    </message>
+    <message>
+        <source>Private chat with %1</source>
+        <translation>Chat privado con %1</translation>
+    </message>
+    <message>
+        <source>%1 is blocked in the chat</source>
+        <translation>%1 ha sido bloqueado en el chat</translation>
+    </message>
+    <message>
+        <source>%1 is unblocked in the chat</source>
+        <translation>%1 ha sido desbloqueado en el chat</translation>
+    </message>
+    <message>
+        <source>Uploading</source>
+        <translation>Enviando</translation>
+    </message>
+    <message>
+        <source>Downloading</source>
+        <translation>Descargando</translation>
+    </message>
+    <message>
+        <source>Collapse bottom area</source>
+        <translation>Mostrar/Ocultar zona inferior</translation>
+    </message>
+    <message>
+        <source>Collapse chat</source>
+        <translation>Mostrar/Ocultar chat</translation>
+    </message>
+    <message>
+        <source>Collapse local channels</source>
+        <translation>Mostrar/Ocultar canales locales</translation>
+    </message>
+    <message>
+        <source>Game</source>
+        <translation>Juego</translation>
+    </message>
+    <message>
+        <source>Navy</source>
+        <translation>Naval</translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in %1 : %2 ?</source>
+        <translation>¿Vamos a tocar a %1 : %2 ?</translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in my private server?</source>
+        <translation>¿Vamos a tocar a mi servidor privado?</translation>
+    </message>
+    <message>
+        <source>Connected with public chat!</source>
+        <translation>¡Conectado al chat público!</translation>
+    </message>
+    <message>
+        <source>Connecting ...</source>
+        <translation>Conectando ...</translation>
+    </message>
+    <message>
+        <source>Block %1 in chat</source>
+        <translation>Bloquear a %1 en el chat</translation>
+    </message>
+    <message>
+        <source>Unblock %1 in chat</source>
+        <translation>Desbloquear a %1 en el chat</translation>
+    </message>
+    <message>
+        <source>Public chat disconnected!</source>
+        <translation>¡Chat público desconectado!</translation>
+    </message>
+    <message>
+        <source>Invite %1 to play in %2 [%3]</source>
+        <translation>Invitar a %1 a tocar en %2 [%3]</translation>
+    </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
@@ -762,6 +884,14 @@
     <message>
         <source>Decrease</source>
         <translation>Reducir</translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation>Ancho</translation>
+    </message>
+    <message>
+        <source>Height</source>
+        <translation>Alto</translation>
     </message>
 </context>
 <context>
@@ -781,6 +911,49 @@
     <message>
         <source>The audio device can&apos;t be started! Please check your audio device and try restart Jamtaba!</source>
         <translation>¡El dispositivo de Sonido no puede ser iniciado!¡Por favor revisa el dispositivo e intenta reiniciar Jamtaba!</translation>
+    </message>
+</context>
+<context>
+    <name>MetronomePanel</name>
+    <message>
+        <source>metronome</source>
+        <translation>metrónomo</translation>
+    </message>
+    <message>
+        <source>Slider to change the BPM of the metronome</source>
+        <translation>Deslizador para cambiar los BPM del metrónomo</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>I</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>D</translation>
+    </message>
+    <message>
+        <source>Solo metronome</source>
+        <translation>Escuchar solo el metrónomo</translation>
+    </message>
+    <message>
+        <source>Button to soloing the metronome</source>
+        <translation>Botón para escuchar solo el metrónomo</translation>
+    </message>
+    <message>
+        <source>mute metronome</source>
+        <translation>Metrónomo en silencio</translation>
+    </message>
+    <message>
+        <source>Button to mute the metronome</source>
+        <translation>Botón para silenciar el metrónomo</translation>
+    </message>
+    <message>
+        <source>open a metronome floating window</source>
+        <translation>abrir el metrónomo en una ventana flotante</translation>
+    </message>
+    <message>
+        <source>open metronome preferences</source>
+        <translation>abrir preferencias del metrónomo</translation>
     </message>
 </context>
 <context>
@@ -824,46 +997,6 @@
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
         <translation>Sincronizar con %1</translation>
-    </message>
-    <message>
-        <source>metronome</source>
-        <translation>metrónomo</translation>
-    </message>
-    <message>
-        <source>Slider to change the BPM of the metronome</source>
-        <translation>Deslizador para cambiar los BPM del metrónomo</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <translation>I</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <translation>D</translation>
-    </message>
-    <message>
-        <source>Solo metronome</source>
-        <translation>Escuchar solo el metrónomo</translation>
-    </message>
-    <message>
-        <source>Button to soloing the metronome</source>
-        <translation>Botón para escuchar solo el metrónomo</translation>
-    </message>
-    <message>
-        <source>mute metronome</source>
-        <translation>Metrónomo en silencio</translation>
-    </message>
-    <message>
-        <source>Button to mute the metronome</source>
-        <translation>Botón para silenciar el metrónomo</translation>
-    </message>
-    <message>
-        <source>open metronome preferences</source>
-        <translation>abrir preferencias del metrónomo</translation>
-    </message>
-    <message>
-        <source>open a metronome floating window</source>
-        <translation>abrir el metrónomo en una ventana flotante</translation>
     </message>
     <message>
         <source>Change the shape here</source>
@@ -929,6 +1062,10 @@
         <source>%1 beats</source>
         <translation>%1 beats</translation>
     </message>
+    <message>
+        <source>Custom...</source>
+        <translation>Personalizado...</translation>
+    </message>
 </context>
 <context>
     <name>NinjamRoomWindow</name>
@@ -969,24 +1106,8 @@
         <translation>Licencia Servidor</translation>
     </message>
     <message>
-        <source>Last chords used</source>
-        <translation>Últimos acordes utilizados</translation>
-    </message>
-    <message>
-        <source>%1 is blocked in the chat</source>
-        <translation>%1 ha sido bloqueado en el chat</translation>
-    </message>
-    <message>
-        <source>%1 is unblocked in the chat</source>
-        <translation>%1 ha sido desbloqueado en el chat</translation>
-    </message>
-    <message>
-        <source>%1 has left the room.</source>
-        <translation>%1 se ha retirado de la sala.</translation>
-    </message>
-    <message>
-        <source>%1 has joined the room.</source>
-        <translation>%1 ha ingresado a la sala.</translation>
+        <source>Set tracks layout to grid</source>
+        <translation>Utilizar diseño de Pista de red</translation>
     </message>
 </context>
 <context>
@@ -1020,12 +1141,8 @@
 <context>
     <name>NinjamTrackGroupView</name>
     <message>
-        <source>Block %1 in chat</source>
-        <translation>Bloquear a %1 en el chat</translation>
-    </message>
-    <message>
-        <source>Unblock %1 in chat</source>
-        <translation>Desbloquear a %1 en el chat</translation>
+        <source>Private chat with %1</source>
+        <translation>Chat privado con %1</translation>
     </message>
 </context>
 <context>
@@ -1050,6 +1167,18 @@
         <source>Drastic</source>
         <translation>Drástica</translation>
     </message>
+    <message>
+        <source>Downloading</source>
+        <translation>Descargando</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation>Estéreo</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation>Mono</translation>
+    </message>
 </context>
 <context>
     <name>NinjamVoteButton</name>
@@ -1073,6 +1202,10 @@
         <translation>buscando plugins...</translation>
     </message>
     <message>
+        <source>scanning %1</source>
+        <translation>buscando %1</translation>
+    </message>
+    <message>
         <source>Found plugins:</source>
         <translation>Plugins encontrados:</translation>
     </message>
@@ -1082,11 +1215,7 @@
     </message>
     <message>
         <source>No plugins found!</source>
-        <translation>¡No se encontró ningún plug-in!</translation>
-    </message>
-    <message>
-        <source>scanning %1</source>
-        <translation>buscando %1</translation>
+        <translation>¡No se encontraron plugins!</translation>
     </message>
 </context>
 <context>
@@ -1098,10 +1227,6 @@
     <message>
         <source>Audio Files</source>
         <translation>Archivos de Sonido</translation>
-    </message>
-    <message>
-        <source>Choosing Secondary beat audio file...</source>
-        <translation>Escoger el archivo para el Sonido Secundario...</translation>
     </message>
     <message>
         <source>Choosing recording path ...</source>
@@ -1204,20 +1329,12 @@
         <translation>Metrónomo</translation>
     </message>
     <message>
-        <source>Metronome Sound:</source>
-        <translation>Sonido del Metrónomo:</translation>
-    </message>
-    <message>
         <source>Custom Metronome Sounds</source>
         <translation>Sonidos de metrónomos personalizados</translation>
     </message>
     <message>
         <source>Primary Beat:</source>
         <translation>Sonido Primario:</translation>
-    </message>
-    <message>
-        <source>Secondary Beat:</source>
-        <translation>Sonido Secundario:</translation>
     </message>
     <message>
         <source>Browse ...</source>
@@ -1291,6 +1408,90 @@
         <source>Choosing loops folder ...</source>
         <translation>Escogiendo la carpeta de Loops ...</translation>
     </message>
+    <message>
+        <source>Metronome Sound:</source>
+        <translation>Sonido del Metrónomo:</translation>
+    </message>
+    <message>
+        <source>Off Beat:</source>
+        <translation>Sonido secundario:</translation>
+    </message>
+    <message>
+        <source>Accent Beat:</source>
+        <translation>Sonido acentuado:</translation>
+    </message>
+    <message>
+        <source>Remember</source>
+        <translation>Recordar</translation>
+    </message>
+    <message>
+        <source>Remember these options when a musician enters the jam:</source>
+        <translation>Recordar estas opciones cuando un músico entra al jam:</translation>
+    </message>
+    <message>
+        <source>The user channel level</source>
+        <translation>El nivel del canal de usuario</translation>
+    </message>
+    <message>
+        <source>Level</source>
+        <translation>Nivel</translation>
+    </message>
+    <message>
+        <source>The user channel mute status</source>
+        <translation>El estado de silencio del canal de usuario</translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation>Silenciar</translation>
+    </message>
+    <message>
+        <source>The user channel pan</source>
+        <translation>El paneo del canal de usuario</translation>
+    </message>
+    <message>
+        <source>Pan</source>
+        <translation>Paneo</translation>
+    </message>
+    <message>
+        <source>The user channel boost</source>
+        <translation>La ganancia del canal de usario</translation>
+    </message>
+    <message>
+        <source>Boost</source>
+        <translation>Ganancia</translation>
+    </message>
+    <message>
+        <source>The user channel low cut button status</source>
+        <translation>el estado de la atenuación de bajos del canal de usuario</translation>
+    </message>
+    <message>
+        <source>Low cut</source>
+        <translation>Atenuación de bajos</translation>
+    </message>
+    <message>
+        <source>Remember collapsible sections when starting JamTaba:</source>
+        <translation>Recordar secciones colapsables al iniciar Jamtaba:</translation>
+    </message>
+    <message>
+        <source>Local Channels (left side)</source>
+        <translation>Canales locales (lado izquierdo)</translation>
+    </message>
+    <message>
+        <source>Bottom Section (master fader and ninjam controls)</source>
+        <translation>Sección inferior (volumen general y controles de ninjam)</translation>
+    </message>
+    <message>
+        <source>Chat section (right side)</source>
+        <translation>Sección de chat (lado derecho)</translation>
+    </message>
+    <message>
+        <source>Choosing Off beat audio file...</source>
+        <translation>Escogiendo el archivo de beat secundario...</translation>
+    </message>
+    <message>
+        <source>Choosing Accent beat audio file...</source>
+        <translation>Escogiendo el archivo de beat acentuado...</translation>
+    </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
@@ -1363,6 +1564,94 @@
     </message>
 </context>
 <context>
+    <name>PrivateServerWindow</name>
+    <message>
+        <source>Your Private Server</source>
+        <translation>Tu Servidor Privado</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Comenzar</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Detener</translation>
+    </message>
+    <message>
+        <source>Server IP:</source>
+        <translation>IP del Servidor:</translation>
+    </message>
+    <message>
+        <source>Server Port:</source>
+        <translation>Puerto del Servidor:</translation>
+    </message>
+    <message>
+        <source>Upload (Kbps):</source>
+        <translation>Enviando (Kbps):</translation>
+    </message>
+    <message>
+        <source>Download (Kbps):</source>
+        <translation>Descargando (Kbps):</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation>Log</translation>
+    </message>
+    <message>
+        <source>Connected Users</source>
+        <translation>Usuarios Conectados</translation>
+    </message>
+    <message>
+        <source>Port closed in your router!</source>
+        <translation>¡Puerto cerrado en tu ruteador!</translation>
+    </message>
+    <message>
+        <source>ERROR in UPnP protocol: %1</source>
+        <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
+        <translation>ERROR en protocolo UPnP: %1</translation>
+    </message>
+    <message>
+        <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
+        <translation>¡Puerto abierto en tu ruteador usnado el protocolo UPnP!¡Otros ninjamers pueden conectarse a tu servidor!</translation>
+    </message>
+    <message>
+        <source>Your external IP is %1</source>
+        <translation>Tu IP externo es %1</translation>
+    </message>
+    <message>
+        <source>Incomming connection from %1</source>
+        <translation>Conexión entrante desde %1</translation>
+    </message>
+    <message>
+        <source>%1 entered in the server</source>
+        <translation>%1 ha entrado al servidor</translation>
+    </message>
+    <message>
+        <source>%1 left the server</source>
+        <translation>%1 se ha desconectado del servidor</translation>
+    </message>
+    <message>
+        <source>Server started</source>
+        <translation>Servidor iniciado</translation>
+    </message>
+    <message>
+        <source>Server stopped!</source>
+        <translation>¡Servidor detenido!</translation>
+    </message>
+    <message>
+        <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
+        <translation>Intentando abrir el puerto %1 en tu ruteador (UPnP) para permitir conexiones externas ...</translation>
+    </message>
+    <message>
+        <source>Hosting Ninjam Private Server</source>
+        <translation>Alojando servidor Privado de Ninjam</translation>
+    </message>
+    <message>
+        <source>Connect with private server ...</source>
+        <translation>Conectar con servidor privado ...</translation>
+    </message>
+</context>
+<context>
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
@@ -1381,6 +1670,28 @@
     <message>
         <source>Remove this folder from scanning</source>
         <translation>Exceptuar a esta carpeta de la búsqueda</translation>
+    </message>
+</context>
+<context>
+    <name>ServerInviteButton</name>
+    <message>
+        <source>Accept!</source>
+        <translation>¡Aceptar!</translation>
+    </message>
+</context>
+<context>
+    <name>Slider</name>
+    <message>
+        <source>center</source>
+        <translation>centro</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>I</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>D</translation>
     </message>
 </context>
 <context>
@@ -1404,6 +1715,28 @@
     <message>
         <source>Press this button if you are ok</source>
         <translation>Presiona este botón para aceptar</translation>
+    </message>
+</context>
+<context>
+    <name>audio::Looper</name>
+    <message>
+        <source>Sequence</source>
+        <translation>Secuencial</translation>
+    </message>
+    <message>
+        <source>All Layers</source>
+        <translation>Todas las pistas</translation>
+    </message>
+    <message>
+        <source>Selected Layer</source>
+        <translation>Pista Seleccionada</translation>
+    </message>
+</context>
+<context>
+    <name>login::MainChat</name>
+    <message>
+        <source>You can&apos;t send messages using an empty user name!</source>
+        <translation>¡No es posible enviar mensajes usando nombre de usuario vacío!</translation>
     </message>
 </context>
 </TS>

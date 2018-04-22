@@ -4,7 +4,7 @@ JamRoomViewPanel #buttonEnter,
 JamRoomViewPanel #buttonListen
 {
     font-family: "Neuropol X RG";
-    font-size: 7.5pt;
+    font-size: 11px;
 }
 
 
@@ -48,7 +48,7 @@ JamRoomViewPanel QLabel#labelRoomStatus
     color: rgba(0, 255, 255, 80);
 
     font-family: "video phreak";
-    font-size: 7.5pt;
+    font-size: 10px;
 }
 
 /* where the user names and wave form are showed */

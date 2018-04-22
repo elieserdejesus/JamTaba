@@ -1,21 +1,36 @@
 #include "GuiUtils.h"
-#include <QWidget>
 
-QString Gui::capitalize(const QString &string)
+#include <QWidget>
+#include <QString>
+#include <QDir>
+
+QString gui::capitalize(const QString &string)
 {
     return string.left(1).toUpper() + string.mid(1);
 }
 
-void Gui::setLayoutItemsVisibility(QLayout *layout, bool visible)
+void gui::setLayoutItemsVisibility(QLayout *layout, bool visible)
 {
     for (int i = 0; i < layout->count(); ++i) {
-        QLayoutItem *item = layout->itemAt(i);
+        auto item = layout->itemAt(i);
         if (item->layout()) {
             setLayoutItemsVisibility(item->layout(), visible);
         } else {
-            QWidget *widget = item->widget();
+            auto widget = item->widget();
             if (widget)
                 widget->setVisible(visible);
         }
     }
 }
+
+QString gui::sanitizeServerName(const QString &serverName)
+{
+    if (serverName.contains(" "))
+        return serverName.split(" ").first();
+
+    if (serverName.count(QChar('.')) == 1) // ninbot.com, ninjamer.com
+        return serverName.split(".").first();
+
+    return serverName;
+}
+

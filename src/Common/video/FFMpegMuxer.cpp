@@ -1,11 +1,12 @@
 #include "FFMpegMuxer.h"
 
+#include <cstring>
+
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QtConcurrent/QtConcurrent>
 #include <QMutex>
-#include <cstring> // to use std:memset in mingw
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class BaseOutputStream
@@ -22,8 +23,8 @@ public:
     virtual ~BaseOutputStream()
     {
         avcodec_free_context(&stream->codec);
-        av_frame_free(&frame);
-        av_frame_free(&tempFrame);
+        //av_frame_free(&frame);
+        //av_frame_free(&tempFrame);
     }
 
     AVStream *stream;
@@ -73,19 +74,17 @@ public:
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-FFMpegMuxer::FFMpegMuxer()
-    : encodeAudio(false),
+FFMpegMuxer::FFMpegMuxer(QObject *parent) :
+      QObject(parent),
       encodeVideo(false),
-      videoStream(nullptr),
-      audioStream(nullptr),
-      videoResolution(QSize(352, 288)),
-      videoFrameRate(25),
-      videoBitRate(static_cast<uint>(FFMpegMuxer::LOW_VIDEO_QUALITY)),
+      encodeAudio(false),
       videoPts(0),
-      formatContext(nullptr),
-      avioContext(nullptr),
+      encodedFrames(0),
+      audioStream(nullptr),
+      videoResolution(QSize(320, 240)),
+      videoFrameRate(25),
+      videoBitRate(static_cast<uint>(FFMpegMuxer::VideoQualityLow)),
       initialized(false),
-      buffer(nullptr),
       startNewIntervalRequested(false)
 {
     av_register_all();
@@ -97,24 +96,25 @@ void FFMpegMuxer::initialize()
 {
     //QMutexLocker locker(&mutex);
 
-    if (!buffer)
-        buffer = (unsigned char*)av_malloc(FFMPEG_BUFFER_SIZE);
-    else
-        std::memset(buffer, 0, FFMPEG_BUFFER_SIZE);
-
     encodeAudio = encodeVideo = false;
     audioStream = nullptr;
-    videoStream = nullptr;
 
     videoPts = 0;
+    encodedFrames = 0;
 }
 
 FFMpegMuxer::~FFMpegMuxer()
 {
-    finishCurrentInterval();
+    finish();
 }
 
-void FFMpegMuxer::encodeImage(const QImage &image)
+void FFMpegMuxer::finish()
+{
+    QtConcurrent::run(&threadPool, this, &FFMpegMuxer::finishCurrentInterval);
+
+}
+
+void FFMpegMuxer::encodeImage(const QImage &image, bool async)
 {
     // encoding in a separated thread
 
@@ -129,30 +129,20 @@ void FFMpegMuxer::encodeImage(const QImage &image)
             encodeVideo = !doEncodeVideoFrame(image);
     };
 
-    QtConcurrent::run(&threadPool, lambda);
+    if (async)
+        QtConcurrent::run(&threadPool, lambda);
+    else
+        lambda();
 }
 
 void FFMpegMuxer::encodeAudioFrame()
 {
-//    QMutexLocker locker(&mutex);
-//    if (!initialized)
-//        return;
+    //QMutexLocker locker(&mutex);
+    //if (!initialized)
+    //    return;
 
-//    if (encodeAudio)
-//        encodeAudio = !doEncodeAudioFrame();
-}
-
-int FFMpegMuxer::writeCallback(void *instancePointer, uint8_t *buffer, int bufferSize)
-{
-    FFMpegMuxer *instance = static_cast<FFMpegMuxer *>(instancePointer);
-
-    QByteArray encodedBytes((const char*)buffer, bufferSize);
-
-    bool isFirstPacket = instance->videoPts == 0;
-
-    emit instance->dataEncoded(encodedBytes, isFirstPacket);
-
-    return bufferSize;
+    //if (encodeAudio)
+    //    encodeAudio = !doEncodeAudioFrame();
 }
 
 void FFMpegMuxer::startNewInterval()
@@ -169,51 +159,18 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
     initialize();
 
-    AVOutputFormat *format = av_guess_format("avi", nullptr, nullptr);
-    if (!format) {
-        qCritical() << "Can't guess the format!";
-        return false;
-    }
-
-    int ret = avformat_alloc_output_context2(&formatContext, format, nullptr, nullptr); // allocate the output media context
-    if (ret < 0) {
-        qCritical() << "Error allocing output format context " << av_err2str(ret);
-        return false;
-    }
-
-    // streaming to memory  https://trac.ffmpeg.org/ticket/984
-    avioContext = avio_alloc_context(buffer, FFMPEG_BUFFER_SIZE, 1, this, nullptr, writeCallback, nullptr);
-    if (!avioContext)  {
-        qCritical() << "Can't create avio context!";
-        return false;
-    }
-
-    avioContext->seekable = 0; // no seek
-    formatContext->pb = avioContext;
-
     // Add the audio and video streams using the default format codecs and initialize the codecs.
-    encodeVideo = addVideoStream(format->video_codec);
 
-    if (format->audio_codec != AV_CODEC_ID_NONE) {
-        //add_stream(&audio_st, &audio_codec, fmt->audio_codec);
-        encodeAudio = false;
-    }
+    AVDictionary * opts = nullptr;
+    AVCodecID codecID = AV_CODEC_ID_H264;
+    encodeVideo = addVideoStream(codecID, &opts);
+
+    encodeAudio = false;
 
     // Now that all the parameters are set, we can open the audio and video codecs and allocate the necessary encode buffers.
-    if (encodeVideo && videoStream)
-        if(!openVideoCodec(formatContext->video_codec))
+    if (encodeVideo)
+        if(!openVideoCodec(codec, &opts))
             return false;
-
-    if (encodeAudio && audioStream)
-        openAudioCodec(formatContext->audio_codec);
-
-     //av_dump_format(formatContext, 0, nullptr, 1);
-
-    ret = avformat_write_header(formatContext, nullptr); // Write the stream header, if any.
-    if (ret < 0) {
-        qCritical() << "Error occurred when opening output file: " << ret;
-        return false;
-    }
 
     initialized = true;
 
@@ -222,18 +179,11 @@ bool FFMpegMuxer::prepareToEncodeNewInterval()
 
 void FFMpegMuxer::finishCurrentInterval()
 {
-    //QMutexLocker locker(&mutex);
-
-    if (!avioContext) {
-        qCritical() << "avioContext is null";
+    if (!initialized)
         return;
-    }
 
-    if (videoStream) {
-        if (!videoStream->stream->codec || !avcodec_is_open(videoStream->stream->codec)) {
-            qCritical() << "video codec is null or not opened!";
-            return;
-        }
+    if (!codecContext || (codecContext && !avcodec_is_open(codecContext))) {
+        return;
     }
 
     if (audioStream) {
@@ -243,124 +193,44 @@ void FFMpegMuxer::finishCurrentInterval()
         }
     }
 
-
-    /** Write the trailer, if any. The trailer must be written before you close the CodecContexts opened when you
-     * wrote the header; otherwise av_write_trailer() may try to use memory that was freed on av_codec_close(). */
-
-    int ret = av_write_trailer(formatContext);
-    if(ret != 0)
-        qCritical() << "Decoder Error while writing trailer:" << av_err2str(ret) << ret;
-
-
-    avio_flush(avioContext);
-
-    // Close each codec.
-    videoStream.reset(nullptr);
+    // drain non encoded frames in last interval
+    bool finished = false;
+    do {
+        finished = doEncodeVideoFrame(QImage());
+    }
+    while(!finished);
 
     audioStream.reset(nullptr);
 
-    avformat_free_context(formatContext); // free the stream
-
-    av_free(avioContext);
-
     initialized = false;
+    encodedFrames = 0;
 
+    if (frame)
+        av_frame_free(&frame);
+
+    if (tempFrame)
+        av_frame_free(&tempFrame);
+
+    if (codecContext)
+        avcodec_free_context(&codecContext);
+
+    emit encodingFinished();
 }
 
-int FFMpegMuxer::writeFrame(const AVRational *time_base, AVStream *stream, AVPacket *packet)
+bool FFMpegMuxer::addVideoStream(AVCodecID codecID, AVDictionary **opts)
 {
-    // rescale output packet timestamp values from codec to stream timebase
-    av_packet_rescale_ts(packet, *time_base, stream->time_base);
-    packet->stream_index = stream->index;
-
-    // Write the compressed frame to the media file.
-    return av_interleaved_write_frame(formatContext, packet);
-}
-
-// Add an output stream.
-void FFMpegMuxer::addAudioStream(AVCodecID codecID)
-{
-    if (audioStream)
-        return;
-
-    audioStream.reset(new AudioOutputStream());
-
     // find the encoder
-    AVCodec *codec = avcodec_find_encoder(codecID);
-    if (!codec) {
-        qCritical() << "Could not find encoder for " << avcodec_get_name(codecID);
-    }
-
-    audioStream->stream = avformat_new_stream(formatContext, NULL);
-    if (!audioStream->stream) {
-        qCritical() << "Could not allocate stream";
-    }
-    audioStream->stream->id = formatContext->nb_streams-1;
-
-    AVCodecContext *codecContext = avcodec_alloc_context3(codec);
-    if (!codecContext) {
-        qCritical() << "Could not alloc an encoding context";
-		return;
-    }
-    audioStream->stream->codec = codecContext;
-
-    codecContext->sample_fmt  = codec->sample_fmts ? codec->sample_fmts[0] : AV_SAMPLE_FMT_FLTP;
-    codecContext->bit_rate    = 64000;
-    codecContext->sample_rate = 44100;
-    if (codec->supported_samplerates) {
-        codecContext->sample_rate = codec->supported_samplerates[0];
-        for (int i = 0; codec->supported_samplerates[i]; i++) {
-            if (codec->supported_samplerates[i] == 44100)
-                codecContext->sample_rate = 44100;
-        }
-    }
-    codecContext->channels = av_get_channel_layout_nb_channels(codecContext->channel_layout);
-    codecContext->channel_layout = AV_CH_LAYOUT_STEREO;
-    if (codec->channel_layouts) {
-        codecContext->channel_layout = codec->channel_layouts[0];
-        for (int i = 0; codec->channel_layouts[i]; i++) {
-            if (codec->channel_layouts[i] == AV_CH_LAYOUT_STEREO)
-                codecContext->channel_layout = AV_CH_LAYOUT_STEREO;
-        }
-    }
-    codecContext->channels = av_get_channel_layout_nb_channels(codecContext->channel_layout);
-    audioStream->stream->time_base = AVRational{ 1, codecContext->sample_rate };
-
-
-
-    // Some formats want stream headers to be separate.
-    if (formatContext->oformat->flags & AVFMT_GLOBALHEADER)
-        codecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-}
-
-
-bool FFMpegMuxer::addVideoStream(AVCodecID codecID)
-{
-    if (videoStream)
-        return false;
-
-    videoStream.reset(new VideoOutputStream());
-
-    // find the encoder
-    AVCodec *codec = avcodec_find_encoder(codecID);
+    codec = avcodec_find_encoder(codecID);
     if (!codec) {
         qCritical() << "Could not find encoder for " << avcodec_get_name(codecID);
         return false;
     }
 
-    videoStream->stream  = avformat_new_stream(formatContext, NULL);
-    if (!videoStream->stream) {
-        qCritical() << "Could not allocate stream";
-        return false;
-    }
-    videoStream->stream->id = formatContext->nb_streams-1;
-
-    AVCodecContext *codecContext = avcodec_alloc_context3(codec);
+    codecContext = avcodec_alloc_context3(codec);
     if (!codecContext) {
         qCritical() << "Could not alloc an encoding context";
         return false;
     }
-    videoStream->stream->codec = codecContext;
 
     codecContext->codec_id = codecID;
     codecContext->bit_rate = videoBitRate;
@@ -371,24 +241,18 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID)
          * of which frame timestamps are represented. For fixed-fps content,
          * timebase should be 1/framerate and timestamp increments should be
          * identical to 1. */
-    videoStream->stream->time_base = AVRational{ 1, static_cast<int>(videoFrameRate) };
-    codecContext->time_base       = videoStream->stream->time_base;
+    codecContext->time_base = AVRational{ 1, static_cast<int>(videoFrameRate) };
 
-    codecContext->gop_size      = 12; // emit one intra frame every twelve frames at most
-    codecContext->pix_fmt       = AV_PIX_FMT_YUV420P;
-    if (codecContext->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
-        codecContext->max_b_frames = 2; /* just for testing, we also add B-frames */
-    }
-    if (codecContext->codec_id == AV_CODEC_ID_MPEG1VIDEO) {
-        /** Needed to avoid using macroblocks in which some coeffs overflow.
-             * This does not happen with normal video, it just happens here as
-             * the motion of the chroma plane does not match the luma plane. */
-        codecContext->mb_decision = 2;
-    }
+    codecContext->gop_size = 30; // emit one intra frame every N frames at most
+    codecContext->pix_fmt = AV_PIX_FMT_YUV420P;
 
-    // Some formats want stream headers to be separate.
-    if (formatContext->oformat->flags & AVFMT_GLOBALHEADER)
-        codecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+    if (codecContext->codec_id == AV_CODEC_ID_H264) {
+        int ret = av_dict_set(opts, "preset", "veryfast", 0);
+        if (ret != 0) {
+            qCritical() << "Error setting h264 preset" << av_error_to_qt_string(ret) << ret;
+            return false;
+        }
+    }
 
     return true;
 }
@@ -481,7 +345,7 @@ void FFMpegMuxer::openAudioCodec(AVCodec *codec)
  */
 bool FFMpegMuxer::doEncodeAudioFrame()
 {
-    AVPacket packet = { 0 }; // data and size must be 0;
+    AVPacket packet = AVPacket(); // avoiding initializing with {0} because GCC is emiting a warning -> data and size must be 0;
     AVFrame *frame;
 
     av_init_packet(&packet);
@@ -519,16 +383,16 @@ bool FFMpegMuxer::doEncodeAudioFrame()
     int gotPacket;
     int ret = avcodec_encode_audio2(codecContext, &packet, frame, &gotPacket);
     if (ret < 0) {
-        qCritical() << "Error encoding audio frame: " << av_err2str(ret);
+        qCritical() << "Error encoding audio frame: " << av_error_to_qt_string(ret);
         exit(1);
     }
 
     if (gotPacket) {
-        ret = writeFrame(&codecContext->time_base, audioStream->stream, &packet);
-        if (ret < 0) {
-            qCritical() << "Error while writing audio frame: " << av_err2str(ret);
-            exit(1);
-        }
+//        ret = writeFrame(&codecContext->time_base, &packet);
+//        if (ret < 0) {
+//            qCritical() << "Error while writing audio frame: " << av_error_to_qt_string(ret);
+//            exit(1);
+//        }
     }
 
     return (frame || gotPacket) ? false : true;
@@ -556,45 +420,31 @@ AVFrame *FFMpegMuxer::allocPicture(enum AVPixelFormat pixelFormat, int width, in
     return picture;
 }
 
-bool FFMpegMuxer::openVideoCodec(AVCodec *codec)
+bool FFMpegMuxer::openVideoCodec(AVCodec *codec, AVDictionary **opts)
 {
 
-    Q_ASSERT(videoStream && videoStream->stream && videoStream->stream->codec);
-
-    AVCodecContext *codecContext = videoStream->stream->codec;
-
-    int ret = avcodec_open2(codecContext, codec, nullptr); /* open the codec */
+    int ret = avcodec_open2(codecContext, codec, opts); /* open the codec */
     if (ret < 0) {
-        qCritical() << "Could not open video codec: " << av_err2str(ret);
+        qCritical() << "Could not open video codec: " << av_error_to_qt_string(ret) << ret;
         return false;
     }
 
     /* allocate and init a re-usable frame */
-    //qDebug() << "Allocating codec context width:" << codecContext->width << "height:" << codecContext->height;
-    videoStream->frame = allocPicture(codecContext->pix_fmt, codecContext->width, codecContext->height);
+    frame = allocPicture(codecContext->pix_fmt, codecContext->width, codecContext->height);
 
-    if (!videoStream->frame) {
+    if (!frame) {
         qCritical() << "Could not allocate video frame";
         return false;
     }
 
-    /* If the output format is not YUV420P, then a temporary YUV420P
-     * picture is needed too. It is then converted to the required
-     * output format. */
-    videoStream->tempFrame = NULL;
+    /* If the output format is not YUV420P, then a temporary YUV420P picture is needed too. It is then converted to the required output format. */
+    tempFrame = NULL;
     if (codecContext->pix_fmt != AV_PIX_FMT_YUV420P) {
-        videoStream->tempFrame = allocPicture(AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height);
-        if (!videoStream->tempFrame) {
+        tempFrame = allocPicture(AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height);
+        if (!tempFrame) {
             qCritical() << "Could not allocate temporary picture";
             return false;
         }
-    }
-
-    /* copy the stream parameters to the muxer */
-    ret = avcodec_parameters_from_context(videoStream->stream->codecpar, codecContext);
-    if (ret < 0) {
-        qCritical() << "Could not copy the stream parameters";
-        return false;
     }
 
     return true;
@@ -608,7 +458,7 @@ void FFMpegMuxer::imageToYuvPicture(const QImage &image, AVFrame *picture, int w
     height = qMin(height, image.height());
 
     // Preparing the buffer to get YUV420P data
-    int size = avpicture_get_size(AV_PIX_FMT_YUV420P, width, height);
+    int size = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, width, height, 1);
     uint8_t *pic_dat = (uint8_t *) av_malloc(size);
 
     // Transforming data from RGB to YUV420P
@@ -617,7 +467,7 @@ void FFMpegMuxer::imageToYuvPicture(const QImage &image, AVFrame *picture, int w
     picture->quality = 0;
 
     // Filling AVFrame with YUV420P data
-    avpicture_fill((AVPicture *)picture, pic_dat, AV_PIX_FMT_YUV420P, width, height);
+    av_image_fill_arrays(picture->data, picture->linesize, pic_dat, AV_PIX_FMT_YUV420P, width, height, 1);
 }
 
 void FFMpegMuxer::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint rgbIncrement, bool swapRGB, int width, int height)
@@ -660,31 +510,27 @@ void FFMpegMuxer::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uin
 
 void FFMpegMuxer::fillFrameWithImageData(const QImage &image)
 {
-    AVCodecContext *codecContext = videoStream->stream->codec;
-
-    /* when we pass a frame to the encoder, it may keep a reference to it
-     * internally; make sure we do not overwrite it here */
-    if (av_frame_make_writable(videoStream->frame) < 0) {
+    /* when we pass a frame to the encoder, it may keep a reference to it internally; make sure we do not overwrite it here */
+    if (av_frame_make_writable(frame) < 0) {
         qCritical() << "frame not writable";
         return;
     }
 
     if (codecContext->pix_fmt != AV_PIX_FMT_YUV420P) { /* need image convertion? as we only generate a YUV420P picture, we must convert it to the codec pixel format if needed */
-        if (!videoStream->swsContext) {
-            //videoStream->swsContext = sws_getContext(codecContext->width, codecContext->height, AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height, codecContext->pix_fmt, SWS_BICUBIC, NULL, NULL, NULL);
-            videoStream->swsContext = sws_getContext(image.width(), image.height(), AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height, codecContext->pix_fmt, SWS_BICUBIC, NULL, NULL, NULL);
-            if (!videoStream->swsContext) {
+        if (!swsContext) {
+            swsContext = sws_getContext(image.width(), image.height(), AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height, codecContext->pix_fmt, SWS_BICUBIC, NULL, NULL, NULL);
+            if (!swsContext) {
                 qCritical() << "Could not initialize the conversion context";
                 return;
             }
         }
-        imageToYuvPicture(image, videoStream->tempFrame, codecContext->width, codecContext->height);
-        sws_scale(videoStream->swsContext, (const uint8_t * const *)videoStream->tempFrame->data, videoStream->tempFrame->linesize, 0, codecContext->height, videoStream->frame->data, videoStream->frame->linesize);
+        imageToYuvPicture(image, tempFrame, codecContext->width, codecContext->height);
+        sws_scale(swsContext, (const uint8_t * const *)tempFrame->data, tempFrame->linesize, 0, codecContext->height, frame->data, frame->linesize);
     } else {
-        imageToYuvPicture(image, videoStream->frame, codecContext->width, codecContext->height);
+        imageToYuvPicture(image, frame, codecContext->width, codecContext->height);
     }
 
-    videoStream->frame->pts = videoPts++;
+    frame->pts = videoPts++;
 }
 
 /*
@@ -696,52 +542,56 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
     if (!initialized)
         return false;
 
-    if (!videoStream)
+    if (!codec)
         return false;
 
-    if (!videoStream->stream)
+    if (!frame)
         return false;
-
-    if (!videoStream->stream->codec)
-        return false;
-
-    if (!videoStream->frame)
-        return false;
-
-    AVCodecContext *codecContext = videoStream->stream->codec;
 
     if(avcodec_is_open(codecContext) <= 0) {
         qCritical() << "Codec is not opened!";
         return false;
     }
 
-    int gotPacket = 0;
-    AVPacket packet = { 0 };
+    if (!image.isNull())
+        fillFrameWithImageData(image);
 
-    fillFrameWithImageData(image);
+    // send the image to encoder, send nullpr if finishing
+    int ret = avcodec_send_frame(codecContext, (!image.isNull()) ? frame : nullptr);
+
+    if (!image.isNull()) {
+        // releasing the allocated memory - fix https://github.com/elieserdejesus/JamTaba/issues/951
+        av_freep(frame);
+
+        if (ret != 0 && ret != AVERROR_EOF) {
+            qCritical() << "Error encoding video frame: " << av_error_to_qt_string(ret) << ret;
+            return false;
+        }
+    }
+
+    // get the encoded packet
+    AVPacket packet = AVPacket();// avoiding {0} initializer because GCC is emitting warning;
+    packet.size = 0;
+    packet.data = nullptr;
+    packet.stream_index = 0; // always using the first stream
 
     av_init_packet(&packet);
 
-    /* encode the image */
-    int ret = avcodec_encode_video2(codecContext, &packet, videoStream->frame, &gotPacket);
+    ret = avcodec_receive_packet(codecContext, &packet);
 
-    // releasing the allocated memory - fix https://github.com/elieserdejesus/JamTaba/issues/951
-    avpicture_free((AVPicture *)videoStream->frame);
+    if (ret == 0 || ret == AVERROR(EAGAIN)) {
+        if (ret == 0) { // we have a decoded frame?
+            QByteArray encodedBytes(reinterpret_cast<const char*>(packet.data), packet.size);
+            bool isFirstPacket = encodedFrames == 0;
+            emit dataEncoded(encodedBytes, isFirstPacket);
+            encodedFrames++;
+            av_packet_unref(&packet);
+        }
+        av_free_packet(&packet);
 
-    if (ret < 0) {
-        qCritical() << "Error encoding video frame: " << av_err2str(ret);
         return false;
     }
+    av_free_packet(&packet);
 
-    if (gotPacket)
-        ret = writeFrame(&codecContext->time_base, videoStream->stream, &packet);
-    else
-        ret = 0;
-
-    if (ret < 0) {
-        qCritical() << "Error while writing video frame: " << av_err2str(ret);
-        return false;
-    }
-
-    return (videoStream->frame || gotPacket) ? false : true;
+    return true;
 }

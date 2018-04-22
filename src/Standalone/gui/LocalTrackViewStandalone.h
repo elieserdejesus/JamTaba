@@ -1,7 +1,7 @@
 #ifndef STANDALONE_LOCAL_TRACK_VIEW_H
 #define STANDALONE_LOCAL_TRACK_VIEW_H
 
-#include "LocalTrackView.h"
+#include "gui/LocalTrackView.h"
 #include "audio/core/AudioDriver.h"
 #include "MainControllerStandalone.h"
 #include "MidiToolsDialog.h"
@@ -20,7 +20,7 @@ class LocalTrackViewStandalone : public LocalTrackView
 
 public:
 
-    LocalTrackViewStandalone(Controller::MainControllerStandalone* mainController, int channelID);
+    LocalTrackViewStandalone(controller::MainControllerStandalone* mainController, int channelID);
 
     void setPeakMetersOnlyMode(bool peakMetersOnly) override;
     void setActivatedStatus(bool unlighted) override;
@@ -36,9 +36,9 @@ public:
 
     void reset() override;
 
-    void addPlugin(Audio::Plugin *plugin, quint32 slotIndex, bool bypassed = false);
+    void addPlugin(audio::Plugin *plugin, quint32 slotIndex, bool bypassed = false);
 
-    QList<const Audio::Plugin *> getInsertedPlugins() const;
+    QList<const audio::Plugin *> getInsertedPlugins() const;
 
     void refreshInputSelectionName();
 
@@ -46,6 +46,8 @@ public:
     bool isNoInput() const;
 
     void setToMidi();
+
+    void setTintColor(const QColor &color) override;
 
 signals:
     void trackInputChanged();
@@ -79,7 +81,7 @@ private slots:
     void useLearnedMidiNote(quint8 midiNote);
 
 private:
-    Controller::MainControllerStandalone* controller; //a 'casted' pointer just for convenience
+    controller::MainControllerStandalone* controller; //a 'casted' pointer just for convenience
 
     QMenu *createMonoInputsMenu(QMenu *parentMenu);
     QMenu *createStereoInputsMenu(QMenu *parentMenu);
@@ -120,7 +122,7 @@ private:
     QString getInputText();
     QString getAudioInputText();
     QString getMidiInputText();
-    QString getInputTypeIconFile();
+    QPixmap getInputTypePixmap();
     bool canUseMidiDeviceIndex(int midiDeviceIndex) const;
 
     void paintRoutingMidiArrow(int topMargin, int arrowSize, bool drawMidiWord);
@@ -131,11 +133,6 @@ private:
     MidiToolsDialog *midiToolsDialog;
 
     QColor midiRoutingArrowColor;
-
-    static const QString MIDI_ICON;
-    static const QString MONO_ICON;
-    static const QString STEREO_ICON;
-    static const QString NO_INPUT_ICON;
 
     static QString getNoInputText();
 

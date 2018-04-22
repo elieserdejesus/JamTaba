@@ -34,6 +34,9 @@ private slots:
     void parsingInvalidSystemVotingMessages();
     void parsingInvalidSystemVotingMessages_data();
 
+    void parsingServerInviteMessages();
+    void parsingServerInviteMessages_data();
+
 private:
     static QString buildSystemVotingMessage(const QString &voteType, quint32 voteValue, quint32 expirationTime, quint8 currentVote, quint8 maxVotes);
     static QString buildLocalUserVotingMessage(const QString &voteType, quint32 voteValue);

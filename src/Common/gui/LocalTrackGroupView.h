@@ -7,6 +7,7 @@
 class MainWindow;
 class QPushButton;
 class BlinkableButton;
+class InstrumentsButton;
 
 class LocalTrackGroupView : public TrackGroupView
 {
@@ -40,6 +41,13 @@ public:
 
     BlinkableButton *getXmitButton() const;
 
+    QSize sizeHint() const override; // fixing #962
+
+    QString getChannelGroupName() const;
+
+    void setInstrumentIcon(int instrumentIndex);
+    int getInstrumentIcon() const;
+
 protected:
 
     LocalTrackView *createTrackView(long trackID) override;
@@ -48,16 +56,14 @@ protected:
 
     virtual void populateMenu(QMenu &menu);
 
-    void refreshStyleSheet() override;
-
     static const int MAX_SUB_CHANNELS = 2;
 
     MainWindow *mainFrame;
 
 private:
     QPushButton *toolButton;
-
     BlinkableButton *xmitButton;
+    InstrumentsButton *instrumentsButton;
 
     bool preparingToTransmit;
     bool usingSmallSpacingInLayouts;
@@ -74,12 +80,14 @@ private:
     void createPresetsActions(QMenu &menu);
     void createChannelsActions(QMenu &menu);
 
+    InstrumentsButton *createInstrumentsButton();
+
     void updateXmitButtonText();
 
     static QString getStripedPresetName(const QString &presetName);
 
 signals:
-    void nameChanged();
+    void instrumentIconChanged();
     void trackRemoved();
     void trackAdded();
     void presetLoaded();

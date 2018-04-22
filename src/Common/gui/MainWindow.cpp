@@ -1,25 +1,38 @@
 #include "MainWindow.h"
-#include "PreferencesDialog.h"
+#include "LooperWindow.h"
 #include "LocalTrackView.h"
-#include "audio/core/LocalInputNode.h"
+#include "LocalTrackGroupView.h"
 #include "NinjamRoomWindow.h"
-#include "Highligther.h"
-#include "PrivateServerDialog.h"
-#include "NinjamController.h"
-#include "Utils.h" // TODO refactoring to AudioUtils.h and use namespace
-#include "GuiUtils.h"
+#include "ninjam/client/Service.h"
 #include "UserNameDialog.h"
-#include "log/Logging.h"
 #include "JamRoomViewPanel.h"
-#include "ChordsPanel.h"
-#include "MapWidget.h"
-#include "BlinkableButton.h"
-#include "CrashReportDialog.h"
+#include "widgets/MapWidget.h"
+#include "widgets/ChatTabWidget.h"
+#include "PreferencesDialog.h"
+#include "PrivateServerDialog.h"
+#include "PrivateServerWindow.h"
+#include "chords/ChordsPanel.h"
+#include "chords/ChatChordsProgressionParser.h"
+#include "widgets/BlinkableButton.h"
 #include "InactivityDetector.h"
 #include "IconFactory.h"
-
-#include "LooperWindow.h"
-#include "ChatChordsProgressionParser.h"
+#include "ThemeLoader.h"
+#include "Highligther.h"
+#include "NinjamController.h"
+#include "MainController.h"
+#include "Utils.h" // TODO refactoring to AudioUtils.h and use namespace
+#include "GuiUtils.h"
+#include "BusyDialog.h"
+#include "UsersColorsPool.h"
+#include "screensaver/ScreensaverBlocker.h"
+#include "log/Logging.h"
+#include "audio/core/LocalInputNode.h"
+#include "audio/RoomStreamerNode.h"
+#include "performance/PerformanceMonitor.h"
+#include "video/VideoFrameGrabber.h"
+#include "chat/NinjamVotingMessageParser.h"
+#include "loginserver/MainChat.h"
+#include "TextEditorModifier.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
@@ -27,17 +40,7 @@
 #include <QDateTime>
 #include <QImage>
 #include <QCameraInfo>
-
-#include "MainController.h"
-#include "ThemeLoader.h"
-#include "performance/PerformanceMonitor.h"
-
-using namespace Audio;
-using namespace Persistence;
-using namespace Controller;
-using namespace Ninjam;
-using namespace Persistence;
-using namespace Login;
+#include <QToolTip>
 
 const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
@@ -45,36 +48,54 @@ const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
 const quint8 MainWindow::MAX_REFRESH_RATE = 60; // in Hertz
 
+const quint32 MainWindow::DEFAULT_NETWORK_USAGE_UPDATE_PERIOD = 4000; // 4 seconds
+
 const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200; //in miliseconds
 
 const QString MainWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
 
-MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent) :
+using persistence::LocalInputTrackSettings;
+using persistence::Channel;
+using persistence::SubChannel;
+using persistence::Preset;
+using login::LoginService;
+using login::MainChat;
+using controller::MainController;
+using controller::NinjamController;
+using audio::ChannelRange;
+using audio::AbstractMp3Streamer;
+
+MainWindow::MainWindow(MainController *mainController, QWidget *parent) :
     QMainWindow(parent),
-    busyDialog(0),
     mainController(mainController),
-    ninjamWindow(nullptr),
-    roomToJump(nullptr),
-    chordsPanel(nullptr),
-    lastPerformanceMonitorUpdate(0),
     camera(nullptr),
     videoFrameGrabber(nullptr),
     cameraView(nullptr),
-    cameraLayout(nullptr),
     cameraCombo(nullptr),
+    cameraLayout(nullptr),
     bottomCollapsed(false),
-    buttonCollapseBottomArea(nullptr),
-    buttonCollapseChat(nullptr),
+    busyDialog(new BusyDialog()),
+    bpmVotingExpirationTimer(nullptr),
+    bpiVotingExpiratonTimer(nullptr),
     buttonCollapseLocalChannels(nullptr),
+    buttonCollapseChat(nullptr),
+    buttonCollapseBottomArea(nullptr),
     performanceMonitorLabel(nullptr),
-    chatTabWidget(nullptr),
-    xmitInactivityDetector(nullptr)
-    {
+    xmitInactivityDetector(nullptr),
+    screensaverBlocker(new ScreensaverBlocker()),
+    usersColorsPool(new UsersColorsPool()),
+    mainChat(new MainChat()),
+    ninjamWindow(nullptr),
+    roomToJump(nullptr),
+    chordsPanel(nullptr),
+    performanceMonitor(new PerformanceMonitor()),
+    lastPerformanceMonitorUpdate(0)
+{
     qCDebug(jtGUI) << "Creating MainWindow...";
 
     ui.setupUi(this);
 
-    setWindowTitle("JamTaba");
+    setWindowTitle(QString("JamTaba (%1 bits)").arg(QSysInfo::WordSize));
 
     initializeLoginService();
     initializeMainTabWidget();
@@ -90,8 +111,19 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     setupWidgets();
     setupSignals();
 
+    setNetworkUsageUpdatePeriod(MainWindow::DEFAULT_NETWORK_USAGE_UPDATE_PERIOD);
+
+    ChatPanel::setFontSizeOffset(mainController->getChatFontSizeOffset());
+
     qCDebug(jtGUI) << "MainWindow created!";
 
+}
+
+void MainWindow::setNetworkUsageUpdatePeriod(quint32 periodInMilliseconds)
+{
+    networkUsageUpdatePeriod = periodInMilliseconds;
+
+    NinjamTrackView::setNetworkUsageUpdatePeriod(periodInMilliseconds);
 }
 
 void MainWindow::setupMainTabCornerWidgets()
@@ -122,8 +154,36 @@ void MainWindow::setupMainTabCornerWidgets()
    performanceMonitorLabel->setVisible(false); // showing RAM monitor in windows only
 #endif
 
+    transmitTransferRateLabel = new QLabel(this);
+    transmitTransferRateLabel->setObjectName(QStringLiteral("transmitTransferRateLabel"));
+    transmitTransferRateLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    transmitTransferRateLabel->setAlignment(Qt::AlignCenter);
+
+    transmitIcon = new QLabel(this);
+    transmitIcon->setObjectName("transmitIcon");
+    transmitIcon->setPixmap(IconFactory::createTransmitPixmap(tintColor));
+
+    receiveTransferRateLabel = new QLabel(this);
+    receiveTransferRateLabel->setObjectName(QStringLiteral("receiveTransferRateLabel"));
+    receiveTransferRateLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    receiveTransferRateLabel->setAlignment(Qt::AlignCenter);
+
+    receiveIcon = new QLabel(this);
+    receiveIcon->setObjectName("receiveIcon");
+    receiveIcon->setPixmap(IconFactory::createReceivePixmap(tintColor));
+
+    auto transferRateLayout = new QHBoxLayout();
+    transferRateLayout->setContentsMargins(0, 0, 0, 0);
+    transferRateLayout->setSpacing(0);
+    transferRateLayout->addWidget(transmitIcon);
+    transferRateLayout->addWidget(transmitTransferRateLabel, 1);
+    transferRateLayout->addWidget(receiveIcon);
+    transferRateLayout->addWidget(receiveTransferRateLabel, 1);
+
+    frameLayout->addLayout(transferRateLayout);
+    frameLayout->addSpacing(6);
     frameLayout->addWidget(performanceMonitorLabel);
-    frameLayout->addSpacing(12);
+    frameLayout->addSpacing(6);
     frameLayout->addWidget(buttonCollapseLocalChannels);
     frameLayout->addWidget(buttonCollapseBottomArea);
     frameLayout->addWidget(buttonCollapseChat);
@@ -148,6 +208,10 @@ void MainWindow::setCameraComboVisibility(bool show)
     }
 
     cameraCombo->setVisible(show && cameraCombo->count() > 1);
+
+    if (ui.localControlsCollapseButton->isChecked()) {
+        cameraCombo->setVisible(false);
+    }
 }
 
 void MainWindow::initializeCamera(const QString &cameraDeviceName)
@@ -175,13 +239,13 @@ void MainWindow::initializeCamera(const QString &cameraDeviceName)
     QList<QSize> resolutions = camera->supportedViewfinderResolutions();
     if (!resolutions.isEmpty()) {
         QCameraViewfinderSettings settings;
-        QSize lowResolution = resolutions.first();
-        settings.setResolution(lowResolution);
+        QSize bestResolution = getBestCameraResolution(resolutions);
+        settings.setResolution(bestResolution);
         camera->setViewfinderSettings(settings);
 
         //getBestSupportedFrameRate();
 
-        mainController->setVideoProperties(lowResolution);
+        mainController->setVideoProperties(bestResolution);
     }
     else {
         qCritical() << "Camera resolutions list is empty!";
@@ -196,6 +260,31 @@ void MainWindow::initializeCamera(const QString &cameraDeviceName)
             break;
         }
     }
+}
+
+QSize MainWindow::getBestCameraResolution(const QList<QSize> resolutions) const
+{
+    const static quint16 PREFERRED_WIDTH = 320;
+
+    auto bestResolution = QSize(PREFERRED_WIDTH, 240);
+
+    if (!resolutions.isEmpty()) {
+        auto lowestResolution = resolutions.first();
+        if (lowestResolution.width() > PREFERRED_WIDTH) { // using the lowest resolution in big resolution cams
+            bestResolution = lowestResolution;
+        }
+        else { // pick the first resolution where width < 320
+            for (int i = resolutions.size() - 1; i >= 0;  --i) {
+                if (resolutions.at(i).width() <= PREFERRED_WIDTH) {
+                    bestResolution = resolutions.at(i);
+                    break;
+                }
+            }
+            //bestResolution = resolutions.first();
+        }
+    }
+
+    return bestResolution;
 }
 
 void MainWindow::changeCameraStatus(bool activated)
@@ -313,18 +402,18 @@ QImage MainWindow::pickCameraFrame() const
 
 void MainWindow::initializeMeteringOptions()
 {
-    const Persistence::Settings &settings = mainController->getSettings();
-    AudioMeter::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
+    const auto &settings = mainController->getSettings();
+    AudioSlider::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
     quint8 meterOption = settings.getMeterOption();
     switch (meterOption) {
     case 0:
-        AudioMeter::paintPeaksAndRms();
+        AudioSlider::paintPeaksAndRms();
         break;
     case 1:
-        AudioMeter::paintPeaksOnly();
+        AudioSlider::paintPeaksOnly();
         break;
     case 2:
-        AudioMeter::paintRmsOnly();
+        AudioSlider::paintRmsOnly();
         break;
     }
 }
@@ -346,11 +435,10 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     loadTranslationFile(locale);
     mainController->setTranslationLanguage(locale);
     updatePublicRoomsListLayout();
-    if (mainController->isPlayingInNinjamRoom()) {
-        if (chatTabWidget) {
-            chatTabWidget->setPreferredTranslationLanguage(locale);
-        }
 
+    ui.chatTabWidget->setPreferredTranslationLanguage(locale);
+
+    if (mainController->isPlayingInNinjamRoom()) {
         ninjamWindow->updateGeoLocations();
     }
 }
@@ -360,7 +448,7 @@ void MainWindow::handleThemeChanged()
     QString themeName = mainController->getTheme();
     MapWidget::setNightMode(MainWindow::themeCanUseNightModeWorldMaps(themeName));
 
-    ui.masterMeter->updateStyleSheet();
+    ui.masterFader->updateStyleSheet();
 
     for (auto groupChannels : localGroupChannels) {
         for (auto trackView : groupChannels->getTracks<LocalTrackView *>()) {
@@ -418,9 +506,11 @@ void MainWindow::setTintColor(const QColor &color)
     for (auto looperWindow : looperWindows)
         looperWindow->setTintColor(color);
 
-    // master
-    ui.speakerIconLeft->setPixmap(IconFactory::createLowLevelIcon(color));
-    ui.speakerIconRight->setPixmap(IconFactory::createHighLevelIcon(color));
+    ui.chatTabWidget->setChatsTintColor(color);
+
+    // network usage icons
+    transmitIcon->setPixmap(IconFactory::createTransmitPixmap(color));
+    receiveIcon->setPixmap(IconFactory::createReceivePixmap(color));
 }
 
 void MainWindow::initializeThemeMenu()
@@ -430,8 +520,8 @@ void MainWindow::initializeThemeMenu()
 
     // create a menu action for each theme
     QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
-    QStringList themes = Theme::Loader::getAvailableThemes(themesDir);
-    for (const QString &themeDir : themes) {
+    auto themes = theme::Loader::getAvailableThemes(themesDir);
+    for (const auto &themeDir : themes) {
         QString themeName = QFileInfo(themeDir).baseName();
         QAction *action = ui.menuTheme->addAction(getStripedThemeName(themeName));
         action->setData(themeName);
@@ -458,7 +548,9 @@ QString MainWindow::getTranslatedThemeName(const QString &themeName)
     translatedNames.insert("Flat",    tr("Flat"));
     translatedNames.insert("Rounded", tr("Rounded"));
     translatedNames.insert("Volcano", tr("Volcano"));
-    translatedNames.insert("Ice", tr("Ice"));
+    translatedNames.insert("Ice",     tr("Ice"));
+    translatedNames.insert("Game",    tr("Game"));
+    translatedNames.insert("Navy",    tr("Navy"));
 
     if (translatedNames.contains(themeName))
         return translatedNames[themeName];
@@ -486,8 +578,8 @@ void MainWindow::initializeLanguageMenu()
         QStringList locales = translationsDir.entryList();
         for (auto translationFile : locales) {
             QLocale loc(translationFile);
-            QString nativeLanguageName = Gui::capitalize(loc.nativeLanguageName());
-            QString englishLanguageName = Gui::capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
+            QString nativeLanguageName = gui::capitalize(loc.nativeLanguageName());
+            QString englishLanguageName = gui::capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
 
             QString actionText = nativeLanguageName + " (" + englishLanguageName + ")";
             auto actions = ui.menuLanguage->actions();
@@ -518,14 +610,6 @@ void MainWindow::initializeGuiRefreshTimer()
 
 void MainWindow::initialize()
 {
-#ifdef Q_OS_WIN
-    if (MainController::crashedInLastExecution()) {
-        CrashReportDialog dialog(this);
-        dialog.setLogDetails(Configurator::getInstance()->getPreviousLogContent());
-        dialog.exec();
-    }
-#endif
-
     // initialize text modifier here to avoid a pure virtual method call in constructor
     TextEditorModifier *textEditorModifier = createTextEditorModifier();
     if (textEditorModifier) {
@@ -538,7 +622,7 @@ void MainWindow::initialize()
     if (qApp->styleSheet().isEmpty()) { // allow custom stylesheet via app arguments
         QString themeName = mainController->getTheme();
         QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
-        if(!Theme::Loader::canLoad(themesDir, themeName))
+        if(!theme::Loader::canLoad(themesDir, themeName))
             themeName = "Flat"; // fallback to Flat theme
         setTheme(themeName);
     }
@@ -552,6 +636,19 @@ void MainWindow::initialize()
     auto firstChannelXmitButton = localChannels.first()->getXmitButton();
     uint intervalsBeforeInactivityWarning = mainController->getSettings().getIntervalsBeforeInactivityWarning();
     xmitInactivityDetector = new InactivityDetector(this, firstChannelXmitButton, intervalsBeforeInactivityWarning);
+
+    // remember collapse status
+    auto settings = mainController->getSettings();
+
+    if (settings.isRememberingLocalChannels())
+        showPeakMetersOnlyInLocalControls(settings.isLocalChannelsCollapsed());
+
+    if (settings.isRememberingBottomSection())
+        setBottomCollapsedStatus(settings.isBottomSectionCollapsed());
+
+    auto turnedOn = false;
+    createMainChat(turnedOn);
+
 }
 
 void MainWindow::doWindowInitialization()
@@ -569,14 +666,23 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
 
     if (cameraView) {
-        cameraView->setVisible(!showPeakMetersOnly);
         cameraCombo->setVisible(cameraView->isVisible() && cameraCombo->count() > 1);
+        
+        if (!showPeakMetersOnly) {
+            cameraView->setMaximumHeight(90);
+        }
+        else {
+            cameraView->setMaximumHeight(32);
+            cameraCombo->setVisible(false);
+        }
     }
-
+    
     updateLocalInputChannelsGeometry();
 
     ui.userNamePanel->setVisible(!showPeakMetersOnly);
     ui.labelYourControls->setVisible(!showPeakMetersOnly);
+
+    mainController->setLocalChannelsCollapsed(showPeakMetersOnly);
 }
 
 void MainWindow::updateLocalInputChannelsGeometry()
@@ -592,16 +698,21 @@ void MainWindow::updateLocalInputChannelsGeometry()
     ui.leftPanel->setMinimumWidth(minWidth);
 }
 
-void MainWindow::toggleBottomAreaCollapseStatus()
+void MainWindow::setBottomCollapsedStatus(bool collapsed)
 {
-    bottomCollapsed = !bottomCollapsed; //toggle
+    bottomCollapsed = collapsed;
 
-    collapseBottomArea(bottomCollapsed);
+    collapseBottomArea(collapsed);
 
     updateCollapseButtons();
+
+    mainController->setBottomSectionCollapsed(collapsed); // store in settings
 }
 
-
+void MainWindow::toggleBottomAreaCollapseStatus()
+{
+    setBottomCollapsedStatus(!bottomCollapsed);
+}
 
 void MainWindow::toggleLocalTracksCollapseStatus()
 {
@@ -614,14 +725,14 @@ void MainWindow::toggleLocalTracksCollapseStatus()
     updateCollapseButtons();
 }
 
-Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
+persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
 {
     LocalInputTrackSettings settings;
-    for (LocalTrackGroupView *trackGroupView : localGroupChannels) {
-        Channel channel(trackGroupView->getGroupName());
+    for (auto trackGroupView : localGroupChannels) {
+        Channel channel(trackGroupView->getInstrumentIcon());
         int subchannelsCount = 0;
-        for (LocalTrackView *trackView : trackGroupView->getTracks<LocalTrackView *>()) {
-            LocalInputNode *inputNode = trackView->getInputNode();
+        for (auto trackView : trackGroupView->getTracks<LocalTrackView *>()) {
+            auto inputNode = trackView->getInputNode();
             ChannelRange inputNodeRange = inputNode->getAudioInputRange();
             int firstInput = inputNodeRange.getFirstChannel();
             int channels = inputNodeRange.getChannels();
@@ -637,7 +748,7 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
             quint8 higherNote = inputNode->getMidiHigherNote();
             bool routindMidiInput = subchannelsCount > 0 && inputNode->isRoutingMidiInput(); // midi routing is not allowed in first subchannel
 
-            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted,
+            SubChannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted,
                                                                     transpose, lowerNote, higherNote, routindMidiInput);
             channel.subChannels.append(sub);
 
@@ -682,7 +793,7 @@ void MainWindow::removeChannelsGroup(int channelIndex)
 {
     if (localGroupChannels.size() > 1) { // the first channel group can't be removed
         if (channelIndex >= 0 && channelIndex < localGroupChannels.size()) {
-            LocalTrackGroupView *channel = localGroupChannels.at(channelIndex);
+            auto channel = localGroupChannels.at(channelIndex);
             ui.localTracksLayout->removeWidget(channel);
             localGroupChannels.removeAt(channelIndex);
 
@@ -704,10 +815,10 @@ void MainWindow::highlightChannelGroup(int index) const
         Highligther::getInstance()->highlight(localGroupChannels.at(index));
 }
 
-void MainWindow::addChannelsGroup(const QString &name)
+void MainWindow::addChannelsGroup(int instrumentIndex)
 {
     int channelIndex = localGroupChannels.size();
-    addLocalChannel(channelIndex, name, true);
+    addLocalChannel(channelIndex, instrumentIndex, true);
 
     if (mainController->isPlayingInNinjamRoom()) {
         mainController->sendNewChannelsNames(getChannelsNames());
@@ -755,12 +866,12 @@ LocalTrackGroupView *MainWindow::createLocalTrackGroupView(int channelGroupIndex
     return new LocalTrackGroupView(channelGroupIndex, this);
 }
 
-LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QString &channelName,
+LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, int instrumentIndex,
                                                  bool createFirstSubchannel)
 {
-    LocalTrackGroupView *localChannel = createLocalTrackGroupView(channelGroupIndex);
+    auto localChannel = createLocalTrackGroupView(channelGroupIndex);
 
-    connect(localChannel, &LocalTrackGroupView::nameChanged, this, &MainWindow::updateChannelsNames);
+    connect(localChannel, &LocalTrackGroupView::instrumentIconChanged, this, &MainWindow::updateChannelsNames);
 
     connect(localChannel, &LocalTrackGroupView::trackAdded, this, &MainWindow::updateLocalInputChannelsGeometry);
 
@@ -771,12 +882,14 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
 
     localGroupChannels.append(localChannel);
 
-    localChannel->setGroupName(channelName);
+    localChannel->setInstrumentIcon(instrumentIndex);
     ui.localTracksLayout->addWidget(localChannel);
 
     if (createFirstSubchannel) {
          localChannel->addTrackView(channelGroupIndex);
     }
+
+    localChannel->setTintColor(tintColor);
 
     ui.localTracksWidget->updateGeometry();
 
@@ -790,7 +903,7 @@ void MainWindow::loadPreset(const Preset &preset)
         initializeLocalInputChannels(preset.inputTrackSettings);
 
         //set all loaded channels xmit to ON
-        for (LocalTrackGroupView *trackGroupView :  localGroupChannels ) {
+        for (auto  trackGroupView :  localGroupChannels ) {
             mainController->setTransmitingStatus(trackGroupView->getChannelIndex(), true);
         }
 
@@ -803,7 +916,7 @@ void MainWindow::removeAllInputLocalTracks()
     mainController->removeAllInputTracks();
 
     while (!localGroupChannels.isEmpty()) {
-        LocalTrackGroupView *view = localGroupChannels.first();
+        auto view = localGroupChannels.first();
         ui.localTracksLayout->removeWidget(view);
         view->deleteLater();
         localGroupChannels.pop_front();
@@ -812,9 +925,9 @@ void MainWindow::removeAllInputLocalTracks()
 
 
 // this function is overrided in MainWindowStandalone to load input selections and plugins
-void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const Subchannel &subChannel)
+void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView, const SubChannel &subChannel)
 {
-    BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
+    auto boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted, subChannel.stereoInverted);
 }
 
@@ -824,7 +937,7 @@ void MainWindow::openLooperWindow(uint trackID)
 
      auto inputTrack = mainController->getInputTrack(trackID);
      if (inputTrack) {
-        LooperWindow *looperWindow = looperWindows[trackID];
+        auto looperWindow = looperWindows[trackID];
         if (!looperWindow) {
             looperWindow = new LooperWindow(this, mainController);
             looperWindows.insert(trackID, looperWindow);
@@ -833,11 +946,11 @@ void MainWindow::openLooperWindow(uint trackID)
 
         looperWindow->setLooper(inputTrack->getLooper());
 
-        LocalTrackGroupView *channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
+        auto channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
         Q_ASSERT(channel);
 
         int subchannelInternalIndex = channel->getSubchannelInternalIndex(trackID);
-        QString channelName = channel->getGroupName();
+        QString channelName = channel->getChannelGroupName();
         if (channelName.isEmpty())
             channelName = tr("Channel %1").arg(QString::number(channel->getChannelIndex() + 1));
         else
@@ -867,20 +980,19 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
     QApplication::setOverrideCursor(Qt::WaitCursor); // this line was hanging/freezing in Mac
 
     int channelIndex = 0;
-    for (const Persistence::Channel &channel : inputsSettings.channels) {
-        qCDebug(jtGUI) << "\tCreating channel "<< channel.name;
+    for (const auto &channel : inputsSettings.channels) {
+        qCDebug(jtGUI) << "\tCreating channel "<< channelIndex;
         bool createFirstSubChannel = channel.subChannels.isEmpty();
-        LocalTrackGroupView *channelView = addLocalChannel(channelIndex, channel.name,
-                                                           createFirstSubChannel);
-        for (const Persistence::Subchannel &subChannel : channel.subChannels) {
+        auto channelView = addLocalChannel(channelIndex, channel.instrumentIndex, createFirstSubChannel);
+        for (const auto &subChannel : channel.subChannels) {
             qCDebug(jtGUI) << "\t\tCreating sub-channel ";
-            LocalTrackView *subChannelView = channelView->addTrackView(channelIndex);
+            auto subChannelView = channelView->addTrackView(channelIndex);
             initializeLocalSubChannel(subChannelView, subChannel);
         }
         channelIndex++;
     }
     if (channelIndex == 0) // no channels in settings file or no settings file...
-        addLocalChannel(0, "", true); // create a channel using an empty name
+        addLocalChannel(0, -1, true); // create a channel using an empty instrument icon
 
     qCDebug(jtGUI) << "Initializing local inputs done!";
 
@@ -926,29 +1038,30 @@ void MainWindow::showBusyDialog()
 
 void MainWindow::showBusyDialog(const QString &message)
 {
-    busyDialog.setParent(this);
+    busyDialog->setParent(this);
+    busyDialog->show(message);
     centerBusyDialog();
-    busyDialog.show(message);
+
 }
 
 void MainWindow::hideBusyDialog()
 {
-    busyDialog.hide();
+    busyDialog->hide();
 }
 
 void MainWindow::centerBusyDialog()
 {
-    if (!busyDialog.parentWidget())
+    if (!busyDialog->parentWidget())
         return;
 
-    QSize parentSize = busyDialog.parentWidget()->size();
-    QSize busyDialogSize = busyDialog.size();
+    QSize parentSize = busyDialog->parentWidget()->size();
+    QSize busyDialogSize = busyDialog->size();
     int newX = parentSize.width()/2 - busyDialogSize.width()/2;
     int newY = parentSize.height()/2;
-    busyDialog.move(newX, newY);
+    busyDialog->move(newX, newY);
 }
 
-bool MainWindow::jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2)
+bool MainWindow::jamRoomLessThan(const login::RoomInfo &r1, const login::RoomInfo &r2)
 {
     return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
 }
@@ -979,7 +1092,6 @@ void MainWindow::handleServerConnectionError(const QString &errorMsg)
     hideBusyDialog();
     QMessageBox::warning(this, tr("Error!"),
                          tr("Error connecting with Jamtaba server!\n") + errorMsg);
-    close();
 }
 
 QString MainWindow::sanitizeLatestVersionDetails(const QString &details)
@@ -1008,7 +1120,7 @@ void MainWindow::showNewVersionAvailableMessage(const QString &latestVersionDeta
     QMessageBox::information(this, tr("New Jamtaba version available!"), text);
 }
 
-JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &roomInfo)
+JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const login::RoomInfo &roomInfo)
 {
     auto newJamRoomView = new JamRoomViewPanel(roomInfo, mainController);
 
@@ -1016,7 +1128,7 @@ JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &room
 
     connect(newJamRoomView, &JamRoomViewPanel::finishingListeningTheRoom, this, &MainWindow::stopPublicRoomStream);
 
-    connect(newJamRoomView, SIGNAL(enteringInTheRoom(Login::RoomInfo)), this, SLOT(tryEnterInRoom(Login::RoomInfo)));
+    connect(newJamRoomView, SIGNAL(enteringInTheRoom(login::RoomInfo)), this, SLOT(tryEnterInRoom(login::RoomInfo)));
 
     return newJamRoomView;
 }
@@ -1026,37 +1138,37 @@ bool MainWindow::canUseTwoColumnLayoutInPublicRooms() const
     return ui.contentTabWidget->width() >= 860;
 }
 
-void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms)
+void MainWindow::refreshPublicRoomsList(const QList<login::RoomInfo> &publicRooms)
 {
     if (publicRooms.isEmpty())
         return;
 
     hideBusyDialog();
 
-    QList<Login::RoomInfo> sortedRooms(publicRooms);
+    QList<login::RoomInfo> sortedRooms(publicRooms);
     qSort(sortedRooms.begin(), sortedRooms.end(), jamRoomLessThan);
 
     int index = 0;
     bool twoCollumns = canUseTwoColumnLayoutInPublicRooms();
-    for (const Login::RoomInfo &roomInfo : sortedRooms) {
-        if (roomInfo.getType() == Login::RoomTYPE::NINJAM) { // skipping other rooms at moment
+    for (const auto &roomInfo : sortedRooms) {
+        if (roomInfo.getType() == login::RoomTYPE::NINJAM) { // skipping other rooms at moment
             int rowIndex = twoCollumns ? (index / 2) : (index);
             int collumnIndex = twoCollumns ? (index % 2) : 0;
-            JamRoomViewPanel *roomViewPanel = roomViewPanels[roomInfo.getID()];
+            auto roomViewPanel = roomViewPanels[roomInfo.getID()];
             if (roomViewPanel) {
                 roomViewPanel->refresh(roomInfo);
                 // check if is playing a public room stream but this room is empty now
                 if (mainController->isPlayingRoomStream()) {
-                    if (roomInfo.isEmpty()
-                        && mainController->getCurrentStreamingRoomID() == roomInfo.getID())
+                    if (roomInfo.isEmpty() && mainController->getCurrentStreamingRoomID() == roomInfo.getID()) {
                         stopCurrentRoomStream();
+                    }
                 }
                 ui.allRoomsContent->layout()->removeWidget(roomViewPanel); // the widget is removed but added again
             } else {
                 roomViewPanel = createJamRoomViewPanel(roomInfo);
                 roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
             }
-            QGridLayout *layout = dynamic_cast<QGridLayout *>(ui.allRoomsContent->layout());
+            auto layout = dynamic_cast<QGridLayout *>(ui.allRoomsContent->layout());
             layout->addWidget(roomViewPanel, rowIndex, collumnIndex);
             index++;
         }
@@ -1064,20 +1176,21 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
 
     if (mainController->isPlayingInNinjamRoom())
         this->ninjamWindow->updateGeoLocations();
+
     /** updating country flag and country names after refresh the public rooms list. This is necessary because the call to webservice used to get country codes and  country names is not synchronous. So, if country code and name are not cached we receive these data from the webservice after some seconds.*/
 }
 
-void MainWindow::playPublicRoomStream(const Login::RoomInfo &roomInfo)
+void MainWindow::playPublicRoomStream(const login::RoomInfo &roomInfo)
 {
     // clear all plots
-    for (JamRoomViewPanel *viewPanel : this->roomViewPanels.values())
+    for (auto viewPanel : this->roomViewPanels.values())
         viewPanel->clear(roomInfo.getID() != viewPanel->getRoomInfo().getID());
 
     if (roomInfo.hasStream()) // just in case...
         mainController->playRoomStream(roomInfo);
 }
 
-void MainWindow::stopPublicRoomStream(const Login::RoomInfo &roomInfo)
+void MainWindow::stopPublicRoomStream(const login::RoomInfo &roomInfo)
 {
     Q_UNUSED(roomInfo)
     stopCurrentRoomStream();
@@ -1086,14 +1199,14 @@ void MainWindow::stopPublicRoomStream(const Login::RoomInfo &roomInfo)
 QStringList MainWindow::getChannelsNames() const
 {
     QStringList channelsNames;
-    for (LocalTrackGroupView *channel : localGroupChannels)
-        channelsNames.append(channel->getGroupName());
+    for (auto channelGroup : localGroupChannels)
+        channelsNames.append(channelGroup->getChannelGroupName());
 
     return channelsNames;
 }
 
 // user trying enter in a room
-void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password)
+void MainWindow::tryEnterInRoom(const login::RoomInfo &roomInfo, const QString &password)
 {
     // stop room stream before enter in a room
     if (mainController->isPlayingRoomStream()) {
@@ -1124,7 +1237,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
 
     if (mainController->isPlayingInNinjamRoom()) {
         // store the room to jump and wait for disconnectedFromServer event to connect in this new room
-        roomToJump.reset(new Login::RoomInfo(roomInfo));
+        roomToJump.reset(new login::RoomInfo(roomInfo));
         passwordToJump = password;
 
         mainController->stopNinjamController(); // disconnect from current ninjam server
@@ -1135,7 +1248,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
     }
 }
 
-void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
+void MainWindow::enterInRoom(const login::RoomInfo &roomInfo)
 {
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
@@ -1144,11 +1257,16 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
-    QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
-    int index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabName);
+
+    auto tabText = QString("%1 [%2]").arg(roomInfo.getName()).arg(roomInfo.getPort());
+    auto index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabText);
     ui.contentTabWidget->setCurrentIndex(index);
 
-    addMainChatPanel();
+    auto serverName = gui::sanitizeServerName(roomInfo.getName());
+    createNinjamServerChat(serverName);
+
+    auto settings = mainController->getSettings();
+    ui.chatTabWidget->collapse(settings.isRememberingChatSection() && settings.isChatSectionCollapsed());
 
     addNinjamPanelsInBottom();
 
@@ -1163,8 +1281,6 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 
 void MainWindow::collapseBottomArea(bool collapse)
 {
-    Gui::setLayoutItemsVisibility(ui.masterControlsLayout, !collapse);
-
     bool canHandleNinjamPanels = mainController->isPlayingInNinjamRoom() && ninjamWindow && ninjamWindow->getNinjamPanel() && ninjamWindow->getMetronomePanel();
 
     if (canHandleNinjamPanels) {
@@ -1173,22 +1289,15 @@ void MainWindow::collapseBottomArea(bool collapse)
         ninjamPanel->setCollapseMode(collapse);
 
         if (collapse)
-            ui.bottomPanelLayout->addWidget(ninjamPanel, 1, 0, 1, 3); // re-add ninjamPanel using 3 cols for colspan
+            ui.bottomPanelLayout->addWidget(ninjamPanel, 1, 0, ui.bottomPanelLayout->rowCount(), ui.bottomPanelLayout->columnCount()); // re-add ninjamPanel using 3 cols for colspan
     }
 
-    ui.masterTitleLabel->setVisible(canHandleNinjamPanels);
+    ui.masterTitleLabel->setVisible(!collapse);
 
     if (collapse) {
-        ui.bottomPanelLayout->removeWidget(ui.masterControlsPanel);
-        ui.masterControlsPanel->setVisible(false);
+        if (canHandleNinjamPanels) {
 
-        if (!canHandleNinjamPanels) {
-            ui.bottomPanelLayout->addWidget(ui.masterMeter, 1, 1, 1, 1, Qt::AlignCenter);
-            ui.masterMeter->setVisible(true);
-        }
-        else {
-            ui.bottomPanelLayout->removeWidget(ui.masterMeter);
-            ui.masterMeter->setVisible(false);
+            ui.masterControlsPanel->setVisible(false);
 
             auto metronomePanel = ninjamWindow->getMetronomePanel();
             ui.bottomPanelLayout->removeWidget(metronomePanel);
@@ -1196,17 +1305,13 @@ void MainWindow::collapseBottomArea(bool collapse)
         }
     }
     else {
-        ui.bottomPanelLayout->removeWidget(ui.masterMeter);
+        ui.bottomPanelLayout->removeWidget(ui.masterFader);
 
-        ui.masterControlsLayout->addWidget(ui.masterMeter);
-        ui.masterMeter->setVisible(true);
+        ui.masterControlsLayout->addWidget(ui.masterFader);
+        ui.masterControlsPanel->setVisible(true);
 
         if (canHandleNinjamPanels)
             addNinjamPanelsInBottom();
-        else
-            ui.bottomPanelLayout->addWidget(ui.masterControlsPanel, 1, 1, 1, 1, Qt::AlignCenter);
-
-        ui.masterControlsPanel->setVisible(true);
     }
 }
 
@@ -1246,16 +1351,12 @@ void MainWindow::wireNinjamControllerSignals()
     connect(controller, &NinjamController::userLeave, this, &MainWindow::handleUserLeaving);
     connect(controller, &NinjamController::userEnter, this, &MainWindow::handleUserEntering);
 
-    connect(controller, &NinjamController::userBlockedInChat, this, &MainWindow::showFeedbackAboutBlockedUserInChat);
-    connect(controller, &NinjamController::userUnblockedInChat, this, &MainWindow::showFeedbackAboutUnblockedUserInChat);
-
-    connect(controller, &NinjamController::publicChatMessageReceived, this, &MainWindow::addMainChatMessage); // main chat
+    connect(controller, &NinjamController::publicChatMessageReceived, this, &MainWindow::addNinjamServerChatMessage); // main chat
     connect(controller, &NinjamController::privateChatMessageReceived, this, &MainWindow::addPrivateChatMessage);
 
-    connect(controller, &NinjamController::topicMessageReceived, this, [=](const QString &message){
+    connect(controller, &NinjamController::topicMessageReceived, this, [=](const QString &message) {
 
-        if (chatTabWidget)
-            chatTabWidget->getMainChat()->setTopicMessage(message);
+        ui.chatTabWidget->getNinjamServerChat()->setTopicMessage(message);
     });
 
     connect(controller, &NinjamController::started, this, [=]() {
@@ -1275,42 +1376,58 @@ void MainWindow::setPrivateChatInputstatus(const QString userName, bool enabled)
     if (userName == JAMTABA_CHAT_BOT_NAME)
         return;
 
-    for (auto chat : chatTabWidget->getChats()) {
-        QString chatUserName = Ninjam::extractUserName(chat->getUserFullName());
-        if (chatUserName == userName) {
-            chat->setInputsStatus(enabled);
-        }
+    auto chat = ui.chatTabWidget->getPrivateChat(userName);
+    if (chat) {
+        chat->setInputsStatus(enabled);
     }
 }
 
-void MainWindow::handleUserLeaving(const QString &userName)
+void MainWindow::handleUserLeaving(const QString &userFullName)
 {
-    auto chatPanel = chatTabWidget->getFocusedChatPanel();
-    if (!chatPanel)
+    auto ninjamChat = ui.chatTabWidget->getNinjamServerChat();
+    if (!ninjamChat)
         return;
 
-    chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 has left the room.").arg(userName));
+    auto chatsToReport = QList<ChatPanel *>();
+    chatsToReport.append(ninjamChat);
 
-    setPrivateChatInputstatus(userName, false); // deactive the private chat when user leave
+    auto privateChat = ui.chatTabWidget->getPrivateChat(userFullName);
+    if (privateChat) {
+        chatsToReport.append(privateChat);
+        setPrivateChatInputstatus(userFullName, false); // deactive the private chat when user leave
+    }
 
-    usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
+    auto localUser = mainController->getUserName();
+    for (auto chat : chatsToReport)
+        chat->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has left the room.").arg(ninjam::client::extractUserName(userFullName)));
+
+    usersColorsPool->giveBack(userFullName); // reuse the color mapped to this 'leaving' user
 }
 
-void MainWindow::handleUserEntering(const QString &userName)
+void MainWindow::handleUserEntering(const QString &userFullName)
 {
-    auto chatPanel = chatTabWidget->getFocusedChatPanel();
-    if (!chatPanel)
+    auto ninjamChat = ui.chatTabWidget->getNinjamServerChat();
+    if (!ninjamChat)
         return;
 
-    chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(userName));
+    auto chatsToReport = QList<ChatPanel *>();
+    chatsToReport.append(ninjamChat);
 
-    setPrivateChatInputstatus(userName, true); // activate the chat if user is entering again
+    auto privateChat = ui.chatTabWidget->getPrivateChat(userFullName);
+    if (privateChat) {
+        chatsToReport.append(privateChat);
+        setPrivateChatInputstatus(userFullName, true); // active the private chat when user enter
+    }
+
+    auto localUser = mainController->getUserName();
+    for (auto chat : chatsToReport)
+        chat->addMessage(localUser, JAMTABA_CHAT_BOT_NAME, tr("%1 has joined the room.").arg(ninjam::client::extractUserName(userFullName)));
+
 }
 
-void MainWindow::showLastChordsInMainChat()
+void MainWindow::showLastChordsInNinjamServerChat()
 {
     Q_ASSERT(ninjamWindow);
-    Q_ASSERT(chatTabWidget);
 
     auto loginService = mainController->getLoginService();
     auto roomInfo = ninjamWindow->getRoomInfo();
@@ -1321,7 +1438,7 @@ void MainWindow::showLastChordsInMainChat()
         ChordProgression progression = parser.parse(lastChordProgression);
         QString title = tr("Last chords used");
 
-        auto mainChatPanel = chatTabWidget->getMainChat();
+        auto mainChatPanel = ui.chatTabWidget->getNinjamServerChat();
         Q_ASSERT(mainChatPanel);
         mainChatPanel->addLastChordsMessage(title, progression.toString());
         mainChatPanel->addChordProgressionConfirmationMessage(progression);
@@ -1329,43 +1446,39 @@ void MainWindow::showLastChordsInMainChat()
     }
 }
 
-void MainWindow::createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage)
+void MainWindow::createVoteButton(const gui::chat::SystemVotingMessage &votingMessage)
 {
     if (!votingMessage.isValidVotingMessage())
         return;
 
-    Q_ASSERT(chatTabWidget);
-
-    auto mainChatPanel = chatTabWidget->getMainChat();
-    Q_ASSERT(mainChatPanel);
+    auto ninjamChatPanel = ui.chatTabWidget->getNinjamServerChat();
+    Q_ASSERT(ninjamChatPanel);
 
     quint32 voteValue = votingMessage.getVoteValue();
     quint32 expireTime = votingMessage.getExpirationTime();
     if (votingMessage.isBpiVotingMessage())
-        mainChatPanel->addBpiVoteConfirmationMessage(voteValue, expireTime);
+        ninjamChatPanel->addBpiVoteConfirmationMessage(voteValue, expireTime);
     else
-        mainChatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
+        ninjamChatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
 }
 
-void MainWindow::handleChordProgressionMessage(const Ninjam::User &user, const QString &message)
+void MainWindow::handleChordProgressionMessage(const User &user, const QString &message)
 {
     Q_UNUSED(user)
-
-    Q_ASSERT(chatTabWidget);
 
     ChatChordsProgressionParser parser;
     try{
         ChordProgression chordProgression = parser.parse(message);
-        auto mainChatPanel = chatTabWidget->getMainChat();
-        Q_ASSERT(mainChatPanel);
-        mainChatPanel->addChordProgressionConfirmationMessage(chordProgression);
+        auto ninjamChatPanel = ui.chatTabWidget->getNinjamServerChat();
+        Q_ASSERT(ninjamChatPanel);
+        ninjamChatPanel->addChordProgressionConfirmationMessage(chordProgression);
     }
     catch (const std::runtime_error &e) {
         qCritical() << e.what();
     }
 }
 
-bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
+bool MainWindow::canShowBlockButtonInChatMessage(const QString &userFullName) const
 {
     /**
         Avoid the block button for bot and current user messages. Is not a good idea allow user
@@ -1375,39 +1488,56 @@ bool MainWindow::canShowBlockButtonInChatMessage(const QString &userName) const
 
     **/
 
+    auto userIsBot = false;
+
     auto ninjamController = mainController->getNinjamController();
-    bool userIsBot = ninjamController->userIsBot(userName) || userName == JAMTABA_CHAT_BOT_NAME;
-    bool currentUserIsPostingTheChatMessage = userName == mainController->getUserName(); // chat message author and the current user name are the same?
-    return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
+    if (ninjamController)
+        userIsBot = ninjamController->userIsBot(userFullName) || userFullName == JAMTABA_CHAT_BOT_NAME;
+
+    bool currentUserIsPostingTheChatMessage = ninjam::client::extractUserName(userFullName) == mainController->getUserName(); // chat message author and the current user name are the same?
+    return !userIsBot && !currentUserIsPostingTheChatMessage && !userFullName.isEmpty();
 }
 
-void MainWindow::addPrivateChatMessage(const Ninjam::User &user, const QString &message)
+
+
+void MainWindow::addPrivateChatMessage(const User &remoteUser, const QString &message)
 {
-    if (!chatTabWidget->contains(user.getFullName())) {
-        createPrivateChat(user.getName(), user.getIp(), false); // create new private chat, but not focused
+    if (!ui.chatTabWidget->contains(remoteUser.getFullName())) {
+        createPrivateChat(remoteUser.getName(), remoteUser.getIp(), false); // create new private chat, but not focused
     }
     else {
-        auto privateChat = chatTabWidget->getPrivateChat(user.getFullName());
+        auto privateChat = ui.chatTabWidget->getPrivateChat(remoteUser.getFullName());
         if (privateChat && !privateChat->inputsAreEnabled())
             privateChat->setInputsStatus(true);
     }
     
-    Q_ASSERT(chatTabWidget->contains(user.getFullName()));
+    Q_ASSERT(ui.chatTabWidget->contains(remoteUser.getFullName()));
 
-    auto chatPanel = chatTabWidget->getPrivateChat(user.getFullName());
-    if (chatPanel)
-        chatPanel->addMessage(user.getName(), message, true, true);
+    auto chatPanel = ui.chatTabWidget->getPrivateChat(remoteUser.getFullName());
+    if (chatPanel) {
+        auto localUser = mainController->getUserName();
+
+        if (!gui::chat::isServerInvitation(message)) {
+            chatPanel->addMessage(localUser, remoteUser.getFullName(), message, true, true);
+        }
+        else { // handling server invitation as private message
+            auto msg = gui::chat::parseServerInviteMessage(message);
+
+            chatPanel->addMessage(localUser, remoteUser.getFullName(), msg.message, true, true);
+
+            chatPanel->createServerInviteButton(msg.serverIP, msg.serverPort);
+        }
+    }
 }
 
-void MainWindow::addMainChatMessage(const Ninjam::User &user, const QString &message)
+void MainWindow::addNinjamServerChatMessage(const User &msgAuthor, const QString &message)
 {
-    Q_ASSERT(chatTabWidget);
     Q_ASSERT(ninjamWindow);
-    Q_ASSERT(chatTabWidget->getMainChat());
+    Q_ASSERT(ui.chatTabWidget->getNinjamServerChat());
 
-    QString userName = user.getName();
+    QString remoteUserName = msgAuthor.getFullName();
 
-    bool isSystemVoteMessage = Gui::Chat::parseSystemVotingMessage(message).isValidVotingMessage();
+    bool isSystemVoteMessage = gui::chat::parseSystemVotingMessage(message).isValidVotingMessage();
 
     bool isChordProgressionMessage = false;
     if (!isSystemVoteMessage) {
@@ -1415,21 +1545,23 @@ void MainWindow::addMainChatMessage(const Ninjam::User &user, const QString &mes
         isChordProgressionMessage = chordsParser.containsProgression(message);
     }
 
-    bool showBlockButton = canShowBlockButtonInChatMessage(userName);
+    bool showBlockButton = canShowBlockButtonInChatMessage(remoteUserName);
     bool showTranslationButton = !isChordProgressionMessage;
 
-    auto mainChatPanel = chatTabWidget->getMainChat();
+    auto mainChatPanel = ui.chatTabWidget->getNinjamServerChat();
     Q_ASSERT(mainChatPanel);
-    mainChatPanel->addMessage(userName, message, showTranslationButton, showBlockButton);
+
+    auto localUserName = mainController->getUserName();
+    mainChatPanel->addMessage(localUserName, remoteUserName, message, showTranslationButton, showBlockButton);
 
     static bool localUserWasVotingInLastMessage = false;
 
     if (isSystemVoteMessage) {
-        Gui::Chat::SystemVotingMessage voteMessage = Gui::Chat::parseSystemVotingMessage(message);
+        auto voteMessage = gui::chat::parseSystemVotingMessage(message);
 
         QTimer *expirationTimer = voteMessage.isBpiVotingMessage() ? bpiVotingExpiratonTimer : bpmVotingExpirationTimer;
 
-        bool isFirstSystemVoteMessage = Gui::Chat::isFirstSystemVotingMessage(userName, message);
+        bool isFirstSystemVoteMessage = gui::chat::isFirstSystemVotingMessage(remoteUserName, message);
         if (isFirstSystemVoteMessage) { //starting a new votation round
             if (!localUserWasVotingInLastMessage) {  //don't create the vote button if local user is proposing BPI or BPM change
                 createVoteButton(voteMessage);
@@ -1448,42 +1580,248 @@ void MainWindow::addMainChatMessage(const Ninjam::User &user, const QString &mes
         expirationTimer->start(voteMessage.getExpirationTime() * 1000); //QTimer::start will cancel a previous voting expiration timer
     }
     else if (isChordProgressionMessage) {
-        handleChordProgressionMessage(user, message);
+        handleChordProgressionMessage(msgAuthor, message);
     }
 
-    localUserWasVotingInLastMessage = Gui::Chat::isLocalUserVotingMessage(message) && user.getName() == mainController->getUserName();
+    localUserWasVotingInLastMessage = gui::chat::isLocalUserVotingMessage(message) && msgAuthor.getName() == mainController->getUserName();
 }
 
-void MainWindow::addMainChatPanel()
+QString MainWindow::buildServerInviteMessage(const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool showPrivateServerIpAndPort)
+{
+    auto msg = tr("Let's play in %1 : %2 ?").arg(serverIP).arg(serverPort);
+    if (isPrivateServer) {
+        msg = tr("Let's play in my private server?");
+        if (showPrivateServerIpAndPort)
+            msg += QString("\n\n IP: %1 \n\n PORT: %2 \n").arg(serverIP).arg(serverPort);
+    }
+
+    return msg;
+}
+
+void MainWindow::createMainChat(bool turnedOn)
+{
+    qCDebug(jtGUI) << "adding main chat panel...";
+
+    auto mainChatPanel = ui.chatTabWidget->createMainChat(createTextEditorModifier());
+
+    mainChatPanel->setTintColor(tintColor);
+
+    connect(mainChatPanel, &ChatPanel::userSendingNewMessage, mainChat.data(), &MainChat::sendPublicMessage);
+
+    connect(mainChat.data(), &MainChat::messageReceived, [=](const QString &userFullName, const QString &content){
+        if (!mainController->userIsBlockedInChat(userFullName)) {
+            auto localUserName = mainController->getUserName();
+            bool showBlockButton = canShowBlockButtonInChatMessage(userFullName);
+            mainChatPanel->addMessage(localUserName, userFullName, content, true, showBlockButton);
+        }
+    });
+
+    connect(mainChat.data(), &MainChat::usersListChanged, ui.chatTabWidget, &ChatTabWidget::setConnectedUsersInMainChat);
+
+    connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
+    connect(mainChatPanel, &ChatPanel::userUnblockingChatMessagesFrom, mainController, &MainController::unblockUserInChat);
+    //connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
+
+    connect(mainChatPanel, &ChatPanel::connectedUserContextMenuActivated, this, &MainWindow::fillConnectedUserContextMenu);
+
+    connect(mainChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
+
+    connect(mainChat.data(), &MainChat::serverInviteReceived, [=](const QString &senderFullName, const QString &serverIP, quint16 serverPort, bool isPrivateServer){
+
+        auto localUserName = mainController->getUserName();
+        bool showBlockButton = true;
+        auto msg = buildServerInviteMessage(serverIP, serverPort, isPrivateServer, false);
+        mainChatPanel->addMessage(localUserName, senderFullName, msg, true, showBlockButton);
+
+        mainChatPanel->createServerInviteButton(serverIP, serverPort);
+    });
+
+    connect(mainChatPanel, &ChatPanel::userAcceptingServerInvite, [=](const QString &serverIP, quint16 serverPort){
+        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, login::RoomTYPE::NINJAM, 8));
+    });
+
+    updateCollapseButtons();
+
+    mainChatPanel->setInputsStatus(false);
+
+    connect(mainChat.data(), &MainChat::connected, [=](){
+
+        auto localUserName = mainController->getUserName();
+        mainChat->setUserName(localUserName);
+
+        auto msg = tr("Connected with public chat!");
+        mainChatPanel->addMessage(localUserName, JAMTABA_CHAT_BOT_NAME, msg);
+
+        mainChatPanel->turnOn();
+        mainChatPanel->showConnectedUsersWidget(true);
+    });
+
+    connect(mainChat.data(), &MainChat::disconnected, [=](){
+        if (mainController) { // if still running
+            mainChatPanel->setInputsStatus(false);
+            auto localUserName = mainController->getUserName();
+            auto author = JAMTABA_CHAT_BOT_NAME;
+            mainChatPanel->addMessage(localUserName, author, tr("Public chat disconnected!"), true, false);
+        }
+    });
+
+    connect(mainChat.data(), &MainChat::error, [=](const QString &errorMessage){
+        if (mainController) {
+            auto localUserName = mainController->getUserName();
+            auto author = JAMTABA_CHAT_BOT_NAME;
+            mainChatPanel->addMessage(localUserName, author, errorMessage, true, false);
+        }
+    });
+
+    connect(mainController, &MainController::userBlockedInChat, [=](const QString &userFullName){
+        mainChatPanel->setConnectedUserBlockedStatus(userFullName, true);
+    });
+
+    connect(mainController, &MainController::userUnblockedInChat, [=](const QString &userFullName){
+        mainChatPanel->setConnectedUserBlockedStatus(userFullName, false);
+    });
+
+    connect(mainChatPanel, &ChatPanel::turnedOn, this, &MainWindow::connectInMainChat);
+    connect(mainChatPanel, &ChatPanel::turnedOff, [=](){
+         mainChat->disconnectFromServer();
+         mainChatPanel->showConnectedUsersWidget(false);
+    });
+
+    if (turnedOn)
+        mainChatPanel->turnOn();
+    else
+        mainChatPanel->turnOff();
+}
+
+void MainWindow::connectInMainChat()
+{
+    auto publicChat = ui.chatTabWidget->getPublicChat();
+    Q_ASSERT(publicChat);
+
+    publicChat->addMessage(mainController->getUserName(), JAMTABA_CHAT_BOT_NAME, tr("Connecting ..."));
+
+    mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
+}
+
+void MainWindow::fillUserContextMenu(QMenu &menu, const QString &userFullName, bool addInvitationEntry)
+{
+    auto userName = ninjam::client::extractUserName(userFullName);
+
+    if (addInvitationEntry && mainController->isPlayingInNinjamRoom()) {
+
+        auto service = mainController->getNinjamService();
+        if (service) {
+            auto serverInfo = service->getCurrentServer();
+            if (serverInfo) {
+                bool userIsAlreadyConnected = false;
+                for (auto user : serverInfo->getUsers()) {
+                    if (ninjam::client::maskIpInUserFullName(user.getFullName()) == ninjam::client::maskIpInUserFullName(userFullName)) {
+                        if (user.hasActiveChannels()) {
+                            userIsAlreadyConnected = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!userIsAlreadyConnected) { // skip the invite menu entry if user is already connected in the server
+
+                    QString inviteText = tr("Invite %1 to play in %2 [%3]")
+                                    .arg(userName)
+                                    .arg(serverInfo->getHostName())
+                                    .arg(serverInfo->getPort());
+
+                    bool isPrivateServer = false;
+                    if (privateServerWindow && privateServerWindow->serverIsRunning()) {
+                        isPrivateServer = serverInfo->getHostName() == privateServerWindow->getServerExternalIP();
+                    }
+
+                    auto action = menu.addAction(inviteText);
+                    connect(action, &QAction::triggered, [=](){
+                        mainChat->sendServerInvite(userFullName, serverInfo->getHostName(), serverInfo->getPort(), isPrivateServer);
+                    });
+
+                    menu.addSeparator();
+                }
+            }
+        }
+    }
+
+    auto userIsBlocked = mainController->userIsBlockedInChat(userFullName);
+
+    auto blockAction = menu.addAction(tr("Block %1 in chat").arg(userName));
+    blockAction->setData(userFullName);
+    blockAction->setEnabled(!userIsBlocked);
+    connect(blockAction, &QAction::triggered, this, &MainWindow::blockUserInChat);
+
+    auto unblockAction = menu.addAction(tr("Unblock %1 in chat").arg(userName));
+    connect(unblockAction, &QAction::triggered, this, &MainWindow::unblockUserInChat);
+    unblockAction->setData(userFullName);
+    unblockAction->setEnabled(userIsBlocked);
+}
+
+void MainWindow::fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName)
+{
+    if (ninjam::client::extractUserName(userFullName) != mainController->getUserName()) // not generating context menu to local user (avoid user blocking yourself or inviting yourseld)
+        fillUserContextMenu(menu, userFullName, true);
+}
+
+void MainWindow::blockUserInChat()
+{
+    auto action  = qobject_cast<QAction *>(QObject::sender());
+    if (action) {
+        auto userFullName = action->data().toString();
+        mainController->blockUserInChat(userFullName);
+    }
+}
+
+void MainWindow::unblockUserInChat()
+{
+    auto action  = qobject_cast<QAction *>(QObject::sender());
+    if (action) {
+        auto userFullName = action->data().toString();
+        mainController->unblockUserInChat(userFullName);
+    }
+}
+
+void MainWindow::createNinjamServerChat(const QString &serverName)
 {
     qCDebug(jtGUI) << "adding ninjam chat panel...";
 
-    auto mainChatPanel = chatTabWidget->createPublicChat(JAMTABA_CHAT_BOT_NAME, mainController->getTranslationLanguage(), createTextEditorModifier());
+    auto ninjamChatPanel = ui.chatTabWidget->createNinjamServerChat(serverName, createTextEditorModifier());
 
-    connect(mainChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
-    connect(mainChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendNewChatMessage);
-    connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
-    connect(mainChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
-    connect(mainChatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+    ninjamChatPanel->setTintColor(tintColor);
+    ninjamChatPanel->showConnectedUsersWidget(false);
+    ninjamChatPanel->turnOn();
+    ninjamChatPanel->hideOnOffButton();
+
+    connect(ninjamChatPanel, &ChatPanel::userConfirmingChordProgression, this, &MainWindow::acceptChordProgression);
+    connect(ninjamChatPanel, &ChatPanel::userSendingNewMessage, this, &MainWindow::sendChatMessageToNinjamServer);
+    connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpiChange, this, &MainWindow::voteToChangeBpi);
+    connect(ninjamChatPanel, &ChatPanel::userConfirmingVoteToBpmChange, this, &MainWindow::voteToChangeBpm);
+    connect(ninjamChatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
+    connect(ninjamChatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 
     initializeVotingExpirationTimers();
 
-    showLastChordsInMainChat();
-
-    setChatsVisibility(true);
+    showLastChordsInNinjamServerChat();
 
     updateCollapseButtons();
 }
 
-void MainWindow::createPrivateChat(const QString &remoteUserName, const QString &userIP, bool focusNewChat)
+void MainWindow::createPrivateChat(const QString &remoteUserName, const QString &remoteUserIP, bool focusNewChat)
 {
-    if (userIP.isEmpty())
+    QString userFullName = remoteUserName + "@" + remoteUserIP;
+
+    if (remoteUserIP.isEmpty() || ui.chatTabWidget->contains(userFullName))
         return;
 
-    QString userFullName = remoteUserName + "@" + userIP;
-
-    auto chatPanel = chatTabWidget->createPrivateChat(remoteUserName, userIP, createTextEditorModifier(), focusNewChat);
+    auto chatPanel = ui.chatTabWidget->createPrivateChat(remoteUserName, remoteUserIP, createTextEditorModifier(), focusNewChat);
     Q_ASSERT(chatPanel);
+
+    chatPanel->setTintColor(tintColor);
+    chatPanel->showConnectedUsersWidget(false);
+    chatPanel->turnOn();
+    chatPanel->hideOnOffButton();
 
     chatPanel->setTopicMessage(tr("Private chat with %1").arg(remoteUserName));
 
@@ -1497,11 +1835,18 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
 
         ninjamController->sendChatMessage(text);
 
-        chatPanel->addMessage(mainController->getUserName(), message, false);
+        auto localUserName = mainController->getUserName();
+        chatPanel->addMessage(localUserName, localUserName, message, false);
 
     });
 
-    connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, this, &MainWindow::blockUserInChat);
+    connect(chatPanel, &ChatPanel::userAcceptingServerInvite, [=](const QString &serverIP, quint16 serverPort){
+        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, login::RoomTYPE::NINJAM, 8));
+    });
+
+    connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
+
+    connect(chatPanel, &ChatPanel::fontSizeOffsetEdited, mainController, &MainController::storeChatFontSizeOffset);
 }
 
 void MainWindow::addPrivateChat(const QString &remoteUserName, const QString &userIP)
@@ -1509,18 +1854,10 @@ void MainWindow::addPrivateChat(const QString &remoteUserName, const QString &us
     createPrivateChat(remoteUserName, userIP, true);
 }
 
-void MainWindow::blockUserInChat(const QString &userNameToBlock)
-{
-    Controller::NinjamController *ninjamController = mainController->getNinjamController();
-    Ninjam::User user = ninjamController->getUserByName(userNameToBlock);
-    if (user.getName() == userNameToBlock)
-        ninjamController->blockUserInChat(user);
-}
-
 void MainWindow::voteToChangeBpi(int newBpi)
 {
     if (mainController->isPlayingInNinjamRoom()) {
-        Controller::NinjamController *controller = mainController->getNinjamController();
+        auto controller = mainController->getNinjamController();
         if (controller)
             controller->voteBpi(newBpi);
     }
@@ -1529,37 +1866,42 @@ void MainWindow::voteToChangeBpi(int newBpi)
 void MainWindow::voteToChangeBpm(int newBpm)
 {
     if (mainController->isPlayingInNinjamRoom()) {
-        Controller::NinjamController *controller = mainController->getNinjamController();
+        auto controller = mainController->getNinjamController();
         if (controller)
             controller->voteBpm(newBpm);
     }
 }
 
-void MainWindow::sendNewChatMessage(const QString &msg)
+void MainWindow::sendChatMessageToNinjamServer(const QString &msg)
 {
     auto ninjamController = mainController->getNinjamController();
     if (ninjamController)
         ninjamController->sendChatMessage(msg);
 }
 
-void MainWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
+void MainWindow::showFeedbackAboutBlockedUserInChat(const QString &userFullName)
 {
-    Q_ASSERT(chatTabWidget);
-
-    auto chatPanel = chatTabWidget->getFocusedChatPanel();
+    // remote all blocked user messages
+    auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
     Q_ASSERT(chatPanel);
-    chatPanel->removeMessagesFrom(userName);
-    chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
+    chatPanel->removeMessagesFrom(userFullName);
+
+    // add a message in chat about the blocked user
+    auto localUserName = mainController->getUserName();
+    auto msgAuthor = JAMTABA_CHAT_BOT_NAME;
+    auto blockedUserName = ninjam::client::extractUserName(userFullName);
+    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is blocked in the chat").arg(blockedUserName));
 }
 
-void MainWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
+void MainWindow::showFeedbackAboutUnblockedUserInChat(const QString &userFullName)
 {
-    Q_ASSERT(chatTabWidget);
-
-    auto chatPanel = chatTabWidget->getFocusedChatPanel();
+    auto chatPanel = ui.chatTabWidget->getFocusedChatPanel();
     Q_ASSERT(chatPanel);
 
-    chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is unblocked in the chat").arg(userName));
+    auto localUserName = mainController->getUserName();
+    auto msgAuthor = JAMTABA_CHAT_BOT_NAME;
+    auto unblockedUserName = ninjam::client::extractUserName(userFullName);
+    chatPanel->addMessage(localUserName, msgAuthor, tr("%1 is unblocked in the chat").arg(unblockedUserName));
 }
 
 void MainWindow::enableLooperButtonInLocalTracks(bool enable)
@@ -1644,8 +1986,6 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
         ninjamWindow.reset(nullptr);
     }
 
-    setChatsVisibility(false);
-
     setInputTracksPreparingStatus(false); /** reset the preparing status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
     if (!normalDisconnection) {
@@ -1678,6 +2018,9 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     if (xmitInactivityDetector)
         xmitInactivityDetector->deinitialize();
+
+    ui.chatTabWidget->closeNinjamChats();
+
 }
 
 void MainWindow::closeAllLooperWindows()
@@ -1690,39 +2033,6 @@ void MainWindow::closeAllLooperWindows()
         }
     }
     looperWindows.clear();
-}
-
-void MainWindow::toggleChatCollapseStatus()
-{
-    Q_ASSERT(chatTabWidget);
-    Q_ASSERT(mainController);
-
-    if (!mainController->isPlayingInNinjamRoom() || !chatTabWidget->isVisible())
-        return;
-
-    chatTabWidget->toggleCollapse();
-}
-
-void MainWindow::setChatsVisibility(bool chatVisible)
-{
-    if (!chatTabWidget)
-        return;
-
-    if (chatVisible) {
-        ui.gridLayout->addWidget(chatTabWidget, 0, 2);
-    }
-    else {
-        ui.gridLayout->removeWidget(chatTabWidget);
-        chatTabWidget->clear();
-    }
-
-    chatTabWidget->setVisible(chatVisible);
-
-    updateCollapseButtons();
-
-    // adjust bottom panel colspan
-    int colSpan = chatVisible ? 2 : 1;
-    ui.gridLayout->addWidget(ui.bottomPanel, 1, 1, 1, colSpan);
 }
 
 void MainWindow::setInputTracksPreparingStatus(bool preparing)
@@ -1753,14 +2063,14 @@ void MainWindow::timerEvent(QTimerEvent *)
     if (now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME) {
 
         if (performanceMonitorLabel)
-            performanceMonitorLabel->setText(QString("MEM: %1%").arg(performanceMonitor.getMemmoryUsed()));
+            performanceMonitorLabel->setText(QString("MEM: %1%").arg(performanceMonitor->getMemmoryUsed()));
 
         lastPerformanceMonitorUpdate = now;
     }
 
     // prevent screen saver if user is playing
     if (mainController->isPlayingInNinjamRoom())
-        screensaverBlocker.update();
+        screensaverBlocker->update();
 
     // update public server stream plot
     if (mainController->isPlayingRoomStream()) {
@@ -1770,7 +2080,7 @@ void MainWindow::timerEvent(QTimerEvent *)
             bool buffering = mainController->getRoomStreamer()->isBuffering();
             roomView->setShowBufferingState(buffering);
             if (!buffering) {
-                Audio::AudioPeak peak = mainController->getRoomStreamPeak();
+                auto peak = mainController->getRoomStreamPeak();
                 roomView->addPeak(peak.getMaxPeak());
             } else {
                 int percentage = mainController->getRoomStreamer()->getBufferingPercentage();
@@ -1780,19 +2090,52 @@ void MainWindow::timerEvent(QTimerEvent *)
     }
 
     // update looper window sound waves
-    for (LooperWindow *looperWindow : looperWindows.values()) {
+    for (auto looperWindow : looperWindows.values()) {
         if (looperWindow && looperWindow->isVisible()) {
             looperWindow->updateDrawings();
         }
     }
 
     // update master peaks
-    Audio::AudioPeak masterPeak = mainController->getMasterPeak();
-    ui.masterMeter->setPeak(masterPeak.getLeftPeak(), masterPeak.getRightPeak(),
+    auto masterPeak = mainController->getMasterPeak();
+    ui.masterFader->setPeak(masterPeak.getLeftPeak(), masterPeak.getRightPeak(),
                             masterPeak.getLeftRMS(), masterPeak.getRightRMS());
 
     // update all blinkable buttons
     BlinkableButton::updateAllBlinkableButtons();
+
+    // update network transfer rate labels
+    static qint64 lastNetworkTransferRateUpdate = QDateTime::currentMSecsSinceEpoch();
+
+    bool showNetworkUsageLabels = mainController->isPlayingInNinjamRoom();
+    transmitTransferRateLabel->setVisible(showNetworkUsageLabels);
+    receiveTransferRateLabel->setVisible(showNetworkUsageLabels);
+    receiveIcon->setVisible(showNetworkUsageLabels);
+    transmitIcon->setVisible(showNetworkUsageLabels);
+
+    if (mainController->isPlayingInNinjamRoom()) {
+        const qint64 ellapsedTime = now - lastNetworkTransferRateUpdate;
+        if (ellapsedTime >= networkUsageUpdatePeriod) {
+            QString transmitTransferRate = QString::number(mainController->getTotalUploadTransferRate() / 1024 * 8);
+            transmitTransferRateLabel->setText(transmitTransferRate.leftJustified(3, QChar(' ')));
+            QString transmitText = QString("%1 %2 Kbps")
+                                            .arg(tr("Uploading"))
+                                            .arg(transmitTransferRate);
+            transmitTransferRateLabel->setToolTip(transmitText);
+            transmitIcon->setToolTip(transmitTransferRateLabel->toolTip());
+
+            QString receiveTransferRate = QString::number(mainController->getTotalDownloadTransferRate() / 1024 * 8);
+            receiveTransferRateLabel->setText(receiveTransferRate.leftJustified(3, QChar(' ')));
+            QString receiveText = QString("%1 %2 Kbps")
+                                            .arg(tr("Downloading"))
+                                            .arg(receiveTransferRate);
+            receiveTransferRateLabel->setToolTip(receiveText);
+            receiveIcon->setToolTip(transmitTransferRateLabel->toolTip());
+
+            lastNetworkTransferRateUpdate = now;
+        }
+    }
+
 }
 
 void MainWindow::resizeEvent(QResizeEvent *ev)
@@ -1822,8 +2165,7 @@ void MainWindow::changeEvent(QEvent *ev)
 
         translateCollapseButtonsToolTips();
 
-        if (ninjamWindow && chatTabWidget)
-            chatTabWidget->updatePublicChatTabTitle(); // translate the chat tab title
+        ui.chatTabWidget->retranslateUi(); // translate the main chat tab title
     }
 
     QMainWindow::changeEvent(ev);
@@ -1848,8 +2190,9 @@ QPointF MainWindow::computeLocation() const
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
-    if (mainController)
+    if (mainController) {
         mainController->storeWindowSettings(isMaximized(), computeLocation(), size());
+    }
 
     closeAllFloatingWindows();
 }
@@ -1879,7 +2222,7 @@ void MainWindow::connectInPrivateServer(const QString &server, int serverPort,
     mainController->setUserName(userName);
     ui.userNameLineEdit->setText(userName);
 
-    Login::RoomInfo roomInfo(server, serverPort, Login::RoomTYPE::NINJAM, 32, 32);
+    login::RoomInfo roomInfo(server, serverPort, login::RoomTYPE::NINJAM, 32, 32);
     tryEnterInRoom(roomInfo, password);
 }
 
@@ -1912,7 +2255,25 @@ void MainWindow::openUrlInUserBrowser(const QString &url)
     }
 }
 
-void MainWindow::showPrivateServerDialog()
+void MainWindow::showPrivateServerWindow()
+{
+    if (!privateServerWindow) {
+        privateServerWindow.reset(new PrivateServerWindow());
+
+        connect(privateServerWindow.data(), &PrivateServerWindow::userConnectingInPrivateServer, [=](QString server, quint16 port){
+            if (mainController)
+                connectInPrivateServer(server, port, mainController->getUserName(), QString());
+        });
+    }
+
+    if (!privateServerWindow->isVisible())
+        privateServerWindow->show();
+    
+    privateServerWindow->raise();
+    privateServerWindow->activateWindow();
+}
+
+void MainWindow::showConnectWithPrivateServerDialog()
 {
     auto privateServerDialog = new PrivateServerDialog(ui.centralWidget, mainController);
 
@@ -2002,7 +2363,8 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 
     connect(dialog, &PreferencesDialog::looperWaveFilesBitDepthChanged, mainController, &MainController::storeLooperBitDepth);
 
-    connect(dialog, &PreferencesDialog::rememberSettingsChanged, mainController, &MainController::storeRememberSettings);
+    connect(dialog, &PreferencesDialog::rememberRemoteUserSettingsChanged, mainController, &MainController::storeRemoteUserRememberSettings);
+    connect(dialog, &PreferencesDialog::rememberCollapsibleSectionsSettingsChanged, mainController, &MainController::storeCollapsibleSectionsRememberSettings);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
@@ -2046,46 +2408,46 @@ void MainWindow::initializeViewMenu()
 void MainWindow::handleMenuMeteringAction(QAction *action)
 {
     if (action == ui.actionShowMaxPeaks){
-        AudioMeter::setPaintMaxPeakMarker(ui.actionShowMaxPeaks->isChecked());
+        AudioSlider::setPaintMaxPeakMarker(ui.actionShowMaxPeaks->isChecked());
     }
     else{
         if (action == ui.actionShowPeakAndRMS){
-            AudioMeter::paintPeaksAndRms();
+            AudioSlider::paintPeaksAndRms();
         }
         else if (action == ui.actionShowPeaksOnly){
-            AudioMeter::paintPeaksOnly();
+            AudioSlider::paintPeaksOnly();
         }
         else{ // RMS only
-            AudioMeter::paintRmsOnly();
+            AudioSlider::paintRmsOnly();
         }
     }
     quint8 meterOption = 0; // rms + peaks
-    if (AudioMeter::isPaintingPeaksOnly())
+    if (AudioSlider::isPaintingPeaksOnly())
         meterOption = 1;
-    else if (AudioMeter::isPaintingRmsOnly())
+    else if (AudioSlider::isPaintingRmsOnly())
         meterOption = 2;
 
-    mainController->storeMeteringSettings(AudioMeter::isPaintintMaxPeakMarker(), meterOption);
+    mainController->storeMeteringSettings(AudioSlider::isPaintintMaxPeakMarker(), meterOption);
 }
 
 void MainWindow::updateMeteringMenu()
 {
-    ui.actionShowMaxPeaks->setChecked(AudioMeter::isPaintintMaxPeakMarker());
-    bool showingPeakAndRms = AudioMeter::isPaintingRMS() && AudioMeter::isPaintingPeaks();
+    ui.actionShowMaxPeaks->setChecked(AudioSlider::isPaintintMaxPeakMarker());
+    bool showingPeakAndRms = AudioSlider::isPaintingRMS() && AudioSlider::isPaintingPeaks();
     if (showingPeakAndRms) {
         ui.actionShowPeakAndRMS->setChecked(true);
     }
     else{
-        ui.actionShowPeaksOnly->setChecked(AudioMeter::isPaintingPeaks());
-        ui.actionShowRmsOnly->setChecked(AudioMeter::isPaintingRMS());
+        ui.actionShowPeaksOnly->setChecked(AudioSlider::isPaintingPeaks());
+        ui.actionShowRmsOnly->setChecked(AudioSlider::isPaintingRMS());
     }
 }
 
 void MainWindow::updatePublicRoomsListLayout()
 {
-    QList<Login::RoomInfo> roomInfos;
+    QList<login::RoomInfo> roomInfos;
 
-    for (JamRoomViewPanel *roomView : roomViewPanels)
+    for (auto roomView : roomViewPanels)
         roomInfos.append(roomView->getRoomInfo());
 
     refreshPublicRoomsList(roomInfos);
@@ -2189,6 +2551,8 @@ void MainWindow::showJamtabaCurrentVersion()
 {
     QString title = tr("About Jamtaba");
     QString text = tr("Jamtaba version is %1").arg(QApplication::applicationVersion());
+    text += QString(" (%1 bits)").arg(QSysInfo::WordSize);
+
     QMessageBox *box = new QMessageBox();
     box->setWindowIcon(this->windowIcon());
     box->setWindowTitle(title);
@@ -2248,8 +2612,8 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
 
 void MainWindow::sendAcceptedChordProgressionToServer(const ChordProgression &progression)
 {
-    Login::LoginService *service = mainController->getLoginService();
-    Login::RoomInfo currentRoom = ninjamWindow->getRoomInfo();
+    auto service = mainController->getLoginService();
+    auto currentRoom = ninjamWindow->getRoomInfo();
     QString chords = progression.toString();
     bool chordProgressionIsOutdated = service->getChordProgressionFor(currentRoom) != chords;
     if (chordProgressionIsOutdated) {
@@ -2329,9 +2693,7 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
 
 void MainWindow::setupWidgets()
 {
-    ui.masterMeter->setOrientation(Qt::Horizontal);
-
-    setChatsVisibility(false); // hide chat area until connect in a server to play
+    ui.masterFader->setOrientation(Qt::Horizontal);
 
     if (ui.allRoomsContent->layout())
         delete ui.allRoomsContent->layout();
@@ -2346,14 +2708,16 @@ void MainWindow::setupWidgets()
     if (!lastUserName.isEmpty())
         ui.userNameLineEdit->setText(lastUserName);
 
-    ui.masterTitleLabel->setVisible(false);
+    ui.masterTitleLabel->setVisible(true);
 
-    chatTabWidget = new ChatTabWidget(this, mainController->getBotNames(), &usersColorsPool);
-    setChatsVisibility(false);
+    ui.chatTabWidget->initialize(mainController, usersColorsPool.data());
+    connect(ui.chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::chatCollapseChanged);
 
-    connect(chatTabWidget, &ChatTabWidget::collapsedChanged, this, &MainWindow::updateCollapseButtons);
-
-    ui.gridLayout->addWidget(chatTabWidget, 0, 2, 1, 1);
+    // remember chat collapse status
+    auto settings = mainController->getSettings();
+    if (settings.isRememberingChatSection()) {
+        ui.chatTabWidget->collapse(settings.isChatSectionCollapsed());
+    }
 }
 
 void MainWindow::setupSignals()
@@ -2364,7 +2728,9 @@ void MainWindow::setupSignals()
 
     connect(ui.actionNinjam_Official_Site, &QAction::triggered, this, &MainWindow::showNinjamOfficialWebPage);
 
-    connect(ui.actionPrivate_Server, &QAction::triggered, this, &MainWindow::showPrivateServerDialog);
+    connect(ui.actionConnectWithPrivateServer, &QAction::triggered, this, &MainWindow::showConnectWithPrivateServerDialog);
+
+    connect(ui.actionHostPrivateServer, &QAction::triggered, this, &MainWindow::showPrivateServerWindow);
 
     connect(ui.actionReportBugs, &QAction::triggered, this, &MainWindow::showJamtabaIssuesWebPage);
 
@@ -2380,13 +2746,16 @@ void MainWindow::setupSignals()
 
     connect(mainController->getRoomStreamer(), &AbstractMp3Streamer::error, this, &MainWindow::handlePublicRoomStreamError);
 
-    connect(ui.masterFader, &Slider::valueChanged, this, &MainWindow::setMasterGain);
+    connect(ui.masterFader, &QSlider::valueChanged, this, &MainWindow::setMasterGain);
 
     connect(ui.menuLanguage, &QMenu::triggered, this, &MainWindow::setLanguage);
 
-    connect(ui.userNameLineEdit, &UserNameLineEdit::textChanged, this, &MainWindow::updateUserName);
+    connect(ui.userNameLineEdit, &UserNameLineEdit::editingFinished, this, &MainWindow::updateUserName);
 
-    connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::handleThemeChanged);
+    connect(mainController, &MainController::themeChanged, this, &MainWindow::handleThemeChanged);
+
+    connect(mainController, &MainController::userBlockedInChat, this, &MainWindow::showFeedbackAboutBlockedUserInChat);
+    connect(mainController, &MainController::userUnblockedInChat, this, &MainWindow::showFeedbackAboutUnblockedUserInChat);
 
     ui.contentTabWidget->installEventFilter(this);
 
@@ -2396,12 +2765,12 @@ void MainWindow::updateUserName()
 {
     QString newUserName = ui.userNameLineEdit->text();
     mainController->setUserName(newUserName);
+
+    mainChat->setUserName(mainController->getUserName());
 }
 
 void MainWindow::initializeMasterFader()
 {
-    ui.masterFader->setSliderType(Slider::AudioSlider);
-
     float lastMasterGain = mainController->getSettings().getLastMasterGain();
     int faderPosition = lastMasterGain * 100;
     ui.masterFader->setValue(faderPosition);
@@ -2417,6 +2786,9 @@ void MainWindow::closeAllFloatingWindows()
         ninjamWindow->closeMetronomeFloatingWindow();
 
     closeAllLooperWindows();
+
+    if (privateServerWindow)
+        privateServerWindow->close();
 }
 
 void MainWindow::initializeVotingExpirationTimers()
@@ -2442,9 +2814,16 @@ void MainWindow::initializeCollapseButtons()
 
     connect(buttonCollapseBottomArea, &QPushButton::clicked, this, &MainWindow::toggleBottomAreaCollapseStatus);
 
-    connect(buttonCollapseChat, &QPushButton::clicked, this, &MainWindow::toggleChatCollapseStatus);
+    connect(buttonCollapseChat, &QPushButton::clicked, ui.chatTabWidget, &ChatTabWidget::toggleCollapse);
 
     updateCollapseButtons();
+}
+
+void MainWindow::chatCollapseChanged(bool chatCollapsed)
+{
+    updateCollapseButtons();
+
+    mainController->setChatSectionCollapsed(chatCollapsed); // update the persistence status
 }
 
 void MainWindow::updateCollapseButtons()
@@ -2453,11 +2832,17 @@ void MainWindow::updateCollapseButtons()
 
     buttonCollapseBottomArea->setChecked(!bottomCollapsed);
 
-    if (chatTabWidget)
-        buttonCollapseChat->setChecked(!chatTabWidget->isCollapsed());
-
-    buttonCollapseChat->setEnabled(mainController->isPlayingInNinjamRoom());
+    buttonCollapseChat->setChecked(!ui.chatTabWidget->isCollapsed());
 
     buttonCollapseLocalChannels->setChecked(!ui.localControlsCollapseButton->isChecked());
 
+}
+
+QString MainWindow::getChannelGroupName(int index) const
+{
+    if (index >= 0 && index < localGroupChannels.size()) {
+        return localGroupChannels.at(index)->getChannelGroupName();
+    }
+
+    return QString();
 }

@@ -4,7 +4,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include "../log/Logging.h"
 
-using namespace Recorder;
+using namespace recorder;
 
 const quint8 JamRecorder::VIDEO_CHANNEL_KEY = 255;
 
@@ -207,16 +207,13 @@ void JamRecorder::appendLocalUserVideo(const QByteArray &encodedVideo, bool isFi
 
         QByteArray encodedData(videoInterval.getEncodedData());
 
-        bool canSave = encodedData.left(4) == "RIFF";
-        if (canSave) {
-            QString videoFileName = buildVideoFileName(localUserName, videoInterval.getIntervalIndex(), "avi");
-            QString videoFilePath = jamMetadataWritter->getVideoAbsolutePath(videoFileName);
+        QString videoFileName = buildVideoFileName(localUserName, videoInterval.getIntervalIndex(), "mp4");
+        QString videoFilePath = jamMetadataWritter->getVideoAbsolutePath(videoFileName);
 
-            if (!videoFilePath.isEmpty()) // some recorders (like ClipSort) can't save videos
-                QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, videoFilePath);
+        if (!videoFilePath.isEmpty()) // some recorders (like ClipSort) can't save videos
+            QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, videoFilePath);
 
-            videoInterval.clear();
-        }
+        videoInterval.clear();
     }
 
     videoInterval.appendEncodedData(encodedVideo);

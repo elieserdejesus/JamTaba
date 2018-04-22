@@ -21,6 +21,15 @@ ChatPanel #chatText:focus                   /* text input field focused */
 }
 
 
+/* connected users */
+ChatPanel QTreeWidget
+{
+    color: rgb(100, 100, 100);
+    selection-color: rgb(140, 140, 140);
+    selection-background-color: rgba(255, 255, 255, 15);
+}
+
+
 #topicLabel
 {
     color: gray;
@@ -28,10 +37,6 @@ ChatPanel #chatText:focus                   /* text input field focused */
 
 /* ChatMessagePanel is the widget used to show ONE chat message
 ----------------------------------------------------------------*/
-ChatMessagePanel
-{
-    border: 1px solid black;
-}
 
 ChatMessagePanel #labelUserName             /* The name of chat message author */
 {

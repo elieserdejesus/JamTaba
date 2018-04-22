@@ -4,7 +4,7 @@
 #include <QString>
 #include <QObject>
 
-namespace Geo {
+namespace geo {
 
 class Location
 {

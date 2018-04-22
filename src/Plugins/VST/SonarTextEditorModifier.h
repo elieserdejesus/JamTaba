@@ -2,7 +2,7 @@
 #define _SONAR_TEXT_EDITOR_MODIFIER_H
 
 #include <QObject>
-#include "TextEditorModifier.h"
+#include "gui/TextEditorModifier.h"
 
 class SonarTextEditorModifier : public QObject, public TextEditorModifier
 {

@@ -9,7 +9,7 @@
 #include <cmath>
 #include "log/Logging.h"
 
-using namespace Vst;
+using vst::VstHost;
 
 QScopedPointer<VstHost> VstHost::hostInstance;
 
@@ -56,9 +56,9 @@ void VstHost::setPlayingFlag(bool playing)
         clearVstTimeInfoFlags();
 }
 
-std::vector<Midi::MidiMessage> VstHost::pullReceivedMidiMessages()
+std::vector<midi::MidiMessage> VstHost::pullReceivedMidiMessages()
 {
-    std::vector<Midi::MidiMessage> messages(receivedMidiMessages);
+    std::vector<midi::MidiMessage> messages(receivedMidiMessages);
     receivedMidiMessages.clear();
     return messages;
 }
@@ -196,7 +196,7 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
             for (int i = 0; i < vstEvents->numEvents; ++i) {
                 if (vstEvents->events[i]->type == kVstMidiType) {
                     VstMidiEvent *vstMidiEvent = (VstMidiEvent *)vstEvents->events[i];
-                    Midi::MidiMessage msg = Midi::MidiMessage::fromArray(vstMidiEvent->midiData);
+                    auto msg = midi::MidiMessage::fromArray(vstMidiEvent->midiData);
                     hostInstance->receivedMidiMessages.push_back(msg);
                 }
             }

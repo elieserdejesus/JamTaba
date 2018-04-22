@@ -3,6 +3,126 @@
 #include <QBitmap>
 #include <QImage>
 #include <QPushButton>
+#include <QDir>
+
+QList<QIcon> IconFactory::getInstrumentIcons()
+{
+    QDir instrumentsDir(":/instruments");
+
+    auto fileInfos = instrumentsDir.entryInfoList();
+    QList<QIcon> icons;
+    for (auto iconInfo : fileInfos)
+        icons.append(QIcon(instrumentsDir.filePath(iconInfo.completeBaseName())));
+
+    return icons;
+}
+
+QIcon IconFactory::getDefaultInstrumentIcon()
+{
+    QDir instrumentsDir(":/instruments");
+
+    return QIcon(instrumentsDir.filePath("jtba.png"));
+}
+
+QPixmap IconFactory::createFontSizePixmap(const QColor &tintColor)
+{
+    QImage image(":/images/font_size.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QIcon IconFactory::createFontSizeIncreaseIcon(const QColor &tintColor)
+{
+    QImage image(":/images/small_plus.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QIcon(QPixmap::fromImage(image));
+}
+
+QIcon IconFactory::createFontSizeDecreaseIcon(const QColor &tintColor)
+{
+    QImage image(":/images/small_minus.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QIcon(QPixmap::fromImage(image));
+}
+
+QPixmap IconFactory::createReceivePixmap(const QColor &tintColor)
+{
+    QImage image(":/images/receive.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QPixmap IconFactory::createTransmitPixmap(const QColor &tintColor)
+{
+    QImage image(":/images/transmit.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QPixmap IconFactory::createMidiIcon(const QColor &tintColor)
+{
+    QImage image(":/images/input_midi.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QPixmap IconFactory::createNoInputIcon(const QColor &tintColor)
+{
+    QImage image(":/images/input_no.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QPixmap IconFactory::createMonoInputIcon(const QColor &tintColor)
+{
+    QImage image(":/images/input_mono.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QPixmap IconFactory::createStereoInputIcon(const QColor &tintColor)
+{
+    QImage image(":/images/input_stereo.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QPixmap::fromImage(image);
+}
+
+QIcon IconFactory::createChatEmojiIcon(const QColor &tintColor, bool happyFace)
+{
+    auto path = QString(":/emoji/%1.png").arg(happyFace ? "smile" : "sad");
+    QImage image(path);
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QIcon(QPixmap::fromImage(image));
+}
+
+QIcon IconFactory::createChatOnOffIcon(const QColor &tintColor)
+{
+    QImage image(":/images/on.png");
+
+    IconFactory::tintImage(image, tintColor, false);
+
+    return QIcon(QPixmap::fromImage(image));
+}
 
 QIcon IconFactory::createLooperResetIcon(const QColor &tintColor)
 {
@@ -85,30 +205,14 @@ QIcon IconFactory::createLocalControlsIcon(const QColor &tintColor)
     return icon;
 }
 
-QPixmap IconFactory::createHighLevelIcon(const QColor &tintColor)
-{
-    QImage image(":/images/level high.png");
-    IconFactory::tintImage(image, tintColor, false);
-    return QPixmap::fromImage(image);
-}
-
-QPixmap IconFactory::createLowLevelIcon(const QColor &tintColor)
-{
-    QImage image(":/images/level low.png");
-    IconFactory::tintImage(image, tintColor, false);
-    return QPixmap::fromImage(image);
-}
-
 QIcon IconFactory::createReceiveIcon(const QColor &tintColor)
 {
-    QImage image(":/images/receive.png");
-
-    IconFactory::tintImage(image, tintColor);
+    auto image = IconFactory::createReceivePixmap(tintColor);
 
     QIcon icon;
 
-    icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::On);
-    icon.addPixmap(QPixmap::fromImage(image), QIcon::Disabled, QIcon::On);
+    icon.addPixmap(image, QIcon::Normal, QIcon::On);
+    icon.addPixmap(image, QIcon::Disabled, QIcon::On);
 
     return icon;
 }

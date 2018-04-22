@@ -13,7 +13,7 @@
 
  */
 
-namespace Persistence {
+namespace persistence {
 
 struct UsersDataCacheHeader {
     static const quint32 REVISION;
@@ -68,6 +68,11 @@ public:
         return lowCutState;
     }
 
+    inline int getInstrumentIndex() const
+    {
+        return instrumentIndex;
+    }
+
     void setUserIP(const QString &userIp);
     void setUserName(const QString &userName);
     void setChannelID(quint8 channelID);
@@ -76,6 +81,8 @@ public:
     void setBoost(float boost);
     void setGain(float gain);
     void setLowCutState(quint8 state);
+    void setInstrumentIndex(qint8 index);
+    bool hasValidInstrumentIndex() const;
 
     static QRegExp ipPattern;
 
@@ -86,6 +93,7 @@ public:
     static const float DEFAULT_BOOST;
     static const float PAN_MAX;
     static const float PAN_MIN;
+    static const qint8 DEFAULT_INSTRUMENT_INDEX;
 private:
     QString userIp;
     QString userName;
@@ -95,6 +103,7 @@ private:
     float pan;
     float boost;
     quint8 lowCutState;
+    qint8 instrumentIndex;
 };
 
 // ++++++++++++++++++++++++++++++++

@@ -3,7 +3,7 @@
 
 #include <QString>
 
-namespace Theme {
+namespace theme {
 
 class Loader { // TODO a namespace? and about the private functions?
 

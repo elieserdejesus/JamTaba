@@ -3,7 +3,7 @@
 
 #include <QString>
 
-namespace Audio {
+namespace audio {
 
 class PluginDescriptor
 {

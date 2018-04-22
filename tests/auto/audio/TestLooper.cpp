@@ -7,7 +7,7 @@
 
 #include "looper/Looper.h"
 
-using namespace Audio;
+using namespace audio;
 
 void TestLooper::monitoringWhenPlayLockedAndHearAllAreChecked() // testing second problem described in #823
 {
@@ -778,7 +778,7 @@ void TestLooper::firstUnlockedLayer_data()
 void TestLooper::multiBufferTest()
 {
 
-    Audio::Looper looper;
+    audio::Looper looper;
     looper.setLayers(1, true);
 
     looper.toggleRecording();

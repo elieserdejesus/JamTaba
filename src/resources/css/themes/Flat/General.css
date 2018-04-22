@@ -167,48 +167,43 @@ QSlider::groove:vertical
 QSlider::groove:horizontal
 {
     background-color: rgba(0, 0, 0, 50);
-    height: 2px;
     border: none;
 }
+
 QSlider::groove:vertical
 {
     background-color: rgba(0, 0, 0, 50);
-    width: 2px;
 }
-
 
 QSlider::handle
 {
-    background: rgb(245, 245, 245);
+    background: rgba(245, 245, 245, 150);
     border: 1px outset rgb(120, 120, 120);
     border-radius: 2px;
 }
 
 QSlider::handle:hover
 {
-    background: rgb(250, 250, 250);
+    background: rgb(245, 245, 245);
     border: 1px outset rgb(90, 90, 90);
 }
 
 QSlider::handle:horizontal
 {
-    margin-top: -6px;
-    margin-bottom: -7px;
     padding: 0px;
     width: 8px;
-    height: 15px;
 }
 
 QSlider::handle:vertical
 {
-    margin-left: -9px;
-    margin-right: -9px;
     padding: 0px;
     height: 9px;
-    width: 24px;
 }
 
-
+AudioSlider
+{
+    qproperty-dBMarksColor: rgb(70, 70, 70);
+}
 
 
 /* TabBar ----------------------*/
@@ -254,7 +249,7 @@ QMenu
 }
 
 
-AudioMeter
+AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
     qproperty-rmsColor: rgb(150, 150, 150);
@@ -263,7 +258,7 @@ AudioMeter
     qproperty-maxPeakColor: rgb(150, 150, 150);
 }
 
-AudioMeter#masterMeter
+AudioSlider#masterFader
 {
     qproperty-maxPeakColor: rgb(120, 120, 120);
     qproperty-rmsColor: rgb(120, 120, 120);

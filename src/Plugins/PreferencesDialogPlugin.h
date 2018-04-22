@@ -1,8 +1,10 @@
 #ifndef PREFERENCES_DIALOG_PLUGIN_H
 #define PREFERENCES_DIALOG_PLUGIN_H
 
-#include "PreferencesDialog.h"
+#include "gui/PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
+
+using persistence::Settings;
 
 class PreferencesDialogPlugin : public PreferencesDialog
 {
@@ -10,7 +12,7 @@ class PreferencesDialogPlugin : public PreferencesDialog
 
 public:
     explicit PreferencesDialogPlugin(QWidget *parent);
-    void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders) override;
+    void initialize(PreferencesTab initialTab, const Settings *settings, const QMap<QString, QString> &jamRecorders) override;
 
 protected slots:
     void selectTab(int index) override;

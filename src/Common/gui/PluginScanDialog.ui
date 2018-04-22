@@ -45,7 +45,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Founded plugins:</string>
+      <string>Found plugins:</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -54,7 +54,7 @@
          <bool>false</bool>
         </property>
         <property name="accessibleDescription">
-         <string>This is the plugin founded list box</string>
+         <string>This is the plugin found list box</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
@@ -75,7 +75,7 @@
          <bool>false</bool>
         </property>
         <property name="placeholderText">
-         <string>No plugins founded!</string>
+         <string>No plugins found!</string>
         </property>
        </widget>
       </item>

@@ -36,7 +36,8 @@ PluginScanDialog #plainTextEdit
     background-color: rgba(0, 255, 255, 10);
 }
 
-BusyDialog
+BusyDialog,
+#instrumentsMenu
 {
     border-image: none;
     border: 1px solid #234544;

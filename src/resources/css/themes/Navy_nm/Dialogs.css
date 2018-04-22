@@ -18,3 +18,26 @@ PreferencesDialog QGroupBox#groupBoxOutputs
 {
     color: rgba(0, 0, 0, 90);
 }
+
+PluginScanDialog QGroupBox
+{
+    background: rgb(53, 53, 53);
+}
+
+PluginScanDialog QPlainTextEdit
+{
+    background: transparent;
+}
+
+PreferencesDialog #vstListWidget
+{
+    border-radius: 6px;
+    background-color: rgb(53, 53, 53);
+}
+
+MidiToolsDialog #spinBoxTranspose
+{
+    margin: 0px;
+    color: rgb(180, 180, 180);
+    background-color: rgba(0, 0, 0, 20);
+}

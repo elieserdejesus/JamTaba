@@ -29,12 +29,13 @@
 #include <cassert>
 
 
-using namespace Vst;
+using vst::VstPlugin;
+using vst::VstHost;
 
 QMap<QString, QDialog*> VstPlugin::editorsWindows;
 
-VstPlugin::VstPlugin(Vst::VstHost* host, const QString &pluginPath) :
-    Audio::Plugin(Vst::utils::createDescriptor(nullptr, pluginPath)),
+VstPlugin::VstPlugin(VstHost* host, const QString &pluginPath) :
+    audio::Plugin(vst::utils::createDescriptor(nullptr, pluginPath)),
     effect(nullptr),
     host(host),
     loaded(false),
@@ -58,13 +59,13 @@ bool VstPlugin::load(const QString &path){
     }
 
     loaded = false;
-    this->effect = Vst::VstLoader::load(path, host);
+    this->effect = vst::VstLoader::load(path, host);
     if (!effect) {
         unload();
         return false;
     }
 
-    descriptor = Vst::utils::createDescriptor(effect, path);
+    descriptor = vst::utils::createDescriptor(effect, path);
 
     this->name = descriptor.getName();
 
@@ -142,8 +143,8 @@ void VstPlugin::start()
     qCDebug(jtVstPlugin) << "starting plugin " << getName() << " thread: " << QThread::currentThreadId();
 
     int hostBufferSize = host->getBufferSize();
-    internalOutputBuffer.reset(new Audio::SamplesBuffer(effect->numOutputs, hostBufferSize));
-    internalInputBuffer.reset(new Audio::SamplesBuffer(effect->numInputs, hostBufferSize));
+    internalOutputBuffer.reset(new audio::SamplesBuffer(effect->numOutputs, hostBufferSize));
+    internalInputBuffer.reset(new audio::SamplesBuffer(effect->numInputs, hostBufferSize));
 
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     qCDebug(jtVstPlugin) << "Starting " << getName() << " version " << ver;
@@ -210,12 +211,12 @@ void VstPlugin::unload()
     }
 }
 
-void VstPlugin::fillVstEventsList(const std::vector<Midi::MidiMessage> &midiBuffer)
+void VstPlugin::fillVstEventsList(const std::vector<midi::MidiMessage> &midiBuffer)
 {
     int midiMessages = qMin((int)midiBuffer.size(), (int)MAX_MIDI_EVENTS);
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
-        Midi::MidiMessage message = midiBuffer.at(m);
+        auto message = midiBuffer.at(m);
         VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
         vstEvent->type = kVstMidiType;
         vstEvent->byteSize = sizeof(vstEvent);
@@ -228,7 +229,7 @@ void VstPlugin::fillVstEventsList(const std::vector<Midi::MidiMessage> &midiBuff
     }
 }
 
-void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, std::vector<Midi::MidiMessage> &midiBuffer)
+void VstPlugin::process(const audio::SamplesBuffer &in, audio::SamplesBuffer &outBuffer, std::vector<midi::MidiMessage> &midiBuffer)
 {
 
     Q_UNUSED(in)
@@ -300,7 +301,7 @@ void VstPlugin::closeEditor()
         effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);
     }
 
-    Audio::Plugin::closeEditor();
+    audio::Plugin::closeEditor();
     qCDebug(jtVstPlugin) << "Editor closed";
 
     VstPlugin::editorsWindows.remove(getName()); // remove the plugin editor reference from map

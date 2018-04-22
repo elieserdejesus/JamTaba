@@ -4,7 +4,7 @@
 #include "Windows.h"
 #include <QString>
 
-namespace KeyboardHook
+namespace keyboardHook
 {
     void installLowLevelKeyboardHook();
     void uninstallLowLevelKeyboardKook();

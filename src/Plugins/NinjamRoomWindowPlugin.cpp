@@ -5,10 +5,10 @@
 #include "MainWindowPlugin.h"
 #include <QToolTip>
 
-using namespace Controller;
+using controller::NinjamController;
 
 // +++++++++++++++++++++++++++++++++++++++++++++
-NinjamRoomWindowPlugin::NinjamRoomWindowPlugin(MainWindowPlugin *mainWindow, const Login::RoomInfo &roomInfo,
+NinjamRoomWindowPlugin::NinjamRoomWindowPlugin(MainWindowPlugin *mainWindow, const login::RoomInfo &roomInfo,
                                          MainControllerPlugin *mainController) :
     NinjamRoomWindow(mainWindow, roomInfo, mainController),
     controller(mainController)
@@ -44,7 +44,7 @@ void NinjamRoomWindowPlugin::disableHostSync()
 void NinjamRoomWindowPlugin::setHostSyncState(bool syncWithHost)
 {
     Q_ASSERT(ninjamPanel);
-    NinjamControllerPlugin *ninjamController = controller->getNinjamController();
+    auto ninjamController = controller->getNinjamController();
     if (syncWithHost) {
         int ninjamBpm = ninjamController->getCurrentBpm();
         int hostBpm = controller->getHostBpm();

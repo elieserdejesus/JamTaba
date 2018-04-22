@@ -1,21 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ja_JP">
-<context>
-    <name>Audio::Looper</name>
-    <message>
-        <source>Sequence</source>
-        <translation>シーケンス</translation>
-    </message>
-    <message>
-        <source>All Layers</source>
-        <translation>すべてのレイヤー</translation>
-    </message>
-    <message>
-        <source>Selected Layer</source>
-        <translation>選択されたレイヤー</translation>
-    </message>
-</context>
+<TS version="2.1" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -38,6 +23,9 @@
         <translatorcomment>Solo  表示スペースの都合上, 省略文字を利用</translatorcomment>
         <translation>S</translation>
     </message>
+</context>
+<context>
+    <name>BoostSpinBox</name>
     <message>
         <source>Boost</source>
         <translation>ブースト</translation>
@@ -73,6 +61,10 @@
         <source>B</source>
         <translation>B</translation>
     </message>
+    <message>
+        <source>Translation error!</source>
+        <translation type="unfinished">翻訳エラー!</translation>
+    </message>
 </context>
 <context>
     <name>ChatPanel</name>
@@ -103,6 +95,41 @@
     <message>
         <source>Use/load the chords above</source>
         <translation>上記のコードを読み込み利用する</translation>
+    </message>
+    <message>
+        <source>type here ...</source>
+        <translation type="unfinished">ここにタイプ ...</translation>
+    </message>
+    <message>
+        <source>Increase chat font size</source>
+        <translation type="unfinished">チャットのフォントサイズを大きくする</translation>
+    </message>
+    <message>
+        <source>Decrease chat font size</source>
+        <translation type="unfinished">チャットのフォントサイズを小さくする</translation>
+    </message>
+    <message>
+        <source>Turn on/off this chat</source>
+        <translation type="unfinished">このチャットのオン/オフを切り替える</translation>
+    </message>
+    <message>
+        <source>chat is off</source>
+        <translation type="unfinished">チャットはオフです</translation>
+    </message>
+    <message>
+        <source>Connected Users (%1)</source>
+        <translation type="unfinished">接続されているユーザー(%1)</translation>
+    </message>
+</context>
+<context>
+    <name>ChatTabWidget</name>
+    <message>
+        <source>Chat</source>
+        <translation>チャット</translation>
+    </message>
+    <message>
+        <source>Public chat</source>
+        <translation type="unfinished">パブリックチャット</translation>
     </message>
 </context>
 <context>
@@ -156,6 +183,13 @@
     <message>
         <source>remove</source>
         <translation>remove</translation>
+    </message>
+</context>
+<context>
+    <name>InactivityDetector</name>
+    <message>
+        <source>You are not transmiting for a long time! This is intentional?</source>
+        <translation type="unfinished">あなたは長い間送信していません！ これは意図的なものですか?</translation>
     </message>
 </context>
 <context>
@@ -219,10 +253,6 @@
         <translation>準備中</translation>
     </message>
     <message>
-        <source>Enable/disable your audio transmission to others</source>
-        <translation>相手へのオーディオ送信を有効/無効化</translation>
-    </message>
-    <message>
         <source>Add or remove channels...</source>
         <translation>チャンネルの追加/削除...</translation>
     </message>
@@ -265,6 +295,10 @@
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
         <translation>プリセット&apos;%1&apos;を削除しますか</translation>
+    </message>
+    <message>
+        <source>Enable/disable your audio transmission for others</source>
+        <translation type="unfinished">他のユーザーへのオーディオ送信を有効/無効にする</translation>
     </message>
 </context>
 <context>
@@ -522,10 +556,6 @@
         <translation>録音...</translation>
     </message>
     <message>
-        <source>Private Server ...</source>
-        <translation>プライベートサーバへ接続...</translation>
-    </message>
-    <message>
         <source>Ninjam community (Ninbot) ...</source>
         <translation>Ninjamコミュニティ(ninbot)...</translation>
     </message>
@@ -633,6 +663,18 @@
         <source>Looper ...</source>
         <translation>ルーパー ...</translation>
     </message>
+    <message>
+        <source>Connect with private server ...</source>
+        <translation type="unfinished">プライベートサーバーと接続...</translation>
+    </message>
+    <message>
+        <source>Remember ...</source>
+        <translation type="unfinished">覚えて...</translation>
+    </message>
+    <message>
+        <source>Host a private server in your machine ...</source>
+        <translation type="unfinished">あなたのマシンにプライベートサーバをホストする...</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -706,10 +748,6 @@
         <translation>英文字・数字・ハイフン・アンダースコアのみ. 空白はアンダースコアへ置換されます.</translation>
     </message>
     <message>
-        <source>Chat</source>
-        <translation>チャット</translation>
-    </message>
-    <message>
         <source>Black</source>
         <translation>黒</translation>
     </message>
@@ -755,6 +793,90 @@
         <source>Channel %1</source>
         <translation>チャンネル %1</translation>
     </message>
+    <message>
+        <source>%1 has left the room.</source>
+        <translation>%1 が退室しました.</translation>
+    </message>
+    <message>
+        <source>%1 has joined the room.</source>
+        <translation>%1 が入室しました.</translation>
+    </message>
+    <message>
+        <source>Last chords used</source>
+        <translation>最後に使ったコード</translation>
+    </message>
+    <message>
+        <source>Private chat with %1</source>
+        <translation type="unfinished">%1とのプライベートチャット</translation>
+    </message>
+    <message>
+        <source>%1 is blocked in the chat</source>
+        <translation>%1の発言はブロックされました</translation>
+    </message>
+    <message>
+        <source>%1 is unblocked in the chat</source>
+        <translation>%1の発言はブロック解除されました</translation>
+    </message>
+    <message>
+        <source>Uploading</source>
+        <translation type="unfinished">アップロードする</translation>
+    </message>
+    <message>
+        <source>Downloading</source>
+        <translation type="unfinished">ダウンロード</translation>
+    </message>
+    <message>
+        <source>Collapse bottom area</source>
+        <translation type="unfinished">下の領域を折りたたむ</translation>
+    </message>
+    <message>
+        <source>Collapse chat</source>
+        <translation type="unfinished">チャットを折りたたむ</translation>
+    </message>
+    <message>
+        <source>Collapse local channels</source>
+        <translation type="unfinished">ローカルチャネルを折りたたむ</translation>
+    </message>
+    <message>
+        <source>Game</source>
+        <translation type="unfinished">ゲーム</translation>
+    </message>
+    <message>
+        <source>Navy</source>
+        <translation type="unfinished">海軍</translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in %1 : %2 ?</source>
+        <translation type="unfinished">サーバー%1：%2で遊んでみましょうか?</translation>
+    </message>
+    <message>
+        <source>Let&apos;s play in my private server?</source>
+        <translation type="unfinished">プライベートサーバーで遊ぼう?</translation>
+    </message>
+    <message>
+        <source>Connected with public chat!</source>
+        <translation type="unfinished">パブリックチャットに接続!</translation>
+    </message>
+    <message>
+        <source>Connecting ...</source>
+        <translation type="unfinished">接続中...</translation>
+    </message>
+    <message>
+        <source>Block %1 in chat</source>
+        <translation type="unfinished">%1の発言をブロック</translation>
+    </message>
+    <message>
+        <source>Unblock %1 in chat</source>
+        <translation type="unfinished">%1の発言をブロック解除</translation>
+    </message>
+    <message>
+        <source>Public chat disconnected!</source>
+        <translation type="unfinished">パブリックチャットが切断されました!</translation>
+    </message>
+    <message>
+        <source>Invite %1 to play in %2 [%3]</source>
+        <translation type="unfinished">%1を%2に再生するように招待する[%3]</translation>
+    </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
@@ -769,6 +891,14 @@
     <message>
         <source>Decrease</source>
         <translation>減少</translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation type="unfinished">幅</translation>
+    </message>
+    <message>
+        <source>Height</source>
+        <translation type="unfinished">高さ</translation>
     </message>
 </context>
 <context>
@@ -788,6 +918,49 @@
     <message>
         <source>The audio device can&apos;t be started! Please check your audio device and try restart Jamtaba!</source>
         <translation>オーディオデバイスが開始できません!設定を見直し, Jamtabaを再起動してください!</translation>
+    </message>
+</context>
+<context>
+    <name>MetronomePanel</name>
+    <message>
+        <source>metronome</source>
+        <translation>メトロノーム</translation>
+    </message>
+    <message>
+        <source>Slider to change the BPM of the metronome</source>
+        <translation>BPM変更のスライダ</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>R</translation>
+    </message>
+    <message>
+        <source>Solo metronome</source>
+        <translation>Soloメトロノーム</translation>
+    </message>
+    <message>
+        <source>Button to soloing the metronome</source>
+        <translation>メトロノームをソロで鳴らすボタン</translation>
+    </message>
+    <message>
+        <source>mute metronome</source>
+        <translation>メトロノームをミュート</translation>
+    </message>
+    <message>
+        <source>Button to mute the metronome</source>
+        <translation>メトロノームをミュートするボタン</translation>
+    </message>
+    <message>
+        <source>open a metronome floating window</source>
+        <translation>メトロノームのウィンドウを開く</translation>
+    </message>
+    <message>
+        <source>open metronome preferences</source>
+        <translation>メトロノーム設定を開く</translation>
     </message>
 </context>
 <context>
@@ -831,46 +1004,6 @@
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
         <translation>%1と同期する</translation>
-    </message>
-    <message>
-        <source>metronome</source>
-        <translation>メトロノーム</translation>
-    </message>
-    <message>
-        <source>Slider to change the BPM of the metronome</source>
-        <translation>BPM変更のスライダ</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <translation>L</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <translation>R</translation>
-    </message>
-    <message>
-        <source>Solo metronome</source>
-        <translation>Soloメトロノーム</translation>
-    </message>
-    <message>
-        <source>Button to soloing the metronome</source>
-        <translation>メトロノームをソロで鳴らすボタン</translation>
-    </message>
-    <message>
-        <source>mute metronome</source>
-        <translation>メトロノームをミュート</translation>
-    </message>
-    <message>
-        <source>Button to mute the metronome</source>
-        <translation>メトロノームをミュートするボタン</translation>
-    </message>
-    <message>
-        <source>open metronome preferences</source>
-        <translation>メトロノーム設定を開く</translation>
-    </message>
-    <message>
-        <source>open a metronome floating window</source>
-        <translation>メトロノームのウィンドウを開く</translation>
     </message>
     <message>
         <source>Change the shape here</source>
@@ -936,6 +1069,10 @@
         <source>%1 beats</source>
         <translation>%1 ビート</translation>
     </message>
+    <message>
+        <source>Custom...</source>
+        <translation type="unfinished">カスタム...</translation>
+    </message>
 </context>
 <context>
     <name>NinjamRoomWindow</name>
@@ -978,24 +1115,8 @@
         <translation>サーバ ライセンス</translation>
     </message>
     <message>
-        <source>Last chords used</source>
-        <translation>最後に使ったコード</translation>
-    </message>
-    <message>
-        <source>%1 is blocked in the chat</source>
-        <translation>%1の発言はブロックされました</translation>
-    </message>
-    <message>
-        <source>%1 is unblocked in the chat</source>
-        <translation>%1の発言はブロック解除されました</translation>
-    </message>
-    <message>
-        <source>%1 has left the room.</source>
-        <translation>%1 が退室しました.</translation>
-    </message>
-    <message>
-        <source>%1 has joined the room.</source>
-        <translation>%1 が入室しました.</translation>
+        <source>Set tracks layout to grid</source>
+        <translation type="unfinished">トラックレイアウトをグリッドに設定する</translation>
     </message>
 </context>
 <context>
@@ -1029,12 +1150,8 @@
 <context>
     <name>NinjamTrackGroupView</name>
     <message>
-        <source>Block %1 in chat</source>
-        <translation>%1の発言をブロック</translation>
-    </message>
-    <message>
-        <source>Unblock %1 in chat</source>
-        <translation>%1の発言をブロック解除</translation>
+        <source>Private chat with %1</source>
+        <translation type="unfinished">%1とのプライベートチャット</translation>
     </message>
 </context>
 <context>
@@ -1059,6 +1176,18 @@
         <source>Drastic</source>
         <translation>抜本的</translation>
     </message>
+    <message>
+        <source>Downloading</source>
+        <translation type="unfinished">ダウンロード</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation>ステレオ</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation>モノラル</translation>
+    </message>
 </context>
 <context>
     <name>NinjamVoteButton</name>
@@ -1082,20 +1211,20 @@
         <translation>プラグイン走査中...</translation>
     </message>
     <message>
+        <source>scanning %1</source>
+        <translation>%1を走査中</translation>
+    </message>
+    <message>
         <source>Found plugins:</source>
-        <translation>見つかったプラグイン:</translation>
+        <translation type="unfinished">見つかったプラグイン:</translation>
     </message>
     <message>
         <source>This is the plugin found list box</source>
-        <translation>見つかったプラグインのリスト</translation>
+        <translation type="unfinished">これはプラグインリストボックスです</translation>
     </message>
     <message>
         <source>No plugins found!</source>
-        <translation>プラグインは見つかりませんでした!</translation>
-    </message>
-    <message>
-        <source>scanning %1</source>
-        <translation>%1を走査中</translation>
+        <translation type="unfinished">プラグインが見つかりません!</translation>
     </message>
 </context>
 <context>
@@ -1107,10 +1236,6 @@
     <message>
         <source>Audio Files</source>
         <translation>オーディオファイル</translation>
-    </message>
-    <message>
-        <source>Choosing Secondary beat audio file...</source>
-        <translation>セカンダリビートのオーディオファイルを選択...</translation>
     </message>
     <message>
         <source>Choosing recording path ...</source>
@@ -1213,20 +1338,12 @@
         <translation>メトロノーム</translation>
     </message>
     <message>
-        <source>Metronome Sound:</source>
-        <translation type="unfinished">メトロノーム音:</translation>
-    </message>
-    <message>
         <source>Custom Metronome Sounds</source>
         <translation>メトロノーム音の変更</translation>
     </message>
     <message>
         <source>Primary Beat:</source>
         <translation>プライマリビート:</translation>
-    </message>
-    <message>
-        <source>Secondary Beat:</source>
-        <translation>セカンダリビート:</translation>
     </message>
     <message>
         <source>Browse ...</source>
@@ -1299,6 +1416,90 @@
     <message>
         <source>Choosing loops folder ...</source>
         <translation>ループフォルダの選択 ...</translation>
+    </message>
+    <message>
+        <source>Metronome Sound:</source>
+        <translation type="unfinished">メトロノーム音:</translation>
+    </message>
+    <message>
+        <source>Off Beat:</source>
+        <translation type="unfinished">オフビート:</translation>
+    </message>
+    <message>
+        <source>Accent Beat:</source>
+        <translation type="unfinished">アクセントビート:</translation>
+    </message>
+    <message>
+        <source>Remember</source>
+        <translation type="unfinished">覚えて</translation>
+    </message>
+    <message>
+        <source>Remember these options when a musician enters the jam:</source>
+        <translation type="unfinished">ミュージシャンが渋滞に入ると、これらのオプションを忘れないでください:</translation>
+    </message>
+    <message>
+        <source>The user channel level</source>
+        <translation type="unfinished">ユーザーのチャンネルレベル</translation>
+    </message>
+    <message>
+        <source>Level</source>
+        <translation type="unfinished">レベル</translation>
+    </message>
+    <message>
+        <source>The user channel mute status</source>
+        <translation type="unfinished">ユーザチャネルのミュート状態</translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation type="unfinished">ミュート</translation>
+    </message>
+    <message>
+        <source>The user channel pan</source>
+        <translation type="unfinished">ユーザチャネルパン</translation>
+    </message>
+    <message>
+        <source>Pan</source>
+        <translation type="unfinished">パン</translation>
+    </message>
+    <message>
+        <source>The user channel boost</source>
+        <translation type="unfinished">ユーザーチャネルのブースト</translation>
+    </message>
+    <message>
+        <source>Boost</source>
+        <translation>ブースト</translation>
+    </message>
+    <message>
+        <source>The user channel low cut button status</source>
+        <translation type="unfinished">ユーザーチャンネルの低カットボタンのステータス</translation>
+    </message>
+    <message>
+        <source>Low cut</source>
+        <translation>ローカット</translation>
+    </message>
+    <message>
+        <source>Remember collapsible sections when starting JamTaba:</source>
+        <translation type="unfinished">JamTabaを起動するときに折りたたみ可能なセクションを覚えています:</translation>
+    </message>
+    <message>
+        <source>Local Channels (left side)</source>
+        <translation type="unfinished">ローカルチャネル（左側）</translation>
+    </message>
+    <message>
+        <source>Bottom Section (master fader and ninjam controls)</source>
+        <translation type="unfinished">ボトムセクション（マスターフェーダーとニンジャムコントロール）</translation>
+    </message>
+    <message>
+        <source>Chat section (right side)</source>
+        <translation type="unfinished">チャットセクション（右側）</translation>
+    </message>
+    <message>
+        <source>Choosing Off beat audio file...</source>
+        <translation type="unfinished">オフビートのオーディオファイルを選択...</translation>
+    </message>
+    <message>
+        <source>Choosing Accent beat audio file...</source>
+        <translation type="unfinished">アクセントビートオーディオファイルを選択...</translation>
     </message>
 </context>
 <context>
@@ -1373,6 +1574,94 @@
     </message>
 </context>
 <context>
+    <name>PrivateServerWindow</name>
+    <message>
+        <source>Your Private Server</source>
+        <translation type="unfinished">あなたのプライベートサーバ</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished">開始</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="unfinished">やめる</translation>
+    </message>
+    <message>
+        <source>Server IP:</source>
+        <translation type="unfinished">サーバーIP:</translation>
+    </message>
+    <message>
+        <source>Server Port:</source>
+        <translation type="unfinished">サーバポート:</translation>
+    </message>
+    <message>
+        <source>Upload (Kbps):</source>
+        <translation type="unfinished">アップロード（Kbps）:</translation>
+    </message>
+    <message>
+        <source>Download (Kbps):</source>
+        <translation type="unfinished">ダウンロード（Kbps）:</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+        <source>Connected Users</source>
+        <translation type="unfinished">接続されたユーザー</translation>
+    </message>
+    <message>
+        <source>Port closed in your router!</source>
+        <translation type="unfinished">ポートはあなたのルータで閉じられました!</translation>
+    </message>
+    <message>
+        <source>ERROR in UPnP protocol: %1</source>
+        <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
+        <translation type="unfinished">UPnPプロトコルのエラー：%1</translation>
+    </message>
+    <message>
+        <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
+        <translation type="unfinished">ポートはUPnPプロトコルを使用してルータで開かれました！ 他のユーザーがあなたのサーバーに接続することができます!</translation>
+    </message>
+    <message>
+        <source>Your external IP is %1</source>
+        <translation type="unfinished">あなたの外部IPは%1です</translation>
+    </message>
+    <message>
+        <source>Incomming connection from %1</source>
+        <translation type="unfinished">%1からの着信接続</translation>
+    </message>
+    <message>
+        <source>%1 entered in the server</source>
+        <translation type="unfinished">%1がサーバーに入力されました</translation>
+    </message>
+    <message>
+        <source>%1 left the server</source>
+        <translation type="unfinished">%1はサーバーを離れました</translation>
+    </message>
+    <message>
+        <source>Server started</source>
+        <translation type="unfinished">サーバーが起動しました</translation>
+    </message>
+    <message>
+        <source>Server stopped!</source>
+        <translation type="unfinished">サーバーが停止しました!</translation>
+    </message>
+    <message>
+        <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
+        <translation type="unfinished">ルータ（UPnP）のポート%1を開いて外部接続を許可しようとしています...</translation>
+    </message>
+    <message>
+        <source>Hosting Ninjam Private Server</source>
+        <translation type="unfinished">Ninjamプライベートサーバのホスティング</translation>
+    </message>
+    <message>
+        <source>Connect with private server ...</source>
+        <translation type="unfinished">プライベートサーバーと接続...</translation>
+    </message>
+</context>
+<context>
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
@@ -1391,6 +1680,28 @@
     <message>
         <source>Remove this folder from scanning</source>
         <translation>この場所の走査を取り消す</translation>
+    </message>
+</context>
+<context>
+    <name>ServerInviteButton</name>
+    <message>
+        <source>Accept!</source>
+        <translation type="unfinished">同意する!</translation>
+    </message>
+</context>
+<context>
+    <name>Slider</name>
+    <message>
+        <source>center</source>
+        <translation type="unfinished">センター</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>R</translation>
     </message>
 </context>
 <context>
@@ -1414,6 +1725,28 @@
     <message>
         <source>Press this button if you are ok</source>
         <translation>準備が出来ればOKをクリック</translation>
+    </message>
+</context>
+<context>
+    <name>audio::Looper</name>
+    <message>
+        <source>Sequence</source>
+        <translation>シーケンス</translation>
+    </message>
+    <message>
+        <source>All Layers</source>
+        <translation>すべてのレイヤー</translation>
+    </message>
+    <message>
+        <source>Selected Layer</source>
+        <translation>選択されたレイヤー</translation>
+    </message>
+</context>
+<context>
+    <name>login::MainChat</name>
+    <message>
+        <source>You can&apos;t send messages using an empty user name!</source>
+        <translation type="unfinished">空のユーザー名を使用してメッセージを送信することはできません!</translation>
     </message>
 </context>
 </TS>

@@ -11,15 +11,13 @@
 #include <QTimer>
 
 #include "looper/Looper.h"
-#include "LooperWavePanel.h"
 #include "looper/LooperPersistence.h"
 #include "looper/LooperLayer.h"
 #include "widgets/BlinkableButton.h"
 #include "widgets/Slider.h"
+#include "widgets/LooperWavePanel.h"
 
-using namespace Audio;
-
-namespace Controller {
+namespace controller {
 class NinjamController;
 class MainController;
 }
@@ -28,12 +26,20 @@ namespace Ui {
 class LooperWindow;
 }
 
+using audio::Looper;
+using audio::LooperLayer;
+using audio::LooperState;
+using audio::LoopSaver;
+using audio::LoopLayerInfo;
+using audio::AudioPeak;
+using controller::MainController;
+
 class LooperWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit LooperWindow(QWidget *parent, Controller::MainController *mainController);
+    explicit LooperWindow(QWidget *parent, MainController *mainController);
     ~LooperWindow();
 
     void setLooper(Looper *looper);
@@ -44,7 +50,7 @@ public:
 protected:
     void paintEvent(QPaintEvent *ev) override;
     void keyPressEvent(QKeyEvent *ev) override;
-    void changeEvent(QEvent *ev);
+    void changeEvent(QEvent *ev) override;
 
 private slots:
     void updateBeatsPerInterval();
@@ -70,16 +76,14 @@ private:
     class LayerControlsLayout : public QHBoxLayout
     {
     public:
-        LayerControlsLayout(Looper *looper, quint8 layerIndex, const QColor &tintColor);
+        LayerControlsLayout(Looper *looper, quint8 layerIndex);
         void setMuteButtonVisibility(bool show);
         void enableMuteButton(bool enabled);
 
-        Slider *panSlider;
-        Slider *gainSlider;
+        PanSlider *panSlider;
+        AudioSlider *gainSlider;
         QLabel *labelPanL;
         QLabel *labelPanR;
-        QLabel *highLevelIcon;
-        QLabel *lowLevelIcon;
         BlinkableButton *muteButton;
     };
 
@@ -105,7 +109,7 @@ private:
 
     QMap<quint8, LayerView> layerViews;
 
-    Controller::MainController *mainController;
+    controller::MainController *mainController;
 
     void deleteWavePanels();
 
@@ -190,7 +194,7 @@ private:
     void updateMaxLayersControls();
     void setMaxLayerComboBoxValuesAvailability(int valuesToDisable);
 
-    void loadLoopInfo(const QString &loopDir, const Audio::LoopInfo &info);
+    void loadLoopInfo(const QString &loopDir, const audio::LoopInfo &info);
 
     void updateLayersControls();
     void updateModeComboBox();
@@ -205,7 +209,7 @@ private:
     QColor tintColor;
 };
 
-Q_DECLARE_METATYPE(Audio::Looper::RecordingOption)
-Q_DECLARE_METATYPE(Audio::Looper::PlayingOption)
+Q_DECLARE_METATYPE(audio::Looper::RecordingOption)
+Q_DECLARE_METATYPE(audio::Looper::PlayingOption)
 
 #endif // LOOPERWINDOW_H

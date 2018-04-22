@@ -23,7 +23,7 @@ private:
     QProcess scanProcess;
     QString lastScannedPlugin; // used to recover the last plugin path when the scanner process crash
 
-    Audio::PluginDescriptor getPluginDescriptor(const QFileInfo &f);
+    audio::PluginDescriptor getPluginDescriptor(const QFileInfo &f);
 
 };
 

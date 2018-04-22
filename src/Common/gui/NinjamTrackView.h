@@ -3,26 +3,27 @@
 
 #include "TrackGroupView.h"
 #include "BaseTrackView.h"
-#include "IntervalChunksDisplay.h"
-#include "persistence/UsersDataCache.h"
-#include "MarqueeLabel.h"
-#include "audio/NinjamTrackNode.h"
-#include "MultiStateButton.h"
+#include "widgets/IntervalChunksDisplay.h"
 
-namespace Controller {
+#include "widgets/MultiStateButton.h"
+#include "persistence/UsersDataCache.h"
+#include "audio/NinjamTrackNode.h"
+
+namespace controller {
 class MainController;
 }
 
 class QLabel;
+class InstrumentsButton;
 
 class NinjamTrackView : public BaseTrackView
 {
     Q_OBJECT
 
 public:
-    NinjamTrackView(Controller::MainController *mainController, long trackID);
+    NinjamTrackView(controller::MainController *mainController, long trackID);
     void setChannelName(const QString &name);
-    void setInitialValues(const Persistence::CacheEntry &initialValues);
+    void setInitialValues(const persistence::CacheEntry &initialValues);
     void setNinjamChannelData(const QString &userFullName, quint8 channelIndex);
 
     // interval chunks visual feedback
@@ -30,9 +31,9 @@ public:
     void finishCurrentDownload(); // called when the interval is fully downloaded
     void setEstimatedChunksPerInterval(int estimatedChunks); // how many download chunks per interval?
 
-    void setActivatedStatus(bool deactivated);
+    void setActivatedStatus(bool deactivated) override;
 
-    void updateGuiElements();
+    void updateGuiElements() override;
 
     QSize sizeHint() const override;
 
@@ -42,18 +43,23 @@ public:
 
     void setTintColor(const QColor &color) override;
 
+    static void setNetworkUsageUpdatePeriod(quint32 periodInMilliseconds);
+
 protected:
 
     QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const override;
 
     void setupVerticalLayout() override;
+    void resizeEvent(QResizeEvent *ev) override;
 
 private:
-    MarqueeLabel *channelNameLabel;
     MultiStateButton *buttonLowCut;
     QPushButton *buttonReceive;
-    Persistence::CacheEntry cacheEntry; // used to remember the track controls values
+    QHBoxLayout *networkUsageLayout;
+    QLabel *networkUsageLabel;
+    persistence::CacheEntry cacheEntry; // used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay; // display downloaded interval chunks
+    InstrumentsButton *instrumentsButton;
 
     // used to send channel receive on/off messages
     QString userFullName;
@@ -63,6 +69,8 @@ private:
 
     void setupHorizontalLayout();
 
+    void updateExtraWidgetsVisibility();
+
     bool downloadingFirstInterval;
     void setDownloadedChunksDisplayVisibility(bool visible);
 
@@ -71,10 +79,19 @@ private:
     void updateLowCutButtonToolTip();
     QString getLowCutStateText() const;
 
-    MarqueeLabel *createChannelNameLabel() const;
     QPushButton *createReceiveButton() const;
 
+    NinjamTrackNode *getTrackNode() const;
+
+    InstrumentsButton *createInstrumentsButton();
+
+    qint8 guessInstrumentIcon() const;
+
     static const int WIDE_HEIGHT;
+
+    qint64 lastNetworkUsageUpdate;
+
+    static quint32 networkUsageUpdatePeriod;
 
 protected slots:
     // overriding the base class slots
@@ -87,6 +104,7 @@ protected slots:
 
 private slots:
     void setReceiveState(bool receive);
+    void instrumentIconChanged(quint8 instrumentIndex);
 
 };
 

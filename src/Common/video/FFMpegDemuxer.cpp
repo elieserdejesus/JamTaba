@@ -9,10 +9,10 @@ FFMpegDemuxer::FFMpegDemuxer(QObject *parent, const QByteArray &encodedData) :
     QObject(parent),
     formatContext(nullptr),
     avioContext(nullptr),
+    //codecContext(nullptr),
+    swsContext(nullptr),
     frame(nullptr),
     frameRGB(nullptr),
-    swsContext(nullptr),
-    codecContext(nullptr),
     rgbBuffer(nullptr),
     buffer(nullptr),
     encodedData(encodedData)
@@ -34,7 +34,7 @@ void FFMpegDemuxer::close()
         avformat_close_input(&formatContext);
         formatContext = nullptr;
         avioContext = nullptr;
-        codecContext = nullptr;
+        //codecContext = nullptr;
         swsContext = nullptr;
     }
 
@@ -60,38 +60,10 @@ void FFMpegDemuxer::close()
 
 }
 
-//int64_t FFMpegDemuxer::seekCallback(void *opaque, int64_t offset, int whence)
-//{
-//    qDebug() << "\tSeek callback ...";
-
-//    if (whence == AVSEEK_SIZE)
-//        return -1; // I don't know "size of my handle in bytes"
-
-//    QIODevice *stream = (QIODevice *)opaque;
-
-//    if (stream->isSequential())
-//            return -1; // cannot seek a sequential stream
-
-//    if (offset < 0 || !stream->seek(offset))
-//        return -1;
-
-//    return stream->pos();
-//}
-
 int FFMpegDemuxer::readCallback(void *stream, uint8_t *buffer, int bufferSize)
 {
     QIODevice *st = (QIODevice *)stream;
     return st->read((char *)buffer, bufferSize);
-}
-
-AVInputFormat *FFMpegDemuxer::probeInputFormat()
-{
-    AVProbeData probeData;
-    probeData.buf = reinterpret_cast<unsigned char*>(encodedData.data());
-    probeData.buf_size = encodedData.size();
-    probeData.filename = nullptr;
-
-    return av_probe_input_format(&probeData, 1);
 }
 
 bool FFMpegDemuxer::open()
@@ -111,41 +83,33 @@ bool FFMpegDemuxer::open()
     avioContext->seekable = 0; // no seek
 
     formatContext->pb = avioContext;
+    formatContext->flags = AVFMT_FLAG_CUSTOM_IO;
 
     int ret = avformat_open_input(&formatContext, nullptr, nullptr, nullptr);
     if (ret != 0) {
-        qCritical() << "Decoder Error while opening input:" << av_err2str(ret) << ret;
+        qCritical() << "Decoder Error while opening input:" << av_error_to_qt_string(ret) << ret;
         return false;
     }
 
-    ret = avformat_find_stream_info(formatContext, nullptr);
-    if (ret < 0) {
-        qCritical() << "Decoder Error while finding stream info:" << av_err2str(ret);
+    if (formatContext->nb_streams <= 0) {
+        qCritical() << "Error opening the demuxer: nb_streams <= 0";
         return false;
     }
 
-    AVInputFormat *format = formatContext->iformat;
-    if (!format) {
-        qCritical() << "Decoder Error: Format is null!";
-        return false;
-    }
+    auto stream = formatContext->streams[0]; // first stream
 
-    AVMediaType type = AVMEDIA_TYPE_VIDEO;
-
-    AVStream *stream = formatContext->streams[0]; // first stream
-
-    codecContext = stream->codec;
+    auto codecContext = stream->codec;
 
     /* find decoder for the stream */
-    AVCodec *codec= avcodec_find_decoder(codecContext->codec_id);
-    if (!codec) {
-        qCritical() << "Failed to find the codec" << av_get_media_type_string(type);
+    auto decoder = avcodec_find_decoder(stream->codecpar->codec_id);
+    if (!decoder) {
+        qCritical() << "Failed to find the codec" << avcodec_get_name(stream->codecpar->codec_id);
         return false;
     }
 
-    ret = avcodec_open2(codecContext, codec, nullptr);
+    ret = avcodec_open2(codecContext, decoder, nullptr);
     if (ret < 0) {
-        qCritical() << av_err2str(ret);
+        qCritical() << av_error_to_qt_string(ret);
         return false;
     }
 
@@ -158,31 +122,20 @@ bool FFMpegDemuxer::open()
         return false;
     }
 
-    frameRGB = av_frame_alloc();
-    if (frameRGB) {
-        // Determine required buffer size and allocate buffer
-        int width = codecContext->width;
-        int height = codecContext->height;
-        int numBytes = av_image_get_buffer_size(AV_PIX_FMT_RGB24, width, height, 1);
-        rgbBuffer = new uint8_t[numBytes];
-
-        // Assign appropriate parts of buffer to image planes in pFrameRGB
-        av_image_fill_arrays(frameRGB->data, frameRGB->linesize, rgbBuffer, AV_PIX_FMT_RGB24, width, height, 1);
-    }
-    else {
-        qCritical() << "Could not allocate frameRGB";
-        return false;
-    }
-
     return true;
 }
 
 uint FFMpegDemuxer::getFrameRate() const
 {
-    if (codecContext)
-        return codecContext->framerate.num;
+    if (formatContext && formatContext->nb_streams > 0) {
+        auto firstStream = formatContext->streams[0];
+        if (firstStream->codec) {
+            auto codecContext = formatContext->streams[0]->codec;
+            return codecContext->framerate.num;
+        }
+    }
 
-    return 1;
+    return 0;
 }
 
 void FFMpegDemuxer::decode()
@@ -195,53 +148,84 @@ void FFMpegDemuxer::decode()
         return;
     }
 
+    if (!formatContext || formatContext->nb_streams <= 0)
+        return;
+
+    auto codecContext = formatContext->streams[0]->codec;
+
     /* initialize packet, set data to NULL, let the demuxer fill it */
     AVPacket packet;
-    av_init_packet(&packet);
     packet.data = nullptr;
     packet.size = 0;
 
-    int gotFrame = 0;
+    int ret = 0;
 
-    /* read frames from the file */
-    while (av_read_frame(formatContext, &packet) == 0) {
+    /* read frames */
+    while ((ret = av_read_frame(formatContext, &packet)) == 0)
+    {
 
-        int ret = avcodec_decode_video2(codecContext, frame, &gotFrame, &packet);
+        int framesDecoded = 0;
 
-        av_free_packet(&packet);
+        while (framesDecoded <= 0)
+        {
+            ret = avcodec_send_packet(codecContext, &packet);
 
-        if (ret < 0) { // error
-            qCritical() << "error decoding video frame";
-            emit imagesDecoded(decodedImages, getFrameRate());
-            return;
-        }
+            if (ret != 0) { // error
+                if (ret != AVERROR(EAGAIN)) {
+                    qCritical() << "error decoding video frame" << av_error_to_qt_string(ret) << ret;
+                    emit imagesDecoded(decodedImages, getFrameRate());
+                }
+                return;
+            }
 
-        if (gotFrame) {
-            // Convert the image format (init the context the first time)
-            int width = codecContext->width;
-            int height = codecContext->height;
-            AVPixelFormat sourcePixelFormat = codecContext->pix_fmt;
-            AVPixelFormat destinationPixelFormat = AV_PIX_FMT_RGB24;
+            while((ret = avcodec_receive_frame(codecContext, frame)) == 0)  // got a frame?
+            {
+                int width = (codecContext->width > 0) ? codecContext->width : frame->width;
+                int height = (codecContext->height > 0) ? codecContext->height : frame->height;
 
-            if (!frame->width || !frame->height) // 0 size images are skipped
-                continue;
+                if (!frameRGB) {
+                    frameRGB = av_frame_alloc();
 
-            swsContext = sws_getCachedContext(swsContext, width, height, sourcePixelFormat, width, height, destinationPixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
+                    // Determine required buffer size and allocate buffer
+                    int numBytes = av_image_get_buffer_size(AV_PIX_FMT_RGB24, width, height, 1);
+                    rgbBuffer = new uint8_t[numBytes];
 
-            if(!swsContext){
-                qCritical() << "Cannot initialize the conversion context!";
+                    // Assign appropriate parts of buffer to image planes in pFrameRGB
+                    av_image_fill_arrays(frameRGB->data, frameRGB->linesize, rgbBuffer, AV_PIX_FMT_RGB24, width, height, 1);
+                }
+
+                // Convert the image format (init the context the first time)
+                AVPixelFormat sourcePixelFormat = codecContext->pix_fmt;
+                AVPixelFormat destinationPixelFormat = AV_PIX_FMT_RGB24;
+
+                if (!frame->width || !frame->height) // 0 size images are skipped
+                    continue;
+
+                swsContext = sws_getCachedContext(swsContext, width, height, sourcePixelFormat, width, height, destinationPixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
+
+                if(!swsContext){
+                    qCritical() << "Cannot initialize the conversion context!";
+                    emit imagesDecoded(decodedImages, getFrameRate());
+                    return;
+                }
+                sws_scale(swsContext, frame->data, frame->linesize, 0, height, frameRGB->data, frameRGB->linesize);
+
+                // Convert the frame to QImage
+                QImage img(width, height, QImage::Format_RGB888);
+
+                for(int y=0; y < height; y++)
+                    memcpy(img.scanLine(y), frameRGB->data[0] + y * frameRGB->linesize[0], width * 3);
+
+                decodedImages << img;
+
+                framesDecoded++;
+            }
+
+            if (ret != 0 && ret != AVERROR(EAGAIN)) {
+                qCritical() << "error decoding video frame in avcodec_receive_frame" << av_error_to_qt_string(ret) << ret;
                 emit imagesDecoded(decodedImages, getFrameRate());
                 return;
             }
-            sws_scale(swsContext, frame->data, frame->linesize, 0, height, frameRGB->data, frameRGB->linesize);
-
-            // Convert the frame to QImage
-            QImage img(width, height, QImage::Format_RGB888);
-
-            for(int y=0; y < height; y++)
-                memcpy(img.scanLine(y), frameRGB->data[0] + y * frameRGB->linesize[0], width * 3);
-
-            decodedImages << img;
         }
     }
 

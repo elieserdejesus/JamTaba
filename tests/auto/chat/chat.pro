@@ -1,8 +1,8 @@
 
 #TODO create a test-common.pri to share common tests configuration
 
-QT += testlib core network
-QT -= gui
+QT += testlib core widgets network
+
 CONFIG += testcase c++11
 TEMPLATE = app
 TARGET = testChat

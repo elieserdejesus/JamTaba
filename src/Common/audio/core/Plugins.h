@@ -6,18 +6,18 @@
 
 class QDialog;
 
-namespace Audio {
-class SamplesBuffer;
-class Plugin;
+namespace audio {
+    class SamplesBuffer;
+    class Plugin;
 }
 
 namespace Jamtaba {
-class VstHost;
+    class VstHost;
 }
 
-namespace Audio {
+namespace audio {
 
-class Plugin : public Audio::AudioNodeProcessor
+class Plugin : public AudioNodeProcessor
 {
     Q_OBJECT
 
@@ -61,7 +61,7 @@ class JamtabaDelay : public Plugin
 public:
     explicit JamtabaDelay(int sampleRate);
     ~JamtabaDelay();
-    void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, std::vector<Midi::MidiMessage> &midiBuffer) override;
+    void process(const SamplesBuffer &in, SamplesBuffer &out, std::vector<midi::MidiMessage> &midiBuffer) override;
     void setDelayTime(int delayTimeInMs);
     void setFeedback(float feedback);
     void setLevel(float level);
@@ -76,7 +76,7 @@ public:
     void updateGui() override;
 
     void start() override;
-    QString getPath() const;
+    QString getPath() const override;
 
     QByteArray getSerializedData() const override;
     void restoreFromSerializedData(const QByteArray &data) override;
@@ -86,7 +86,7 @@ public:
     void resume() override;
 
 private:
-    void setSampleRate(int newSampleRate);
+    void setSampleRate(int newSampleRate) override;
 
     static const int MAX_DELAY_IN_SECONDS;
     int delayTimeInSamples;
@@ -95,7 +95,7 @@ private:
     float level;
     int internalIndex;
     int sampleRate;
-    Audio::SamplesBuffer *internalBuffer;
+    audio::SamplesBuffer *internalBuffer;
 };
 
 inline void JamtabaDelay::suspend()

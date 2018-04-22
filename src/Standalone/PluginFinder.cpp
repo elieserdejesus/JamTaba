@@ -2,12 +2,14 @@
 #include "audio/core/PluginDescriptor.h"
 #include "log/Logging.h"
 
-using namespace audio;
+using audio::PluginFinder;
+using audio::PluginDescriptor;
 
 void PluginFinder::finishScan()
 {
     QProcess::ExitStatus exitStatus = scanProcess.exitStatus();
-    scanProcess.close();
+    if (exitStatus!= QProcess::ExitStatus::CrashExit) // do not try to close an already crashed exit process
+        scanProcess.close();
     bool exitingWithoutError = exitStatus == QProcess::NormalExit;
 
     qCDebug(jtStandalonePluginFinder) << "Closing scan process! exited without error:" << exitingWithoutError;
