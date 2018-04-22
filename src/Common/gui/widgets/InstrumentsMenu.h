@@ -9,6 +9,7 @@ enum class InstrumentIndex : qint8
     AcousticGuitar,
     Banjo,
     ElectricBass,
+    Video,
     Computer,
     DoubleBass,
     Drums,
@@ -40,7 +41,7 @@ public:
     void setInstrumentIcon(quint8 instrumentIcon);
     int getSelectedIcon() const;
 signals:
-    void iconSelected(quint8 iconIndex);
+    void iconChanged(quint8 iconIndex);
 
 private slots:
     void showInstrumentIcons();

@@ -22,6 +22,9 @@ public:
 
     int getChannelIndex() const;
 
+    void setAsVideoChannel();
+    bool isVideoChannel() const;
+
     virtual void setPeakMeterMode(bool peakMeterOnly);
     virtual void togglePeakMeterOnlyMode();
     bool isShowingPeakMeterOnly() const;
@@ -71,6 +74,7 @@ private:
     int index;
 
     bool peakMeterOnly;
+    bool videoChannel;
 
     QPushButton *createToolButton();
     BlinkableButton *createXmitButton();
@@ -114,6 +118,11 @@ private slots:
 
     void toggleTransmitingStatus(bool checked);
 };
+
+inline bool LocalTrackGroupView::isVideoChannel() const
+{
+    return videoChannel;
+}
 
 inline BlinkableButton *LocalTrackGroupView::getXmitButton() const
 {

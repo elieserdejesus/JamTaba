@@ -89,6 +89,8 @@ FFMpegMuxer::FFMpegMuxer(QObject *parent) :
 {
     av_register_all();
 
+    av_log_set_level(AV_LOG_QUIET); // disabling ffmpeg encoder messages
+
     threadPool.setMaxThreadCount(1);
 }
 
