@@ -313,8 +313,8 @@ void MainWindow::changeCameraStatus(bool activated)
 
             if (localGroupChannels.size() > 1) {
                 auto secondChannel = localGroupChannels.at(1);
-                if (secondChannel) {
-                    secondChannel->setInstrumentIcon(static_cast<int>(InstrumentIndex::JamTabaIcon));
+                if (secondChannel && secondChannel->isVideoChannel()) {
+                    removeChannelsGroup(secondChannel->getChannelIndex());
                 }
             }
 
@@ -348,15 +348,15 @@ void MainWindow::changeCameraStatus(bool activated)
         cameraView->activate(false);
     }
     else { // if the camera is correctly activated we need need create a 2nd channel (if necessary) to xmit the video
-        auto cameraIconIndex = static_cast<int>(InstrumentIndex::Video);
-        if (localGroupChannels.size() < 2) {
-            addChannelsGroup(cameraIconIndex);
-        }
-        else {
-            auto secondChannel = localGroupChannels.at(1);
-            if (secondChannel && secondChannel->getInstrumentIcon() != cameraIconIndex)
-                secondChannel->setInstrumentIcon(cameraIconIndex);
-        }
+
+        while (localGroupChannels.size() > 1)
+            removeChannelsGroup(localGroupChannels.at(1)->getChannelIndex()); // delete the 2nd channel if exists
+
+        addChannelsGroup(-1); // add the 2nd channel using the default icon
+
+        auto secondChannel = localGroupChannels.at(1);
+        if (secondChannel)
+            secondChannel->setAsVideoChannel();
     }
 
 }
@@ -825,7 +825,8 @@ void MainWindow::removeChannelsGroup(int channelIndex)
             // TODO Refactoring: emit a signal 'localChannel removed' and catch this signal in NinjamController
             mainController->sendRemovedChannelMessage(channelIndex);
 
-            cameraView->activate(false); // deactivate the camera if the 2nd channel is deleted
+            if (channel->isVideoChannel())
+                cameraView->activate(false); // deactivate the camera if the 2nd channel is deleted
 
             update();
         }

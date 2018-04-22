@@ -7,6 +7,7 @@
 #include "widgets/BlinkableButton.h"
 #include "IconFactory.h"
 #include "widgets/InstrumentsMenu.h"
+#include "gui/GuiUtils.h"
 
 #include <QInputDialog>
 #include <QToolTip>
@@ -17,6 +18,7 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     index(channelIndex),
     mainFrame(mainWindow),
     peakMeterOnly(false),
+    videoChannel(false),
     preparingToTransmit(false),
     usingSmallSpacingInLayouts(false)
 {
@@ -37,6 +39,29 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     connect(xmitButton, &QPushButton::toggled, this, &LocalTrackGroupView::toggleTransmitingStatus);
 
     translateUi();
+}
+
+void LocalTrackGroupView::setAsVideoChannel()
+{
+    if (index < 1 || videoChannel)
+        return; // first channel can't be a video channel
+
+    videoChannel = true;
+
+    resetTracks();
+
+    auto instrumentIcon = static_cast<int>(videoChannel ? InstrumentIndex::Video : InstrumentIndex::JamTabaIcon);
+    setInstrumentIcon(instrumentIcon);
+    instrumentsButton->setStyleSheet(QString("margin-left: %1px").arg(videoChannel ? 0 : 14));
+    instrumentsButton->blockSignals(true);
+
+    auto tracks = getTracks<BaseTrackView *>();
+    for (auto track : tracks)
+        track->setVisible(!videoChannel);
+
+    toolButton->setVisible(!videoChannel);
+
+    updateXmitButtonText();
 }
 
 InstrumentsButton *LocalTrackGroupView::createInstrumentsButton()
@@ -65,7 +90,7 @@ void LocalTrackGroupView::translateUi()
 
 void LocalTrackGroupView::updateXmitButtonText()
 {
-    if (peakMeterOnly) {
+    if (peakMeterOnly || videoChannel) {
         xmitButton->setText(""); // no text, just the up arrow icon
     }
     else{
@@ -393,7 +418,7 @@ void LocalTrackGroupView::deletePreset(QAction *action)
 
 QSize LocalTrackGroupView::sizeHint() const
 {
-    if (peakMeterOnly)
+    if (peakMeterOnly || videoChannel)
         return QFrame::sizeHint();
 
     return TrackGroupView::sizeHint();
