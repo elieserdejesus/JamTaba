@@ -347,7 +347,7 @@ void MainWindow::changeCameraStatus(bool activated)
 
         cameraView->activate(false);
     }
-    else { // if the camera is correctly activated we need need create a 2nd channel (if necessary) to xmit the video
+    else { // if the camera is correctly activated we need need create a 2nd channel to xmit the video
 
         while (localGroupChannels.size() > 1)
             removeChannelsGroup(localGroupChannels.at(1)->getChannelIndex()); // delete the 2nd channel if exists
@@ -355,6 +355,7 @@ void MainWindow::changeCameraStatus(bool activated)
         addChannelsGroup(-1); // add the 2nd channel using the default icon
 
         auto secondChannel = localGroupChannels.at(1);
+        secondChannel->setPeakMeterMode(localGroupChannels.first()->isShowingPeakMeterOnly());
         if (secondChannel)
             secondChannel->setAsVideoChannel();
     }

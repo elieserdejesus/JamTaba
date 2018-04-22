@@ -48,18 +48,17 @@ void LocalTrackGroupView::setAsVideoChannel()
 
     videoChannel = true;
 
-    resetTracks();
-
     auto instrumentIcon = static_cast<int>(videoChannel ? InstrumentIndex::Video : InstrumentIndex::JamTabaIcon);
     setInstrumentIcon(instrumentIcon);
-    instrumentsButton->setStyleSheet(QString("margin-left: %1px").arg(videoChannel ? 0 : 14));
+    instrumentsButton->setStyleSheet(QString("margin-left: 0px"));
     instrumentsButton->blockSignals(true);
+    instrumentsButton->setVisible(!peakMeterOnly);
 
     auto tracks = getTracks<BaseTrackView *>();
     for (auto track : tracks)
-        track->setVisible(!videoChannel);
+        track->setVisible(false);
 
-    toolButton->setVisible(!videoChannel);
+    toolButton->setVisible(false);
 
     updateXmitButtonText();
 }
@@ -428,7 +427,9 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
 {
     if (this->peakMeterOnly != peakMeterOnly) {
         this->peakMeterOnly = peakMeterOnly;
-        topPanel->setVisible(!this->peakMeterOnly);
+        topPanel->setVisible(!peakMeterOnly);
+
+        instrumentsButton->setVisible(topPanel->isVisible());
 
         for (auto view : getTracks<LocalTrackView *>()) {
             view->setPeakMetersOnlyMode(peakMeterOnly);
