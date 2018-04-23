@@ -8,6 +8,7 @@
 #include "IconFactory.h"
 #include "widgets/InstrumentsMenu.h"
 #include "gui/GuiUtils.h"
+#include "audio/core/LocalInputNode.h"
 
 #include <QInputDialog>
 #include <QToolTip>
@@ -54,9 +55,11 @@ void LocalTrackGroupView::setAsVideoChannel()
     instrumentsButton->blockSignals(true);
     instrumentsButton->setVisible(!peakMeterOnly);
 
-    auto tracks = getTracks<BaseTrackView *>();
-    for (auto track : tracks)
+    auto tracks = getTracks<LocalTrackView *>();
+    for (auto track : tracks) {
         track->setVisible(false);
+        track->getInputNode()->setToNoInput();
+    }
 
     toolButton->setVisible(false);
 
