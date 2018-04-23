@@ -1116,8 +1116,15 @@ void MainWindow::detachMainController()
 void MainWindow::handleServerConnectionError(const QString &errorMsg)
 {
     hideBusyDialog();
-    QMessageBox::warning(this, tr("Error!"),
-                         tr("Error connecting with Jamtaba server!\n") + errorMsg);
+
+    auto message = tr("Error connecting with Jamtaba server!\n") + errorMsg;
+
+    auto metrics = fontMetrics();
+    auto messageWidth = metrics.width(message);
+
+    auto pos = QPoint(width()/2 - messageWidth/2, height()/2);
+
+    QToolTip::showText(mapToGlobal(pos), message, this, rect());
 }
 
 QString MainWindow::sanitizeLatestVersionDetails(const QString &details)
