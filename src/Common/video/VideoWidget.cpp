@@ -23,9 +23,11 @@ void VideoWidget::activate(bool status)
 {
     if (status != activated) {
         activated = status;
-        update();
+        //update();
 
         emit statusChanged(activated);
+
+        updateGeometry();
     }
 }
 
@@ -80,8 +82,6 @@ void VideoWidget::mouseReleaseEvent(QMouseEvent *ev)
     Q_UNUSED(ev);
 
     activate(!activated);
-
-    updateGeometry();
 }
 
 void VideoWidget::paintEvent(QPaintEvent *ev)

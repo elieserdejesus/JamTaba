@@ -33,6 +33,7 @@
 #include "chat/NinjamVotingMessageParser.h"
 #include "loginserver/MainChat.h"
 #include "TextEditorModifier.h"
+#include "widgets/InstrumentsMenu.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
@@ -310,6 +311,13 @@ void MainWindow::changeCameraStatus(bool activated)
 
             setCameraComboVisibility(false);
 
+            if (localGroupChannels.size() > 1) {
+                auto secondChannel = localGroupChannels.at(1);
+                if (secondChannel && secondChannel->isVideoChannel()) {
+                    removeChannelsGroup(secondChannel->getChannelIndex());
+                }
+            }
+
             return;
         }
     }
@@ -338,6 +346,18 @@ void MainWindow::changeCameraStatus(bool activated)
         videoFrameGrabber = nullptr;
 
         cameraView->activate(false);
+    }
+    else { // if the camera is correctly activated we need need create a 2nd channel to xmit the video
+
+        while (localGroupChannels.size() > 1)
+            removeChannelsGroup(localGroupChannels.at(1)->getChannelIndex()); // delete the 2nd channel if exists
+
+        addChannelsGroup(-1); // add the 2nd channel using the default icon
+
+        auto secondChannel = localGroupChannels.at(1);
+        secondChannel->setPeakMeterMode(localGroupChannels.first()->isShowingPeakMeterOnly());
+        if (secondChannel)
+            secondChannel->setAsVideoChannel();
     }
 
 }
@@ -369,12 +389,14 @@ void MainWindow::initializeCameraWidget()
             cameraCombo->setObjectName(QStringLiteral("cameraCombo"));
             connect(cameraCombo, SIGNAL(activated(int)), this, SLOT(selectNewCamera(int)));
             cameraCombo->setVisible(false);
+            cameraCombo->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
             cameraLayout->addWidget(cameraView, 0, Qt::AlignCenter);
             cameraLayout->addWidget(cameraCombo);
 
-            QVBoxLayout *leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
+            auto leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
             leftPanelLayout->addLayout(cameraLayout);
+            leftPanelLayout->setAlignment(cameraLayout, Qt::AlignCenter);
         }
     }
 }
@@ -803,6 +825,10 @@ void MainWindow::removeChannelsGroup(int channelIndex)
 
             // TODO Refactoring: emit a signal 'localChannel removed' and catch this signal in NinjamController
             mainController->sendRemovedChannelMessage(channelIndex);
+
+            if (channel->isVideoChannel())
+                cameraView->activate(false); // deactivate the camera if the 2nd channel is deleted
+
             update();
         }
         updateLocalInputChannelsGeometry();

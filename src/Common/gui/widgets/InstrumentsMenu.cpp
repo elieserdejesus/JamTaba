@@ -55,6 +55,9 @@ InstrumentIndex stringToInstrumentIndex(const QString &string)
     if (str.contains("TrollFace"))
         return InstrumentIndex::TrollFace;
 
+    if (str.contains("video"))
+        return InstrumentIndex::Video;
+
     return InstrumentIndex::JamTabaIcon;
 }
 
@@ -78,6 +81,7 @@ QString instrumentIndexToString(InstrumentIndex index)
     case InstrumentIndex::TrollFace:        return "TrollFace";
     case InstrumentIndex::Trumpet:          return "Trumpet";
     case InstrumentIndex::Violin:           return "Violin";
+    case InstrumentIndex::Video:           return "Video";
     }
 
     return "";
@@ -101,11 +105,12 @@ InstrumentsButton::InstrumentsButton(const QIcon &defaultIcon, const QList<QIcon
     connect(this, &InstrumentsButton::clicked, this, &InstrumentsButton::showInstrumentIcons);
 }
 
-void InstrumentsButton::setInstrumentIcon(quint8 instrumentIcon)
+void InstrumentsButton::setInstrumentIcon(quint8 instrumentIconIndex)
 {
-    if (instrumentIcon < icons.size()) {
-        setIcon(icons.at(instrumentIcon));
-        selectedIcon = instrumentIcon;
+    if (instrumentIconIndex < icons.size()) {
+        setIcon(icons.at(instrumentIconIndex));
+        selectedIcon = instrumentIconIndex;
+        emit iconChanged(selectedIcon);
     }
 }
 
@@ -129,9 +134,7 @@ QWidget *InstrumentsButton::createToolBar(const QList<QIcon> &icons, const QSize
 
         connect(button, &QToolButton::clicked, [=](){
             toolBar->close();
-            setIcon(icons.at(i));
-            selectedIcon = i;
-            emit iconSelected(i);
+            setInstrumentIcon(i);
         });
 
         auto rowIndex = i / columns;

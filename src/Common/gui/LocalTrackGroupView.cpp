@@ -7,6 +7,8 @@
 #include "widgets/BlinkableButton.h"
 #include "IconFactory.h"
 #include "widgets/InstrumentsMenu.h"
+#include "gui/GuiUtils.h"
+#include "audio/core/LocalInputNode.h"
 
 #include <QInputDialog>
 #include <QToolTip>
@@ -17,13 +19,14 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     index(channelIndex),
     mainFrame(mainWindow),
     peakMeterOnly(false),
+    videoChannel(false),
     preparingToTransmit(false),
     usingSmallSpacingInLayouts(false)
 {
     instrumentsButton = createInstrumentsButton();
     topPanelLayout->addWidget(instrumentsButton, 1, Qt::AlignCenter);
 
-    connect(instrumentsButton, &InstrumentsButton::iconSelected, this, &LocalTrackGroupView::instrumentIconChanged);
+    connect(instrumentsButton, &InstrumentsButton::iconChanged, this, &LocalTrackGroupView::instrumentIconChanged);
 
 
     toolButton = createToolButton();
@@ -37,6 +40,30 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     connect(xmitButton, &QPushButton::toggled, this, &LocalTrackGroupView::toggleTransmitingStatus);
 
     translateUi();
+}
+
+void LocalTrackGroupView::setAsVideoChannel()
+{
+    if (index < 1 || videoChannel)
+        return; // first channel can't be a video channel
+
+    videoChannel = true;
+
+    auto instrumentIcon = static_cast<int>(videoChannel ? InstrumentIndex::Video : InstrumentIndex::JamTabaIcon);
+    setInstrumentIcon(instrumentIcon);
+    instrumentsButton->setStyleSheet(QString("margin-left: 0px"));
+    instrumentsButton->blockSignals(true);
+    instrumentsButton->setVisible(!peakMeterOnly);
+
+    auto tracks = getTracks<LocalTrackView *>();
+    for (auto track : tracks) {
+        track->setVisible(false);
+        track->getInputNode()->setToNoInput();
+    }
+
+    toolButton->setVisible(false);
+
+    updateXmitButtonText();
 }
 
 InstrumentsButton *LocalTrackGroupView::createInstrumentsButton()
@@ -65,7 +92,7 @@ void LocalTrackGroupView::translateUi()
 
 void LocalTrackGroupView::updateXmitButtonText()
 {
-    if (peakMeterOnly) {
+    if (peakMeterOnly || videoChannel) {
         xmitButton->setText(""); // no text, just the up arrow icon
     }
     else{
@@ -393,7 +420,7 @@ void LocalTrackGroupView::deletePreset(QAction *action)
 
 QSize LocalTrackGroupView::sizeHint() const
 {
-    if (peakMeterOnly)
+    if (peakMeterOnly || videoChannel)
         return QFrame::sizeHint();
 
     return TrackGroupView::sizeHint();
@@ -403,7 +430,9 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
 {
     if (this->peakMeterOnly != peakMeterOnly) {
         this->peakMeterOnly = peakMeterOnly;
-        topPanel->setVisible(!this->peakMeterOnly);
+        topPanel->setVisible(!peakMeterOnly);
+
+        instrumentsButton->setVisible(topPanel->isVisible());
 
         for (auto view : getTracks<LocalTrackView *>()) {
             view->setPeakMetersOnlyMode(peakMeterOnly);

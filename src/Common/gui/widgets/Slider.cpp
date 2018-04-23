@@ -41,6 +41,9 @@ AudioSlider::AudioSlider(QWidget *parent) :
     setMaximum(129); // up to +6dB
 
     connect(this, &AudioSlider::valueChanged, this, &AudioSlider::showToolTip);
+
+    currentPeak[0] = currentPeak[1] = 0;
+    currentRms[0] = currentRms[1] = 0;
 }
 
 void AudioSlider::setShowMeterOnly(bool showMeterOnly)
