@@ -186,8 +186,11 @@ QSize TrackGroupView::sizeHint() const
 {
     int width = 0;
 
-    for (BaseTrackView *trackView : trackViews)
-        width += trackView->minimumSizeHint().width();
+    for (auto trackView : trackViews) {
+        if (trackView->isVisible()) {
+            width += trackView->minimumSizeHint().width();
+        }
+    }
 
     return QSize(width, 10);
 }
