@@ -668,8 +668,8 @@ void MainWindow::initialize()
     if (settings.isRememberingBottomSection())
         setBottomCollapsedStatus(settings.isBottomSectionCollapsed());
 
-    auto turnedOn = false;
-    createMainChat(turnedOn);
+    auto publicChatActivated = settings.publicChatIsActivated();
+    createMainChat(publicChatActivated);
 
 }
 
@@ -1711,6 +1711,7 @@ void MainWindow::createMainChat(bool turnedOn)
     connect(mainChatPanel, &ChatPanel::turnedOff, [=](){
          mainChat->disconnectFromServer();
          mainChatPanel->showConnectedUsersWidget(false);
+         mainController->setPublicChatActivated(false);
     });
 
     if (turnedOn)
@@ -1727,6 +1728,8 @@ void MainWindow::connectInMainChat()
     publicChat->addMessage(mainController->getUserName(), JAMTABA_CHAT_BOT_NAME, tr("Connecting ..."));
 
     mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
+
+    mainController->setPublicChatActivated(true);
 }
 
 void MainWindow::fillUserContextMenu(QMenu &menu, const QString &userFullName, bool addInvitationEntry)

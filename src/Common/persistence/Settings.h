@@ -390,13 +390,14 @@ private:
 
     QStringList recentEmojis;
 
-    QString lastUserName; // the last nick name choosed by user
-    QString translation; // the translation language (en, fr, jp, pt, etc.) being used in chat
-    QString theme; // the style sheet used
-    int ninjamIntervalProgressShape; // Circle, Ellipe or Line
-    float masterFaderGain; // last master fader gain
-    quint8 tracksLayoutOrientation; // horizontal or vertical
-    bool usingNarrowedTracks; // narrow or wide tracks?
+    QString lastUserName;               // the last nick name choosed by user
+    QString translation;                // the translation language (en, fr, jp, pt, etc.) being used in chat
+    QString theme;                      // the style sheet used
+    int ninjamIntervalProgressShape;    // Circle, Ellipe or Line
+    float masterFaderGain;              // last master fader gain
+    quint8 tracksLayoutOrientation;     // horizontal or vertical
+    bool usingNarrowedTracks;           // narrow or wide tracks?
+    bool publicChatActivated;
 
     uint intervalsBeforeInactivityWarning;
 
@@ -578,7 +579,20 @@ public:
     bool isChatSectionCollapsed() const;
 
     uint getIntervalsBeforeInactivityWarning() const;
+
+    bool publicChatIsActivated() const;
+    void setPublicChatActivated(bool activated);
 };
+
+inline void Settings::setPublicChatActivated(bool activated)
+{
+    publicChatActivated = activated;
+}
+
+inline bool Settings::publicChatIsActivated() const
+{
+    return publicChatActivated;
+}
 
 inline void Settings::setLocalChannelsCollapsed(bool collapsed)
 {
