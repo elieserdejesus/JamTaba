@@ -2202,9 +2202,24 @@ void MainWindow::changeEvent(QEvent *ev)
         translateCollapseButtonsToolTips();
 
         ui.chatTabWidget->retranslateUi(); // translate the main chat tab title
+
+        translatePublicChatCountryNames();
     }
 
     QMainWindow::changeEvent(ev);
+}
+
+void MainWindow::translatePublicChatCountryNames()
+{
+    auto publicChat = ui.chatTabWidget->getPublicChat();
+    if (publicChat) {
+        auto connectedUsers = publicChat->getConnectedUsers();
+
+        for (const QString &userFullName : connectedUsers) {
+            auto ip = ninjam::client::extractUserIP(userFullName);
+            publicChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
+        }
+    }
 }
 
 void MainWindow::translateCollapseButtonsToolTips()

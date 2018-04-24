@@ -293,6 +293,8 @@ private slots:
 
     void translateCollapseButtonsToolTips();
 
+    void translatePublicChatCountryNames();
+
     void updateUserNameLineEditToolTip();
 
     void changeCameraStatus(bool activated);
