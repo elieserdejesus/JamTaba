@@ -1206,3 +1206,8 @@ bool MainController::crashedInLastExecution()
     return false;
 }
 
+
+void MainController::setPublicChatActivated(bool activated)
+{
+    settings.setPublicChatActivated(activated);
+}

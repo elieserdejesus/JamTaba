@@ -120,6 +120,14 @@ QColor NinjamTrackGroupView::getTintColor() const
 void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)
 {
 
+    // hide the video (2nd) channel
+    if (trackViews.size() > 1) {
+        auto videoChannel = getTracks<NinjamTrackView *>().at(1);
+        if (videoChannel->isVideoChannel()) {
+            videoChannel->setVisible(false);
+        }
+    }
+
     FFMpegDemuxer *videoDecoder = new FFMpegDemuxer(this, encodedVideoData);
     connect(videoDecoder, &FFMpegDemuxer::imagesDecoded, this, [=](QList<QImage> images, uint frameRate){
         if (!images.isEmpty()) {
@@ -396,7 +404,9 @@ QSize NinjamTrackGroupView::sizeHint() const
     else if (tracksLayoutEnum == TracksLayout::HorizontalLayout) {
         int height = 0;
         for (auto trackView : trackViews) {
-            height += trackView->minimumSizeHint().height();
+            if (trackView->isVisible()) {
+                height += trackView->minimumSizeHint().height();
+            }
         }
 
         auto margins = mainLayout->contentsMargins();

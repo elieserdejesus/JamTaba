@@ -668,8 +668,8 @@ void MainWindow::initialize()
     if (settings.isRememberingBottomSection())
         setBottomCollapsedStatus(settings.isBottomSectionCollapsed());
 
-    auto turnedOn = false;
-    createMainChat(turnedOn);
+    auto publicChatActivated = settings.publicChatIsActivated();
+    createMainChat(publicChatActivated);
 
 }
 
@@ -1116,8 +1116,15 @@ void MainWindow::detachMainController()
 void MainWindow::handleServerConnectionError(const QString &errorMsg)
 {
     hideBusyDialog();
-    QMessageBox::warning(this, tr("Error!"),
-                         tr("Error connecting with Jamtaba server!\n") + errorMsg);
+
+    auto message = tr("Error connecting with Jamtaba server!\n") + errorMsg;
+
+    auto metrics = fontMetrics();
+    auto messageWidth = metrics.width(message);
+
+    auto pos = QPoint(width()/2 - messageWidth/2, height()/2);
+
+    QToolTip::showText(mapToGlobal(pos), message, this, rect());
 }
 
 QString MainWindow::sanitizeLatestVersionDetails(const QString &details)
@@ -1711,6 +1718,7 @@ void MainWindow::createMainChat(bool turnedOn)
     connect(mainChatPanel, &ChatPanel::turnedOff, [=](){
          mainChat->disconnectFromServer();
          mainChatPanel->showConnectedUsersWidget(false);
+         mainController->setPublicChatActivated(false);
     });
 
     if (turnedOn)
@@ -1727,6 +1735,8 @@ void MainWindow::connectInMainChat()
     publicChat->addMessage(mainController->getUserName(), JAMTABA_CHAT_BOT_NAME, tr("Connecting ..."));
 
     mainChat->connectWithServer(MainChat::MAIN_CHAT_URL);
+
+    mainController->setPublicChatActivated(true);
 }
 
 void MainWindow::fillUserContextMenu(QMenu &menu, const QString &userFullName, bool addInvitationEntry)
@@ -2192,9 +2202,24 @@ void MainWindow::changeEvent(QEvent *ev)
         translateCollapseButtonsToolTips();
 
         ui.chatTabWidget->retranslateUi(); // translate the main chat tab title
+
+        translatePublicChatCountryNames();
     }
 
     QMainWindow::changeEvent(ev);
+}
+
+void MainWindow::translatePublicChatCountryNames()
+{
+    auto publicChat = ui.chatTabWidget->getPublicChat();
+    if (publicChat) {
+        auto connectedUsers = publicChat->getConnectedUsers();
+
+        for (const QString &userFullName : connectedUsers) {
+            auto ip = ninjam::client::extractUserIP(userFullName);
+            publicChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
+        }
+    }
 }
 
 void MainWindow::translateCollapseButtonsToolTips()

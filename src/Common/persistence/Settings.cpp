@@ -945,6 +945,10 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         else
             this->usingNarrowedTracks = false;
 
+        if (root.contains("publicChatActivated")) {
+            publicChatActivated = root["publicChatActivated"].toBool(true);
+        }
+
         // read settings sections (Audio settings, Midi settings, ninjam settings, etc...)
         for (SettingsObject *so : sections)
             so->read(root[so->getName()].toObject());
@@ -1009,6 +1013,7 @@ bool Settings::writeFile(const QList<SettingsObject *> &sections) // io ops ...
         root["masterGain"] = masterFaderGain;
         root["intervalsBeforeInactivityWarning"] = static_cast<int>(intervalsBeforeInactivityWarning);
         root["chatFontSizeOffset"] = static_cast<int>(chatFontSizeOffset);
+        root["publicChatActivated"] = publicChatIsActivated();
 
         if (!recentEmojis.isEmpty()) {
             root["recentEmojis"] = QJsonArray::fromStringList(recentEmojis);
@@ -1111,7 +1116,8 @@ Settings::Settings() :
     ninjamIntervalProgressShape(0),
     usingNarrowedTracks(false),
     intervalsBeforeInactivityWarning(5), // 5 intervals by default,
-    chatFontSizeOffset(0)
+    chatFontSizeOffset(0),
+    publicChatActivated(true)
 {
     // qDebug() << "Settings in " << fileDir;
 }

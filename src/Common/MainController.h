@@ -298,6 +298,8 @@ public:
 
     qint8 getChatFontSizeOffset() const;
 
+    void setPublicChatActivated(bool activated);
+
 signals:
     void ipResolved(const QString &ip);
     void themeChanged();

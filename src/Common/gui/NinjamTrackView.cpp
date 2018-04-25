@@ -209,6 +209,11 @@ void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialVal
 
 }
 
+bool NinjamTrackView::isVideoChannel() const
+{
+    return instrumentsButton->getSelectedIcon() == static_cast<int>(InstrumentIndex::Video);
+}
+
 qint8 NinjamTrackView::guessInstrumentIcon() const
 {
     auto channelName = instrumentsButton->toolTip();

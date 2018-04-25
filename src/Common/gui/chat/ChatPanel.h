@@ -46,6 +46,8 @@ public:
     bool inputsAreEnabled() const;
 
     void setConnectedUsers(const QStringList &usersNames);
+    QList<QString> getConnectedUsers() const;
+
     void setConnectedUserBlockedStatus(const QString &usersFullName, bool blocked);
 
     void setTintColor(const QColor &color);
