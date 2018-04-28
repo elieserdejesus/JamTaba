@@ -646,7 +646,7 @@ void MainWindow::initialize()
         QString themeName = mainController->getTheme();
         QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
         if(!theme::Loader::canLoad(themesDir, themeName))
-            themeName = "Flat"; // fallback to Flat theme
+            themeName = "Navy_nm"; // fallback to Navy theme
         setTheme(themeName);
     }
 

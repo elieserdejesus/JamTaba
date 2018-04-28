@@ -931,7 +931,7 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         if (root.contains("theme"))
             this->theme = root["theme"].toString();
         if (this->theme.isEmpty())
-            this->theme = "Flat"; //using flat as the new default theme
+            this->theme = "Navy_nm"; //using Navy as the new default theme
 
         if (root.contains("intervalProgressShape")) // read intervall progress shape
             this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt(0); // zero as default value
@@ -1112,7 +1112,7 @@ Settings::Settings() :
     tracksLayoutOrientation(Qt::Vertical),
     masterFaderGain(1.0),
     translation("en"), // english as default language
-    theme("Flat"), // flat as default theme,
+    theme("Navy_nm"), // flat as default theme,
     ninjamIntervalProgressShape(0),
     usingNarrowedTracks(false),
     intervalsBeforeInactivityWarning(5), // 5 intervals by default,
