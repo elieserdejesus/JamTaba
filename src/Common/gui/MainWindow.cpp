@@ -43,7 +43,7 @@
 #include <QCameraInfo>
 #include <QToolTip>
 
-const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
+const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 685);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
 const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
@@ -377,7 +377,8 @@ void MainWindow::initializeCameraWidget()
         if (!cameraView) {
             QIcon webcamIcon = IconFactory::createWebcamIcon(tintColor);
             cameraView = new VideoWidget(this, webcamIcon, false);
-            cameraView->setMaximumHeight(90);
+            cameraView->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+            cameraView->setMaximumHeight(136);
 
             connect(cameraView, &VideoWidget::statusChanged, this, &MainWindow::changeCameraStatus);
         }
@@ -389,9 +390,9 @@ void MainWindow::initializeCameraWidget()
             cameraCombo->setObjectName(QStringLiteral("cameraCombo"));
             connect(cameraCombo, SIGNAL(activated(int)), this, SLOT(selectNewCamera(int)));
             cameraCombo->setVisible(false);
-            cameraCombo->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+            cameraCombo->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
-            cameraLayout->addWidget(cameraView, 0, Qt::AlignCenter);
+            cameraLayout->addWidget(cameraView, 1, Qt::AlignHCenter);
             cameraLayout->addWidget(cameraCombo);
 
             auto leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
@@ -690,11 +691,7 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
     if (cameraView) {
         cameraCombo->setVisible(cameraView->isVisible() && cameraCombo->count() > 1);
         
-        if (!showPeakMetersOnly) {
-            cameraView->setMaximumHeight(90);
-        }
-        else {
-            cameraView->setMaximumHeight(32);
+        if (showPeakMetersOnly) {
             cameraCombo->setVisible(false);
         }
     }

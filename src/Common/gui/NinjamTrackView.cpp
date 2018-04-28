@@ -278,7 +278,7 @@ QSize NinjamTrackView::sizeHint() const
         if (narrowed)
             return QWidget::sizeHint();
         else
-            return QSize(width(), WIDE_HEIGHT);
+            return QSize(BaseTrackView::sizeHint().width(), WIDE_HEIGHT);
     }
     return BaseTrackView::sizeHint();
 }
@@ -359,7 +359,7 @@ void NinjamTrackView::setupHorizontalLayout()
     secondaryChildsLayout->setDirection(QBoxLayout::RightToLeft);
 
     levelSlider->setOrientation(Qt::Horizontal);
-    levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    levelSlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
     panSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 

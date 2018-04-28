@@ -500,8 +500,13 @@ void NinjamRoomWindow::addTrack(NinjamTrackGroupView *track)
     }
 
     Qt::Alignment alignment = tracksLayout == TracksLayout::VerticalLayout ? Qt::AlignLeft : Qt::AlignTop;
-    ui->tracksLayout->addWidget(track, row, collumn, 1, 1, alignment);
+    auto vPolicy = tracksLayout == TracksLayout::VerticalLayout ? QSizePolicy::Expanding : QSizePolicy::Preferred;
+    auto hPolicy = tracksLayout == TracksLayout::HorizontalLayout ? QSizePolicy::MinimumExpanding : QSizePolicy::Preferred;
+    track->setSizePolicy(QSizePolicy(hPolicy, vPolicy));
 
+    auto colSpan = 1;
+    auto rowSpan = 1;
+    ui->tracksLayout->addWidget(track, row, collumn, rowSpan, colSpan, alignment);
 
 }
 
@@ -812,8 +817,6 @@ void NinjamRoomWindow::setTracksLayout(TracksLayout newLayout)
     }
 
     reAddTrackGroups();
-
-    updateGeometry();
 
     mainController->storeTracksLayoutOrientation(static_cast<quint8>(newLayout));
 }

@@ -26,7 +26,6 @@ public:
     void removeTrackView(BaseTrackView *trackView);
     void removeTrackView(int index);
 
-    QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
 
     virtual void updateGuiElements();
