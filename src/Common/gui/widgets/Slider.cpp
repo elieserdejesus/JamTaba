@@ -238,6 +238,10 @@ void AudioSlider::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
+    if (!painter.isActive())
+        return;
+
+
     paintSliderGroove(painter);
 
     if (isEnabled() && !showSliderOnly) {
@@ -687,7 +691,8 @@ void PanSlider::paintEvent(QPaintEvent *ev)
 {
     if (value() != 0){ // painting the center marker only when the slider is not in the center marker
         QPainter painter(this);
-        drawMarker(painter);
+        if (painter.isActive())
+            drawMarker(painter);
     }
 
     QSlider::paintEvent(ev);

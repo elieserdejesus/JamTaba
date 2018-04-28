@@ -130,6 +130,8 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
     Q_UNUSED(ev);
 
     QPainter painter(this);
+    if (!painter.isActive())
+        return;
 
     static const QColor bgColor(0, 0, 0, 30);
     painter.fillRect(rect(), bgColor);
