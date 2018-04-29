@@ -43,7 +43,7 @@
 #include <QCameraInfo>
 #include <QToolTip>
 
-const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 665);
+const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 685);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
 const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
@@ -377,7 +377,8 @@ void MainWindow::initializeCameraWidget()
         if (!cameraView) {
             QIcon webcamIcon = IconFactory::createWebcamIcon(tintColor);
             cameraView = new VideoWidget(this, webcamIcon, false);
-            cameraView->setMaximumHeight(90);
+            cameraView->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+            cameraView->setMaximumHeight(136);
 
             connect(cameraView, &VideoWidget::statusChanged, this, &MainWindow::changeCameraStatus);
         }
@@ -389,9 +390,9 @@ void MainWindow::initializeCameraWidget()
             cameraCombo->setObjectName(QStringLiteral("cameraCombo"));
             connect(cameraCombo, SIGNAL(activated(int)), this, SLOT(selectNewCamera(int)));
             cameraCombo->setVisible(false);
-            cameraCombo->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+            cameraCombo->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
-            cameraLayout->addWidget(cameraView, 0, Qt::AlignCenter);
+            cameraLayout->addWidget(cameraView, 1, Qt::AlignHCenter);
             cameraLayout->addWidget(cameraCombo);
 
             auto leftPanelLayout = static_cast<QVBoxLayout *>(ui.leftPanel->layout());
@@ -645,7 +646,7 @@ void MainWindow::initialize()
         QString themeName = mainController->getTheme();
         QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
         if(!theme::Loader::canLoad(themesDir, themeName))
-            themeName = "Flat"; // fallback to Flat theme
+            themeName = "Navy_nm"; // fallback to Navy theme
         setTheme(themeName);
     }
 
@@ -690,11 +691,7 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
     if (cameraView) {
         cameraCombo->setVisible(cameraView->isVisible() && cameraCombo->count() > 1);
         
-        if (!showPeakMetersOnly) {
-            cameraView->setMaximumHeight(90);
-        }
-        else {
-            cameraView->setMaximumHeight(32);
+        if (showPeakMetersOnly) {
             cameraCombo->setVisible(false);
         }
     }
@@ -1007,6 +1004,11 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
 
     int channelIndex = 0;
     for (const auto &channel : inputsSettings.channels) {
+
+        // just a temporary workaround to https://github.com/elieserdejesus/JamTaba/issues/1104
+        if(channelIndex > 0 && channel.instrumentIndex == static_cast<int>(InstrumentIndex::Video))
+            continue; // skip this channel, it's a video channel used in the last session
+
         qCDebug(jtGUI) << "\tCreating channel "<< channelIndex;
         bool createFirstSubChannel = channel.subChannels.isEmpty();
         auto channelView = addLocalChannel(channelIndex, channel.instrumentIndex, createFirstSubChannel);
@@ -1015,6 +1017,7 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
             auto subChannelView = channelView->addTrackView(channelIndex);
             initializeLocalSubChannel(subChannelView, subChannel);
         }
+
         channelIndex++;
     }
     if (channelIndex == 0) // no channels in settings file or no settings file...

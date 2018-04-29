@@ -232,9 +232,12 @@ void BaseTrackView::updateGuiElements()
 
 QSize BaseTrackView::sizeHint() const
 {
+    auto hint = QFrame::sizeHint();
+
     if (narrowed)
-        return QSize(NARROW_WIDTH, height());
-    return QSize(WIDE_WIDTH, height());
+        return QSize(NARROW_WIDTH, hint.height());
+
+    return QSize(WIDE_WIDTH, hint.height());
 }
 
 QSize BaseTrackView::minimumSizeHint() const

@@ -8,9 +8,10 @@ VideoWidget::VideoWidget(QWidget *parent, const QIcon &icon, bool activated) :
     QWidget(parent),
     activated(activated),
     targetRect(0, 0, VideoWidget::MIN_SIZE, VideoWidget::MIN_SIZE),
-    webcamIcon(icon)
+    webcamIcon(icon),
+    imageRatio(0.75)
 {
-
+    setMinimumSize(VideoWidget::MIN_SIZE, VideoWidget::MIN_SIZE);
 }
 
 void VideoWidget::setIcon(const QIcon &icon)
@@ -36,7 +37,7 @@ void VideoWidget::setCurrentFrame(const QImage &image)
     currentImage = image;
 
     if (!currentImage.isNull() && activated) {
-
+        imageRatio = static_cast<qreal>(currentImage.height())/currentImage.width();
         updateScaledImage();
         updateGeometry();
     }
@@ -84,12 +85,53 @@ void VideoWidget::mouseReleaseEvent(QMouseEvent *ev)
     activate(!activated);
 }
 
+QSize VideoWidget::minimumSizeHint() const
+{
+    if (activated) {
+        auto w = width();
+        auto h = height();
+        if (parentWidget()) {
+            bool parentIsVertical = parentWidget()->height() > parentWidget()->width();
+            if (parentIsVertical) {
+                w = parentWidget()->width();
+                h = heightForWidth(w);
+            }
+            else {
+                h = height();
+                w = h * 1.0/imageRatio;
+            }
+        }
+        return QSize(w, h);
+    }
+
+    return minimumSize();
+}
+
+bool VideoWidget::hasHeightForWidth() const
+{
+    return activated;
+}
+
+int VideoWidget::heightForWidth(int width) const
+{
+    if (activated) {
+        if (parentWidget() && parentWidget()->width() < width)
+            width = parentWidget()->width();
+
+        return width * imageRatio;
+    }
+
+    return MIN_SIZE;
+}
+
 void VideoWidget::paintEvent(QPaintEvent *ev)
 {
 
     Q_UNUSED(ev);
 
     QPainter painter(this);
+    if (!painter.isActive())
+        return;
 
     static const QColor bgColor(0, 0, 0, 30);
     painter.fillRect(rect(), bgColor);
@@ -105,11 +147,6 @@ void VideoWidget::paintEvent(QPaintEvent *ev)
         webcamIcon.paint(&painter, targetRect.marginsRemoved(QMargins(3, 3, 3, 3)), alignment);
 }
 
-QSize VideoWidget::sizeHint() const
-{
-    return minimumSizeHint();
-}
-
 void VideoWidget::showEvent(QShowEvent *ev)
 {
     Q_UNUSED(ev);
@@ -122,15 +159,4 @@ void VideoWidget::hideEvent(QHideEvent *ev)
     Q_UNUSED(ev);
 
     emit visibilityChanged(false);
-}
-
-QSize VideoWidget::minimumSizeHint() const
-{
-    static const int MAX_HEIGHT = 90;
-    static const int MAX_WIDTH = 120;
-
-    if (activated)
-        return QSize(MAX_WIDTH, MAX_HEIGHT);
-
-    return QSize(VideoWidget::MIN_SIZE, VideoWidget::MIN_SIZE);
 }

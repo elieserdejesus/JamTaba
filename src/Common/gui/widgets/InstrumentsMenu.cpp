@@ -19,7 +19,7 @@ InstrumentIndex stringToInstrumentIndex(const QString &string)
     if (str.contains("piano"))
         return InstrumentIndex::Piano;
 
-    if (str.contains("voice") || str.contains("sing"))
+    if (str.contains("voice") || str.contains("sing")) || str.contains("mic"))
         return InstrumentIndex::Mic;
 
     if (str.contains("drum"))
@@ -52,7 +52,7 @@ InstrumentIndex stringToInstrumentIndex(const QString &string)
     if (str.contains("Percussion"))
         return InstrumentIndex::Percussion;
 
-    if (str.contains("TrollFace"))
+    if (str.contains("Troll"))
         return InstrumentIndex::TrollFace;
 
     if (str.contains("video"))
@@ -78,7 +78,7 @@ QString instrumentIndexToString(InstrumentIndex index)
     case InstrumentIndex::Mandolin:         return "Mandolin";
     case InstrumentIndex::Mic:              return "Voice";
     case InstrumentIndex::Percussion:       return "Percussion";
-    case InstrumentIndex::TrollFace:        return "TrollFace";
+    case InstrumentIndex::TrollFace:        return "Troll";
     case InstrumentIndex::Trumpet:          return "Trumpet";
     case InstrumentIndex::Violin:           return "Violin";
     case InstrumentIndex::Video:           return "Video";

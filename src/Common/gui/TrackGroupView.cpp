@@ -177,20 +177,17 @@ void TrackGroupView::removeTrackView(int trackIndex)
         qCritical() << "Invalid index " << trackIndex;
 }
 
-QSize TrackGroupView::minimumSizeHint() const
-{
-    return sizeHint();
-}
-
 QSize TrackGroupView::sizeHint() const
 {
-    int width = 0;
+    auto w = 0;
+
+    auto hint = QFrame::sizeHint();
 
     for (auto trackView : trackViews) {
         if (trackView->isVisible()) {
-            width += trackView->minimumSizeHint().width();
+            w += trackView->minimumSizeHint().width();
         }
     }
 
-    return QSize(width, 10);
+    return QSize(qMin(w, hint.width()), hint.height());
 }
