@@ -54,6 +54,7 @@ void LocalTrackGroupView::setAsVideoChannel()
     instrumentsButton->setStyleSheet(QString("margin-left: 0px"));
     instrumentsButton->blockSignals(true);
     instrumentsButton->setVisible(!peakMeterOnly);
+    xmitButton->setVisible(false);
 
     auto tracks = getTracks<LocalTrackView *>();
     for (auto track : tracks) {
