@@ -53,7 +53,6 @@ void LocalTrackGroupView::setAsVideoChannel()
     setInstrumentIcon(instrumentIcon);
     instrumentsButton->setStyleSheet(QString("margin-left: 0px"));
     instrumentsButton->blockSignals(true);
-    instrumentsButton->setVisible(false);
     xmitButton->setVisible(false);
 
     auto tracks = getTracks<LocalTrackView *>();
