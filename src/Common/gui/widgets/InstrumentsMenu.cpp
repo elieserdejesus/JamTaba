@@ -19,7 +19,7 @@ InstrumentIndex stringToInstrumentIndex(const QString &string)
     if (str.contains("piano"))
         return InstrumentIndex::Piano;
 
-    if (str.contains("voice") || str.contains("sing"))
+    if (str.contains("voice") || str.contains("sing")) || str.contains("mic"))
         return InstrumentIndex::Mic;
 
     if (str.contains("drum"))
