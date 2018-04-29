@@ -1004,6 +1004,11 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
 
     int channelIndex = 0;
     for (const auto &channel : inputsSettings.channels) {
+
+        // just a temporary workaround to https://github.com/elieserdejesus/JamTaba/issues/1104
+        if(channelIndex > 0 && channel.instrumentIndex == static_cast<int>(InstrumentIndex::Video))
+            continue; // skip this channel, it's a video channel used in the last session
+
         qCDebug(jtGUI) << "\tCreating channel "<< channelIndex;
         bool createFirstSubChannel = channel.subChannels.isEmpty();
         auto channelView = addLocalChannel(channelIndex, channel.instrumentIndex, createFirstSubChannel);
@@ -1012,6 +1017,7 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
             auto subChannelView = channelView->addTrackView(channelIndex);
             initializeLocalSubChannel(subChannelView, subChannel);
         }
+
         channelIndex++;
     }
     if (channelIndex == 0) // no channels in settings file or no settings file...
