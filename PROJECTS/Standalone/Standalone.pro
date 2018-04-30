@@ -166,6 +166,6 @@ linux{
     DEFINES += __LINUX_ALSA__
 
 
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lx264 -lavformat -lavcodec -lswscale -lavutil -lswresample -lminiupnpc
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavformat -lavcodec -lswscale -lavutil -lswresample -lminiupnpc -lx264
     LIBS += -lasound
 }
