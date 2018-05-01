@@ -238,6 +238,8 @@ QMap<QString, QString> EmojiManager::getCombinationsMap()
     combinations.insert(":-*", "1F617");
     combinations.insert(":'(",  "1F622");
     combinations.insert(":'-(", "1F622");
+    combinations.insert("->", "27A1");
+    combinations.insert("<-", "2B05");
 
 
     return combinations;

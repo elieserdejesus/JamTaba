@@ -25,7 +25,7 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userFullName,
     ui->setupUi(this);
 
     if (emojifier)
-        emojifiedText = emojifier->emojify(msg);
+        emojifiedText = emojifier->emojify(msg).replace(QRegExp("<[^img]"), ""); // scape html tags chars after emojify, except img tags
     else
         emojifiedText = msg;
 
