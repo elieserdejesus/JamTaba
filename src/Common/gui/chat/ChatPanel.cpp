@@ -246,6 +246,7 @@ void ChatPanel::setConnectedUsers(const QStringList &usersNames)
 
     //ui->treeWidget->setVisible(usersNames.size() > 1);
     ui->treeWidget->setVisible(true);
+    root->setExpanded(usersNames.size() > 1); // issue #1107
 }
 
 QList<QString> ChatPanel::getConnectedUsers() const
