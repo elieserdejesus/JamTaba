@@ -34,3 +34,5 @@ SOURCES += test_Chat.cpp
 FORMS += gui/chat/ChatMessagePanel.ui
 FORMS += gui/chat/ChatPanel.ui
 
+RESOURCES += ../../../src/resources/jamtaba.qrc
+
