@@ -697,7 +697,7 @@ void MainController::syncWithNinjamIntervalStart(uint intervalLenght)
 
 audio::AudioPeak MainController::getTrackPeak(int trackID)
 {
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
 
     auto trackNode = tracksNodes[trackID];
 
