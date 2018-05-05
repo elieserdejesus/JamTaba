@@ -23,6 +23,8 @@ int main(int argc, char *argv[])
     chatPanel.setConnectedUsers(QStringList() << "Tester" << "Tester 2" << "Tester 3");
 
     QString localUserName("Tester");
+    chatPanel.addMessage(localUserName, "ninbot", "username@81.174.155.x -120 Db");
+    chatPanel.addMessage(localUserName, "tester 1", "nice :+1:-1");
     chatPanel.addMessage(localUserName, "UserName", "<- ;) ->", true);
     chatPanel.addMessage(localUserName, "UserName", "http://www.google.com", true);
     chatPanel.addMessage(localUserName, "UserName", "<p testing html marker! :(", true);
