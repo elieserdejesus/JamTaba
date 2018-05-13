@@ -3,6 +3,15 @@
 
 #include <QObject>
 
+class TestNinbotCommands :public QObject
+{
+    Q_OBJECT
+
+private slots:
+    void ninbotLevelMessages();
+    void ninbotLevelMessages_data();
+};
+
 class TestAdminCommands : public QObject
 {
     Q_OBJECT

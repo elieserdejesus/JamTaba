@@ -30,7 +30,7 @@
 #include "audio/RoomStreamerNode.h"
 #include "performance/PerformanceMonitor.h"
 #include "video/VideoFrameGrabber.h"
-#include "chat/NinjamVotingMessageParser.h"
+#include "chat/NinjamChatMessageParser.h"
 #include "loginserver/MainChat.h"
 #include "TextEditorModifier.h"
 #include "widgets/InstrumentsMenu.h"
@@ -1571,7 +1571,14 @@ void MainWindow::addNinjamServerChatMessage(const User &msgAuthor, const QString
     Q_ASSERT(ninjamWindow);
     Q_ASSERT(ui.chatTabWidget->getNinjamServerChat());
 
-    QString remoteUserName = msgAuthor.getFullName();
+    auto remoteUserName = msgAuthor.getFullName();
+    auto localUserName = mainController->getUserName();
+
+    if (gui::chat::isNinbotLevelMessage(message)) {
+        auto messageUserName = gui::chat::extractUserNameFromNinbotLevelMessage(message);
+        if (messageUserName != localUserName)
+            return; // skip all ninbot level messages sended to other musicians (only the messages sent to me will appear in the chat)
+    }
 
     bool isSystemVoteMessage = gui::chat::parseSystemVotingMessage(message).isValidVotingMessage();
 
@@ -1587,7 +1594,6 @@ void MainWindow::addNinjamServerChatMessage(const User &msgAuthor, const QString
     auto mainChatPanel = ui.chatTabWidget->getNinjamServerChat();
     Q_ASSERT(mainChatPanel);
 
-    auto localUserName = mainController->getUserName();
     mainChatPanel->addMessage(localUserName, remoteUserName, message, showTranslationButton, showBlockButton);
 
     static bool localUserWasVotingInLastMessage = false;
