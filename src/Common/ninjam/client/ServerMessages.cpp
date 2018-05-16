@@ -73,8 +73,7 @@ AuthChallengeMessage AuthChallengeMessage::from(QIODevice *device, quint32)
     stream.setByteOrder(QDataStream::LittleEndian);
 
     QByteArray challenge(8, Qt::Uninitialized);
-    int readed = stream.readRawData(challenge.data(), challenge.capacity());
-    Q_ASSERT(readed = 8);
+    Q_ASSERT(stream.readRawData(challenge.data(), challenge.capacity()) == 8);
 
     quint32 serverCapabilities;
     stream >> serverCapabilities;
@@ -444,9 +443,7 @@ ServerToClientChatMessage ServerToClientChatMessage::from(QIODevice *device, qui
 
     QByteArray byteArray(payload, Qt::Uninitialized);
 
-    int readed = stream.readRawData(byteArray.data(), payload);
-
-    Q_ASSERT(readed == payload);
+    Q_ASSERT(stream.readRawData(byteArray.data(), payload) == payload);
 
     auto arrays = byteArray.split('\0');
     Q_ASSERT(arrays.size() >= 5);
@@ -639,9 +636,7 @@ DownloadIntervalWrite DownloadIntervalWrite::from(QIODevice *device, quint32 pay
     stream >> flags;
 
     QByteArray encodedData(payload - 17, Qt::Uninitialized);
-    int bytesReaded = stream.readRawData(encodedData.data(), encodedData.size());
-
-    Q_ASSERT(bytesReaded == encodedData.size());
+    Q_ASSERT(stream.readRawData(encodedData.data(), encodedData.size()) == encodedData.size());
 
     return DownloadIntervalWrite(GUID, flags, encodedData);
 }
