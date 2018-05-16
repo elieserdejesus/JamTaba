@@ -17,7 +17,7 @@
 #include "chords/ChatChordsProgressionParser.h"
 #include "NinjamPanel.h"
 #include "chat/ChatPanel.h"
-#include "chat/NinjamVotingMessageParser.h"
+#include "chat/NinjamChatMessageParser.h"
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "persistence/UsersDataCache.h"
@@ -435,9 +435,6 @@ void NinjamRoomWindow::setChannelXmitStatus(long channelID, bool transmiting)
 
 void NinjamRoomWindow::removeChannel(const User &user, const UserChannel &channel, long channelID)
 {
-    qCDebug(jtNinjamGUI) << "channel removed:" << channel.getName();
-    Q_UNUSED(channel);
-
     auto group = trackGroups[user.getFullName()];
     if (group) {
         if (group->getTracksCount() == 1) { // removing the last track, the group is removed too
@@ -449,11 +446,13 @@ void NinjamRoomWindow::removeChannel(const User &user, const UserChannel &channe
             if (trackView)
                 group->removeTrackView(trackView);
         }
+
+        qCDebug(jtNinjamGUI) << "channel removed:" << channel.getName();
+
+        updateTracksSizeButtons();
+
+        reAddTrackGroups(); // update the gridlayout to avoid empty cells
     }
-
-    updateTracksSizeButtons();
-
-    reAddTrackGroups(); // update the gridlayout to avoid empty cells
 }
 
 NinjamTrackView *NinjamRoomWindow::getTrackViewByID(long trackID)

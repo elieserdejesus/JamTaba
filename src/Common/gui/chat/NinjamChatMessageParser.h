@@ -1,5 +1,5 @@
-#ifndef NINJAM_VOTING_MESSAGE_PARSER_H
-#define NINJAM_VOTING_MESSAGE_PARSER_H
+#ifndef NINJAM_CHAT_MESSAGE_PARSER_H
+#define NINJAM_CHAT_MESSAGE_PARSER_H
 
 #include <QString>
 
@@ -15,6 +15,8 @@ namespace gui
         extern const QRegularExpression PRIVATE_MESSAGE_REGEX;
         extern const QRegularExpression PUBLIC_SERVER_INVITE_REGEX;
         extern const QRegularExpression PRIVATE_SERVER_INVITE_REGEX;
+
+        extern const QRegularExpression NINBOT_LEVEL_MESSAGE_REGEX;
 
         class SystemVotingMessage
         {
@@ -58,6 +60,10 @@ namespace gui
         bool isAdminCommand(const QString &message);
         bool isPrivateMessage(const QString &message);
         QString extractDestinationUserNameFromPrivateMessage(const QString &text);
+
+        bool isNinbotLevelMessage(const QString &message);
+        QString extractUserNameFromNinbotLevelMessage(const QString &message);
+        float extractDBValueFromNinbotLevelMessage(const QString &message);
 
     } // Chat namespace
 

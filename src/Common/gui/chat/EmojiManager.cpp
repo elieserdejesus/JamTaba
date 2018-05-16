@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QDateTime>
 #include <QStandardItemModel>
+#include <QRegularExpression>
 
 const uint EmojiManager::ICONS_SIZE = 24;
 
@@ -97,7 +98,7 @@ QString EmojiManager::emojify(const QString &string)
     QString replacedString(string);
 
     for (const QString &combination : combinationsMap.keys())
-        replacedString.replace(combination, emojiCodeToUtf8(combinationsMap[combination]));
+        replacedString.replace(QRegularExpression(combination), emojiCodeToUtf8(combinationsMap[combination]));
 
     QVector<uint> codes = replacedString.toUcs4();
     QString newString;
@@ -212,32 +213,32 @@ QMap<QString, QString> EmojiManager::getCombinationsMap()
 {
     QMap<QString, QString> combinations;
 
-    combinations.insert(":)",   "1F600");
-    combinations.insert(":-)",  "1F600");
-    combinations.insert(":(",   "1F61E");
-    combinations.insert(":-(",  "1F61E");
-    combinations.insert(";)",   "1F609");
-    combinations.insert(";-)",  "1F609");
-    combinations.insert(":-o)", "1F632");
-    combinations.insert(":-O)", "1F632");
+    combinations.insert(":\\)",   "1F600");
+    combinations.insert(":-\\)",  "1F600");
+    combinations.insert(":\\(",   "1F61E");
+    combinations.insert(":-\\(",  "1F61E");
+    combinations.insert(";\\)",   "1F609");
+    combinations.insert(";-\\)",  "1F609");
+    combinations.insert(":-o\\)", "1F632");
+    combinations.insert(":-O\\)", "1F632");
     combinations.insert(":p",   "1F61B");
     combinations.insert(":-p",  "1F61B");
     combinations.insert(":P",   "1F61B");
     combinations.insert(":-P",  "1F61B");
-    combinations.insert(":/)",  "1F615");
-    combinations.insert(":-/)", "1F615");
+    combinations.insert(":/\\)",  "1F615");
+    combinations.insert(":-/\\)", "1F615");
     combinations.insert(":D",   "1F603");
-    combinations.insert(":-D)", "1F603");
+    combinations.insert(":-D\\)", "1F603");
     combinations.insert(":@",   "1F620");
-    combinations.insert(":-@)", "1F620");
-    combinations.insert("(y)",  "1F44D");
-    combinations.insert("(n)",  "1F44E");
-    combinations.insert("+1",   "1F44D");
-    combinations.insert("-1",   "1F44E");
-    combinations.insert(":*",   "1F617");
-    combinations.insert(":-*", "1F617");
-    combinations.insert(":'(",  "1F622");
-    combinations.insert(":'-(", "1F622");
+    combinations.insert(":-@\\)", "1F620");
+    combinations.insert(":y",   "1F44D");
+    combinations.insert(":n",   "1F44E");
+    combinations.insert(":\\+1",  "1F44D");
+    combinations.insert(":-1",  "1F44E");
+    combinations.insert(":\\*",   "1F617");
+    combinations.insert(":-\\*",  "1F617");
+    combinations.insert(":'\\(",  "1F622");
+    combinations.insert(":'-\\(", "1F622");
 
     return combinations;
 }
