@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include <QDebug>
 #include <QFileDialog>
+#include <QDateTime>
 #include "persistence/Settings.h"
 #include "MetronomeUtils.h"
 #include "audio/vorbis/Vorbis.h"
@@ -74,6 +75,7 @@ void PreferencesDialog::initialize(PreferencesTab initialTab, const persistence:
     this->settings = settings;
     this->jamRecorders = jamRecorders;
     this->jamRecorderCheckBoxes = QMap<QCheckBox *, QString>();
+    this->jamDateFormatRadioButtons = QMap<const QRadioButton *, QString>();
 
     for (const auto &jamRecorder : jamRecorders.keys()) {
         QCheckBox *myCheckBox = new QCheckBox(this);
@@ -82,6 +84,29 @@ void PreferencesDialog::initialize(PreferencesTab initialTab, const persistence:
         ui->layoutRecorders->addWidget(myCheckBox);
         jamRecorderCheckBoxes[myCheckBox] = jamRecorder;
     }
+
+    QDateTime now = QDateTime::currentDateTime();
+    Qt::DateFormat dateFormat;
+    QString nowString;
+    QRadioButton *myRadioButton;
+
+    dateFormat = Qt::TextDate;
+    nowString = "Jam-" + now.toString(dateFormat).replace(QRegExp("[/:]"), "-").replace(QRegExp("[ ]"), "_");
+    myRadioButton = new QRadioButton(this);
+    myRadioButton->setObjectName("rbdfTextDate");
+    myRadioButton->setText(nowString);
+    myRadioButton->setProperty("buttonGroup", "rbDateFormat");
+    ui->layoutDateFormats->addWidget(myRadioButton);
+    jamDateFormatRadioButtons[myRadioButton] = "Qt::TextDate";
+
+    dateFormat = Qt::ISODate;
+    nowString = "Jam-" + now.toString(dateFormat).replace(QRegExp("[/:]"), "-").replace(QRegExp("[ ]"), "_");
+    myRadioButton = new QRadioButton(this);
+    myRadioButton->setObjectName("rbdfISODate");
+    myRadioButton->setText(nowString);
+    myRadioButton->setProperty("buttonGroup", "rbDateFormat");
+    ui->layoutDateFormats->addWidget(myRadioButton);
+    jamDateFormatRadioButtons[myRadioButton] = "Qt::ISODate";
 
     setupSignals();
 
@@ -95,8 +120,14 @@ void PreferencesDialog::setupSignals()
     connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectTab(int)));
 
     connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this, SLOT(toggleRecording(bool)));
-
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(openRecordingPathBrowser()));
+    for(const QRadioButton *rb : jamDateFormatRadioButtons.keys()) {
+        connect(rb, &QRadioButton::toggled, [=]() {
+            if (rb->isChecked()) {
+                emit jamDateFormatChanged(jamDateFormatRadioButtons[rb]);
+            }
+        });
+    }
 
     connect(ui->groupBoxCustomMetronome, SIGNAL(toggled(bool)), this, SLOT(toggleCustomMetronomeSounds(bool)));
     connect(ui->groupBoxBuiltInMetronomes, SIGNAL(toggled(bool)), this, SLOT(toggleBuiltInMetronomeSounds(bool)));
@@ -288,6 +319,10 @@ void PreferencesDialog::populateMultiTrackRecordingTab()
 
     for (auto myCheckBox : jamRecorderCheckBoxes.keys()) {
         myCheckBox->setChecked(recordingSettings.isJamRecorderActivated(jamRecorderCheckBoxes[myCheckBox]));
+    }
+
+    for (const QRadioButton * myRadioButton : jamDateFormatRadioButtons.keys()) {
+        ((QRadioButton *)myRadioButton)->setChecked(QString::compare(recordingSettings.dirNameDateFormat, jamDateFormatRadioButtons[myRadioButton]) == 0);
     }
 
     QDir recordDir(recordingSettings.recordingPath);

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QCheckBox>
+#include <QRadioButton>
 #include "persistence/Settings.h"
 #include "recorder/JamRecorder.h"
 
@@ -38,6 +39,7 @@ signals:
     void multiTrackRecordingStatusChanged(bool recording);
     void jamRecorderStatusChanged(const QString &writerId, bool status);
     void recordingPathSelected(const QString &newRecordingPath);
+    void jamDateFormatChanged(QString dateFormat);
     void encodingQualityChanged(float newEncodingQuality);
     void looperAudioEncodingFlagChanged(bool savingEncodedAudio);
     void looperWaveFilesBitDepthChanged(quint8 bitDepth);
@@ -71,6 +73,7 @@ private:
     void refreshMetronomeControlsStyleSheet();
     QString openAudioFileBrowser(const QString caption);
     QMap<QCheckBox *, QString> jamRecorderCheckBoxes;
+    QMap<const QRadioButton *, QString> jamDateFormatRadioButtons;
     static QString getAudioFilesFilter();
 
 protected:

@@ -213,6 +213,7 @@ public:
     void storeMultiTrackRecordingStatus(bool savingMultiTracks);
     bool isMultiTrackRecordingActivated() const;
     void storeMultiTrackRecordingPath(const QString &newPath);
+    void storeDirNameDateFormat(const QString &newDateFormat);
 
     void storeJamRecorderStatus(const QString &writerId, bool status);
 

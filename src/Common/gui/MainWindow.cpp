@@ -2411,6 +2411,8 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 
     connect(dialog, &PreferencesDialog::recordingPathSelected, this, &MainWindow::setRecordingPath);
 
+    connect(dialog, &PreferencesDialog::jamDateFormatChanged, this, &MainWindow::setJamDirectoryDateFormat);
+
     connect(dialog, &PreferencesDialog::builtInMetronomeSelected, this, &MainWindow::setBuiltInMetronome);
 
     connect(dialog, &PreferencesDialog::customMetronomeSelected, this, &MainWindow::setCustomMetronome);
@@ -2451,6 +2453,11 @@ void MainWindow::setJamRecorderStatus(const QString &writerId, bool status)
 void MainWindow::setRecordingPath(const QString &newRecordingPath)
 {
     mainController->storeMultiTrackRecordingPath(newRecordingPath);
+}
+
+void MainWindow::setJamDirectoryDateFormat(const QString &newDateFormat)
+{
+    mainController->storeDirNameDateFormat(newDateFormat);
 }
 
 void MainWindow::initializeViewMenu()
