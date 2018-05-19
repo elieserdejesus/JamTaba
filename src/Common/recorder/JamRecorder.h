@@ -244,6 +244,8 @@ public:
     inline QString getWriterId() const { return jamMetadataWritter->getWriterId(); }
     inline QString getWriterName() const { return jamMetadataWritter->getWriterName(); }
 
+    void setDirNameDateFormat(Qt::DateFormat newDateFormat);
+
 private:
     QString currentJamName;
     std::unique_ptr<Jam> jam;
@@ -252,6 +254,7 @@ private:
     QString localUserName;
     bool running;
     QDir recordBaseDir;
+    Qt::DateFormat dirNameDateFormat;
 
     /**
         Audio Intervals: Using channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
