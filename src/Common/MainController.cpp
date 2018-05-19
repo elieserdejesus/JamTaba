@@ -583,6 +583,17 @@ void MainController::storeMultiTrackRecordingPath(const QString &newPath)
     }
 }
 
+void MainController::storeDirNameDateFormat(const QString &newDateFormat)
+{
+    settings.setDirNameDateFormat(newDateFormat);
+    Qt::DateFormat dateFormat = settings.getMultiTrackRecordingSettings().getDirNameDateFormat();
+    if (settings.isSaveMultiTrackActivated()) {
+        for (auto jamRecorder : jamRecorders) {
+            jamRecorder->setDirNameDateFormat(dateFormat);
+        }
+    }
+}
+
 void MainController::storePrivateServerSettings(const QString &server, int serverPort, const QString &password)
 {
     settings.addPrivateServer(server, serverPort, password);

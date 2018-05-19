@@ -122,7 +122,7 @@ void Jam::addAudioFile(const QString &userName, quint8 channelIndex, const QStri
 QString JamRecorder::getNewJamName()
 {
     QDateTime now = QDateTime::currentDateTime();
-    QString nowString = now.toString(Qt::TextDate);
+    QString nowString = now.toString(dirNameDateFormat);
     nowString = nowString.replace(QRegExp("[/:]"), "-").replace(QRegExp("[ ]"), "_");
     return "Jam-" + nowString;
 }
@@ -268,6 +268,15 @@ void JamRecorder::setBpm(int newBpm)
 void JamRecorder::setRecordPath(const QDir &newDir)
 {
     recordBaseDir = newDir;
+    if (running) {
+        stopRecording();
+        startRecording(localUserName, recordBaseDir, jam->getBpm(), jam->getBpi(), jam->getSampleRate() );
+    }
+}
+
+void JamRecorder::setDirNameDateFormat(Qt::DateFormat newDateFormat)
+{
+    dirNameDateFormat = newDateFormat;
     if (running) {
         stopRecording();
         startRecording(localUserName, recordBaseDir, jam->getBpm(), jam->getBpi(), jam->getSampleRate() );

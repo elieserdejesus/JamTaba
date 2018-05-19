@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>4</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -461,7 +461,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>98</width>
+               <width>467</width>
                <height>45</height>
               </rect>
              </property>
@@ -510,6 +510,27 @@
        <property name="verticalSpacing">
         <number>18</number>
        </property>
+       <item row="0" column="0" colspan="3">
+        <widget class="QCheckBox" name="recordingCheckBox">
+         <property name="text">
+          <string>Save multi tracks </string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="3">
+        <layout class="QVBoxLayout" name="layoutRecorders">
+         <property name="leftMargin">
+          <number>26</number>
+         </property>
+        </layout>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Record path:</string>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="1">
         <widget class="QLineEdit" name="recordPathLineEdit">
          <property name="enabled">
@@ -524,7 +545,21 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="4" column="0">
+        <widget class="QLabel" name="lblJamDirectoryName">
+         <property name="text">
+          <string>Directory name format:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="3">
+        <layout class="QVBoxLayout" name="layoutDateFormats">
+         <property name="leftMargin">
+          <number>26</number>
+         </property>
+        </layout>
+       </item>
+       <item row="6" column="1">
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -536,27 +571,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <widget class="QCheckBox" name="recordingCheckBox">
-         <property name="text">
-          <string>Save multi tracks </string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Record path:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="3">
-        <layout class="QVBoxLayout" name="layoutRecorders">
-         <property name="leftMargin">
-          <number>26</number>
-         </property>
-        </layout>
        </item>
       </layout>
      </widget>

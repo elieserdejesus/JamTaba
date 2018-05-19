@@ -279,6 +279,7 @@ private slots:
     void setMultiTrackRecordingStatus(bool recording);
     void setJamRecorderStatus(const QString &writerId, bool status);
     void setRecordingPath(const QString &newRecordingPath);
+    void setJamDirectoryDateFormat(const QString &newDateFormat);
     void setBuiltInMetronome(const QString &metronomeAlias);
     void setCustomMetronome(const QString &primaryBeatFile, const QString &offBeatFile, const QString &accentBeatFile);
 
