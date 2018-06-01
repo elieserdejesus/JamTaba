@@ -165,6 +165,7 @@ public:
     void read(const QJsonObject &in) override;
     bool saveMultiTracksActivated;
     QString recordingPath;
+    QString dirNameDateFormat;
 
     inline bool isJamRecorderActivated(const QString &key) const
     {
@@ -175,6 +176,26 @@ public:
     inline void setJamRecorderActivated(const QString &key, bool value)
     {
         jamRecorderActivated[key] = value;
+    }
+
+    inline Qt::DateFormat getDirNameDateFormat() const
+    {
+        if (QString::compare("Qt::ISODate", dirNameDateFormat) == 0) {
+            return Qt::ISODate;
+        } else {
+            return Qt::TextDate;
+        }
+    }
+    inline void setDirNameDateFormat(const Qt::DateFormat dateFormat)
+    {
+        switch (dateFormat) {
+        case Qt::ISODate:
+            dirNameDateFormat = "Qt::ISODate";
+            break;
+        default:
+            dirNameDateFormat = "Qt::TextDate";
+            break;
+        }
     }
 
 private:
@@ -462,6 +483,8 @@ public:
     void setJamRecorderActivated(const QString &key, bool value);
     QString getRecordingPath() const;
     void setMultiTrackRecordingPath(const QString &newPath);
+    QString getDirNameDateFormat() const;
+    void setDirNameDateFormat(const QString &newDateFormat);
 
     // user name
     QString getUserName() const;
@@ -877,6 +900,17 @@ inline void Settings::setMultiTrackRecordingPath(const QString &newPath)
 {
     recordingSettings.recordingPath = newPath;
 }
+
+inline QString Settings::getDirNameDateFormat() const
+{
+    return recordingSettings.dirNameDateFormat;
+}
+
+inline void Settings::setDirNameDateFormat(const QString &newDateFormat)
+{
+    recordingSettings.dirNameDateFormat = newDateFormat;
+}
+
 
 // user name
 inline QString Settings::getUserName() const
