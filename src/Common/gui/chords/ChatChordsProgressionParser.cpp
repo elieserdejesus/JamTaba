@@ -3,7 +3,7 @@
 #include <QString>
 #include <QRegularExpression>
 
-const QString ChatChordsProgressionParser::CHORDS_EXTENSIONS = "(M|Major|major|maj|m|minor|min|add|sus|aug|dim)";
+const QString ChatChordsProgressionParser::CHORDS_EXTENSIONS = "(M|Major|major|maj|m|minor|min|add|sus|aug|dim|M7|7M)";
 
 const QString ChatChordsProgressionParser::CHORDS_NUMBERS = "([\\(]?[#b\\+-]?(2|5|6|7|9|11|13)[ ]?[#b\\+-]?[\\)]?){1,3}|\\+|\\º|\\(maj7\\)";
 
