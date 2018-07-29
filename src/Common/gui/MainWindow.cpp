@@ -88,7 +88,6 @@ MainWindow::MainWindow(MainController *mainController, QWidget *parent) :
     mainChat(new MainChat()),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
-    chordsPanel(nullptr),
     performanceMonitor(new PerformanceMonitor()),
     lastPerformanceMonitorUpdate(0)
 {
@@ -2636,7 +2635,8 @@ void MainWindow::setMasterGain(int faderPosition)
 
 ChordsPanel *MainWindow::createChordsPanel()
 {
-    ChordsPanel *chordsPanel = new ChordsPanel();
+    auto chordsPanel = new ChordsPanel();
+
     connect(chordsPanel, &ChordsPanel::sendingChordsToChat, this, &MainWindow::sendCurrentChordProgressionToChat);
     connect(chordsPanel, &ChordsPanel::chordsDiscarded, this, &MainWindow::hideChordsPanel);
 
@@ -2648,7 +2648,7 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
     int currentBpi = mainController->getNinjamController()->getCurrentBpi();
     if (progression.canBeUsed(currentBpi)) {
         if (!chordsPanel)
-            chordsPanel = createChordsPanel();
+            chordsPanel.reset(createChordsPanel());
         else
             chordsPanel->setVisible(true);
 
@@ -2659,10 +2659,10 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
             chordsPanel->setChords(progression);
 
         // add the chord panel in top of bottom panel in main window
-        ui.bottomPanelLayout->addWidget(chordsPanel, 0, 0, 1, 3);
+        ui.bottomPanelLayout->addWidget(chordsPanel.data(), 0, 0, 1, 3);
 
         if (ninjamWindow) {
-            NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
+            auto ninjamPanel = ninjamWindow->getNinjamPanel();
             ninjamPanel->setLowContrastPaintInIntervalPanel(true);
         }
 
@@ -2694,7 +2694,7 @@ void MainWindow::sendAcceptedChordProgressionToServer(const ChordProgression &pr
 void MainWindow::sendCurrentChordProgressionToChat()
 {
     if (chordsPanel && mainController) { // just in case
-        ChordProgression chordProgression = chordsPanel->getChordProgression();
+        auto chordProgression = chordsPanel->getChordProgression();
         mainController->getNinjamController()->sendChatMessage(chordProgression.toString());
     }
 }
@@ -2702,10 +2702,9 @@ void MainWindow::sendCurrentChordProgressionToChat()
 void MainWindow::hideChordsPanel()
 {
     if (chordsPanel) {
-        ui.bottomPanel->layout()->removeWidget(chordsPanel);
+        ui.bottomPanel->layout()->removeWidget(chordsPanel.data());
         chordsPanel->setVisible(false);
-        chordsPanel->deleteLater();
-        chordsPanel = nullptr;
+        chordsPanel.reset();
     }
 
     if (ninjamWindow)
