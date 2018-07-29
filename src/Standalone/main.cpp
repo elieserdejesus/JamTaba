@@ -18,9 +18,6 @@ int main(int argc, char* args[] ){
     if (!configurator->setUp())
         qCritical() << "JTBConfig->setUp() FAILED !" ;
 
-    persistence::Settings settings;
-    settings.load();
-
 // SingleApplication is not working in mac. Using a dirty ifdef until have time to solve the SingleApplication issue in Mac
 #ifdef Q_OS_WIN
     SingleApplication application(argc, args);
@@ -29,6 +26,9 @@ int main(int argc, char* args[] ){
 #endif
 
     application.setStyle("fusion"); // same visual in all platforms
+
+    persistence::Settings settings;
+    settings.load();
 
     controller::MainControllerStandalone mainController(settings, &application);
     mainController.start();
