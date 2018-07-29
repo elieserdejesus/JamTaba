@@ -7,50 +7,63 @@
     <x>0</x>
     <y>0</y>
     <width>725</width>
-    <height>25</height>
+    <height>219</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string notr="true"/>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
    <property name="spacing">
-    <number>6</number>
+    <number>24</number>
    </property>
    <property name="leftMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="topMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <item>
-    <layout class="QGridLayout" name="gridLayout">
-     <property name="horizontalSpacing">
-      <number>3</number>
-     </property>
-     <property name="verticalSpacing">
-      <number>0</number>
-     </property>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="buttonsLayout">
      <property name="spacing">
       <number>3</number>
      </property>
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
-     </property>
      <item>
+      <widget class="QLabel" name="titleLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Chords (server:2049)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item alignment="Qt::AlignRight|Qt::AlignTop">
       <widget class="QPushButton" name="buttonSendToChat">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+        <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -64,34 +77,25 @@
        <property name="text">
         <string/>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="buttonDiscardChords">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string>discard chord progression</string>
-       </property>
-       <property name="accessibleDescription">
-        <string>discard chord progression</string>
-       </property>
-       <property name="text">
-        <string/>
+       <property name="icon">
+        <iconset resource="../../../resources/jamtaba.qrc">
+         <normaloff>:/images/chat_small.png</normaloff>:/images/chat_small.png</iconset>
        </property>
       </widget>
      </item>
-     <item>
+     <item alignment="Qt::AlignRight|Qt::AlignTop">
       <widget class="QPushButton" name="buttonTransposeDown">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+        <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
+         <verstretch>1</verstretch>
         </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="toolTip">
         <string>transpose down</string>
@@ -104,13 +108,19 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item alignment="Qt::AlignRight|Qt::AlignTop">
       <widget class="QPushButton" name="buttonTransposeUp">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+        <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
+         <verstretch>1</verstretch>
         </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="toolTip">
         <string>transpose up</string>
@@ -125,8 +135,33 @@
      </item>
     </layout>
    </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="horizontalSpacing">
+      <number>3</number>
+     </property>
+     <property name="verticalSpacing">
+      <number>12</number>
+     </property>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../resources/jamtaba.qrc"/>
+ </resources>
  <connections/>
 </ui>

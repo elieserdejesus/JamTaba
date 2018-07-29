@@ -88,7 +88,6 @@ MainWindow::MainWindow(MainController *mainController, QWidget *parent) :
     mainChat(new MainChat()),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
-    chordsPanel(nullptr),
     performanceMonitor(new PerformanceMonitor()),
     lastPerformanceMonitorUpdate(0)
 {
@@ -1044,19 +1043,31 @@ void MainWindow::initializeLoginService()
 void MainWindow::closeContentTab(int index)
 {
     if (index > 0) { // the first tab (rooms to play) is not closeable
-        showBusyDialog(tr("disconnecting ..."));
-        if (mainController->isPlayingInNinjamRoom())
-            mainController->stopNinjamController();
+        if (index == 1) { // jam tab
+            showBusyDialog(tr("disconnecting ..."));
+            if (mainController->isPlayingInNinjamRoom())
+                mainController->stopNinjamController();
+        }
+        else if (index == 2) { // chords tab
+            auto chordsPanel = ui.contentTabWidget->widget(2);
+            if (chordsPanel) {
+                ui.contentTabWidget->removeTab(2);
+                chordsPanel->deleteLater();
+            }
+        }
     }
 }
 
 void MainWindow::changeTab(int index)
 {
-    if (index > 0) { // click in room tab?
-        if (mainController->isPlayingInNinjamRoom() && mainController->isPlayingRoomStream())
+    if (index == 1) { // click in jam tab?
+        if (mainController->isPlayingInNinjamRoom() && mainController->isPlayingRoomStream()) {
             stopCurrentRoomStream();
-    } else { // click in the public rooms tab?
-        updatePublicRoomsListLayout();
+        }
+    } else {
+        if (index == 0) { // click in the public rooms tab?
+            updatePublicRoomsListLayout();
+        }
     }
 }
 
@@ -2010,9 +2021,9 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     // unlock the user name field
     setUserNameReadOnlyStatus(false);
 
-    // remove the jam room tab (the last tab)
-    if (ui.contentTabWidget->count() > 1) {
-        ui.contentTabWidget->widget(1)->deleteLater(); // delete the room window
+    // remove jam and the chords tab
+    while (ui.contentTabWidget->count() > 1) {
+        ui.contentTabWidget->widget(1)->deleteLater();
         ui.contentTabWidget->removeTab(1);
     }
 
@@ -2023,8 +2034,6 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     }
 
     collapseBottomArea(bottomCollapsed); // update bottom area visibility honoring collapse status
-
-    hideChordsPanel();
 
     if (ninjamWindow) {
         ninjamWindow->deleteLater();
@@ -2636,9 +2645,19 @@ void MainWindow::setMasterGain(int faderPosition)
 
 ChordsPanel *MainWindow::createChordsPanel()
 {
-    ChordsPanel *chordsPanel = new ChordsPanel();
-    connect(chordsPanel, &ChordsPanel::sendingChordsToChat, this, &MainWindow::sendCurrentChordProgressionToChat);
-    connect(chordsPanel, &ChordsPanel::chordsDiscarded, this, &MainWindow::hideChordsPanel);
+    Q_ASSERT(ninjamWindow);
+
+    auto chordsPanel = new ChordsPanel(ninjamWindow->getRoomName());
+
+    connect(chordsPanel, &ChordsPanel::sendingChordsToChat, this, [=]()
+    {
+        if (mainController) { // just in case
+            auto chordProgression = chordsPanel->getChordProgression();
+            mainController->getNinjamController()->sendChatMessage(chordProgression.toString());
+        }
+    });
+
+    connect(mainController->getNinjamController(), &NinjamController::intervalBeatChanged, chordsPanel, &ChordsPanel::setCurrentBeat);
 
     return chordsPanel;
 }
@@ -2647,10 +2666,13 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
 {
     int currentBpi = mainController->getNinjamController()->getCurrentBpi();
     if (progression.canBeUsed(currentBpi)) {
+
+        // add the chord panel in a new tab
+        showChordsPanel();
+
+        auto chordsPanel = qobject_cast<ChordsPanel *>(ui.contentTabWidget->widget(2)); // get the chords tab
         if (!chordsPanel)
-            chordsPanel = createChordsPanel();
-        else
-            chordsPanel->setVisible(true);
+            return;
 
         bool needStrech = progression.getBeatsPerInterval() != currentBpi;
         if (needStrech)
@@ -2658,11 +2680,8 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
         else
             chordsPanel->setChords(progression);
 
-        // add the chord panel in top of bottom panel in main window
-        ui.bottomPanelLayout->addWidget(chordsPanel, 0, 0, 1, 3);
-
         if (ninjamWindow) {
-            NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
+            auto ninjamPanel = ninjamWindow->getNinjamPanel();
             ninjamPanel->setLowContrastPaintInIntervalPanel(true);
         }
 
@@ -2691,25 +2710,17 @@ void MainWindow::sendAcceptedChordProgressionToServer(const ChordProgression &pr
     }
 }
 
-void MainWindow::sendCurrentChordProgressionToChat()
+void MainWindow::showChordsPanel()
 {
-    if (chordsPanel && mainController) { // just in case
-        ChordProgression chordProgression = chordsPanel->getChordProgression();
-        mainController->getNinjamController()->sendChatMessage(chordProgression.toString());
-    }
-}
+    if (!mainController || !mainController->isPlayingInNinjamRoom())
+        return;
 
-void MainWindow::hideChordsPanel()
-{
-    if (chordsPanel) {
-        ui.bottomPanel->layout()->removeWidget(chordsPanel);
-        chordsPanel->setVisible(false);
-        chordsPanel->deleteLater();
-        chordsPanel = nullptr;
+    if (ui.contentTabWidget->count() < 3) { // chords tab is not created
+        auto chordsPanel = createChordsPanel();
+        auto tabTitle = tr("Chords");
+        auto tabIndex = ui.contentTabWidget->addTab(chordsPanel, tabTitle);
+        ui.contentTabWidget->setCurrentIndex(tabIndex);
     }
-
-    if (ninjamWindow)
-        ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(false);
 }
 
 // ninjam controller events
@@ -2718,16 +2729,18 @@ void MainWindow::updateBpi(int bpi)
     if (!ninjamWindow)
         return;
 
-    NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
+    auto ninjamPanel = ninjamWindow->getNinjamPanel();
 
     if (!ninjamPanel)
         return;
 
     ninjamPanel->setBpi(bpi);
+
+    auto chordsPanel = qobject_cast<ChordsPanel *>(ui.contentTabWidget->widget(2));
     if (chordsPanel) {
         bool bpiWasAccepted = chordsPanel->setBpi(bpi);
         if (!bpiWasAccepted)
-            hideChordsPanel();
+            closeContentTab(2); // close chords tab
     }
 }
 
@@ -2753,9 +2766,6 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
         return;
 
     ninjamPanel->setCurrentBeat(beat);
-
-    if (chordsPanel)
-        chordsPanel->setCurrentBeat(beat);
 }
 
 void MainWindow::setupWidgets()

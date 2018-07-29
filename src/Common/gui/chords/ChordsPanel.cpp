@@ -1,16 +1,17 @@
 #include "ChordsPanel.h"
 #include "ui_ChordsPanel.h"
 
-ChordsPanel::ChordsPanel(QWidget *parent) :
+ChordsPanel::ChordsPanel(const QString &serverName, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ChordsPanel),
     currentChordLabel(nullptr)
 {
     ui->setupUi(this);
 
+    ui->titleLabel->setText(QString("%1 [%2]").arg(tr("Chords")).arg(serverName));
+
     // setup signals and slots
     connect(ui->buttonSendToChat, &QPushButton::clicked, this, &ChordsPanel::sendingChordsToChat);
-    connect(ui->buttonDiscardChords, &QPushButton::clicked, this, &ChordsPanel::discardChords);
     connect(ui->buttonTransposeUp, &QPushButton::clicked, this, &ChordsPanel::transposeUp);
     connect(ui->buttonTransposeDown, &QPushButton::clicked, this, &ChordsPanel::transposeDown);
 }
@@ -28,11 +29,12 @@ void ChordsPanel::setChords(const ChordProgression &progression)
     clear();
 
     chordProgression = progression;
-    QList<ChordProgressionMeasure *> measures = chordProgression.getMeasures();
+    auto measures = chordProgression.getMeasures();
     int beatToInsert = 0;
-    for (ChordProgressionMeasure *measure : measures) {
-        QList<Chord *> chords = measure->getChords();
-        for (Chord *chord : chords) {
+    for (auto measure : measures) {
+        auto chords = measure->getChords();
+
+        for (auto chord : chords) {
             int chordBeat = beatToInsert;
             int chordDuration = getEstimatedChordDuration(chord, measure);
             addChord(chord, chordBeat, chordDuration);
@@ -43,16 +45,14 @@ void ChordsPanel::setChords(const ChordProgression &progression)
 
 void ChordsPanel::addChord(Chord *chord, int beatToInsert, int durationInBeats)
 {
-    const int ROW = 0;
-    ChordLabel *chordLabel = new ChordLabel(this, chord, durationInBeats);
-    ui->gridLayout->addWidget(chordLabel, ROW, beatToInsert, 1, durationInBeats);
-    chordsMap.insert(beatToInsert, chordLabel);
-}
+    int row = beatToInsert / 16; // 4 measures per row, 16 beats per row
+    int column = beatToInsert % 16;
 
-void ChordsPanel::resetGridLayout()
-{
-    for (int c = 0; c < ui->gridLayout->columnCount(); ++c)
-        ui->gridLayout->removeItem(ui->gridLayout->itemAtPosition(0, c));
+    auto chordLabel = new ChordLabel(this, chord, durationInBeats);
+
+    ui->gridLayout->addWidget(chordLabel, row, column, 1, durationInBeats);
+
+    chordsMap.insert(beatToInsert, chordLabel);
 }
 
 bool ChordsPanel::setBpi(int newBpi)
@@ -75,13 +75,15 @@ void ChordsPanel::clear()
 {
     chordProgression.clear();
 
-    for (ChordLabel *chordLabel : chordsMap.values()) {
+    for (auto chordLabel : chordsMap.values()) {
         ui->gridLayout->removeWidget(chordLabel);
-        delete chordLabel;
+        if (chordLabel) {
+            chordLabel->deleteLater();
+        }
     }
+
     chordsMap.clear();
     currentChordLabel = nullptr;
-    resetGridLayout();
 }
 
 int ChordsPanel::getEstimatedChordDuration(Chord *chord, ChordProgressionMeasure *measure) const
@@ -118,10 +120,4 @@ void ChordsPanel::transposeUp()
 void ChordsPanel::transposeDown()
 {
     setChords(chordProgression.getTransposedVersion(-1));
-}
-
-void ChordsPanel::discardChords()
-{
-    clear();
-    emit chordsDiscarded();
 }

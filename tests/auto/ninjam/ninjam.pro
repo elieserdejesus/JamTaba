@@ -21,6 +21,7 @@ HEADERS += ninjam/client/User.h
 HEADERS += ninjam/client/UserChannel.h
 HEADERS += ninjam/client/Service.h
 HEADERS += ninjam/Ninjam.h
+HEADERS += ninjam/server/Server.h
 
 SOURCES += log/logging.cpp
 SOURCES += ninjam/Ninjam.cpp

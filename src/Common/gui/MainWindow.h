@@ -251,7 +251,6 @@ protected slots:
 
     // chords progression
     void acceptChordProgression(const ChordProgression &chordProgression);
-    void sendCurrentChordProgressionToChat();
 
     void updateBpi(int bpi);
     void updateBpm(int bpm);
@@ -271,7 +270,7 @@ private slots:
 
     void refreshPublicRoomsList(const QList<login::RoomInfo> &publicRooms);
 
-    void hideChordsPanel();
+    void showChordsPanel();
 
     void chatCollapseChanged(bool chatCollapsed);
 
@@ -425,8 +424,6 @@ private:
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
     void setInputTracksPreparingStatus(bool preparing);
-
-    ChordsPanel *chordsPanel;
 
     ChordsPanel *createChordsPanel();
 
