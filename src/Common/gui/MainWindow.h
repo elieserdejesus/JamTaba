@@ -426,7 +426,7 @@ private:
 
     void setInputTracksPreparingStatus(bool preparing);
 
-    ChordsPanel *chordsPanel;
+    QScopedPointer<ChordsPanel> chordsPanel;
 
     ChordsPanel *createChordsPanel();
 
