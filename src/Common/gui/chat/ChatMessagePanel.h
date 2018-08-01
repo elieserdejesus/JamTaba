@@ -93,6 +93,9 @@ private:
 
     void adjustContentMargins();
 
+    void downloadImage(const QString &link);
+    void insertImage(const QImage &image, const QString &link);
+
     static FontDetails getFontDetails(const QFont &f);
 
     static QString buildFontStyleSheet(const FontDetails &fontDetails, qint8 fontSizeOffset);
