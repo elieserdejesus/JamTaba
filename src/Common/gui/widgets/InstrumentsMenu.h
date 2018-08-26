@@ -14,6 +14,7 @@ enum class InstrumentIndex : qint8
     DoubleBass,
     Drums,
     Guitar,
+    Harmonica,
     JamTabaIcon,
     Keys,
     Mandolin,

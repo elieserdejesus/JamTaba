@@ -58,6 +58,9 @@ InstrumentIndex stringToInstrumentIndex(const QString &string)
     if (str.contains("video"))
         return InstrumentIndex::Video;
 
+    if (str.contains("harmonica") || str.contains("blues harp"))
+        return InstrumentIndex::Harmonica;
+
     return InstrumentIndex::JamTabaIcon;
 }
 
@@ -81,7 +84,8 @@ QString instrumentIndexToString(InstrumentIndex index)
     case InstrumentIndex::TrollFace:        return "Troll";
     case InstrumentIndex::Trumpet:          return "Trumpet";
     case InstrumentIndex::Violin:           return "Violin";
-    case InstrumentIndex::Video:           return "Video";
+    case InstrumentIndex::Video:            return "Video";
+    case InstrumentIndex::Harmonica:        return "Harmonica";
     }
 
     return "";
@@ -126,7 +130,7 @@ QWidget *InstrumentsButton::createToolBar(const QList<QIcon> &icons, const QSize
 
     toolBar->setLayout(gridLayout);
 
-    const auto columns = 6;
+    const auto columns = 5;
     for (int i = 0; i < icons.size(); ++i) {
         auto button = new QToolButton();
         button->setIconSize(iconSize);

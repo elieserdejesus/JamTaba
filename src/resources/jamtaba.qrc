@@ -1356,6 +1356,7 @@
         <file>instruments/computer.png</file>
         <file>instruments/pads.png</file>
         <file>instruments/percussion.png</file>
+        <file>instruments/harmonica.png</file>
     </qresource>
     <qresource prefix="/tiles">
         <file>map/0/0/0.png</file>
