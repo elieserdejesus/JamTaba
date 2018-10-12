@@ -451,6 +451,7 @@ void NinjamPanel::setBpi(int bpi)
         }
     } else {
         ui->comboAccentBeats->setCurrentIndex(0);// off
+        emit accentsComboChanged(0); // emit off value
         ui->intervalPanel->setShowAccents(false);
         if (metronomeFloatingWindow) {
             metronomeFloatingWindow->setShowAccents(false);
