@@ -147,6 +147,7 @@ HEADERS += gui/chords/ChordsPanel.h
 HEADERS += gui/chords/ChordProgression.h
 HEADERS += gui/chords/ChordProgressionMeasure.h
 HEADERS += gui/chords/ChordsProgressionParser.h
+HEADERS += gui/chords/ChordProgressionCreationDialog.h
 HEADERS += gui/chords/ChatChordsProgressionParser.h
 HEADERS += gui/chords/Chord.h
 HEADERS += gui/LocalTrackView.h
@@ -273,6 +274,7 @@ SOURCES += gui/BpiUtils.cpp
 SOURCES += gui/chords/ChordsPanel.cpp
 SOURCES += gui/chords/ChordProgression.cpp
 SOURCES += gui/chords/ChordProgressionMeasure.cpp
+SOURCES += gui/chords/ChordProgressionCreationDialog.cpp
 SOURCES += gui/chords/Chord.cpp
 SOURCES += gui/chords/ChordLabel.cpp
 SOURCES += gui/chords/ChatChordsProgressionParser.cpp
@@ -311,6 +313,7 @@ FORMS += gui/PrivateServerWindow.ui
 FORMS += gui/UserNameDialog.ui
 FORMS += gui/MainWindow.ui
 FORMS += gui/chords/ChordsPanel.ui
+FORMS += gui/chords/ChordProgressionCreationDialog.ui
 
 RESOURCES += ../resources/jamtaba.qrc
 
