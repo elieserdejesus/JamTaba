@@ -50,7 +50,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const RoomInfo &roomI
     tracksSize(TracksSize::WIDE),
     metronomeFloatingWindow(nullptr),
     roomInfo(roomInfo),
-    usersColorsPool(mainWindow->getUsersColorsPool())
+    usersColorsPool(mainWindow->getUsersColorsPool()),
+    chordProgressionDialog(new ChordProgressionCreationDialog(this))
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow ctor";
     ui->setupUi(this);
@@ -733,6 +734,16 @@ void NinjamRoomWindow::setupSignals(controller::NinjamController* ninjamControll
 
     connect(mainController->getNinjamService(), &ninjam::client::Service::videoIntervalCompleted, this, &NinjamRoomWindow::setVideoInterval);
 
+    connect(ui->chordsButton, &QPushButton::clicked, this, &NinjamRoomWindow::showChordProgressionDialog);
+}
+
+void NinjamRoomWindow::showChordProgressionDialog()
+{
+    if (chordProgressionDialog) {
+        chordProgressionDialog->show();
+        chordProgressionDialog->raise();
+        chordProgressionDialog->activateWindow();
+    }
 }
 
 void NinjamRoomWindow::setVideoInterval(const User &user, const QByteArray &encodedVideoData)

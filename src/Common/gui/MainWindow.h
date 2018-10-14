@@ -368,7 +368,7 @@ private:
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
-    void wireNinjamControllerSignals();
+    void wireNinjamSignals();
 
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;

@@ -13,6 +13,7 @@
 #include "PrivateServerWindow.h"
 #include "chords/ChordsPanel.h"
 #include "chords/ChatChordsProgressionParser.h"
+#include "chords/ChordProgressionCreationDialog.h"
 #include "widgets/BlinkableButton.h"
 #include "InactivityDetector.h"
 #include "IconFactory.h"
@@ -1319,7 +1320,7 @@ void MainWindow::enterInRoom(const login::RoomInfo &roomInfo)
 
     ui.leftPanel->adjustSize();
 
-    wireNinjamControllerSignals();
+    wireNinjamSignals();
 
     enableLooperButtonInLocalTracks(true); // looper buttons are enabled when entering in a server
 
@@ -1386,7 +1387,7 @@ void MainWindow::addNinjamPanelsInBottom()
 
 }
 
-void MainWindow::wireNinjamControllerSignals()
+void MainWindow::wireNinjamSignals()
 {
     auto controller = mainController->getNinjamController();
     connect(controller, &NinjamController::preparedToTransmit, this, &MainWindow::startTransmission);
@@ -1415,6 +1416,11 @@ void MainWindow::wireNinjamControllerSignals()
 
     Q_ASSERT(xmitInactivityDetector);
     xmitInactivityDetector->initialize(controller);
+
+    if (ninjamWindow) {
+        auto chordsDialog = ninjamWindow->getChordProgressionDialog();
+        connect(chordsDialog, &ChordProgressionCreationDialog::newChordProgression, this, &MainWindow::acceptChordProgression);
+    }
 
 }
 
@@ -2656,6 +2662,8 @@ ChordsPanel *MainWindow::createChordsPanel()
             mainController->getNinjamController()->sendChatMessage(chordProgression.toString());
         }
     });
+
+    connect(chordsPanel, &ChordsPanel::openingChordsDialog, ninjamWindow.data(), &NinjamRoomWindow::showChordProgressionDialog);
 
     connect(mainController->getNinjamController(), &NinjamController::intervalBeatChanged, chordsPanel, &ChordsPanel::setCurrentBeat);
 

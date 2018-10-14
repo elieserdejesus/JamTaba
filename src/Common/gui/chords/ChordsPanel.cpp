@@ -14,6 +14,7 @@ ChordsPanel::ChordsPanel(const QString &serverName, QWidget *parent) :
     connect(ui->buttonSendToChat, &QPushButton::clicked, this, &ChordsPanel::sendingChordsToChat);
     connect(ui->buttonTransposeUp, &QPushButton::clicked, this, &ChordsPanel::transposeUp);
     connect(ui->buttonTransposeDown, &QPushButton::clicked, this, &ChordsPanel::transposeDown);
+    connect(ui->buttonChordsDialog, &QPushButton::clicked, this, &ChordsPanel::openingChordsDialog);
 }
 
 ChordsPanel::~ChordsPanel()

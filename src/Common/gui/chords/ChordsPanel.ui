@@ -60,6 +60,17 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QPushButton" name="buttonChordsDialog">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../resources/jamtaba.qrc">
+         <normaloff>:/images/chords.png</normaloff>:/images/chords.png</iconset>
+       </property>
+      </widget>
+     </item>
      <item alignment="Qt::AlignRight|Qt::AlignTop">
       <widget class="QPushButton" name="buttonSendToChat">
        <property name="sizePolicy">
