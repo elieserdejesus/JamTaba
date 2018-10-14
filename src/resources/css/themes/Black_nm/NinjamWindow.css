@@ -98,7 +98,8 @@ QToolButton:hover:checked,
 }
 
 NinjamRoomWindow QToolButton:hover:!checked,
-#licenceButton:hover:!checked
+#licenceButton:hover:!checked,
+#chordsButton:hover
 {
     background-color: rgba(255, 255, 255, 40);
 }
@@ -108,7 +109,8 @@ NinjamRoomWindow QToolButton:hover:!checked,
 #buttonGridLayout,
 #wide,
 #narrow,
-#licenceButton
+#licenceButton,
+#chordsButton
 {
     border: 1px solid black;
     height: 20px;
@@ -117,7 +119,8 @@ NinjamRoomWindow QToolButton:hover:!checked,
 }
 
 NinjamRoomWindow QToolButton:checked,
-#licenceButton
+#licenceButton,
+#chordsButton
 {
     background-color: rgb(255, 255, 255, 60);
 }
