@@ -187,6 +187,7 @@
         <file>collapse_bottom.png</file>
         <file>collapse_right.png</file>
         <file>collapse_left.png</file>
+        <file>chords.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>
