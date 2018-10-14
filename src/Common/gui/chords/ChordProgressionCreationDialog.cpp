@@ -6,7 +6,7 @@
 #include <QSpacerItem>
 #include <QDebug>
 
-#include "GuiUtils.h"
+#include "gui/GuiUtils.h"
 
 ChordProgressionCreationDialog::ChordProgressionCreationDialog(QWidget *parent) :
     QDialog(parent),
