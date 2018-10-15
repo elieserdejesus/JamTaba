@@ -245,3 +245,39 @@ void ChordProgressionCreationDialog::setupChordSlots(int measures, int chordsPer
     QApplication::processEvents();
     adjustSize();
 }
+
+int ChordProgressionCreationDialog::guessMeasures(int bpi) const
+{
+    switch (bpi) {
+        case 64:
+        case 32:
+        case 16:
+        case 8 : return bpi/4;   // 4/4 measures
+
+        case 12:
+        case 24: return bpi/3;   // 3/4 measures
+
+        case 48: return 12;      // 12 bars blues
+
+        case 20:
+        case 40: return bpi/5;   // 5/4 measures
+
+        case 28:
+        case 56: return bpi/7;   // 7/4 measures
+
+    }
+
+    return 8; // 8 measures as default
+}
+
+void ChordProgressionCreationDialog::show(int currentBpi)
+{
+    auto measures = guessMeasures(currentBpi);
+    auto chordsPerMeasure = 1;
+
+    setupChordSlots(measures, chordsPerMeasure);
+
+    QDialog::show();
+    raise();
+    activateWindow();
+}

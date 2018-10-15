@@ -18,6 +18,9 @@ public:
     explicit ChordProgressionCreationDialog(QWidget *parent = 0);
     ~ChordProgressionCreationDialog();
 
+public slots:
+    void show(int currentBpi);
+
 signals:
     void newChordProgression(const ChordProgression &progression);
 
@@ -35,6 +38,8 @@ private:
 
     void fillMeasuresCombo();
     void fillChordsPerMeasureCombo();
+
+    int guessMeasures(int bpi) const;
 
     void clearChordsLayout();
 };

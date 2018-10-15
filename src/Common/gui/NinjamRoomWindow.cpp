@@ -740,9 +740,9 @@ void NinjamRoomWindow::setupSignals(controller::NinjamController* ninjamControll
 void NinjamRoomWindow::showChordProgressionDialog()
 {
     if (chordProgressionDialog) {
-        chordProgressionDialog->show();
-        chordProgressionDialog->raise();
-        chordProgressionDialog->activateWindow();
+
+        auto currentBpi = ninjamPanel->getBpi();
+        chordProgressionDialog->show(currentBpi);
     }
 }
 
