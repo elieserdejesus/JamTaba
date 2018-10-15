@@ -235,8 +235,10 @@ void ChordProgressionCreationDialog::setupChordSlots(int measures, int chordsPer
             }
 
             chordsLayout->addLayout(layout, row, measure, 1, 1);
-
             chordsLayout->setAlignment(layout, Qt::AlignLeft);
+
+            auto lastWidget = layout->itemAt(layout->count()-1)->widget();
+            QWidget::setTabOrder(lastWidget, ui->buttonLoad); // keep the 'ok' button as the last element in tab order
         }
     }
 
