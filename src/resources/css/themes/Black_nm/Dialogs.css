@@ -12,7 +12,8 @@ UserNameDialog,
 PrivateServerDialog,
 LooperWindow,
 PrivateServerWindow,
-QWidget#instrumentsMenu
+QWidget#instrumentsMenu,
+ChordProgressionCreationDialog
 {
     border-color: rgb(20, 20, 20);
     color: rgb(40, 40, 40);
@@ -216,6 +217,16 @@ PrivateServerDialog QComboBox QAbstractItemView
     background-color: rgb(80, 80, 80);
     selection-background-color: rgb(50, 50, 50);
     selection-color: rgb(180, 180, 180);
+}
+
+ChordProgressionCreationDialog QComboBox
+{
+    min-width: 24px;
+}
+
+ChordProgressionCreationDialog QComboBox:focus
+{
+    border: 1px solid white;
 }
 
 BusyDialog

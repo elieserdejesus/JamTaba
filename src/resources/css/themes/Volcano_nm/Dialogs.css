@@ -12,7 +12,8 @@ QInputDialog,
 MidiToolsDialog,
 UserNameDialog,
 PrivateServerDialog,
-#instrumentsMenu
+#instrumentsMenu,
+ChordProgressionCreationDialog
 {
     border-color: rgb(20, 20, 20);
     color: rgb(220, 220, 220);
@@ -242,6 +243,16 @@ PrivateServerDialog QComboBox QAbstractItemView
     background-color: rgba(254, 181, 102, 150);
     selection-background-color: rgb(179, 89, 37);
     selection-color: rgb(254, 181, 102);
+}
+
+ChordProgressionCreationDialog QComboBox
+{
+    min-width: 20px;
+}
+
+ChordProgressionCreationDialog QComboBox:focus
+{
+    border: 1px solid rgb(255, 50, 50);
 }
 
 BusyDialog
