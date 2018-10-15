@@ -40,12 +40,6 @@ ChordProgressionCreationDialog::ChordProgressionCreationDialog(QWidget *parent) 
 
     fillMeasuresCombo();
     fillChordsPerMeasureCombo();
-
-    auto measures = 4;
-    auto chordsPerMeasure = 1;
-
-    ui->comboMeasures->setCurrentText(QString::number(measures));
-    ui->comboChordsPerMeasure->setCurrentText(QString::number(chordsPerMeasure));
 }
 
 ChordProgressionCreationDialog::~ChordProgressionCreationDialog()
@@ -241,6 +235,9 @@ void ChordProgressionCreationDialog::setupChordSlots(int measures, int chordsPer
             QWidget::setTabOrder(lastWidget, ui->buttonLoad); // keep the 'ok' button as the last element in tab order
         }
     }
+
+    ui->comboMeasures->setCurrentText(QString::number(measures));
+    ui->comboChordsPerMeasure->setCurrentText(QString::number(chordsPerMeasure));
 
     QApplication::processEvents();
     adjustSize();
