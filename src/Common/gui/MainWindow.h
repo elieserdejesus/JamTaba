@@ -120,6 +120,8 @@ public:
 
     void fillUserContextMenu(QMenu &menu, const QString &userFullName, bool addInvitationEntry);
 
+    ChordsPanel* getChordsPanel() const;
+
 public slots:
     void enterInRoom(const login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
@@ -316,6 +318,8 @@ private slots:
 
     void connectInMainChat();
 
+    bool chordsPanelIsVisible() const;
+
 private:
 
     static const QString JAMTABA_CHAT_BOT_NAME;
@@ -368,7 +372,7 @@ private:
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
-    void wireNinjamControllerSignals();
+    void wireNinjamSignals();
 
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;

@@ -69,7 +69,8 @@ NinjamTrackView QPushButton#receiveButton:hover:!checked
 #narrow:hover,
 #licenceButton:hover,
 InstrumentsButton:hover,
-#instrumentsMenu QToolButton:hover
+#instrumentsMenu QToolButton:hover,
+#chordsButton:hover
 {
     border: 1px solid rgba(0, 0, 0, 80);
     background-color: rgba(255, 255, 255, 120);
@@ -89,7 +90,8 @@ InstrumentsButton:hover,
 #buttonGridLayout,
 #wide,
 #narrow,
-#licenceButton
+#licenceButton,
+#chordsButton
 {
     border: 1px solid rgba(0, 0, 0, 50);
     background-color: rgba(255, 255, 255, 10);

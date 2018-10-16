@@ -6,7 +6,8 @@ PluginScanDialog
     background-color: rgb(250, 250, 250);
 }
 
-LooperWindow
+LooperWindow,
+ChordProgressionCreationDialog
 {
     background-color: rgb(160, 160, 160);
 }
@@ -43,6 +44,11 @@ BusyDialog
 PreferencesDialog QComboBox
 {
     background-color: white;
+}
+
+ChordProgressionCreationDialog QComboBox:focus
+{
+    border: 1px solid black;
 }
 
 PreferencesDialog QComboBox QAbstractItemView

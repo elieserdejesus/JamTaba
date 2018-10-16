@@ -340,12 +340,6 @@ QToolTip
 }
 
 
-/* selection border */
-QComboBox
-{
-    selection-background-color: #5A728A;
-}
-
 QLineEdit#groupNameField-topLevel,
 QLineEdit#userNameLineEdit-topLevel,
 QLineEdit#chatText-topLevel,

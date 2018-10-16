@@ -11,6 +11,7 @@
 #include "NinjamPanel.h"
 #include "MetronomePanel.h"
 #include "intervalProgress/IntervalProgressWindow.h"
+#include "chords/ChordProgressionCreationDialog.h"
 #include "chat/ChatPanel.h"
 #include "ninjam/client/UserChannel.h"
 
@@ -44,6 +45,7 @@ public:
 
     NinjamPanel *getNinjamPanel() const;
     MetronomePanel *getMetronomePanel() const;
+    ChordProgressionCreationDialog *getChordProgressionDialog() const;
 
     void setTracksLayout(TracksLayout newLayout);
 
@@ -73,6 +75,7 @@ public slots:
     void setChannelXmitStatus(long channelID, bool transmiting);
     void resetBpiComboBox();
     void resetBpmComboBox();
+    void showChordProgressionDialog(const ChordProgression &currentProgression);
 
 protected:
     Ui::NinjamRoomWindow *ui;
@@ -103,6 +106,7 @@ private:
     TracksSize tracksSize;
 
     IntervalProgressWindow *metronomeFloatingWindow;
+    ChordProgressionCreationDialog *chordProgressionDialog;
 
     void createLayoutButtons(TracksLayout initialLayout);
     QToolButton *horizontalLayoutButton;
@@ -173,6 +177,11 @@ private slots:
 
     void updateStylesheet();
 };
+
+inline ChordProgressionCreationDialog *NinjamRoomWindow::getChordProgressionDialog() const
+{
+    return chordProgressionDialog;
+}
 
 inline QList<NinjamTrackGroupView *> NinjamRoomWindow::getTrackGroups() const
 {
