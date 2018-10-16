@@ -1419,7 +1419,7 @@ void MainWindow::wireNinjamSignals()
 
     if (ninjamWindow) {
         auto chordsDialog = ninjamWindow->getChordProgressionDialog();
-        connect(chordsDialog, &ChordProgressionCreationDialog::newChordProgression, this, &MainWindow::acceptChordProgression);
+        connect(chordsDialog, &ChordProgressionCreationDialog::chordProgressionCreated, this, &MainWindow::acceptChordProgression);
     }
 
 }
@@ -2723,12 +2723,25 @@ void MainWindow::showChordsPanel()
     if (!mainController || !mainController->isPlayingInNinjamRoom())
         return;
 
-    if (ui.contentTabWidget->count() < 3) { // chords tab is not created
+    if (!chordsPanelIsVisible()) { // chords tab is not created
         auto chordsPanel = createChordsPanel();
         auto tabTitle = tr("Chords");
         auto tabIndex = ui.contentTabWidget->addTab(chordsPanel, tabTitle);
         ui.contentTabWidget->setCurrentIndex(tabIndex);
     }
+}
+
+bool MainWindow::chordsPanelIsVisible() const
+{
+    return ui.contentTabWidget->count() >= 3;
+}
+
+ChordsPanel *MainWindow::getChordsPanel() const
+{
+    if (!chordsPanelIsVisible())
+        return nullptr;
+
+    return qobject_cast<ChordsPanel *>(ui.contentTabWidget->widget(2));
 }
 
 // ninjam controller events

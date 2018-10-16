@@ -15,6 +15,18 @@ const QList<ChordProgressionMeasure *> ChordProgression::getMeasures() const
     return measuresPointers;
 }
 
+int ChordProgression::getMaxChordsPerMeasure() const
+{
+    auto maxChords = 1;
+    for (auto measure : measures) {
+        auto chords = measure.getChords().size();
+        if (chords > maxChords)
+            maxChords = chords;
+    }
+
+    return maxChords;
+}
+
 bool ChordProgression::canBeUsed(int bpi) const
 {
     auto dividers = bpiUtils::getBpiDividers(bpi);

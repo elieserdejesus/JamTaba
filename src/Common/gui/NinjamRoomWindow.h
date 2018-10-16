@@ -75,7 +75,7 @@ public slots:
     void setChannelXmitStatus(long channelID, bool transmiting);
     void resetBpiComboBox();
     void resetBpmComboBox();
-    void showChordProgressionDialog();
+    void showChordProgressionDialog(const ChordProgression &currentProgression);
 
 protected:
     Ui::NinjamRoomWindow *ui;

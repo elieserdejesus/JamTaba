@@ -734,15 +734,22 @@ void NinjamRoomWindow::setupSignals(controller::NinjamController* ninjamControll
 
     connect(mainController->getNinjamService(), &ninjam::client::Service::videoIntervalCompleted, this, &NinjamRoomWindow::setVideoInterval);
 
-    connect(ui->chordsButton, &QPushButton::clicked, this, &NinjamRoomWindow::showChordProgressionDialog);
+    connect(ui->chordsButton, &QPushButton::clicked, [=](){
+
+        auto chordsPanel = mainWindow->getChordsPanel();
+        auto currentProgression = ChordProgression();
+        if (chordsPanel)
+            currentProgression = chordsPanel->getChordProgression();
+
+        showChordProgressionDialog(currentProgression);
+    });
 }
 
-void NinjamRoomWindow::showChordProgressionDialog()
+void NinjamRoomWindow::showChordProgressionDialog(const ChordProgression &currentProgression)
 {
     if (chordProgressionDialog) {
-
         auto currentBpi = ninjamPanel->getBpi();
-        chordProgressionDialog->show(currentBpi);
+        chordProgressionDialog->show(currentBpi, currentProgression);
     }
 }
 

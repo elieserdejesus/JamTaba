@@ -17,12 +17,12 @@ ChordProgressionCreationDialog::ChordProgressionCreationDialog(QWidget *parent) 
 
     connect(ui->buttonLoad, &QPushButton::clicked, [=](){
 
-        emit newChordProgression(buildChordProgression());
+        emit chordProgressionCreated(buildChordProgression());
 
         accept();
     });
 
-    connect(ui->comboMeasures, &QComboBox::currentTextChanged, [=](const QString &newText){
+    connect(ui->comboMeasures, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), [=](const QString &newText){
 
         auto measures = newText.toInt();
         auto chordsPerMeasure = ui->comboChordsPerMeasure->currentText().toInt();
@@ -30,7 +30,7 @@ ChordProgressionCreationDialog::ChordProgressionCreationDialog(QWidget *parent) 
         setupChordSlots(measures, chordsPerMeasure);
     });
 
-    connect(ui->comboChordsPerMeasure, &QComboBox::currentTextChanged, [=](const QString &newText){
+    connect(ui->comboChordsPerMeasure,  static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), [=](const QString &newText){
 
         auto measures = ui->comboMeasures->currentText().toInt();
         auto chordsPerMeasure = newText.toInt();
@@ -45,6 +45,17 @@ ChordProgressionCreationDialog::ChordProgressionCreationDialog(QWidget *parent) 
 ChordProgressionCreationDialog::~ChordProgressionCreationDialog()
 {
     delete ui;
+}
+
+void ChordProgressionCreationDialog::setProgression(const ChordProgression &progression)
+{
+    if (progression.isEmpty())
+        return;
+
+    auto measures = progression.getMeasuresCount();
+    auto chordsPerMeasure = progression.getMaxChordsPerMeasure();
+
+    setupChordSlots(measures, chordsPerMeasure, progression);
 }
 
 void ChordProgressionCreationDialog::fillMeasuresCombo()
@@ -190,7 +201,7 @@ void ChordProgressionCreationDialog::clearChordsLayout()
     ui->verticalLayout->setStretch(1, 1);
 }
 
-void ChordProgressionCreationDialog::setupChordSlots(int measures, int chordsPerMeasure)
+void ChordProgressionCreationDialog::setupChordSlots(int measures, int chordsPerMeasure, const ChordProgression &progression)
 {
     if (measures <= 0 || chordsPerMeasure <= 0)
         return;
@@ -203,32 +214,42 @@ void ChordProgressionCreationDialog::setupChordSlots(int measures, int chordsPer
     auto rows = measures/measuresPerRow;
 
     for (int row = 0; row < rows; ++row) {
-        for (int measure = 0; measure < measuresPerRow; ++measure) {
+        for (int m = 0; m < measuresPerRow; ++m) {
 
             auto layout = new QHBoxLayout();
             layout->setContentsMargins(0, 0, 0, 0);
             layout->setSpacing(2);
 
-            auto measureIndex = (measure + (row * measuresPerRow)) + 1;
-            layout->addWidget(new QLabel(QString::number(measureIndex)));
+            auto measureIndex = (m + (row * measuresPerRow));
+            layout->addWidget(new QLabel(QString::number(measureIndex + 1)));
             layout->addSpacing(6);
 
-            for (int chord = 0; chord < chordsPerMeasure; ++chord) {
+            for (int chordIndex = 0; chordIndex < chordsPerMeasure; ++chordIndex) {
 
-                auto emptySelection = chord > 0; // second chords will be "empty" as default
+                auto emptySelection = chordIndex > 0; // second chords will be "empty" as default
 
-                layout->addWidget(createChordRootCombo(emptySelection));
+                auto comboChordRoot = createChordRootCombo(emptySelection);
+                layout->addWidget(comboChordRoot);
 
                 auto comboChordQuality = createChordQualityCombo();
                 layout->addWidget(comboChordQuality);
                 layout->setAlignment(comboChordQuality, Qt::AlignLeft);
 
-                if (chord < chordsPerMeasure - 1) {
+                if (!progression.isEmpty()) {
+                    auto measure = progression.getMeasures().at(measureIndex);
+                    if (measure) {
+                        auto chords = measure->getChords();
+                        if (chordIndex < chords.size())
+                            fillChordCombos(comboChordRoot, comboChordQuality, chords.at(chordIndex));
+                    }
+                }
+
+                if (chordIndex < chordsPerMeasure - 1) {
                     layout->addSpacing(chordsLayout->spacing()/3);
                 }
             }
 
-            chordsLayout->addLayout(layout, row, measure, 1, 1);
+            chordsLayout->addLayout(layout, row, m, 1, 1);
             chordsLayout->setAlignment(layout, Qt::AlignLeft);
 
             auto lastWidget = layout->itemAt(layout->count()-1)->widget();
@@ -241,6 +262,15 @@ void ChordProgressionCreationDialog::setupChordSlots(int measures, int chordsPer
 
     QApplication::processEvents();
     adjustSize();
+}
+
+void ChordProgressionCreationDialog::fillChordCombos(QComboBox *rootCombo, QComboBox *qualityCombo, Chord *chord)
+{
+    rootCombo->setCurrentText(chord->getRootKey());
+
+    auto quality = chord->getLettersAfterRoot();
+    if (!quality.isEmpty())
+        qualityCombo->setCurrentText(quality);
 }
 
 int ChordProgressionCreationDialog::guessMeasures(int bpi) const
@@ -267,12 +297,12 @@ int ChordProgressionCreationDialog::guessMeasures(int bpi) const
     return 8; // 8 measures as default
 }
 
-void ChordProgressionCreationDialog::show(int currentBpi)
+void ChordProgressionCreationDialog::show(int currentBpi, const ChordProgression &currentProgression)
 {
-    auto measures = guessMeasures(currentBpi);
-    auto chordsPerMeasure = 1;
+    auto measures = currentProgression.isEmpty() ? guessMeasures(currentBpi) : currentProgression.getMeasuresCount();
+    auto chordsPerMeasure = currentProgression.isEmpty() ? 1 : currentProgression.getMaxChordsPerMeasure();
 
-    setupChordSlots(measures, chordsPerMeasure);
+    setupChordSlots(measures, chordsPerMeasure, currentProgression);
 
     QDialog::show();
     raise();

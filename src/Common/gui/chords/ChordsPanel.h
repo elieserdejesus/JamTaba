@@ -24,7 +24,7 @@ public:
 
 signals:
     void sendingChordsToChat();
-    void openingChordsDialog();
+    void openingChordsDialog(const ChordProgression &currentProgression);
 
 public slots:
     void setCurrentBeat(int beat);

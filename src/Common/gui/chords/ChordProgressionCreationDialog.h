@@ -19,17 +19,18 @@ public:
     ~ChordProgressionCreationDialog();
 
 public slots:
-    void show(int currentBpi);
+    void show(int currentBpi, const ChordProgression &currentChordProgression);
+    void setProgression(const ChordProgression &progression);
 
 signals:
-    void newChordProgression(const ChordProgression &progression);
+    void chordProgressionCreated(const ChordProgression &newProgression);
 
 private:
     Ui::ChordProgressionCreationDialog *ui;
 
     QGridLayout *chordsLayout;
 
-    void setupChordSlots(int measures, int chordsPerMeasure);
+    void setupChordSlots(int measures, int chordsPerMeasure, const ChordProgression &progression = ChordProgression());
 
     ChordProgression buildChordProgression();
 
@@ -40,6 +41,8 @@ private:
     void fillChordsPerMeasureCombo();
 
     int guessMeasures(int bpi) const;
+
+    void fillChordCombos(QComboBox *rootCombo, QComboBox *qualityCombo, Chord *chord);
 
     void clearChordsLayout();
 };

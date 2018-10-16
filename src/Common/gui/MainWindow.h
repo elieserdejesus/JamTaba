@@ -120,6 +120,8 @@ public:
 
     void fillUserContextMenu(QMenu &menu, const QString &userFullName, bool addInvitationEntry);
 
+    ChordsPanel* getChordsPanel() const;
+
 public slots:
     void enterInRoom(const login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
@@ -315,6 +317,8 @@ private slots:
     void fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName);
 
     void connectInMainChat();
+
+    bool chordsPanelIsVisible() const;
 
 private:
 
