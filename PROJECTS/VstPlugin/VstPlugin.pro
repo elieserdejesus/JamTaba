@@ -20,6 +20,8 @@ win32{
     INCLUDEPATH += "$$VST_SDK_PATH/VST2_SDK"
     INCLUDEPATH += "$$VST_SDK_PATH/VST2_SDK/pluginterfaces/vst2.x/"
     INCLUDEPATH += "$$VST_SDK_PATH/VST2_SDK/public.sdk/source/vst2.x"
+
+    DEF_FILE = VstPlugin.def #exporting DLL functions - fixing #1131
 }
 
 VPATH += $$SOURCE_PATH/Common
