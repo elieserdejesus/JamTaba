@@ -89,7 +89,7 @@ QList<int> IntervalProgressDisplay::getAccentBeats() const
 
 void IntervalProgressDisplay::setBeatsPerInterval(int beats)
 {
-    if (beats > 0 && beats <= 64) {
+    if (beats > 0 && beats <= 192) {
         this->beatsPerInterval = beats;
     }
 }

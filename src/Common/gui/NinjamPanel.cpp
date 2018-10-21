@@ -54,7 +54,7 @@ void NinjamPanel::initializeCombos(TextEditorModifier *bpiModifier, TextEditorMo
         ui->comboBpi->addItem(QString::number(bpi), bpi);
 
     ui->comboBpm->setValidator(new QIntValidator(MIN_BPM, 400, ui->comboBpm));
-    ui->comboBpi->setValidator(new QIntValidator(2, 64, ui->comboBpi));
+    ui->comboBpi->setValidator(new QIntValidator(2, 192, ui->comboBpi));
 
     ui->comboBpi->setCompleter(nullptr); // disabling completer
     ui->comboBpm->setCompleter(nullptr); // disabling completer
