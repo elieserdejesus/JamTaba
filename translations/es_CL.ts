@@ -89,7 +89,7 @@
     </message>
     <message>
         <source>Use/load the chords above</source>
-        <translation>Usar/cargar los acordes que aparecen arriba</translation>
+        <translation>Usar/cargar estos acordes</translation>
     </message>
     <message>
         <source>type here ...</source>
