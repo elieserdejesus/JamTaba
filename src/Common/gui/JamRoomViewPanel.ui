@@ -41,7 +41,7 @@
       </sizepolicy>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="2" rowspan="2">
+      <item row="0" column="2" rowspan="2" alignment="Qt::AlignBottom">
        <widget class="QPushButton" name="buttonEnter">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -82,7 +82,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" rowspan="2">
+      <item row="0" column="1" rowspan="2" alignment="Qt::AlignBottom">
        <widget class="QPushButton" name="buttonListen">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -173,13 +173,9 @@
         <property name="accessibleDescription">
          <string>That zone displays the waveform actually played</string>
         </property>
-        <zorder>panelTop</zorder>
        </widget>
       </item>
      </layout>
-     <zorder>wavePeakPanel</zorder>
-     <zorder>labelRoomStatus</zorder>
-     <zorder>horizontalSpacer_2</zorder>
     </widget>
    </item>
   </layout>
