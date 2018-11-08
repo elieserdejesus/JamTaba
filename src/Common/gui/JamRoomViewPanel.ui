@@ -54,7 +54,7 @@
        <number>3</number>
       </property>
       <property name="verticalSpacing">
-       <number>5</number>
+       <number>3</number>
       </property>
       <item row="0" column="2" rowspan="2">
        <widget class="QPushButton" name="buttonEnter">
