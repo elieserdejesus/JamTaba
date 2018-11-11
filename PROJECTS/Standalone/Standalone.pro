@@ -15,6 +15,7 @@ INCLUDEPATH += $$ROOT_PATH/libs/includes/rtmidi
 INCLUDEPATH += $$SOURCE_PATH/Standalone
 
 INCLUDEPATH += $$SOURCE_PATH/Standalone/gui
+VST_SDK_PATH = "$$PWD/../.."
 
 INCLUDEPATH += $$VST_SDK_PATH/VST2_SDK/pluginterfaces/vst2.x
 

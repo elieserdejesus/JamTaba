@@ -2,12 +2,15 @@
 #include "ui_JamRoomViewPanel.h"
 
 #include <QDebug>
+#include <QButtonGroup>
+
 #include "MainController.h"
 #include "ninjam/client/User.h"
 #include "ninjam/client/UserChannel.h"
 #include "ninjam/client/ServerInfo.h"
 #include "widgets/MapWidget.h"
 #include "widgets/MapMarker.h"
+#include <QStyle>
 
 JamRoomViewPanel::JamRoomViewPanel(const login::RoomInfo &roomInfo, controller::MainController *mainController) :
     QFrame(nullptr),
