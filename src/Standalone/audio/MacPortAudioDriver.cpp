@@ -8,7 +8,7 @@ PortAudioDriver::PortAudioDriver(controller::MainController *mainController, int
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
     AudioDriver(mainController),
-    useSystemDefaultDevices(true) // in mac deviceIndex is always the system default values
+    useSystemDefaultDevices(false) // in mac deviceIndex is always the system default values
 {
 
     Q_UNUSED(firstInIndex)
