@@ -26,12 +26,9 @@ int main(int argc, char* args[] ){
 #endif
 
     application.setStyle("fusion"); // same visual in all platforms
-<<<<<<< HEAD
-=======
 
     persistence::Settings settings;
     settings.load();
->>>>>>> e8d8610b6086cb503329fb88c847f66184348669
 
     controller::MainControllerStandalone mainController(settings, &application);
     mainController.start();
