@@ -17,7 +17,7 @@
 #include "chords/ChatChordsProgressionParser.h"
 #include "NinjamPanel.h"
 #include "chat/ChatPanel.h"
-#include "chat/NinjamVotingMessageParser.h"
+#include "chat/NinjamChatMessageParser.h"
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "persistence/UsersDataCache.h"
@@ -50,7 +50,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *mainWindow, const RoomInfo &roomI
     tracksSize(TracksSize::WIDE),
     metronomeFloatingWindow(nullptr),
     roomInfo(roomInfo),
-    usersColorsPool(mainWindow->getUsersColorsPool())
+    usersColorsPool(mainWindow->getUsersColorsPool()),
+    chordProgressionDialog(new ChordProgressionCreationDialog(this))
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow::NinjamRoomWindow ctor";
     ui->setupUi(this);
@@ -435,9 +436,6 @@ void NinjamRoomWindow::setChannelXmitStatus(long channelID, bool transmiting)
 
 void NinjamRoomWindow::removeChannel(const User &user, const UserChannel &channel, long channelID)
 {
-    qCDebug(jtNinjamGUI) << "channel removed:" << channel.getName();
-    Q_UNUSED(channel);
-
     auto group = trackGroups[user.getFullName()];
     if (group) {
         if (group->getTracksCount() == 1) { // removing the last track, the group is removed too
@@ -449,11 +447,13 @@ void NinjamRoomWindow::removeChannel(const User &user, const UserChannel &channe
             if (trackView)
                 group->removeTrackView(trackView);
         }
+
+        qCDebug(jtNinjamGUI) << "channel removed:" << channel.getName();
+
+        updateTracksSizeButtons();
+
+        reAddTrackGroups(); // update the gridlayout to avoid empty cells
     }
-
-    updateTracksSizeButtons();
-
-    reAddTrackGroups(); // update the gridlayout to avoid empty cells
 }
 
 NinjamTrackView *NinjamRoomWindow::getTrackViewByID(long trackID)
@@ -500,8 +500,13 @@ void NinjamRoomWindow::addTrack(NinjamTrackGroupView *track)
     }
 
     Qt::Alignment alignment = tracksLayout == TracksLayout::VerticalLayout ? Qt::AlignLeft : Qt::AlignTop;
-    ui->tracksLayout->addWidget(track, row, collumn, 1, 1, alignment);
+    auto vPolicy = tracksLayout == TracksLayout::VerticalLayout ? QSizePolicy::Expanding : QSizePolicy::Preferred;
+    auto hPolicy = tracksLayout == TracksLayout::HorizontalLayout ? QSizePolicy::MinimumExpanding : QSizePolicy::Preferred;
+    track->setSizePolicy(QSizePolicy(hPolicy, vPolicy));
 
+    auto colSpan = 1;
+    auto rowSpan = 1;
+    ui->tracksLayout->addWidget(track, row, collumn, rowSpan, colSpan, alignment);
 
 }
 
@@ -729,6 +734,23 @@ void NinjamRoomWindow::setupSignals(controller::NinjamController* ninjamControll
 
     connect(mainController->getNinjamService(), &ninjam::client::Service::videoIntervalCompleted, this, &NinjamRoomWindow::setVideoInterval);
 
+    connect(ui->chordsButton, &QPushButton::clicked, [=](){
+
+        auto chordsPanel = mainWindow->getChordsPanel();
+        auto currentProgression = ChordProgression();
+        if (chordsPanel)
+            currentProgression = chordsPanel->getChordProgression();
+
+        showChordProgressionDialog(currentProgression);
+    });
+}
+
+void NinjamRoomWindow::showChordProgressionDialog(const ChordProgression &currentProgression)
+{
+    if (chordProgressionDialog) {
+        auto currentBpi = ninjamPanel->getBpi();
+        chordProgressionDialog->show(currentBpi, currentProgression);
+    }
 }
 
 void NinjamRoomWindow::setVideoInterval(const User &user, const QByteArray &encodedVideoData)
@@ -812,8 +834,6 @@ void NinjamRoomWindow::setTracksLayout(TracksLayout newLayout)
     }
 
     reAddTrackGroups();
-
-    updateGeometry();
 
     mainController->storeTracksLayoutOrientation(static_cast<quint8>(newLayout));
 }

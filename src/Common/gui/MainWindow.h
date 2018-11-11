@@ -84,7 +84,7 @@ public:
 
     void highlightChannelGroup(int index) const;
 
-    virtual void addChannelsGroup(const QString &name);
+    virtual void addChannelsGroup(int instrumentIndex);
     void removeChannelsGroup(int channelGroupIndex);
 
     void exitFromRoom(bool normalDisconnection, QString disconnectionMessage = "");
@@ -120,6 +120,8 @@ public:
 
     void fillUserContextMenu(QMenu &menu, const QString &userFullName, bool addInvitationEntry);
 
+    ChordsPanel* getChordsPanel() const;
+
 public slots:
     void enterInRoom(const login::RoomInfo &roomInfo);
     void openLooperWindow(uint trackID);
@@ -143,7 +145,7 @@ protected:
 
     bool eventFilter(QObject *target, QEvent *event) override;
 
-    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, const QString &channelName,
+    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, int instrumentIndex,
                                          bool createFirstSubchannel);
 
     // this factory method is overrided in derived classes to create more specific views
@@ -251,7 +253,6 @@ protected slots:
 
     // chords progression
     void acceptChordProgression(const ChordProgression &chordProgression);
-    void sendCurrentChordProgressionToChat();
 
     void updateBpi(int bpi);
     void updateBpm(int bpm);
@@ -271,7 +272,7 @@ private slots:
 
     void refreshPublicRoomsList(const QList<login::RoomInfo> &publicRooms);
 
-    void hideChordsPanel();
+    void showChordsPanel();
 
     void chatCollapseChanged(bool chatCollapsed);
 
@@ -279,6 +280,7 @@ private slots:
     void setMultiTrackRecordingStatus(bool recording);
     void setJamRecorderStatus(const QString &writerId, bool status);
     void setRecordingPath(const QString &newRecordingPath);
+    void setJamDirectoryDateFormat(const QString &newDateFormat);
     void setBuiltInMetronome(const QString &metronomeAlias);
     void setCustomMetronome(const QString &primaryBeatFile, const QString &offBeatFile, const QString &accentBeatFile);
 
@@ -292,6 +294,8 @@ private slots:
     void handleThemeChanged();
 
     void translateCollapseButtonsToolTips();
+
+    void translatePublicChatCountryNames();
 
     void updateUserNameLineEditToolTip();
 
@@ -313,6 +317,8 @@ private slots:
     void fillConnectedUserContextMenu(QMenu &menu, const QString &userFullName);
 
     void connectInMainChat();
+
+    bool chordsPanelIsVisible() const;
 
 private:
 
@@ -366,7 +372,7 @@ private:
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
-    void wireNinjamControllerSignals();
+    void wireNinjamSignals();
 
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;
@@ -422,8 +428,6 @@ private:
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
     void setInputTracksPreparingStatus(bool preparing);
-
-    ChordsPanel *chordsPanel;
 
     ChordsPanel *createChordsPanel();
 

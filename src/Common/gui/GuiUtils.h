@@ -12,6 +12,8 @@ namespace gui {
 
     QString sanitizeServerName(const QString &serverName);
 
+    void clearLayout(QLayout *layout);
+
 } // namespace
 
 #endif

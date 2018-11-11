@@ -246,6 +246,20 @@ void ChatPanel::setConnectedUsers(const QStringList &usersNames)
 
     //ui->treeWidget->setVisible(usersNames.size() > 1);
     ui->treeWidget->setVisible(true);
+    root->setExpanded(usersNames.size() > 1); // issue #1107
+}
+
+QList<QString> ChatPanel::getConnectedUsers() const
+{
+    QList<QString> users;
+    auto root = ui->treeWidget->topLevelItem(0);
+    for (int i = 0; i < root->childCount(); ++i) {
+        auto item = root->child(i);
+        auto ip = item->data(0, Qt::UserRole + 1).toString();
+        auto name = item->text(0);
+        users.append(QString("%1@%2").arg(name).arg(ip));
+    }
+    return users;
 }
 
 void ChatPanel::updateConnectedUsersTitleString(quint32 connectedUsers)

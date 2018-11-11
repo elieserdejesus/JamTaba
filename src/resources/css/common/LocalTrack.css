@@ -105,6 +105,11 @@ LocalTrackView #buttonLooper
 
 }
 
+LocalTrackGroupView InstrumentsButton
+{
+    margin-left: 14px; /* little hack to centralize the instrument icon in local tracks */
+}
+
  /* The transmiting (xmit) button.
  ----------------------------------*/
 #xmitButton
@@ -164,8 +169,7 @@ LocalTrackGroupView  #toolButton                /* The wheel/gear button used to
     border: none;
     padding: 0px;
     margin: 0px;
-    width: 14px;
-    height: 14px;
+    max-width: 14px;
 }
 
 LocalTrackGroupView   #toolButton:hover

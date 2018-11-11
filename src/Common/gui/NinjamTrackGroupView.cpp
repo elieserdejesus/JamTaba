@@ -36,19 +36,16 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     topPanelLayout->setContentsMargins(0, 0, 0, 0);
     topPanelLayout->setSpacing(3);
 
-    // replace the original QLineEdit with a MarqueeLabel
-    topPanelLayout->removeWidget(groupNameField);
-    delete groupNameField;
-    groupNameLabel = new MarqueeLabel();
-    groupNameLabel->setObjectName("groupNameField");
-    groupNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+    userNameLabel = new MarqueeLabel();
+    userNameLabel->setObjectName("groupNameField");
+    userNameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     QHBoxLayout *groupNameLayout = new QHBoxLayout();
-    groupNameLayout->addWidget(groupNameLabel, 1);
+    groupNameLayout->addWidget(userNameLabel, 1);
     chatBlockIconLabel = new QLabel(this);
     chatBlockIconLabel->setPixmap(QPixmap(":/images/chat_blocked.png"));
 
-    setGroupName(initialValues.getUserName());
+    setUserName(initialValues.getUserName());
 
     auto blocked = mainController->userIsBlockedInChat(getUniqueName());
     chatBlockIconLabel->setVisible(blocked);
@@ -81,7 +78,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     styleSheet += "stop: 0.35 " + userColor.name() + ", ";
     styleSheet += "stop: 0.65" + userColor.name() + ", ";
     styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
-    groupNameLabel->setStyleSheet(styleSheet);
+    userNameLabel->setStyleSheet(styleSheet);
 
     QIcon webcamIcon = IconFactory::createWebcamIcon(getTintColor());
     videoWidget = new VideoWidget(this, webcamIcon);
@@ -122,6 +119,14 @@ QColor NinjamTrackGroupView::getTintColor() const
 
 void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)
 {
+
+    // hide the video (2nd) channel
+    if (trackViews.size() > 1) {
+        auto videoChannel = getTracks<NinjamTrackView *>().at(1);
+        if (videoChannel->isVideoChannel()) {
+            videoChannel->setVisible(false);
+        }
+    }
 
     FFMpegDemuxer *videoDecoder = new FFMpegDemuxer(this, encodedVideoData);
     connect(videoDecoder, &FFMpegDemuxer::imagesDecoded, this, [=](QList<QImage> images, uint frameRate){
@@ -165,7 +170,7 @@ void NinjamTrackGroupView::updateVideoFrame(const QImage &frame)
 
 QString NinjamTrackGroupView::getUniqueName() const
 {
-    QString userName = getGroupName();
+    QString userName = userNameLabel->text();
     if (!userName.contains("@")) {
         return QString("%1@%2")
                 .arg(userName)
@@ -189,7 +194,7 @@ void NinjamTrackGroupView::showChatBlockIcon(const QString &blockedUserName)
 
 void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
-    QString userName = getGroupName();
+    QString userName = userNameLabel->text();
 
     //bool userIsBlockedInChat = mainController->userIsBlockedInChat(getUniqueName());
 
@@ -386,14 +391,9 @@ NinjamTrackView *NinjamTrackGroupView::createTrackView(long trackID)
     return new NinjamTrackView(mainController, trackID);
 }
 
-void NinjamTrackGroupView::setGroupName(const QString &groupName)
+void NinjamTrackGroupView::setUserName(const QString &userName)
 {
-    groupNameLabel->setText(groupName);
-}
-
-QString NinjamTrackGroupView::getGroupName() const
-{
-    return groupNameLabel->text();
+    userNameLabel->setText(userName);
 }
 
 QSize NinjamTrackGroupView::sizeHint() const
@@ -404,10 +404,13 @@ QSize NinjamTrackGroupView::sizeHint() const
     else if (tracksLayoutEnum == TracksLayout::HorizontalLayout) {
         int height = 0;
         for (auto trackView : trackViews) {
-            height += trackView->minimumSizeHint().height();
+            if (trackView->isVisible()) {
+                height += trackView->minimumSizeHint().height();
+            }
         }
 
-        return QSize(1, qMax(height, 64)); // 64 is the minimum height of a horizontal narrowed track
+        auto margins = mainLayout->contentsMargins();
+        return QSize(1, qMax(height, 64) + margins.top() + margins.bottom()); // 64 is the minimum height of a horizontal narrowed track
     }
 
     // grid layout
@@ -448,7 +451,7 @@ void NinjamTrackGroupView::setNarrowStatus(bool narrow)
 void NinjamTrackGroupView::updateGuiElements()
 {
     TrackGroupView::updateGuiElements();
-    groupNameLabel->updateMarquee();
+    userNameLabel->updateMarquee();
 
     // video
     if (!decodedImages.isEmpty()) {

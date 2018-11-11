@@ -8,7 +8,7 @@ const int UsersColorsPool::TOTAL_COLORS = 8;
 UsersColorsPool::UsersColorsPool() :
     availableColors(createColors(TOTAL_COLORS))
 {
-    qsrand(0);
+    qsrand(QDateTime::currentMSecsSinceEpoch());
 }
 
 QColor UsersColorsPool::get(const QString &userName)
@@ -17,8 +17,10 @@ QColor UsersColorsPool::get(const QString &userName)
         return pool[userName];
 
     if (availableColors.isEmpty()) { // no more colors, returning a duplicated random color
-        QList<QColor> colors = pool.values();
-        return pool.values().at(qrand() % colors.size());
+        auto colors = pool.values();
+        auto randomColor = colors.at(qrand() % colors.size());
+        pool.insert(userName, randomColor);
+        return randomColor;
     }
 
     pool.insert(userName, availableColors.takeFirst());
@@ -36,10 +38,9 @@ void UsersColorsPool::giveBack(const QString &userName)
 
 void UsersColorsPool::giveBackAllColors()
 {
-    for (auto userName: pool.keys())
-        availableColors.append(pool[userName]);
-
     pool.clear();
+
+    availableColors = createColors(TOTAL_COLORS);
 }
 
 QList<QColor> UsersColorsPool::createColors(int totalColors) const

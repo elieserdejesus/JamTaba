@@ -136,3 +136,8 @@ BusyDialog > QLabel /* the text appearing in Busy dialog, like "connecting in ni
 {
     font-weight: bold;
 }
+
+ChordProgressionCreationDialog QComboBox:focus
+{
+    border: 1px inset rgba(255, 255, 255, 50);
+}

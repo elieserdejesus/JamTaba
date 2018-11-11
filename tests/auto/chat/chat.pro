@@ -14,7 +14,7 @@ VPATH += ../../../src/Common
 HEADERS += log/logging.h
 HEADERS += TestChatMessages.h
 HEADERS += TestChatVotingMessages.h
-HEADERS += gui/chat/NinjamVotingMessageParser.h
+HEADERS += gui/chat/NinjamChatMessageParser.h
 
 SOURCES += log/logging.cpp
 SOURCES += TestChatMessages.cpp
@@ -24,6 +24,6 @@ SOURCES += gui/chords/ChordProgressionMeasure.cpp
 SOURCES += gui/chords/ChordProgression.cpp
 SOURCES += gui/BpiUtils.cpp
 SOURCES += TestChatVotingMessages.cpp
-SOURCES += gui/chat/NinjamVotingMessageParser.cpp
+SOURCES += gui/chat/NinjamChatMessageParser.cpp
 
 SOURCES += test_Chat.cpp

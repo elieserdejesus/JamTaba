@@ -165,6 +165,7 @@ public:
     void read(const QJsonObject &in) override;
     bool saveMultiTracksActivated;
     QString recordingPath;
+    QString dirNameDateFormat;
 
     inline bool isJamRecorderActivated(const QString &key) const
     {
@@ -175,6 +176,26 @@ public:
     inline void setJamRecorderActivated(const QString &key, bool value)
     {
         jamRecorderActivated[key] = value;
+    }
+
+    inline Qt::DateFormat getDirNameDateFormat() const
+    {
+        if (QString::compare("Qt::ISODate", dirNameDateFormat) == 0) {
+            return Qt::ISODate;
+        } else {
+            return Qt::TextDate;
+        }
+    }
+    inline void setDirNameDateFormat(const Qt::DateFormat dateFormat)
+    {
+        switch (dateFormat) {
+        case Qt::ISODate:
+            dirNameDateFormat = "Qt::ISODate";
+            break;
+        default:
+            dirNameDateFormat = "Qt::TextDate";
+            break;
+        }
     }
 
 private:
@@ -279,8 +300,8 @@ private:
 class Channel
 {
 public:
-    explicit Channel(const QString &name);
-    QString name;
+    explicit Channel(int instrumentIndex);
+    int instrumentIndex;
     QList<SubChannel> subChannels;
 };
 
@@ -390,13 +411,14 @@ private:
 
     QStringList recentEmojis;
 
-    QString lastUserName; // the last nick name choosed by user
-    QString translation; // the translation language (en, fr, jp, pt, etc.) being used in chat
-    QString theme; // the style sheet used
-    int ninjamIntervalProgressShape; // Circle, Ellipe or Line
-    float masterFaderGain; // last master fader gain
-    quint8 tracksLayoutOrientation; // horizontal or vertical
-    bool usingNarrowedTracks; // narrow or wide tracks?
+    QString lastUserName;               // the last nick name choosed by user
+    QString translation;                // the translation language (en, fr, jp, pt, etc.) being used in chat
+    QString theme;                      // the style sheet used
+    int ninjamIntervalProgressShape;    // Circle, Ellipe or Line
+    float masterFaderGain;              // last master fader gain
+    quint8 tracksLayoutOrientation;     // horizontal or vertical
+    bool usingNarrowedTracks;           // narrow or wide tracks?
+    bool publicChatActivated;
 
     uint intervalsBeforeInactivityWarning;
 
@@ -461,6 +483,8 @@ public:
     void setJamRecorderActivated(const QString &key, bool value);
     QString getRecordingPath() const;
     void setMultiTrackRecordingPath(const QString &newPath);
+    QString getDirNameDateFormat() const;
+    void setDirNameDateFormat(const QString &newDateFormat);
 
     // user name
     QString getUserName() const;
@@ -578,7 +602,20 @@ public:
     bool isChatSectionCollapsed() const;
 
     uint getIntervalsBeforeInactivityWarning() const;
+
+    bool publicChatIsActivated() const;
+    void setPublicChatActivated(bool activated);
 };
+
+inline void Settings::setPublicChatActivated(bool activated)
+{
+    publicChatActivated = activated;
+}
+
+inline bool Settings::publicChatIsActivated() const
+{
+    return publicChatActivated;
+}
 
 inline void Settings::setLocalChannelsCollapsed(bool collapsed)
 {
@@ -863,6 +900,17 @@ inline void Settings::setMultiTrackRecordingPath(const QString &newPath)
 {
     recordingSettings.recordingPath = newPath;
 }
+
+inline QString Settings::getDirNameDateFormat() const
+{
+    return recordingSettings.dirNameDateFormat;
+}
+
+inline void Settings::setDirNameDateFormat(const QString &newDateFormat)
+{
+    recordingSettings.dirNameDateFormat = newDateFormat;
+}
+
 
 // user name
 inline QString Settings::getUserName() const

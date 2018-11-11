@@ -20,6 +20,7 @@
 #include "widgets/BoostSpinBox.h"
 #include "widgets/PeakMeter.h"
 #include "widgets/InstrumentsMenu.h"
+#include "IconFactory.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; // height used in horizontal layout for wide tracks
 
@@ -58,7 +59,7 @@ NinjamTrackView::NinjamTrackView(MainController *mainController, long trackID) :
     connect(buttonReceive, &QPushButton::toggled, this, &NinjamTrackView::setReceiveState);
 
     instrumentsButton = createInstrumentsButton();
-    connect(instrumentsButton, &InstrumentsButton::iconSelected, this, &NinjamTrackView::instrumentIconChanged);
+    connect(instrumentsButton, &InstrumentsButton::iconChanged, this, &NinjamTrackView::instrumentIconChanged);
 
     setupVerticalLayout();
 
@@ -208,41 +209,16 @@ void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialVal
 
 }
 
+bool NinjamTrackView::isVideoChannel() const
+{
+    return instrumentsButton->getSelectedIcon() == static_cast<int>(InstrumentIndex::Video);
+}
+
 qint8 NinjamTrackView::guessInstrumentIcon() const
 {
-    auto channelName = instrumentsButton->toolTip().toLower();
+    auto channelName = instrumentsButton->toolTip();
 
-    if (channelName.contains("guitar"))
-        return static_cast<qint8>(InstrumentsIndexes::Guitar);
-
-    if (channelName.contains("key"))
-        return static_cast<qint8>(InstrumentsIndexes::Keys);
-
-    if (channelName.contains("piano"))
-        return static_cast<qint8>(InstrumentsIndexes::Piano);
-
-    if (channelName.contains("voice") || channelName.contains("sing"))
-        return static_cast<qint8>(InstrumentsIndexes::Mic);
-
-    if (channelName.contains("drum"))
-        return static_cast<qint8>(InstrumentsIndexes::DrumStick);
-
-    if (channelName.contains("mandolin"))
-        return static_cast<qint8>(InstrumentsIndexes::Mandolin);
-
-    if (channelName.contains("violin"))
-        return static_cast<qint8>(InstrumentsIndexes::Violin);
-
-    if (channelName.contains("double"))
-        return static_cast<qint8>(InstrumentsIndexes::DoubleBass);
-
-    if (channelName.contains("bass"))
-        return static_cast<qint8>(InstrumentsIndexes::ElectricBass);
-
-    if (channelName.contains("trumpet"))
-        return static_cast<qint8>(InstrumentsIndexes::Trumpet);
-
-    return CacheEntry::DEFAULT_INSTRUMENT_INDEX;
+    return static_cast<qint8>(stringToInstrumentIndex(channelName));
 }
 
 void NinjamTrackView::updateGuiElements()
@@ -302,7 +278,7 @@ QSize NinjamTrackView::sizeHint() const
         if (narrowed)
             return QWidget::sizeHint();
         else
-            return QSize(width(), WIDE_HEIGHT);
+            return QSize(BaseTrackView::sizeHint().width(), WIDE_HEIGHT);
     }
     return BaseTrackView::sizeHint();
 }
@@ -383,7 +359,7 @@ void NinjamTrackView::setupHorizontalLayout()
     secondaryChildsLayout->setDirection(QBoxLayout::RightToLeft);
 
     levelSlider->setOrientation(Qt::Horizontal);
-    levelSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    levelSlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
     panSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
@@ -443,6 +419,8 @@ void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible)
 void NinjamTrackView::setChannelName(const QString &name)
 {
     instrumentsButton->setToolTip(name);
+
+    instrumentsButton->setInstrumentIcon(guessInstrumentIcon());
 }
 
 void NinjamTrackView::setPan(int value)
@@ -503,14 +481,8 @@ void NinjamTrackView::setLowCutToNextState()
 
 InstrumentsButton *NinjamTrackView::createInstrumentsButton()
 {
-    QDir instrumentsDir(":/instruments");
-
-    QIcon defaultIcon(instrumentsDir.filePath("jtba.png"));
-
-    auto fileInfos = instrumentsDir.entryInfoList();
-    QList<QIcon> icons;
-    for (auto iconInfo : fileInfos)
-        icons.append(QIcon(instrumentsDir.filePath(iconInfo.completeBaseName())));
+    auto defaultIcon = IconFactory::getDefaultInstrumentIcon();
+    auto icons = IconFactory::getInstrumentIcons();
 
     return new InstrumentsButton(defaultIcon, icons, this);
 }

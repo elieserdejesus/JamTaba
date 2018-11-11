@@ -359,6 +359,9 @@ void ChatTabWidget::setChatsTintColor(const QColor &color)
 
     for (auto chat : privateChats.values())
         chat->setTintColor(color);
+
+    if (mainChat)
+        mainChat->setTintColor(color);
 }
 
 ChatPanel *ChatTabWidget::getFocusedChatPanel() const

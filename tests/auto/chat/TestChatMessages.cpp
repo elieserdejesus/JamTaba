@@ -1,8 +1,40 @@
 #include "TestChatMessages.h"
-#include "gui/chat/NinjamVotingMessageParser.h"
+#include "gui/chat/NinjamChatMessageParser.h"
 #include <QTest>
 
 using namespace gui::chat;
+
+void TestNinbotCommands::ninbotLevelMessages_data()
+{
+    QTest::addColumn<QString>("userName");
+    QTest::addColumn<float>("db");
+    QTest::addColumn<QString>("message");
+
+    QList<QString> names{ "tester", "ninjamer", "another_tester", "testing"};
+    QList<float> dbValues{ 122.49f, 88.5f, 92.01f, 499.572f};
+
+    for (int i = 0; i < names.size(); ++i) {
+        QString name = names.at(i);
+        float db = dbValues.at(i);
+
+        QTest::newRow(QString("%1 [%2]").arg(name).arg(db).toStdString().c_str()) <<
+                                   name <<
+                                   db   <<
+                                   QString("%1, you are clipping  %2 db").arg(name).arg(db);
+    }
+
+}
+
+void TestNinbotCommands::ninbotLevelMessages()
+{
+    QFETCH(QString, userName);
+    QFETCH(float, db);
+    QFETCH(QString, message);
+
+    QVERIFY(isNinbotLevelMessage(message));
+    QCOMPARE(extractUserNameFromNinbotLevelMessage(message), userName);
+    QCOMPARE(extractDBValueFromNinbotLevelMessage(message), db);
+}
 
 void TestAdminCommands::invalidPrivateMessage_data()
 {

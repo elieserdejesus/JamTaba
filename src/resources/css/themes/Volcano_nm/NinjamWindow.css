@@ -46,7 +46,8 @@ NinjamRoomWindow QToolButton:hover:checked
 #wide,
 #narrow,
 #licenceButton,
-#instrumentsMenu QToolButton:!hover
+#instrumentsMenu QToolButton:!hover,
+#chordsButton
 {
     border: 1px solid rgba(0, 0, 0, 50);
     background-color: rgba(255, 255, 255, 10);
@@ -67,7 +68,8 @@ NinjamRoomWindow QToolButton:hover:checked
 #buttonGridLayout:hover,
 #wide:hover,
 #narrow:hover,
-#licenceButton:hover
+#licenceButton:hover,
+#chordsButton:hover
 {
     background-color: rgba(255, 255, 255, 120);
     border: 1px solid rgba(0, 0, 0, 130);

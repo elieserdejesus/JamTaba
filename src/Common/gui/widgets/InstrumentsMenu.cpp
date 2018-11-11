@@ -4,9 +4,97 @@
 #include <QToolBar>
 #include <QHBoxLayout>
 
+InstrumentIndex stringToInstrumentIndex(const QString &string)
+{
+    auto str = string.toLower().trimmed();
+    if (str.contains("acoustic guitar"))
+        return InstrumentIndex::AcousticGuitar;
+
+    if (str.contains("guitar"))
+        return InstrumentIndex::Guitar;
+
+    if (str.contains("key"))
+        return InstrumentIndex::Keys;
+
+    if (str.contains("piano"))
+        return InstrumentIndex::Piano;
+
+    if (str.contains("voice") || str.contains("sing") || str.contains("mic"))
+        return InstrumentIndex::Mic;
+
+    if (str.contains("drum"))
+        return InstrumentIndex::Drums;
+
+    if (str.contains("mandolin"))
+        return InstrumentIndex::Mandolin;
+
+    if (str.contains("violin"))
+        return InstrumentIndex::Violin;
+
+    if (str.contains("double"))
+        return InstrumentIndex::DoubleBass;
+
+    if (str.contains("bass"))
+        return InstrumentIndex::ElectricBass;
+
+    if (str.contains("trumpet"))
+        return InstrumentIndex::Trumpet;
+
+    if (str.contains("banjo"))
+        return InstrumentIndex::Banjo;
+
+    if (str.contains("pads"))
+        return InstrumentIndex::Pads;
+
+    if (str.contains("computer"))
+        return InstrumentIndex::Computer;
+
+    if (str.contains("Percussion"))
+        return InstrumentIndex::Percussion;
+
+    if (str.contains("Troll"))
+        return InstrumentIndex::TrollFace;
+
+    if (str.contains("video"))
+        return InstrumentIndex::Video;
+
+    if (str.contains("harmonica") || str.contains("blues harp"))
+        return InstrumentIndex::Harmonica;
+
+    return InstrumentIndex::JamTabaIcon;
+}
+
+QString instrumentIndexToString(InstrumentIndex index)
+{
+    switch (index) {
+    case InstrumentIndex::AcousticGuitar:   return "Acoustic Guitar";
+    case InstrumentIndex::Banjo:            return "Banjo";
+    case InstrumentIndex::ElectricBass:     return "Bass";
+    case InstrumentIndex::DoubleBass:       return "Double Bass";
+    case InstrumentIndex::Drums:            return "Drums";
+    case InstrumentIndex::Computer:         return "Computer";
+    case InstrumentIndex::Pads:             return "Pads";
+    case InstrumentIndex::Guitar:           return "Guitar";
+    case InstrumentIndex::JamTabaIcon:      return "";
+    case InstrumentIndex::Keys:             return "Keys";
+    case InstrumentIndex::Piano:            return "Piano";
+    case InstrumentIndex::Mandolin:         return "Mandolin";
+    case InstrumentIndex::Mic:              return "Voice";
+    case InstrumentIndex::Percussion:       return "Percussion";
+    case InstrumentIndex::TrollFace:        return "Troll";
+    case InstrumentIndex::Trumpet:          return "Trumpet";
+    case InstrumentIndex::Violin:           return "Violin";
+    case InstrumentIndex::Video:            return "Video";
+    case InstrumentIndex::Harmonica:        return "Harmonica";
+    }
+
+    return "";
+}
+
 InstrumentsButton::InstrumentsButton(const QIcon &defaultIcon, const QList<QIcon> &icons, QWidget *parent) :
     QToolButton(parent),
-    icons(icons)
+    icons(icons),
+    selectedIcon(-1)
 {
     setPopupMode(QToolButton::InstantPopup);
     setObjectName("instrumentsButton");
@@ -21,10 +109,13 @@ InstrumentsButton::InstrumentsButton(const QIcon &defaultIcon, const QList<QIcon
     connect(this, &InstrumentsButton::clicked, this, &InstrumentsButton::showInstrumentIcons);
 }
 
-void InstrumentsButton::setInstrumentIcon(quint8 instrumentIcon)
+void InstrumentsButton::setInstrumentIcon(quint8 instrumentIconIndex)
 {
-    if (instrumentIcon < icons.size())
-        setIcon(icons.at(instrumentIcon));
+    if (instrumentIconIndex < icons.size()) {
+        setIcon(icons.at(instrumentIconIndex));
+        selectedIcon = instrumentIconIndex;
+        emit iconChanged(selectedIcon);
+    }
 }
 
 QWidget *InstrumentsButton::createToolBar(const QList<QIcon> &icons, const QSize &iconSize)
@@ -39,7 +130,7 @@ QWidget *InstrumentsButton::createToolBar(const QList<QIcon> &icons, const QSize
 
     toolBar->setLayout(gridLayout);
 
-    const auto columns = 6;
+    const auto columns = 5;
     for (int i = 0; i < icons.size(); ++i) {
         auto button = new QToolButton();
         button->setIconSize(iconSize);
@@ -47,8 +138,7 @@ QWidget *InstrumentsButton::createToolBar(const QList<QIcon> &icons, const QSize
 
         connect(button, &QToolButton::clicked, [=](){
             toolBar->close();
-            setIcon(icons.at(i));
-            emit iconSelected(i);
+            setInstrumentIcon(i);
         });
 
         auto rowIndex = i / columns;

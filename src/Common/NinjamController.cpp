@@ -22,7 +22,7 @@
 #include "persistence/Settings.h"
 #include "Utils.h"
 
-#include "gui/chat/NinjamVotingMessageParser.h"
+#include "gui/chat/NinjamChatMessageParser.h"
 
 #include <QMutexLocker>
 #include <QDebug>

@@ -324,7 +324,8 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, int bufferChannelOffset, in
     int framesToCopy = std::min(buffer.getFrameLenght(), frameLenght);
     int channelsToProcess = std::min(channelsToCopy, std::min(buffer.getChannels(), static_cast<int>(channels)));
 
-    Q_ASSERT(channelsToProcess + bufferChannelOffset <= buffer.getChannels());
+    if (channelsToProcess + bufferChannelOffset > buffer.getChannels())
+        return; // avoid crash acessing invalid memory
 
     int bytesToCopy = framesToCopy * sizeof(float);
     for (int c = 0; c < channelsToProcess; ++c) {

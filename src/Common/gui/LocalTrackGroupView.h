@@ -7,6 +7,7 @@
 class MainWindow;
 class QPushButton;
 class BlinkableButton;
+class InstrumentsButton;
 
 class LocalTrackGroupView : public TrackGroupView
 {
@@ -20,6 +21,9 @@ public:
     LocalTrackView *addTrackView(long trackID) override;
 
     int getChannelIndex() const;
+
+    void setAsVideoChannel();
+    bool isVideoChannel() const;
 
     virtual void setPeakMeterMode(bool peakMeterOnly);
     virtual void togglePeakMeterOnlyMode();
@@ -42,6 +46,11 @@ public:
 
     QSize sizeHint() const override; // fixing #962
 
+    QString getChannelGroupName() const;
+
+    void setInstrumentIcon(int instrumentIndex);
+    int getInstrumentIcon() const;
+
 protected:
 
     LocalTrackView *createTrackView(long trackID) override;
@@ -50,16 +59,14 @@ protected:
 
     virtual void populateMenu(QMenu &menu);
 
-    void refreshStyleSheet() override;
-
     static const int MAX_SUB_CHANNELS = 2;
 
     MainWindow *mainFrame;
 
 private:
     QPushButton *toolButton;
-
     BlinkableButton *xmitButton;
+    InstrumentsButton *instrumentsButton;
 
     bool preparingToTransmit;
     bool usingSmallSpacingInLayouts;
@@ -67,6 +74,7 @@ private:
     int index;
 
     bool peakMeterOnly;
+    bool videoChannel;
 
     QPushButton *createToolButton();
     BlinkableButton *createXmitButton();
@@ -76,12 +84,14 @@ private:
     void createPresetsActions(QMenu &menu);
     void createChannelsActions(QMenu &menu);
 
+    InstrumentsButton *createInstrumentsButton();
+
     void updateXmitButtonText();
 
     static QString getStripedPresetName(const QString &presetName);
 
 signals:
-    void nameChanged();
+    void instrumentIconChanged();
     void trackRemoved();
     void trackAdded();
     void presetLoaded();
@@ -108,6 +118,11 @@ private slots:
 
     void toggleTransmitingStatus(bool checked);
 };
+
+inline bool LocalTrackGroupView::isVideoChannel() const
+{
+    return videoChannel;
+}
 
 inline BlinkableButton *LocalTrackGroupView::getXmitButton() const
 {

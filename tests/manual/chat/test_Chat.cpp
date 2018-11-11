@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     UsersColorsPool colorsPool;
     QStringList botNames("ninjamers.servebeer.com");
 
-    EmojiManager emojiManager("", "");
+    EmojiManager emojiManager(":/emoji/emoji.json", ":/emoji/icons");
 
     ChatPanel chatPanel(botNames, &colorsPool, nullptr, &emojiManager);
     chatPanel.setTopicMessage("Server topic message");
@@ -23,7 +23,14 @@ int main(int argc, char *argv[])
     chatPanel.setConnectedUsers(QStringList() << "Tester" << "Tester 2" << "Tester 3");
 
     QString localUserName("Tester");
-    chatPanel.addMessage(localUserName, "UserName", "message", true);
+    chatPanel.addMessage(localUserName, "ninbot", "username@81.174.155.x -120 Db");
+    chatPanel.addMessage(localUserName, "tester 1", "nice :+1:-1");
+    chatPanel.addMessage(localUserName, "UserName", "<- ;) ->", true);
+    chatPanel.addMessage(localUserName, "UserName", "https://media0.giphy.com/media/xTiTnet7xRv1GPTShi/giphy.gif", true);
+    chatPanel.addMessage(localUserName, "UserName", "https://jamtaba-music-web-site.appspot.com/img/jamtaba.png", true);
+    chatPanel.addMessage(localUserName, "UserName", "https://2.bp.blogspot.com/-CzUfiy32Orc/Vua-05F7N1I/AAAAAAAAVbU/4BMmTu06QGku_Y_IVbOq2UpmPZPxCrwjg/s1600/google%2Bplay%2Bmusic%2Bdesktop%2Blinux.png", true);
+
+    chatPanel.addMessage(localUserName, "UserName", "<p testing html marker! :(", true);
     chatPanel.addMessage(localUserName, "A_big_user_name_", "message", true);
     chatPanel.addMessage(localUserName, "A_big_user_name_", "A big message text to see if the layout is working ok when users decide chat using long texts :)", true);
     chatPanel.addMessage(localUserName, "Jamtaba", "User XXX leave the room", false);

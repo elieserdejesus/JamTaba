@@ -38,7 +38,6 @@
 		2A0DBCEF1E0AF46A00BEF1FF /* ChatPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB731E0AF46900BEF1FF /* ChatPanel.h */; };
 		2A0DBCF11E0AF46A00BEF1FF /* ChatPanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBB741E0AF46900BEF1FF /* ChatPanel.ui */; };
 		2A0DBCF51E0AF46A00BEF1FF /* ChatTextEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB761E0AF46900BEF1FF /* ChatTextEditor.h */; };
-		2A0DBD031E0AF46A00BEF1FF /* NinjamVotingMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB7E1E0AF46900BEF1FF /* NinjamVotingMessageParser.h */; };
 		2A0DBD071E0AF46A00BEF1FF /* ChatChordsProgressionParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB811E0AF46900BEF1FF /* ChatChordsProgressionParser.h */; };
 		2A0DBD0B1E0AF46A00BEF1FF /* Chord.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB831E0AF46900BEF1FF /* Chord.h */; };
 		2A0DBD0F1E0AF46A00BEF1FF /* ChordLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB851E0AF46900BEF1FF /* ChordLabel.h */; };
@@ -219,7 +218,6 @@
 		2A1C7A481E0B5F2C00C7984D /* ChatMessagePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6F1E0AF46900BEF1FF /* ChatMessagePanel.cpp */; };
 		2A1C7A491E0B5F2C00C7984D /* ChatPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB721E0AF46900BEF1FF /* ChatPanel.cpp */; };
 		2A1C7A4A1E0B5F2C00C7984D /* ChatTextEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB751E0AF46900BEF1FF /* ChatTextEditor.cpp */; };
-		2A1C7A4B1E0B5F2C00C7984D /* NinjamVotingMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB7D1E0AF46900BEF1FF /* NinjamVotingMessageParser.cpp */; };
 		2A1C7A4C1E0B5F2C00C7984D /* ChatChordsProgressionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB801E0AF46900BEF1FF /* ChatChordsProgressionParser.cpp */; };
 		2A1C7A4D1E0B5F2C00C7984D /* Chord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB821E0AF46900BEF1FF /* Chord.cpp */; };
 		2A1C7A4E1E0B5F2C00C7984D /* ChordLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB841E0AF46900BEF1FF /* ChordLabel.cpp */; };
@@ -336,6 +334,10 @@
 		2A3016361E0D94320013700B /* AUPlugInDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B81891A149005D69C7 /* AUPlugInDispatch.cpp */; };
 		2A3669141E0DBFA9006CD583 /* JamTabaAUPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A3669121E0DBFA9006CD583 /* JamTabaAUPlugin.mm */; };
 		2A3669151E0DBFA9006CD583 /* JamTabaAUPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A3669131E0DBFA9006CD583 /* JamTabaAUPlugin.h */; };
+		2A36DEF921711F2700218F05 /* NinjamChatMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A36DEF721711F2700218F05 /* NinjamChatMessageParser.cpp */; };
+		2A36DEFA21711F2700218F05 /* NinjamChatMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A36DEF721711F2700218F05 /* NinjamChatMessageParser.cpp */; };
+		2A36DEFB21711F2700218F05 /* NinjamChatMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A36DEF821711F2700218F05 /* NinjamChatMessageParser.h */; };
+		2A36DEFC21711F2700218F05 /* NinjamChatMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A36DEF821711F2700218F05 /* NinjamChatMessageParser.h */; };
 		2A3AE1DE1E80863000D391C5 /* BlinkableButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A3AE1DC1E80863000D391C5 /* BlinkableButton.h */; };
 		2A3AE1DF1E80863000D391C5 /* BlinkableButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A3AE1DD1E80863000D391C5 /* BlinkableButton.cpp */; };
 		2A3AE1E01E80863800D391C5 /* BlinkableButton.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A3AE1DC1E80863000D391C5 /* BlinkableButton.h */; };
@@ -596,8 +598,6 @@
 		2A0DBB741E0AF46900BEF1FF /* ChatPanel.ui */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ChatPanel.ui; sourceTree = "<group>"; };
 		2A0DBB751E0AF46900BEF1FF /* ChatTextEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChatTextEditor.cpp; sourceTree = "<group>"; };
 		2A0DBB761E0AF46900BEF1FF /* ChatTextEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTextEditor.h; sourceTree = "<group>"; };
-		2A0DBB7D1E0AF46900BEF1FF /* NinjamVotingMessageParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NinjamVotingMessageParser.cpp; sourceTree = "<group>"; };
-		2A0DBB7E1E0AF46900BEF1FF /* NinjamVotingMessageParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NinjamVotingMessageParser.h; sourceTree = "<group>"; };
 		2A0DBB801E0AF46900BEF1FF /* ChatChordsProgressionParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChatChordsProgressionParser.cpp; sourceTree = "<group>"; };
 		2A0DBB811E0AF46900BEF1FF /* ChatChordsProgressionParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatChordsProgressionParser.h; sourceTree = "<group>"; };
 		2A0DBB821E0AF46900BEF1FF /* Chord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chord.cpp; sourceTree = "<group>"; };
@@ -771,6 +771,8 @@
 		2A2F700F1E08116200A4B6C2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		2A3669121E0DBFA9006CD583 /* JamTabaAUPlugin.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = JamTabaAUPlugin.mm; path = ../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm; sourceTree = "<group>"; };
 		2A3669131E0DBFA9006CD583 /* JamTabaAUPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTabaAUPlugin.h; path = ../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.h; sourceTree = "<group>"; };
+		2A36DEF721711F2700218F05 /* NinjamChatMessageParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NinjamChatMessageParser.cpp; sourceTree = "<group>"; };
+		2A36DEF821711F2700218F05 /* NinjamChatMessageParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NinjamChatMessageParser.h; sourceTree = "<group>"; };
 		2A3AE1DC1E80863000D391C5 /* BlinkableButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlinkableButton.h; sourceTree = "<group>"; };
 		2A3AE1DD1E80863000D391C5 /* BlinkableButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlinkableButton.cpp; sourceTree = "<group>"; };
 		2A3AE1E11E80868500D391C5 /* Mp3FileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mp3FileReader.h; sourceTree = "<group>"; };
@@ -1320,6 +1322,8 @@
 		2A0DBB6E1E0AF46900BEF1FF /* chat */ = {
 			isa = PBXGroup;
 			children = (
+				2A36DEF721711F2700218F05 /* NinjamChatMessageParser.cpp */,
+				2A36DEF821711F2700218F05 /* NinjamChatMessageParser.h */,
 				2A14FF662007A68800ADAEB0 /* EmojiManager.cpp */,
 				2A14FF672007A68800ADAEB0 /* EmojiManager.h */,
 				2A14FF682007A68800ADAEB0 /* EmojiWidget.cpp */,
@@ -1332,8 +1336,6 @@
 				2A0DBB741E0AF46900BEF1FF /* ChatPanel.ui */,
 				2A0DBB751E0AF46900BEF1FF /* ChatTextEditor.cpp */,
 				2A0DBB761E0AF46900BEF1FF /* ChatTextEditor.h */,
-				2A0DBB7D1E0AF46900BEF1FF /* NinjamVotingMessageParser.cpp */,
-				2A0DBB7E1E0AF46900BEF1FF /* NinjamVotingMessageParser.h */,
 			);
 			path = chat;
 			sourceTree = "<group>";
@@ -1787,6 +1789,7 @@
 				2A0DBD951E0AF46B00BEF1FF /* NinjamRoomWindow.h in Headers */,
 				2A0DBE6B1E0AF46E00BEF1FF /* UploadIntervalData.h in Headers */,
 				2A0DBCDB1E0AF46900BEF1FF /* BaseTrackView.h in Headers */,
+				2A36DEFC21711F2700218F05 /* NinjamChatMessageParser.h in Headers */,
 				2A0DBCAB1E0AF46900BEF1FF /* Resampler.h in Headers */,
 				2A3AE1DE1E80863000D391C5 /* BlinkableButton.h in Headers */,
 				2AAAA7D0203247CB0005C3F5 /* PrivateServerWindow.h in Headers */,
@@ -1803,7 +1806,6 @@
 				2A0DBC531E0AF46900BEF1FF /* AudioDriver.h in Headers */,
 				2A0DBC7D1E0AF46900BEF1FF /* Plugins.h in Headers */,
 				2A0DBE551E0AF46E00BEF1FF /* Settings.h in Headers */,
-				2A0DBD031E0AF46A00BEF1FF /* NinjamVotingMessageParser.h in Headers */,
 				2AF5A94C1E761BC500D1150A /* Looper.h in Headers */,
 				2A586B441F8BE36200031DC7 /* CrashReportDialog.h in Headers */,
 				2A0DBC5B1E0AF46900BEF1FF /* AudioNode.h in Headers */,
@@ -1917,6 +1919,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A36DEFB21711F2700218F05 /* NinjamChatMessageParser.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2140,6 +2143,7 @@
 				2AF562192047185100D809D7 /* MainChat.h in Sources */,
 				2AF5A94F1E761BC500D1150A /* LooperPersistence.cpp in Sources */,
 				2A1C7AAE1E0B5FBE00C7984D /* JamTaba_UIView.mm in Sources */,
+				2A36DEFA21711F2700218F05 /* NinjamChatMessageParser.cpp in Sources */,
 				2A1C7AAD1E0B5FBC00C7984D /* JamTaba_ViewFactory.mm in Sources */,
 				2A1C7A301E0B5F2C00C7984D /* AudioMixer.cpp in Sources */,
 				2A1C7A311E0B5F2C00C7984D /* AudioNode.cpp in Sources */,
@@ -2171,7 +2175,6 @@
 				2A1C7A481E0B5F2C00C7984D /* ChatMessagePanel.cpp in Sources */,
 				2A1C7A491E0B5F2C00C7984D /* ChatPanel.cpp in Sources */,
 				2A1C7A4A1E0B5F2C00C7984D /* ChatTextEditor.cpp in Sources */,
-				2A1C7A4B1E0B5F2C00C7984D /* NinjamVotingMessageParser.cpp in Sources */,
 				2A1C7A4C1E0B5F2C00C7984D /* ChatChordsProgressionParser.cpp in Sources */,
 				2A1C7A4D1E0B5F2C00C7984D /* Chord.cpp in Sources */,
 				2A1C7A4E1E0B5F2C00C7984D /* ChordLabel.cpp in Sources */,
@@ -2280,6 +2283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A3016221E0D90AB0013700B /* AUBase.cpp in Sources */,
+				2A36DEF921711F2700218F05 /* NinjamChatMessageParser.cpp in Sources */,
 				2A3016231E0D90AD0013700B /* AUDispatch.cpp in Sources */,
 				2A30162B1E0D90CA0013700B /* AUEffectBase.cpp in Sources */,
 				2A3016241E0D90B00013700B /* AUInputElement.cpp in Sources */,

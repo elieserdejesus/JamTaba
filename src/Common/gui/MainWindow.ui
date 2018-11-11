@@ -353,7 +353,7 @@
              </sizepolicy>
             </property>
             <property name="maximum">
-             <number>140</number>
+             <number>148</number>
             </property>
             <property name="singleStep">
              <number>10</number>

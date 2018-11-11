@@ -14,7 +14,8 @@ QInputDialog,
 MidiToolsDialog,
 UserNameDialog,
 LooperWindow,
-QWidget#instrumentsMenu
+QWidget#instrumentsMenu,
+ChordProgressionCreationDialog
 {
     border-color: rgb(20, 20, 20);
     color: white;
@@ -259,6 +260,11 @@ PrivateServerDialog QComboBox QAbstractItemView
     background-color: rgb(180, 207, 250);
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
+}
+
+ChordProgressionCreationDialog QComboBox:focus
+{
+    border: 1px solid white;
 }
 
 BusyDialog

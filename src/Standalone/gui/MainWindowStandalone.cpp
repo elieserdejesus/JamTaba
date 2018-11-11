@@ -476,9 +476,9 @@ void MainWindowStandalone::refreshTrackInputSelection(int inputTrackIndex)
         channel->refreshInputSelectionName(inputTrackIndex);
 }
 
-void MainWindowStandalone::addChannelsGroup(const QString &groupName)
+void MainWindowStandalone::addChannelsGroup(int instrumentIndex)
 {
-    MainWindow::addChannelsGroup(groupName);
+    MainWindow::addChannelsGroup(instrumentIndex);
     controller->updateInputTracksRange();
 }
 

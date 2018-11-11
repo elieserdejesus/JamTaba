@@ -16,7 +16,7 @@ INCLUDEPATH += $$SOURCE_PATH/Standalone
 
 INCLUDEPATH += $$SOURCE_PATH/Standalone/gui
 
-INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x
+INCLUDEPATH += $$VST_SDK_PATH/VST2_SDK/pluginterfaces/vst2.x
 
 HEADERS += MainControllerStandalone.h
 HEADERS += gui/MainWindowStandalone.h
@@ -166,6 +166,6 @@ linux{
     DEFINES += __LINUX_ALSA__
 
 
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lx264 -lavformat -lavcodec -lswscale -lavutil -lswresample -lminiupnpc
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavformat -lavcodec -lswscale -lavutil -lswresample -lminiupnpc -lx264
     LIBS += -lasound
 }
