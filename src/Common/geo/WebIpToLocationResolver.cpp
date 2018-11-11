@@ -132,37 +132,32 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
         }
 
         QJsonObject root = doc.object();
-        if (!root.contains("country")) {
-            qCritical() << "The root json object not contains 'country'";
+        if (!root.contains("country_name")) {
+            qCritical() << "The root json object not contains 'country_name'";
             return;
         }
 
-        QJsonObject countryObject = root["country"].toObject();
-        if (countryObject.contains("name") && countryObject.contains("code")) {
-            QString countryName = countryObject["name"].toString();
-            QString countryCode = countryObject["code"].toString();
-            countryCodesCache.insert(ip, countryCode);
-            countryNamesCache.insert(countryCode, countryName);
-            if (root.contains("location")) {
-                QJsonObject locationObject = root["location"].toObject();
-                if (locationObject.contains("latitude") && locationObject.contains("longitude")) {
-                    double latitude = locationObject["latitude"].toDouble();
-                    double longitude = locationObject["longitude"].toDouble();
-                    latLongCache.insert(ip, QPointF(latitude, longitude));
-                    qCDebug(jtIpToLocation) << "Data received IP:" << ip << " Lang:" << language << " country code:" << countryCode << " country name:" << countryName << "lat:" << latitude << " long:" << longitude;
-                }
-                else {
-                    qCritical() << "The json 'location' object not contains 'latidude' or 'longitude' entries";
-                }
-            }
-            else {
-                qCritical() << "The root json object not contains 'location'";
-            }
-            emit ipResolved(ip);
+        if (!root.contains("country_code")) {
+            qCritical() << "The root json object not contains 'country_name'";
+            return;
+        }
+
+        QString countryName = root["country_name"].toString();
+        QString countryCode = root["country_code"].toString();
+        countryCodesCache.insert(ip, countryCode);
+        countryNamesCache.insert(countryCode, countryName);
+
+        if (root.contains("latitude") && root.contains("longitude")) {
+            auto latitude = root["latitude"].toDouble();
+            auto longitude = root["longitude"].toDouble();
+            latLongCache.insert(ip, QPointF(latitude, longitude));
+            qCDebug(jtIpToLocation) << "Data received IP:" << ip << " Lang:" << language << " country code:" << countryCode << " country name:" << countryName << "lat:" << latitude << " long:" << longitude;
         }
         else {
-            qCritical() << "The country json object not contains 'name' or 'code'";
+            qCritical() << "The json 'location' object not contains 'latidude' or 'longitude' entries";
         }
+
+        emit ipResolved(ip);
     }
     else {
         qCDebug(jtIpToLocation) << "error requesting " << ip << ". Returning an empty location!";
@@ -171,20 +166,22 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
     reply->deleteLater();
 }
 
-// At moment the current api is geoip.nekudo.com. Another option is https://freegeoip.net/json/
+// At moment the current api is http://api.ipapi.com/ (the replacement for Nekudo api). Another option is https://freegeoip.net/json/
 void WebIpToLocationResolver::requestDataFromWebService(const QString &ip)
 {
     qCDebug(jtIpToLocation) << "requesting ip " << ip ;
 
     QNetworkRequest request;
-    QString serviceUrl = "http://geoip.nekudo.com/api/";
+    QString serviceUrl = "http://api.ipapi.com";
 
-    // http://geoip.nekudo.com/api/{ip}/{language}/{type}
+    QString accessKey(QStringLiteral("22f433857895c84347e949db234af11f"));
+
     QString lang = sanitizeLanguageCode(currentLanguage);
     if (!canTranslateCountryName(lang))
         lang = "en";
 
-    request.setUrl(QUrl(serviceUrl + ip + "/" + lang + "/short"));
+    // URL FORMAT: http://api.ipapi.com/{ip}?access_key={key}&language={lang}
+    request.setUrl(QUrl(QString("%1/%2?access_key=%3&language=%4").arg(serviceUrl, ip, accessKey, lang)));
 
     QNetworkReply* reply = httpClient.get(request);
     reply->setProperty("ip", QVariant(ip));

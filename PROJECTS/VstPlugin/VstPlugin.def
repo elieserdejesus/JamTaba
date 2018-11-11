@@ -1,0 +1,4 @@
+LIBRARY JamTaba
+EXPORTS
+VSTPluginMain 
+main=VSTPluginMain

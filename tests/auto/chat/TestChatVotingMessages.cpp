@@ -1,5 +1,5 @@
 #include "TestChatVotingMessages.h"
-#include "gui/chat/NinjamVotingMessageParser.h"
+#include "gui/chat/NinjamChatMessageParser.h"
 #include <QTest>
 
 using namespace gui::chat;

@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QString>
+#include <QDir>
 
 QString gui::capitalize(const QString &string)
 {
@@ -31,4 +32,22 @@ QString gui::sanitizeServerName(const QString &serverName)
         return serverName.split(".").first();
 
     return serverName;
+}
+
+void gui::clearLayout(QLayout *layout)
+{
+    if (!layout)
+        return;
+
+    QLayoutItem *item = nullptr;
+    while ((item = layout->takeAt(0)) != nullptr) {
+
+        if (item->widget())
+            item->widget()->deleteLater();
+
+        if (item->layout())
+            clearLayout(item->layout());
+
+        delete item;
+    }
 }

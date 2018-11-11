@@ -116,8 +116,14 @@ QString ChordLabel::chordToHtmlText(Chord *chord)
     }
 
     finalString += "</strong>";
-    if (chord->hasLettersAfterRoot())
-        finalString += chord->getLettersAfterRoot().toLower();
+    if (chord->hasLettersAfterRoot()) {
+        auto letters = chord->getLettersAfterRoot();
+
+        if (letters != "M") // upper case 'M' is not lowered to allow C7M or CM7
+            letters = letters.toLower();
+
+        finalString += letters;
+    }
 
     if (chord->hasLastPart())
         finalString += chord->getLastPart();

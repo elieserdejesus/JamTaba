@@ -187,6 +187,7 @@
         <file>collapse_bottom.png</file>
         <file>collapse_right.png</file>
         <file>collapse_left.png</file>
+        <file>chords.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>
@@ -1340,21 +1341,23 @@
         <file>emoji/sad.png</file>
         <file>instruments/ac-guitar.png</file>
         <file>instruments/banjo.png</file>
+        <file>instruments/cam.png</file>
         <file>instruments/bass.png</file>
         <file>instruments/double-bass.png</file>
         <file>instruments/drum.png</file>
-        <file>instruments/drumsticks.png</file>
-        <file>instruments/gramophone.png</file>
         <file>instruments/guitar.png</file>
         <file>instruments/jtba.png</file>
         <file>instruments/keys.png</file>
         <file>instruments/mandolin.png</file>
         <file>instruments/mic.png</file>
         <file>instruments/piano.png</file>
-        <file>instruments/triangle.png</file>
         <file>instruments/troll.png</file>
         <file>instruments/trumpet.png</file>
         <file>instruments/violin.png</file>
+        <file>instruments/computer.png</file>
+        <file>instruments/pads.png</file>
+        <file>instruments/percussion.png</file>
+        <file>instruments/harmonica.png</file>
     </qresource>
     <qresource prefix="/tiles">
         <file>map/0/0/0.png</file>

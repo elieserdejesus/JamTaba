@@ -55,14 +55,12 @@ The library **portaudio** was **pre compiled** in windows using **only the ASIO 
         |_ tests
         |_ translations	
 	|_ VST_SDK       <- create this folder
-		|_ base
-		|_ bin
-		|_ doc
-		|_ pluginterfaces
-		|_ plublic.sdk
-		|_ vstgui.sf
-		|_ vstgui4
-		|_ index.html
+                |_ my_plugins
+                |_ VST2_SDK
+                |_ VST3_SDK
+                |_ copy_vst2_to_vst3_sdk.bat
+                |_ copy_vst2_to_vst3_sdk.sh
+
 ```
 - The **QtCreator projects** are in the folder **PROJECTS**. Try open the **Standalone.pro** in QtCreator to compile **JamTaba Standalone**. 
 

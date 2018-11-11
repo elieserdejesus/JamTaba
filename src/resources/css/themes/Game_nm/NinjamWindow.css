@@ -70,7 +70,8 @@ IntervalProgressDisplay
 #buttonHorizontalLayout:enabled:checked,
 #buttonGridLayout:enabled:checked,
 #wide:enabled:checked,
-#narrow:enabled:checked
+#narrow:enabled:checked,
+#chordsButton
 {
     border: none;
     background: #0B4B49;
@@ -84,7 +85,8 @@ IntervalProgressDisplay
 #narrow:enabled:hover,
 #licenceButton:hover,
 #instrumentsButton:hover,
-#instrumentsMenu QToolButton:hover
+#instrumentsMenu QToolButton:hover,
+#chordsButton:hover
 {
     border: 1px solid #368788;
     background-color: #0B4B49;

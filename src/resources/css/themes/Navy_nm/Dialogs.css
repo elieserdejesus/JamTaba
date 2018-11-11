@@ -41,3 +41,10 @@ MidiToolsDialog #spinBoxTranspose
     color: rgb(180, 180, 180);
     background-color: rgba(0, 0, 0, 20);
 }
+
+ChordProgressionCreationDialog QComboBox:focus
+{
+    border-radius: 3px;
+}
+
+

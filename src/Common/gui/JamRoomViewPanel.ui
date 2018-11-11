@@ -40,20 +40,42 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QGridLayout" name="gridLayout">
       <property name="leftMargin">
-       <number>3</number>
+       <number>6</number>
       </property>
       <property name="topMargin">
        <number>3</number>
       </property>
       <property name="rightMargin">
-       <number>3</number>
+       <number>6</number>
       </property>
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <item>
+      <property name="verticalSpacing">
+       <number>3</number>
+      </property>
+      <item row="0" column="2" rowspan="2">
+       <widget class="QPushButton" name="buttonEnter">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="accessibleName">
+         <string/>
+        </property>
+        <property name="accessibleDescription">
+         <string>Click that button to enter in this room</string>
+        </property>
+        <property name="text">
+         <string>enter</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
        <widget class="QLabel" name="labelName">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -75,32 +97,7 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLabel" name="labelRoomStatus">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
-          <horstretch>1</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="accessibleName">
-         <string/>
-        </property>
-        <property name="accessibleDescription">
-         <string>This is the status of this room</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="text">
-         <string notr="true">5/7 musicians  120 BPM  16 BPI</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
+      <item row="0" column="1" rowspan="2">
        <widget class="QPushButton" name="buttonListen">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -122,11 +119,11 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="buttonEnter">
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelRoomStatus">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-          <horstretch>0</horstretch>
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+          <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
@@ -134,10 +131,16 @@
          <string/>
         </property>
         <property name="accessibleDescription">
-         <string>Click that button to enter in this room</string>
+         <string>This is the status of this room</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>enter</string>
+         <string notr="true">5/7 musicians  120 BPM  16 BPI</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>

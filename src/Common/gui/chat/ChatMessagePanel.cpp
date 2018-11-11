@@ -25,7 +25,7 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userFullName,
     ui->setupUi(this);
 
     if (emojifier)
-        emojifiedText = emojifier->emojify(msg);
+        emojifiedText = emojifier->emojify(msg.toHtmlEscaped());
     else
         emojifiedText = msg;
 
@@ -223,13 +223,42 @@ void ChatMessagePanel::initialize(const QString &userFullName, const QString &ms
         ui->labelUserName->setVisible(false);
     }
 
-    setMessageLabelText(emojifiedText);
-
     ui->translateButton->setVisible(showTranslationButton);
 
     ui->blockButton->setVisible(showBlockButton);
 
+    setMessageLabelText(emojifiedText);
+
     originalText = msg;
+}
+
+bool linkIsImage(const QString &link)
+{
+    static auto acceptedFormats = QStringList() << ".png" << "gif" << "jpg" << "jpeg";
+
+    for (auto extension : acceptedFormats) {
+        if (link.endsWith(extension, Qt::CaseInsensitive))
+            return true;
+    }
+
+    return false;
+}
+
+bool messageContainsDownloadableImageLink(const QString &message)
+{
+    QRegularExpression regex("((?:https?|ftp|www)://\\S+)");
+    auto matcher = regex.match(message);
+    if (matcher.hasMatch()) {
+        auto links = matcher.capturedTexts();
+        if (!links.isEmpty()) {
+            auto link = links.first();
+            if (linkIsImage(link)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void ChatMessagePanel::setMessageLabelText(const QString &msg)
@@ -237,14 +266,56 @@ void ChatMessagePanel::setMessageLabelText(const QString &msg)
     QString newMessage(msg);
     newMessage = newMessage.replace(QRegExp("<.+?>"), ""); // scape html tags
     newMessage = newMessage.replace("\n", "<br/>");
-    newMessage = replaceLinksInString(newMessage);
 
-    ui->labelMessage->setText(newMessage);
+   if (messageContainsDownloadableImageLink(msg)) {
+       downloadImage(msg);
+       ui->translateButton->setVisible(false); // images are not translatable
+   }
+   else {
+        newMessage = replaceLinksInString(newMessage);
+        ui->labelMessage->setText(newMessage);
+   }
+}
+
+void ChatMessagePanel::downloadImage(const QString &link)
+{
+
+    auto nam = new QNetworkAccessManager(this);
+    nam->get(QNetworkRequest(QUrl(QString(link).replace("https:", "http:")))); // trying download from https using simple http
+
+    connect(nam, &QNetworkAccessManager::finished, [=](QNetworkReply *reply)
+    {
+        auto imageData = reply->readAll();
+        if (parentWidget()) {
+            int bestWidth = parentWidget()->width() * 0.85;
+            auto image = QImage::fromData(imageData);
+            if (!image.isNull()) {
+                insertImage(image.scaledToWidth(bestWidth, Qt::SmoothTransformation), link);
+            }
+            else {
+                ui->labelMessage->setText(replaceLinksInString(link));
+            }
+        }
+
+        nam->deleteLater();
+        reply->deleteLater();
+    });
+}
+
+void ChatMessagePanel::insertImage(const QImage &image, const QString &link)
+{
+    auto document = ui->labelMessage->document();
+    document->addResource(QTextDocument::ImageResource, QUrl("image"), image);
+
+    ui->labelMessage->append(QString("<a href=\"%1\"><img src=\"image\" /></a>").arg(link));
+    ui->labelMessage->clearFocus();
+
+    ui->labelMessage->setMinimumWidth(image.width() + 10);
 }
 
 QString ChatMessagePanel::replaceLinksInString(const QString &string)
 {
-    QString regex = "((?:https?|ftp|www)://\\S+)";
+    static QString regex = "((?:https?|ftp|www)://\\S+)";
     return QString(string).replace(QRegExp(regex), "<a href=\"\\1\">\\1</a>");
 }
 

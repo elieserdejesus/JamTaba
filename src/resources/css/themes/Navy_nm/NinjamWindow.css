@@ -66,6 +66,7 @@ QToolButton#buttonGridLayout:!checked,
 QToolButton#wide:!checked,
 QToolButton#narrow:!checked,
 QPushButton#licenceButton,
+QPushButton#chordsButton,
 LooperWindow QPushButton:!checked
 {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -78,6 +79,7 @@ QToolButton#buttonGridLayout:hover,
 QToolButton#wide:hover,
 QToolButton#narrow:hover,
 QPushButton#licenceButton:hover,
+QPushButton#chordsButton:hover,
 LooperWindow QPushButton:!checked:hover
 {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,

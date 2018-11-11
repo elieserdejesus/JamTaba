@@ -87,7 +87,8 @@ NinjamTrackView[horizontal="true"]
 #buttonGridLayout,
 #wide,
 #narrow,
-#licenceButton
+#licenceButton,
+#chordsButton
 {
     border: 1px solid rgba(0, 0, 0, 20);
     background-color: rgba(0, 0, 0, 8);
@@ -98,7 +99,8 @@ NinjamTrackView[horizontal="true"]
 #buttonGridLayout:hover,
 #wide:hover,
 #narrow:hover,
-#licenceButton:hover
+#licenceButton:hover,
+#chordsButton:hover
 {
     border: 1px solid rgba(0, 0, 0, 50);
     background-color: rgba(255, 255, 255, 50);

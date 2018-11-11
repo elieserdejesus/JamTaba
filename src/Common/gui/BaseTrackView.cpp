@@ -103,7 +103,6 @@ void BaseTrackView::createLayoutStructure()
     levelSlider = new AudioSlider();
     levelSlider->setObjectName(QStringLiteral("levelSlider"));
     levelSlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    levelSlider->setMaximum(120);
     levelSlider->setValue(100);
     levelSlider->setTickPosition(QSlider::NoTicks);
 
@@ -233,9 +232,12 @@ void BaseTrackView::updateGuiElements()
 
 QSize BaseTrackView::sizeHint() const
 {
+    auto hint = QFrame::sizeHint();
+
     if (narrowed)
-        return QSize(NARROW_WIDTH, height());
-    return QSize(WIDE_WIDTH, height());
+        return QSize(NARROW_WIDTH, hint.height());
+
+    return QSize(WIDE_WIDTH, hint.height());
 }
 
 QSize BaseTrackView::minimumSizeHint() const

@@ -17,9 +17,11 @@ win32{
 
     QMAKE_LFLAGS += /ignore:4099 #supressing warning about missing .pdb files
 
-    INCLUDEPATH += "$$VST_SDK_PATH/"
-    INCLUDEPATH += "$$VST_SDK_PATH/pluginterfaces/vst2.x/"
-    INCLUDEPATH += "$$VST_SDK_PATH/public.sdk/source/vst2.x"
+    INCLUDEPATH += "$$VST_SDK_PATH/VST2_SDK"
+    INCLUDEPATH += "$$VST_SDK_PATH/VST2_SDK/pluginterfaces/vst2.x/"
+    INCLUDEPATH += "$$VST_SDK_PATH/VST2_SDK/public.sdk/source/vst2.x"
+
+    DEF_FILE = VstPlugin.def #exporting DLL functions - fixing #1131
 }
 
 VPATH += $$SOURCE_PATH/Common
@@ -55,8 +57,8 @@ SOURCES += TopLevelTextEditorModifier.cpp
 win32:SOURCES += SonarTextEditorModifier.cpp
 SOURCES += PreferencesDialogPlugin.cpp
 SOURCES += KeyboardHook.cpp
-SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffectx.cpp
-SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffect.cpp
+SOURCES += $$VST_SDK_PATH/VST2_SDK/public.sdk/source/vst2.x/audioeffectx.cpp
+SOURCES += $$VST_SDK_PATH/VST2_SDK/public.sdk/source/vst2.x/audioeffect.cpp
 
 win32 {
     #message("Windows VST build")

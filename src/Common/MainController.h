@@ -213,6 +213,7 @@ public:
     void storeMultiTrackRecordingStatus(bool savingMultiTracks);
     bool isMultiTrackRecordingActivated() const;
     void storeMultiTrackRecordingPath(const QString &newPath);
+    void storeDirNameDateFormat(const QString &newDateFormat);
 
     void storeJamRecorderStatus(const QString &writerId, bool status);
 
@@ -298,6 +299,8 @@ public:
 
     qint8 getChatFontSizeOffset() const;
 
+    void setPublicChatActivated(bool activated);
+
 signals:
     void ipResolved(const QString &ip);
     void themeChanged();
@@ -344,7 +347,7 @@ protected:
 
     // map the input channel indexes to a GUID (used to upload audio to ninjam server)
     QMap<quint8, UploadIntervalData> audioIntervalsToUpload;
-    UploadIntervalData videoIntervalToUpload;
+    QScopedPointer<UploadIntervalData> videoIntervalToUpload;
 
     QMutex mutex;
 
@@ -405,9 +408,6 @@ private:
 
     static const QString CRASH_FLAG_STRING;
 
-    void enqueueAudioDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
-    void enqueueVideoDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
-
     EmojiManager emojiManager;
 
     QSet<QString> chatBlockedUsers;
@@ -418,7 +418,8 @@ protected slots:
     virtual void disconnectFromNinjamServer(const ServerInfo &server);
     virtual void quitFromNinjamServer(const QString &error);
 
-    virtual void enqueueDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
+    void enqueueAudioDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart);
+    void enqueueVideoDataToUpload(const QByteArray &encodedData, bool isFirstPart);
 
     virtual void updateBpi(int newBpi);
     virtual void updateBpm(int newBpm);
@@ -428,7 +429,6 @@ protected slots:
 
     void requestCameraFrame(int intervalPosition);
 
-    void uploadEncodedVideoData(const QByteArray &encodedData, bool firstPart);
 };
 
 inline MainWindow *MainController::getMainWindow() const

@@ -1,4 +1,4 @@
-#include "NinjamVotingMessageParser.h"
+#include "NinjamChatMessageParser.h"
 #include <QRegularExpression>
 #include <QDebug>
 
@@ -16,6 +16,35 @@ const QRegularExpression gui::chat::PRIVATE_MESSAGE_REGEX("^/msg");
 
 const QRegularExpression gui::chat::PUBLIC_SERVER_INVITE_REGEX("^(Let's play in ([A-Za-z\\.0-9]+) \\: ([0-9]{4}) \\?)");
 const QRegularExpression gui::chat::PRIVATE_SERVER_INVITE_REGEX("^(Let's play in my private server\\?)\\n\\n IP\\: ([A-Za-z\\.0-9]+) \\n\\n PORT\\: ([0-9]{4}) \\n");
+
+const QRegularExpression gui::chat::NINBOT_LEVEL_MESSAGE_REGEX("^(.+), you are clipping [ ]?([0-9]+\\.[0-9]+) db");
+
+bool gui::chat::isNinbotLevelMessage(const QString &message)
+{
+    return NINBOT_LEVEL_MESSAGE_REGEX.match(message).hasMatch();
+}
+
+QString gui::chat::extractUserNameFromNinbotLevelMessage(const QString &message)
+{
+    if (isNinbotLevelMessage(message)) {
+        auto match = NINBOT_LEVEL_MESSAGE_REGEX.match(message);
+        if (match.lastCapturedIndex() >= 1)
+            return match.captured(1); // return the second captured (the first group is the entire message)
+    }
+
+    return QString();
+}
+
+float gui::chat::extractDBValueFromNinbotLevelMessage(const QString &message)
+{
+    if (isNinbotLevelMessage(message)) {
+        auto match = NINBOT_LEVEL_MESSAGE_REGEX.match(message);
+        if (match.lastCapturedIndex() >= 2)
+            return match.captured(2).toFloat(); // return the third captured group (the first group is the entire message, the 2nd is the user name and the 3rd is the dB value)
+    }
+
+    return 0;
+}
 
 QString gui::chat::extractDestinationUserNameFromPrivateMessage(const QString &text)
 {

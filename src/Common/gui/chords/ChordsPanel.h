@@ -14,10 +14,9 @@ class ChordsPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit ChordsPanel(QWidget *parent = 0);
+    explicit ChordsPanel(const QString &title, QWidget *parent = 0);
     ~ChordsPanel();
     void setChords(const ChordProgression &progression);
-    void setCurrentBeat(int beat);
     bool setBpi(int bpi); // return true if the new bpi can be use with the currentChordProgression
     bool hasValidProgression() const;
     int getCurrentBpi() const;
@@ -25,10 +24,10 @@ public:
 
 signals:
     void sendingChordsToChat();
-    void chordsDiscarded();
+    void openingChordsDialog(const ChordProgression &currentProgression);
 
 public slots:
-    void discardChords();
+    void setCurrentBeat(int beat);
 
 private slots:
     void transposeUp();
@@ -41,7 +40,6 @@ private:
     ChordLabel *currentChordLabel;
 
     int getEstimatedChordDuration(Chord *chord, ChordProgressionMeasure *measure) const;
-    void resetGridLayout();
     void clear();
     void addChord(Chord *chord, int beatToInsert, int durationInBeats);
 };

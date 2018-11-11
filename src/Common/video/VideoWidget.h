@@ -35,15 +35,15 @@ protected:
     void mouseReleaseEvent(QMouseEvent *) override;
     void hideEvent(QHideEvent *ev) override;
     void showEvent(QShowEvent *ev) override;
-
-    QSize sizeHint() const override;
-
+    bool hasHeightForWidth() const override;
+    int heightForWidth(int width) const override;
     QSize minimumSizeHint() const override;
 
 private:
     QImage currentImage;
     QImage scaledImage;
     QRect targetRect;
+    qreal imageRatio;
 
     void updateScaledImage();
 
