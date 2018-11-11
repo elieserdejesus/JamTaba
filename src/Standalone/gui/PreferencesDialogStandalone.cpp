@@ -24,12 +24,12 @@ PreferencesDialogStandalone::PreferencesDialogStandalone(QWidget *parent,
     midiDriver(midiDriver),
     showAudioDriverControlPanelButton(showAudioControlPanelButton)
 {
-#ifdef Q_OS_MAC
-    ui->comboAudioDevice->setVisible(false);
-    ui->audioDeviceGroupBox->setVisible(false);
-    ui->groupBoxInputs->setVisible(false);
-    ui->groupBoxOutputs->setVisible(false);
-#endif
+//#ifdef Q_OS_MAC
+//    ui->comboAudioDevice->setVisible(false);
+//    ui->audioDeviceGroupBox->setVisible(false);
+//    ui->groupBoxInputs->setVisible(false);
+//    ui->groupBoxOutputs->setVisible(false);
+//#endif
 
     connect(ui->comboSampleRate, SIGNAL(activated(int)), this, SLOT(notifySampleRateChanged()));
     connect(ui->comboBufferSize, SIGNAL(activated(int)), this, SLOT(notifyBufferSizeChanged()));
@@ -289,7 +289,13 @@ void PreferencesDialogStandalone::populateFirstInputCombo()
     ui->comboFirstInput->clear();
     int maxInputs = audioDriver->getMaxInputs();
     for (int i = 0; i < maxInputs; i++)
-        ui->comboFirstInput->addItem(audioDriver->getInputChannelName(i), i);
+    {
+        auto cName = audioDriver->getInputChannelName(i);
+        i++;
+        i--;
+
+        ui->comboFirstInput->addItem(cName, i);
+    }
 
     int firstInputIndex = audioDriver->getFirstSelectedInput();
     if (firstInputIndex < maxInputs)
