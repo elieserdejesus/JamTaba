@@ -421,7 +421,8 @@ void PreferencesDialogStandalone::accept()
     int firstOut = ui->comboFirstOutput->currentData().toInt();
     int lastOut = ui->comboLastOutput->currentData().toInt();
 
-    // build midi inputs devices statusß
+    QList<bool> midiInputsStatus;
+    // build midi inputs devices status
     QList<QCheckBox *> boxes = ui->midiContentPanel->findChildren<QCheckBox *>();
     for (QCheckBox *check : boxes)
         midiInputsStatus.append(check->isChecked());
