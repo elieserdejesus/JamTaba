@@ -417,7 +417,7 @@ void PreferencesDialogStandalone::accept()
     int lastIn = ui->comboLastInput->currentData().toInt();
 
     auto indexOut = ui->comboAudioOutputDevice->currentIndex();
-    int selectedAudioOutputDevice = ui->comboAudioInputDevice->itemData(indexOut).toInt();
+    int selectedAudioOutputDevice = ui->comboAudioOutputDevice->itemData(indexOut).toInt();
     int firstOut = ui->comboFirstOutput->currentData().toInt();
     int lastOut = ui->comboLastOutput->currentData().toInt();
 
