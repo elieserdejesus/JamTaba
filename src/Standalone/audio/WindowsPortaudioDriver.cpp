@@ -4,13 +4,13 @@
 
 namespace audio {
 
-PortAudioDriver::PortAudioDriver(controller::MainController* mainController, int deviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize ) :
+PortAudioDriver::PortAudioDriver(controller::MainController* mainController, int audioInputDeviceIndex, int audioOutputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize ) :
     AudioDriver(mainController),
     useSystemDefaultDevices(false)
 {
     globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
     globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
-    audioDeviceIndex = deviceIndex;
+    audioDeviceIndex = audioInputDeviceIndex;
     if(!initPortAudio(sampleRate, bufferSize)){
         audioDeviceIndex = paNoDevice;
     }

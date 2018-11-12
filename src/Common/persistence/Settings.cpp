@@ -31,51 +31,41 @@ SettingsObject::SettingsObject(const QString &name) :
 
 SettingsObject::~SettingsObject()
 {
-    qCDebug(jtSettings) << "SettingsObject destroyed";
+    // qCDebug(jtSettings) << "SettingsObject destroyed";
 }
 
 int SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                      int fallBackValue)
 {
-    qCDebug(jtSettings) << "SettingsObject getValueFromJson: propertyName = " << propertyName;
+    auto val = json.contains(propertyName) ? json[propertyName].toInt() : fallBackValue;
+    qCDebug(jtSettings) << "SettingsObject getValueFromJson: " << propertyName << " = " << val;
 
-    if (json.contains(propertyName))
-        return json[propertyName].toInt();
-
-    return fallBackValue;
+    return val;
 }
 
 bool SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                       bool fallBackValue)
 {
-    qCDebug(jtSettings) << "SettingsObject getValueFromJson: propertyName = " << propertyName;
+    auto val = json.contains(propertyName) ? json[propertyName].toBool() : fallBackValue;
+    qCDebug(jtSettings) << "SettingsObject getValueFromJson: " << propertyName << " = " << val;
 
-    if (json.contains(propertyName))
-        return json[propertyName].toBool();
-
-    return fallBackValue;
+    return val;
 }
 
 QString SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                          QString fallBackValue)
 {
-    qCDebug(jtSettings) << "SettingsObject getValueFromJson: propertyName = " << propertyName;
-
-    if (json.contains(propertyName))
-        return json[propertyName].toString();
-
-    return fallBackValue;
+    auto val = json.contains(propertyName) ? json[propertyName].toString() : fallBackValue;
+    qCDebug(jtSettings) << "SettingsObject getValueFromJson: " << propertyName << " = " << val;
+    return val;
 }
 
 float SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                        float fallBackValue)
 {
-    qCDebug(jtSettings) << "SettingsObject getValueFromJson: propertyName = " << propertyName;
-
-    if (json.contains(propertyName))
-        return (float)(json[propertyName].toDouble());
-
-    return fallBackValue;
+    auto val = json.contains(propertyName) ? static_cast<float>(json[propertyName].toDouble()) : fallBackValue;
+    qCDebug(jtSettings) << "SettingsObject getValueFromJson: " << propertyName << " = " << val;
+    return val;
 }
 
 QJsonArray SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
@@ -254,7 +244,8 @@ AudioSettings::AudioSettings() :
     firstOut(-1),
     lastIn(-1),
     lastOut(-1),
-    audioDevice(-1)
+    audioInputDevice(-1),
+    audioOutputDevice(-1)
 {
     qCDebug(jtSettings) << "AudioSettings ctor";
 }
@@ -267,7 +258,8 @@ void AudioSettings::read(const QJsonObject &in)
     firstOut = getValueFromJson(in, "firstOut", 0);
     lastIn = getValueFromJson(in, "lastIn", 0);
     lastOut = getValueFromJson(in, "lastOut", 0);
-    audioDevice = getValueFromJson(in, "audioDevice", -1);
+    audioInputDevice = getValueFromJson(in, "audioInputDevice", -1);
+    audioOutputDevice = getValueFromJson(in, "audioOutputDevice", -1);
 
     encodingQuality = getValueFromJson(in, "encodingQuality", vorbis::EncoderQualityNormal); // using normal quality as fallback value.
 
@@ -283,7 +275,8 @@ void AudioSettings::read(const QJsonObject &in)
                         << "; firstOut " << firstOut
                         << "; lastIn " << lastIn
                         << "; lastOut " << lastOut
-                        << "; audioDevice " << audioDevice
+                        << "; audioInputDevice " << audioInputDevice
+                        << "; audioOutputDevice " << audioOutputDevice
                         << "; encodingQuality " << encodingQuality;
 }
 
@@ -296,7 +289,13 @@ void AudioSettings::write(QJsonObject &out) const
     out["firstOut"] = firstOut;
     out["lastIn"] = lastIn;
     out["lastOut"] = lastOut;
-    out["audioDevice"] = audioDevice;
+
+    // Note that this index based approach below is sub-optimal,
+    // as when system adds / removes devices and we would loose our mapping.
+    // Storing / restoring from device names would probably be more effective in future ...
+    out["audioInputDevice"] = audioInputDevice;
+    out["audioOutputDevice"] = audioOutputDevice;
+
     out["encodingQuality"] = encodingQuality;
 }
 
@@ -1018,18 +1017,20 @@ void Settings::setWindowSettings(bool windowIsMaximized, const QPointF &location
 }
 
 // ++++++++++++++++++++++++++++++++++++++++
-void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice)
+void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioInputDevice, int audioOutputDevice)
 {
     qCDebug(jtSettings) << "Settings setAudioSettings: firstIn from " << audioSettings.firstIn << " to " << firstIn
                         << "; lastIn from " << audioSettings.lastIn << " to " << lastIn
                         << "; firstOut from " << audioSettings.firstOut << " to " << firstOut
                         << "; lastOut from " << audioSettings.lastOut << " to " << lastOut
-                        << "; audioDevice from " << audioSettings.audioDevice << " to " << audioDevice;
+                        << "; audioInputDevice from " << audioSettings.audioInputDevice << " to " << audioInputDevice
+                        << "; audioOutputDevice from " << audioSettings.audioOutputDevice << " to " << audioOutputDevice;
     audioSettings.firstIn = firstIn;
     audioSettings.firstOut = firstOut;
     audioSettings.lastIn = lastIn;
     audioSettings.lastOut = lastOut;
-    audioSettings.audioDevice = audioDevice;
+    audioSettings.audioInputDevice = audioInputDevice;
+    audioSettings.audioOutputDevice = audioOutputDevice;
 }
 
 void Settings::setSampleRate(int newSampleRate)
@@ -1305,7 +1306,7 @@ void Settings::deletePreset(const QString &name)
 
 Settings::~Settings()
 {
-    qCDebug(jtSettings) << "Settings destructor";
+    // qCDebug(jtSettings) << "Settings destructor";
 }
 
 void Settings::setTheme(const QString theme)
@@ -1318,7 +1319,7 @@ void Settings::setTheme(const QString theme)
 
 QString Settings::getTranslation() const
 {
-    qCDebug(jtSettings) << "Settings getTranslation";
+    // qCDebug(jtSettings) << "Settings getTranslation";
     return translation;
 }
 

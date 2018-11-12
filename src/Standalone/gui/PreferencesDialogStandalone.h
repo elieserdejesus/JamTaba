@@ -31,8 +31,8 @@ public slots:
     void setCurrentScannedVstPlugin(const QString &pluginPath);
 
 signals:
-    void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn,
-                              int lastIn, int firstOut, int lastOut);
+    void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedInputAudioDevice, int selectedOutputAudioDevice,
+                              int firstIn, int lastIn, int firstOut, int lastOut);
 
     void sampleRateChanged(int newSampleRate);
     void bufferSizeChanged(int newBufferSize);
@@ -57,7 +57,8 @@ private slots:
     void populateLastInputCombo();
     void populateLastOutputCombo();
 
-    void changeAudioDevice(int index);
+    void changeAudioInputDevice(int index);
+    void changeAudioOutputDevice(int index);
 
     void notifySampleRateChanged();
     void notifyBufferSizeChanged();
