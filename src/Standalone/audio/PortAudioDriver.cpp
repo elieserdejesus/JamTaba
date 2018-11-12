@@ -23,8 +23,8 @@ namespace audio
 bool PortAudioDriver::canBeStarted() const
 {
     if (useSystemDefaultDevices) {
-        return  Pa_GetDefaultInputDevice()  != paNoDevice;
-                Pa_GetDefaultOutputDevice() != paNoDevice; // we need output
+        return     Pa_GetDefaultInputDevice()  != paNoDevice
+                && Pa_GetDefaultOutputDevice() != paNoDevice; // we need output
     }
 
     return     audioInputDeviceIndex  != paNoDevice
