@@ -24,12 +24,11 @@ PreferencesDialogStandalone::PreferencesDialogStandalone(QWidget *parent,
     midiDriver(midiDriver),
     showAudioDriverControlPanelButton(showAudioControlPanelButton)
 {
-//#ifdef Q_OS_MAC
-//    ui->comboAudioDevice->setVisible(false);
-//    ui->audioDeviceGroupBox->setVisible(false);
-//    ui->groupBoxInputs->setVisible(false);
-//    ui->groupBoxOutputs->setVisible(false);
-//#endif
+    if (UseSingleAudioIODevice)
+    {
+        ui->comboAudioOutputDevice->setVisible(false);
+        ui->comboAudioOutputDeviceLabel->setVisible(false);
+    }
 
     connect(ui->comboSampleRate, SIGNAL(activated(int)), this, SLOT(notifySampleRateChanged()));
     connect(ui->comboBufferSize, SIGNAL(activated(int)), this, SLOT(notifyBufferSizeChanged()));
@@ -393,15 +392,24 @@ void PreferencesDialogStandalone::changeAudioInputDevice(int index)
 {
     int deviceIndex = ui->comboAudioInputDevice->itemData(index).toInt();
     audioDriver->setAudioInputDeviceIndex(deviceIndex);
-
     populateFirstInputCombo();
-    populateSampleRateCombo();
-    populateBufferSizeCombo();
+    // On some platforms that don't support well seperate i/o devices yet,
+    // we may use only one device selection so auto-update output
+    if  (UseSingleAudioIODevice) {
+        changeAudioOutputDevice(deviceIndex); // also sets buffer and sample size
+    }
+    else {
+        populateSampleRateCombo();
+        populateBufferSizeCombo();
+    }
 }
 
 void PreferencesDialogStandalone::changeAudioOutputDevice(int index)
 {
-    int deviceIndex = ui->comboAudioOutputDevice->itemData(index).toInt();
+    int deviceIndex = UseSingleAudioIODevice ?
+                ui->comboAudioInputDevice->itemData(index).toInt() :
+                ui->comboAudioOutputDevice->itemData(index).toInt();
+
     audioDriver->setAudioOutputDeviceIndex(deviceIndex);
 
     populateFirstOutputCombo();

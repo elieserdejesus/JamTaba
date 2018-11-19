@@ -5,6 +5,13 @@
 #include <QObject>
 #include <QMutex>
 
+// Change settings below to experiment with seperate input/output audio devices
+#ifdef Q_OS_WIN
+    const bool UseSingleAudioIODevice = true;
+#else
+    const bool UseSingleAudioIODevice = false;
+#endif
+
 namespace controller {
 class MainController;
 }

@@ -21,7 +21,7 @@ PortAudioDriver::PortAudioDriver(controller::MainController *mainController,
     PaError error = Pa_Initialize();
     if (error == paNoError) {
         audioInputDeviceIndex = deviceInputIndex;
-        audioOutputDeviceIndex = deviceOutputIndex;
+        audioOutputDeviceIndex = UseSingleAudioIODevice ? deviceInputIndex : deviceOutputIndex;
 
         globalInputRange = ChannelRange(0, getMaxInputs());
 
