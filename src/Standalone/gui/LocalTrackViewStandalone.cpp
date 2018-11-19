@@ -520,7 +520,7 @@ QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
     monoInputsMenu->setIcon(QIcon(IconFactory::createMonoInputIcon(tintColor)));
     auto audioDriver = controller->getAudioDriver();
     int globalInputs = audioDriver->getInputsCount();
-    QString deviceName(audioDriver->getAudioInputDeviceName(audioDriver->getAudioDeviceIndex()));
+    QString deviceName(audioDriver->getAudioInputDeviceName(audioDriver->getAudioInputDeviceIndex()));
 
     for (int i = 0; i < globalInputs; ++i) {
         int index = audioDriver->getFirstSelectedInput() + i;
@@ -562,7 +562,7 @@ QMenu *LocalTrackViewStandalone::createStereoInputsMenu(QMenu *parent)
     stereoInputsMenu->setIcon(QIcon(IconFactory::createStereoInputIcon(tintColor)));
     auto audioDriver = controller->getAudioDriver();
     int globalInputs = audioDriver->getInputsCount();
-    QString deviceName(audioDriver->getAudioInputDeviceName(audioDriver->getAudioDeviceIndex()));
+    QString deviceName(audioDriver->getAudioInputDeviceName(audioDriver->getAudioInputDeviceIndex()));
     for (int i = 0; i < globalInputs; i += 2) {
         if (i + 1 < globalInputs) { // we can make a channel pair using (i) and (i+1)?
             QString firstName = getInputChannelNameOnly(i);

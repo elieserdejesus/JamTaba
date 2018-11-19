@@ -10,9 +10,11 @@ class PortAudioDriver : public AudioDriver
 {
 
 public:
-    PortAudioDriver(controller::MainController *mainController, int audioDeviceIndex,
+    PortAudioDriver(controller::MainController *mainController,
+                    int audioInputDeviceIndex,int audioOutputDeviceIndex,
                     int firstInputIndex, int lastInputIndex, int firstOutputIndex,
                     int lastOutputIndex, int sampleRate, int bufferSize);
+
     virtual ~PortAudioDriver();
 
     bool start() override;
@@ -28,14 +30,15 @@ public:
     QString getInputChannelName(unsigned const int index) const override;
     QString getOutputChannelName(unsigned const int index) const override;
 
-    QString getAudioInputDeviceName(int index) const override;
-    QString getAudioOutputDeviceName(int index) const override;
-    QString getAudioInputDeviceName() const override;
-    QString getAudioOutputDeviceName() const override;
+    QString getAudioInputDeviceName(int index = CurrentAudioDeviceSelection) const override;
+    QString getAudioOutputDeviceName(int index = CurrentAudioDeviceSelection) const override;
+    QString getAudioDeviceInfo(int index, unsigned& nIn, unsigned& nOut) const override;
 
-    int getAudioDeviceIndex() const override;
+    int getAudioInputDeviceIndex() const override;
+    int getAudioOutputDeviceIndex() const override;
 
-    void setAudioDeviceIndex(int index) override;
+    void setAudioInputDeviceIndex(int index) override;
+    void setAudioOutputDeviceIndex(int index) override;
 
     int getDevicesCount() const override;
 

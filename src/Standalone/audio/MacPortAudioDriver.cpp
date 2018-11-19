@@ -4,23 +4,24 @@
 
 namespace audio {
 
-PortAudioDriver::PortAudioDriver(controller::MainController *mainController, int deviceIndex,
+PortAudioDriver::PortAudioDriver(controller::MainController *mainController,
+                                 int deviceInputIndex, int deviceOutputIndex,
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
     AudioDriver(mainController),
-    useSystemDefaultDevices(true) // in mac deviceIndex is always the system default values
+    useSystemDefaultDevices(false) // in mac deviceIndex is always the system default values
 {
 
     Q_UNUSED(firstInIndex)
     Q_UNUSED(firstOutIndex)
     Q_UNUSED(lastInIndex)
     Q_UNUSED(lastOutIndex)
-    Q_UNUSED(deviceIndex)
 
     // initialize portaudio using default devices, mono input and try estereo output if possible
     PaError error = Pa_Initialize();
     if (error == paNoError) {
-        audioDeviceIndex = paNoDevice;
+        audioInputDeviceIndex = deviceInputIndex;
+        audioOutputDeviceIndex = UseSingleAudioIODevice ? deviceInputIndex : deviceOutputIndex;
 
         globalInputRange = ChannelRange(0, getMaxInputs());
 
@@ -31,11 +32,11 @@ PortAudioDriver::PortAudioDriver(controller::MainController *mainController, int
             globalOutputRange.setToStereo();
         if(!initPortAudio(sampleRate, bufferSize)){
             qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-            audioDeviceIndex = paNoDevice;
+            audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice;
         }
     } else {
         qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-        audioDeviceIndex = paNoDevice;
+        audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice;
     }
 }
 

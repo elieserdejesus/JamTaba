@@ -10,6 +10,8 @@
 #include <QtMath>
 #include <QFormLayout>
 #include <QPushButton>
+#include <QAbstractItemView>
+#include <QAbstractButton>
 
 NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifier *bpmComboModifier,
                          TextEditorModifier *accentBeatsModifier, QWidget *parent) :

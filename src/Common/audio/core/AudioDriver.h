@@ -5,6 +5,13 @@
 #include <QObject>
 #include <QMutex>
 
+// Change settings below to experiment with seperate input/output audio devices
+#ifdef Q_OS_WIN
+    const bool UseSingleAudioIODevice = true;
+#else
+    const bool UseSingleAudioIODevice = false;
+#endif
+
 namespace controller {
 class MainController;
 }
@@ -63,6 +70,7 @@ inline bool ChannelRange::isMono() const
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+const int CurrentAudioDeviceSelection = -1;
 
 class AudioDriver : public QObject
 {
@@ -106,14 +114,17 @@ public:
     virtual QString getInputChannelName(unsigned const int index) const = 0;
     virtual QString getOutputChannelName(unsigned const int index) const = 0;
 
-    virtual QString getAudioInputDeviceName(int index) const = 0;
-    virtual QString getAudioInputDeviceName() const = 0;
+    virtual QString getAudioDeviceInfo(int index, unsigned& nInputs, unsigned& nOutputs) const = 0;
 
-    virtual QString getAudioOutputDeviceName(int index) const = 0;
-    virtual QString getAudioOutputDeviceName() const = 0;
+    virtual QString getAudioInputDeviceName(int index = CurrentAudioDeviceSelection) const = 0;
+    virtual QString getAudioOutputDeviceName(int index = CurrentAudioDeviceSelection) const = 0;
 
-    virtual int getAudioDeviceIndex() const = 0;
-    virtual void setAudioDeviceIndex(int index) = 0;
+    virtual int getAudioInputDeviceIndex() const = 0;
+    virtual int getAudioOutputDeviceIndex() const = 0;
+
+    virtual void setAudioInputDeviceIndex(int index) = 0;
+    virtual void setAudioOutputDeviceIndex(int index) = 0;
+
 
     virtual int getDevicesCount() const = 0;
 
@@ -128,7 +139,8 @@ protected:
     ChannelRange globalInputRange; // the range of input channels selected in audio preferences menu
     ChannelRange globalOutputRange; // the range of output channels selected in audio preferences menu
 
-    int audioDeviceIndex; // using same audio device for input and output
+    int audioInputDeviceIndex; // not using same audio device for input and output
+    int audioOutputDeviceIndex; // not using same audio device for input and output
 
     int sampleRate;
     int bufferSize;
@@ -209,17 +221,19 @@ public:
 
     QString getOutputChannelName(const unsigned int) const override;
 
-    QString getAudioInputDeviceName(int) const override;
+    QString getAudioInputDeviceName(int index = CurrentAudioDeviceSelection) const override;
 
-    QString getAudioInputDeviceName() const override;
+    QString getAudioOutputDeviceName(int index = CurrentAudioDeviceSelection) const override;
 
-    QString getAudioOutputDeviceName(int) const override;
+    QString getAudioDeviceInfo(int index, unsigned& nIn, unsigned& nOut) const override;
 
-    QString getAudioOutputDeviceName() const override;
+    int getAudioInputDeviceIndex() const override;
 
-    int getAudioDeviceIndex() const override;
+    void setAudioInputDeviceIndex(int) override;
 
-    void setAudioDeviceIndex(int) override;
+    int getAudioOutputDeviceIndex() const override;
+
+    void setAudioOutputDeviceIndex(int) override;
 
     int getDevicesCount() const override;
 
@@ -276,32 +290,38 @@ inline QString NullAudioDriver::getOutputChannelName(const unsigned int) const
     return "Silence";
 }
 
-inline QString NullAudioDriver::getAudioInputDeviceName(int) const
+inline QString NullAudioDriver::getAudioInputDeviceName(int index) const
 {
-    return "NullAudioDriver";
+    return index == CurrentAudioDeviceSelection ? getAudioInputDeviceName(0) : "NullAudioInputDriver";
 }
 
-inline QString NullAudioDriver::getAudioInputDeviceName() const
+inline QString NullAudioDriver::getAudioOutputDeviceName(int index) const
 {
-    return getAudioInputDeviceName(0);
+    return index == CurrentAudioDeviceSelection ? getAudioOutputDeviceName(0) : "NullAudioOutputDriver";
 }
 
-inline QString NullAudioDriver::getAudioOutputDeviceName(int) const
+inline QString NullAudioDriver::getAudioDeviceInfo(int index,unsigned& nIn, unsigned& nOut ) const
 {
-    return "NullAudioDriver";
+    nIn = nOut = 1;
+    return index==0 ? "NullAudioInputDriver" : "NullAudioOutputDriver";
 }
 
-inline QString NullAudioDriver::getAudioOutputDeviceName() const
-{
-    return getAudioOutputDeviceName(0);
-}
-
-inline int NullAudioDriver::getAudioDeviceIndex() const
+inline int NullAudioDriver::getAudioInputDeviceIndex() const
 {
     return 0;
 }
 
-inline void NullAudioDriver::setAudioDeviceIndex(int)
+inline void NullAudioDriver::setAudioInputDeviceIndex(int)
+{
+    //
+}
+
+inline int NullAudioDriver::getAudioOutputDeviceIndex() const
+{
+    return 0;
+}
+
+inline void NullAudioDriver::setAudioOutputDeviceIndex(int)
 {
     //
 }
