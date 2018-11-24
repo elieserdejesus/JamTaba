@@ -2278,6 +2278,7 @@ void MidiInWinMM :: closePort( void )
         data->inHandle = 0;
         errorString_ = "MidiInWinMM::openPort: error closing Windows MM MIDI input port (midiInUnprepareHeader).";
         error( RtMidiError::DRIVER_ERROR, errorString_ );
+	    LeaveCriticalSection( &(data->_mutex) );
         return;
       }
     }

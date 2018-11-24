@@ -442,7 +442,8 @@ void MainWindowStandalone::initializePluginFinder()
 }
 
 void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus,
-                                                int audioDevice, int firstIn, int lastIn,
+                                                int audioInputDevice, int audioOutputDevice,
+                                                int firstIn, int lastIn,
                                                 int firstOut, int lastOut)
 {
     qDebug(jtGUI) << "Setting global preferences ...";
@@ -450,7 +451,7 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
     auto audioDriver = controller->getAudioDriver();
 
     audioDriver->setProperties(firstIn, lastIn, firstOut, lastOut);
-    controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, midiInputsStatus);
+    controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioInputDevice, audioOutputDevice, midiInputsStatus);
 
     auto midiDriver = controller->getMidiDriver();
     midiDriver->setInputDevicesStatus(midiInputsStatus);
@@ -465,7 +466,7 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
     if (!audioDriver->start()) {
         qCritical() << "Error starting audio device";
         QMessageBox::warning(this, tr("Audio error!"), tr("The audio device can't be started! Please check your audio device and try restart Jamtaba!"));
-        controller->useNullAudioDriver();
+        //controller->useNullAudioDriver();
     }
 }
 

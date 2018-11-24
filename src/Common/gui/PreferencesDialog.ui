@@ -38,12 +38,36 @@
          <property name="title">
           <string>Audio Device</string>
          </property>
-         <layout class="QHBoxLayout" name="deviceLayout" stretch="0,0">
+         <layout class="QHBoxLayout" name="deviceLayout" stretch="0,0,0,0,0">
           <property name="spacing">
            <number>6</number>
           </property>
-          <item alignment="Qt::AlignVCenter">
-           <widget class="QComboBox" name="comboAudioDevice">
+          <item>
+           <widget class="QLabel" name="comboAudioInputDeviceLabel">
+            <property name="text">
+             <string>Input</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboAudioInputDevice">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="comboAudioOutputDeviceLabel">
+            <property name="text">
+             <string>Output</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboAudioOutputDevice">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>1</horstretch>
@@ -461,7 +485,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>467</width>
+               <width>484</width>
                <height>45</height>
               </rect>
              </property>

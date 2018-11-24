@@ -360,7 +360,8 @@ audio::AudioDriver *MainControllerStandalone::createAudioDriver(const persistenc
 {
     return new audio::PortAudioDriver(
         this,
-        settings.getLastAudioDevice(),
+        settings.getLastAudioInputDevice(),
+        settings.getLastAudioOutputDevice(),
         settings.getFirstGlobalAudioInput(),
         settings.getLastGlobalAudioInput(),
         settings.getFirstGlobalAudioOutput(),

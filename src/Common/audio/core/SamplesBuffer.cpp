@@ -10,7 +10,7 @@ using audio::AudioPeak;
 const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
 SamplesBuffer::SamplesBuffer(unsigned int channels) :
-    SamplesBuffer(channels, 0)
+    SamplesBuffer(channels, 4096) // avoid vector internally call reserve from a zero size to final frameLenght, use small 4K chunks
 {
 
 }
@@ -23,7 +23,7 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
     rmsWindowSize(13230) // 300 ms in 44100 KHz
 {
     for (unsigned int c = 0; c < channels; ++c)
-        samples.push_back(std::vector<float>(frameLenght));
+        samples.emplace_back(frameLenght);
 
     squaredSums[0] = squaredSums[1] = 0.0f;
     lastRmsValues[0] = lastRmsValues[1] = 0.0f;
@@ -65,9 +65,7 @@ SamplesBuffer &SamplesBuffer::operator=(const SamplesBuffer &other)
     return *this;
 }
 
-SamplesBuffer::~SamplesBuffer()
-{
-}
+SamplesBuffer::~SamplesBuffer() = default;
 
 void SamplesBuffer::setRmsWindowSize(int samples)
 {
@@ -187,21 +185,25 @@ AudioPeak SamplesBuffer::computePeak()
 {
     float abs; // max peak absolute value
     float maxPeaks[2] = {0};// left and right peaks
-    for (unsigned int c = 0; c < channels; ++c) {
-        float maxPeak = 0;
-        for (unsigned int i = 0; i < frameLenght; ++i) {
+	unsigned maxChan = isMono() ? 1 : channels; // don't loop and mul/add twice if only one channel
 
+    for (unsigned int c = 0; c < maxChan; ++c) {
+        float maxPeak = 0;
+		const std::vector<float>& chanSamples = samples[c]; // optimize costly stl vector access out of the inner loop
+        for (unsigned int i = 0; i < frameLenght; ++i) {
             // max peak
-            abs = std::fabs(samples[c][i]);
-            if (abs > maxPeak)
-                maxPeak = abs;
-            maxPeaks[c] = maxPeak;
+            abs = chanSamples[i]; // access inner std:svector array only once, use it for square value below
+			if(abs<0) abs = -abs; // std::fabs is very slow, just negate if needed
+
+            if (abs > maxPeak) maxPeak = abs;
 
             // rms running squared sum
-            squaredSums[c] += samples[c][i] * samples[c][i]; // squaring every sample and summing
+            squaredSums[c] += abs * abs; // squaring every sample and summing
         }
+		maxPeaks[c] = maxPeak;
         summedSamples += frameLenght;
     }
+
     if (isMono()) {
         maxPeaks[1] = maxPeaks[0];
         squaredSums[1] = squaredSums[0];
@@ -226,21 +228,30 @@ int SamplesBuffer::computeRmsWindowSize(int sampleRate, int windowTimeInMs)
 
 void SamplesBuffer::add(const SamplesBuffer &buffer, int internalWriteOffset)
 {
-    uint framesToProcess = std::min((uint)frameLenght, buffer.getFrameLenght());
+	const uint framesToProcess = std::min(static_cast<uint>(frameLenght), buffer.getFrameLenght());
+
     if (buffer.channels >= channels) {
         for (unsigned int c = 0; c < channels; ++c) {
+	        auto& chanSamples = samples[c]; // save costly loop access to vector sub float array
+			const auto& bufChanSamples = buffer.samples[c]; // save costly loop access to vector sub float array
+
             for (unsigned int s = 0; s < framesToProcess; ++s) {
-                Q_ASSERT(s + internalWriteOffset < samples[c].size());
-                samples[c][s + internalWriteOffset] += buffer.samples[c][s];
+                Q_ASSERT(s + internalWriteOffset < chanSamples.size());
+                chanSamples[s + internalWriteOffset] += bufChanSamples[s];
             }
         }
     }
     else { // samples is stereo and buffer is mono
+	    auto& chanSamples0 = samples[0]; // save costly loop access to vector sub float array
+	    auto& chanSamples1 = samples[1]; // save costly loop access to vector sub float array
+		const auto& bufChanSamples0 = buffer.samples[0]; // save costly loop access to vector sub float array
+
         for (unsigned int s = 0; s < framesToProcess; ++s) {
-            Q_ASSERT(s + internalWriteOffset < samples[0].size());
-            Q_ASSERT(s + internalWriteOffset < samples[1].size());
-            samples[0][s + internalWriteOffset] += buffer.samples[0][s];
-            samples[1][s + internalWriteOffset] += buffer.samples[0][s];
+            Q_ASSERT(s + internalWriteOffset < chanSamples0.size());
+            Q_ASSERT(s + internalWriteOffset < chanSamples1.size());
+	        const auto monoBufferSampleAtIndex  = bufChanSamples0[s];
+            chanSamples0[s + internalWriteOffset] += monoBufferSampleAtIndex;
+            chanSamples1[s + internalWriteOffset] += monoBufferSampleAtIndex;
         }
     }
 }

@@ -10,6 +10,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QRegularExpression>
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userFullName, const QString &msg,
                                    const QColor &backgroundColor, const QColor &textColor,

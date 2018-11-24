@@ -40,7 +40,8 @@ void ChannelRange::setToMono()
 AudioDriver::AudioDriver(controller::MainController *mainController) :
     globalInputRange(0, 0),
     globalOutputRange(0, 0),
-    audioDeviceIndex(0),
+    audioInputDeviceIndex(0),
+    audioOutputDeviceIndex(0),
     sampleRate(44100),
     bufferSize(128),
     inputBuffer(SamplesBuffer(2)),
