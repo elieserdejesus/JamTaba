@@ -28,6 +28,7 @@ PreferencesDialogStandalone::PreferencesDialogStandalone(QWidget *parent,
     {
         ui->comboAudioOutputDevice->setVisible(false);
         ui->comboAudioOutputDeviceLabel->setVisible(false);
+        ui->comboAudioInputDeviceLabel->setVisible(false);
     }
 
     connect(ui->comboSampleRate, SIGNAL(activated(int)), this, SLOT(notifySampleRateChanged()));
