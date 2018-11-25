@@ -432,8 +432,8 @@ geo::Location MainController::getGeoLocation(const QString &ip)
 {
 
     auto sanitizedIp = ninjam::client::maskIP(ip);
-
-    sanitizedIp.replace(ninjam::client::IP_MASK, ".128"); // replace .x (mask) with .128 to generate a valid IP
+    if (sanitizedIp.length()>0) // some servers such as discord don't return an ip for user, dont concanetate to .128 in that case
+        sanitizedIp.replace(ninjam::client::IP_MASK, ".128"); // replace .x (mask) with .128 to generate a valid IP
 
     return ipToLocationResolver->resolve(sanitizedIp, getTranslationLanguage());
 }
