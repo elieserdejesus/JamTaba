@@ -2,6 +2,7 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QEventLoop>
@@ -25,6 +26,9 @@ const QString WebIpToLocationResolver::LAT_LONG_CACHE_FILE = "lat_long_cache.bin
 const quint32 WebIpToLocationResolver::COUNTRY_NAMES_CACHE_REVISION = 1;
 const quint32 WebIpToLocationResolver::COUNTRY_CODES_CACHE_REVISION = 1;
 const quint32 WebIpToLocationResolver::LAT_LONG_CACHE_REVISION = 1;
+
+// Alternative servers private implementation strategies
+const int MaxServersAlternatives = 2;
 
 WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir)
     :currentLanguage("en"), // using english as default language
@@ -120,6 +124,7 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
 {
     QString ip = reply->property("ip").toString();
     QString language = reply->property("language").toString();
+    int retryCount = reply->property("retryCount").toInt();
 
     if (language != currentLanguage)
         return; //discard the received data if the language was changed since the last request.
@@ -133,8 +138,23 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
 
         QJsonObject root = doc.object();
         if (!root.contains("country_name")) {
-            qCritical() << "The root json object not contains 'country_name'";
-            return;
+            if (root.contains("error")) {
+                auto error= root["error"].toObject();
+                auto code = error.contains("code") ? error["code"].toInt() : -1;
+                if (retryCount<MaxServersAlternatives)
+                {
+                    qDebug() << "Error " << code << " received, trying alternative server ...";
+                    requestDataFromWebService(ip, retryCount+1);
+                }
+                else {
+                    qCritical() << "All servers failed, no more alternatives available";
+                }
+                return;
+            }
+            else {
+                qCritical() << "The root json object not contains 'country_name'";
+                return;
+            }
         }
 
         if (!root.contains("country_code")) {
@@ -167,25 +187,40 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
 }
 
 // At moment the current api is http://api.ipapi.com/ (the replacement for Nekudo api). Another option is https://freegeoip.net/json/
-void WebIpToLocationResolver::requestDataFromWebService(const QString &ip)
+void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int retryCount)
 {
     qCDebug(jtIpToLocation) << "requesting ip " << ip ;
 
     QNetworkRequest request;
-    QString serviceUrl = "http://api.ipapi.com";
 
-    QString accessKey(QStringLiteral("22f433857895c84347e949db234af11f"));
+    QString serviceUrl = "http://api.ipapi.com";
+    QString accessKey("22f433857895c84347e949db234af11f");
+
+    QString alternativeServiceUrl1 = "http://api.ipstack.com/";
+    QString alternativeAccessKey1("myIpstackKey");
+
 
     QString lang = sanitizeLanguageCode(currentLanguage);
     if (!canTranslateCountryName(lang))
         lang = "en";
 
-    // URL FORMAT: http://api.ipapi.com/{ip}?access_key={key}&language={lang}
-    request.setUrl(QUrl(QString("%1/%2?access_key=%3&language=%4").arg(serviceUrl, ip, accessKey, lang)));
+    // URL FORMAT: i.e. http://api.ipapi.com/{ip}?access_key={key}&language={lang}
+    switch(retryCount) {
+        case 0:
+            request.setUrl(QUrl(QString("%1/%2?access_key=%3&language=%4")
+                .arg(serviceUrl, ip, accessKey, lang)));
+            break;
+        default:
+            request.setUrl(QUrl(QString("%1/%2?access_key=%3&language=%4")
+                .arg(alternativeServiceUrl1, ip, alternativeAccessKey1, lang)));
+            break;
+    }
 
     QNetworkReply* reply = httpClient.get(request);
     reply->setProperty("ip", QVariant(ip));
     reply->setProperty("language", QVariant(currentLanguage));
+    reply->setProperty("retryCount", retryCount);
+
     QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(replyError(QNetworkReply::NetworkError)));
 }
 
@@ -224,7 +259,6 @@ geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString 
         currentLanguage = code;
         loadCountryNamesFromFile(currentLanguage); //update the country names QMap
     }
-
     if (countryCodesCache.contains(ip)) {
         QString countryCode = countryCodesCache[ip];
         if (countryNamesCache.contains(countryCode)) {
@@ -238,7 +272,7 @@ geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString 
     }
 
     if (!ip.isEmpty()) {
-        requestDataFromWebService(ip);
+        requestDataFromWebService(ip, 0);
     }
     return Location();//empty location, the next request for same ip probabily return from cache
 }

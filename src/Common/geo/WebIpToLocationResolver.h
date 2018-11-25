@@ -26,7 +26,7 @@ private:
     QMap<QString, QPointF> latLongCache;      // IP => QPointF(latitude, longitude)
     QNetworkAccessManager httpClient;
 
-    void requestDataFromWebService(const QString &ip);
+    void requestDataFromWebService(const QString &ip, int retryCount);
 
     // loading
     void loadCountryCodesFromFile();
