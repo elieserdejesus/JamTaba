@@ -197,7 +197,7 @@ void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int r
     QString accessKey("22f433857895c84347e949db234af11f");
 
     QString alternativeServiceUrl1 = "http://api.ipstack.com/";
-    QString alternativeAccessKey1("myIpstackKey");
+    QString alternativeAccessKey1("7dfb5855025fa60f5ce082a4c376091a");
 
 
     QString lang = sanitizeLanguageCode(currentLanguage);
