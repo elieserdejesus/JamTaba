@@ -259,6 +259,7 @@ geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString 
         currentLanguage = code;
         loadCountryNamesFromFile(currentLanguage); //update the country names QMap
     }
+
     if (countryCodesCache.contains(ip)) {
         QString countryCode = countryCodesCache[ip];
         if (countryNamesCache.contains(countryCode)) {
