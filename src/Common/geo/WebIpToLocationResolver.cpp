@@ -16,6 +16,8 @@
 #include <QPointF>
 #include "log/Logging.h"
 #include "persistence/CacheHeader.h"
+#include <QSettings>
+#include <QApplication>
 
 using geo::WebIpToLocationResolver;
 
@@ -193,11 +195,20 @@ void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int r
 
     QNetworkRequest request;
 
+    static QString ipApiKey;
+    static QString ipStackKey;
+
+    if (ipApiKey.isEmpty()) {
+        QSettings settings(QCoreApplication::applicationName());
+        ipApiKey = settings.value("ipApiKey", "22f433857895c84347e949db234af11f").toString();
+        ipStackKey = settings.value("ipStackKey", "7dfb5855025fa60f5ce082a4c376091a").toString();
+    }
+
     QString serviceUrl = "http://api.ipapi.com";
-    QString accessKey("22f433857895c84347e949db234af11f");
+    QString accessKey(ipApiKey);
 
     QString alternativeServiceUrl1 = "http://api.ipstack.com/";
-    QString alternativeAccessKey1("7dfb5855025fa60f5ce082a4c376091a");
+    QString alternativeAccessKey1(ipStackKey);
 
 
     QString lang = sanitizeLanguageCode(currentLanguage);
