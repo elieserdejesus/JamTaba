@@ -141,12 +141,12 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
         QJsonObject root = doc.object();
         if (!root.contains("country_name")) {
             if (root.contains("error")) {
-                auto error= root["error"].toObject();
+                auto error = root["error"].toObject();
                 auto code = error.contains("code") ? error["code"].toInt() : -1;
-                if (retryCount<MaxServersAlternatives)
+                if (retryCount < MaxServersAlternatives)
                 {
                     qDebug() << "Error " << code << " received, trying alternative server ...";
-                    requestDataFromWebService(ip, retryCount+1);
+                    requestDataFromWebService(ip, retryCount + 1);
                 }
                 else {
                     qCritical() << "All servers failed, no more alternatives available";
