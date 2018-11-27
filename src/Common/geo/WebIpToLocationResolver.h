@@ -10,7 +10,6 @@
 #include <QDir>
 
 namespace geo {
-
 class WebIpToLocationResolver : public IpToLocationResolver
 {
     Q_OBJECT
@@ -32,19 +31,23 @@ private:
     void loadCountryCodesFromFile();
     void loadCountryNamesFromFile(const QString &languageCode);
     void loadLatLongsFromFile();
-    bool populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map, quint32 expectedCacheHeaderRevision);
-    bool populateQMapFromFile(const QString &fileName, QMap<QString, QPointF> &map, quint32 expectedCacheHeaderRevision);
+    bool populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map,
+                              quint32 expectedCacheHeaderRevision);
+    bool populateQMapFromFile(const QString &fileName, QMap<QString, QPointF> &map,
+                              quint32 expectedCacheHeaderRevision);
 
     bool needLoadTheOldCache();
     void loadOldCacheContent(); // these functions are used to handle the old 'cache.bin' content used until the version 2.0.13. This will be deleted in future.
     void deleteOldCacheFile();
 
-    //saving
+    // saving
     void saveCountryCodesToFile();
     void saveCountryNamesToFile();
     void saveLatLongsToFile();
-    bool saveMapToFile(const QString &fileName, const QMap<QString, QString> &map, quint32 cacheHeaderRevision);
-    bool saveMapToFile(const QString &fileName, const QMap<QString, QPointF> &map, quint32 cacheHeaderRevision);
+    bool saveMapToFile(const QString &fileName, const QMap<QString, QString> &map,
+                       quint32 cacheHeaderRevision);
+    bool saveMapToFile(const QString &fileName, const QMap<QString, QPointF> &map,
+                       quint32 cacheHeaderRevision);
 
     static QString buildFileNameFromLanguage(const QString &languageCode);
     static QString sanitizeLanguageCode(const QString &languageCode);
@@ -66,9 +69,7 @@ private:
 private slots:
     void replyFinished(QNetworkReply *);
     void replyError(QNetworkReply::NetworkError);
-
 };
-
 } // namespace
 
 #endif // FREEGEOIPTOLOCATIONRESOLVER_H

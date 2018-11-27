@@ -14,7 +14,6 @@ Location::Location() :
     longitude(-200),
     city("UNKNOWN")
 {
-
 }
 
 bool Location::isUnknown() const

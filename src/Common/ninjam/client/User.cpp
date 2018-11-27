@@ -34,8 +34,8 @@ QString ninjam::client::maskIpInUserFullName(const QString &userFullName)
         return userFullName;
 
     return QString("%1@%2")
-            .arg(name)
-            .arg(maskIP(ip));
+           .arg(name)
+           .arg(maskIP(ip));
 }
 
 QString ninjam::client::maskIP(const QString &ip)
@@ -58,9 +58,7 @@ User::User(const QString &fullName) :
     fullName(fullName),
     name(ninjam::client::extractUserName(fullName)),
     ip(ninjam::client::extractUserIP(fullName))
-
 {
-
 }
 
 User::~User()
@@ -73,7 +71,8 @@ UserChannel User::getChannel(quint8 index) const
     if (channels.contains(index))
         return channels[index];
 
-    qCritical() << "invalid channel index (" << QString::number(index) << "), returning an empty channel!";
+    qCritical() << "invalid channel index (" << QString::number(index)
+                << "), returning an empty channel!";
 
     return UserChannel(); // return a invalid/empty channel
 }
@@ -88,7 +87,8 @@ void User::updateChannelName(quint8 channelIndex, const QString &newName)
     if (channels.contains(channelIndex))
         channels[channelIndex].setName(newName);
     else
-        qCritical() << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
+        qCritical() << "invalid channel index (" << QString::number(channelIndex)
+                    << "), can't update the channel!";
 }
 
 void User::updateChannelReceiveStatus(quint8 channelIndex, bool receiving)
@@ -96,7 +96,8 @@ void User::updateChannelReceiveStatus(quint8 channelIndex, bool receiving)
     if (channels.contains(channelIndex))
         channels[channelIndex].setActive(receiving);
     else
-        qCritical() << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
+        qCritical() << "invalid channel index (" << QString::number(channelIndex)
+                    << "), can't update the channel!";
 }
 
 bool User::hasActiveChannels() const
