@@ -135,6 +135,7 @@ BusyDialog #labelGif
 BusyDialog > QLabel /* the text appearing in Busy dialog, like "connecting in ninbot.com" */
 {
     font-weight: bold;
+    font-size: 10px;
 }
 
 ChordProgressionCreationDialog QComboBox:focus
