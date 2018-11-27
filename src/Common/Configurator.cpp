@@ -84,6 +84,7 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
     default:
         messageType = "INFO    ";
         messageColor = COLOR_RESET;
+        break;
     }
 
     QString timeStamp(QTime::currentTime().toString("hh:mm:ss:zzz"));
