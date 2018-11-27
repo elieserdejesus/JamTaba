@@ -9,14 +9,14 @@
 #include "SingleApplication/singleapplication.h"
 #include "Configurator.h"
 
-int main(int argc, char* args[] ){
-
+int main(int argc, char *args[])
+{
     QApplication::setApplicationName("JamTaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 
     auto configurator = Configurator::getInstance();
     if (!configurator->setUp())
-        qCritical() << "JTBConfig->setUp() FAILED !" ;
+        qCritical() << "JTBConfig->setUp() FAILED !";
 
 // SingleApplication is not working in mac. Using a dirty ifdef until have time to solve the SingleApplication issue in Mac
 #ifdef Q_OS_WIN
@@ -33,9 +33,9 @@ int main(int argc, char* args[] ){
     controller::MainControllerStandalone mainController(settings, &application);
     mainController.start();
 
-    if (mainController.isUsingNullAudioDriver()) {
-        QMessageBox::about(nullptr, "Fatal error!", "Jamtaba can't detect any audio device in your machine!");
-    }
+    if (mainController.isUsingNullAudioDriver())
+        QMessageBox::about(nullptr, "Fatal error!",
+                           "Jamtaba can't detect any audio device in your machine!");
 
     MainWindowStandalone mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
@@ -55,4 +55,4 @@ int main(int argc, char* args[] ){
     mainController.saveLastUserSettings(mainWindow.getInputsSettings());
 
     return execResult;
- }
+}

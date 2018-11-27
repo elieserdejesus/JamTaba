@@ -30,7 +30,7 @@ public:
 
     void initialize() override;
 
-    MainControllerStandalone * getMainController() const override
+    MainControllerStandalone *getMainController() const override
     {
         return controller;
     }
@@ -44,9 +44,11 @@ protected:
 
     LocalTrackGroupViewStandalone *createLocalTrackGroupView(int channelGroupIndex) override;
 
-    void initializeLocalSubChannel(LocalTrackView *subChannelView, const SubChannel &subChannel) override;
+    void initializeLocalSubChannel(LocalTrackView *subChannelView,
+                                   const SubChannel &subChannel) override;
 
-    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const SubChannel &subChannel);
+    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView,
+                                           const SubChannel &subChannel);
 
     PreferencesDialog *createPreferencesDialog() override;
 
@@ -81,7 +83,8 @@ private:
 
     bool midiDeviceIsValid(int deviceIndex) const;
 
-    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, const persistence::SubChannel &subChannel);
+    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView,
+                                           const persistence::SubChannel &subChannel);
 
     bool fullScreenViewMode;
 
