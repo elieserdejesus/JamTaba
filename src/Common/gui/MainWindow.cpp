@@ -2239,6 +2239,7 @@ void MainWindow::translatePublicChatCountryNames()
     if (publicChat) {
         auto connectedUsers = publicChat->getConnectedUsers();
 
+        //TODO use bulk ip loockup here too
         for (const QString &userFullName : connectedUsers) {
             auto ip = ninjam::client::extractUserIP(userFullName);
             publicChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));

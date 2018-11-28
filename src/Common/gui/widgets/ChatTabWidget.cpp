@@ -67,6 +67,7 @@ void ChatTabWidget::initialize(MainController *mainController, UsersColorsPool *
     this->ninjamColorsPool = colorsPool;
     this->mainController = mainController;
 
+    //TODO use bulk ip loockup here
     connect(mainController, &MainController::ipResolved, [=](const QString &ip){
         mainChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
     });
@@ -183,6 +184,7 @@ void ChatTabWidget::setConnectedUsersInMainChat(const QStringList &usersNames)
 
     mainChat->setConnectedUsers(usersNames);
 
+    //TODO user bulk ip loockup here
     for (const QString &userFullName : usersNames) {
         auto ip = ninjam::client::extractUserIP(userFullName);
         mainChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));

@@ -169,6 +169,7 @@ void JamRoomViewPanel::updateMap()
         QList<MapMarker> newMarkers;
         for (const auto &user : userInfos) {
             if (!userIsBot(user)) {
+                //TODO Use bulk ip loockup here
                 auto userLocation = mainController->getGeoLocation(user.getIp());
                 if (userLocation.isUnknown())
                     continue; // skip invalid locations
