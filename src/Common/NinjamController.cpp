@@ -37,16 +37,15 @@
 using controller::NinjamController;
 using ninjam::client::ServerInfo;
 
-//+++++++++++++  ENCODING THREAD  +++++++++++++
+// +++++++++++++  ENCODING THREAD  +++++++++++++
 
 class NinjamController::EncodingThread : public QThread // TODO: use better thread approach, avoid inheritance form QThread
 {
-
 public:
-    
-    explicit EncodingThread(NinjamController* controller)
-        : stopRequested(false), 
-          controller(controller)
+
+    explicit EncodingThread(NinjamController *controller) :
+        stopRequested(false),
+        controller(controller)
     {
         qCDebug(jtNinjamCore) << "Starting Encoding Thread";
         start();
@@ -57,78 +56,77 @@ public:
         stop();
     }
 
-    void addSamplesToEncode(const audio::SamplesBuffer& samplesToEncode, quint8 channelIndex, bool isFirstPart, bool isLastPart)
+    void addSamplesToEncode(const audio::SamplesBuffer &samplesToEncode, quint8 channelIndex,
+                            bool isFirstPart, bool isLastPart)
     {
-        //qCDebug(jtNinjamCore) << "Adding samples to encode";
+        // qCDebug(jtNinjamCore) << "Adding samples to encode";
         QMutexLocker locker(&mutex);
-        chunksToEncode.push_back(EncodingChunk(samplesToEncode, channelIndex, isFirstPart, isLastPart));
+        chunksToEncode.push_back(EncodingChunk(samplesToEncode, channelIndex, isFirstPart,
+                                               isLastPart));
         // this method is called by Qt main thread (the producer thread).
-        hasAvailableChunksToEncode.wakeAll();//wakeup the encoding thread (consumer thread)
-
+        hasAvailableChunksToEncode.wakeAll();// wakeup the encoding thread (consumer thread)
     }
 
     void stop()
     {
-        if (!stopRequested) {
-            //QMutexLocker locker(&mutex);
+        if (!stopRequested)
+        {
+            // QMutexLocker locker(&mutex);
             stopRequested = true;
             hasAvailableChunksToEncode.wakeAll();
             qCDebug(jtNinjamCore) << "Stopping Encoding Thread";
         }
     }
 
-    
 protected:
-    
+
     void run()
     {
-        while (!stopRequested) {
+        while (!stopRequested)
+        {
             mutex.lock();
-            if (chunksToEncode.empty()) {
+            if (chunksToEncode.empty())
                 hasAvailableChunksToEncode.wait(&mutex);
-            }
-            
-            if (stopRequested) {
+
+            if (stopRequested)
+            {
                 mutex.unlock();
                 break;
             }
-            
 
-            EncodingChunk chunk = !chunksToEncode.empty() ? chunksToEncode.front() : EncodingChunk(audio::SamplesBuffer::ZERO_BUFFER, 0, false, false);
+            EncodingChunk chunk = !chunksToEncode.empty() ? chunksToEncode.front() : EncodingChunk(
+                audio::SamplesBuffer::ZERO_BUFFER, 0, false, false);
 
             chunksToEncode.erase(chunksToEncode.begin()); // remove first element
 
             mutex.unlock();
-            
-            if (!chunk.buffer.isEmpty()) {
+
+            if (!chunk.buffer.isEmpty())
+            {
                 QByteArray encodedBytes(controller->encode(chunk.buffer, chunk.channelIndex));
-                if (chunk.lastPart) {
+                if (chunk.lastPart)
                     encodedBytes.append(controller->encodeLastPartOfInterval(chunk.channelIndex));
-                }
 
-                if (!encodedBytes.isEmpty()) {
-                    emit controller->encodedAudioAvailableToSend(encodedBytes, chunk.channelIndex, chunk.firstPart, chunk.lastPart);
-                }
-
+                if (!encodedBytes.isEmpty())
+                    emit controller->encodedAudioAvailableToSend(encodedBytes, chunk.channelIndex,
+                                                                 chunk.firstPart, chunk.lastPart);
             }
-
         }
         qCDebug(jtNinjamCore) << "Encoding thread stopped!";
     }
 
-
 private:
-    
-    class EncodingChunk 
+
+    class EncodingChunk
     {
     public:
-        EncodingChunk(const audio::SamplesBuffer& buffer, quint8 channelIndex, bool firstPart, bool lastPart) :
+        EncodingChunk(const audio::SamplesBuffer &buffer, quint8 channelIndex, bool firstPart,
+                      bool lastPart) :
             buffer(buffer),
             channelIndex(channelIndex),
             firstPart(firstPart),
-            lastPart(lastPart )
+            lastPart(lastPart)
         {
-
         }
 
         audio::SamplesBuffer buffer;
@@ -140,38 +138,37 @@ private:
     std::vector<EncodingChunk> chunksToEncode;
     QMutex mutex;
     volatile bool stopRequested;
-    NinjamController* controller;
+    NinjamController *controller;
     QWaitCondition hasAvailableChunksToEncode;
 };
 
-//+++++++++++++++++ Nested classes to handle schedulable events ++++++++++++++++
+// +++++++++++++++++ Nested classes to handle schedulable events ++++++++++++++++
 
 class NinjamController::SchedulableEvent // an event scheduled to be processed in next interval
 {
 public:
-    explicit SchedulableEvent(NinjamController* controller) :
+    explicit SchedulableEvent(NinjamController *controller) :
         controller(controller)
     {
         //
     }
-    
+
     virtual void process() = 0;
-    
+
     virtual ~SchedulableEvent()
     {
-    
     }
 
 protected:
-    NinjamController* controller;
+    NinjamController *controller;
 };
 
-//++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++
 
 class NinjamController::BpiChangeEvent : public SchedulableEvent
 {
 public:
-    BpiChangeEvent(NinjamController* controller, quint16 newBpi) :
+    BpiChangeEvent(NinjamController *controller, quint16 newBpi) :
         SchedulableEvent(controller),
         newBpi(newBpi)
     {
@@ -186,21 +183,19 @@ public:
 
 private:
     quint16 newBpi;
-
 };
 
-//+++++++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++++++++++++++++++
 
 class NinjamController::BpmChangeEvent : public SchedulableEvent
 {
 public:
-    BpmChangeEvent(NinjamController* controller, quint16 newBpm) :
+    BpmChangeEvent(NinjamController *controller, quint16 newBpm) :
         SchedulableEvent(controller),
         newBpm(newBpm)
     {
-    
     }
-    
+
     void process()
     {
         controller->setBpm(newBpm);
@@ -208,36 +203,35 @@ public:
 
 private:
     quint16 newBpm;
-
 };
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class NinjamController::InputChannelChangedEvent : public SchedulableEvent
 {
-    public:
-        InputChannelChangedEvent(NinjamController* controller, int channelIndex) :
-            SchedulableEvent(controller),
-            channelIndex(channelIndex)
-        {
-        }
-        
-        void process()
-        {
-            controller->recreateEncoderForChannel(channelIndex);
-        }
-    
-    private:
-        int channelIndex;
+public:
+    InputChannelChangedEvent(NinjamController *controller, int channelIndex) :
+        SchedulableEvent(controller),
+        channelIndex(channelIndex)
+    {
+    }
+
+    void process()
+    {
+        controller->recreateEncoderForChannel(channelIndex);
+    }
+
+private:
+    int channelIndex;
 };
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-NinjamController::NinjamController(controller::MainController* mainController) :
+NinjamController::NinjamController(controller::MainController *mainController) :
     intervalPosition(0),
     samplesInInterval(0),
     mainController(mainController),
-    metronomeTrackNode(createMetronomeTrackNode( mainController->getSampleRate())),
+    metronomeTrackNode(createMetronomeTrackNode(mainController->getSampleRate())),
     lastBeat(0),
     currentBpi(0),
     currentBpm(0),
@@ -248,14 +242,14 @@ NinjamController::NinjamController(controller::MainController* mainController) :
     waitingIntervals(0) // waiting for start transmit
 {
     running = false;
-
 }
 
 User NinjamController::getUserByName(const QString &userName) const
 {
     auto server = mainController->getNinjamService()->getCurrentServer();
     auto users = server->getUsers();
-    for (const auto &user : users) {
+    for (const auto &user : users)
+    {
         if (user.getName() == userName)
             return user;
     }
@@ -274,31 +268,32 @@ void NinjamController::setBpm(int newBpm)
 void NinjamController::removeEncoder(int groupChannelIndex)
 {
     QMutexLocker locker(&mutex);
-    if (encoders.contains(groupChannelIndex)) {
+    if (encoders.contains(groupChannelIndex))
         encoders.remove(groupChannelIndex);
-    }
 }
 
-//+++++++++++++++++++++++++ THE MAIN LOGIC IS HERE  ++++++++++++++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++ THE MAIN LOGIC IS HERE  ++++++++++++++++++++++++++++++++++++++++++++++++
 
-void NinjamController::process(const audio::SamplesBuffer &in, audio::SamplesBuffer &out, int sampleRate)
+void NinjamController::process(const audio::SamplesBuffer &in, audio::SamplesBuffer &out,
+                               int sampleRate)
 {
-
     QMutexLocker locker(&mutex);
 
-    if (!running || samplesInInterval <= 0) {
+    if (!running || samplesInInterval <= 0)
         return; // not initialized
-    }
 
     int totalSamplesToProcess = out.getFrameLenght();
     int samplesProcessed = 0;
 
     int offset = 0;
 
-    do {
+    do
+    {
         emit startProcessing(intervalPosition); // vst host time line is updated with this event
 
-        int samplesToProcessInThisStep = (std::min)((int)(samplesInInterval - intervalPosition), totalSamplesToProcess - offset);
+        int samplesToProcessInThisStep
+            = (std::min)((int)(samplesInInterval - intervalPosition),
+                         totalSamplesToProcess - offset);
 
         assert(samplesToProcessInThisStep);
 
@@ -310,42 +305,47 @@ void NinjamController::process(const audio::SamplesBuffer &in, audio::SamplesBuf
         tempInBuffer.set(in, offset, samplesToProcessInThisStep, 0);
 
         bool newInterval = intervalPosition == 0;
-        if (newInterval) { // starting new interval
+        if (newInterval)   // starting new interval
             handleNewInterval();
-        }
 
         metronomeTrackNode->setIntervalPosition(this->intervalPosition);
         int currentBeat = intervalPosition / getSamplesPerBeat();
-        if (currentBeat != lastBeat) {
+        if (currentBeat != lastBeat)
+        {
             lastBeat = currentBeat;
             emit intervalBeatChanged(currentBeat);
         }
 
-        //+++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
+        // +++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
         bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
-        for (NinjamTrackNode* track : trackNodes) {
+        for (NinjamTrackNode *track : trackNodes)
             track->setProcessingLastPartOfInterval(isLastPart); // TODO resampler still need a flag indicating the last part?
-        }
         mainController->doAudioProcess(tempInBuffer, tempOutBuffer, sampleRate);
         out.add(tempOutBuffer, offset); // generate audio output
-        //++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        if (preparedForTransmit) {
+        if (preparedForTransmit)
+        {
             // 1) mix input subchannels, 2) encode and 3) send the encoded audio
             bool isFirstPart = intervalPosition == 0;
             int groupedChannels = mainController->getInputTrackGroupsCount();
-            for (int groupIndex = 0; groupIndex < groupedChannels; ++groupIndex) {
-                if (mainController->isTransmiting(groupIndex)) {
+            for (int groupIndex = 0; groupIndex < groupedChannels; ++groupIndex)
+            {
+                if (mainController->isTransmiting(groupIndex))
+                {
                     int channels = mainController->getMaxAudioChannelsForEncoding(groupIndex);
-                    if (channels > 0) {
+                    if (channels > 0)
+                    {
                         audio::SamplesBuffer inputMixBuffer(channels, samplesToProcessInThisStep);
 
-                        if (encoders.contains(groupIndex)) {
+                        if (encoders.contains(groupIndex))
+                        {
                             inputMixBuffer.zero();
                             mainController->mixGroupedInputs(groupIndex, inputMixBuffer);
 
                             // encoding is running in another thread to avoid slow down the audio thread
-                            encodingThread->addSamplesToEncode( inputMixBuffer, groupIndex, isFirstPart, isLastPart);
+                            encodingThread->addSamplesToEncode(inputMixBuffer, groupIndex,
+                                                               isFirstPart, isLastPart);
                         }
                     }
                 }
@@ -354,26 +354,31 @@ void NinjamController::process(const audio::SamplesBuffer &in, audio::SamplesBuf
 
         samplesProcessed += samplesToProcessInThisStep;
         offset += samplesToProcessInThisStep;
-        this->intervalPosition = (this->intervalPosition + samplesToProcessInThisStep) % samplesInInterval;
+        this->intervalPosition = (this->intervalPosition + samplesToProcessInThisStep)
+                                 % samplesInInterval;
     }
     while (samplesProcessed < totalSamplesToProcess);
 }
 
-
-audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sampleRate)
+audio::MetronomeTrackNode *NinjamController::createMetronomeTrackNode(int sampleRate)
 {
     audio::SamplesBuffer firstBeatBuffer(2);
     audio::SamplesBuffer offBeatBuffer(2);
     audio::SamplesBuffer accentBeatBuffer(2);
-    if (!(mainController->isUsingCustomMetronomeSounds())) {
+    if (!(mainController->isUsingCustomMetronomeSounds()))
+    {
         QString builtInMetronomeAlias = mainController->getSettings().getBuiltInMetronome();
-        audio::metronomeUtils::createBuiltInSounds(builtInMetronomeAlias, firstBeatBuffer, offBeatBuffer, accentBeatBuffer, sampleRate);
+        audio::metronomeUtils::createBuiltInSounds(builtInMetronomeAlias, firstBeatBuffer,
+                                                   offBeatBuffer, accentBeatBuffer, sampleRate);
     }
-    else {
+    else
+    {
         QString firstBeatAudioFile = mainController->getMetronomeFirstBeatFile();
         QString offBeatAudioFile = mainController->getMetronomeOffBeatFile();
         QString accentBeatAudioFile = mainController->getMetronomeOffBeatFile();
-        audio::metronomeUtils::createCustomSounds(firstBeatAudioFile, offBeatAudioFile, accentBeatAudioFile, firstBeatBuffer, offBeatBuffer, accentBeatBuffer, sampleRate);
+        audio::metronomeUtils::createCustomSounds(firstBeatAudioFile, offBeatAudioFile,
+                                                  accentBeatAudioFile, firstBeatBuffer,
+                                                  offBeatBuffer, accentBeatBuffer, sampleRate);
     }
 
     audio::metronomeUtils::removeSilenceInBufferStart(firstBeatBuffer);
@@ -397,96 +402,103 @@ void NinjamController::recreateMetronome(int newSampleRate)
     // recreate metronome using the new sample rate
     this->metronomeTrackNode = createMetronomeTrackNode(newSampleRate);
     this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
-    this->metronomeTrackNode->setGain( oldGain );
-    this->metronomeTrackNode->setPan( oldPan );
-    this->metronomeTrackNode->setMute( oldMutedStatus );
-    this->metronomeTrackNode->setSolo( oldSoloStatus );
+    this->metronomeTrackNode->setGain(oldGain);
+    this->metronomeTrackNode->setPan(oldPan);
+    this->metronomeTrackNode->setMute(oldMutedStatus);
+    this->metronomeTrackNode->setSolo(oldSoloStatus);
     this->metronomeTrackNode->setAccentBeats(oldAccentBeats);
     mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
 }
 
-
 void NinjamController::stop(bool emitDisconnectedSignal)
 {
-    if (isRunning()) {
+    if (isRunning())
+    {
         this->running = false;
 
         // store metronome settings
         auto metronomeTrack = mainController->getTrackNode(METRONOME_TRACK_ID);
-        if (metronomeTrack) {
+        if (metronomeTrack)
+        {
             float metronomeGain = Utils::poweredGainToLinear(metronomeTrack->getGain());
             float metronomePan = metronomeTrack->getPan();
             bool metronomeIsMuted = metronomeTrack->isMuted();
 
             mainController->storeMetronomeSettings(metronomeGain, metronomePan, metronomeIsMuted);
-            mainController->removeTrack(METRONOME_TRACK_ID);//remove metronome
+            mainController->removeTrack(METRONOME_TRACK_ID);// remove metronome
         }
 
         // clear all tracks
-        for (auto trackNode : trackNodes.values()) {
+        for (auto trackNode : trackNodes.values())
             mainController->removeTrack(trackNode->getID());
-        }
         trackNodes.clear();
     }
 
-    if (encodingThread) {
+    if (encodingThread)
+    {
         encodingThread->stop();
         encodingThread->wait(); // wait the encoding thread to finish
         delete encodingThread;
         encodingThread = nullptr;
     }
 
-    for (AudioEncoder* encoder : encoders.values()) {
+    for (AudioEncoder *encoder : encoders.values())
         delete encoder;
-    }
     encoders.clear();
 
     // delete possible non consumed events
     for (SchedulableEvent *e : scheduledEvents)
         delete e;
-    
+
     scheduledEvents.clear();
 
     qCDebug(jtNinjamCore) << "NinjamController destructor - disconnecting...";
 
     auto ninjamService = mainController->getNinjamService();
-    disconnect(ninjamService, &Service::serverBpmChanged, this, &NinjamController::scheduleBpmChangeEvent);
-    disconnect(ninjamService, &Service::serverBpiChanged, this, &NinjamController::scheduleBpiChangeEvent);
-    disconnect(ninjamService, &Service::audioIntervalCompleted, this, &NinjamController::handleIntervalCompleted);
+    disconnect(ninjamService, &Service::serverBpmChanged, this,
+               &NinjamController::scheduleBpmChangeEvent);
+    disconnect(ninjamService, &Service::serverBpiChanged, this,
+               &NinjamController::scheduleBpiChangeEvent);
+    disconnect(ninjamService, &Service::audioIntervalCompleted, this,
+               &NinjamController::handleIntervalCompleted);
 
-    disconnect(ninjamService, &Service::userChannelCreated, this, &NinjamController::addNinjamRemoteChannel);
-    disconnect(ninjamService, &Service::userChannelRemoved, this, &NinjamController::removeNinjamRemoteChannel);
-    disconnect(ninjamService, &Service::userChannelUpdated, this, &NinjamController::updateNinjamRemoteChannel);
-    disconnect(ninjamService, &Service::audioIntervalDownloading, this, &NinjamController::handleIntervalDownloading);
+    disconnect(ninjamService, &Service::userChannelCreated, this,
+               &NinjamController::addNinjamRemoteChannel);
+    disconnect(ninjamService, &Service::userChannelRemoved, this,
+               &NinjamController::removeNinjamRemoteChannel);
+    disconnect(ninjamService, &Service::userChannelUpdated, this,
+               &NinjamController::updateNinjamRemoteChannel);
+    disconnect(ninjamService, &Service::audioIntervalDownloading, this,
+               &NinjamController::handleIntervalDownloading);
 
-    disconnect(ninjamService, &Service::publicChatMessageReceived, this, &NinjamController::publicChatMessageReceived);
-    disconnect(ninjamService, &Service::privateChatMessageReceived, this, &NinjamController::privateChatMessageReceived);
-    disconnect(ninjamService, &Service::serverTopicMessageReceived, this, &NinjamController::topicMessageReceived);
+    disconnect(ninjamService, &Service::publicChatMessageReceived, this,
+               &NinjamController::publicChatMessageReceived);
+    disconnect(ninjamService, &Service::privateChatMessageReceived, this,
+               &NinjamController::privateChatMessageReceived);
+    disconnect(ninjamService, &Service::serverTopicMessageReceived, this,
+               &NinjamController::topicMessageReceived);
 
     ninjamService->disconnectFromServer(emitDisconnectedSignal);
 }
 
 NinjamController::~NinjamController()
 {
-    //QMutexLocker locker(&mutex);
+    // QMutexLocker locker(&mutex);
     qCDebug(jtNinjamCore) << "NinjamController destructor";
-    if (isRunning()) {
+    if (isRunning())
         stop(false);
-    }
 
     // delete possible non consumed events
-    for (SchedulableEvent *e : scheduledEvents) {
+    for (SchedulableEvent *e : scheduledEvents)
         delete e;
-    }
-
 }
 
-void NinjamController::start(const ServerInfo& server)
+void NinjamController::start(const ServerInfo &server)
 {
     qCDebug(jtNinjamCore) << "starting ninjam controller...";
     QMutexLocker locker(&mutex);
 
-    //schedule an update in internal attributes
+    // schedule an update in internal attributes
     scheduledEvents.append(new BpiChangeEvent(this, server.getBpi()));
     scheduledEvents.append(new BpmChangeEvent(this, server.getBpm()));
     preparedForTransmit = false; // the xmit start after the first interval is received
@@ -494,50 +506,62 @@ void NinjamController::start(const ServerInfo& server)
 
     // schedule the encoders creation (one encoder for each channel)
     int channels = mainController->getInputTrackGroupsCount();
-    for (int channelIndex = 0; channelIndex < channels; ++channelIndex) {
+    for (int channelIndex = 0; channelIndex < channels; ++channelIndex)
         scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex));
-    }
 
     processScheduledChanges();
 
-    if (!running) {
-
+    if (!running)
+    {
         encodingThread = new NinjamController::EncodingThread(this);
 
         // add a sine wave generator as input to test audio transmission
-        //mainController->addInputTrackNode(new Audio::LocalInputTestStreamer(440, mainController->getAudioDriverSampleRate()));
-
+        // mainController->addInputTrackNode(new Audio::LocalInputTestStreamer(440, mainController->getAudioDriverSampleRate()));
 
         mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
-        mainController->setTrackMute(METRONOME_TRACK_ID, mainController->getSettings().getMetronomeMuteStatus());
-        mainController->setTrackGain(METRONOME_TRACK_ID,mainController->getSettings().getMetronomeGain());
-        mainController->setTrackPan(METRONOME_TRACK_ID,  mainController->getSettings().getMetronomePan());
+        mainController->setTrackMute(METRONOME_TRACK_ID,
+                                     mainController->getSettings().getMetronomeMuteStatus());
+        mainController->setTrackGain(METRONOME_TRACK_ID,
+                                     mainController->getSettings().getMetronomeGain());
+        mainController->setTrackPan(METRONOME_TRACK_ID,
+                                    mainController->getSettings().getMetronomePan());
 
-        this->intervalPosition  = lastBeat = 0;
-
+        this->intervalPosition = lastBeat = 0;
 
         auto ninjamService = mainController->getNinjamService();
-        connect(ninjamService, &Service::serverBpmChanged, this, &NinjamController::scheduleBpmChangeEvent);
-        connect(ninjamService, &Service::serverBpiChanged, this, &NinjamController::scheduleBpiChangeEvent);
-        connect(ninjamService, &Service::audioIntervalCompleted, this, &NinjamController::handleIntervalCompleted);
+        connect(ninjamService, &Service::serverBpmChanged, this,
+                &NinjamController::scheduleBpmChangeEvent);
+        connect(ninjamService, &Service::serverBpiChanged, this,
+                &NinjamController::scheduleBpiChangeEvent);
+        connect(ninjamService, &Service::audioIntervalCompleted, this,
+                &NinjamController::handleIntervalCompleted);
 
-        connect(ninjamService, &Service::userChannelCreated, this, &NinjamController::addNinjamRemoteChannel);
-        connect(ninjamService, &Service::userChannelRemoved, this, &NinjamController::removeNinjamRemoteChannel);
-        connect(ninjamService, &Service::userChannelUpdated, this, &NinjamController::updateNinjamRemoteChannel);
-        connect(ninjamService, &Service::audioIntervalDownloading, this, &NinjamController::handleIntervalDownloading);
-        connect(ninjamService, &Service::userExited, this, &NinjamController::handleNinjamUserExiting);
-        connect(ninjamService, &Service::userEntered, this, &NinjamController::handleNinjamUserEntering);
+        connect(ninjamService, &Service::userChannelCreated, this,
+                &NinjamController::addNinjamRemoteChannel);
+        connect(ninjamService, &Service::userChannelRemoved, this,
+                &NinjamController::removeNinjamRemoteChannel);
+        connect(ninjamService, &Service::userChannelUpdated, this,
+                &NinjamController::updateNinjamRemoteChannel);
+        connect(ninjamService, &Service::audioIntervalDownloading, this,
+                &NinjamController::handleIntervalDownloading);
+        connect(ninjamService, &Service::userExited, this,
+                &NinjamController::handleNinjamUserExiting);
+        connect(ninjamService, &Service::userEntered, this,
+                &NinjamController::handleNinjamUserEntering);
 
-        connect(ninjamService, &Service::publicChatMessageReceived, this, &NinjamController::handleReceivedPublicChatMessage);
-        connect(ninjamService, &Service::privateChatMessageReceived, this, &NinjamController::handleReceivedPrivateChatMessage);
-        connect(ninjamService, &Service::serverTopicMessageReceived, this, &NinjamController::topicMessageReceived);
+        connect(ninjamService, &Service::publicChatMessageReceived, this,
+                &NinjamController::handleReceivedPublicChatMessage);
+        connect(ninjamService, &Service::privateChatMessageReceived, this,
+                &NinjamController::handleReceivedPrivateChatMessage);
+        connect(ninjamService, &Service::serverTopicMessageReceived, this,
+                &NinjamController::topicMessageReceived);
 
         // add tracks for users connected in server
         auto users = server.getUsers();
-        for (const auto &user : users) {
-            for (const auto &channel : user.getChannels()) {
+        for (const auto &user : users)
+        {
+            for (const auto &channel : user.getChannels())
                 addTrack(user, channel);
-            }
         }
 
         this->running = true;
@@ -546,8 +570,6 @@ void NinjamController::start(const ServerInfo& server)
     }
     qCDebug(jtNinjamCore) << "ninjam controller started!";
 }
-
-
 
 void NinjamController::handleReceivedPublicChatMessage(const User &user, const QString &message)
 {
@@ -565,61 +587,65 @@ void NinjamController::sendChatMessage(const QString &msg)
 {
     auto service = mainController->getNinjamService();
 
-    if (gui::chat::isAdminCommand(msg)) {
+    if (gui::chat::isAdminCommand(msg))
+    {
         service->sendAdminCommand(msg);
     }
-    else if (gui::chat::isPrivateMessage(msg)) {
+    else if (gui::chat::isPrivateMessage(msg))
+    {
         QString destUserName = gui::chat::extractDestinationUserNameFromPrivateMessage(msg);
         auto text = QString(msg).replace(destUserName + " ", ""); // remove the blank space after user name
         service->sendPrivateChatMessage(text, destUserName);
     }
-    else {
+    else
+    {
         service->sendPublicChatMessage(msg);
     }
 }
 
 long NinjamController::generateNewTrackID()
 {
-    //QMutexLocker locker(&mutex);
+    // QMutexLocker locker(&mutex);
     static long TRACK_IDS = 100;
     return TRACK_IDS++;
 }
 
-QString NinjamController::getUniqueKeyForChannel(const UserChannel &channel, const QString &userFullName)
+QString NinjamController::getUniqueKeyForChannel(const UserChannel &channel,
+                                                 const QString &userFullName)
 {
     return userFullName + QString::number(channel.getIndex());
 }
 
 bool NinjamController::userIsBot(const QString userName) const
 {
-    if (mainController) {
+    if (mainController)
         return mainController->getBotNames().contains(userName);
-    }
     return false;
 }
 
 void NinjamController::addTrack(const User &user, const UserChannel &channel)
 {
-    if (userIsBot(user.getName())) {
+    if (userIsBot(user.getName()))
         return;
-    }
 
     auto trackNode = new NinjamTrackNode(generateNewTrackID());
 
     bool trackAdded = false;
 
-    //checkThread("addTrack();");
+    // checkThread("addTrack();");
     {
         QMutexLocker locker(&mutex);
         trackNodes.insert(getUniqueKeyForChannel(channel, user.getFullName()), trackNode);
     } // release the mutex before emit the signal
-    
+
     trackAdded = mainController->addTrack(trackNode->getID(), trackNode);
 
-    if (trackAdded) {
-        emit channelAdded(user,  channel, trackNode->getID());
+    if (trackAdded)
+    {
+        emit channelAdded(user, channel, trackNode->getID());
     }
-    else {
+    else
+    {
         QMutexLocker locker(&mutex);
         trackNodes.remove(getUniqueKeyForChannel(channel, user.getFullName()));
         delete trackNode;
@@ -632,10 +658,11 @@ void NinjamController::removeTrack(const User &user, const UserChannel &channel)
     long ID = -1;
     {
         QMutexLocker locker(&mutex);
-        //checkThread("removeTrack();");
+        // checkThread("removeTrack();");
         QString uniqueKey = getUniqueKeyForChannel(channel, user.getFullName());
 
-        if (trackNodes.contains(uniqueKey)) {
+        if (trackNodes.contains(uniqueKey))
+        {
             auto trackNode = trackNodes[uniqueKey];
             ID = trackNode->getID();
             trackNodes.remove(uniqueKey);
@@ -643,10 +670,9 @@ void NinjamController::removeTrack(const User &user, const UserChannel &channel)
             channelDeleted = true;
         }
     }
-    
-    if (channelDeleted) {
+
+    if (channelDeleted)
         emit channelRemoved(user, channel, ID);
-    }
 }
 
 void NinjamController::voteBpi(int bpi)
@@ -674,45 +700,47 @@ void NinjamController::setMetronomeAccentBeats(QList<int> accentBeats)
     metronomeTrackNode->setAccentBeats(accentBeats);
 }
 
-//void NinjamController::deleteDeactivatedTracks(){
-//    //QMutexLocker locker(&mutex);
-//    checkThread("deleteDeactivatedTracks();");
-//    QList<QString> keys = trackNodes.keys();
-//    foreach (QString key, keys) {
-//        NinjamTrackNode* trackNode = trackNodes[key];
-//        if(!(trackNode->isActivated())){
-//            trackNodes.remove(key);
-//            mainController->removeTrack(trackNode->getID());
-//            //delete trackNode; //BUG - sometimes Jamtaba crash when trackNode is deleted
-//        }
-//    }
-//}
+// void NinjamController::deleteDeactivatedTracks(){
+////QMutexLocker locker(&mutex);
+// checkThread("deleteDeactivatedTracks();");
+// QList<QString> keys = trackNodes.keys();
+// foreach (QString key, keys) {
+// NinjamTrackNode* trackNode = trackNodes[key];
+// if(!(trackNode->isActivated())){
+// trackNodes.remove(key);
+// mainController->removeTrack(trackNode->getID());
+////delete trackNode; //BUG - sometimes Jamtaba crash when trackNode is deleted
+// }
+// }
+// }
 
 void NinjamController::handleNewInterval()
 {
     // check if the transmiting can start
-    if (!preparedForTransmit) {
-        if(waitingIntervals >= TOTAL_PREPARED_INTERVALS){
+    if (!preparedForTransmit)
+    {
+        if (waitingIntervals >= TOTAL_PREPARED_INTERVALS)
+        {
             preparedForTransmit = true;
             waitingIntervals = 0;
             emit preparedToTransmit();
         }
-        else {
+        else
+        {
             waitingIntervals++;
         }
     }
 
-    if (hasScheduledChanges()) {
+    if (hasScheduledChanges())
         processScheduledChanges();
-    }
-    
-    //QMutexLocker locker(&mutex);
-    for (NinjamTrackNode* track : trackNodes.values()) {
+
+    // QMutexLocker locker(&mutex);
+    for (NinjamTrackNode *track : trackNodes.values())
+    {
         bool trackWasPlaying = track->isPlaying();
         bool trackIsPlaying = track->startNewInterval();
-        if (trackWasPlaying != trackIsPlaying) {
+        if (trackWasPlaying != trackIsPlaying)
             emit channelXmitChanged(track->getID(), trackIsPlaying);
-        }
     }
 
     emit startingNewInterval(); // update the UI
@@ -722,7 +750,8 @@ void NinjamController::handleNewInterval()
 
 void NinjamController::processScheduledChanges()
 {
-    for (SchedulableEvent* event : scheduledEvents) {
+    for (SchedulableEvent *event : scheduledEvents)
+    {
         event->process();
         delete event;
     }
@@ -736,11 +765,11 @@ long NinjamController::getSamplesPerBeat()
 
 long NinjamController::computeTotalSamplesInInterval()
 {
-    double intervalPeriod =  60000.0 / currentBpm * currentBpi;
+    double intervalPeriod = 60000.0 / currentBpm * currentBpi;
     return (long)(mainController->getSampleRate() * intervalPeriod / 1000.0);
 }
 
-//ninjam slots
+// ninjam slots
 void NinjamController::handleNinjamUserEntering(const User &user)
 {
     emit userEnter(user.getFullName());
@@ -748,10 +777,9 @@ void NinjamController::handleNinjamUserEntering(const User &user)
 
 void NinjamController::handleNinjamUserExiting(const User &user)
 {
-     for (const auto &channel : user.getChannels()) {
+    for (const auto &channel : user.getChannels())
         removeTrack(user, channel);
-     }
-     emit userLeave(user.getFullName());
+    emit userLeave(user.getFullName());
 }
 
 void NinjamController::addNinjamRemoteChannel(const User &user, const UserChannel &channel)
@@ -768,11 +796,11 @@ void NinjamController::updateNinjamRemoteChannel(const User &user, const UserCha
 {
     QString uniqueKey = getUniqueKeyForChannel(channel, user.getFullName());
     QMutexLocker locker(&mutex);
-    if (trackNodes.contains(uniqueKey)) {
+    if (trackNodes.contains(uniqueKey))
+    {
         auto trackNode = trackNodes[uniqueKey];
         emit channelNameChanged(user, channel, trackNode->getID());
     }
-
 }
 
 void NinjamController::scheduleBpiChangeEvent(quint16 newBpi, quint16 oldBpi)
@@ -787,9 +815,11 @@ void NinjamController::scheduleBpmChangeEvent(quint16 newBpm)
     scheduledEvents.append(new BpmChangeEvent(this, newBpm));
 }
 
-void NinjamController::handleIntervalCompleted(const User &user, quint8 channelIndex, const QByteArray &encodedData)
+void NinjamController::handleIntervalCompleted(const User &user, quint8 channelIndex,
+                                               const QByteArray &encodedData)
 {
-    if (mainController->isMultiTrackRecordingActivated()) {
+    if (mainController->isMultiTrackRecordingActivated())
+    {
         auto geoLocation = mainController->getGeoLocation(user.getIp());
         QString userName = user.getName() + " from " + geoLocation.getCountryName();
         mainController->saveEncodedAudio(userName, channelIndex, encodedData);
@@ -798,24 +828,27 @@ void NinjamController::handleIntervalCompleted(const User &user, quint8 channelI
     auto channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKeyForChannel(channel, user.getFullName());
     QMutexLocker locker(&mutex);
-    if (trackNodes.contains(channelKey)) {
-        NinjamTrackNode* trackNode = trackNodes[channelKey];
-        if (trackNode) {
+    if (trackNodes.contains(channelKey))
+    {
+        NinjamTrackNode *trackNode = trackNodes[channelKey];
+        if (trackNode)
+        {
             trackNode->addVorbisEncodedInterval(encodedData);
             emit channelAudioFullyDownloaded(trackNode->getID());
         }
     }
-    else {
-        qWarning() << "The channel " << channelIndex << " of user " << user.getName() << " not founded in map!";
+    else
+    {
+        qWarning() << "The channel " << channelIndex << " of user " << user.getName()
+                   << " not founded in map!";
     }
 }
 
 void NinjamController::reset(bool keepRecentIntervals)
 {
     QMutexLocker locker(&mutex);
-    for (NinjamTrackNode* trackNode : trackNodes.values()) {
+    for (NinjamTrackNode *trackNode : trackNodes.values())
         trackNode->discardDownloadedIntervals(keepRecentIntervals);
-    }
     intervalPosition = lastBeat = 0;
 }
 
@@ -827,68 +860,65 @@ void NinjamController::scheduleEncoderChangeForChannel(int channelIndex)
 QByteArray NinjamController::encode(const audio::SamplesBuffer &buffer, uint channelIndex)
 {
     QMutexLocker locker(&encodersMutex);
-    if (encoders.contains(channelIndex)) {
+    if (encoders.contains(channelIndex))
         return encoders[channelIndex]->encode(buffer);
-    }
     return QByteArray();
 }
 
 QByteArray NinjamController::encodeLastPartOfInterval(uint channelIndex)
 {
     QMutexLocker locker(&encodersMutex);
-    if (encoders.contains(channelIndex)) {
+    if (encoders.contains(channelIndex))
         return encoders[channelIndex]->finishIntervalEncoding();
-    }
     return QByteArray();
 }
 
 void NinjamController::recreateEncoderForChannel(int channelIndex)
 {
-
     QMutexLocker locker(&encodersMutex);
     int maxChannelsForEncoding = mainController->getMaxAudioChannelsForEncoding(channelIndex);
 
     if (maxChannelsForEncoding <= 0) // input track is setted as noInput?
         return;
 
-    bool currentEncoderIsInvalid = encoders.contains(channelIndex) &&
-            (encoders[channelIndex]->getChannels() != maxChannelsForEncoding
-                || encoders[channelIndex]->getSampleRate() != mainController->getSampleRate());
+    bool currentEncoderIsInvalid = encoders.contains(channelIndex)
+                                   && (encoders[channelIndex]->getChannels()
+                                       != maxChannelsForEncoding
+                                       || encoders[channelIndex]->getSampleRate()
+                                       != mainController->getSampleRate());
 
-    if (!encoders.contains(channelIndex) || currentEncoderIsInvalid) { // a new encoder is necessary?
-
-        if (currentEncoderIsInvalid && encoders.contains(channelIndex)) {
+    if (!encoders.contains(channelIndex) || currentEncoderIsInvalid)   // a new encoder is necessary?
+    {
+        if (currentEncoderIsInvalid && encoders.contains(channelIndex))
             delete encoders[channelIndex];
-        }
 
         int sampleRate = mainController->getSampleRate();
         float encodingQuality = mainController->getEncodingQuality();
 
-        encoders[channelIndex] = new vorbis::Encoder(maxChannelsForEncoding, sampleRate, encodingQuality);
+        encoders[channelIndex] = new vorbis::Encoder(maxChannelsForEncoding, sampleRate,
+                                                     encodingQuality);
     }
 }
 
 void NinjamController::recreateEncoders()
 {
-    if (isRunning()) {
+    if (isRunning())
+    {
         QMutexLocker locker(&encodersMutex); // this method is called from main thread, and the encoders are used in audio thread every time
-        for (int e = 0; e < encoders.size(); ++e) {
+        for (int e = 0; e < encoders.size(); ++e)
             delete encoders[e];
-        }
         encoders.clear(); // new encoders will be create on demand
 
         int trackGroupsCount = mainController->getInputTrackGroupsCount();
-        for (int channelIndex = 0; channelIndex < trackGroupsCount; ++channelIndex) {
+        for (int channelIndex = 0; channelIndex < trackGroupsCount; ++channelIndex)
             recreateEncoderForChannel(channelIndex);
-        }
     }
 }
 
 void NinjamController::setSampleRate(int newSampleRate)
 {
-    if (!isRunning()) {
+    if (!isRunning())
         return;
-    }
 
     reset(false); // discard all downloaded intervals
 
@@ -899,20 +929,21 @@ void NinjamController::setSampleRate(int newSampleRate)
     recreateEncoders();
 }
 
-void NinjamController::handleIntervalDownloading(const User &user, quint8 channelIndex, int downloadedBytes)
+void NinjamController::handleIntervalDownloading(const User &user, quint8 channelIndex,
+                                                 int downloadedBytes)
 {
     Q_UNUSED(downloadedBytes);
     auto channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKeyForChannel(channel, user.getFullName());
 
     mutex.lock();
-    NinjamTrackNode* track = trackNodes[channelKey];
+    NinjamTrackNode *track = trackNodes[channelKey];
     mutex.unlock();
 
-    if (track) {
-        if (!track->isPlaying()) { // track is not playing yet and receive the first interval bytes
+    if (track)
+    {
+        if (!track->isPlaying())   // track is not playing yet and receive the first interval bytes
             emit channelXmitChanged(track->getID(), true);
-        }
         emit channelAudioChunkDownloaded(track->getID());
     }
 }

@@ -64,7 +64,8 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
     QString messageColor;
 
     QTextStream stream(&stringMsg);
-    switch (type) {
+    switch (type)
+    {
     case QtDebugMsg:
         messageType = "DEBUG   ";
         messageColor = getDebugColor(context);
@@ -103,13 +104,17 @@ void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context,
 
     QFile outFile(path);
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
-    if (configurator->logFileIsCreated()) {
+    if (configurator->logFileIsCreated())
+    {
         ioFlags |= QIODevice::Append;
-    } else {
+    }
+    else
+    {
         ioFlags |= QIODevice::Truncate;
         configurator->setFileCreatedFlag();
     }
-    if (outFile.open(ioFlags)) {
+    if (outFile.open(ioFlags))
+    {
         QTextStream ts(&outFile);
         ts << stringMsg.replace(QRegularExpression("\\033\\[[0-6]{1,2}(;1)?m"), ""); // remove ANSI color codes from log file
     }
@@ -124,7 +129,8 @@ QStringList Configurator::loadPreviousLogContent() const
 
     QDir logDir = getBaseDir();
     QFile inputFile(logDir.absoluteFilePath(Configurator::LOG_FILE));
-    if (inputFile.open(QIODevice::ReadOnly)) {
+    if (inputFile.open(QIODevice::ReadOnly))
+    {
         QTextStream stream(&inputFile);
 
         while (!stream.atEnd())
@@ -160,8 +166,10 @@ QStringList Configurator::getPresetFilesNames(bool fullpath)
     QFileInfoList fileInfos = presetsDir.entryInfoList(nameFilters, filters, sort);
 
     QStringList filesPaths;
-    for (const QFileInfo &item : fileInfos) {
-        if (item.isFile()) {
+    for (const QFileInfo &item : fileInfos)
+    {
+        if (item.isFile())
+        {
             if (fullpath)
                 filesPaths.append(item.absoluteFilePath());
             else
@@ -250,14 +258,17 @@ void Configurator::exportThemeFile(const QString &themeName, const QFileInfo &so
     static QTime compilationTime = QTime::fromString(QString(__TIME__).simplified(), "hh:mm:ss");
     static QDateTime jamTabaCompilationDate(compilationDate, compilationTime);
 
-    if (!destination.exists() || jamTabaCompilationDate > destination.lastModified()) {
+    if (!destination.exists() || jamTabaCompilationDate > destination.lastModified())
+    {
         // QFile::copy can't replace existing files, so is necessary delete existing file before call QFile::copy
-        if (destination.exists()) {
+        if (destination.exists())
+        {
             qDebug() << "Removing " << destination.fileName() << " before copy";
             QFile(destination.absoluteFilePath()).remove();
         }
 
-        if (QFile::copy(source.absoluteFilePath(), destination.absoluteFilePath())) {
+        if (QFile::copy(source.absoluteFilePath(), destination.absoluteFilePath()))
+        {
             qDebug() << "\tExporting " << themeName << source.fileName() << " to "
                      << destination.absolutePath();
 
@@ -265,7 +276,9 @@ void Configurator::exportThemeFile(const QString &themeName, const QFileInfo &so
                 QFile::ReadOwner | QFile::WriteOwner);
             if (!permissionSetted)
                 qCritical() << "Can't set permission in file " << destination.absoluteFilePath();
-        } else {
+        }
+        else
+        {
             qCritical() << "Can't copy " << source.absoluteFilePath() << " to "
                         << destination.absoluteFilePath();
         }
@@ -279,7 +292,8 @@ void Configurator::exportThemes() const
     QDir themesDir = getThemesDir();
     QStringList themesInResources = resourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
-    for (const QString &themeDir : themesInResources) {
+    for (const QString &themeDir : themesInResources)
+    {
         QDir destinationDir(themesDir.absoluteFilePath(themeDir));
         if (!destinationDir.exists())
             themesDir.mkdir(themeDir);
@@ -290,23 +304,29 @@ void Configurator::exportThemes() const
         QDir pathInResources(fullPath);
         QStringList themeFiles = pathInResources.entryList(); // files and folders
 
-        for (const QString &themeFile : themeFiles) {
+        for (const QString &themeFile : themeFiles)
+        {
             QFileInfo sourceFileInfo(pathInResources.absoluteFilePath(themeFile));
             QFileInfo destinationFileInfo(destinationDir.absoluteFilePath(themeFile));
 
-            if (sourceFileInfo.isFile()) {
+            if (sourceFileInfo.isFile())
+            {
                 exportThemeFile(themeDir, sourceFileInfo, destinationFileInfo);
-            } else { // a folder inside theme folder (images, fonts, etc.)
+            }
+            else     // a folder inside theme folder (images, fonts, etc.)
+            {
                 QString folderName = sourceFileInfo.baseName();
                 QDir sourceFolder(QDir(sourceFileInfo.absolutePath()).absoluteFilePath(folderName));
                 auto files = sourceFolder.entryInfoList(QDir::Files);
-                if (!files.isEmpty()) {
+                if (!files.isEmpty())
+                {
                     if (!destinationFileInfo.exists())
                         destinationFileInfo.absoluteDir().mkdir(folderName);
 
                     QDir destDir(destinationFileInfo.absoluteDir().absoluteFilePath(folderName));
 
-                    for (auto file : files) {
+                    for (auto file : files)
+                    {
                         destinationFileInfo = QFileInfo(destDir.absoluteFilePath(file.fileName()));
                         exportThemeFile(themeDir, file, destinationFileInfo);
                     }
@@ -319,10 +339,13 @@ void Configurator::exportThemes() const
 void Configurator::setupLogConfigFile()
 {
     QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
-    if (!logConfigFilePath.isEmpty()) {
+    if (!logConfigFilePath.isEmpty())
+    {
         qputenv("QT_LOGGING_CONF", QByteArray(logConfigFilePath.toUtf8()));
         qInstallMessageHandler(&Configurator::logHandler);
-    } else {
+    }
+    else
+    {
         qCritical() << "Logging config file path is empty!";
     }
 }
@@ -331,21 +354,24 @@ void Configurator::createFoldersTree()
 {
     qWarning(jtConfigurator) << " Creating folders tree...";
 
-    if (!baseDir.exists()) {
+    if (!baseDir.exists())
+    {
         if (baseDir.mkpath("."))
             qCDebug(jtConfigurator) << "Base dir created in " << baseDir.absolutePath();
         else
             qCDebug(jtConfigurator) << "Can´t create Base dir in " << baseDir.absolutePath();
     }
 
-    if (!cacheDir.exists()) {
+    if (!cacheDir.exists())
+    {
         if (cacheDir.mkpath("."))
             qCDebug(jtConfigurator) << "Cache dir created in " << cacheDir.absolutePath();
         else
             qCDebug(jtConfigurator) << "Can´t create Cache dir in " << cacheDir.absolutePath();
     }
 
-    if (!presetsDir.exists()) {
+    if (!presetsDir.exists())
+    {
         if (presetsDir.mkpath("."))
             qCDebug(jtConfigurator) << "Standalone presets dir created in "
                                     << presetsDir.absolutePath();
@@ -353,7 +379,8 @@ void Configurator::createFoldersTree()
             qCDebug(jtConfigurator) << "Can´t create PRESETS dir in " << presetsDir.absolutePath();
     }
 
-    if (!themesDir.exists()) {
+    if (!themesDir.exists())
+    {
         if (themesDir.mkpath("."))
             qCDebug(jtConfigurator) << "Themes dir created in " << themesDir.absolutePath();
         else
@@ -363,7 +390,8 @@ void Configurator::createFoldersTree()
 
 bool Configurator::folderTreeExists() const
 {
-    if (!presetsDir.exists() || !cacheDir.exists() || !themesDir.exists()) {
+    if (!presetsDir.exists() || !cacheDir.exists() || !themesDir.exists())
+    {
         if (!presetsDir.exists())
             qWarning(jtConfigurator) << "Presets dir don't exist !";
 
@@ -384,7 +412,8 @@ void Configurator::exportLogIniFile()
     QString logConfigFilePath(baseDir.absoluteFilePath(logConfigFileName));
 
     QFile file(logConfigFilePath);
-    if (!file.exists()) {
+    if (!file.exists())
+    {
         qDebug(jtConfigurator) << "Log Ini file don't exist in' :" << logConfigFilePath;
 
         // copy the log config file from resources to 'filePath'
@@ -400,7 +429,8 @@ void Configurator::exportLogIniFile()
 
 QString Configurator::getPresetPath(const QString &presetFileName)
 {
-    if (!presetsDir.exists()) {
+    if (!presetsDir.exists())
+    {
         qDebug(jtConfigurator) << "Can't load preset file , preset dir inexistent !";
         return "";
     }
