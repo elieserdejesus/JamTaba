@@ -10,9 +10,9 @@ using geo::NullIpToLocationResolver;
 Location::Location() :
     countryName("UNKNOWN"),
     countryCode("UNKNOWN"),
+    city("UNKNOWN"),
     latitude(-200),
-    longitude(-200),
-    city("UNKNOWN")
+    longitude(-200)
 {
 
 }
@@ -26,9 +26,9 @@ Location::Location(const QString &country, const QString &countryCode, double la
                    double longitude, const QString &city) :
     countryName(sanitize(country)),
     countryCode(sanitize(countryCode)),
+    city(sanitize(city)),
     latitude(latitude),
-    longitude(longitude),
-    city(sanitize(city))
+    longitude(longitude)
 {
     //
 }
