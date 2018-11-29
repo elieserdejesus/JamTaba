@@ -54,7 +54,6 @@ MainController::MainController(const Settings &settings) :
     lastFrameTimeStamp(0),
     emojiManager(":/emoji/emoji.json", ":/emoji/icons")
 {
-
     QDir cacheDir = Configurator::getInstance()->getCacheDir();
     ipToLocationResolver.reset(new geo::WebIpToLocationResolver(cacheDir));
 
@@ -72,9 +71,8 @@ MainController::MainController(const Settings &settings) :
 
 void MainController::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
 {
-    if (isPlayingInNinjamRoom()) {
+    if (isPlayingInNinjamRoom())
         ninjamService->setChannelReceiveStatus(userFullName, channelIndex, receiveChannel);
-    }
 }
 
 long MainController::getDownloadTransferRate(const QString userFullName, quint8 channelIndex) const
@@ -133,7 +131,8 @@ bool MainController::userIsBlockedInChat(const QString &userFullName) const
 
 void MainController::setSampleRate(int newSampleRate)
 {
-    for (auto node : tracksNodes.values()) {
+    for (auto node : tracksNodes.values())
+    {
         int rmsWindowSize = audio::SamplesBuffer::computeRmsWindowSize(newSampleRate);
         node->setRmsWindowSize(rmsWindowSize);
     }
@@ -141,17 +140,15 @@ void MainController::setSampleRate(int newSampleRate)
     audioMixer.setSampleRate(newSampleRate);
 
     if (settings.isSaveMultiTrackActivated()) {
-        for (auto jamRecorder : jamRecorders) {
+        for (auto jamRecorder : jamRecorders)
             jamRecorder->setSampleRate(newSampleRate);
-        }
     }
 
     if (isPlayingInNinjamRoom()) {
         ninjamController->setSampleRate(newSampleRate);
 
-        for (auto inputTrack : inputTracks.values()) {
+        for (auto inputTrack : inputTracks.values())
             inputTrack->getLooper()->stop(); // looper is stopped when sample rate is changed because the recorded material will sound funny :)
-        }
     }
 
     settings.setSampleRate(newSampleRate);
@@ -167,7 +164,8 @@ void MainController::setEncodingQuality(float newEncodingQuality)
 
 void MainController::finishUploads()
 {
-    for (int channelIndex : audioIntervalsToUpload.keys()) {
+    for (int channelIndex : audioIntervalsToUpload.keys())
+    {
         auto &audioInterval = audioIntervalsToUpload[channelIndex];
         ninjamService->sendIntervalPart(audioInterval.getGUID(), QByteArray(), true);
     }
@@ -182,9 +180,8 @@ void MainController::quitFromNinjamServer(const QString &error)
 
     stopNinjamController();
 
-    if (mainWindow) {
+    if (mainWindow)
         mainWindow->exitFromRoom(false, error);
-    }
 }
 
 void MainController::disconnectFromNinjamServer(const ServerInfo &server)
@@ -197,9 +194,8 @@ void MainController::disconnectFromNinjamServer(const ServerInfo &server)
         mainWindow->exitFromRoom(true);
 
     if (settings.isSaveMultiTrackActivated()) {
-        for (auto jamRecorder : jamRecorders) {
+        for (auto jamRecorder : jamRecorders)
             jamRecorder->stopRecording();
-        }
     }
 }
 
@@ -227,29 +223,25 @@ void MainController::connectInNinjamServer(const ServerInfo &server)
 
     setupNinjamControllerSignals();
 
-
-    if (mainWindow) {
-        mainWindow->enterInRoom(login::RoomInfo(server.getHostName(), server.getPort(), login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
-    }
-    else {
+    if (mainWindow)
+        mainWindow->enterInRoom(login::RoomInfo(server.getHostName(), server.getPort(), login::RoomTYPE::NINJAM, server.getMaxUsers(),
+                                                server.getMaxChannels()));
+    else
         qCritical() << "mainWindow is null!";
-    }
 
     qCDebug(jtCore) << "starting ninjamController...";
 
     newNinjamController->start(server);
 
     if (settings.isSaveMultiTrackActivated()) {
-
         QString userName = getUserName();
         QDir recordBasePath = QDir(settings.getRecordingPath());
         quint16 bpm = server.getBpm();
         quint16 bpi = server.getBpi();
         float sampleRate = getSampleRate();
 
-        for (auto jamRecorder : getActiveRecorders()) {
+        for (auto jamRecorder : getActiveRecorders())
             jamRecorder->startRecording(userName, recordBasePath, bpm, bpi, sampleRate);
-        }
     }
 }
 
@@ -257,9 +249,8 @@ QMap<int, bool> MainController::getXmitChannelsFlags() const
 {
     QMap<int, bool> xmitFlags;
 
-    for (auto inputGroup : trackGroups) {
+    for (auto inputGroup : trackGroups)
         xmitFlags.insert(inputGroup->getIndex(), inputGroup->isTransmiting());
-    }
 
     return xmitFlags;
 }
@@ -268,9 +259,8 @@ void MainController::handleNewNinjamInterval()
 {
     // TODO move the jamRecorder to NinjamController?
     if (settings.isSaveMultiTrackActivated()) {
-        for (auto jamRecorder : jamRecorders) {
+        for (auto jamRecorder : jamRecorders)
             jamRecorder->newInterval();
-        }
     }
 
     if (mainWindow->cameraIsActivated())
@@ -307,34 +297,29 @@ uint MainController::getFramesPerInterval() const
 void MainController::updateBpi(int newBpi)
 {
     if (settings.isSaveMultiTrackActivated()) {
-        for (auto jamRecorder : jamRecorders) {
+        for (auto jamRecorder : jamRecorders)
             jamRecorder->setBpi(newBpi);
-        }
     }
 }
 
 void MainController::updateBpm(int newBpm)
 {
     if (settings.isSaveMultiTrackActivated()) {
-        for (auto jamRecorder : jamRecorders) {
+        for (auto jamRecorder : jamRecorders)
             jamRecorder->setBpm(newBpm);
-        }
     }
 
     if (isPlayingInNinjamRoom()) {
-        for (auto inputTrack: inputTracks.values()) {
+        for (auto inputTrack: inputTracks.values())
             inputTrack->getLooper()->stop(); // looper is stopped when BPM is changed because the recorded material will be out of sync
-        }
     }
 }
 
 void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, quint8 channelIndex, bool isFirstPart)
 {
-
-    Q_ASSERT(encodedData.left(4) ==  "OggS");
+    Q_ASSERT(encodedData.left(4) == "OggS");
 
     if (isFirstPart) {
-
         if (audioIntervalsToUpload.contains(channelIndex)) {
             auto &audioInterval = audioIntervalsToUpload[channelIndex];
 
@@ -349,7 +334,6 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, qui
     }
 
     if (audioIntervalsToUpload.contains(channelIndex)) {
-
         auto &interval = audioIntervalsToUpload[channelIndex];
 
         interval.appendData(encodedData);
@@ -362,19 +346,15 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, qui
     }
 
     if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
-        for (auto jamRecorder : getActiveRecorders()) {
+        for (auto jamRecorder : getActiveRecorders())
             jamRecorder->appendLocalUserAudio(encodedData, channelIndex, isFirstPart);
-        }
     }
-
 }
 
 void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, bool isFirstPart)
 {
     if (isFirstPart) {
-
         if (videoIntervalToUpload) {
-
             // flush the end of previous interval
             ninjamService->sendIntervalPart(videoIntervalToUpload->getGUID(), videoIntervalToUpload->getData(), true); // is the last part of interval
             videoIntervalToUpload->clear();
@@ -395,11 +375,11 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, boo
     }
 
     // disabling the video recording
-//    if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
-//        for (auto jamRecorder : getActiveRecorders()) {
-//            jamRecorder->appendLocalUserVideo(encodedData, isFirstPart);
-//        }
-//    }
+// if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()) {
+// for (auto jamRecorder : getActiveRecorders()) {
+// jamRecorder->appendLocalUserVideo(encodedData, isFirstPart);
+// }
+// }
 }
 
 int MainController::getMaxAudioChannelsForEncoding(uint trackGroupIndex) const
@@ -430,7 +410,6 @@ QStringList MainController::getBotNames()
 
 geo::Location MainController::getGeoLocation(const QString &ip)
 {
-
     auto sanitizedIp = ninjam::client::maskIP(ip);
     if (!sanitizedIp.isEmpty()) // some servers may not return an ip for user, dont concatenate to ".128" in that case
         sanitizedIp.replace(ninjam::client::IP_MASK, ".128"); // replace .x (mask) with .128 to generate a valid IP
@@ -448,17 +427,15 @@ void MainController::mixGroupedInputs(int groupIndex, audio::SamplesBuffer &out)
 void MainController::saveEncodedAudio(const QString &userName, quint8 channelIndex, const QByteArray &encodedAudio)
 {
     if (settings.isSaveMultiTrackActivated()) { // just in case
-        for (auto jamRecorder : getActiveRecorders()) {
+        for (auto jamRecorder : getActiveRecorders())
             jamRecorder->addRemoteUserAudio(userName, encodedAudio, channelIndex);
-        }
     }
 }
 
 void MainController::removeAllInputTracks()
 {
-    for (int trackID : inputTracks.keys()) {
+    for (int trackID : inputTracks.keys())
         removeInputTrackNode(trackID);
-    }
 }
 
 void MainController::removeInputTrackNode(int inputTrackIndex)
@@ -531,9 +508,8 @@ void MainController::storeChatFontSizeOffset(qint8 fontSizeOffset)
 void MainController::storeMultiTrackRecordingStatus(bool savingMultiTracks)
 {
     if (settings.isSaveMultiTrackActivated() && !savingMultiTracks) { // user is disabling recording multi tracks?
-        for (auto jamRecorder : jamRecorders) {
+        for (auto jamRecorder : jamRecorders)
             jamRecorder->stopRecording();
-        }
     }
 
     settings.setSaveMultiTrack(savingMultiTracks);
@@ -542,9 +518,8 @@ void MainController::storeMultiTrackRecordingStatus(bool savingMultiTracks)
 QMap<QString, QString> MainController::getJamRecoders() const
 {
     QMap<QString, QString> jamRecoderMap;
-    for (auto jamRecorder : jamRecorders) {
+    for (auto jamRecorder : jamRecorders)
         jamRecoderMap.insert(jamRecorder->getWriterId(), jamRecorder->getWriterName());
-    }
 
     return jamRecoderMap;
 }
@@ -552,7 +527,8 @@ QMap<QString, QString> MainController::getJamRecoders() const
 void MainController::storeJamRecorderStatus(const QString &writerId, bool status)
 {
     if (settings.isSaveMultiTrackActivated()) { // recording is active and changing the jamRecorder status
-        for (auto jamRecorder : jamRecorders) {
+        for (auto jamRecorder : jamRecorders)
+        {
             if (jamRecorder->getWriterId() == writerId) {
                 if (status) {
                     if (isPlayingInNinjamRoom()) {
@@ -562,8 +538,7 @@ void MainController::storeJamRecorderStatus(const QString &writerId, bool status
                         int bpm = ninjamController->getCurrentBpm();
                         jamRecorder->startRecording(getUserName(), recordingPath, bpm, bpi, getSampleRate());
                     }
-                }
-                else {
+                } else {
                     jamRecorder->stopRecording();
                 }
             }
@@ -577,9 +552,8 @@ void MainController::storeMultiTrackRecordingPath(const QString &newPath)
 {
     settings.setMultiTrackRecordingPath(newPath);
     if (settings.isSaveMultiTrackActivated()) {
-        for (auto jamRecorder : jamRecorders) {
+        for (auto jamRecorder : jamRecorders)
             jamRecorder->setRecordPath(newPath);
-        }
     }
 }
 
@@ -588,9 +562,8 @@ void MainController::storeDirNameDateFormat(const QString &newDateFormat)
     settings.setDirNameDateFormat(newDateFormat);
     Qt::DateFormat dateFormat = settings.getMultiTrackRecordingSettings().getDirNameDateFormat();
     if (settings.isSaveMultiTrackActivated()) {
-        for (auto jamRecorder : jamRecorders) {
+        for (auto jamRecorder : jamRecorders)
             jamRecorder->setDirNameDateFormat(dateFormat);
-        }
     }
 }
 
@@ -601,7 +574,6 @@ void MainController::storePrivateServerSettings(const QString &server, int serve
 
 void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted)
 {
-
     settings.setMetronomeSettings(metronomeGain, metronomePan, metronomeMuted);
 }
 
@@ -619,9 +591,8 @@ void MainController::setCustomMetronome(const QString &primaryBeatFile, const QS
 
 void MainController::recreateMetronome()
 {
-    if (isPlayingInNinjamRoom()) {
+    if (isPlayingInNinjamRoom())
         ninjamController->recreateMetronome(getSampleRate());
-    }
 }
 
 void MainController::storeIntervalProgressShape(int shape)
@@ -634,7 +605,8 @@ void MainController::storeWindowSettings(bool maximized, const QPointF &location
     settings.setWindowSettings(maximized, location, size);
 }
 
-void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioInputDevice, int audioOutputDevice, const QList<bool> &midiInputsStatus)
+void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioInputDevice, int audioOutputDevice,
+                                     const QList<bool> &midiInputsStatus)
 {
     settings.setAudioSettings(firstIn, lastIn, firstOut, lastOut, audioInputDevice, audioOutputDevice);
     settings.setMidiSettings(midiInputsStatus);
@@ -656,9 +628,8 @@ void MainController::removeTrack(long trackID)
 
 void MainController::setAllLoopersStatus(bool activated)
 {
-    for (auto inputTrack : inputTracks.values()) {
+    for (auto inputTrack : inputTracks.values())
         inputTrack->getLooper()->setActivated(activated);
-    }
 }
 
 void MainController::doAudioProcess(const audio::SamplesBuffer &in, audio::SamplesBuffer &out, int sampleRate)
@@ -677,22 +648,22 @@ void MainController::process(const audio::SamplesBuffer &in, audio::SamplesBuffe
     if (!started)
         return;
 
-    try {
+    try
+    {
         if (!isPlayingInNinjamRoom()) {
             doAudioProcess(in, out, sampleRate);
-        }
-        else {
-
+        } else {
             if (ninjamController)
                 ninjamController->process(in, out, sampleRate);
         }
     }
-    catch(...) {
+    catch (...)
+    {
         qCritical() << "Exception in MainController::process";
 
         #ifdef Q_OS_WIN
-            WindowsStackWalker stackWalker;
-            stackWalker.ShowCallstack();
+        WindowsStackWalker stackWalker;
+        stackWalker.ShowCallstack();
         #endif
 
         qFatal("Aborting in  MainController::process!");
@@ -701,14 +672,13 @@ void MainController::process(const audio::SamplesBuffer &in, audio::SamplesBuffe
 
 void MainController::syncWithNinjamIntervalStart(uint intervalLenght)
 {
-    for (auto inputTrack : inputTracks.values()) {
+    for (auto inputTrack : inputTracks.values())
         inputTrack->startNewLoopCycle(intervalLenght);
-    }
 }
 
 audio::AudioPeak MainController::getTrackPeak(int trackID)
 {
-    //QMutexLocker locker(&mutex);
+    // QMutexLocker locker(&mutex);
 
     auto trackNode = tracksNodes[trackID];
 
@@ -730,9 +700,8 @@ void MainController::setTransmitingStatus(int channelID, bool transmiting)
 {
     if (trackGroups.contains(channelID)) {
         auto trackGroup = trackGroups[channelID];
-        if (trackGroup->isTransmiting() != transmiting) {
+        if (trackGroup->isTransmiting() != transmiting)
             trackGroup->setTransmitingStatus(transmiting);
-        }
     }
 }
 
@@ -858,15 +827,13 @@ MainController::~MainController()
 
     tracksNodes.clear();
 
-    for (auto input : inputTracks) {
+    for (auto input : inputTracks)
         delete input;
-    }
 
     inputTracks.clear();
 
-    for (auto group : trackGroups) {
+    for (auto group : trackGroups)
         delete group;
-    }
 
     trackGroups.clear();
 
@@ -874,9 +841,8 @@ MainController::~MainController()
 
     qCDebug(jtCore()) << "cleaning jamRecorders...";
 
-    for(auto jamRecorder : jamRecorders) {
+    for (auto jamRecorder : jamRecorders)
         delete jamRecorder;
-    }
 
     audioIntervalsToUpload.clear();
 
@@ -927,7 +893,8 @@ void MainController::setFullScreenView(bool fullScreen)
 
 void MainController::setAllTracksActivation(bool activated)
 {
-    for (auto track : tracksNodes) {
+    for (auto track : tracksNodes)
+    {
         if (activated)
             track->activate();
         else
@@ -984,8 +951,7 @@ void MainController::sendRemovedChannelMessage(int removedChannelIndex)
         ninjamService->sendRemovedChannelIndex(removedChannelIndex);
 }
 
-void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom, const QStringList &channelsNames,
-                                              const QString &password)
+void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom, const QStringList &channelsNames, const QString &password)
 {
     qCDebug(jtCore) << "connecting...";
 
@@ -996,7 +962,7 @@ void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom,
         QString pass = (password.isNull() || password.isEmpty()) ? "" : password;
 
         this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames,
-                                                  pass);
+                                                   pass);
     } else {
         qCritical() << "user name not choosed yet!";
     }
@@ -1005,7 +971,6 @@ void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom,
 void MainController::start()
 {
     if (!started) {
-
         qCInfo(jtCore) << "Creating roomStreamer ...";
 
         roomStreamer.reset(new audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
@@ -1101,9 +1066,8 @@ void MainController::stopNinjamController()
 {
     QMutexLocker locker(&mutex);
 
-    if (ninjamController && ninjamController->isRunning()) {
+    if (ninjamController && ninjamController->isRunning())
         ninjamController->stop(true);
-    }
 
     audioIntervalsToUpload.clear();
 
@@ -1133,7 +1097,6 @@ QString MainController::getSuggestedUserName()
     return ""; // returning empty name as suggestion
 }
 
-
 void MainController::storeMeteringSettings(bool showingMaxPeaks, quint8 meterOption)
 {
     settings.storeMeterOption(meterOption);
@@ -1162,10 +1125,10 @@ QList<recorder::JamRecorder *> MainController::getActiveRecorders() const
 {
     QList<recorder::JamRecorder *> activeRecorders;
 
-    for (auto jamRecorder : jamRecorders) {
-        if (settings.isJamRecorderActivated(jamRecorder->getWriterId())) {
+    for (auto jamRecorder : jamRecorders)
+    {
+        if (settings.isJamRecorderActivated(jamRecorder->getWriterId()))
             activeRecorders.append(jamRecorder);
-        }
     }
 
     return activeRecorders;
@@ -1177,10 +1140,10 @@ QString MainController::getVersionFromLogContent()
     QStringList logContent = configurator->getPreviousLogContent();
 
     static const QString START_LINE("Starting Jamtaba ");
-    for (const QString &logLine : logContent) {
-        if (logLine.contains(START_LINE)) {
+    for (const QString &logLine : logContent)
+    {
+        if (logLine.contains(START_LINE))
             return logLine.mid(logLine.indexOf(START_LINE) + START_LINE.length(), 6).trimmed();
-        }
     }
 
     return QString();
@@ -1188,7 +1151,6 @@ QString MainController::getVersionFromLogContent()
 
 bool MainController::crashedInLastExecution()
 {
-
     // crash in last execution is detected from version 2.1.1
     QString version = getVersionFromLogContent();
     QStringList versionParts = version.split(".");
@@ -1205,10 +1167,10 @@ bool MainController::crashedInLastExecution()
     auto configurator = Configurator::getInstance();
     QStringList logContent = configurator->getPreviousLogContent();
     if (!logContent.isEmpty()) {
-        for (const QString &logLine : logContent) {
-            if (logLine.contains(MainController::CRASH_FLAG_STRING)) {
+        for (const QString &logLine : logContent)
+        {
+            if (logLine.contains(MainController::CRASH_FLAG_STRING))
                 return false;
-            }
         }
 
         return true;
@@ -1216,7 +1178,6 @@ bool MainController::crashedInLastExecution()
 
     return false;
 }
-
 
 void MainController::setPublicChatActivated(bool activated)
 {

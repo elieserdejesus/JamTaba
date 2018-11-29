@@ -56,7 +56,6 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/)
             qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
 
         ownApplication = QMfcApp::pluginInstance(hInst);
-
     }
     if (dwReason == DLL_PROCESS_DETACH && ownApplication)
         delete qApp;

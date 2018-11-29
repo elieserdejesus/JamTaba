@@ -43,12 +43,9 @@ WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir) :
     loadCountryCodesFromFile();
     loadLatLongsFromFile();
 
-    if (!needLoadTheOldCache())
-    {
+    if (!needLoadTheOldCache()) {
         loadCountryNamesFromFile(currentLanguage); // loading the english country names by default
-    }
-    else
-    {
+    } else {
         loadOldCacheContent();
         deleteOldCacheFile();
     }
@@ -101,8 +98,7 @@ bool WebIpToLocationResolver::saveMapToFile(const QString &fileName, const QMap<
         return true;
 
     QFile cacheFile(cacheDir.absoluteFilePath(fileName));
-    if (cacheFile.open(QFile::WriteOnly))
-    {
+    if (cacheFile.open(QFile::WriteOnly)) {
         QDataStream stream(&cacheFile);
         CacheHeader cacheHeader(cacheHeaderRevision);
         stream << cacheHeader;
@@ -118,8 +114,7 @@ bool WebIpToLocationResolver::saveMapToFile(const QString &fileName, const QMap<
         return true;
 
     QFile cacheFile(cacheDir.absoluteFilePath(fileName));
-    if (cacheFile.open(QFile::WriteOnly))
-    {
+    if (cacheFile.open(QFile::WriteOnly)) {
         QDataStream stream(&cacheFile);
         CacheHeader cacheHeader(cacheHeaderRevision);
         stream << cacheHeader;
@@ -138,42 +133,32 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
     if (language != currentLanguage)
         return; // discard the received data if the language was changed since the last request.
 
-    if (reply->error() == QNetworkReply::NoError)
-    {
+    if (reply->error() == QNetworkReply::NoError) {
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-        if (doc.isEmpty() || !doc.isObject())
-        {
+        if (doc.isEmpty() || !doc.isObject()) {
             qCritical() << "Json document is empty or is not an json object!";
             return;
         }
 
         QJsonObject root = doc.object();
-        if (!root.contains("country_name"))
-        {
-            if (root.contains("error"))
-            {
+        if (!root.contains("country_name")) {
+            if (root.contains("error")) {
                 auto error = root["error"].toObject();
                 auto code = error.contains("code") ? error["code"].toInt() : -1;
-                if (retryCount < MaxServersAlternatives)
-                {
+                if (retryCount < MaxServersAlternatives) {
                     qDebug() << "Error " << code << " received, trying alternative server ...";
                     requestDataFromWebService(ip, retryCount + 1);
-                }
-                else
-                {
+                } else {
                     qCritical() << "All servers failed, no more alternatives available";
                 }
                 return;
-            }
-            else
-            {
+            } else {
                 qCritical() << "The root json object not contains 'country_name'";
                 return;
             }
         }
 
-        if (!root.contains("country_code"))
-        {
+        if (!root.contains("country_code")) {
             qCritical() << "The root json object not contains 'country_name'";
             return;
         }
@@ -183,23 +168,18 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
         countryCodesCache.insert(ip, countryCode);
         countryNamesCache.insert(countryCode, countryName);
 
-        if (root.contains("latitude") && root.contains("longitude"))
-        {
+        if (root.contains("latitude") && root.contains("longitude")) {
             auto latitude = root["latitude"].toDouble();
             auto longitude = root["longitude"].toDouble();
             latLongCache.insert(ip, QPointF(latitude, longitude));
             qCDebug(jtIpToLocation) << "Data received IP:" << ip << " Lang:" << language << " country code:" << countryCode
                                     << " country name:" << countryName << "lat:" << latitude << " long:" << longitude;
-        }
-        else
-        {
+        } else {
             qCritical() << "The json 'location' object not contains 'latidude' or 'longitude' entries";
         }
 
         emit ipResolved(ip);
-    }
-    else
-    {
+    } else {
         qCDebug(jtIpToLocation) << "error requesting " << ip << ". Returning an empty location!";
     }
 
@@ -216,8 +196,7 @@ void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int r
     static QString ipApiKey;
     static QString ipStackKey;
 
-    if (ipApiKey.isEmpty())
-    {
+    if (ipApiKey.isEmpty()) {
         QSettings settings(QCoreApplication::applicationName());
         ipApiKey = settings.value("ipApiKey", "22f433857895c84347e949db234af11f").toString();
         ipStackKey = settings.value("ipStackKey", "7dfb5855025fa60f5ce082a4c376091a").toString();
@@ -284,21 +263,17 @@ geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString 
 {
     // check for language changes
     QString code = sanitizeLanguageCode(languageCode);
-    if (code != currentLanguage)
-    {
+    if (code != currentLanguage) {
         saveCountryNamesToFile(); // save cached country names before change the language
         currentLanguage = code;
         loadCountryNamesFromFile(currentLanguage); // update the country names QMap
     }
 
-    if (countryCodesCache.contains(ip))
-    {
+    if (countryCodesCache.contains(ip)) {
         QString countryCode = countryCodesCache[ip];
-        if (countryNamesCache.contains(countryCode))
-        {
+        if (countryNamesCache.contains(countryCode)) {
             QString countryName = countryNamesCache[countryCode];
-            if (latLongCache.contains(ip))
-            {
+            if (latLongCache.contains(ip)) {
                 qreal latitude = latLongCache[ip].x();
                 qreal longitude = latLongCache[ip].y();
                 return Location(countryName, countryCode, latitude, longitude);
@@ -350,18 +325,14 @@ bool WebIpToLocationResolver::populateQMapFromFile(const QString &fileName, QMap
 {
     map.clear();
     QFile cacheFile(cacheDir.absoluteFilePath(fileName));
-    if (cacheFile.open(QFile::ReadOnly))
-    {
+    if (cacheFile.open(QFile::ReadOnly)) {
         QDataStream stream(&cacheFile);
         CacheHeader cacheHeader;
         stream >> cacheHeader;
-        if (cacheHeader.isValid(expectedCacheHeaderRevision))
-        {
+        if (cacheHeader.isValid(expectedCacheHeaderRevision)) {
             stream >> map;
             return true;
-        }
-        else
-        {
+        } else {
             qCritical() << "Cache header is not valid in " << fileName;
         }
     }
@@ -372,18 +343,14 @@ bool WebIpToLocationResolver::populateQMapFromFile(const QString &fileName, QMap
 {
     map.clear();
     QFile cacheFile(cacheDir.absoluteFilePath(fileName));
-    if (cacheFile.open(QFile::ReadOnly))
-    {
+    if (cacheFile.open(QFile::ReadOnly)) {
         QDataStream stream(&cacheFile);
         CacheHeader cacheHeader;
         stream >> cacheHeader;
-        if (cacheHeader.isValid(expectedCacheHeaderRevision))
-        {
+        if (cacheHeader.isValid(expectedCacheHeaderRevision)) {
             stream >> map;
             return true;
-        }
-        else
-        {
+        } else {
             qCritical() << "Cache header is not valid in " << fileName;
         }
     }
@@ -395,17 +362,14 @@ void WebIpToLocationResolver::loadOldCacheContent()
     // load cache content from the old 'cache.bin' file. This code will be delete in future versions
     QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
     QFile cacheFile(cacheDir.absoluteFilePath("cache.bin"));
-    if (cacheFile.open(QFile::ReadOnly))
-    {
+    if (cacheFile.open(QFile::ReadOnly)) {
         QTextStream inputStream(&cacheFile);
         while (!inputStream.atEnd())
         {
             QString line = inputStream.readLine();
-            if (!line.isNull() && !line.isEmpty())
-            {
+            if (!line.isNull() && !line.isEmpty()) {
                 QStringList parts = line.split(";");
-                if (!parts.isEmpty())
-                {
+                if (!parts.isEmpty()) {
                     QString ip = parts.at(0);
                     QString countryName = (parts.size() >= 1) ? parts.at(1) : "";
                     QString countryCode = (parts.size() >= 2) ? parts.at(2) : "";

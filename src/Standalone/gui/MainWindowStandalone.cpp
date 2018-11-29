@@ -220,8 +220,7 @@ void MainWindowStandalone::toggleFullScreen()
 }
 
 // sanitize the input selection for each loaded subchannel
-void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *subChannelView,
-                                                             const SubChannel &subChannel)
+void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, const SubChannel &subChannel)
 {
     int trackID = subChannelView->getInputIndex();
     if (subChannel.isMidi()) {
@@ -253,7 +252,8 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
     LocalTrackViewStandalone *subChannelView, const SubChannel &subChannel)
 {
     // create the plugins list
-    for (const auto &plugin : subChannel.getPlugins()) {
+    for (const auto &plugin : subChannel.getPlugins())
+    {
         auto category = static_cast<audio::PluginDescriptor::Category>(plugin.category);
 
         audio::PluginDescriptor descriptor(plugin.name, category, plugin.manufacturer, plugin.path);
@@ -263,10 +263,12 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
             auto pluginInstance
                 = controller->addPlugin(inputTrackIndex, pluginSlotIndex, descriptor);
             if (pluginInstance) {
-                try {
+                try
+                {
                     pluginInstance->restoreFromSerializedData(plugin.data);
                 }
-                catch (...) {
+                catch (...)
+                {
                     qWarning() << "Exception restoring " << pluginInstance->getName();
                 }
                 subChannelView->addPlugin(pluginInstance, pluginSlotIndex, plugin.bypassed);
@@ -278,8 +280,7 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
     }
 }
 
-void MainWindowStandalone::initializeLocalSubChannel(LocalTrackView *subChannelView,
-                                                     const SubChannel &subChannel)
+void MainWindowStandalone::initializeLocalSubChannel(LocalTrackView *subChannelView, const SubChannel &subChannel)
 {
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
@@ -302,7 +303,8 @@ LocalTrackGroupViewStandalone *MainWindowStandalone::createLocalTrackGroupView(i
 QList<persistence::Plugin> buildPersistentPluginList(QList<const audio::Plugin *> trackPlugins)
 {
     QList<persistence::Plugin> persistentPlugins;
-    for (auto p : trackPlugins) {
+    for (auto p : trackPlugins)
+    {
         QByteArray serializedData = p->getSerializedData();
         persistence::Plugin plugin(p->getDescriptor(), p->isBypassed(), serializedData);
         persistentPlugins.append(plugin);
@@ -322,7 +324,8 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
     Q_ASSERT(groups.size() == baseSettings.channels.size());
 
     int channelID = 0;
-    for (const Channel &channel : baseSettings.channels) {
+    for (const Channel &channel : baseSettings.channels)
+    {
         LocalTrackGroupViewStandalone *trackGroupView = groups.at(channelID++);
         if (!trackGroupView)
             continue;
@@ -331,7 +334,8 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
         int subChannelID = 0;
         QList<LocalTrackViewStandalone *> trackViews
             = trackGroupView->getTracks<LocalTrackViewStandalone *>();
-        for (SubChannel subchannel : channel.subChannels) {
+        for (SubChannel subchannel : channel.subChannels)
+        {
             SubChannel newSubChannel = subchannel;
             LocalTrackViewStandalone *trackView = trackViews.at(subChannelID);
             if (trackView)
@@ -346,8 +350,7 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
     return settings;
 }
 
-NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(const login::RoomInfo &roomInfo,
-                                                           MainController *mainController)
+NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(const login::RoomInfo &roomInfo, MainController *mainController)
 {
     return new NinjamRoomWindow(this, roomInfo, mainController);
 }
@@ -465,9 +468,8 @@ void MainWindowStandalone::initializePluginFinder()
     }
 }
 
-void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus,
-                                                int audioInputDevice, int audioOutputDevice,
-                                                int firstIn, int lastIn, int firstOut, int lastOut)
+void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus, int audioInputDevice, int audioOutputDevice, int firstIn, int lastIn,
+                                                int firstOut, int lastOut)
 {
     qDebug(jtGUI) << "Setting global preferences ...";
 

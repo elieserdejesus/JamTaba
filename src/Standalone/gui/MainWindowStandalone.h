@@ -4,8 +4,9 @@
 #include "gui/MainWindow.h"
 #include "LocalTrackGroupViewStandalone.h" // necessary to return covariant type
 
-namespace controller {
-class MainControllerStandalone;
+namespace controller
+{
+    class MainControllerStandalone;
 }
 
 class LocalTrackView;
@@ -44,18 +45,15 @@ protected:
 
     LocalTrackGroupViewStandalone *createLocalTrackGroupView(int channelGroupIndex) override;
 
-    void initializeLocalSubChannel(LocalTrackView *subChannelView,
-                                   const SubChannel &subChannel) override;
+    void initializeLocalSubChannel(LocalTrackView *subChannelView, const SubChannel &subChannel) override;
 
-    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView,
-                                           const SubChannel &subChannel);
+    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const SubChannel &subChannel);
 
     PreferencesDialog *createPreferencesDialog() override;
 
 protected slots: // TODO change to private slots?
 
-    void setGlobalPreferences(const QList<bool> &, int audioInputDevice, int audioOutputDevice,
-                              int firstIn, int lastIn, int firstOut, int lastOut);
+    void setGlobalPreferences(const QList<bool> &, int audioInputDevice, int audioOutputDevice, int firstIn, int lastIn, int firstOut, int lastOut);
 
     // plugin finder
     void showPluginScanDialog();
@@ -83,8 +81,7 @@ private:
 
     bool midiDeviceIsValid(int deviceIndex) const;
 
-    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView,
-                                           const persistence::SubChannel &subChannel);
+    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, const persistence::SubChannel &subChannel);
 
     bool fullScreenViewMode;
 
