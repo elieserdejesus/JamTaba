@@ -4,8 +4,9 @@
 #include "gui/MainWindow.h"
 #include "LocalTrackGroupViewStandalone.h" // necessary to return covariant type
 
-namespace controller {
-class MainControllerStandalone;
+namespace controller
+{
+    class MainControllerStandalone;
 }
 
 class LocalTrackView;
@@ -30,7 +31,7 @@ public:
 
     void initialize() override;
 
-    MainControllerStandalone * getMainController() const override
+    MainControllerStandalone *getMainController() const override
     {
         return controller;
     }
@@ -52,8 +53,7 @@ protected:
 
 protected slots: // TODO change to private slots?
 
-    void setGlobalPreferences(const QList<bool> &, int audioInputDevice, int audioOutputDevice,
-                              int firstIn, int lastIn, int firstOut, int lastOut);
+    void setGlobalPreferences(const QList<bool> &, int audioInputDevice, int audioOutputDevice, int firstIn, int lastIn, int firstOut, int lastOut);
 
     // plugin finder
     void showPluginScanDialog();

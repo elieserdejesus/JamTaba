@@ -14,7 +14,6 @@ Location::Location() :
     longitude(-200),
     city("UNKNOWN")
 {
-
 }
 
 bool Location::isUnknown() const
@@ -22,8 +21,7 @@ bool Location::isUnknown() const
     return countryName == "UNKNOWN" && countryCode == "UNKNOWN";
 }
 
-Location::Location(const QString &country, const QString &countryCode, double latitude,
-                   double longitude, const QString &city) :
+Location::Location(const QString &country, const QString &countryCode, double latitude, double longitude, const QString &city) :
     countryName(sanitize(country)),
     countryCode(sanitize(countryCode)),
     latitude(latitude),

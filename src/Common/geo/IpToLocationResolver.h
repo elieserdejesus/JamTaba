@@ -4,79 +4,76 @@
 #include <QString>
 #include <QObject>
 
-namespace geo {
-
-class Location
+namespace geo
 {
+    class Location
+    {
+    public:
+        Location(const QString &countryName, const QString &countryCode, double latitude = -200, double longitude = -200, const QString &city = "UNKNOWN");
+        Location();
 
-public:
-    Location(const QString &countryName, const QString &countryCode, double latitude = -200,
-             double longitude = -200, const QString &city = "UNKNOWN");
-    Location();
+        double getLatitude() const;
+        double getLongitude() const;
 
-    double getLatitude() const;
-    double getLongitude() const;
+        QString getCountryName() const;
+        QString getCountryCode() const;
 
-    QString getCountryName() const;
-    QString getCountryCode() const;
+        QString getCity() const;
 
-    QString getCity() const;
+        bool isUnknown() const;
 
-    bool isUnknown() const;
+    private:
+        QString countryName;
+        QString countryCode;
+        QString city;
+        double latitude;
+        double longitude;
 
-private:
-    QString countryName;
-    QString countryCode;
-    QString city;
-    double latitude;
-    double longitude;
+        static QString sanitize(const QString &inputString);
+    };
 
-    static QString sanitize(const QString &inputString);
-};
+    inline double Location::getLatitude() const
+    {
+        return latitude;
+    }
 
-inline double Location::getLatitude() const
-{
-    return latitude;
-}
+    inline double Location::getLongitude() const
+    {
+        return longitude;
+    }
 
-inline double Location::getLongitude() const
-{
-    return longitude;
-}
+    inline QString Location::getCountryName() const
+    {
+        return countryName;
+    }
 
-inline QString Location::getCountryName() const
-{
-    return countryName;
-}
+    inline QString Location::getCountryCode() const
+    {
+        return countryCode;
+    }
 
-inline QString Location::getCountryCode() const
-{
-    return countryCode;
-}
+    inline QString Location::getCity() const
+    {
+        return city;
+    }
 
-inline QString Location::getCity() const
-{
-    return city;
-}
+    class IpToLocationResolver : public QObject
+    {
+        Q_OBJECT
 
+    public:
+        virtual Location resolve(const QString &ip, const QString &languageCode) = 0;
+        virtual ~IpToLocationResolver();
 
-class IpToLocationResolver : public QObject
-{
-    Q_OBJECT
+    signals:
+        void ipResolved(const QString &ip);
+    };
 
-public:
-    virtual Location resolve(const QString &ip, const QString &languageCode) = 0;
-    virtual ~IpToLocationResolver();
-
-signals:
-    void ipResolved(const QString &ip);
-};
-
-class NullIpToLocationResolver : public IpToLocationResolver
-{
-public:
-    Location resolve(const QString &ip, const QString &languageCode) override;
-};
+    class NullIpToLocationResolver : public IpToLocationResolver
+    {
+    public:
+        Location resolve(const QString &ip, const QString &languageCode) override;
+    };
 }
 
 #endif // IPTOCOUNTRYRESOLVER_H

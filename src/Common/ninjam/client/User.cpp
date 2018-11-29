@@ -34,8 +34,8 @@ QString ninjam::client::maskIpInUserFullName(const QString &userFullName)
         return userFullName;
 
     return QString("%1@%2")
-            .arg(name)
-            .arg(maskIP(ip));
+           .arg(name)
+           .arg(maskIP(ip));
 }
 
 QString ninjam::client::maskIP(const QString &ip)
@@ -58,9 +58,7 @@ User::User(const QString &fullName) :
     fullName(fullName),
     name(ninjam::client::extractUserName(fullName)),
     ip(ninjam::client::extractUserIP(fullName))
-
 {
-
 }
 
 User::~User()
