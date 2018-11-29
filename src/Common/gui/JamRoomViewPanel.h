@@ -35,7 +35,7 @@ class JamRoomViewPanel : public QFrame
 
 public:
     JamRoomViewPanel(const login::RoomInfo &roomInfo, controller::MainController *mainController);
-    ~JamRoomViewPanel();
+    ~JamRoomViewPanel() override;
     void addPeak(float peak);
     void clear(bool resetListenButton);
     void refresh(const login::RoomInfo &roomInfo);
