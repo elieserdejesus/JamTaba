@@ -213,8 +213,7 @@ void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int r
         lang = "en";
 
     // URL FORMAT: i.e. http://api.ipapi.com/{ip}?access_key={key}&language={lang}
-    switch (retryCount)
-    {
+    switch (retryCount) {
     case 0:
         request.setUrl(QUrl(QString("%1/%2?access_key=%3&language=%4")
                             .arg(serviceUrl, ip, accessKey, lang)));

@@ -131,8 +131,7 @@ bool MainController::userIsBlockedInChat(const QString &userFullName) const
 
 void MainController::setSampleRate(int newSampleRate)
 {
-    for (auto node : tracksNodes.values())
-    {
+    for (auto node : tracksNodes.values()) {
         int rmsWindowSize = audio::SamplesBuffer::computeRmsWindowSize(newSampleRate);
         node->setRmsWindowSize(rmsWindowSize);
     }
@@ -164,8 +163,7 @@ void MainController::setEncodingQuality(float newEncodingQuality)
 
 void MainController::finishUploads()
 {
-    for (int channelIndex : audioIntervalsToUpload.keys())
-    {
+    for (int channelIndex : audioIntervalsToUpload.keys()) {
         auto &audioInterval = audioIntervalsToUpload[channelIndex];
         ninjamService->sendIntervalPart(audioInterval.getGUID(), QByteArray(), true);
     }
@@ -527,8 +525,7 @@ QMap<QString, QString> MainController::getJamRecoders() const
 void MainController::storeJamRecorderStatus(const QString &writerId, bool status)
 {
     if (settings.isSaveMultiTrackActivated()) { // recording is active and changing the jamRecorder status
-        for (auto jamRecorder : jamRecorders)
-        {
+        for (auto jamRecorder : jamRecorders) {
             if (jamRecorder->getWriterId() == writerId) {
                 if (status) {
                     if (isPlayingInNinjamRoom()) {
@@ -893,8 +890,7 @@ void MainController::setFullScreenView(bool fullScreen)
 
 void MainController::setAllTracksActivation(bool activated)
 {
-    for (auto track : tracksNodes)
-    {
+    for (auto track : tracksNodes) {
         if (activated)
             track->activate();
         else
@@ -1125,8 +1121,7 @@ QList<recorder::JamRecorder *> MainController::getActiveRecorders() const
 {
     QList<recorder::JamRecorder *> activeRecorders;
 
-    for (auto jamRecorder : jamRecorders)
-    {
+    for (auto jamRecorder : jamRecorders) {
         if (settings.isJamRecorderActivated(jamRecorder->getWriterId()))
             activeRecorders.append(jamRecorder);
     }
@@ -1140,8 +1135,7 @@ QString MainController::getVersionFromLogContent()
     QStringList logContent = configurator->getPreviousLogContent();
 
     static const QString START_LINE("Starting Jamtaba ");
-    for (const QString &logLine : logContent)
-    {
+    for (const QString &logLine : logContent) {
         if (logLine.contains(START_LINE))
             return logLine.mid(logLine.indexOf(START_LINE) + START_LINE.length(), 6).trimmed();
     }
@@ -1167,8 +1161,7 @@ bool MainController::crashedInLastExecution()
     auto configurator = Configurator::getInstance();
     QStringList logContent = configurator->getPreviousLogContent();
     if (!logContent.isEmpty()) {
-        for (const QString &logLine : logContent)
-        {
+        for (const QString &logLine : logContent) {
             if (logLine.contains(MainController::CRASH_FLAG_STRING))
                 return false;
         }

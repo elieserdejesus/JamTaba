@@ -252,8 +252,7 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
     LocalTrackViewStandalone *subChannelView, const SubChannel &subChannel)
 {
     // create the plugins list
-    for (const auto &plugin : subChannel.getPlugins())
-    {
+    for (const auto &plugin : subChannel.getPlugins()) {
         auto category = static_cast<audio::PluginDescriptor::Category>(plugin.category);
 
         audio::PluginDescriptor descriptor(plugin.name, category, plugin.manufacturer, plugin.path);
@@ -303,8 +302,7 @@ LocalTrackGroupViewStandalone *MainWindowStandalone::createLocalTrackGroupView(i
 QList<persistence::Plugin> buildPersistentPluginList(QList<const audio::Plugin *> trackPlugins)
 {
     QList<persistence::Plugin> persistentPlugins;
-    for (auto p : trackPlugins)
-    {
+    for (auto p : trackPlugins) {
         QByteArray serializedData = p->getSerializedData();
         persistence::Plugin plugin(p->getDescriptor(), p->isBypassed(), serializedData);
         persistentPlugins.append(plugin);
@@ -324,8 +322,7 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
     Q_ASSERT(groups.size() == baseSettings.channels.size());
 
     int channelID = 0;
-    for (const Channel &channel : baseSettings.channels)
-    {
+    for (const Channel &channel : baseSettings.channels) {
         LocalTrackGroupViewStandalone *trackGroupView = groups.at(channelID++);
         if (!trackGroupView)
             continue;
@@ -334,8 +331,7 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
         int subChannelID = 0;
         QList<LocalTrackViewStandalone *> trackViews
             = trackGroupView->getTracks<LocalTrackViewStandalone *>();
-        for (SubChannel subchannel : channel.subChannels)
-        {
+        for (SubChannel subchannel : channel.subChannels) {
             SubChannel newSubChannel = subchannel;
             LocalTrackViewStandalone *trackView = trackViews.at(subChannelID);
             if (trackView)
