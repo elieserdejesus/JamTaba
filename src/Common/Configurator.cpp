@@ -257,16 +257,14 @@ void Configurator::exportThemeFile(const QString &themeName, const QFileInfo &so
         }
 
         if (QFile::copy(source.absoluteFilePath(), destination.absoluteFilePath())) {
-            qDebug() << "\tExporting " << themeName << source.fileName() << " to "
-                     << destination.absolutePath();
+            qDebug() << "\tExporting " << themeName << source.fileName() << " to " << destination.absolutePath();
 
             bool permissionSetted = QFile(destination.absoluteFilePath()).setPermissions(
                 QFile::ReadOwner | QFile::WriteOwner);
             if (!permissionSetted)
                 qCritical() << "Can't set permission in file " << destination.absoluteFilePath();
         } else {
-            qCritical() << "Can't copy " << source.absoluteFilePath() << " to "
-                        << destination.absoluteFilePath();
+            qCritical() << "Can't copy " << source.absoluteFilePath() << " to " << destination.absoluteFilePath();
         }
     }
 }
@@ -390,10 +388,9 @@ void Configurator::exportLogIniFile()
         QFile logFile(":/" + logConfigFileName);
         bool result = logFile.copy(logConfigFilePath);
         if (result)
-            qDebug(jtConfigurator) << "Log Config file copied in :"<<logConfigFilePath;
+            qDebug(jtConfigurator) << "Log Config file copied in :" << logConfigFilePath;
         else
-            qDebug(jtConfigurator) << "FAILED to copy the log config file in :"
-                                   << logConfigFilePath << "Error:" << logFile.errorString();
+            qDebug(jtConfigurator) << "FAILED to copy the log config file in :" << logConfigFilePath << "Error:" << logFile.errorString();
     }
 }
 
