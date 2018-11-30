@@ -303,7 +303,7 @@ public:
     void setPublicChatActivated(bool activated);
 
 signals:
-    void ipResolved(const QString &ip);
+    void ipResolved(const QString &ip, const geo::Location &location);
     void themeChanged();
     void userBlockedInChat(const QString &userName);
     void userUnblockedInChat(const QString &userName);
