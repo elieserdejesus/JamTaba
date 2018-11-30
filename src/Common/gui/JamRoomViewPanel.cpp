@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QButtonGroup>
+#include <QStyle>
 
 #include "MainController.h"
 #include "ninjam/client/User.h"
@@ -10,7 +11,7 @@
 #include "ninjam/client/ServerInfo.h"
 #include "widgets/MapWidget.h"
 #include "widgets/MapMarker.h"
-#include <QStyle>
+#include "geo/Location.h"
 
 JamRoomViewPanel::JamRoomViewPanel(const login::RoomInfo &roomInfo, controller::MainController *mainController) :
     QFrame(nullptr),
@@ -173,9 +174,8 @@ void JamRoomViewPanel::updateMap()
                 if (userLocation.isUnknown())
                     continue; // skip invalid locations
 
-                QPointF latLong(userLocation.getLatitude(), userLocation.getLongitude());
                 QPixmap flag(":/flags/flags/" + userLocation.getCountryCode().toLower() + ".png");
-                MapMarker marker(user.getName(), userLocation.getCountryName(), latLong, flag.toImage());
+                MapMarker marker(user.getName(), userLocation.getCountryName(), userLocation.getLatLong(), flag.toImage());
                 newMarkers.append(marker);
             }
         }

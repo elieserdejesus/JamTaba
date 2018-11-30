@@ -16,6 +16,7 @@
 #include "audio/Resampler.h"
 #include "audio/SamplesBufferRecorder.h"
 #include "audio/vorbis/VorbisEncoder.h"
+#include "geo/Location.h"
 #include "gui/NinjamRoomWindow.h"
 #include "log/Logging.h"
 #include "MetronomeUtils.h"

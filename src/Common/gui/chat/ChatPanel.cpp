@@ -6,7 +6,9 @@
 #include "gui/TextEditorModifier.h"
 #include "gui/UsersColorsPool.h"
 #include "ninjam/client/User.h"
+#include "gui/IconFactory.h"
 #include "geo/IpToLocationResolver.h"
+#include "geo/Location.h"
 
 #include <QWidget>
 #include <QScrollBar>
@@ -15,7 +17,6 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <QMenu>
-#include "gui/IconFactory.h"
 
 const qint8 ChatPanel::MAX_FONT_OFFSET = 3;
 const qint8 ChatPanel::MIN_FONT_OFFSET = -2;

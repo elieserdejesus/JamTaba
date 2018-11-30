@@ -35,6 +35,7 @@
 #include "loginserver/MainChat.h"
 #include "TextEditorModifier.h"
 #include "widgets/InstrumentsMenu.h"
+#include "geo/Location.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>

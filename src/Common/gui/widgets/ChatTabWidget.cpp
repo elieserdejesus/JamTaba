@@ -11,6 +11,7 @@
 #include "gui/chat/ChatPanel.h"
 #include "gui/UsersColorsPool.h"
 #include "ninjam/client/User.h"
+#include "geo/Location.h"
 
 using controller::MainController;
 

@@ -20,6 +20,7 @@
 #include "gui/ThemeLoader.h"
 #include "log/Logging.h"
 #include "geo/WebIpToLocationResolver.h"
+#include "geo/Location.h"
 
 #include <QBuffer>
 #include <QByteArray>

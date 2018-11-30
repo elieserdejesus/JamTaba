@@ -1,5 +1,6 @@
 #include "NinjamTrackGroupView.h"
 #include "geo/IpToLocationResolver.h"
+#include "geo/Location.h"
 #include "MainController.h"
 #include "NinjamController.h"
 #include "video/FFMpegDemuxer.h"

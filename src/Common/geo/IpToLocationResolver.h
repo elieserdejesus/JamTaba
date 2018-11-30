@@ -6,56 +6,7 @@
 
 namespace geo
 {
-    class Location
-    {
-    public:
-        Location(const QString &countryName, const QString &countryCode, double latitude = -200, double longitude = -200, const QString &city = "UNKNOWN");
-        Location();
-
-        double getLatitude() const;
-        double getLongitude() const;
-
-        QString getCountryName() const;
-        QString getCountryCode() const;
-
-        QString getCity() const;
-
-        bool isUnknown() const;
-
-    private:
-        QString countryName;
-        QString countryCode;
-        QString city;
-        double latitude;
-        double longitude;
-
-        static QString sanitize(const QString &inputString);
-    };
-
-    inline double Location::getLatitude() const
-    {
-        return latitude;
-    }
-
-    inline double Location::getLongitude() const
-    {
-        return longitude;
-    }
-
-    inline QString Location::getCountryName() const
-    {
-        return countryName;
-    }
-
-    inline QString Location::getCountryCode() const
-    {
-        return countryCode;
-    }
-
-    inline QString Location::getCity() const
-    {
-        return city;
-    }
+    class Location;
 
     class IpToLocationResolver : public QObject
     {
@@ -66,7 +17,7 @@ namespace geo
         virtual ~IpToLocationResolver();
 
     signals:
-        void ipResolved(const QString &ip);
+        void ipResolved(const QString &ip, const geo::Location &location);
     };
 
     class NullIpToLocationResolver : public IpToLocationResolver
