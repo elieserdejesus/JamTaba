@@ -17,7 +17,7 @@ namespace geo
 
     public:
         explicit WebIpToLocationResolver(const QDir &cacheDir);
-        ~WebIpToLocationResolver();
+        ~WebIpToLocationResolver() override;
         geo::Location resolve(const QString &ip, const QString &languageCode) override;
 
     private:
@@ -54,6 +54,8 @@ namespace geo
         QString currentLanguage;
 
         QDir cacheDir;
+
+        QSet<QString> pendingRequests;
 
         static const QString COUNTRY_CODES_FILE;
         static const QString COUNTRY_NAMES_FILE_PREFIX;

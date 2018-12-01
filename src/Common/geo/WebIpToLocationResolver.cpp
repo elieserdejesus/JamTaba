@@ -33,12 +33,10 @@ const quint32 WebIpToLocationResolver::LAT_LONG_CACHE_REVISION = 1;
 const int MaxServersAlternatives = 2;
 
 WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir) :
-    currentLanguage("en"),
-    // using english as default language
+    currentLanguage("en"), // using english as default language
     cacheDir(cacheDir)
 {
-    QObject::connect(&httpClient, SIGNAL(finished(QNetworkReply*)), this,
-                     SLOT(replyFinished(QNetworkReply*)));
+    connect(&httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 
     loadCountryCodesFromFile();
     loadLatLongsFromFile();
@@ -147,6 +145,7 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
                 auto code = error.contains("code") ? error["code"].toInt() : -1;
                 if (retryCount < MaxServersAlternatives) {
                     qDebug() << "Error " << code << " received, trying alternative server ...";
+                    pendingRequests.clear(); // clear pending requests before try another API
                     requestDataFromWebService(ip, retryCount + 1);
                 } else {
                     qCritical() << "All servers failed, no more alternatives available";
@@ -178,6 +177,8 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
             qCritical() << "The json 'location' object not contains 'latidude' or 'longitude' entries";
         }
 
+        pendingRequests.remove(ip);
+
         emit ipResolved(ip);
     } else {
         qCDebug(jtIpToLocation) << "error requesting " << ip << ". Returning an empty location!";
@@ -190,6 +191,7 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
 void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int retryCount)
 {
     qCDebug(jtIpToLocation) << "requesting ip " << ip;
+    pendingRequests.insert(ip);
 
     QNetworkRequest request;
 
@@ -266,6 +268,8 @@ geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString 
         saveCountryNamesToFile(); // save cached country names before change the language
         currentLanguage = code;
         loadCountryNamesFromFile(currentLanguage); // update the country names QMap
+
+        pendingRequests.clear();
     }
 
     if (countryCodesCache.contains(ip)) {
@@ -280,7 +284,7 @@ geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString 
         }
     }
 
-    if (!ip.isEmpty())
+    if (!ip.isEmpty() && !pendingRequests.contains(ip)) // avoid request pending IPs
         requestDataFromWebService(ip, 0);
     return Location();// empty location, the next request for same ip probabily return from cache
 }
