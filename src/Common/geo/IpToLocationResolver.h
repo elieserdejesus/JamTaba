@@ -17,7 +17,7 @@ namespace geo
         virtual ~IpToLocationResolver();
 
     signals:
-        void ipResolved(const QString &ip, const geo::Location &location);
+        void ipResolved(const QString &ip, const geo::Location &location, const QString &languageCode);
     };
 
     class NullIpToLocationResolver : public IpToLocationResolver

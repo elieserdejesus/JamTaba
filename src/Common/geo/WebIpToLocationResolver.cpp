@@ -25,8 +25,7 @@ using geo::WebIpToLocationResolver;
 // Alternative servers private implementation strategies
 const int MaxServersAlternatives = 2;
 
-WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir) :
-    cache(cacheDir)
+WebIpToLocationResolver::WebIpToLocationResolver()
 {
     connect(&httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 }
@@ -42,9 +41,6 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
     QString language = reply->property("language").toString();
     int retryCount = reply->property("retryCount").toInt();
 
-    if (language != cache.getCurrentLanguage())
-        return; // discard the received data if the language was changed since the last request.
-
     if (reply->error() == QNetworkReply::NoError) {
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
         if (doc.isEmpty() || !doc.isObject()) {
@@ -59,7 +55,7 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
                 auto code = error.contains("code") ? error["code"].toInt() : -1;
                 if (retryCount < MaxServersAlternatives) {
                     qDebug() << "Error " << code << " received, trying alternative server ...";
-                    requestDataFromWebService(ip, retryCount + 1);
+                    requestDataFromWebService(ip, language, retryCount + 1);
                 } else {
                     qCritical() << "All servers failed, no more alternatives available";
                 }
@@ -90,8 +86,7 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
         }
 
         Location location(countryName, countryCode, latitude, longitude);
-        cache.add(ip, location);
-        emit ipResolved(ip, location);
+        emit ipResolved(ip, location, language);
     } else {
         qCDebug(jtIpToLocation) << "error requesting " << ip << ". Returning an empty location!";
     }
@@ -100,9 +95,9 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
 }
 
 // At moment the current api is http://api.ipapi.com/ (the replacement for Nekudo api). Another option is https://freegeoip.net/json/
-void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int retryCount)
+void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, const QString &currentLanguage, int retryCount)
 {
-    qCDebug(jtIpToLocation) << "requesting ip " << ip;
+    qCDebug(jtIpToLocation) << "requesting ip " << ip << " lang:" << currentLanguage << " retry count:" << retryCount;
 
     QNetworkRequest request;
 
@@ -121,7 +116,7 @@ void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int r
     QString alternativeServiceUrl1 = "http://api.ipstack.com/";
     QString alternativeAccessKey1(ipStackKey);
 
-    QString lang = sanitizeLanguageCode(cache.getCurrentLanguage());
+    QString lang = sanitizeLanguageCode(currentLanguage);
     if (!canTranslateCountryName(lang))
         lang = "en";
 
@@ -138,12 +133,11 @@ void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int r
     }
 
     QNetworkReply *reply = httpClient.get(request);
-    reply->setProperty("ip", QVariant(ip));
-    reply->setProperty("language", QVariant(cache.getCurrentLanguage()));
+    reply->setProperty("ip", ip);
+    reply->setProperty("language", currentLanguage);
     reply->setProperty("retryCount", retryCount);
 
-    QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this,
-                     SLOT(replyError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(replyError(QNetworkReply::NetworkError)));
 }
 
 bool WebIpToLocationResolver::canTranslateCountryName(const QString &currentLanguage)
@@ -173,15 +167,7 @@ QString WebIpToLocationResolver::sanitizeLanguageCode(const QString &languageCod
 
 geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString &languageCode)
 {
-    // check for language changes
-    QString code = sanitizeLanguageCode(languageCode);
-    if (code != cache.getCurrentLanguage())
-        cache.setCurrentLanguage(code);
+    requestDataFromWebService(ip, sanitizeLanguageCode(languageCode), 0);
 
-    auto location = cache.getLocation(ip);
-
-    if (!ip.isEmpty() && location.isUnknown()) // request from API if location is unknown (not cached yet)
-        requestDataFromWebService(ip, 0);
-
-    return location;// unknown or cached location
+    return geo::Location(); // unknown location
 }

@@ -116,7 +116,7 @@ void JamRoomViewPanel::createMapWidgets()
     ui->content->layout()->addWidget(map);
 }
 
-void JamRoomViewPanel::updateUserLocation(const QString &userIP)
+void JamRoomViewPanel::updateUserLocation(const QString &userIP, const geo::Location &location)
 {
     Q_UNUSED(userIP)
     for (const auto &user : roomInfo.getUsers()) {

@@ -55,10 +55,10 @@ MainController::MainController(const Settings &settings) :
     lastFrameTimeStamp(0),
     emojiManager(":/emoji/emoji.json", ":/emoji/icons")
 {
-    QDir cacheDir = Configurator::getInstance()->getCacheDir();
-    ipToLocationResolver.reset(new geo::WebIpToLocationResolver(cacheDir));
+    geoLocationCache.reset(new geo::GeoLocationCache(Configurator::getInstance()->getCacheDir()));
+    ipToLocationResolver.reset(new geo::WebIpToLocationResolver());
 
-    connect(ipToLocationResolver.data(), &geo::IpToLocationResolver::ipResolved, this, &MainController::ipResolved);
+    connect(ipToLocationResolver.data(), &geo::IpToLocationResolver::ipResolved, this, &MainController::handleResolvedIp);
 
     // Register known JamRecorders here:
     jamRecorders.append(new recorder::JamRecorder(new recorder::ReaperProjectGenerator()));
@@ -68,6 +68,20 @@ MainController::MainController(const Settings &settings) :
 
     for (auto emojiCode: settings.getRecentEmojis())
         emojiManager.addRecent(emojiCode);
+}
+
+void MainController::handleResolvedIp(const QString &ip, const geo::Location &location, const QString &languageCode)
+{
+    if (languageCode != getTranslationLanguage()) {
+        qDebug() << QString("Skipping resolved IP in a different language (%1) then selected by the user (%2)")
+                    .arg(languageCode)
+                    .arg(getTranslationLanguage());
+        return;
+    }
+
+    geoLocationCache->add(ip, location);
+
+    emit ipResolved(ip, location);
 }
 
 void MainController::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
@@ -1074,6 +1088,8 @@ void MainController::stopNinjamController()
 void MainController::setTranslationLanguage(const QString &languageCode)
 {
     settings.setTranslation(languageCode);
+
+    geoLocationCache->setCurrentLanguage(languageCode); // save the cached infos and load the cached data for the new language
 }
 
 QString MainController::getSuggestedUserName()

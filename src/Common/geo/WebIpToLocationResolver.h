@@ -2,7 +2,6 @@
 #define FREEGEOIPTOLOCATIONRESOLVER_H
 
 #include "IpToLocationResolver.h"
-#include "GeoLocationCache.h"
 
 #include <QMap>
 #include <QLoggingCategory>
@@ -18,7 +17,7 @@ namespace geo
         Q_OBJECT
 
     public:
-        explicit WebIpToLocationResolver(const QDir &cacheDir);
+        explicit WebIpToLocationResolver();
         ~WebIpToLocationResolver() override;
         geo::Location resolve(const QString &ip, const QString &languageCode) override;
 
@@ -26,13 +25,11 @@ namespace geo
 
         QNetworkAccessManager httpClient;
 
-        void requestDataFromWebService(const QString &ip, int retryCount);
+        void requestDataFromWebService(const QString &ip, const QString &currentLanguage, int retryCount);
 
         static QString sanitizeLanguageCode(const QString &languageCode);
 
         static bool canTranslateCountryName(const QString &currentLanguage);
-
-        GeoLocationCache cache;
 
     private slots:
         void replyFinished(QNetworkReply *);

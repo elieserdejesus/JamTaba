@@ -6,6 +6,7 @@
 
 #include "UploadIntervalData.h"
 #include "geo/IpToLocationResolver.h"
+#include "geo/GeoLocationCache.h"
 #include "loginserver/LoginService.h"
 #include "persistence/Settings.h"
 #include "persistence/UsersDataCache.h"
@@ -61,6 +62,7 @@ using audio::AudioMixer;
 using login::RoomInfo;
 using login::LoginService;
 using recorder::JamRecorder;
+using geo::GeoLocationCache;
 
 class MainController : public QObject
 {
@@ -352,6 +354,8 @@ protected:
 
     QMutex mutex;
 
+    QScopedPointer<GeoLocationCache> geoLocationCache;
+
     virtual void setupNinjamControllerSignals();
 
     virtual void setCSS(const QString &css) = 0;
@@ -429,6 +433,9 @@ protected slots:
     virtual void handleNewNinjamInterval();
 
     void requestCameraFrame(int intervalPosition);
+
+private slots:
+    void handleResolvedIp(const QString &ip, const geo::Location &location, const QString &languageCode);
 
 };
 

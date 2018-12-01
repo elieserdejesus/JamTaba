@@ -57,7 +57,7 @@ protected:
 private slots:
     void toggleRoomListening();
     void enterInTheRoom();
-    void updateUserLocation(const QString &userIP);
+    void updateUserLocation(const QString &userIP, const geo::Location &location);
 
 private:
     Ui::JamRoomViewPanel *ui;
