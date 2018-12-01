@@ -427,7 +427,7 @@ geo::Location MainController::getGeoLocation(const QString &ip)
     if (!sanitizedIp.isEmpty()) // some servers may not return an ip for user, dont concatenate to ".128" in that case
         sanitizedIp.replace(ninjam::client::IP_MASK, ".128"); // replace .x (mask) with .128 to generate a valid IP
 
-    return ipToLocationResolver->resolve(sanitizedIp, getTranslationLanguage());
+    return geoLocationCache->getLocation(sanitizedIp);
 }
 
 void MainController::mixGroupedInputs(int groupIndex, audio::SamplesBuffer &out)
