@@ -171,8 +171,6 @@ void JamRoomViewPanel::updateMap()
         for (const auto &user : userInfos) {
             if (!userIsBot(user)) {
                 auto userLocation = mainController->getGeoLocation(user.getIp());
-                if (userLocation.isUnknown())
-                    continue; // skip invalid locations
 
                 QPixmap flag(":/flags/flags/" + userLocation.getCountryCode().toLower() + ".png");
                 MapMarker marker(user.getName(), userLocation.getCountryName(), userLocation.getLatLong(), flag.toImage());

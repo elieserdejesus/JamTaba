@@ -220,6 +220,9 @@ void MapWidget::setMarkers(const QList<MapMarker> &newMarkers)
 
 void MapWidget::setCenter(QPointF latLong)
 {
+    if (latLong == QPointF(-200, -200)) // avoid center in invalid (unknown) lat long
+        return;
+
     this->latitude = latLong.x();
     this->longitude = latLong.y();
     invalidate();
@@ -364,7 +367,12 @@ QPointF MapWidget::getMarkerScreenCoordinate(const MapMarker &marker) const
     qreal vCenter = height()/2.0;
 
     QPointF latLong = marker.getLatLong();
-    QPointF tile = tileForCoordinate(latLong.x(), latLong.y(), ZOOM);
+
+    QPointF tile(0, 0);
+    if (latLong != QPointF(-200, -200))
+        tile = tileForCoordinate(latLong.x(), latLong.y(), ZOOM);
+
+
     qreal x = hCenter - ((center.x() - tile.x()) * TILES_SIZE);
     qreal y = vCenter - ((center.y() - tile.y()) * TILES_SIZE);
     return QPointF(x, y);
@@ -526,11 +534,15 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
 
     painter.setBrush(QBrush(markerTextBackgroundColor));
 
-    // drawing the line connector
-    painter.setPen(markerLineConnectorColor);
-    painter.setClipping(true);
-    painter.setClipRegion(QRegion(rect()).subtracted(markerRect.toRect()));
-    painter.drawLine(markerRect.center(), markerPosition);
+    auto markerPositionIsValid = QRectF(rect()).contains(markerPosition);
+
+     // drawing the line connector
+    if (markerPositionIsValid) {
+        painter.setPen(markerLineConnectorColor);
+        painter.setClipping(true);
+        painter.setClipRegion(QRegion(rect()).subtracted(markerRect.toRect()));
+        painter.drawLine(markerRect.center(), markerPosition);
+    }
 
     // drawing the transparent background
     painter.setClipping(false);
@@ -538,9 +550,11 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.drawRect(markerRect);
 
     // drawing the player marker (the small circle)
-    const static qreal markerSize = 1.6;
-    painter.setBrush(markerColor);
-    painter.drawEllipse(markerPosition, markerSize, markerSize);
+    if (markerPositionIsValid) {
+        const static qreal markerSize = 1.6;
+        painter.setBrush(markerColor);
+        painter.drawEllipse(markerPosition, markerSize, markerSize);
+    }
 
     qreal hOffset = rectPosition.x() + TEXT_MARGIM; // left margin
 
