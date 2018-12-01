@@ -567,22 +567,7 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.setPen(markerTextColor);
     qreal textY = markerRect.center().y() + TEXT_MARGIM + metrics.descent()/2.0;
     painter.drawText(hOffset, textY, playerName);
-    hOffset += playerNameWidth + TEXT_MARGIM * 3;
-
-    // draw the player country name
-    painter.setFont(countryFont);
-    metrics = painter.fontMetrics();
-
-    QColor countryNameColor(markerTextColor);
-    countryNameColor.setAlpha(180); // country name is drawed using some alpha
-    painter.setPen(countryNameColor);
-    QString countryName = marker.getCountryName();
-    painter.drawText(hOffset, textY, countryName);
-
-    hOffset += metrics.width(countryName);
-
-    painter.setFont(font()); // restore the normal font
-    metrics = painter.fontMetrics();
+    hOffset += playerNameWidth + TEXT_MARGIM;// * 3;
 
     // draw the player country flag
     const QImage &image = marker.getFlag();
@@ -611,10 +596,8 @@ QSizeF MapWidget::getMarkerSize(const MapMarker &marker) const
 
     QFontMetrics metrics(font());
     markerWidth += metrics.width(marker.getPlayerName());
-    markerWidth += TEXT_MARGIM  * 3; // space between player and country name
+    markerWidth += TEXT_MARGIM; // space between player and country name
 
-    metrics = QFontMetrics(countryFont);
-    markerWidth += metrics.width(marker.getCountryName());
     markerWidth += TEXT_MARGIM + flag.width();
     markerWidth += TEXT_MARGIM; // right margin
 
