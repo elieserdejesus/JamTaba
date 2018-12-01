@@ -430,6 +430,21 @@ geo::Location MainController::getGeoLocation(const QString &ip)
     return geoLocationCache->getLocation(sanitizedIp);
 }
 
+void MainController::resolveIPs(const QStringList &ips)
+{
+    // resolve only non cached IPs
+    QStringList nonCachedIps;
+
+    for (const auto &ip : ips) {
+        if (!geoLocationCache->isCached(ip)) {
+            nonCachedIps.append(ip);
+        }
+    }
+
+    //TODO call bulk ip loockup here
+    //ipToLocationResolver->resolve()
+}
+
 void MainController::mixGroupedInputs(int groupIndex, audio::SamplesBuffer &out)
 {
     if (groupIndex >= 0 && groupIndex < trackGroups.size())

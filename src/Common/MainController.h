@@ -183,6 +183,7 @@ public:
     bool isStarted() const;
 
     geo::Location getGeoLocation(const QString &ip);
+    void resolveIPs(const QStringList &ips); // translate connected users IPs to geo::Location
 
     LocalInputNode *getInputTrack(int localInputIndex);
     virtual int addInputTrackNode(LocalInputNode *inputTrackNode);

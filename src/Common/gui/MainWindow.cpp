@@ -1187,12 +1187,32 @@ bool MainWindow::canUseTwoColumnLayoutInPublicRooms() const
     return ui.contentTabWidget->width() >= 860;
 }
 
+QStringList MainWindow::getAllConnectedIPs(const QList<login::RoomInfo> &publicRooms) const
+{
+    QStringList ips;
+
+    for (const auto &room : publicRooms) {
+        if (room.getType() == login::RoomTYPE::NINJAM) {
+            for (const auto &user : room.getUsers()) {
+                auto userIP = user.getIp();
+                if (!ips.contains(userIP)) {
+                    ips.append(userIP);
+                }
+            }
+        }
+    }
+
+    return ips;
+}
+
 void MainWindow::refreshPublicRoomsList(const QList<login::RoomInfo> &publicRooms)
 {
     if (publicRooms.isEmpty())
         return;
 
     hideBusyDialog();
+
+    mainController->resolveIPs(getAllConnectedIPs(publicRooms)); // trying to translate IPs to geoLocation
 
     QList<login::RoomInfo> sortedRooms(publicRooms);
     qSort(sortedRooms.begin(), sortedRooms.end(), jamRoomLessThan);

@@ -464,6 +464,8 @@ private:
 
     void setupMainTabCornerWidgets();
 
+    QStringList getAllConnectedIPs(const QList<login::RoomInfo> &publicRooms) const;
+
     static QString buildServerInviteMessage(const QString &serverIP, quint16 serverPort, bool isPrivateServer, bool showPrivateServerIpAndPort);
 
     QScopedPointer<PerformanceMonitor> performanceMonitor; // cpu and memmory usage
