@@ -340,6 +340,16 @@ void MapWidget::drawMapTiles(QPainter &p, const QRect &rect)
     }
 }
 
+void MapWidget::enterEvent(QEvent *)
+{
+    repaint(); // to paint or not the countries legend on mouse hover
+}
+
+void MapWidget::leaveEvent(QEvent *)
+{
+    repaint(); // to paint or not the countries legend on mouse hover
+}
+
 void MapWidget::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
@@ -352,6 +362,58 @@ void MapWidget::paintEvent(QPaintEvent *event)
 
     if (blurActivated) {
         p.fillRect(rect(), QColor(0, 0, 0, 140)); // draw a transparent black layer and create more contrast to show the sound wave
+    }
+
+    if (underMouse()) {
+        drawCountriesLegend(p);
+    }
+}
+
+QList<MapMarker> MapWidget::getUniqueCountryMarkers() const
+{
+    QMap<QString, MapMarker> uniqueMarkers;
+
+    for (const auto &marker : markers) {
+        uniqueMarkers.insert(marker.getCountryName(), marker); // new inserts will replace the old ones
+    }
+
+    return uniqueMarkers.values();
+}
+
+void MapWidget::drawCountriesLegend(QPainter &p)
+{
+    if (markers.isEmpty())
+        return;
+
+    auto uniqueCountryMarkers = getUniqueCountryMarkers(); // if all players are from same country just one legend will be drawed
+
+    auto maxCountryNameWidth = getMaximumCountryNameWidth();
+    auto flagSize = markers.first().getFlag().size();
+
+    auto legendWidth = TEXT_MARGIM + flagSize.width() + TEXT_MARGIM + maxCountryNameWidth + TEXT_MARGIM;
+    auto legendHeight = (flagSize.height() + TEXT_MARGIM) * uniqueCountryMarkers.size() + TEXT_MARGIM;
+
+    QSizeF legendSize(legendWidth, legendHeight);
+    QPointF legendTopLeft(width() - legendSize.width() - TEXT_MARGIM, TEXT_MARGIM);
+    QRectF legendRect(legendTopLeft, legendSize);
+
+    // draw the transparent background
+    p.setPen(Qt::NoPen);
+    p.fillRect(legendRect, markerTextBackgroundColor);
+
+    // draw contry names and flags
+    p.setFont(countryFont);
+    p.setPen(markerTextColor);
+
+    QFontMetricsF metrics(countryFont);
+
+    auto yOffset = legendRect.y() + TEXT_MARGIM;
+    for (const auto &marker : uniqueCountryMarkers) {
+        auto xOffset = legendRect.x() + TEXT_MARGIM;
+        p.drawImage(QPointF(xOffset, yOffset), marker.getFlag());
+        xOffset += flagSize.width() + TEXT_MARGIM;
+        p.drawText(QPointF(xOffset, yOffset + metrics.ascent()), marker.getCountryName());
+        yOffset += flagSize.height() + TEXT_MARGIM;
     }
 }
 
@@ -376,6 +438,21 @@ QPointF MapWidget::getMarkerScreenCoordinate(const MapMarker &marker) const
     qreal x = hCenter - ((center.x() - tile.x()) * TILES_SIZE);
     qreal y = vCenter - ((center.y() - tile.y()) * TILES_SIZE);
     return QPointF(x, y);
+}
+
+int MapWidget::getMaximumCountryNameWidth() const
+{
+    int maxWidth = 0;
+
+    QFontMetrics metrics(countryFont);
+
+    for (const auto &marker : markers) {
+        auto countryNameWidth = metrics.width(marker.getCountryName());
+        if (countryNameWidth > maxWidth)
+            maxWidth = countryNameWidth;
+    }
+
+    return maxWidth;
 }
 
 int MapWidget::getMaximumMarkerWidth()
@@ -567,22 +644,7 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.setPen(markerTextColor);
     qreal textY = markerRect.center().y() + TEXT_MARGIM + metrics.descent()/2.0;
     painter.drawText(hOffset, textY, playerName);
-    hOffset += playerNameWidth + TEXT_MARGIM * 3;
-
-    // draw the player country name
-    painter.setFont(countryFont);
-    metrics = painter.fontMetrics();
-
-    QColor countryNameColor(markerTextColor);
-    countryNameColor.setAlpha(180); // country name is drawed using some alpha
-    painter.setPen(countryNameColor);
-    QString countryName = marker.getCountryName();
-    painter.drawText(hOffset, textY, countryName);
-
-    hOffset += metrics.width(countryName);
-
-    painter.setFont(font()); // restore the normal font
-    metrics = painter.fontMetrics();
+    hOffset += playerNameWidth + TEXT_MARGIM;// * 3;
 
     // draw the player country flag
     const QImage &image = marker.getFlag();
@@ -611,10 +673,8 @@ QSizeF MapWidget::getMarkerSize(const MapMarker &marker) const
 
     QFontMetrics metrics(font());
     markerWidth += metrics.width(marker.getPlayerName());
-    markerWidth += TEXT_MARGIM  * 3; // space between player and country name
+    markerWidth += TEXT_MARGIM; // space between player and country name
 
-    metrics = QFontMetrics(countryFont);
-    markerWidth += metrics.width(marker.getCountryName());
     markerWidth += TEXT_MARGIM + flag.width();
     markerWidth += TEXT_MARGIM; // right margin
 

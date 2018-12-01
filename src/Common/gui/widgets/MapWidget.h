@@ -20,7 +20,7 @@ class MapWidget: public QWidget
     friend struct MapMarkerComparator;
 
 public:
-    explicit MapWidget(QWidget *parent = 0);
+    explicit MapWidget(QWidget *parent = nullptr);
     void setMarkers(const QList<MapMarker> &markers);
     static void setTilesDir(const QString &newDir);
     static void setNightMode(bool useNightMode);
@@ -34,6 +34,8 @@ public:
 protected:
     void resizeEvent(QResizeEvent *) override;
     void paintEvent(QPaintEvent *event) override;
+    void enterEvent(QEvent *) override;
+    void leaveEvent(QEvent *) override;
     QSize minimumSizeHint() const override;
     bool eventFilter(QObject *, QEvent *) override;
 
@@ -99,6 +101,10 @@ private:
     bool rectIntersectsSomeMarker(const QRectF &rect, const QList<MapMarker> &markers) const;
 
     int getMaximumMarkerWidth();
+    int getMaximumCountryNameWidth() const;
+    QList<MapMarker> getUniqueCountryMarkers() const;
+
+    void drawCountriesLegend(QPainter &p);
 
     QFont countryFont;
 
