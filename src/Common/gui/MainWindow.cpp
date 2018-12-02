@@ -421,7 +421,7 @@ QImage MainWindow::pickCameraFrame() const
         // have only big resolutions, and we have problems sensing big resolution videos to ninjam servers.
 
         if (frame.width() > MainController::MAX_VIDEO_SIZE.width())
-            return frame.scaled(mainController->getVideoResolution(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            return frame.scaled(mainController->getVideoResolution(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
         return frame;
     }

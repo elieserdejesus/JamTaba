@@ -33,7 +33,7 @@ using persistence::LocalInputTrackSettings;
 using controller::MainController;
 
 const quint8 MainController::CAMERA_FPS = 10;
-const QSize MainController::MAX_VIDEO_SIZE(320, 340); // max video width in pixels
+const QSize MainController::MAX_VIDEO_SIZE(320, 240); // max video resolution in pixels
 
 const QString MainController::CRASH_FLAG_STRING = "JamTaba closed without crash :)";
 
