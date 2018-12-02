@@ -302,6 +302,8 @@ public:
 
     void setPublicChatActivated(bool activated);
 
+    const static QSize MAX_VIDEO_SIZE;
+
 signals:
     void ipResolved(const QString &ip);
     void themeChanged();

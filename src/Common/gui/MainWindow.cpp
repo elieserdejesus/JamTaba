@@ -243,6 +243,7 @@ void MainWindow::initializeCamera(const QString &cameraDeviceName)
         QSize bestResolution = getBestCameraResolution(resolutions);
         settings.setResolution(bestResolution);
         camera->setViewfinderSettings(settings);
+        qDebug() << "Setting camera viewFinder resolution to " << camera->viewfinderSettings().resolution();
 
         //getBestSupportedFrameRate();
 
@@ -415,8 +416,15 @@ bool MainWindow::cameraIsActivated() const
 QImage MainWindow::pickCameraFrame() const
 {
     if (videoFrameGrabber && cameraView) {
-        QImage frame = videoFrameGrabber->grab(cameraView->size());
+        auto frame = videoFrameGrabber->grab();
         cameraView->setCurrentFrame(frame);
+
+        // scale the grabed frame if is bigger than MAX_VIDEO_SIZE. This is necessary because some cameras
+        // have only big resolutions, and we have problems sensing big resolution videos to ninjam servers.
+
+        if (frame.width() > MainController::MAX_VIDEO_SIZE.width())
+            return frame.scaled(mainController->getVideoResolution(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
         return frame;
     }
 
