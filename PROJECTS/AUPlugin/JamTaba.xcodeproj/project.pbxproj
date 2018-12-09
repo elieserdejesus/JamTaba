@@ -334,9 +334,7 @@
 		2A3016361E0D94320013700B /* AUPlugInDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B81891A149005D69C7 /* AUPlugInDispatch.cpp */; };
 		2A3669141E0DBFA9006CD583 /* JamTabaAUPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A3669121E0DBFA9006CD583 /* JamTabaAUPlugin.mm */; };
 		2A3669151E0DBFA9006CD583 /* JamTabaAUPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A3669131E0DBFA9006CD583 /* JamTabaAUPlugin.h */; };
-		2A36DEF921711F2700218F05 /* NinjamChatMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A36DEF721711F2700218F05 /* NinjamChatMessageParser.cpp */; };
 		2A36DEFA21711F2700218F05 /* NinjamChatMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A36DEF721711F2700218F05 /* NinjamChatMessageParser.cpp */; };
-		2A36DEFB21711F2700218F05 /* NinjamChatMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A36DEF821711F2700218F05 /* NinjamChatMessageParser.h */; };
 		2A36DEFC21711F2700218F05 /* NinjamChatMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A36DEF821711F2700218F05 /* NinjamChatMessageParser.h */; };
 		2A3AE1DE1E80863000D391C5 /* BlinkableButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A3AE1DC1E80863000D391C5 /* BlinkableButton.h */; };
 		2A3AE1DF1E80863000D391C5 /* BlinkableButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A3AE1DD1E80863000D391C5 /* BlinkableButton.cpp */; };
@@ -402,7 +400,7 @@
 		2AAAA7D2203247F00005C3F5 /* PrivateServerWindow.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAA7CE203247CB0005C3F5 /* PrivateServerWindow.ui */; };
 		2AAAA7D42032488A0005C3F5 /* libminiupnpc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AAAA7D32032488A0005C3F5 /* libminiupnpc.a */; };
 		2AAAA7D5203249200005C3F5 /* PrivateServerWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAA7CD203247CB0005C3F5 /* PrivateServerWindow.h */; };
-		2AB5C82E1E076776007BD342 /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; };
+		2AB5C82E1E076776007BD342 /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2AC0D3E41E0AB913005A940A /* JamTabaPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */; };
 		2AC0D3E81E0AB913005A940A /* MainControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D61E0AB913005A940A /* MainControllerPlugin.h */; };
 		2AC0D3EC1E0AB913005A940A /* MainWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D81E0AB913005A940A /* MainWindowPlugin.h */; };
@@ -456,11 +454,20 @@
 		2AF5A9601E761D9900D1150A /* Encoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A95F1E761D9900D1150A /* Encoder.h */; };
 		2AF5A9621E761DAD00D1150A /* Mp3Decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */; };
 		2AF5A9641E761DBC00D1150A /* Mp3Decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */; };
-		62B3B89F1891936500E507B7 /* JamTaba.r in Rez */ = {isa = PBXBuildFile; fileRef = 62B3B89E1891936500E507B7 /* JamTaba.r */; };
 		8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
 		8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
 		8BA4AE54073EB72300A2709A /* JamTaba_ViewFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */; };
 		8BA4AE55073EB72300A2709A /* JamTaba_UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */; };
+		D6CDB08421BD35A700A81EA8 /* ChordProgressionCreationDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6CDB08121BD35A700A81EA8 /* ChordProgressionCreationDialog.cpp */; };
+		D6CDB08521BD35A700A81EA8 /* ChordProgressionCreationDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = D6CDB08221BD35A700A81EA8 /* ChordProgressionCreationDialog.h */; };
+		D6CDB08621BD35A700A81EA8 /* ChordProgressionCreationDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = D6CDB08321BD35A700A81EA8 /* ChordProgressionCreationDialog.ui */; };
+		D6CDB08721BD35C900A81EA8 /* ChordProgressionCreationDialog.h in Sources */ = {isa = PBXBuildFile; fileRef = D6CDB08221BD35A700A81EA8 /* ChordProgressionCreationDialog.h */; };
+		D6D2DCEA21BD81FC0096AE0F /* libQt5Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54E1E1835A100843898 /* libQt5Core.a */; };
+		D6D2DCEB21BD82440096AE0F /* libqcocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55C1E18360A00843898 /* libqcocoa.a */; };
+		D6D2DCEC21BD82490096AE0F /* libqtpcre.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55A1E1835E100843898 /* libqtpcre.a */; };
+		D6D2DCED21BD827C0096AE0F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362B21F6595D2004953CF /* AVFoundation.framework */; };
+		D6D2DCF121BD82FC0096AE0F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA4AE5B073EB79000A2709A /* Cocoa.framework */; };
+		D6D2DCF421BD83450096AE0F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70071E080F7200A4B6C2 /* libz.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -948,6 +955,9 @@
 		8BA4AE5B073EB79000A2709A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		8D01CCD10486CAD60068D4B7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D01CCD20486CAD60068D4B7 /* JamTaba.component */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JamTaba.component; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6CDB08121BD35A700A81EA8 /* ChordProgressionCreationDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordProgressionCreationDialog.cpp; sourceTree = "<group>"; };
+		D6CDB08221BD35A700A81EA8 /* ChordProgressionCreationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChordProgressionCreationDialog.h; sourceTree = "<group>"; };
+		D6CDB08321BD35A700A81EA8 /* ChordProgressionCreationDialog.ui */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ChordProgressionCreationDialog.ui; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1005,10 +1015,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6D2DCEC21BD82490096AE0F /* libqtpcre.a in Frameworks */,
+				D6D2DCEB21BD82440096AE0F /* libqcocoa.a in Frameworks */,
+				D6D2DCEA21BD81FC0096AE0F /* libQt5Core.a in Frameworks */,
+				D6D2DCF421BD83450096AE0F /* libz.dylib in Frameworks */,
 				2A3FC8401E15BCD5005227F4 /* Carbon.framework in Frameworks */,
 				8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */,
 				8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */,
 				2A0DBE8A1E0AF5AA00BEF1FF /* CoreAudio.framework in Frameworks */,
+				D6D2DCED21BD827C0096AE0F /* AVFoundation.framework in Frameworks */,
+				D6D2DCF121BD82FC0096AE0F /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1343,6 +1359,9 @@
 		2A0DBB7F1E0AF46900BEF1FF /* chords */ = {
 			isa = PBXGroup;
 			children = (
+				D6CDB08121BD35A700A81EA8 /* ChordProgressionCreationDialog.cpp */,
+				D6CDB08221BD35A700A81EA8 /* ChordProgressionCreationDialog.h */,
+				D6CDB08321BD35A700A81EA8 /* ChordProgressionCreationDialog.ui */,
 				2A0DBB801E0AF46900BEF1FF /* ChatChordsProgressionParser.cpp */,
 				2A0DBB811E0AF46900BEF1FF /* ChatChordsProgressionParser.h */,
 				2A0DBB821E0AF46900BEF1FF /* Chord.cpp */,
@@ -1779,6 +1798,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A1362941F6586A4004953CF /* FFMpegMuxer.h in Headers */,
+				D6CDB08521BD35A700A81EA8 /* ChordProgressionCreationDialog.h in Headers */,
 				2A67BDA01E410F3200A8FFF1 /* PerformanceMonitor.h in Headers */,
 				2A1362901F6586A4004953CF /* FFMpegCommon.h in Headers */,
 				2A0DBE671E0AF46E00BEF1FF /* ReaperProjectGenerator.h in Headers */,
@@ -1919,7 +1939,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A36DEFB21711F2700218F05 /* NinjamChatMessageParser.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1976,7 +1995,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0830;
 			};
 			buildConfigurationList = 3EED0949089806170095A620 /* Build configuration list for PBXProject "JamTaba" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2013,6 +2032,7 @@
 				2AF5A9401E761ADF00D1150A /* LooperWindow.ui in Resources */,
 				2A0DBD971E0AF46B00BEF1FF /* NinjamRoomWindow.ui in Resources */,
 				2A0DBCE51E0AF46900BEF1FF /* BusyDialog.ui in Resources */,
+				D6CDB08621BD35A700A81EA8 /* ChordProgressionCreationDialog.ui in Resources */,
 				2A0DBD8B1E0AF46B00BEF1FF /* MainWindow.ui in Resources */,
 				2A586B451F8BE36200031DC7 /* CrashReportDialog.ui in Resources */,
 				2A4E3FA01F99877300677E9C /* MetronomePanel.ui in Resources */,
@@ -2035,7 +2055,6 @@
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62B3B89F1891936500E507B7 /* JamTaba.r in Rez */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2058,6 +2077,7 @@
 				2A4E3FB11F99889200677E9C /* BoostSpinBox.h in Sources */,
 				2A14FF722007A6FC00ADAEB0 /* EmojiWidget.h in Sources */,
 				2AAAA7A1203245AE0005C3F5 /* UPnPManager.h in Sources */,
+				D6CDB08721BD35C900A81EA8 /* ChordProgressionCreationDialog.h in Sources */,
 				2AAAA7D2203247F00005C3F5 /* PrivateServerWindow.ui in Sources */,
 				2AF5A9411E761B9300D1150A /* LooperWindow.ui in Sources */,
 				2A0DBE961E0AF79300BEF1FF /* PrivateServerDialog.ui in Sources */,
@@ -2235,6 +2255,7 @@
 				2A1C7A7D1E0B5F2C00C7984D /* NinjamController.cpp in Sources */,
 				2A1C7A7E1E0B5F2C00C7984D /* CacheHeader.cpp in Sources */,
 				2A1C7A7F1E0B5F2C00C7984D /* Settings.cpp in Sources */,
+				D6CDB08421BD35A700A81EA8 /* ChordProgressionCreationDialog.cpp in Sources */,
 				2AAAA7C52032462B0005C3F5 /* Ninjam.cpp in Sources */,
 				2A1C7A801E0B5F2C00C7984D /* UsersDataCache.cpp in Sources */,
 				2A1C7A811E0B5F2C00C7984D /* ClipSortLogGenerator.cpp in Sources */,
@@ -2283,7 +2304,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A3016221E0D90AB0013700B /* AUBase.cpp in Sources */,
-				2A36DEF921711F2700218F05 /* NinjamChatMessageParser.cpp in Sources */,
 				2A3016231E0D90AD0013700B /* AUDispatch.cpp in Sources */,
 				2A30162B1E0D90CA0013700B /* AUEffectBase.cpp in Sources */,
 				2A3016241E0D90B00013700B /* AUInputElement.cpp in Sources */,
@@ -2332,7 +2352,6 @@
 		3EED0942089806170095A620 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2356,17 +2375,7 @@
 				);
 				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"~/Desktop/Qt-5.6/lib/**",
-					"~/Desktop/Qt-5.6/plugins/platforms/**",
-					"/Users/elieser/Desktop/JamTaba/libs/static/mac64/**",
-					"/Users/elieser/Desktop/Qt-5.6/lib",
-					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
-					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
-					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
-					"/Users/elieser/Desktop/Qt-5.6/plugins/mediaservice",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
@@ -2377,6 +2386,7 @@
 					AppKit,
 				);
 				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamtaba.audiounit.JamTaba;
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -2393,7 +2403,6 @@
 		3EED0943089806170095A620 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2414,17 +2423,7 @@
 				);
 				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"~/Desktop/Qt-5.6/lib/**",
-					"~/Desktop/Qt-5.6/plugins/platforms/**",
-					"/Users/elieser/Desktop/JamTaba/libs/static/mac64/**",
-					"/Users/elieser/Desktop/Qt-5.6/lib",
-					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
-					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
-					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
-					"/Users/elieser/Desktop/Qt-5.6/plugins/mediaservice",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
@@ -2435,6 +2434,7 @@
 					AppKit,
 				);
 				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamtaba.audiounit.JamTaba;
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -2451,7 +2451,6 @@
 		3EED0944089806170095A620 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2471,17 +2470,7 @@
 				);
 				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"~/Desktop/Qt-5.6/lib/**",
-					"~/Desktop/Qt-5.6/plugins/platforms/**",
-					"/Users/elieser/Desktop/JamTaba/libs/static/mac64/**",
-					"/Users/elieser/Desktop/Qt-5.6/lib",
-					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
-					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
-					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
-					"/Users/elieser/Desktop/Qt-5.6/plugins/mediaservice",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
@@ -2492,6 +2481,7 @@
 					AppKit,
 				);
 				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamtaba.audiounit.JamTaba;
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -2507,7 +2497,6 @@
 		3EED0946089806170095A620 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2523,15 +2512,13 @@
 				GENERATE_PKGINFO_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-bundle";
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamtaba.audiounit.JamTaba;
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -2547,7 +2534,6 @@
 		3EED0947089806170095A620 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2561,15 +2547,13 @@
 				GENERATE_PKGINFO_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-bundle";
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamtaba.audiounit.JamTaba;
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -2585,7 +2569,6 @@
 		3EED0948089806170095A620 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2598,15 +2581,13 @@
 				GENERATE_PKGINFO_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-bundle";
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamtaba.audiounit.JamTaba;
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -2623,24 +2604,35 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_SHADOW = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
@@ -2655,8 +2647,12 @@
 					"~/Desktop/Qt-5.6/include/**",
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"~/Desktop/Qt-5.6/**",
+					"~/Desktop/JamTaba/libs/static/mac64/**",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;
@@ -2669,24 +2665,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_SHADOW = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
@@ -2701,7 +2707,10 @@
 					"~/Desktop/Qt-5.6/include/**",
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"~/Desktop/Qt-5.6/**",
+					"~/Desktop/JamTaba/libs/static/mac64/**",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
@@ -2715,23 +2724,33 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_SHADOW = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
@@ -2746,7 +2765,10 @@
 					"~/Desktop/Qt-5.6/include/**",
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"~/Desktop/Qt-5.6/**",
+					"~/Desktop/JamTaba/libs/static/mac64/**",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";

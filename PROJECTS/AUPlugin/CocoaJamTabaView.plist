@@ -5,7 +5,7 @@
 	<key>CFBundleExecutable</key>
 	<string>CocoaJamTabaView</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.jamtaba.audiounit.JamTaba</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>NSPrincipalClass</key>
