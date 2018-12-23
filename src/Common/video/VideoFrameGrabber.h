@@ -46,7 +46,7 @@ public:
 
     bool present(const QVideoFrame& frame) override;
 
-    inline QImage grab(const QSize &size) override
+    inline QImage grab(const QSize &size = QSize()) override
     {
         Q_UNUSED(size);
         return lastImage;

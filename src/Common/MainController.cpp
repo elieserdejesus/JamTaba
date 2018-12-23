@@ -24,6 +24,7 @@
 #include <QBuffer>
 #include <QByteArray>
 #include <QDateTime>
+#include <QSize>
 
 using ninjam::client::Service;
 using ninjam::client::ServerInfo;
@@ -32,6 +33,7 @@ using persistence::LocalInputTrackSettings;
 using controller::MainController;
 
 const quint8 MainController::CAMERA_FPS = 10;
+const QSize MainController::MAX_VIDEO_SIZE(320, 240); // max video resolution in pixels
 
 const QString MainController::CRASH_FLAG_STRING = "JamTaba closed without crash :)";
 
@@ -101,7 +103,11 @@ long MainController::getTotalUploadTransferRate() const
 
 void MainController::setVideoProperties(const QSize &resolution)
 {
-    videoEncoder.setVideoResolution(resolution);
+    QSize bestResolution(resolution);
+    if (resolution.width() > MainController::MAX_VIDEO_SIZE.width())
+         bestResolution = MainController::MAX_VIDEO_SIZE;
+
+    videoEncoder.setVideoResolution(bestResolution);
     videoEncoder.setVideoFrameRate(CAMERA_FPS);
 }
 
