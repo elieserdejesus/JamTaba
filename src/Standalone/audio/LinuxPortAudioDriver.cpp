@@ -6,7 +6,7 @@ using controller::MainController;
 
 namespace audio {
 
-PortAudioDriver::PortAudioDriver(MainController *mainController, int deviceIndex,
+PortAudioDriver::PortAudioDriver(MainController *mainController, int deviceInputIndex, int deviceOutputIndex,
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
     AudioDriver(mainController),
@@ -17,12 +17,12 @@ PortAudioDriver::PortAudioDriver(MainController *mainController, int deviceIndex
     Q_UNUSED(firstOutIndex)
     Q_UNUSED(lastInIndex)
     Q_UNUSED(lastOutIndex)
-    Q_UNUSED(deviceIndex)
 
     // initialize portaudio using default devices
     PaError error = Pa_Initialize();
     if (error == paNoError) {
-        audioDeviceIndex = deviceIndex;// Pa_GetDefaultOutputDevice();
+        audioInputDeviceIndex = deviceInputIndex; // Pa_GetDefaultOutputDevice();
+        audioOutputDeviceIndex = deviceOutputIndex;
         globalInputRange = ChannelRange(0, getMaxInputs());
         globalOutputRange = ChannelRange(0, 2);// 2 channels for output
 
@@ -31,11 +31,11 @@ PortAudioDriver::PortAudioDriver(MainController *mainController, int deviceIndex
             globalOutputRange.setToStereo();
         if(!initPortAudio(sampleRate, bufferSize)){
             qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-            audioDeviceIndex = paNoDevice;
+            audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice;
         }
     } else {
         qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-        audioDeviceIndex = paNoDevice;
+        audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice;
     }
 }
 
@@ -61,7 +61,7 @@ QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const
 
 QString PortAudioDriver::getOutputChannelName(const unsigned int index) const
 {
-    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(audioDeviceIndex);
+    auto deviceInfo = Pa_GetDeviceInfo(audioOutputDeviceIndex);
     if (index < (uint)deviceInfo->maxOutputChannels)
         return "Out " + QString::number(index + 1);
     return "error";
@@ -69,7 +69,7 @@ QString PortAudioDriver::getOutputChannelName(const unsigned int index) const
 
 QString PortAudioDriver::getInputChannelName(const unsigned int index) const
 {
-    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(audioDeviceIndex);
+    auto deviceInfo = Pa_GetDeviceInfo(audioInputDeviceIndex);
     if (index < (uint)deviceInfo->maxInputChannels)
         return "In " + QString::number(index + 1);
     return "error";
