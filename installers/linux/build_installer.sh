@@ -39,10 +39,10 @@ cd $destDir
 
 echo "Creating makefile ..."
 #-spec linux-g++-32
-qmake -config release $projectsDir/Jamtaba.pro 
+$qtDir/bin/qmake -config release $projectsDir/Jamtaba.pro 
 
 echo "generating translation (.qm) files..."
-lrelease $projectsDir/Jamtaba.pro
+$qtDir/bin/lrelease $projectsDir/Jamtaba.pro
 
 echo "Compiling..."
 make -s -j 4
@@ -64,15 +64,15 @@ cp $scriptDir/Jamtaba2.png packageFiles/Jamtaba2.png
 echo "Done!"
 
 echo "Copying Qt distribution files from $qtDir to 'packageFiles'" 
-cp $qtDir/lib/libQt5Widgets.so.5 packageFiles/
-cp $qtDir/lib/libQt5Gui.so.5 packageFiles/ 
-cp $qtDir/lib/libQt5Core.so.5 packageFiles/
-cp $qtDir/lib/libQt5Network.so.5 packageFiles/
-cp $qtDir/lib/libQt5DBus.so.5 packageFiles/
-cp $qtDir/lib/libQt5XcbQpa.so.5 packageFiles/
-cp $qtDir/lib/libicui18n.so.54 packageFiles/
-cp $qtDir/lib/libicuuc.so.54 packageFiles/
-cp $qtDir/lib/libicudata.so.54 packageFiles/
+cp $qtDir/lib/libQt5Widgets.so.* packageFiles/
+cp $qtDir/lib/libQt5Gui.so.* packageFiles/ 
+cp $qtDir/lib/libQt5Core.so.* packageFiles/
+cp $qtDir/lib/libQt5Network.so.* packageFiles/
+cp $qtDir/lib/libQt5DBus.so.* packageFiles/
+cp $qtDir/lib/libQt5XcbQpa.so.* packageFiles/
+cp $qtDir/lib/libicui18n.so.* packageFiles/
+cp $qtDir/lib/libicuuc.so.* packageFiles/
+cp $qtDir/lib/libicudata.so.* packageFiles/
 cp $qtDir/plugins/platforms/libqxcb.so packageFiles/platforms
 
 
