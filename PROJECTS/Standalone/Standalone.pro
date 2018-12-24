@@ -168,4 +168,6 @@ linux{
 
     LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavformat -lavcodec -lswscale -lavutil -lswresample -lminiupnpc -lx264
     LIBS += -lasound
+    LIBS += -ldl
+    LIBS += -lz
 }
