@@ -10,7 +10,7 @@ using audio::AudioPeak;
 const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
 SamplesBuffer::SamplesBuffer(unsigned int channels) :
-    SamplesBuffer(channels, 4096) // avoid vector internally call reserve from a zero size to final frameLenght, use small 4K chunks
+    SamplesBuffer(channels, 0)
 {
 
 }
