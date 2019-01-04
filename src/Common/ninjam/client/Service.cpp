@@ -206,6 +206,7 @@ QStringList Service::buildBotNamesList()
     names.append(QStringLiteral("LiveStream"));
     names.append(QStringLiteral("localhost"));
     names.append(QStringLiteral("dojcbot"));
+    names.append(QStringLiteral("DOJCbot"));
     return names;
 }
 
