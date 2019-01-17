@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -131,35 +131,35 @@
     <name>ChordProgressionCreationDialog</name>
     <message>
         <source>Creating Chord Progression ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Creando Acordes ...</translation>
     </message>
     <message>
         <source>Measures:</source>
-        <translation type="unfinished"></translation>
+        <translation>Medidas:</translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished"></translation>
+        <translation>4</translation>
     </message>
     <message>
         <source>Chords per measure:</source>
-        <translation type="unfinished"></translation>
+        <translation>Acordes por medida:</translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished"></translation>
+        <translation>2</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; use TAB to navigate!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;type the first letter of chord name to quick jump!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; ¡usa TAB para navegar!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;¡Escribe la primera letra del acorde para búsqueda rápida!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Load the chord progression!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Cargar Acordes!</translation>
     </message>
     <message>
         <source>ok</source>
-        <translation type="unfinished">Aceptar</translation>
+        <translation>Aceptar</translation>
     </message>
 </context>
 <context>
@@ -182,11 +182,11 @@
     </message>
     <message>
         <source>Chords (server:2049)</source>
-        <translation type="unfinished"></translation>
+        <translation>Acordes (Servidor:2049)</translation>
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation>Acordes</translation>
     </message>
 </context>
 <context>
@@ -540,7 +540,7 @@
     </message>
     <message>
         <source>Play non empty layers</source>
-        <translation type="unfinished"></translation>
+        <translation>Escuchar pistas no vacías</translation>
     </message>
 </context>
 <context>
@@ -911,7 +911,7 @@
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation>Acordes</translation>
     </message>
 </context>
 <context>
@@ -1234,15 +1234,15 @@
     <name>PanSlider</name>
     <message>
         <source>center</source>
-        <translation type="unfinished">centro</translation>
+        <translation>centro</translation>
     </message>
     <message>
         <source>L</source>
-        <translation type="unfinished">I</translation>
+        <translation>I</translation>
     </message>
     <message>
         <source>R</source>
-        <translation type="unfinished">D</translation>
+        <translation>D</translation>
     </message>
 </context>
 <context>
@@ -1552,15 +1552,15 @@
     </message>
     <message>
         <source>Input</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrada</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Salida</translation>
     </message>
     <message>
         <source>Directory name format:</source>
-        <translation type="unfinished"></translation>
+        <translation>Formato de nombre de carpeta:</translation>
     </message>
 </context>
 <context>
