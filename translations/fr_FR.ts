@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr_FR">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -128,6 +128,41 @@
     </message>
 </context>
 <context>
+    <name>ChordProgressionCreationDialog</name>
+    <message>
+        <source>Creating Chord Progression ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measures:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chords per measure:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; use TAB to navigate!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;type the first letter of chord name to quick jump!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load the chord progression!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ok</source>
+        <translation type="unfinished">ok</translation>
+    </message>
+</context>
+<context>
     <name>ChordsPanel</name>
     <message>
         <source>send the chords to chat...</source>
@@ -138,16 +173,20 @@
         <translation>Envoyer ces accords vers le chat</translation>
     </message>
     <message>
-        <source>discard chord progression</source>
-        <translation>Rejeter cette progression d accords</translation>
-    </message>
-    <message>
         <source>transpose up</source>
         <translation>transposer un demi-ton au dessus</translation>
     </message>
     <message>
         <source>transpose down</source>
         <translation>transposer un demi-ton en dessous</translation>
+    </message>
+    <message>
+        <source>Chords (server:2049)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chords</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -270,10 +309,6 @@
     <message>
         <source>Preset name:</source>
         <translation>Nom du preset:</translation>
-    </message>
-    <message>
-        <source>channel name</source>
-        <translation>nom du canal</translation>
     </message>
     <message>
         <source>Transmit</source>
@@ -502,6 +537,10 @@
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
         <translation>Le fichier Loop existe déjà. Voulez-vous le remplacer?</translation>
+    </message>
+    <message>
+        <source>Play non empty layers</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -855,14 +894,6 @@
         <translation>Connexion en cours ...</translation>
     </message>
     <message>
-        <source>My private server (%1:%2)</source>
-        <translation>Mon serveur privé (%1:%2)</translation>
-    </message>
-    <message>
-        <source>%1 / %2 players </source>
-        <translation>%1 / %2 musiciens</translation>
-    </message>
-    <message>
         <source>Block %1 in chat</source>
         <translation>Bloquer %1 dans le chat</translation>
     </message>
@@ -877,6 +908,10 @@
     <message>
         <source>Invite %1 to play in %2 [%3]</source>
         <translation type="unfinished">Inviter %1 à jouer dans %2 [%3]</translation>
+    </message>
+    <message>
+        <source>Chords</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1196,6 +1231,21 @@
     </message>
 </context>
 <context>
+    <name>PanSlider</name>
+    <message>
+        <source>center</source>
+        <translation type="unfinished">Centré</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation type="unfinished">L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation type="unfinished">R</translation>
+    </message>
+</context>
+<context>
     <name>PluginScanDialog</name>
     <message>
         <source>[JamTaba] Scanning plugins ...</source>
@@ -1500,6 +1550,18 @@
         <source>Choosing Accent beat audio file...</source>
         <translation>Choisir fichier temps fort...</translation>
     </message>
+    <message>
+        <source>Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Directory name format:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
@@ -1654,9 +1716,11 @@
         <source>Hosting Ninjam Private Server</source>
         <translation>Ouverture d&apos;un serveur ninjam privé</translation>
     </message>
-   <message>
+    <message>
         <source>Connect with private server ...</source>
-        <translation>Connecté avec un serveur privé ...</translation>    </message></context>
+        <translation>Connecté avec un serveur privé ...</translation>
+    </message>
+</context>
 <context>
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
@@ -1683,21 +1747,6 @@
     <message>
         <source>Accept!</source>
         <translation>Accepté!</translation>
-    </message>
-</context>
-<context>
-    <name>Slider</name>
-    <message>
-        <source>center</source>
-        <translation>Centré</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <translation>L</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <translation>R</translation>
     </message>
 </context>
 <context>
