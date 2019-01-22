@@ -128,6 +128,41 @@
     </message>
 </context>
 <context>
+    <name>ChordProgressionCreationDialog</name>
+    <message>
+        <source>Creating Chord Progression ...</source>
+        <translation>Creando Acordes ...</translation>
+    </message>
+    <message>
+        <source>Measures:</source>
+        <translation>Medidas:</translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation>4</translation>
+    </message>
+    <message>
+        <source>Chords per measure:</source>
+        <translation>Acordes por medida:</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation>2</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; use TAB to navigate!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;type the first letter of chord name to quick jump!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; ¡usa TAB para navegar!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;¡Escribe la primera letra del acorde para búsqueda rápida!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Load the chord progression!</source>
+        <translation>¡Cargar Acordes!</translation>
+    </message>
+    <message>
+        <source>ok</source>
+        <translation>Aceptar</translation>
+    </message>
+</context>
+<context>
     <name>ChordsPanel</name>
     <message>
         <source>send the chords to chat...</source>
@@ -138,16 +173,20 @@
         <translation>envía los acordes al chat</translation>
     </message>
     <message>
-        <source>discard chord progression</source>
-        <translation>descartar la progresión de acordes</translation>
-    </message>
-    <message>
         <source>transpose up</source>
         <translation>Transponer hacia arriba</translation>
     </message>
     <message>
         <source>transpose down</source>
         <translation>Transponer hacia abajo</translation>
+    </message>
+    <message>
+        <source>Chords (server:2049)</source>
+        <translation>Acordes (Servidor:2049)</translation>
+    </message>
+    <message>
+        <source>Chords</source>
+        <translation>Acordes</translation>
     </message>
 </context>
 <context>
@@ -270,10 +309,6 @@
     <message>
         <source>Preset name:</source>
         <translation>Nombre del programa:</translation>
-    </message>
-    <message>
-        <source>channel name</source>
-        <translation>nombre canal</translation>
     </message>
     <message>
         <source>Transmit</source>
@@ -502,6 +537,10 @@
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
         <translation>El archivo de loop ya existe. ¿Desea sobreescribirlo?</translation>
+    </message>
+    <message>
+        <source>Play non empty layers</source>
+        <translation>Escuchar pistas no vacías</translation>
     </message>
 </context>
 <context>
@@ -870,6 +909,10 @@
         <source>Invite %1 to play in %2 [%3]</source>
         <translation>Invitar a %1 a tocar en %2 [%3]</translation>
     </message>
+    <message>
+        <source>Chords</source>
+        <translation>Acordes</translation>
+    </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
@@ -1188,6 +1231,21 @@
     </message>
 </context>
 <context>
+    <name>PanSlider</name>
+    <message>
+        <source>center</source>
+        <translation>centro</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>I</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation>D</translation>
+    </message>
+</context>
+<context>
     <name>PluginScanDialog</name>
     <message>
         <source>[JamTaba] Scanning plugins ...</source>
@@ -1492,6 +1550,18 @@
         <source>Choosing Accent beat audio file...</source>
         <translation>Escogiendo el archivo de beat acentuado...</translation>
     </message>
+    <message>
+        <source>Input</source>
+        <translation>Entrada</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation>Salida</translation>
+    </message>
+    <message>
+        <source>Directory name format:</source>
+        <translation>Formato de nombre de carpeta:</translation>
+    </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
@@ -1677,21 +1747,6 @@
     <message>
         <source>Accept!</source>
         <translation>¡Aceptar!</translation>
-    </message>
-</context>
-<context>
-    <name>Slider</name>
-    <message>
-        <source>center</source>
-        <translation>centro</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <translation>I</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <translation>D</translation>
     </message>
 </context>
 <context>

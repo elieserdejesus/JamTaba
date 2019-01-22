@@ -133,6 +133,41 @@
     </message>
 </context>
 <context>
+    <name>ChordProgressionCreationDialog</name>
+    <message>
+        <source>Creating Chord Progression ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measures:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chords per measure:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; use TAB to navigate!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;type the first letter of chord name to quick jump!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load the chord progression!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ok</source>
+        <translation type="unfinished">保存</translation>
+    </message>
+</context>
+<context>
     <name>ChordsPanel</name>
     <message>
         <source>send the chords to chat...</source>
@@ -143,16 +178,20 @@
         <translation>コード進行をチャットへ送信</translation>
     </message>
     <message>
-        <source>discard chord progression</source>
-        <translation>コード進行を取り消す</translation>
-    </message>
-    <message>
         <source>transpose up</source>
         <translation>移調(上)</translation>
     </message>
     <message>
         <source>transpose down</source>
         <translation>移調(下)</translation>
+    </message>
+    <message>
+        <source>Chords (server:2049)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chords</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -275,10 +314,6 @@
     <message>
         <source>Remove channel &quot;%1&quot;</source>
         <translation>&quot;%1&quot;チャンネルを削除</translation>
-    </message>
-    <message>
-        <source>channel name</source>
-        <translation>チャンネル名</translation>
     </message>
     <message>
         <source>Transmit</source>
@@ -507,6 +542,10 @@
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
         <translation>ループファイルは既に存在します。 上書きしますか?</translation>
+    </message>
+    <message>
+        <source>Play non empty layers</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -877,6 +916,10 @@
         <source>Invite %1 to play in %2 [%3]</source>
         <translation type="unfinished">%1を%2に再生するように招待する[%3]</translation>
     </message>
+    <message>
+        <source>Chords</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
@@ -1197,6 +1240,21 @@
     </message>
 </context>
 <context>
+    <name>PanSlider</name>
+    <message>
+        <source>center</source>
+        <translation type="unfinished">センター</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation type="unfinished">L</translation>
+    </message>
+    <message>
+        <source>R</source>
+        <translation type="unfinished">R</translation>
+    </message>
+</context>
+<context>
     <name>PluginScanDialog</name>
     <message>
         <source>[JamTaba] Scanning plugins ...</source>
@@ -1501,6 +1559,18 @@
         <source>Choosing Accent beat audio file...</source>
         <translation type="unfinished">アクセントビートオーディオファイルを選択...</translation>
     </message>
+    <message>
+        <source>Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Directory name format:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
@@ -1687,21 +1757,6 @@
     <message>
         <source>Accept!</source>
         <translation type="unfinished">同意する!</translation>
-    </message>
-</context>
-<context>
-    <name>Slider</name>
-    <message>
-        <source>center</source>
-        <translation type="unfinished">センター</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <translation>L</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <translation>R</translation>
     </message>
 </context>
 <context>
