@@ -49,7 +49,7 @@ InstrumentIndex stringToInstrumentIndex(const QString &string)
     if (str.contains("computer"))
         return InstrumentIndex::Computer;
 
-    if (str.contains("percussion"))
+    if (str.contains("percussion") || str.contains("conga"))
         return InstrumentIndex::Percussion;
 
     if (str.contains("troll"))
