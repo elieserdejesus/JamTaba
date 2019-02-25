@@ -394,7 +394,7 @@ void MapWidget::drawCountriesLegend(QPainter &p)
     auto legendHeight = (flagSize.height() + TEXT_MARGIM) * uniqueCountryMarkers.size() + TEXT_MARGIM;
 
     QSizeF legendSize(legendWidth, legendHeight);
-    QPointF legendTopLeft(width() - legendSize.width() - TEXT_MARGIM, TEXT_MARGIM);
+    QPointF legendTopLeft((width() - legendSize.width() - TEXT_MARGIM) / 2, TEXT_MARGIM);
     QRectF legendRect(legendTopLeft, legendSize);
 
     // draw the transparent background
