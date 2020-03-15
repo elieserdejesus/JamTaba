@@ -129,8 +129,8 @@ QPointF MapWidget::getCenterLatLong() const
 
     for (const MapMarker &marker : markers) {
         QPointF latLong = marker.getLatLong();
-        qreal latitude = latLong.x();
-        qreal longitude = latLong.y();
+        qreal latitude = latLong.x() != -200 ? latLong.x() : 0.0f;
+        qreal longitude = latLong.y() != -200 ? latLong.y() : 0.0f;
         if (latitude < minLatitude)
             minLatitude = latitude;
 
@@ -220,11 +220,8 @@ void MapWidget::setMarkers(const QList<MapMarker> &newMarkers)
 
 void MapWidget::setCenter(QPointF latLong)
 {
-    if (latLong.isNull()) // avoid center in invalid (unknown [0.0, 0.0]) lat long
-        return;
-
-    this->latitude = latLong.x();
-    this->longitude = latLong.y();
+    this->latitude = latLong.x() != -200 ? latLong.x() : 0.0f;
+    this->longitude = latLong.y() != -200 ? latLong.y() : 0.0f;
     invalidate();
 }
 
