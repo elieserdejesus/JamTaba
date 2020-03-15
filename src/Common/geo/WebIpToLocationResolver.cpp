@@ -34,6 +34,7 @@ const int MaxServersAlternatives = 2;
 
 WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir) :
     currentLanguage("en"), // using english as default language
+    apiServersRunning(true),
     cacheDir(cacheDir)
 {
     connect(&httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
@@ -142,13 +143,15 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
         if (!root.contains("country_name")) {
             if (root.contains("error")) {
                 auto error = root["error"].toObject();
-                auto code = error.contains("code") ? error["code"].toInt() : -1;
+                auto errorCode = error.contains("code") ? error["code"].toInt() : -1;
+                auto errorInfo = error.contains("info") ? error["info"].toString() : "Can`t get error info!";
                 if (retryCount < MaxServersAlternatives) {
-                    qDebug() << "Error " << code << " received, trying alternative server ...";
+                    qDebug() << "Error " << errorCode << " received (" << errorInfo << "), trying alternative server ...";
                     pendingRequests.clear(); // clear pending requests before try another API
                     requestDataFromWebService(ip, retryCount + 1);
                 } else {
                     qCritical() << "All servers failed, no more alternatives available";
+                    apiServersRunning = false;
                 }
                 return;
             } else {
@@ -190,7 +193,6 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
 // At moment the current api is http://api.ipapi.com/ (the replacement for Nekudo api). Another option is https://freegeoip.net/json/
 void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int retryCount)
 {
-    qCDebug(jtIpToLocation) << "requesting ip " << ip;
     pendingRequests.insert(ip);
 
     QNetworkRequest request;
@@ -225,6 +227,8 @@ void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int r
                             .arg(alternativeServiceUrl1, ip, alternativeAccessKey1, lang)));
         break;
     }
+
+    qCDebug(jtIpToLocation) << "requesting ip " << ip << " from " << request.url();
 
     QNetworkReply *reply = httpClient.get(request);
     reply->setProperty("ip", QVariant(ip));
@@ -284,8 +288,9 @@ geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString 
         }
     }
 
-    if (!ip.isEmpty() && !pendingRequests.contains(ip)) // avoid request pending IPs
+    if (!ip.isEmpty() && !pendingRequests.contains(ip) && apiServersRunning) // avoid request pending IPs
         requestDataFromWebService(ip, 0);
+
     return Location();// empty location, the next request for same ip probabily return from cache
 }
 

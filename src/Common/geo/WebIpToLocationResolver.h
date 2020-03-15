@@ -51,6 +51,8 @@ namespace geo
 
         static bool canTranslateCountryName(const QString &currentLanguage);
 
+        bool apiServersRunning; // the api servers are running ok? Or we reached the api usage limits?
+
         QString currentLanguage;
 
         QDir cacheDir;
