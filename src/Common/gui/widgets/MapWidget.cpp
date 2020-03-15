@@ -497,9 +497,9 @@ void MapWidget::drawPlayersMarkers(QPainter &p)
                 if (map[newEmptyPosition.index].isEmpty()) // new position is really empty?
                     map[newEmptyPosition.index].append(marker);
             }
-            else{
-                qCritical() << "Warning! The newPosition.index is not really a new position!";
-            }
+//            else{
+//                qDebug() << "Warning! The newPosition.index is not really a new position!";
+//            }
         }
     }
 
