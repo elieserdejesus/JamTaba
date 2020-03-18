@@ -17,7 +17,14 @@ JamTaba is builded using **Qt framework**. We are using Qt for GUI, threads, soc
 
 JamTaba is using some libraries: [portaudio](http://www.portaudio.com/), [rtmidi](https://www.music.mcgill.ca/~gary/rtmidi/), [minimp3](http://keyj.emphy.de/minimp3/), [libvorbis and libogg](http://www.vorbis.com/). We are distributing **pre compiled static libs** just for convenience (see more details in the next sections), but feel free to compile the libs yourself!
 
-#### IMPORTANT FOR WINDOWS if you will use the pre compiled libs (recommended):
+### Ubuntu Linux
+On Ubuntu Linux, run the following command to install a missing dependency for Qt 5 Websockets:
+
+```
+sudo apt install libqt5websockets5
+```
+
+### IMPORTANT FOR WINDOWS if you will use the pre compiled libs (recommended):
 The library **portaudio** was **pre compiled** in windows using **only the ASIO flags**. So, if you don't have any **ASIO driver** installed JamTaba will emit an error message in initialization and fallback to an NullAudioDriver, and no sound will be produced. If you have no ASIO devices please install [Asio4ALL](http://www.asio4all.com/).
 
 ## Downloading Pre Compiled Libs
