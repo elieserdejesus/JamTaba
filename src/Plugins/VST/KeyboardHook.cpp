@@ -125,9 +125,9 @@ void keyboardHook::installLowLevelKeyboardHook()
 {
     if (!globalKeyboardHook) { // not installed?
         globalKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, globalKeyboardHookProcedure,
-                                              qWinAppInst(), NULL);
+                                              GetModuleHandleA(0), NULL);
         if (!globalKeyboardHook)
-            qCritical() << "Hook failed for application instance" << qWinAppInst()
+            qCritical() << "Hook failed for application instance" << GetModuleHandleA(0)
                         << "with error:" << GetLastError();
     }
 }
