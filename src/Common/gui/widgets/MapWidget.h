@@ -61,7 +61,7 @@ private:
 
     void drawMapTiles(QPainter &p, const QRect &rect);
     void drawPlayersMarkers(QPainter &p);
-    void drawMarker(const MapMarker &marker, QPainter &p, const QPointF &markerPosition, const QPointF &rectPosition);
+    void drawMarker(const MapMarker &marker, QPainter &p, const QPointF &markerPosition, const QPointF &rectPosition, bool drawMarker);
 
     QColor markerTextBackgroundColor;
     QColor markerColor;

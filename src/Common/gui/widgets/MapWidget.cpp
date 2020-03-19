@@ -432,8 +432,15 @@ QPointF MapWidget::getMarkerScreenCoordinate(const MapMarker &marker) const
         tile = tileForCoordinate(latLong.x(), latLong.y(), ZOOM);
 
 
-    qreal x = hCenter - ((center.x() - tile.x()) * TILES_SIZE);
-    qreal y = vCenter - ((center.y() - tile.y()) * TILES_SIZE);
+    qreal x = 0.0;
+    qreal y = 0.0;
+
+    if (!qIsNaN(tile.x()))
+        x = hCenter - ((center.x() - tile.x()) * TILES_SIZE);
+
+    if (!qIsNaN(tile.y()))
+        y = vCenter - ((center.y() - tile.y()) * TILES_SIZE);
+
     return QPointF(x, y);
 }
 
@@ -507,7 +514,9 @@ void MapWidget::drawPlayersMarkers(QPainter &p)
             if (positionIndex >= 0 && positionIndex < mapPositions.size()) {
                 QPointF rectPosition = mapPositions.at(positionIndex).coords;
                 QPointF markerPosition = getMarkerScreenCoordinate(marker);
-                drawMarker(marker, p, markerPosition, rectPosition);
+                auto latLngIsValid = marker.getLatLong() != QPointF(-200, -200);
+                auto drawLineConnector = !qIsNaN(markerPosition.x()) && !qIsNaN(markerPosition.y()) && QRectF(rect()).contains(markerPosition) && latLngIsValid;
+                drawMarker(marker, p, markerPosition, rectPosition, drawLineConnector);
             }
         }
     }
@@ -602,16 +611,14 @@ struct MapMarkerComparator
     }
 };
 
-void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition)
+void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition, bool drawLineConnector)
 {
     QRectF markerRect(rectPosition, getMarkerSize(marker));
 
     painter.setBrush(QBrush(markerTextBackgroundColor));
 
-    auto markerPositionIsValid = !qIsNaN(markerPosition.x()) && !qIsNaN(markerPosition.y()) && QRectF(rect()).contains(markerPosition);
-
     // drawing the line connector
-    if (markerPositionIsValid) {
+    if (drawLineConnector) {
         painter.setPen(markerLineConnectorColor);
         painter.setClipping(true);
         painter.setClipRegion(QRegion(rect()).subtracted(markerRect.toRect()));
@@ -624,11 +631,9 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.drawRect(markerRect);
 
     // drawing the player marker (the small circle)
-    if (markerPositionIsValid) {
-        const static qreal markerSize = 1.6;
-        painter.setBrush(markerColor);
-        painter.drawEllipse(markerPosition, markerSize, markerSize);
-    }
+    const static qreal markerSize = 1.6;
+    painter.setBrush(markerColor);
+    painter.drawEllipse(markerPosition, markerSize, markerSize);
 
     qreal hOffset = rectPosition.x() + TEXT_MARGIM; // left margin
 
