@@ -30,7 +30,20 @@ const quint32 WebIpToLocationResolver::COUNTRY_CODES_CACHE_REVISION = 1;
 const quint32 WebIpToLocationResolver::LAT_LONG_CACHE_REVISION = 1;
 
 // Alternative servers private implementation strategies
-const int MaxServersAlternatives = 2;
+const int MaxServersAlternatives = 4;
+
+struct IpToLocationAPI {
+    QString name;
+    QString url;
+    QString key;
+};
+
+static IpToLocationAPI apis[MaxServersAlternatives] = {
+    {"ipStack", "http://api.ipstack.com",   "ddf3b56e56a1a3139193a8272516ea7b"},
+    {"ipApi",   "http://api.ipapi.com",     "22f433857895c84347e949db234af11f"},
+    {"ipStack", "http://api.ipstack.com",   "7dfb5855025fa60f5ce082a4c376091a"},
+    {"ipApi",   "http://api.ipapi.com",     "3397dda1789e2826bd7a15abe2043ee9"} // Daniele API Key
+};
 
 WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir) :
     currentLanguage("en"), // using english as default language
@@ -191,42 +204,27 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
 }
 
 // At moment the current api is http://api.ipapi.com/ (the replacement for Nekudo api). Another option is https://freegeoip.net/json/
-void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, int retryCount)
+void WebIpToLocationResolver::requestDataFromWebService(const QString &ip, uint retryCount)
 {
+
+    if (retryCount >= MaxServersAlternatives)
+        return;
+
     pendingRequests.insert(ip);
 
     QNetworkRequest request;
 
-    static QString ipApiKey;
-    static QString ipStackKey;
+    auto api = apis[retryCount];
 
-    if (ipApiKey.isEmpty()) {
-        QSettings settings(QCoreApplication::applicationName());
-        ipApiKey = settings.value("ipApiKey", "22f433857895c84347e949db234af11f").toString();
-        ipStackKey = settings.value("ipStackKey", "7dfb5855025fa60f5ce082a4c376091a").toString();
-    }
-
-    QString serviceUrl = "http://api.ipapi.com";
-    QString accessKey(ipApiKey);
-
-    QString alternativeServiceUrl1 = "http://api.ipstack.com/";
-    QString alternativeAccessKey1(ipStackKey);
+    QString serviceUrl = api.url;
+    QString accessKey(api.key);
 
     QString lang = sanitizeLanguageCode(currentLanguage);
     if (!canTranslateCountryName(lang))
         lang = "en";
 
     // URL FORMAT: i.e. http://api.ipapi.com/{ip}?access_key={key}&language={lang}
-    switch (retryCount) {
-    case 0:
-        request.setUrl(QUrl(QString("%1/%2?access_key=%3&language=%4")
-                            .arg(serviceUrl, ip, accessKey, lang)));
-        break;
-    default:
-        request.setUrl(QUrl(QString("%1/%2?access_key=%3&language=%4")
-                            .arg(alternativeServiceUrl1, ip, alternativeAccessKey1, lang)));
-        break;
-    }
+    request.setUrl(QUrl(QString("%1/%2?access_key=%3&language=%4").arg(serviceUrl, ip, accessKey, lang)));
 
     qCDebug(jtIpToLocation) << "requesting ip " << ip << " from " << request.url();
 
