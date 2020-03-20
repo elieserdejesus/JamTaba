@@ -410,10 +410,7 @@
 		2AEFF5531E1835A100843898 /* libQt5Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54E1E1835A100843898 /* libQt5Core.a */; };
 		2AEFF5541E1835A100843898 /* libQt5Gui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54F1E1835A100843898 /* libQt5Gui.a */; };
 		2AEFF5551E1835A100843898 /* libQt5Network.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5501E1835A100843898 /* libQt5Network.a */; };
-		2AEFF5561E1835A100843898 /* libQt5PlatformSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5511E1835A100843898 /* libQt5PlatformSupport.a */; };
 		2AEFF5571E1835A100843898 /* libQt5Widgets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5521E1835A100843898 /* libQt5Widgets.a */; };
-		2AEFF5591E1835CC00843898 /* libqtharfbuzzng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5581E1835CC00843898 /* libqtharfbuzzng.a */; };
-		2AEFF55B1E1835E100843898 /* libqtpcre.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55A1E1835E100843898 /* libqtpcre.a */; };
 		2AEFF55D1E18360A00843898 /* libqcocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55C1E18360A00843898 /* libqcocoa.a */; };
 		2AEFF55F1E18362500843898 /* libcocoaprintersupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55E1E18362500843898 /* libcocoaprintersupport.a */; };
 		2AEFF5611E18363800843898 /* libqtfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5601E18363800843898 /* libqtfreetype.a */; };
@@ -454,6 +451,25 @@
 		2AF5A9601E761D9900D1150A /* Encoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A95F1E761D9900D1150A /* Encoder.h */; };
 		2AF5A9621E761DAD00D1150A /* Mp3Decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */; };
 		2AF5A9641E761DBC00D1150A /* Mp3Decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */; };
+		2AF8A48124253B79000D6366 /* libqtharfbuzz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A48024253B79000D6366 /* libqtharfbuzz.a */; };
+		2AF8A48324253B8A000D6366 /* libqtpcre2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A48224253B8A000D6366 /* libqtpcre2.a */; };
+		2AF8A48524253BC9000D6366 /* libQt5AccessibilitySupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A48424253BC9000D6366 /* libQt5AccessibilitySupport.a */; };
+		2AF8A48724253BDD000D6366 /* libQt5FontDatabaseSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A48624253BDD000D6366 /* libQt5FontDatabaseSupport.a */; };
+		2AF8A48924253BE1000D6366 /* libQt5GraphicsSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A48824253BE1000D6366 /* libQt5GraphicsSupport.a */; };
+		2AF8A48B24253BEC000D6366 /* libQt5PlatformCompositorSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A48A24253BEC000D6366 /* libQt5PlatformCompositorSupport.a */; };
+		2AF8A48D24253CC5000D6366 /* libqtlibpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A48C24253CC5000D6366 /* libqtlibpng.a */; };
+		2AF8A48F24253D1E000D6366 /* libQt5CglSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A48E24253D1E000D6366 /* libQt5CglSupport.a */; };
+		2AF8A49124253D24000D6366 /* libQt5Designer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A49024253D24000D6366 /* libQt5Designer.a */; };
+		2AF8A49324253D29000D6366 /* libQt5DesignerComponents.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A49224253D29000D6366 /* libQt5DesignerComponents.a */; };
+		2AF8A49524253D2D000D6366 /* libQt5DeviceDiscoverySupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A49424253D2D000D6366 /* libQt5DeviceDiscoverySupport.a */; };
+		2AF8A49724253D33000D6366 /* libQt5EventDispatcherSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A49624253D33000D6366 /* libQt5EventDispatcherSupport.a */; };
+		2AF8A49924253D36000D6366 /* libQt5FbSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A49824253D36000D6366 /* libQt5FbSupport.a */; };
+		2AF8A49B24253D51000D6366 /* libQt5ThemeSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A49A24253D51000D6366 /* libQt5ThemeSupport.a */; };
+		2AF8A49D24253D53000D6366 /* libQt5UiTools.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A49C24253D53000D6366 /* libQt5UiTools.a */; };
+		2AF8A49F24253F23000D6366 /* libQt5Bootstrap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A49E24253F23000D6366 /* libQt5Bootstrap.a */; };
+		2AF8A4A324254196000D6366 /* libqminimal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A4A224254196000D6366 /* libqminimal.a */; };
+		2AF8A4A524254198000D6366 /* libqoffscreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A4A424254198000D6366 /* libqoffscreen.a */; };
+		2AF8A4A724254382000D6366 /* libQt5ClipboardSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A4A624254382000D6366 /* libQt5ClipboardSupport.a */; };
 		8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
 		8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
 		8BA4AE54073EB72300A2709A /* JamTaba_ViewFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */; };
@@ -883,6 +899,26 @@
 		2AF5A95F1E761D9900D1150A /* Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Encoder.h; sourceTree = "<group>"; };
 		2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mp3Decoder.h; sourceTree = "<group>"; };
 		2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mp3Decoder.cpp; sourceTree = "<group>"; };
+		2AF8A48024253B79000D6366 /* libqtharfbuzz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtharfbuzz.a; path = "../../../Qt-5.6/lib/libqtharfbuzz.a"; sourceTree = "<group>"; };
+		2AF8A48224253B8A000D6366 /* libqtpcre2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtpcre2.a; path = "../../../Qt-5.6/lib/libqtpcre2.a"; sourceTree = "<group>"; };
+		2AF8A48424253BC9000D6366 /* libQt5AccessibilitySupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5AccessibilitySupport.a; path = "../../../Qt-5.6/lib/libQt5AccessibilitySupport.a"; sourceTree = "<group>"; };
+		2AF8A48624253BDD000D6366 /* libQt5FontDatabaseSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5FontDatabaseSupport.a; path = "../../../Qt-5.6/lib/libQt5FontDatabaseSupport.a"; sourceTree = "<group>"; };
+		2AF8A48824253BE1000D6366 /* libQt5GraphicsSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5GraphicsSupport.a; path = "../../../Qt-5.6/lib/libQt5GraphicsSupport.a"; sourceTree = "<group>"; };
+		2AF8A48A24253BEC000D6366 /* libQt5PlatformCompositorSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PlatformCompositorSupport.a; path = "../../../Qt-5.6/lib/libQt5PlatformCompositorSupport.a"; sourceTree = "<group>"; };
+		2AF8A48C24253CC5000D6366 /* libqtlibpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtlibpng.a; path = "../../../Qt-5.6/lib/libqtlibpng.a"; sourceTree = "<group>"; };
+		2AF8A48E24253D1E000D6366 /* libQt5CglSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5CglSupport.a; path = "../../../Qt-5.6/lib/libQt5CglSupport.a"; sourceTree = "<group>"; };
+		2AF8A49024253D24000D6366 /* libQt5Designer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Designer.a; path = "../../../Qt-5.6/lib/libQt5Designer.a"; sourceTree = "<group>"; };
+		2AF8A49224253D29000D6366 /* libQt5DesignerComponents.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5DesignerComponents.a; path = "../../../Qt-5.6/lib/libQt5DesignerComponents.a"; sourceTree = "<group>"; };
+		2AF8A49424253D2D000D6366 /* libQt5DeviceDiscoverySupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5DeviceDiscoverySupport.a; path = "../../../Qt-5.6/lib/libQt5DeviceDiscoverySupport.a"; sourceTree = "<group>"; };
+		2AF8A49624253D33000D6366 /* libQt5EventDispatcherSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5EventDispatcherSupport.a; path = "../../../Qt-5.6/lib/libQt5EventDispatcherSupport.a"; sourceTree = "<group>"; };
+		2AF8A49824253D36000D6366 /* libQt5FbSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5FbSupport.a; path = "../../../Qt-5.6/lib/libQt5FbSupport.a"; sourceTree = "<group>"; };
+		2AF8A49A24253D51000D6366 /* libQt5ThemeSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5ThemeSupport.a; path = "../../../Qt-5.6/lib/libQt5ThemeSupport.a"; sourceTree = "<group>"; };
+		2AF8A49C24253D53000D6366 /* libQt5UiTools.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5UiTools.a; path = "../../../Qt-5.6/lib/libQt5UiTools.a"; sourceTree = "<group>"; };
+		2AF8A49E24253F23000D6366 /* libQt5Bootstrap.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Bootstrap.a; path = "../../../Qt-5.6/lib/libQt5Bootstrap.a"; sourceTree = "<group>"; };
+		2AF8A4A024253F7E000D6366 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		2AF8A4A224254196000D6366 /* libqminimal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqminimal.a; path = "../../../Qt-5.6/plugins/platforms/libqminimal.a"; sourceTree = "<group>"; };
+		2AF8A4A424254198000D6366 /* libqoffscreen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqoffscreen.a; path = "../../../Qt-5.6/plugins/platforms/libqoffscreen.a"; sourceTree = "<group>"; };
+		2AF8A4A624254382000D6366 /* libQt5ClipboardSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5ClipboardSupport.a; path = "../../../Qt-5.6/lib/libQt5ClipboardSupport.a"; sourceTree = "<group>"; };
 		32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTaba_Prefix.pch; path = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch; sourceTree = "<group>"; };
 		6211E2B11891AA2900751AA3 /* ComponentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentBase.cpp; path = ../../AU_SDK/AUPublic/AUBase/ComponentBase.cpp; sourceTree = SOURCE_ROOT; };
 		6211E2B21891AA2900751AA3 /* ComponentBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentBase.h; path = ../../AU_SDK/AUPublic/AUBase/ComponentBase.h; sourceTree = SOURCE_ROOT; };
@@ -975,11 +1011,15 @@
 				2AEFF5671E1836EA00843898 /* IOKit.framework in Frameworks */,
 				2AEFF5641E18368F00843898 /* OpenGL.framework in Frameworks */,
 				2A1C7AA31E0B5F6600C7984D /* Security.framework in Frameworks */,
+				2AF8A4A724254382000D6366 /* libQt5ClipboardSupport.a in Frameworks */,
 				2A1C7AAB1E0B5F6600C7984D /* AudioUnit.framework in Frameworks */,
 				2A1C7AAC1E0B5F6600C7984D /* CoreAudio.framework in Frameworks */,
 				2AAAA7D42032488A0005C3F5 /* libminiupnpc.a in Frameworks */,
 				2A1C7AAA1E0B5F6600C7984D /* AudioToolbox.framework in Frameworks */,
+				2AF8A4A324254196000D6366 /* libqminimal.a in Frameworks */,
 				2A1362AF1F658D3E004953CF /* libqavfcamera.a in Frameworks */,
+				2AEFF55D1E18360A00843898 /* libqcocoa.a in Frameworks */,
+				2AF8A4A524254198000D6366 /* libqoffscreen.a in Frameworks */,
 				2A13629E1F658714004953CF /* libavcodec.a in Frameworks */,
 				2A2093B1207AB579001219DF /* libx264.a in Frameworks */,
 				2A13629F1F658714004953CF /* libavformat.a in Frameworks */,
@@ -988,24 +1028,36 @@
 				2A1362A21F658714004953CF /* libswscale.a in Frameworks */,
 				2AEFF5611E18363800843898 /* libqtfreetype.a in Frameworks */,
 				2AEFF5551E1835A100843898 /* libQt5Network.a in Frameworks */,
-				2AEFF55D1E18360A00843898 /* libqcocoa.a in Frameworks */,
 				2AEFF5531E1835A100843898 /* libQt5Core.a in Frameworks */,
-				2AEFF5591E1835CC00843898 /* libqtharfbuzzng.a in Frameworks */,
 				2AEFF5631E18364D00843898 /* libQt5PrintSupport.a in Frameworks */,
 				2A0DBEC61E0B03C700BEF1FF /* libvorbisfile.a in Frameworks */,
 				2A0DBEC21E0B03C700BEF1FF /* libvorbis.a in Frameworks */,
 				2AEFF5541E1835A100843898 /* libQt5Gui.a in Frameworks */,
-				2AEFF55B1E1835E100843898 /* libqtpcre.a in Frameworks */,
 				2AEFF55F1E18362500843898 /* libcocoaprintersupport.a in Frameworks */,
-				2AEFF5561E1835A100843898 /* libQt5PlatformSupport.a in Frameworks */,
 				2A0DBEC41E0B03C700BEF1FF /* libvorbisenc.a in Frameworks */,
+				2AF8A48D24253CC5000D6366 /* libqtlibpng.a in Frameworks */,
 				2A0DBEC01E0B03C600BEF1FF /* librtmidi.a in Frameworks */,
 				2A0DBEBA1E0B03C600BEF1FF /* libminimp3.a in Frameworks */,
 				2A0DBEBC1E0B03C600BEF1FF /* libogg.a in Frameworks */,
 				2AEFF5571E1835A100843898 /* libQt5Widgets.a in Frameworks */,
 				2A0DBEBE1E0B03C600BEF1FF /* libportaudio.a in Frameworks */,
 				2A1362A51F6587C0004953CF /* libQt5Multimedia.a in Frameworks */,
+				2AF8A48F24253D1E000D6366 /* libQt5CglSupport.a in Frameworks */,
+				2AF8A49924253D36000D6366 /* libQt5FbSupport.a in Frameworks */,
+				2AF8A48724253BDD000D6366 /* libQt5FontDatabaseSupport.a in Frameworks */,
+				2AF8A49D24253D53000D6366 /* libQt5UiTools.a in Frameworks */,
+				2AF8A49B24253D51000D6366 /* libQt5ThemeSupport.a in Frameworks */,
+				2AF8A48B24253BEC000D6366 /* libQt5PlatformCompositorSupport.a in Frameworks */,
 				2A1362A61F6587C0004953CF /* libQt5MultimediaWidgets.a in Frameworks */,
+				2AF8A49524253D2D000D6366 /* libQt5DeviceDiscoverySupport.a in Frameworks */,
+				2AF8A48924253BE1000D6366 /* libQt5GraphicsSupport.a in Frameworks */,
+				2AF8A49F24253F23000D6366 /* libQt5Bootstrap.a in Frameworks */,
+				2AF8A49724253D33000D6366 /* libQt5EventDispatcherSupport.a in Frameworks */,
+				2AF8A49124253D24000D6366 /* libQt5Designer.a in Frameworks */,
+				2AF8A49324253D29000D6366 /* libQt5DesignerComponents.a in Frameworks */,
+				2AF8A48124253B79000D6366 /* libqtharfbuzz.a in Frameworks */,
+				2AF8A48324253B8A000D6366 /* libqtpcre2.a in Frameworks */,
+				2AF8A48524253BC9000D6366 /* libQt5AccessibilitySupport.a in Frameworks */,
 				2A2F70081E080F7200A4B6C2 /* libz.dylib in Frameworks */,
 				2A2F70061E08094500A4B6C2 /* libcups.dylib in Frameworks */,
 			);
@@ -1039,6 +1091,7 @@
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
+				2AF8A47F24253B78000D6366 /* Frameworks */,
 			);
 			name = FilterDemo;
 			sourceTree = "<group>";
@@ -1663,6 +1716,33 @@
 				2A13628F1F6586A4004953CF /* VideoWidget.h */,
 			);
 			path = video;
+			sourceTree = "<group>";
+		};
+		2AF8A47F24253B78000D6366 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2AF8A4A624254382000D6366 /* libQt5ClipboardSupport.a */,
+				2AF8A4A424254198000D6366 /* libqoffscreen.a */,
+				2AF8A4A224254196000D6366 /* libqminimal.a */,
+				2AF8A4A024253F7E000D6366 /* Cocoa.framework */,
+				2AF8A49E24253F23000D6366 /* libQt5Bootstrap.a */,
+				2AF8A49C24253D53000D6366 /* libQt5UiTools.a */,
+				2AF8A49A24253D51000D6366 /* libQt5ThemeSupport.a */,
+				2AF8A49824253D36000D6366 /* libQt5FbSupport.a */,
+				2AF8A49624253D33000D6366 /* libQt5EventDispatcherSupport.a */,
+				2AF8A49424253D2D000D6366 /* libQt5DeviceDiscoverySupport.a */,
+				2AF8A49224253D29000D6366 /* libQt5DesignerComponents.a */,
+				2AF8A49024253D24000D6366 /* libQt5Designer.a */,
+				2AF8A48E24253D1E000D6366 /* libQt5CglSupport.a */,
+				2AF8A48C24253CC5000D6366 /* libqtlibpng.a */,
+				2AF8A48A24253BEC000D6366 /* libQt5PlatformCompositorSupport.a */,
+				2AF8A48824253BE1000D6366 /* libQt5GraphicsSupport.a */,
+				2AF8A48624253BDD000D6366 /* libQt5FontDatabaseSupport.a */,
+				2AF8A48424253BC9000D6366 /* libQt5AccessibilitySupport.a */,
+				2AF8A48224253B8A000D6366 /* libqtpcre2.a */,
+				2AF8A48024253B79000D6366 /* libqtharfbuzz.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		62FEDF6A1891AEA9004C557F /* AUPublic */ = {
