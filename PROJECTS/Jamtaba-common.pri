@@ -26,6 +26,8 @@ DEFINES += OV_EXCLUDE_STATIC_CALLBACKS  #avoid ogg static callback warnings
 linux{ #avoid errors in VST SDK when compiling in Linux
     DEFINES += __cdecl=""
     QMAKE_CXXFLAGS += -D__LINUX_ALSA__
+    QMAKE_CFLAGS_APP += -fPIC
+    QMAKE_LFLAGS = -no-pie
 }
 
 macx{
