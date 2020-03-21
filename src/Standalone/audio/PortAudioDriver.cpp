@@ -44,7 +44,7 @@ int PortAudioDriver::getAudioOutputDeviceIndex() const
 
 bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 {
-    qCDebug(jtAudio) << "initializing portaudio...";
+    qCDebug(jtAudio) << QString("initializing portaudio (%1)...").arg(Pa_GetVersionText());
     PaError error = Pa_Initialize();
     if (error != paNoError) {
         qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
