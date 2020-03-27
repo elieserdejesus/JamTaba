@@ -273,7 +273,7 @@ bool JamRoomViewPanel::roomContainsBotsOnly(const login::RoomInfo &roomInfo)
 
 bool JamRoomViewPanel::canShowNinjamServerPort(const QString &serverName)
 {
-    return serverName.startsWith("ninbot") || serverName.startsWith("ninjamer");
+    return serverName.startsWith("ninbot") || serverName.startsWith("ninjamer") || serverName.startsWith("live.ninjamer") || serverName.startsWith("cockos");
 }
 
 void JamRoomViewPanel::initialize(const login::RoomInfo &roomInfo)
