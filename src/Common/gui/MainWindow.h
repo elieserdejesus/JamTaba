@@ -378,7 +378,7 @@ private:
 
     QPointF computeLocation() const;
 
-    QMap<long long, JamRoomViewPanel *> roomViewPanels;
+    QMap<QString, JamRoomViewPanel *> roomViewPanels;
 
     QScopedPointer<NinjamRoomWindow> ninjamWindow;
 

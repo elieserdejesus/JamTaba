@@ -129,7 +129,7 @@ public:
     bool isTransmiting(int channelID) const;
 
     void stopRoomStream();     // stop currentRoom stream
-    long long getCurrentStreamingRoomID() const;
+    QString getCurrentStreamingRoomID() const;
 
     int getLastTracksLayout() const;
 
@@ -370,7 +370,7 @@ private:
     void setAllTracksActivation(bool activated);
 
     QScopedPointer<AbstractMp3Streamer> roomStreamer;
-    long long currentStreamingRoomID;
+    QString currentStreamingRoomID;
 
     QMap<int, LocalInputGroup *> trackGroups;
 
@@ -567,7 +567,7 @@ inline Service *MainController::getNinjamService()
     return ninjamService.data();
 }
 
-inline long long MainController::getCurrentStreamingRoomID() const
+inline QString MainController::getCurrentStreamingRoomID() const
 {
     return currentStreamingRoomID;
 }

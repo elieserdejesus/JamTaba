@@ -15,12 +15,11 @@ class UserInfo
 {
 
 public:
-    UserInfo(long long id, const QString &name, const QString &ip);
+    UserInfo(const QString &name, const QString &ip);
     inline QString getIp() const { return ip; }
     inline QString getName() const { return name; }
 
 private:
-    long long id;
     QString name;
     QString ip;
 };
@@ -36,7 +35,7 @@ class RoomInfo
 {
 
 public:
-    RoomInfo(long long id, const QString &roomName, int roomPort, int maxUsers,
+    RoomInfo(const QString &roomName, int roomPort, int maxUsers,
              const QList<UserInfo> &users, int maxChannels, int bpi, int bpm, const QString &streamUrl);
 
     RoomInfo(const QString &roomName, int roomPort, int maxUsers, int maxChannels = 0);
@@ -44,7 +43,6 @@ public:
     //~RoomInfo();
 
     QString getName() const;
-    long long getID() const;
 
     bool isEmpty() const;
     bool isFull() const;
@@ -64,8 +62,9 @@ public:
     int getBpm() const;
     int getBpi() const;
 
+    QString getUniqueName() const;
+
 protected:
-    long long id;
 
     QString name;
 
@@ -100,11 +99,6 @@ inline QList<UserInfo> RoomInfo::getUsers() const
 inline bool RoomInfo::hasStream() const
 {
     return !streamUrl.isEmpty();
-}
-
-inline long long RoomInfo::getID() const
-{
-    return id;
 }
 
 inline QString RoomInfo::getStreamUrl() const

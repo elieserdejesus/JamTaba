@@ -908,7 +908,7 @@ void MainController::playRoomStream(const login::RoomInfo &roomInfo)
 {
     if (roomInfo.hasStream()) {
         roomStreamer->setStreamPath(roomInfo.getStreamUrl());
-        currentStreamingRoomID = roomInfo.getID();
+        currentStreamingRoomID = roomInfo.getUniqueName();
 
         // mute all tracks and unmute the room Streamer
         setAllTracksActivation(false);
@@ -919,7 +919,7 @@ void MainController::playRoomStream(const login::RoomInfo &roomInfo)
 void MainController::stopRoomStream()
 {
     roomStreamer->stopCurrentStream();
-    currentStreamingRoomID = -1000;
+    currentStreamingRoomID = "";
 
     setAllTracksActivation(true);
     // roomStreamer->setMuteStatus(true);

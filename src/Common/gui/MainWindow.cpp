@@ -787,7 +787,7 @@ persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
 void MainWindow::stopCurrentRoomStream()
 {
     if (mainController->isPlayingRoomStream()) {
-        long long roomID = mainController->getCurrentStreamingRoomID();
+        QString roomID = mainController->getCurrentStreamingRoomID();
 
         if (roomViewPanels[roomID])
             roomViewPanels[roomID]->clear(true);
@@ -1181,19 +1181,19 @@ void MainWindow::refreshPublicRoomsList(const QList<login::RoomInfo> &publicRoom
     for (const auto &roomInfo : sortedRooms) {
         int rowIndex = twoCollumns ? (index / 2) : (index);
         int collumnIndex = twoCollumns ? (index % 2) : 0;
-        auto roomViewPanel = roomViewPanels[roomInfo.getID()];
+        auto roomViewPanel = roomViewPanels[roomInfo.getUniqueName()];
         if (roomViewPanel) {
             roomViewPanel->refresh(roomInfo);
             // check if is playing a public room stream but this room is empty now
             if (mainController->isPlayingRoomStream()) {
-                if (roomInfo.isEmpty() && mainController->getCurrentStreamingRoomID() == roomInfo.getID()) {
+                if (roomInfo.isEmpty() && mainController->getCurrentStreamingRoomID() == roomInfo.getUniqueName()) {
                     stopCurrentRoomStream();
                 }
             }
             ui.allRoomsContent->layout()->removeWidget(roomViewPanel); // the widget is removed but added again
         } else {
             roomViewPanel = createJamRoomViewPanel(roomInfo);
-            roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
+            roomViewPanels.insert(roomInfo.getUniqueName(), roomViewPanel);
         }
         auto layout = dynamic_cast<QGridLayout *>(ui.allRoomsContent->layout());
         layout->addWidget(roomViewPanel, rowIndex, collumnIndex);
@@ -1210,7 +1210,7 @@ void MainWindow::playPublicRoomStream(const login::RoomInfo &roomInfo)
 {
     // clear all plots
     for (auto viewPanel : this->roomViewPanels.values())
-        viewPanel->clear(roomInfo.getID() != viewPanel->getRoomInfo().getID());
+        viewPanel->clear(roomInfo.getUniqueName() != viewPanel->getRoomInfo().getUniqueName());
 
     if (roomInfo.hasStream()) // just in case...
         mainController->playRoomStream(roomInfo);
@@ -1236,7 +1236,7 @@ void MainWindow::tryEnterInRoom(const login::RoomInfo &roomInfo, const QString &
 {
     // stop room stream before enter in a room
     if (mainController->isPlayingRoomStream()) {
-        long long roomID = mainController->getCurrentStreamingRoomID();
+        auto roomID = mainController->getCurrentStreamingRoomID();
 
         if (roomViewPanels[roomID])
             roomViewPanels[roomID]->clear(true);
@@ -2089,7 +2089,7 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update public server stream plot
     if (mainController->isPlayingRoomStream()) {
-        long long roomID = mainController->getCurrentStreamingRoomID();
+        auto roomID = mainController->getCurrentStreamingRoomID();
         JamRoomViewPanel *roomView = roomViewPanels[roomID];
         if (roomView) {
             bool buffering = mainController->getRoomStreamer()->isBuffering();
