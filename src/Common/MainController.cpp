@@ -228,7 +228,7 @@ void MainController::connectInNinjamServer(const ServerInfo &server)
     setupNinjamControllerSignals();
 
     if (mainWindow)
-        mainWindow->enterInRoom(login::RoomInfo(server.getHostName(), server.getPort(), login::RoomTYPE::NINJAM, server.getMaxUsers(),
+        mainWindow->enterInRoom(login::RoomInfo(server.getHostName(), server.getPort(), server.getMaxUsers(),
                                                 server.getMaxChannels()));
     else
         qCritical() << "mainWindow is null!";
@@ -937,8 +937,7 @@ void MainController::enterInRoom(const login::RoomInfo &room, const QStringList 
     if (isPlayingRoomStream())
         stopRoomStream();
 
-    if (room.getType() == login::RoomTYPE::NINJAM)
-        tryConnectInNinjamServer(room, channelsNames, password);
+    tryConnectInNinjamServer(room, channelsNames, password);
 }
 
 void MainController::sendNewChannelsNames(const QStringList &channelsNames)
@@ -990,22 +989,6 @@ void MainController::start()
     }
 }
 
-void MainController::connectInJamtabaServer()
-{
-    // connect with login server and receive (after some seconds) a list of public rooms to play
-
-    NatMap map; // not used yet, will be used in future to real time rooms
-    QString userEnvironment = getUserEnvironmentString();
-    QString version = QApplication::applicationVersion();
-    QString userName = settings.getUserName();
-    if (userName.isEmpty())
-        userName = "No name!";
-
-    qCInfo(jtCore) << "Connecting in Jamtaba server...";
-
-    loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
-}
-
 QString MainController::getUserEnvironmentString() const
 {
     QString systemName = QSysInfo::prettyProductName();
@@ -1026,9 +1009,6 @@ void MainController::stop()
             ninjamController->stop(false); // block disconnected signal
 
         started = false;
-
-        qCDebug(jtCore) << "disconnecting from login server...";
-        loginService.disconnectFromServer();
     }
 }
 

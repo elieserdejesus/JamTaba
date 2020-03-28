@@ -229,8 +229,6 @@ protected slots:
     // login service
     void showNewVersionAvailableMessage(const QString &latestVersionDetails);
     static QString sanitizeLatestVersionDetails(const QString &details);
-    void handleIncompatiblity();
-    void handleServerConnectionError(const QString &errorMsg);
 
     // +++++  ROOM FEATURES ++++++++
     void playPublicRoomStream(const login::RoomInfo &roomInfo);
@@ -442,7 +440,6 @@ private:
     void createNinjamServerChat(const QString &serverName);
     void addNinjamPanelsInBottom();
 
-    void showLastChordsInNinjamServerChat();
     void createVoteButton(const SystemVotingMessage &votingMessage);
     bool canShowBlockButtonInChatMessage(const QString &userFullName) const;
 
@@ -451,8 +448,6 @@ private:
     void setUserNameReadOnlyStatus(bool readOnly);
 
     void openUrlInUserBrowser(const QString &url);
-
-    void sendAcceptedChordProgressionToServer(const ChordProgression &progression);
 
     QString getTranslatedThemeName(const QString &themeName);
 

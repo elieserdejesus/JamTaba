@@ -156,7 +156,7 @@ QString JamRoomViewPanel::buildRoomDescriptionString()
 
     if (roomInfo.getBpm() > 0)
         roomDescription += "  " + QString::number(roomInfo.getBpm()) + " BPM ";
-    if (roomInfo.getType() == login::RoomTYPE::NINJAM && roomInfo.getBpi() > 0)
+    if (roomInfo.getBpi() > 0)
         roomDescription += "  " + QString::number(roomInfo.getBpi()) + " BPI";
     return roomDescription;
 }
@@ -274,7 +274,7 @@ void JamRoomViewPanel::initialize(const login::RoomInfo &roomInfo)
     if (roomName.endsWith(".com"))
         roomName = roomName.replace(".com", "");
 
-    if (roomInfo.getType() == login::RoomTYPE::NINJAM && canShowNinjamServerPort(roomName))
+    if (canShowNinjamServerPort(roomName))
         roomName += " (" + QString::number(roomInfo.getPort()) + ")";
 
     ui->labelName->setText(roomName);

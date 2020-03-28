@@ -36,17 +36,15 @@ class RoomInfo
 {
 
 public:
-    RoomInfo(long long id, const QString &roomName, int roomPort, RoomTYPE roomType, int maxUsers,
+    RoomInfo(long long id, const QString &roomName, int roomPort, int maxUsers,
              const QList<UserInfo> &users, int maxChannels, int bpi, int bpm, const QString &streamUrl);
 
-    RoomInfo(const QString &roomName, int roomPort, RoomTYPE roomType, int maxUsers, int maxChannels = 0);
+    RoomInfo(const QString &roomName, int roomPort, int maxUsers, int maxChannels = 0);
 
-    ~RoomInfo();
+    //~RoomInfo();
 
     QString getName() const;
     long long getID() const;
-
-    RoomTYPE getType() const;
 
     bool isEmpty() const;
     bool isFull() const;
@@ -73,8 +71,6 @@ protected:
 
     int port;
 
-    RoomTYPE type;
-
     int maxUsers;
     int maxChannels;
 
@@ -85,11 +81,6 @@ protected:
     int bpi;
     int bpm;
 };
-
-inline RoomInfo::~RoomInfo()
-{
-    //
-}
 
 inline bool RoomInfo::isFull() const
 {
@@ -146,11 +137,6 @@ inline QString RoomInfo::getName() const
     return name;
 }
 
-inline RoomTYPE RoomInfo::getType() const
-{
-    return type;
-}
-
 // +++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class LoginService : public QObject
@@ -160,63 +146,23 @@ class LoginService : public QObject
 public:
 
     explicit LoginService(QObject *parent = 0);
-    virtual ~LoginService();
-    virtual void connectInServer(const QString &userName, int instrumentID, const QString &channelName,
-                                    const NatMap &localPeerMap, const QString &version, const QString &environment, int sampleRate);
-
-    virtual void disconnectFromServer();
-    bool isConnected() const;
-
-    QString getChordProgressionFor(const login::RoomInfo &roomInfo) const;
-    void sendChordProgressionToServer(const QString &userName, const QString &serverName, quint32 serverPort, const QString &chordProgression);
+    //virtual ~LoginService();
 
 signals:
     void roomsListAvailable(const QList<login::RoomInfo> &publicRooms);
-    void incompatibilityWithServerDetected();
-    void newVersionAvailableForDownload(const QString &latestVersionDetails);
-    void errorWhenConnectingToServer(const QString &error);
 
 private:
 
-    enum Command {
-        CONNECT,
-        DISCONNECT,
-        REFRESH_ROOMS_LIST
-    };
-
     QNetworkAccessManager httpClient;
-    QNetworkReply *pendingReply;
     static const QString LOGIN_SERVER_URL;
-    bool connected;
 
-    static const int REFRESH_PERIOD = 30000;
+    static const int REFRESH_PERIOD = 60000;
     QTimer *refreshTimer;
-
-    QMap<QString, QString> lastChordProgressions;
-
 
     void handleJson(const QString &json);
 
-    QNetworkReply *sendCommandToServer(const QUrlQuery &, bool synchronous = false);
-
     RoomInfo buildRoomInfoFromJson(const QJsonObject &json);
-
-    static QString getRoomInfoUniqueName(const login::RoomInfo &roomInfo);
-
-private slots:
-    void connectedSlot();
-    void roomsListReceivedSlot();
-
-    void errorSlot(QNetworkReply::NetworkError error);
-    void connectNetworkReplySlots(QNetworkReply *reply, Command command);
-
-    void refreshTimerSlot();
 };
-
-inline bool LoginService::isConnected() const
-{
-    return connected;
-}
 
 } // namespace
 

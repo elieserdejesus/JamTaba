@@ -148,8 +148,6 @@ public:
 
     LoginService *getLoginService() const;
 
-    void connectInJamtabaServer();
-
     virtual controller::NinjamController *getNinjamController() const;
 
     Service *getNinjamService();

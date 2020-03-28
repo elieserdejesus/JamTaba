@@ -47,7 +47,6 @@ void JamTabaPlugin::initialize()
             controller.reset(createPluginMainController(settings, this));
             controller->setSampleRate(getSampleRate());
             controller->start();
-            controller->connectInJamtabaServer();
 
             qCDebug(jtVstPlugin)<< "Controller started!";
             running = true;

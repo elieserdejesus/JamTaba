@@ -1040,11 +1040,7 @@ void MainWindow::initializeLoginService()
 
     connect(loginService, &LoginService::roomsListAvailable, this, &MainWindow::refreshPublicRoomsList);
 
-    connect(loginService, &LoginService::incompatibilityWithServerDetected, this, &MainWindow::handleIncompatiblity);
-
-    connect(loginService, &LoginService::newVersionAvailableForDownload, this, &MainWindow::showNewVersionAvailableMessage);
-
-    connect(loginService, &LoginService::errorWhenConnectingToServer, this, &MainWindow::handleServerConnectionError);
+    //connect(loginService, &LoginService::newVersionAvailableForDownload, this, &MainWindow::showNewVersionAvailableMessage);
 }
 
 void MainWindow::closeContentTab(int index)
@@ -1113,14 +1109,6 @@ bool MainWindow::jamRoomLessThan(const login::RoomInfo &r1, const login::RoomInf
     return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
 }
 
-void MainWindow::handleIncompatiblity()
-{
-    hideBusyDialog();
-    QString text = tr("Your Jamtaba version is not compatible with previous versions!");
-    QMessageBox::warning(this, tr("Server : Compatibility problem"), text);
-    close();
-}
-
 void MainWindow::detachMainController()
 {
     //if (videoFrameGrabber) { // necessary to avoid crash VST host when Jamtaba is removed
@@ -1132,20 +1120,6 @@ void MainWindow::detachMainController()
     }
 
     mainController = nullptr;
-}
-
-void MainWindow::handleServerConnectionError(const QString &errorMsg)
-{
-    hideBusyDialog();
-
-    auto message = tr("Error connecting with Jamtaba server!\n") + errorMsg;
-
-    auto metrics = fontMetrics();
-    auto messageWidth = metrics.width(message);
-
-    auto pos = QPoint(width()/2 - messageWidth/2, height()/2);
-
-    QToolTip::showText(mapToGlobal(pos), message, this, rect());
 }
 
 QString MainWindow::sanitizeLatestVersionDetails(const QString &details)
@@ -1205,27 +1179,25 @@ void MainWindow::refreshPublicRoomsList(const QList<login::RoomInfo> &publicRoom
     int index = 0;
     bool twoCollumns = canUseTwoColumnLayoutInPublicRooms();
     for (const auto &roomInfo : sortedRooms) {
-        if (roomInfo.getType() == login::RoomTYPE::NINJAM) { // skipping other rooms at moment
-            int rowIndex = twoCollumns ? (index / 2) : (index);
-            int collumnIndex = twoCollumns ? (index % 2) : 0;
-            auto roomViewPanel = roomViewPanels[roomInfo.getID()];
-            if (roomViewPanel) {
-                roomViewPanel->refresh(roomInfo);
-                // check if is playing a public room stream but this room is empty now
-                if (mainController->isPlayingRoomStream()) {
-                    if (roomInfo.isEmpty() && mainController->getCurrentStreamingRoomID() == roomInfo.getID()) {
-                        stopCurrentRoomStream();
-                    }
+        int rowIndex = twoCollumns ? (index / 2) : (index);
+        int collumnIndex = twoCollumns ? (index % 2) : 0;
+        auto roomViewPanel = roomViewPanels[roomInfo.getID()];
+        if (roomViewPanel) {
+            roomViewPanel->refresh(roomInfo);
+            // check if is playing a public room stream but this room is empty now
+            if (mainController->isPlayingRoomStream()) {
+                if (roomInfo.isEmpty() && mainController->getCurrentStreamingRoomID() == roomInfo.getID()) {
+                    stopCurrentRoomStream();
                 }
-                ui.allRoomsContent->layout()->removeWidget(roomViewPanel); // the widget is removed but added again
-            } else {
-                roomViewPanel = createJamRoomViewPanel(roomInfo);
-                roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
             }
-            auto layout = dynamic_cast<QGridLayout *>(ui.allRoomsContent->layout());
-            layout->addWidget(roomViewPanel, rowIndex, collumnIndex);
-            index++;
+            ui.allRoomsContent->layout()->removeWidget(roomViewPanel); // the widget is removed but added again
+        } else {
+            roomViewPanel = createJamRoomViewPanel(roomInfo);
+            roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
         }
+        auto layout = dynamic_cast<QGridLayout *>(ui.allRoomsContent->layout());
+        layout->addWidget(roomViewPanel, rowIndex, collumnIndex);
+        index++;
     }
 
     if (mainController->isPlayingInNinjamRoom())
@@ -1484,27 +1456,6 @@ void MainWindow::handleUserEntering(const QString &userFullName)
 
 }
 
-void MainWindow::showLastChordsInNinjamServerChat()
-{
-    Q_ASSERT(ninjamWindow);
-
-    auto loginService = mainController->getLoginService();
-    auto roomInfo = ninjamWindow->getRoomInfo();
-
-    QString lastChordProgression = loginService->getChordProgressionFor(roomInfo);
-    ChatChordsProgressionParser parser;
-    if (parser.containsProgression(lastChordProgression)) {
-        ChordProgression progression = parser.parse(lastChordProgression);
-        QString title = tr("Last chords used");
-
-        auto mainChatPanel = ui.chatTabWidget->getNinjamServerChat();
-        Q_ASSERT(mainChatPanel);
-        mainChatPanel->addLastChordsMessage(title, progression.toString());
-        mainChatPanel->addChordProgressionConfirmationMessage(progression);
-
-    }
-}
-
 void MainWindow::createVoteButton(const gui::chat::SystemVotingMessage &votingMessage)
 {
     if (!votingMessage.isValidVotingMessage())
@@ -1702,7 +1653,7 @@ void MainWindow::createMainChat(bool turnedOn)
     });
 
     connect(mainChatPanel, &ChatPanel::userAcceptingServerInvite, [=](const QString &serverIP, quint16 serverPort){
-        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, login::RoomTYPE::NINJAM, 8));
+        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, 8));
     });
 
     updateCollapseButtons();
@@ -1871,8 +1822,6 @@ void MainWindow::createNinjamServerChat(const QString &serverName)
 
     initializeVotingExpirationTimers();
 
-    showLastChordsInNinjamServerChat();
-
     updateCollapseButtons();
 }
 
@@ -1909,7 +1858,7 @@ void MainWindow::createPrivateChat(const QString &remoteUserName, const QString 
     });
 
     connect(chatPanel, &ChatPanel::userAcceptingServerInvite, [=](const QString &serverIP, quint16 serverPort){
-        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, login::RoomTYPE::NINJAM, 8));
+        tryEnterInRoom(login::RoomInfo(serverIP, serverPort, 8));
     });
 
     connect(chatPanel, &ChatPanel::userBlockingChatMessagesFrom, mainController, &MainController::blockUserInChat);
@@ -2303,7 +2252,7 @@ void MainWindow::connectInPrivateServer(const QString &server, int serverPort,
     mainController->setUserName(userName);
     ui.userNameLineEdit->setText(userName);
 
-    login::RoomInfo roomInfo(server, serverPort, login::RoomTYPE::NINJAM, 32, 32);
+    login::RoomInfo roomInfo(server, serverPort, 32, 32);
     tryEnterInRoom(roomInfo, password);
 }
 
@@ -2699,28 +2648,12 @@ void MainWindow::acceptChordProgression(const ChordProgression &progression)
             ninjamPanel->setLowContrastPaintInIntervalPanel(true);
         }
 
-        sendAcceptedChordProgressionToServer(progression);
-
     } else {
         int measures = progression.getMeasures().size();
         QString msg = tr("These chords (%1 measures) can't be used in a %2 bpi interval!")
                       .arg(QString::number(measures))
                       .arg(QString::number(currentBpi));
         QMessageBox::warning(this, tr("Problem..."), msg);
-    }
-}
-
-void MainWindow::sendAcceptedChordProgressionToServer(const ChordProgression &progression)
-{
-    auto service = mainController->getLoginService();
-    auto currentRoom = ninjamWindow->getRoomInfo();
-    QString chords = progression.toString();
-    bool chordProgressionIsOutdated = service->getChordProgressionFor(currentRoom) != chords;
-    if (chordProgressionIsOutdated) {
-        QString userName = mainController->getUserName();
-        QString serverName = currentRoom.getName();
-        quint32 serverPort = currentRoom.getPort();
-        service->sendChordProgressionToServer(userName, serverName, serverPort, chords);
     }
 }
 
