@@ -222,15 +222,7 @@ void JamRoomViewPanel::updateStyleSheet()
 
 void JamRoomViewPanel::updateButtonListen()
 {
-    ui->buttonListen->setEnabled(roomInfo.hasStream() && !roomInfo.isEmpty());
-
-    if (!roomInfo.hasStream()) {
-        ui->buttonListen->setIcon(QIcon(":/images/warning.png"));
-        ui->buttonListen->setToolTip(tr("The audio stream of this room is not available at moment!"));
-    } else {
-        ui->buttonListen->setIcon(QIcon()); // remove the icon
-        ui->buttonListen->setToolTip(""); // clean the tooltip
-    }
+    ui->buttonListen->setVisible(roomInfo.hasStream() && !roomInfo.isEmpty());
 
     style()->unpolish(ui->buttonListen);
     style()->polish(ui->buttonListen);
