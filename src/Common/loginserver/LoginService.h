@@ -40,8 +40,6 @@ public:
 
     RoomInfo(const QString &roomName, int roomPort, int maxUsers, int maxChannels = 0);
 
-    //~RoomInfo();
-
     QString getName() const;
 
     bool isEmpty() const;

@@ -147,10 +147,10 @@ RoomInfo LoginService::buildRoomInfoFromJson(const QJsonObject &jsonObject)
     auto serverNameText = jsonObject.contains("name") ? jsonObject["name"].toString() : QString("Error");
     QString name =  getServerName(serverNameText);
     int port = getServerPort(serverNameText);
-    int maxUsers = jsonObject.contains("maxUsers") ? jsonObject["maxUsers"].toInt() : getServerGuessedMaxUsers(name, port);
+    int maxUsers = jsonObject.contains("user_max") ? jsonObject["user_max"].toString().toInt() : getServerGuessedMaxUsers(name, port);
     QString streamLink = jsonObject.contains("stream") ? jsonObject["stream"].toString() : QString("");
-    int bpi = jsonObject.contains("bpi") ? jsonObject["bpi"].toInt() : 16;
-    int bpm = jsonObject.contains("bpm") ? jsonObject["bpm"].toInt() : 120;
+    int bpi = jsonObject.contains("bpi") ? jsonObject["bpi"].toString().toInt() : 16;
+    int bpm = jsonObject.contains("bpm") ? jsonObject["bpm"].toString().toInt() : 120;
 
     QJsonArray usersArray = jsonObject.contains("users") ? jsonObject["users"].toArray() : QJsonArray();
     QList<UserInfo> users;
