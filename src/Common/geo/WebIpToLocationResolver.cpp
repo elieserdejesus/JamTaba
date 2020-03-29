@@ -148,7 +148,7 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
     if (reply->error() == QNetworkReply::NoError) {
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
         if (doc.isEmpty() || !doc.isObject()) {
-            qCritical() << "Json document is empty or is not an json object!";
+            qCCritical(jtIpToLocation) << "Json document is empty or is not an json object!";
             return;
         }
 
@@ -159,16 +159,16 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
                 auto errorCode = error.contains("code") ? error["code"].toInt() : -1;
                 auto errorInfo = error.contains("info") ? error["info"].toString() : "Can`t get error info!";
                 if (retryCount < MaxServersAlternatives) {
-                    qDebug() << "Error " << errorCode << " received (" << errorInfo << "), trying alternative server ...";
+                    qCDebug(jtIpToLocation) << "Error " << errorCode << " received (" << errorInfo << "), trying alternative server ...";
                     pendingRequests.clear(); // clear pending requests before try another API
                     requestDataFromWebService(ip, retryCount + 1);
                 } else {
-                    qCritical() << "All servers failed, no more alternatives available";
+                    qCCritical(jtIpToLocation) << "All servers failed, no more alternatives available";
                     apiServersRunning = false;
                 }
                 return;
             } else {
-                qCritical() << "The root json object not contains 'country_name'";
+                qCCritical(jtIpToLocation) << "The root json object not contains 'country_name'";
                 return;
             }
         }
@@ -190,7 +190,7 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply)
             qCDebug(jtIpToLocation) << "Data received IP:" << ip << " Lang:" << language << " country code:" << countryCode
                                     << " country name:" << countryName << "lat:" << latitude << " long:" << longitude;
         } else {
-            qCritical() << "The json 'location' object not contains 'latidude' or 'longitude' entries";
+            qCCritical(jtIpToLocation) << "The json 'location' object not contains 'latidude' or 'longitude' entries";
         }
 
         pendingRequests.remove(ip);
