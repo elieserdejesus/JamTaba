@@ -374,6 +374,8 @@
 		2A67BDAB1E41112600A8FFF1 /* MainWindowPlugin.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3D81E0AB913005A940A /* MainWindowPlugin.h */; };
 		2A73C8141E44F84900DF124A /* TopLevelTextEditorModifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A73C8131E44F84900DF124A /* TopLevelTextEditorModifier.h */; };
 		2A73C8161E44F85C00DF124A /* TopLevelTextEditorModifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A73C8151E44F85C00DF124A /* TopLevelTextEditorModifier.cpp */; };
+		2A90965E2431579400EAEBE8 /* libQt5ClipboardSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A90965D2431579400EAEBE8 /* libQt5ClipboardSupport.a */; };
+		2A90965F2431579400EAEBE8 /* libQt5ClipboardSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A90965D2431579400EAEBE8 /* libQt5ClipboardSupport.a */; };
 		2AAAA79F2032459F0005C3F5 /* UPnPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAA79D2032459F0005C3F5 /* UPnPManager.cpp */; };
 		2AAAA7A02032459F0005C3F5 /* UPnPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AAAA79E2032459F0005C3F5 /* UPnPManager.h */; };
 		2AAAA7A1203245AE0005C3F5 /* UPnPManager.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAA79E2032459F0005C3F5 /* UPnPManager.h */; };
@@ -410,6 +412,7 @@
 		2AC0D3F01E0AB913005A940A /* NinjamControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DA1E0AB913005A940A /* NinjamControllerPlugin.h */; };
 		2AC0D3F41E0AB913005A940A /* NinjamRoomWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DC1E0AB913005A940A /* NinjamRoomWindowPlugin.h */; };
 		2ACA3F721EAE3EF000EF369A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ACA3F711EAE3EF000EF369A /* SystemConfiguration.framework */; };
+		2AD1515524315AE300F6A922 /* libqtpcre2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A48224253B8A000D6366 /* libqtpcre2.a */; };
 		2AEFF5531E1835A100843898 /* libQt5Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54E1E1835A100843898 /* libQt5Core.a */; };
 		2AEFF5541E1835A100843898 /* libQt5Gui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54F1E1835A100843898 /* libQt5Gui.a */; };
 		2AEFF5551E1835A100843898 /* libQt5Network.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5501E1835A100843898 /* libQt5Network.a */; };
@@ -472,7 +475,6 @@
 		2AF8A49F24253F23000D6366 /* libQt5Bootstrap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A49E24253F23000D6366 /* libQt5Bootstrap.a */; };
 		2AF8A4A324254196000D6366 /* libqminimal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A4A224254196000D6366 /* libqminimal.a */; };
 		2AF8A4A524254198000D6366 /* libqoffscreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A4A424254198000D6366 /* libqoffscreen.a */; };
-		2AF8A4A724254382000D6366 /* libQt5ClipboardSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF8A4A624254382000D6366 /* libQt5ClipboardSupport.a */; };
 		8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
 		8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
 		8BA4AE54073EB72300A2709A /* JamTaba_ViewFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */; };
@@ -483,7 +485,6 @@
 		D6CDB08721BD35C900A81EA8 /* ChordProgressionCreationDialog.h in Sources */ = {isa = PBXBuildFile; fileRef = D6CDB08221BD35A700A81EA8 /* ChordProgressionCreationDialog.h */; };
 		D6D2DCEA21BD81FC0096AE0F /* libQt5Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54E1E1835A100843898 /* libQt5Core.a */; };
 		D6D2DCEB21BD82440096AE0F /* libqcocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55C1E18360A00843898 /* libqcocoa.a */; };
-		D6D2DCEC21BD82490096AE0F /* libqtpcre.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55A1E1835E100843898 /* libqtpcre.a */; };
 		D6D2DCED21BD827C0096AE0F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1362B21F6595D2004953CF /* AVFoundation.framework */; };
 		D6D2DCF121BD82FC0096AE0F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA4AE5B073EB79000A2709A /* Cocoa.framework */; };
 		D6D2DCF421BD83450096AE0F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70071E080F7200A4B6C2 /* libz.dylib */; };
@@ -499,7 +500,7 @@
 			outputFiles = (
 				"${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h",
 			);
-			script = "~/Desktop/Qt-5.6/bin/uic -o ${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n";
+			script = "~/Desktop/Qt-5.9.8/bin/uic -o ${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n";
 		};
 		2A0DBB0E1E0AF31900BEF1FF /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -510,7 +511,7 @@
 			outputFiles = (
 				"${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp",
 			);
-			script = "~/Desktop/Qt-5.6/bin/moc -o ${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}\n";
+			script = "~/Desktop/Qt-5.9.8/bin/moc -o ${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}\n";
 		};
 		2A120A871E0C066100E0E596 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -521,7 +522,7 @@
 			outputFiles = (
 				"${INPUT_FILE_DIR}/GeneratedFiles/rcc_${INPUT_FILE_BASE}.cpp",
 			);
-			script = "~/Desktop/Qt-5.6/bin/rcc -o ${INPUT_FILE_DIR}/GeneratedFiles/rcc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}";
+			script = "~/Desktop/Qt-5.9.8/bin/rcc -o ${INPUT_FILE_DIR}/GeneratedFiles/rcc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}";
 		};
 /* End PBXBuildRule section */
 
@@ -771,10 +772,10 @@
 		2A13629B1F658714004953CF /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ../../libs/static/mac64/libavutil.a; sourceTree = "<group>"; };
 		2A13629C1F658714004953CF /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = ../../libs/static/mac64/libswresample.a; sourceTree = "<group>"; };
 		2A13629D1F658714004953CF /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = ../../libs/static/mac64/libswscale.a; sourceTree = "<group>"; };
-		2A1362A31F6587C0004953CF /* libQt5Multimedia.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Multimedia.a; path = "../../../Qt-5.6/lib/libQt5Multimedia.a"; sourceTree = "<group>"; };
-		2A1362A41F6587C0004953CF /* libQt5MultimediaWidgets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5MultimediaWidgets.a; path = "../../../Qt-5.6/lib/libQt5MultimediaWidgets.a"; sourceTree = "<group>"; };
+		2A1362A31F6587C0004953CF /* libQt5Multimedia.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Multimedia.a; path = "../../../Qt-5.9.8/lib/libQt5Multimedia.a"; sourceTree = "<group>"; };
+		2A1362A41F6587C0004953CF /* libQt5MultimediaWidgets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5MultimediaWidgets.a; path = "../../../Qt-5.9.8/lib/libQt5MultimediaWidgets.a"; sourceTree = "<group>"; };
 		2A1362A71F6587FA004953CF /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
-		2A1362AD1F658D26004953CF /* libqavfcamera.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqavfcamera.a; path = "../../../Qt-5.6/plugins/mediaservice/libqavfcamera.a"; sourceTree = "<group>"; };
+		2A1362AD1F658D26004953CF /* libqavfcamera.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqavfcamera.a; path = "../../../Qt-5.9.8/plugins/mediaservice/libqavfcamera.a"; sourceTree = "<group>"; };
 		2A1362B01F659589004953CF /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		2A1362B21F6595D2004953CF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2A1362B41F659642004953CF /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -826,6 +827,7 @@
 		2A67BDA51E410FE400A8FFF1 /* ScreensaverBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreensaverBlocker.h; sourceTree = "<group>"; };
 		2A73C8131E44F84900DF124A /* TopLevelTextEditorModifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TopLevelTextEditorModifier.h; path = ../../src/Plugins/TopLevelTextEditorModifier.h; sourceTree = "<group>"; };
 		2A73C8151E44F85C00DF124A /* TopLevelTextEditorModifier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TopLevelTextEditorModifier.cpp; path = ../../src/Plugins/TopLevelTextEditorModifier.cpp; sourceTree = "<group>"; };
+		2A90965D2431579400EAEBE8 /* libQt5ClipboardSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5ClipboardSupport.a; path = "../../../Qt-5.9.8/lib/libQt5ClipboardSupport.a"; sourceTree = "<group>"; };
 		2AAAA79D2032459F0005C3F5 /* UPnPManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UPnPManager.cpp; sourceTree = "<group>"; };
 		2AAAA79E2032459F0005C3F5 /* UPnPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPnPManager.h; sourceTree = "<group>"; };
 		2AAAA7A42032462B0005C3F5 /* ClientMessages.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientMessages.cpp; sourceTree = "<group>"; };
@@ -865,20 +867,20 @@
 		2AC0D3DD1E0AB913005A940A /* PreferencesDialogPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferencesDialogPlugin.cpp; path = ../../src/Plugins/PreferencesDialogPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3DE1E0AB913005A940A /* PreferencesDialogPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesDialogPlugin.h; path = ../../src/Plugins/PreferencesDialogPlugin.h; sourceTree = "<group>"; };
 		2ACA3F711EAE3EF000EF369A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		2AEFF54E1E1835A100843898 /* libQt5Core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Core.a; path = "../../../Qt-5.6/lib/libQt5Core.a"; sourceTree = "<group>"; };
-		2AEFF54F1E1835A100843898 /* libQt5Gui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Gui.a; path = "../../../Qt-5.6/lib/libQt5Gui.a"; sourceTree = "<group>"; };
-		2AEFF5501E1835A100843898 /* libQt5Network.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Network.a; path = "../../../Qt-5.6/lib/libQt5Network.a"; sourceTree = "<group>"; };
-		2AEFF5511E1835A100843898 /* libQt5PlatformSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PlatformSupport.a; path = "../../../Qt-5.6/lib/libQt5PlatformSupport.a"; sourceTree = "<group>"; };
-		2AEFF5521E1835A100843898 /* libQt5Widgets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Widgets.a; path = "../../../Qt-5.6/lib/libQt5Widgets.a"; sourceTree = "<group>"; };
-		2AEFF5581E1835CC00843898 /* libqtharfbuzzng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtharfbuzzng.a; path = "../../../Qt-5.6/lib/libqtharfbuzzng.a"; sourceTree = "<group>"; };
-		2AEFF55A1E1835E100843898 /* libqtpcre.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtpcre.a; path = "../../../Qt-5.6/lib/libqtpcre.a"; sourceTree = "<group>"; };
-		2AEFF55C1E18360A00843898 /* libqcocoa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqcocoa.a; path = "../../../Qt-5.6/plugins/platforms/libqcocoa.a"; sourceTree = "<group>"; };
-		2AEFF55E1E18362500843898 /* libcocoaprintersupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcocoaprintersupport.a; path = "../../../Qt-5.6/plugins/printsupport/libcocoaprintersupport.a"; sourceTree = "<group>"; };
-		2AEFF5601E18363800843898 /* libqtfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtfreetype.a; path = "../../../Qt-5.6/lib/libqtfreetype.a"; sourceTree = "<group>"; };
-		2AEFF5621E18364D00843898 /* libQt5PrintSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PrintSupport.a; path = "../../../Qt-5.6/lib/libQt5PrintSupport.a"; sourceTree = "<group>"; };
+		2AEFF54E1E1835A100843898 /* libQt5Core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Core.a; path = "../../../Qt-5.9.8/lib/libQt5Core.a"; sourceTree = "<group>"; };
+		2AEFF54F1E1835A100843898 /* libQt5Gui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Gui.a; path = "../../../Qt-5.9.8/lib/libQt5Gui.a"; sourceTree = "<group>"; };
+		2AEFF5501E1835A100843898 /* libQt5Network.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Network.a; path = "../../../Qt-5.9.8/lib/libQt5Network.a"; sourceTree = "<group>"; };
+		2AEFF5511E1835A100843898 /* libQt5PlatformSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PlatformSupport.a; path = "../../../Qt-5.9.8/lib/libQt5PlatformSupport.a"; sourceTree = "<group>"; };
+		2AEFF5521E1835A100843898 /* libQt5Widgets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Widgets.a; path = "../../../Qt-5.9.8/lib/libQt5Widgets.a"; sourceTree = "<group>"; };
+		2AEFF5581E1835CC00843898 /* libqtharfbuzzng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtharfbuzzng.a; path = "../../../Qt-5.9.8/lib/libqtharfbuzzng.a"; sourceTree = "<group>"; };
+		2AEFF55A1E1835E100843898 /* libqtpcre.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtpcre.a; path = "../../../Qt-5.9.8/lib/libqtpcre.a"; sourceTree = "<group>"; };
+		2AEFF55C1E18360A00843898 /* libqcocoa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqcocoa.a; path = "../../../Qt-5.9.8/plugins/platforms/libqcocoa.a"; sourceTree = "<group>"; };
+		2AEFF55E1E18362500843898 /* libcocoaprintersupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcocoaprintersupport.a; path = "../../../Qt-5.9.8/plugins/printsupport/libcocoaprintersupport.a"; sourceTree = "<group>"; };
+		2AEFF5601E18363800843898 /* libqtfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtfreetype.a; path = "../../../Qt-5.9.8/lib/libqtfreetype.a"; sourceTree = "<group>"; };
+		2AEFF5621E18364D00843898 /* libQt5PrintSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PrintSupport.a; path = "../../../Qt-5.9.8/lib/libQt5PrintSupport.a"; sourceTree = "<group>"; };
 		2AF562152047181A00D809D7 /* MainChat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainChat.cpp; sourceTree = "<group>"; };
 		2AF562162047181A00D809D7 /* MainChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainChat.h; sourceTree = "<group>"; };
-		2AF5621A204719A700D809D7 /* libQt5WebSockets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5WebSockets.a; path = "../../../Qt-5.6/lib/libQt5WebSockets.a"; sourceTree = "<group>"; };
+		2AF5621A204719A700D809D7 /* libQt5WebSockets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5WebSockets.a; path = "../../../Qt-5.9.8/lib/libQt5WebSockets.a"; sourceTree = "<group>"; };
 		2AF5A9281E76192F00D1150A /* FileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReader.h; sourceTree = "<group>"; };
 		2AF5A9291E76192F00D1150A /* FileReaderFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileReaderFactory.cpp; sourceTree = "<group>"; };
 		2AF5A92A1E76192F00D1150A /* FileReaderFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReaderFactory.h; sourceTree = "<group>"; };
@@ -904,26 +906,25 @@
 		2AF5A95F1E761D9900D1150A /* Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Encoder.h; sourceTree = "<group>"; };
 		2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mp3Decoder.h; sourceTree = "<group>"; };
 		2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mp3Decoder.cpp; sourceTree = "<group>"; };
-		2AF8A48024253B79000D6366 /* libqtharfbuzz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtharfbuzz.a; path = "../../../Qt-5.6/lib/libqtharfbuzz.a"; sourceTree = "<group>"; };
-		2AF8A48224253B8A000D6366 /* libqtpcre2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtpcre2.a; path = "../../../Qt-5.6/lib/libqtpcre2.a"; sourceTree = "<group>"; };
-		2AF8A48424253BC9000D6366 /* libQt5AccessibilitySupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5AccessibilitySupport.a; path = "../../../Qt-5.6/lib/libQt5AccessibilitySupport.a"; sourceTree = "<group>"; };
-		2AF8A48624253BDD000D6366 /* libQt5FontDatabaseSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5FontDatabaseSupport.a; path = "../../../Qt-5.6/lib/libQt5FontDatabaseSupport.a"; sourceTree = "<group>"; };
-		2AF8A48824253BE1000D6366 /* libQt5GraphicsSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5GraphicsSupport.a; path = "../../../Qt-5.6/lib/libQt5GraphicsSupport.a"; sourceTree = "<group>"; };
-		2AF8A48A24253BEC000D6366 /* libQt5PlatformCompositorSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PlatformCompositorSupport.a; path = "../../../Qt-5.6/lib/libQt5PlatformCompositorSupport.a"; sourceTree = "<group>"; };
-		2AF8A48C24253CC5000D6366 /* libqtlibpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtlibpng.a; path = "../../../Qt-5.6/lib/libqtlibpng.a"; sourceTree = "<group>"; };
-		2AF8A48E24253D1E000D6366 /* libQt5CglSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5CglSupport.a; path = "../../../Qt-5.6/lib/libQt5CglSupport.a"; sourceTree = "<group>"; };
-		2AF8A49024253D24000D6366 /* libQt5Designer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Designer.a; path = "../../../Qt-5.6/lib/libQt5Designer.a"; sourceTree = "<group>"; };
-		2AF8A49224253D29000D6366 /* libQt5DesignerComponents.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5DesignerComponents.a; path = "../../../Qt-5.6/lib/libQt5DesignerComponents.a"; sourceTree = "<group>"; };
-		2AF8A49424253D2D000D6366 /* libQt5DeviceDiscoverySupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5DeviceDiscoverySupport.a; path = "../../../Qt-5.6/lib/libQt5DeviceDiscoverySupport.a"; sourceTree = "<group>"; };
-		2AF8A49624253D33000D6366 /* libQt5EventDispatcherSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5EventDispatcherSupport.a; path = "../../../Qt-5.6/lib/libQt5EventDispatcherSupport.a"; sourceTree = "<group>"; };
-		2AF8A49824253D36000D6366 /* libQt5FbSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5FbSupport.a; path = "../../../Qt-5.6/lib/libQt5FbSupport.a"; sourceTree = "<group>"; };
-		2AF8A49A24253D51000D6366 /* libQt5ThemeSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5ThemeSupport.a; path = "../../../Qt-5.6/lib/libQt5ThemeSupport.a"; sourceTree = "<group>"; };
-		2AF8A49C24253D53000D6366 /* libQt5UiTools.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5UiTools.a; path = "../../../Qt-5.6/lib/libQt5UiTools.a"; sourceTree = "<group>"; };
-		2AF8A49E24253F23000D6366 /* libQt5Bootstrap.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Bootstrap.a; path = "../../../Qt-5.6/lib/libQt5Bootstrap.a"; sourceTree = "<group>"; };
+		2AF8A48024253B79000D6366 /* libqtharfbuzz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtharfbuzz.a; path = "../../../Qt-5.9.8/lib/libqtharfbuzz.a"; sourceTree = "<group>"; };
+		2AF8A48224253B8A000D6366 /* libqtpcre2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtpcre2.a; path = "../../../Qt-5.9.8/lib/libqtpcre2.a"; sourceTree = "<group>"; };
+		2AF8A48424253BC9000D6366 /* libQt5AccessibilitySupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5AccessibilitySupport.a; path = "../../../Qt-5.9.8/lib/libQt5AccessibilitySupport.a"; sourceTree = "<group>"; };
+		2AF8A48624253BDD000D6366 /* libQt5FontDatabaseSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5FontDatabaseSupport.a; path = "../../../Qt-5.9.8/lib/libQt5FontDatabaseSupport.a"; sourceTree = "<group>"; };
+		2AF8A48824253BE1000D6366 /* libQt5GraphicsSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5GraphicsSupport.a; path = "../../../Qt-5.9.8/lib/libQt5GraphicsSupport.a"; sourceTree = "<group>"; };
+		2AF8A48A24253BEC000D6366 /* libQt5PlatformCompositorSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PlatformCompositorSupport.a; path = "../../../Qt-5.9.8/lib/libQt5PlatformCompositorSupport.a"; sourceTree = "<group>"; };
+		2AF8A48C24253CC5000D6366 /* libqtlibpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtlibpng.a; path = "../../../Qt-5.9.8/lib/libqtlibpng.a"; sourceTree = "<group>"; };
+		2AF8A48E24253D1E000D6366 /* libQt5CglSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5CglSupport.a; path = "../../../Qt-5.9.8/lib/libQt5CglSupport.a"; sourceTree = "<group>"; };
+		2AF8A49024253D24000D6366 /* libQt5Designer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Designer.a; path = "../../../Qt-5.9.8/lib/libQt5Designer.a"; sourceTree = "<group>"; };
+		2AF8A49224253D29000D6366 /* libQt5DesignerComponents.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5DesignerComponents.a; path = "../../../Qt-5.9.8/lib/libQt5DesignerComponents.a"; sourceTree = "<group>"; };
+		2AF8A49424253D2D000D6366 /* libQt5DeviceDiscoverySupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5DeviceDiscoverySupport.a; path = "../../../Qt-5.9.8/lib/libQt5DeviceDiscoverySupport.a"; sourceTree = "<group>"; };
+		2AF8A49624253D33000D6366 /* libQt5EventDispatcherSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5EventDispatcherSupport.a; path = "../../../Qt-5.9.8/lib/libQt5EventDispatcherSupport.a"; sourceTree = "<group>"; };
+		2AF8A49824253D36000D6366 /* libQt5FbSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5FbSupport.a; path = "../../../Qt-5.9.8/lib/libQt5FbSupport.a"; sourceTree = "<group>"; };
+		2AF8A49A24253D51000D6366 /* libQt5ThemeSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5ThemeSupport.a; path = "../../../Qt-5.9.8/lib/libQt5ThemeSupport.a"; sourceTree = "<group>"; };
+		2AF8A49C24253D53000D6366 /* libQt5UiTools.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5UiTools.a; path = "../../../Qt-5.9.8/lib/libQt5UiTools.a"; sourceTree = "<group>"; };
+		2AF8A49E24253F23000D6366 /* libQt5Bootstrap.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Bootstrap.a; path = "../../../Qt-5.9.8/lib/libQt5Bootstrap.a"; sourceTree = "<group>"; };
 		2AF8A4A024253F7E000D6366 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		2AF8A4A224254196000D6366 /* libqminimal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqminimal.a; path = "../../../Qt-5.6/plugins/platforms/libqminimal.a"; sourceTree = "<group>"; };
-		2AF8A4A424254198000D6366 /* libqoffscreen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqoffscreen.a; path = "../../../Qt-5.6/plugins/platforms/libqoffscreen.a"; sourceTree = "<group>"; };
-		2AF8A4A624254382000D6366 /* libQt5ClipboardSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5ClipboardSupport.a; path = "../../../Qt-5.6/lib/libQt5ClipboardSupport.a"; sourceTree = "<group>"; };
+		2AF8A4A224254196000D6366 /* libqminimal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqminimal.a; path = "../../../Qt-5.9.8/plugins/platforms/libqminimal.a"; sourceTree = "<group>"; };
+		2AF8A4A424254198000D6366 /* libqoffscreen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqoffscreen.a; path = "../../../Qt-5.9.8/plugins/platforms/libqoffscreen.a"; sourceTree = "<group>"; };
 		32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTaba_Prefix.pch; path = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch; sourceTree = "<group>"; };
 		6211E2B11891AA2900751AA3 /* ComponentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentBase.cpp; path = ../../AU_SDK/AUPublic/AUBase/ComponentBase.cpp; sourceTree = SOURCE_ROOT; };
 		6211E2B21891AA2900751AA3 /* ComponentBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentBase.h; path = ../../AU_SDK/AUPublic/AUBase/ComponentBase.h; sourceTree = SOURCE_ROOT; };
@@ -1016,7 +1017,6 @@
 				2AEFF5671E1836EA00843898 /* IOKit.framework in Frameworks */,
 				2AEFF5641E18368F00843898 /* OpenGL.framework in Frameworks */,
 				2A1C7AA31E0B5F6600C7984D /* Security.framework in Frameworks */,
-				2AF8A4A724254382000D6366 /* libQt5ClipboardSupport.a in Frameworks */,
 				2A1C7AAB1E0B5F6600C7984D /* AudioUnit.framework in Frameworks */,
 				2A1C7AAC1E0B5F6600C7984D /* CoreAudio.framework in Frameworks */,
 				2AAAA7D42032488A0005C3F5 /* libminiupnpc.a in Frameworks */,
@@ -1055,6 +1055,7 @@
 				2AF8A48B24253BEC000D6366 /* libQt5PlatformCompositorSupport.a in Frameworks */,
 				2A1362A61F6587C0004953CF /* libQt5MultimediaWidgets.a in Frameworks */,
 				2AF8A49524253D2D000D6366 /* libQt5DeviceDiscoverySupport.a in Frameworks */,
+				2A90965F2431579400EAEBE8 /* libQt5ClipboardSupport.a in Frameworks */,
 				2AF8A48924253BE1000D6366 /* libQt5GraphicsSupport.a in Frameworks */,
 				2AF8A49F24253F23000D6366 /* libQt5Bootstrap.a in Frameworks */,
 				2AF8A49724253D33000D6366 /* libQt5EventDispatcherSupport.a in Frameworks */,
@@ -1072,7 +1073,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6D2DCEC21BD82490096AE0F /* libqtpcre.a in Frameworks */,
+				2AD1515524315AE300F6A922 /* libqtpcre2.a in Frameworks */,
 				D6D2DCEB21BD82440096AE0F /* libqcocoa.a in Frameworks */,
 				D6D2DCEA21BD81FC0096AE0F /* libQt5Core.a in Frameworks */,
 				D6D2DCF421BD83450096AE0F /* libz.dylib in Frameworks */,
@@ -1080,6 +1081,7 @@
 				8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */,
 				8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */,
 				2A0DBE8A1E0AF5AA00BEF1FF /* CoreAudio.framework in Frameworks */,
+				2A90965E2431579400EAEBE8 /* libQt5ClipboardSupport.a in Frameworks */,
 				D6D2DCED21BD827C0096AE0F /* AVFoundation.framework in Frameworks */,
 				D6D2DCF121BD82FC0096AE0F /* Cocoa.framework in Frameworks */,
 			);
@@ -1728,7 +1730,7 @@
 		2AF8A47F24253B78000D6366 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2AF8A4A624254382000D6366 /* libQt5ClipboardSupport.a */,
+				2A90965D2431579400EAEBE8 /* libQt5ClipboardSupport.a */,
 				2AF8A4A424254198000D6366 /* libqoffscreen.a */,
 				2AF8A4A224254196000D6366 /* libqminimal.a */,
 				2AF8A4A024253F7E000D6366 /* Cocoa.framework */,
@@ -2461,7 +2463,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
-					"~/Desktop/Qt-5.6/include/**",
+					"~/Desktop/Qt-5.9.8/include/**",
 				);
 				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
@@ -2480,7 +2482,7 @@
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.6/include/**";
+				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.9.8/include/**";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2509,7 +2511,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
-					"~/Desktop/Qt-5.6/include/**",
+					"~/Desktop/Qt-5.9.8/include/**",
 				);
 				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
@@ -2528,7 +2530,7 @@
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				STRIP_INSTALLED_PRODUCT = YES;
-				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.6/include/**";
+				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.9.8/include/**";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2556,7 +2558,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
-					"~/Desktop/Qt-5.6/include/**",
+					"~/Desktop/Qt-5.9.8/include/**",
 				);
 				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
@@ -2575,7 +2577,7 @@
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				STRIP_INSTALLED_PRODUCT = YES;
-				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.6/include/**";
+				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.9.8/include/**";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2734,11 +2736,11 @@
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
 					"\"$(SRCROOT)/../../src/Common\"/**",
-					"~/Desktop/Qt-5.6/include/**",
+					"~/Desktop/Qt-5.9.8/include/**",
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					"~/Desktop/Qt-5.6/**",
+					"~/Desktop/Qt-5.9.8/**",
 					"~/Desktop/JamTaba/libs/static/mac64/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -2794,11 +2796,11 @@
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
 					"\"$(SRCROOT)/../../src/Common\"/**",
-					"~/Desktop/Qt-5.6/include/**",
+					"~/Desktop/Qt-5.9.8/include/**",
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					"~/Desktop/Qt-5.6/**",
+					"~/Desktop/Qt-5.9.8/**",
 					"~/Desktop/JamTaba/libs/static/mac64/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -2852,11 +2854,11 @@
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
 					"\"$(SRCROOT)/../../src/Common\"/**",
-					"~/Desktop/Qt-5.6/include/**",
+					"~/Desktop/Qt-5.9.8/include/**",
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					"~/Desktop/Qt-5.6/**",
+					"~/Desktop/Qt-5.9.8/**",
 					"~/Desktop/JamTaba/libs/static/mac64/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
