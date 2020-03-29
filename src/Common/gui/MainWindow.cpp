@@ -1040,7 +1040,7 @@ void MainWindow::initializeLoginService()
 
     connect(loginService, &LoginService::roomsListAvailable, this, &MainWindow::refreshPublicRoomsList);
 
-    //connect(loginService, &LoginService::newVersionAvailableForDownload, this, &MainWindow::showNewVersionAvailableMessage);
+    connect(loginService, &LoginService::newVersionAvailableForDownload, this, &MainWindow::showNewVersionAvailableMessage);
 }
 
 void MainWindow::closeContentTab(int index)
@@ -1135,13 +1135,18 @@ QString MainWindow::sanitizeLatestVersionDetails(const QString &details)
     return newDetails;
 }
 
-void MainWindow::showNewVersionAvailableMessage(const QString &latestVersionDetails)
+void MainWindow::showNewVersionAvailableMessage(const QString &versionTag, const QString &publicationDate, const QString &latestVersionDetails)
 {
     hideBusyDialog();
     QString text = tr("A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!");
 
+    auto locale = QLocale::system();
+    auto dateFormat = locale.dateTimeFormat(QLocale::FormatType::ShortFormat);
+    auto formatedDate = locale.toString(QDateTime::fromString(publicationDate, Qt::ISODate), dateFormat);
+
     if (!latestVersionDetails.isEmpty()) {
         text += "<br><br>";
+        text += QString("<b>%1</b> (release date: %2)<br>").arg(versionTag).arg(formatedDate);
         text += MainWindow::sanitizeLatestVersionDetails(latestVersionDetails);
     }
 

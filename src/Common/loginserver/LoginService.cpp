@@ -11,12 +11,15 @@
 #include "ninjam/client/ServerInfo.h"
 #include "ninjam/client/Service.h"
 #include "log/Logging.h"
+#include "Configurator.h" // just to use VERSION
+#include "Version.h"
 
 using login::LoginService;
 using login::UserInfo;
 using login::RoomInfo;
 
 const QString LoginService::LOGIN_SERVER_URL = "http://ninbot.com/app/servers.php";
+const QString LoginService::VERSION_SERVER_URL = "http://jamtaba2.appspot.com/version";
 
 UserInfo::UserInfo(const QString &name, const QString &ip) :
     name(name),
@@ -85,19 +88,14 @@ LoginService::LoginService(QObject *parent) :
 
     // the first public servers list query
     httpClient.get(QNetworkRequest(QUrl(LOGIN_SERVER_URL)));
+
+    // query the current version to jamtaba server using HTTP (is querying github using HTTPS)
+    httpClient.get(QNetworkRequest(QUrl(VERSION_SERVER_URL)));
+
 }
 
-void LoginService::handleJson(const QString &json)
+void LoginService::handleServersJson(const QJsonObject &root)
 {
-    if (json.isEmpty())
-        return;
-
-    QJsonDocument document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
-    QJsonObject root = document.object();
-
-    if (!root.contains("servers"))
-        return;
-
     QJsonArray allRooms = root["servers"].toArray();
     QList<RoomInfo> publicRooms;
     for (int i = 0; i < allRooms.size(); ++i) {
@@ -106,6 +104,33 @@ void LoginService::handleJson(const QString &json)
         publicRooms.append(roomInfo);
     }
     emit roomsListAvailable(publicRooms);
+}
+void LoginService::handleVersionJson(const QJsonObject &root)
+{
+    auto versionTag = root.contains("version") ? root["version"].toString() : "error";
+    auto versionDetails = root.contains("details") ? root["details"].toString() : "error";
+    auto publicationDate = root.contains("published_at") ? root["published_at"].toString() : "";
+
+    auto currentVersion = loginserver::Version::fromString(VERSION);
+    auto latestVersion = loginserver::Version::fromString(versionTag);
+
+    if (latestVersion.isNewerThan(currentVersion))
+        emit newVersionAvailableForDownload(versionTag, publicationDate, versionDetails);
+
+}
+
+void LoginService::handleJson(const QString &json)
+{
+    if (json.isEmpty())
+        return;
+
+    auto document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
+    auto root = document.object();
+
+    if (root.contains("servers"))
+        handleServersJson(root);
+    else if (root.contains("version"))
+        handleVersionJson(root);
 }
 
 int getServerPort(const QString &serverName) {

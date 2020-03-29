@@ -227,7 +227,7 @@ protected slots:
     void connectInPrivateServer(const QString &server, int serverPort, const QString &userName, const QString &password);
 
     // login service
-    void showNewVersionAvailableMessage(const QString &latestVersionDetails);
+    void showNewVersionAvailableMessage(const QString &versionTag, const QString &publicationDate, const QString &latestVersionDetails);
     static QString sanitizeLatestVersionDetails(const QString &details);
 
     // +++++  ROOM FEATURES ++++++++

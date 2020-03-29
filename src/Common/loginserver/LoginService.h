@@ -142,16 +142,20 @@ public:
 
 signals:
     void roomsListAvailable(const QList<login::RoomInfo> &publicRooms);
+    void newVersionAvailableForDownload(const QString &newVersion, const QString &publicationDate, const QString &versionDetails);
 
 private:
 
     QNetworkAccessManager httpClient;
     static const QString LOGIN_SERVER_URL;
+    static const QString VERSION_SERVER_URL;
 
     static const int REFRESH_PERIOD = 60000;
     QTimer *refreshTimer;
 
     void handleJson(const QString &json);
+    void handleServersJson(const QJsonObject &root);
+    void handleVersionJson(const QJsonObject &root);
 
     RoomInfo buildRoomInfoFromJson(const QJsonObject &json);
 };
