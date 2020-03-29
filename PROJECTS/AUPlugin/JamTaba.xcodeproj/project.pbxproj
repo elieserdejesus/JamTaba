@@ -306,6 +306,9 @@
 		2A2093B4207AB66A001219DF /* InstrumentsMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2093B2207AB66A001219DF /* InstrumentsMenu.cpp */; };
 		2A2093B5207AB66A001219DF /* InstrumentsMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A2093B3207AB66A001219DF /* InstrumentsMenu.h */; };
 		2A2093B6207AB695001219DF /* InstrumentsMenu.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A2093B3207AB66A001219DF /* InstrumentsMenu.h */; };
+		2A2919F324311C2F000255D6 /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2919F124311C2F000255D6 /* Version.cpp */; };
+		2A2919F424311C2F000255D6 /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A2919F224311C2F000255D6 /* Version.h */; };
+		2A2919F524311CBB000255D6 /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2919F124311C2F000255D6 /* Version.cpp */; };
 		2A2D725D1EABC04E00979920 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A2D725B1EABC04E00979920 /* Slider.h */; };
 		2A2D725E1EABC04E00979920 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2D725C1EABC04E00979920 /* Slider.cpp */; };
 		2A2D725F1EABC06400979920 /* Slider.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A2D725B1EABC04E00979920 /* Slider.h */; };
@@ -785,6 +788,8 @@
 		2A2093B0207AB579001219DF /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libx264.a; path = ../../libs/static/mac64/libx264.a; sourceTree = "<group>"; };
 		2A2093B2207AB66A001219DF /* InstrumentsMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InstrumentsMenu.cpp; sourceTree = "<group>"; };
 		2A2093B3207AB66A001219DF /* InstrumentsMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstrumentsMenu.h; sourceTree = "<group>"; };
+		2A2919F124311C2F000255D6 /* Version.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Version.cpp; sourceTree = "<group>"; };
+		2A2919F224311C2F000255D6 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		2A2D725B1EABC04E00979920 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Slider.h; sourceTree = "<group>"; };
 		2A2D725C1EABC04E00979920 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Slider.cpp; sourceTree = "<group>"; };
 		2A2F70051E08094500A4B6C2 /* libcups.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcups.dylib; path = usr/lib/libcups.dylib; sourceTree = SDKROOT; };
@@ -1520,6 +1525,8 @@
 		2A0DBC051E0AF46900BEF1FF /* loginserver */ = {
 			isa = PBXGroup;
 			children = (
+				2A2919F124311C2F000255D6 /* Version.cpp */,
+				2A2919F224311C2F000255D6 /* Version.h */,
 				2AF562152047181A00D809D7 /* MainChat.cpp */,
 				2AF562162047181A00D809D7 /* MainChat.h */,
 				2A0DBC061E0AF46900BEF1FF /* GeneratedFiles */,
@@ -2019,6 +2026,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A2919F424311C2F000255D6 /* Version.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2145,6 +2153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A2919F524311CBB000255D6 /* Version.cpp in Sources */,
 				2A120A861E0C05EA00E0E596 /* jamtaba.qrc in Sources */,
 				2AAAA7CA203247400005C3F5 /* Service.h in Sources */,
 				2A2D725F1EABC06400979920 /* Slider.h in Sources */,
@@ -2393,6 +2402,7 @@
 				2A3016291E0D90C30013700B /* AUBaseHelper.cpp in Sources */,
 				2A30162A1E0D90C60013700B /* AUBuffer.cpp in Sources */,
 				2A3016281E0D90BE0013700B /* ComponentBase.cpp in Sources */,
+				2A2919F324311C2F000255D6 /* Version.cpp in Sources */,
 				2A3016211E0D907B0013700B /* JamTaba.cpp in Sources */,
 				2A3016331E0D90FB0013700B /* CAStreamBasicDescription.cpp in Sources */,
 				2A30162C1E0D90CF0013700B /* CAAudioChannelLayout.cpp in Sources */,
