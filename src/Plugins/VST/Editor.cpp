@@ -96,7 +96,13 @@ bool VstEditor::open(void *ptr)
     rectangle.bottom = mainWindow->height();
     rectangle.right = mainWindow->width();
 
-    widget->move(0, 0);
+    int screenOffsetX = 0;
+    int screenOffsetY = 0;
+    if (jamtaba->getHostName() != "Reaper") { // this is an ugly workaround to fix the issue introduced ni new Qt versions. In many hosts the VST plugin screen is shifted.
+        screenOffsetY = 32;
+        screenOffsetX = 8;
+    }
+    widget->move(screenOffsetX, screenOffsetY);
     widget->resize(rectangle.right, rectangle.bottom);
     widget->setMinimumSize(mainWindow->minimumSize());
 
