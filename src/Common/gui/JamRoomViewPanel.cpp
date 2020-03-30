@@ -22,7 +22,6 @@ JamRoomViewPanel::JamRoomViewPanel(const login::RoomInfo &roomInfo, controller::
 
     ui->wavePeakPanel->setEnabled(false); // is enable when user click in listen button
 
-    connect(mainController, &controller::MainController::ipResolved, this, &JamRoomViewPanel::updateUserLocation);
     connect(ui->buttonListen, &QPushButton::clicked, this, &JamRoomViewPanel::toggleRoomListening);
     connect(ui->buttonEnter, &QPushButton::clicked, this, &JamRoomViewPanel::enterInTheRoom);
 
@@ -169,11 +168,11 @@ void JamRoomViewPanel::updateMap()
         QList<MapMarker> newMarkers;
         for (const auto &user : userInfos) {
             if (!userIsBot(user)) {
-                auto userLocation = mainController->getGeoLocation(user.getIp());
+                auto userLocation = user.getLocation();
 
-                QPointF latLong(userLocation.getLatitude(), userLocation.getLongitude());
-                QPixmap flag(":/flags/flags/" + userLocation.getCountryCode().toLower() + ".png");
-                MapMarker marker(user.getName(), userLocation.getCountryName(), latLong, flag.toImage());
+                QPointF latLong(userLocation.latitude, userLocation.longitude);
+                QPixmap flag(":/flags/flags/" + userLocation.countryCode.toLower() + ".png");
+                MapMarker marker(user.getName(), userLocation.countryName, latLong, flag.toImage());
                 newMarkers.append(marker);
             }
         }

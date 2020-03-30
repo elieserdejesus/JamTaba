@@ -66,10 +66,6 @@ void ChatTabWidget::initialize(MainController *mainController, UsersColorsPool *
 {
     this->ninjamColorsPool = colorsPool;
     this->mainController = mainController;
-
-    connect(mainController, &MainController::ipResolved, [=](const QString &ip){
-        mainChat->updateUsersLocation(ip, mainController->getGeoLocation(ip));
-    });
 }
 
 void ChatTabWidget::changeCurrentTab(int tabIndex)

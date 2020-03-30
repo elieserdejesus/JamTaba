@@ -821,7 +821,7 @@ void NinjamController::handleIntervalCompleted(const User &user, quint8 channelI
     if (mainController->isMultiTrackRecordingActivated())
     {
         auto geoLocation = mainController->getGeoLocation(user.getIp());
-        QString userName = user.getName() + " from " + geoLocation.getCountryName();
+        QString userName = user.getName() + " from " + geoLocation.countryName;
         mainController->saveEncodedAudio(userName, channelIndex, encodedData);
     }
 

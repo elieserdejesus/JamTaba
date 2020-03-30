@@ -19,7 +19,6 @@
 #include "gui/MainWindow.h"
 #include "gui/ThemeLoader.h"
 #include "log/Logging.h"
-#include "geo/WebIpToLocationResolver.h"
 
 #include <QBuffer>
 #include <QByteArray>
@@ -49,7 +48,6 @@ MainController::MainController(const Settings &settings) :
     videoEncoder(),
     currentStreamingRoomID(-1000),
     started(false),
-    ipToLocationResolver(nullptr),
     masterGain(1),
     usersDataCache(Configurator::getInstance()->getCacheDir()),
     lastInputTrackID(0),
@@ -57,9 +55,6 @@ MainController::MainController(const Settings &settings) :
     emojiManager(":/emoji/emoji.json", ":/emoji/icons")
 {
     QDir cacheDir = Configurator::getInstance()->getCacheDir();
-    ipToLocationResolver.reset(new geo::WebIpToLocationResolver(cacheDir));
-
-    connect(ipToLocationResolver.data(), &geo::IpToLocationResolver::ipResolved, this, &MainController::ipResolved);
 
     // Register known JamRecorders here:
     jamRecorders.append(new recorder::JamRecorder(new recorder::ReaperProjectGenerator()));
@@ -69,6 +64,14 @@ MainController::MainController(const Settings &settings) :
 
     for (auto emojiCode: settings.getRecentEmojis())
         emojiManager.addRecent(emojiCode);
+
+    connect(&loginService, &login::LoginService::roomsListAvailable, [=](const QList<login::RoomInfo> &publicRooms){
+        for (const auto & room : publicRooms) {
+            for (const auto & user : room.getUsers()) {
+                locationCache.insert(user.getIp(), user.getLocation());
+            }
+        }
+    });
 }
 
 void MainController::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
@@ -412,13 +415,13 @@ QStringList MainController::getBotNames()
     return Service::getBotNamesList();
 }
 
-geo::Location MainController::getGeoLocation(const QString &ip)
+login::Location MainController::getGeoLocation(const QString &ip)
 {
-    auto sanitizedIp = ninjam::client::maskIP(ip);
-    if (!sanitizedIp.isEmpty()) // some servers may not return an ip for user, dont concatenate to ".128" in that case
-        sanitizedIp.replace(ninjam::client::IP_MASK, ".128"); // replace .x (mask) with .128 to generate a valid IP
+    //auto sanitizedIp = ninjam::client::maskIP(ip);
+    //if (!sanitizedIp.isEmpty()) // some servers may not return an ip for user, dont concatenate to ".128" in that case
+    //    sanitizedIp.replace(ninjam::client::IP_MASK, ".128"); // replace .x (mask) with .128 to generate a valid IP
 
-    return ipToLocationResolver->resolve(sanitizedIp, getTranslationLanguage());
+    return locationCache[ip];
 }
 
 void MainController::mixGroupedInputs(int groupIndex, audio::SamplesBuffer &out)

@@ -6,7 +6,6 @@
 #include "gui/TextEditorModifier.h"
 #include "gui/UsersColorsPool.h"
 #include "ninjam/client/User.h"
-#include "geo/IpToLocationResolver.h"
 
 #include <QWidget>
 #include <QScrollBar>
@@ -16,6 +15,7 @@
 #include <QGridLayout>
 #include <QMenu>
 #include "gui/IconFactory.h"
+#include "loginserver/LoginService.h"
 
 const qint8 ChatPanel::MAX_FONT_OFFSET = 3;
 const qint8 ChatPanel::MIN_FONT_OFFSET = -2;
@@ -184,7 +184,7 @@ void ChatPanel::showConnectedUsersWidget(bool show)
     ui->treeWidget->setVisible(show);
 }
 
-void ChatPanel::updateUsersLocation(const QString &ip, const geo::Location &location)
+void ChatPanel::updateUsersLocation(const QString &ip, const login::Location &location)
 {
     auto root = ui->treeWidget->topLevelItem(0);
     for (int i = 0; i < root->childCount(); ++i) {
@@ -196,14 +196,14 @@ void ChatPanel::updateUsersLocation(const QString &ip, const geo::Location &loca
     }
 }
 
-void ChatPanel::setItemCountryDetails(QTreeWidgetItem *item, const geo::Location &location)
+void ChatPanel::setItemCountryDetails(QTreeWidgetItem *item, const login::Location &location)
 {
-    auto icon = QIcon(QString(":/flags/flags/%1.png").arg(location.getCountryCode().toLower()));
+    auto icon = QIcon(QString(":/flags/flags/%1.png").arg(location.countryCode.toLower()));
 
     auto countryCollumn = 1;
 
     item->setIcon(countryCollumn, icon);
-    item->setText(countryCollumn, location.getCountryName());
+    item->setText(countryCollumn, location.countryName);
 }
 
 void ChatPanel::setConnectedUserBlockedStatus(const QString &userFullName, bool blocked)
@@ -240,7 +240,7 @@ void ChatPanel::setConnectedUsers(const QStringList &usersNames)
         auto ip = ninjam::client::extractUserIP(userFullName);
         auto item = new QTreeWidgetItem(root, QStringList(name));
         item->setData(0, Qt::UserRole + 1, ip);
-        setItemCountryDetails(item, geo::Location()); // unknown location
+        setItemCountryDetails(item, login::Location()); // unknown location
         root->addChild(item);
     }
 

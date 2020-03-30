@@ -21,11 +21,14 @@ using login::RoomInfo;
 const QString LoginService::LOGIN_SERVER_URL = "http://ninbot.com/app/servers.php";
 const QString LoginService::VERSION_SERVER_URL = "http://jamtaba2.appspot.com/version";
 
-UserInfo::UserInfo(const QString &name, const QString &ip) :
+UserInfo::UserInfo(const QString &name, const QString &ip, const QString &countryName, const QString &countryCode, float latitude, float longitude) :
     name(name),
     ip(ip)
 {
-    //
+    location.latitude = latitude;
+    location.longitude = longitude;
+    location.countryCode = countryCode;
+    location.countryName = countryName;
 }
 
 RoomInfo::RoomInfo(const QString &roomName, int roomPort,
@@ -170,20 +173,24 @@ int getServerGuessedMaxUsers(const QString &serverName, int serverPort) {
 RoomInfo LoginService::buildRoomInfoFromJson(const QJsonObject &jsonObject)
 {
     auto serverNameText = jsonObject.contains("name") ? jsonObject["name"].toString() : QString("Error");
-    QString name =  getServerName(serverNameText);
+    auto name =  getServerName(serverNameText);
     int port = getServerPort(serverNameText);
     int maxUsers = jsonObject.contains("user_max") ? jsonObject["user_max"].toString().toInt() : getServerGuessedMaxUsers(name, port);
-    QString streamLink = jsonObject.contains("stream") ? jsonObject["stream"].toString() : QString("");
+    auto streamLink = jsonObject.contains("stream") ? jsonObject["stream"].toString() : QString("");
     int bpi = jsonObject.contains("bpi") ? jsonObject["bpi"].toString().toInt() : 16;
     int bpm = jsonObject.contains("bpm") ? jsonObject["bpm"].toString().toInt() : 120;
 
-    QJsonArray usersArray = jsonObject.contains("users") ? jsonObject["users"].toArray() : QJsonArray();
+    auto usersArray = jsonObject.contains("users") ? jsonObject["users"].toArray() : QJsonArray();
     QList<UserInfo> users;
     for (int i = 0; i < usersArray.size(); ++i) {
-        QJsonObject userObject = usersArray[i].toObject();
-        QString userName = userObject.contains("name") ? userObject.value("name").toString() : QString("Error");
-        QString userIp = userObject.contains("ip") ? userObject.value("ip").toString() : QString("Error");
-        users.append(login::UserInfo(userName, userIp));
+        auto userObject = usersArray[i].toObject();
+        auto userName = userObject.contains("name") ? userObject["name"].toString() : QString("Error");
+        auto userIp = userObject.contains("ip") ? userObject["ip"].toString() : QString("Error");
+        float latitude = userObject.contains("lat") ? userObject["lat"].toString().toFloat() : 0;
+        float longitude = userObject.contains("lon") ? userObject["lon"].toString().toFloat() : 0;
+        auto countryName = userObject.contains("country") ? userObject["country"].toString() : QString("");
+        auto countryCode = userObject.contains("co") ? userObject["co"].toString() : QString("");
+        users.append(login::UserInfo(userName, userIp, countryName, countryCode, latitude, longitude));
     }
     return RoomInfo(name, port, maxUsers, users, 0, bpi, bpm, streamLink);
 }

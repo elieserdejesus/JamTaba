@@ -11,17 +11,26 @@ class QTimer;
 
 namespace login {
 
+struct Location {
+    float latitude = 0;
+    float longitude = 0;
+    QString countryName;
+    QString countryCode;
+};
+
 class UserInfo
 {
 
 public:
-    UserInfo(const QString &name, const QString &ip);
+    UserInfo(const QString &name, const QString &ip, const QString &countryName, const QString &countryCode, float latitude, float longitude);
     inline QString getIp() const { return ip; }
     inline QString getName() const { return name; }
+    inline Location getLocation() const { return location; }
 
 private:
     QString name;
     QString ip;
+    Location location;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++

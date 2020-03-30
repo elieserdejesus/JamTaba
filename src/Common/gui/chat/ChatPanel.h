@@ -15,8 +15,8 @@ namespace Ui {
 class ChatPanel;
 }
 
-namespace geo {
-class Location;
+namespace login {
+struct Location;
 }
 
 class ChatMessagePanel;
@@ -66,7 +66,7 @@ public:
 
 public slots:
     void setTopicMessage(const QString &topic);
-    void updateUsersLocation(const QString &ip, const geo::Location &location);
+    void updateUsersLocation(const QString &ip, const login::Location &location);
     void createServerInviteButton(const QString &serverIP, quint16 serverPort);
 
 signals:
@@ -141,7 +141,7 @@ private:
     const static qint8 MAX_FONT_OFFSET;
     const static qint8 MIN_FONT_OFFSET;
 
-    static void setItemCountryDetails(QTreeWidgetItem *item, const geo::Location &location);
+    static void setItemCountryDetails(QTreeWidgetItem *item, const login::Location &location);
 
     QColor getUserColor(const QString &userName);
 

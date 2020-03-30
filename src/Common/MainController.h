@@ -5,7 +5,6 @@
 #include <QImage>
 
 #include "UploadIntervalData.h"
-#include "geo/IpToLocationResolver.h"
 #include "loginserver/LoginService.h"
 #include "persistence/Settings.h"
 #include "persistence/UsersDataCache.h"
@@ -178,7 +177,7 @@ public:
 
     bool isStarted() const;
 
-    geo::Location getGeoLocation(const QString &ip);
+    login::Location getGeoLocation(const QString &ip);
 
     LocalInputNode *getInputTrack(int localInputIndex);
     virtual int addInputTrackNode(LocalInputNode *inputTrackNode);
@@ -303,7 +302,6 @@ public:
     const static QSize MAX_VIDEO_SIZE;
 
 signals:
-    void ipResolved(const QString &ip);
     void themeChanged();
     void userBlockedInChat(const QString &userName);
     void userUnblockedInChat(const QString &userName);
@@ -331,6 +329,8 @@ protected:
     static QString LOG_CONFIG_FILE;
 
     LoginService loginService;
+
+    QMap<QString, login::Location> locationCache;
 
     AudioMixer audioMixer;
 
@@ -382,8 +382,6 @@ private:
 
     void tryConnectInNinjamServer(const RoomInfo &ninjamRoom, const QStringList &channels,
                                   const QString &password = "");
-
-    QScopedPointer<geo::IpToLocationResolver> ipToLocationResolver;
 
     QList<JamRecorder *> jamRecorders;
 

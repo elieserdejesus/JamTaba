@@ -1,5 +1,4 @@
 #include "NinjamTrackGroupView.h"
-#include "geo/IpToLocationResolver.h"
 #include "MainController.h"
 #include "NinjamController.h"
 #include "video/FFMpegDemuxer.h"
@@ -95,9 +94,6 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
                 setupHorizontalLayout();
         }
     });
-
-    //connect(mainController, &MainController::ipResolved, this, &NinjamTrackGroupView::updateGeoLocation);
-    connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
     // reacting to chat block/unblock events
     connect(mainController, &MainController::userBlockedInChat, this, &NinjamTrackGroupView::showChatBlockIcon);
@@ -238,10 +234,10 @@ void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
         return;
 
     auto location = mainController->getGeoLocation(ip);
-    QString countryCode = location.getCountryCode().toLower();
+    QString countryCode = location.countryCode.toLower();
     QString flagImage = ":/flags/flags/" + countryCode +".png";
     countryFlag->setPixmap(QPixmap(flagImage));
-    countryLabel->setText(location.getCountryName());
+    countryLabel->setText(location.countryName);
 }
 
 void NinjamTrackGroupView::updateGeoLocation()
