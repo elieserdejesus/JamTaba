@@ -8,6 +8,11 @@ if [ $# -lt 1 ] ; then
 	exit
 fi
 
+if [ $# -lt 2 ] ; then
+	echo "The second parameter (the Qt LIBs dir) is empty"	
+	exit
+fi
+
 scriptDir=$(pwd)
 #check if the script is running from the correct dir. Just checking if a expected file is in the folder.
 if [ ! -f "$scriptDir/installer_script.sh" ]; then
@@ -16,6 +21,7 @@ if [ ! -f "$scriptDir/installer_script.sh" ]; then
 fi
 
 qtDir=$1 #the first parameter is the Qt base path
+qtLibDir=$2 #the second parameter is Qt LIBs path
 
 #check if qt dir exists and abort if not
 if [ ! -d "$qtDir" ]; then
@@ -45,7 +51,7 @@ echo "generating translation (.qm) files..."
 $qtDir/bin/lrelease $projectsDir/Jamtaba.pro
 
 echo "Compiling..."
-make -s -j 4
+make -s -Wno-reorder -j 4
 echo "Compilation finished!"
 
 if [ ! -d "packageFiles" ]; then
@@ -63,17 +69,17 @@ cp $scriptDir/uninstaller.sh packageFiles/
 cp $scriptDir/Jamtaba2.png packageFiles/Jamtaba2.png
 echo "Done!"
 
-echo "Copying Qt distribution files from $qtDir to 'packageFiles'" 
-cp $qtDir/lib/libQt5Widgets.so.* packageFiles/
-cp $qtDir/lib/libQt5Gui.so.* packageFiles/ 
-cp $qtDir/lib/libQt5Core.so.* packageFiles/
-cp $qtDir/lib/libQt5Network.so.* packageFiles/
-cp $qtDir/lib/libQt5DBus.so.* packageFiles/
-cp $qtDir/lib/libQt5XcbQpa.so.* packageFiles/
-cp $qtDir/lib/libicui18n.so.* packageFiles/
-cp $qtDir/lib/libicuuc.so.* packageFiles/
-cp $qtDir/lib/libicudata.so.* packageFiles/
-cp $qtDir/plugins/platforms/libqxcb.so packageFiles/platforms
+echo "Copying Qt distribution files from $qtLibDir to 'packageFiles'" 
+cp $qtLibDir/libQt5Widgets.so.* packageFiles/
+cp $qtLibDir/libQt5Gui.so.* packageFiles/ 
+cp $qtLibDir/libQt5Core.so.* packageFiles/
+cp $qtLibDir/libQt5Network.so.* packageFiles/
+cp $qtLibDir/libQt5DBus.so.* packageFiles/
+cp $qtLibDir/libQt5XcbQpa.so.* packageFiles/
+cp $qtLibDir/libicui18n.so.* packageFiles/
+cp $qtLibDir/libicuuc.so.* packageFiles/
+cp $qtLibDir/libicudata.so.* packageFiles/
+cp $qtLibDir/qt5/plugins/platforms/libqxcb.so packageFiles/platforms
 
 
 chmod +x packageFiles/installer_script.sh 
@@ -87,4 +93,4 @@ installerSuffix=".run"
 installerName=$installerPrefix"_"$arch"bits"$installerSuffix
 
 makeself.sh packageFiles ~/Desktop/$installerName "Jamtaba 2 Installer" ./installer_script.sh
-chmod +x ~/Desktop/$installerName
+sudo chmod +x ~/Desktop/$installerName

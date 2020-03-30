@@ -15,18 +15,16 @@ cp -rp . $destDir
 #change the _DEST_DIR placeholder text in Jamtaba2.desktop file
 sed -i "s|_DEST_DIR|$destDir|" Jamtaba2.desktop
 
-#copy the .desktop file to Desktop and Applications folder
-cp Jamtaba2.desktop ~/Desktop/
+#copy the .desktop file to Applications folder
 cp Jamtaba2.desktop /usr/share/applications/
 
 
 #copy the icon
-cp Jamtaba2.png /usr/share/pixmaps/
+cp Jamtaba2.png /usr/share/icons/
 
 #permissions
 chmod 777 $destDir/Jamtaba2
 chmod 777 $destDir/VstScanner
 chmod 777 $destDir/uninstaller.sh
-chmod 777 ~/Desktop/Jamtaba2.desktop
 chmod 777 /usr/share/applications/Jamtaba2.desktop
-chmod 777 /usr/share/pixmaps/Jamtaba2.png
+chmod 777 /usr/share/icons/Jamtaba2.png
