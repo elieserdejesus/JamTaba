@@ -30,6 +30,7 @@ Q_IMPORT_PLUGIN(AVFServicePlugin) // Camera
     QApplication::setApplicationName("JamTaba 2");
     QApplication::setAttribute(Qt::AA_MacPluginApplication);
     QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar); // not working in qt 5.6.2
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // fixing issue https://github.com/elieserdejesus/JamTaba/issues/1216
     
     JamTabaAUPlugin *auPlugin = nullptr;
     UInt32 size = sizeof(JamTabaAUInterface *);
