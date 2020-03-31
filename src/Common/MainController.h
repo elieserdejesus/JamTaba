@@ -305,6 +305,7 @@ signals:
     void themeChanged();
     void userBlockedInChat(const QString &userName);
     void userUnblockedInChat(const QString &userName);
+    void ipResolved(const QString &ip);
 
 public slots:
     virtual void setSampleRate(int newSampleRate);

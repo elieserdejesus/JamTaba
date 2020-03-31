@@ -68,7 +68,11 @@ MainController::MainController(const Settings &settings) :
     connect(&loginService, &login::LoginService::roomsListAvailable, [=](const QList<login::RoomInfo> &publicRooms){
         for (const auto & room : publicRooms) {
             for (const auto & user : room.getUsers()) {
-                locationCache.insert(user.getIp(), user.getLocation());
+                auto maskedIp = ninjam::client::maskIP(user.getIp());
+                if (!maskedIp.isEmpty() && !locationCache.contains(maskedIp)) {
+                    locationCache.insert(maskedIp, user.getLocation());
+                    emit ipResolved(maskedIp);
+                }
             }
         }
     });
@@ -415,13 +419,29 @@ QStringList MainController::getBotNames()
     return Service::getBotNamesList();
 }
 
+
+QString getFirstIpPart(const QString &ip){
+    auto index = ip.indexOf(".");
+    if (index)
+        return ip.left(index);
+
+    return ip;
+}
+
 login::Location MainController::getGeoLocation(const QString &ip)
 {
-    //auto sanitizedIp = ninjam::client::maskIP(ip);
-    //if (!sanitizedIp.isEmpty()) // some servers may not return an ip for user, dont concatenate to ".128" in that case
-    //    sanitizedIp.replace(ninjam::client::IP_MASK, ".128"); // replace .x (mask) with .128 to generate a valid IP
+    auto maskedIp = ninjam::client::maskIP(ip);
+    if (locationCache.contains(maskedIp))
+        return locationCache[maskedIp];
 
-    return locationCache[ip];
+    // try second level cache
+    auto halfIp = getFirstIpPart(ip);
+    for(auto key : locationCache.keys()){
+        if (getFirstIpPart(key) == halfIp && !halfIp.isEmpty())
+            return locationCache[key];
+    }
+
+    return login::Location();
 }
 
 void MainController::mixGroupedInputs(int groupIndex, audio::SamplesBuffer &out)

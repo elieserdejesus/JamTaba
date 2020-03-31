@@ -40,11 +40,9 @@ QString ninjam::client::maskIpInUserFullName(const QString &userFullName)
 
 QString ninjam::client::maskIP(const QString &ip)
 {
-    // mask ip if necessary to be compatible with ninjam masked IPs
-    if (!ip.isEmpty() && !ip.endsWith(ninjam::client::IP_MASK)) { // not masked?
-        auto index = ip.lastIndexOf(".");
-        if (index) return ip.left(index) + ninjam::client::IP_MASK; // masking
-    }
+    auto index = ip.lastIndexOf(".");
+    if (index)
+        return ip.left(index) + ninjam::client::IP_MASK; // masking
 
     return ip;
 }

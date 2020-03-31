@@ -24,6 +24,7 @@ JamRoomViewPanel::JamRoomViewPanel(const login::RoomInfo &roomInfo, controller::
 
     connect(ui->buttonListen, &QPushButton::clicked, this, &JamRoomViewPanel::toggleRoomListening);
     connect(ui->buttonEnter, &QPushButton::clicked, this, &JamRoomViewPanel::enterInTheRoom);
+    connect(mainController, &controller::MainController::ipResolved, this, &JamRoomViewPanel::updateUserLocation);
 
     createMapWidgets();
 

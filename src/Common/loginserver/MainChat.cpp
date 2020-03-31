@@ -138,9 +138,12 @@ void MainChat::parseNewUsersList(const QJsonObject &data)
     }
 
     QStringList usersNames;
-    QJsonArray array = data["users"].toArray();
+    auto array = data["users"].toArray();
     for (int i = 0; i < array.count(); ++i) {
-        usersNames.append(array[i].toString());
+        auto userName = array[i].toString();
+        if (!userName.isEmpty() && userName.at(0) != '@') { // the user name is empty and the string is starting with the @IP
+            usersNames.append(userName);
+        }
     }
 
     emit usersListChanged(usersNames);

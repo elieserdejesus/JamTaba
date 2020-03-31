@@ -95,6 +95,9 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
         }
     });
 
+    //connect(mainController, &MainController::ipResolved, this, &NinjamTrackGroupView::updateGeoLocation);
+    connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
+
     // reacting to chat block/unblock events
     connect(mainController, &MainController::userBlockedInChat, this, &NinjamTrackGroupView::showChatBlockIcon);
     connect(mainController, &MainController::userUnblockedInChat, this, &NinjamTrackGroupView::hideChatBlockIcon);
@@ -230,7 +233,7 @@ void NinjamTrackGroupView::unblockChatMessages()
 
 void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
 {
-    if (ip != this->userIP)
+    if (ninjam::client::maskIP(ip) != ninjam::client::maskIP(this->userIP))
         return;
 
     auto location = mainController->getGeoLocation(ip);
