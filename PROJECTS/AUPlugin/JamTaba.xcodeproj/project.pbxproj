@@ -27,8 +27,6 @@
 		2A0DBCBB1E0AF46900BEF1FF /* VorbisDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB541E0AF46900BEF1FF /* VorbisDecoder.h */; };
 		2A0DBCBF1E0AF46900BEF1FF /* VorbisEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB561E0AF46900BEF1FF /* VorbisEncoder.h */; };
 		2A0DBCC31E0AF46900BEF1FF /* Configurator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB581E0AF46900BEF1FF /* Configurator.h */; };
-		2A0DBCD31E0AF46900BEF1FF /* IpToLocationResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB631E0AF46900BEF1FF /* IpToLocationResolver.h */; };
-		2A0DBCD71E0AF46900BEF1FF /* WebIpToLocationResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB651E0AF46900BEF1FF /* WebIpToLocationResolver.h */; };
 		2A0DBCDB1E0AF46900BEF1FF /* BaseTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB681E0AF46900BEF1FF /* BaseTrackView.h */; };
 		2A0DBCDF1E0AF46900BEF1FF /* BpiUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB6A1E0AF46900BEF1FF /* BpiUtils.h */; };
 		2A0DBCE31E0AF46900BEF1FF /* BusyDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB6C1E0AF46900BEF1FF /* BusyDialog.h */; };
@@ -120,8 +118,6 @@
 		2A120A521E0BEEED00E0E596 /* AudioDriver.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB191E0AF46800BEF1FF /* AudioDriver.h */; };
 		2A120A531E0BEEF300E0E596 /* AudioNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1D1E0AF46800BEF1FF /* AudioNode.h */; };
 		2A120A541E0BEEFC00E0E596 /* LocalInputNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2B1E0AF46800BEF1FF /* LocalInputNode.h */; };
-		2A120A551E0BEF1900E0E596 /* IpToLocationResolver.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB631E0AF46900BEF1FF /* IpToLocationResolver.h */; };
-		2A120A561E0BEF1C00E0E596 /* WebIpToLocationResolver.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB651E0AF46900BEF1FF /* WebIpToLocationResolver.h */; };
 		2A120A571E0BEF2100E0E596 /* BaseTrackView.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB681E0AF46900BEF1FF /* BaseTrackView.h */; };
 		2A120A581E0BEF2400E0E596 /* BusyDialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6C1E0AF46900BEF1FF /* BusyDialog.h */; };
 		2A120A591E0BEF2A00E0E596 /* ChatMessagePanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB701E0AF46900BEF1FF /* ChatMessagePanel.h */; };
@@ -210,8 +206,6 @@
 		2A1C7A401E0B5F2C00C7984D /* SamplesBufferResampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB501E0AF46900BEF1FF /* SamplesBufferResampler.cpp */; };
 		2A1C7A411E0B5F2C00C7984D /* VorbisDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB531E0AF46900BEF1FF /* VorbisDecoder.cpp */; };
 		2A1C7A421E0B5F2C00C7984D /* VorbisEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB551E0AF46900BEF1FF /* VorbisEncoder.cpp */; };
-		2A1C7A431E0B5F2C00C7984D /* IpToLocationResolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB621E0AF46900BEF1FF /* IpToLocationResolver.cpp */; };
-		2A1C7A441E0B5F2C00C7984D /* WebIpToLocationResolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB641E0AF46900BEF1FF /* WebIpToLocationResolver.cpp */; };
 		2A1C7A451E0B5F2C00C7984D /* BaseTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB671E0AF46900BEF1FF /* BaseTrackView.cpp */; };
 		2A1C7A461E0B5F2C00C7984D /* BpiUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB691E0AF46900BEF1FF /* BpiUtils.cpp */; };
 		2A1C7A471E0B5F2C00C7984D /* BusyDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6B1E0AF46900BEF1FF /* BusyDialog.cpp */; };
@@ -1928,7 +1922,6 @@
 				2A0DBD8F1E0AF46B00BEF1FF /* NinjamPanel.h in Headers */,
 				2A0DBDF51E0AF46C00BEF1FF /* UserNameLineEdit.h in Headers */,
 				2A0DBC791E0AF46900BEF1FF /* PluginDescriptor.h in Headers */,
-				2A0DBCD31E0AF46900BEF1FF /* IpToLocationResolver.h in Headers */,
 				2A3669151E0DBFA9006CD583 /* JamTabaAUPlugin.h in Headers */,
 				2AAAA7C82032462B0005C3F5 /* Server.h in Headers */,
 				2AC0D3F41E0AB913005A940A /* NinjamRoomWindowPlugin.h in Headers */,
@@ -2010,7 +2003,6 @@
 				2A0DBD0B1E0AF46A00BEF1FF /* Chord.h in Headers */,
 				2A0DBCBF1E0AF46900BEF1FF /* VorbisEncoder.h in Headers */,
 				2A4E3FAA1F99881700677E9C /* BoostSpinBox.h in Headers */,
-				2A0DBCD71E0AF46900BEF1FF /* WebIpToLocationResolver.h in Headers */,
 				2A1362961F6586A4004953CF /* VideoFrameGrabber.h in Headers */,
 				2A0DBE111E0AF46D00BEF1FF /* MidiDriver.h in Headers */,
 				2A0DBDF91E0AF46C00BEF1FF /* WavePeakPanel.h in Headers */,
@@ -2248,8 +2240,6 @@
 				2A120A521E0BEEED00E0E596 /* AudioDriver.h in Sources */,
 				2A120A531E0BEEF300E0E596 /* AudioNode.h in Sources */,
 				2A120A541E0BEEFC00E0E596 /* LocalInputNode.h in Sources */,
-				2A120A551E0BEF1900E0E596 /* IpToLocationResolver.h in Sources */,
-				2A120A561E0BEF1C00E0E596 /* WebIpToLocationResolver.h in Sources */,
 				2A120A811E0BF2C300E0E596 /* RoomStreamerNode.h in Sources */,
 				2AF562192047185100D809D7 /* MainChat.h in Sources */,
 				2AF5A94F1E761BC500D1150A /* LooperPersistence.cpp in Sources */,
@@ -2277,8 +2267,6 @@
 				2A1C7A401E0B5F2C00C7984D /* SamplesBufferResampler.cpp in Sources */,
 				2A1C7A411E0B5F2C00C7984D /* VorbisDecoder.cpp in Sources */,
 				2A1C7A421E0B5F2C00C7984D /* VorbisEncoder.cpp in Sources */,
-				2A1C7A431E0B5F2C00C7984D /* IpToLocationResolver.cpp in Sources */,
-				2A1C7A441E0B5F2C00C7984D /* WebIpToLocationResolver.cpp in Sources */,
 				2A1C7A451E0B5F2C00C7984D /* BaseTrackView.cpp in Sources */,
 				2AF5A9381E76192F00D1150A /* WaveFileWriter.cpp in Sources */,
 				2A1C7A461E0B5F2C00C7984D /* BpiUtils.cpp in Sources */,
