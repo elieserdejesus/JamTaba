@@ -17,9 +17,14 @@ Install  libfontconfig1-dev to avoid bad fonts. After install the fontconfig pac
 
 -----------------------------------------------------------------
 
-Mac OSX - Compiling from Qt 5.6.2, the newer versions are not compatible with Mac 10.7
+Mac OSX - Compiling from Qt 5.6, the newer versions are not compatible with Mac 10.7
 
+git clone git://code.qt.io/qt/qt5.git ~/Downloads/Qt5.6
+cd ~/Downloads/Qt5.6
+git checkout 5.6
+perl init-repository -f --module-subset=essential,-qtwebengine,-qtdeclarative,-qtdoc,-qtqa,-qtquickcontrols,-qtrepotools
 ./configure -prefix ~/Desktop/Qt-5.6 -debug-and-release -opensource -confirm-license -static -no-largefile -no-qml-debug -no-sql-psql -no-sql-mysql -no-sm -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-dbus -nomake examples -no-compile-examples -nomake tests
+make -j 4
 
 32 bits
 __________
