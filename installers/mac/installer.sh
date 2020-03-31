@@ -17,10 +17,10 @@ cd ~/Desktop/Release
 
 echo “Compiling …”
 
-~/Desktop/Qt-5.9.8/bin/qmake -config release ~/Desktop/JamTaba/PROJECTS/Jamtaba.pro -r -spec macx-clang CONFIG+=x86_64
+~/Desktop/Qt-5.6/bin/qmake -config release ~/Desktop/JamTaba/PROJECTS/Jamtaba.pro -r -spec macx-clang CONFIG+=x86_64
 
 #compile the translations file
-~/Desktop/Qt-5.9.8/bin/lrelease ~/Desktop/JamTaba/PROJECTS/Jamtaba.pro
+~/Desktop/Qt-5.6/bin/lrelease ~/Desktop/JamTaba/PROJECTS/Jamtaba.pro
 
 
 /usr/bin/make -s -j 4
