@@ -405,7 +405,7 @@ QString MultiTrackRecordingSettings::getDefaultRecordingPath()
     QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
     QDir pathDir(QDir::homePath());
     QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
-    QDir jamTabaDir = QDir(documentsDir).absoluteFilePath("Jamtaba");
+    QDir jamTabaDir = QDir(documentsDir).absoluteFilePath("JamTaba");
 
     return QDir(jamTabaDir).absoluteFilePath("Jams"); // using 'Jams' as default recording folder (issue #891)
 }
