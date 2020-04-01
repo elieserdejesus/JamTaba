@@ -77,7 +77,7 @@ public:
     explicit ClientSetChannel(const QStringList &channelsNames);
     static ClientSetChannel unserializeFrom(QIODevice *device, quint32 payload);
 
-    void addChannel(const QString &channelName, bool active = true);
+    void addChannel(const QString &channelName, quint8 flags = 0, bool active = true);
 
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;

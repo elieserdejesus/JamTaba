@@ -136,11 +136,11 @@ ClientSetChannel::ClientSetChannel(const QStringList &channelsNames) :
         addChannel(channelName);
 }
 
-void ClientSetChannel::addChannel(const QString &channelName, bool active)
+void ClientSetChannel::addChannel(const QString &channelName, quint8 flags, bool active)
 {
     payload += (channelName.toUtf8().size() + 1) + 2 + 1 + 1; // NUL + volume(short) + pan(byte) + flags(byte)
 
-    channels.append(UserChannel(channelName, channels.size(), active));
+    channels.append(UserChannel(channelName, channels.size(), flags, active));
 }
 
 ClientSetChannel ClientSetChannel::unserializeFrom(QIODevice *device, quint32 payload)
@@ -175,7 +175,7 @@ ClientSetChannel ClientSetChannel::unserializeFrom(QIODevice *device, quint32 pa
 
         bool active = flags == 0;
 
-        msg.addChannel(channelName, active);
+        msg.addChannel(channelName, flags, active);
     }
 
     return msg;

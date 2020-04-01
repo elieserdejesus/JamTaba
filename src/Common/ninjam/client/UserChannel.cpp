@@ -4,8 +4,8 @@
 
 using ninjam::client::UserChannel;
 
-UserChannel::UserChannel(const QString &channelName, quint8 channelIndex, bool active,
-                         quint16 volume, quint8 pan, quint8 flags) :
+UserChannel::UserChannel(const QString &channelName, quint8 channelIndex, quint8 flags, bool active,
+                         quint16 volume, quint8 pan) :
     channelName(channelName),
     active(active),
     index(channelIndex),

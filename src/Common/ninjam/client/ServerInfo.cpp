@@ -47,9 +47,13 @@ void ServerInfo::addUser(const User &user)
 void ServerInfo::updateUserChannel(const QString &userFullName, const UserChannel &serverChannel)
 {
     if (users.contains(userFullName)) {
+
         quint8 channelIndex = serverChannel.getIndex();
-        users[userFullName].updateChannelName(channelIndex, serverChannel.getName());
-        users[userFullName].updateChannelReceiveStatus(channelIndex, serverChannel.isActive());
+        auto &user = users[userFullName];
+
+        user.updateChannelName(channelIndex, serverChannel.getName());
+        user.updateChannelReceiveStatus(channelIndex, serverChannel.isActive());
+        user.updateChannelFlags(channelIndex, serverChannel.getFlags());
     }
 }
 

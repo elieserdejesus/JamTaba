@@ -95,6 +95,14 @@ void User::updateChannelReceiveStatus(quint8 channelIndex, bool receiving)
         qCritical() << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
 }
 
+void User::updateChannelFlags(quint8 channelIndex, quint8 flags)
+{
+    if (channels.contains(channelIndex))
+        channels[channelIndex].setFlags(flags);
+    else
+        qCritical() << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
+}
+
 bool User::hasActiveChannels() const
 {
     for (const auto &channel : channels.values()) {
