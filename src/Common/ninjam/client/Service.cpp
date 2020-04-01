@@ -332,7 +332,7 @@ void Service::process(const DownloadIntervalWrite &msg)
                     emit audioIntervalCompleted(user, download.getChannelIndex(), download.getEncodedData());
                     downloads.remove(msg.getGUID());
                 } else {
-                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData().size());
+                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData());
                 }
             }
         }

@@ -932,9 +932,8 @@ void NinjamController::setSampleRate(int newSampleRate)
 }
 
 void NinjamController::handleIntervalDownloading(const User &user, quint8 channelIndex,
-                                                 int downloadedBytes)
+                                                 const QByteArray &encodedAudio)
 {
-    Q_UNUSED(downloadedBytes);
     auto channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKeyForChannel(channel, user.getFullName());
 
