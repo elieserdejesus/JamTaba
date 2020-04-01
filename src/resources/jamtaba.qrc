@@ -126,6 +126,7 @@
         <file alias="qtbase_da.qm">../../translations/Qt/qtbase_da.qm</file>
     </qresource>
     <qresource prefix="/images">
+        <file>mic.png</file>
         <file>small_plus.png</file>
         <file>small_minus.png</file>
         <file>font_size.png</file>

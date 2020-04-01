@@ -461,12 +461,16 @@ NinjamTrackView *NinjamRoomWindow::getTrackViewByID(long trackID)
     return dynamic_cast<NinjamTrackView *>(NinjamTrackView::getTrackViewByID(trackID));
 }
 
-void NinjamRoomWindow::changeChannelName(const User &, const UserChannel &channel, long channelID)
+void NinjamRoomWindow::changeChannel(const User &, const UserChannel &channel, long channelID)
 {
-    qCDebug(jtNinjamGUI) << "channel name changed:" << channel.getName();
+    // invoked when channel name or flags (intervalic or voice chat) are changed
+
+    qCDebug(jtNinjamGUI) << "channel name or flags changed:" << channel.getName();
     auto trackView = getTrackViewByID(channelID);
-    if (trackView)
+    if (trackView) {
         trackView->setChannelName(channel.getName());
+        trackView->setChannelMode(channel.isVoiceChatChannel() ? NinjamTrackView::VoiceChat : NinjamTrackView::Intervalic);
+    }
 }
 
 quint8 NinjamRoomWindow::getGridLayoutMaxCollumns() const
@@ -546,10 +550,11 @@ void NinjamRoomWindow::addChannel(const User &user, const UserChannel &channel, 
     CacheEntry cacheEntry = cache->getUserCacheEntry(user.getIp(), user.getName(), static_cast<quint8>(channel.getIndex()));
 
     if (!trackGroups.contains(user.getFullName())) { // first channel from this user?
-        QString channelName = channel.getName();
-        QColor userColor = usersColorsPool->get(user.getName()); // the user channel and your chat messages are painted with same color
-        auto trackGroupView = new NinjamTrackGroupView(mainController, channelID,
-                                                                           channelName, userColor, cacheEntry);
+        auto channelName = channel.getName();
+        auto channelMode = channel.isVoiceChatChannel() ? NinjamTrackView::VoiceChat : NinjamTrackView::Intervalic;
+        auto userColor = usersColorsPool->get(user.getName()); // the user channel and your chat messages are painted with same color
+        auto trackGroupView = new NinjamTrackGroupView(mainController, channelID, channelName,
+                                                       channelMode, userColor, cacheEntry);
         trackGroupView->setTracksLayout(tracksLayout);
         trackGroupView->setNarrowStatus(tracksSize == TracksSize::NARROW);
         addTrack(trackGroupView);
@@ -563,6 +568,7 @@ void NinjamRoomWindow::addChannel(const User &user, const UserChannel &channel, 
         if (trackGroup) {
             auto ninjamTrackView = trackGroup->addTrackView(channelID);
             ninjamTrackView->setChannelName(channel.getName());
+            ninjamTrackView->setChannelMode(channel.isVoiceChatChannel() ? NinjamTrackView::VoiceChat : NinjamTrackView::Intervalic);
             ninjamTrackView->setInitialValues(cacheEntry);
             ninjamTrackView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
             ninjamTrackView->setActivatedStatus(true); /** disabled/grayed until receive the first bytes. When the first bytes
@@ -717,7 +723,7 @@ void NinjamRoomWindow::setupSignals(controller::NinjamController* ninjamControll
     connect(ninjamController, &NinjamController::channelAdded, this, &NinjamRoomWindow::addChannel);
     connect(ninjamController, &NinjamController::channelRemoved, this, &NinjamRoomWindow::removeChannel);
 
-    connect(ninjamController, &NinjamController::channelNameChanged, this, &NinjamRoomWindow::changeChannelName);
+    connect(ninjamController, &NinjamController::channelChanged, this, &NinjamRoomWindow::changeChannel);
 
     connect(ninjamController, &NinjamController::channelAudioChunkDownloaded, this, &NinjamRoomWindow::updateIntervalDownloadingProgressBar);
 

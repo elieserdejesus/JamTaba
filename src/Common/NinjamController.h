@@ -94,7 +94,7 @@ signals:
     void startProcessing(int intervalPosition);
     void channelAdded(const User &user, const UserChannel &channel, long channelID);
     void channelRemoved(const User &user, const UserChannel &channel, long channelID);
-    void channelNameChanged(const User &user, const UserChannel &channel, long channelID);
+    void channelChanged(const User &user, const UserChannel &channel, long channelID); // emmited when channel name or flags (intervalic or voice chat channel) changes
     void channelXmitChanged(long channelID, bool transmiting);
     void channelAudioChunkDownloaded(long channelID);
     void channelAudioFullyDownloaded(long channelID);

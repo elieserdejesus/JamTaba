@@ -20,7 +20,7 @@ using controller::NinjamController;
 using persistence::CacheEntry;
 
 NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long trackID,
-                                           const QString &channelName, const QColor &userColor,
+                                           const QString &channelName, NinjamTrackView::ChannelMode channelMode, const QColor &userColor,
                                            const CacheEntry &initialValues) :
     TrackGroupView(nullptr),
     mainController(mainController),
@@ -70,6 +70,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     // create the first subchannel by default
     NinjamTrackView *newTrackView = addTrackView(trackID);
     newTrackView->setChannelName(channelName);
+    newTrackView->setChannelMode(channelMode);
     newTrackView->setInitialValues(initialValues);
 
     QString styleSheet = "background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, ";

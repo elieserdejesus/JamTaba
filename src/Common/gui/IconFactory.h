@@ -30,6 +30,7 @@ public:
     static QIcon createLooperSaveIcon(const QColor &tintColor);
     static QIcon createLooperLoadIcon(const QColor &tintColor);
     static QIcon createLooperResetIcon(const QColor &tintColor);
+    static QPixmap createVoiceChatIcon();
 
     static QIcon getDefaultInstrumentIcon();
     static QList<QIcon> getInstrumentIcons();

@@ -480,7 +480,8 @@ bool Service::channelIsOutdate(const User &user, const UserChannel &serverChanne
     //if (user.getFullName() == serverChannel.getUserFullName()) {
         if (user.hasChannel(serverChannel.getIndex())) {
             UserChannel userChannel = user.getChannel(serverChannel.getIndex());
-            return userChannel.getName() != serverChannel.getName();
+            return userChannel.getName() != serverChannel.getName()
+                    || userChannel.getFlags() != serverChannel.getFlags();
         }
     //}
     return false;

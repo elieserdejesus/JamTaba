@@ -794,12 +794,14 @@ void NinjamController::removeNinjamRemoteChannel(const User &user, const UserCha
 
 void NinjamController::updateNinjamRemoteChannel(const User &user, const UserChannel &channel)
 {
-    QString uniqueKey = getUniqueKeyForChannel(channel, user.getFullName());
+    auto uniqueKey = getUniqueKeyForChannel(channel, user.getFullName());
     QMutexLocker locker(&mutex);
     if (trackNodes.contains(uniqueKey))
     {
         auto trackNode = trackNodes[uniqueKey];
-        emit channelNameChanged(user, channel, trackNode->getID());
+        if (trackNode) {
+            emit channelChanged(user, channel, trackNode->getID());
+        }
     }
 }
 
