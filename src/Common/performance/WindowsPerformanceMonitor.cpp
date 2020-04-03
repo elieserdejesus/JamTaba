@@ -93,10 +93,11 @@ int PerformanceMonitor::getMemmoryUsed(){
 
 int PerformanceMonitor::getBatteryUsed(){
 
+    //http://www.cplusplus.com/forum/beginner/72594/
         SYSTEM_POWER_STATUS status; // note not LPSYSTEM_POWER_STATUS
     GetSystemPowerStatus(&status);
 
-    int life = status.BatteryLifePercent;
+    int life = status.BatteryLifePercent; //if value is 255 that means unknown
     //int BTime = status.BatteryLifeTime;
 
 return life;

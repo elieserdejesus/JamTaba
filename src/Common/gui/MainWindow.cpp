@@ -2086,7 +2086,7 @@ void MainWindow::timerEvent(QTimerEvent *)
             QString string;
 
                 if (performanceMonitor->getMemmoryUsed() > 60) //memory meter only active if memory usage is <60%
-                    string = string + QString(" MEM: %1%").arg(performanceMonitor->getMemmoryUsed());
+                    string = string + QString("MEM: %1%").arg(performanceMonitor->getMemmoryUsed());
 
                 if (performanceMonitor->getBatteryUsed() < 255) //Battery meter active only if battery is available
                     string = string + QString(" BAT: %1%").arg(performanceMonitor->getBatteryUsed());
