@@ -90,3 +90,14 @@ int PerformanceMonitor::getMemmoryUsed(){
     }
     return 0;
 }
+
+int PerformanceMonitor::getBatteryUsed(){
+
+        SYSTEM_POWER_STATUS status; // note not LPSYSTEM_POWER_STATUS
+    GetSystemPowerStatus(&status);
+
+    int life = status.BatteryLifePercent;
+    //int BTime = status.BatteryLifeTime;
+
+return life;
+}

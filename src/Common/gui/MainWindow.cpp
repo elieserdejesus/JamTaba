@@ -2082,8 +2082,18 @@ void MainWindow::timerEvent(QTimerEvent *)
     qint64 now = QDateTime::currentMSecsSinceEpoch();
     if (now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME) {
 
-        if (performanceMonitorLabel)
-            performanceMonitorLabel->setText(QString("MEM: %1%").arg(performanceMonitor->getMemmoryUsed()));
+        if (performanceMonitorLabel) {
+            QString string;
+
+                if (performanceMonitor->getMemmoryUsed() > 60) //memory meter only active if memory usage is <60%
+                    string = string + QString(" MEM: %1%").arg(performanceMonitor->getMemmoryUsed());
+
+                if (performanceMonitor->getBatteryUsed() < 255) //Battery meter active only if battery is available
+                    string = string + QString(" BAT: %1%").arg(performanceMonitor->getBatteryUsed());
+
+            performanceMonitorLabel->setText(string);
+
+        }
 
         lastPerformanceMonitorUpdate = now;
     }
