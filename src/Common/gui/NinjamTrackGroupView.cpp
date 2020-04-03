@@ -20,7 +20,7 @@ using controller::NinjamController;
 using persistence::CacheEntry;
 
 NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long trackID,
-                                           const QString &channelName, NinjamTrackView::ChannelMode channelMode, const QColor &userColor,
+                                           const QString &channelName, NinjamTrackNode::ChannelMode channelMode, const QColor &userColor,
                                            const CacheEntry &initialValues) :
     TrackGroupView(nullptr),
     mainController(mainController),

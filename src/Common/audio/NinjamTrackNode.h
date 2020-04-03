@@ -17,12 +17,18 @@ public:
 
     enum LowCutState
     {
-        OFF, NORMAl, DRASTIC
+        Off, Normal, Drastic
+    };
+
+    enum ChannelMode {
+        Intervalic,
+        VoiceChat
     };
 
     explicit NinjamTrackNode(int ID);
     virtual ~NinjamTrackNode();
-    void addVorbisEncodedInterval(const QByteArray &encodedBytes);
+    void addVorbisEncodedInterval(const QByteArray &fullIntervalBytes);
+    void addVorbisEncodedChunk(const QByteArray &chunkBytes, bool isLastPart);
     void processReplacing(const audio::SamplesBuffer &in, audio::SamplesBuffer &out, int sampleRate,
                           std::vector<midi::MidiMessage> &midiBuffer) override;
 
@@ -39,12 +45,18 @@ public:
 
     bool isStereo() const;
 
+    bool isIntervalic() const { return mode == Intervalic; }
+
+    bool isVoiceChat() const { return mode == VoiceChat; }
+
+    void setChannelMode(ChannelMode mode);
+
     // Discard all downloaded (but not played yet) intervals
-    void discardDownloadedIntervals(bool keepMostRecentInterval);
+    void discardDownloadedIntervals();
 
     void stopDecoding();
 
-    void setProcessingLastPartOfInterval(bool status);
+    //void setProcessingLastPartOfInterval(bool status);
 
 private:
     int ID;
@@ -59,7 +71,7 @@ private:
 
     int getFramesToProcess(int targetSampleRate, int outFrameLenght);
 
-    bool processingLastPartOfInterval;
+    //bool processingLastPartOfInterval;
 
     class IntervalDecoder;
 
@@ -67,12 +79,14 @@ private:
     IntervalDecoder* currentDecoder;
     QMutex decodersMutex;
 
+    ChannelMode mode = Intervalic;
+
 };
 
-inline void NinjamTrackNode::setProcessingLastPartOfInterval(bool status)
-{
-    this->processingLastPartOfInterval = status;
-}
+//inline void NinjamTrackNode::setProcessingLastPartOfInterval(bool status)
+//{
+//    this->processingLastPartOfInterval = status;
+//}
 
 inline int NinjamTrackNode::getID() const
 {

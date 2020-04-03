@@ -47,12 +47,7 @@ public:
 
     static void setNetworkUsageUpdatePeriod(quint32 periodInMilliseconds);
 
-    enum ChannelMode {
-        Intervalic,
-        VoiceChat
-    };
-
-    void setChannelMode(ChannelMode mode);
+    void setChannelMode(NinjamTrackNode::ChannelMode mode);
 
 protected:
 
@@ -72,8 +67,6 @@ private:
     InstrumentsButton *instrumentsButton;
 
     QPixmap voiceChatIcon;
-
-    ChannelMode channelMode = Intervalic;
 
     // used to send channel receive on/off messages
     QString userFullName;

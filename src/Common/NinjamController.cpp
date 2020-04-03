@@ -318,8 +318,8 @@ void NinjamController::process(const audio::SamplesBuffer &in, audio::SamplesBuf
 
         // +++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
         bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
-        for (NinjamTrackNode *track : trackNodes)
-            track->setProcessingLastPartOfInterval(isLastPart); // TODO resampler still need a flag indicating the last part?
+        //for (NinjamTrackNode *track : trackNodes)
+        //    track->setProcessingLastPartOfInterval(isLastPart); // TODO resampler still need a flag indicating the last part?
         mainController->doAudioProcess(tempInBuffer, tempOutBuffer, sampleRate);
         out.add(tempOutBuffer, offset); // generate audio output
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -734,7 +734,7 @@ void NinjamController::handleNewInterval()
     if (hasScheduledChanges())
         processScheduledChanges();
 
-    // QMutexLocker locker(&mutex);
+    //mutex.lock();
     for (NinjamTrackNode *track : trackNodes.values())
     {
         bool trackWasPlaying = track->isPlaying();
@@ -742,6 +742,7 @@ void NinjamController::handleNewInterval()
         if (trackWasPlaying != trackIsPlaying)
             emit channelXmitChanged(track->getID(), trackIsPlaying);
     }
+    //mutex.unlock();
 
     emit startingNewInterval(); // update the UI
 
@@ -846,11 +847,11 @@ void NinjamController::handleIntervalCompleted(const User &user, quint8 channelI
     }
 }
 
-void NinjamController::reset(bool keepRecentIntervals)
+void NinjamController::reset()
 {
     QMutexLocker locker(&mutex);
     for (NinjamTrackNode *trackNode : trackNodes.values())
-        trackNode->discardDownloadedIntervals(keepRecentIntervals);
+        trackNode->discardDownloadedIntervals();
     intervalPosition = lastBeat = 0;
 }
 
@@ -922,7 +923,7 @@ void NinjamController::setSampleRate(int newSampleRate)
     if (!isRunning())
         return;
 
-    reset(false); // discard all downloaded intervals
+    reset(); // discard all downloaded intervals
 
     this->samplesInInterval = computeTotalSamplesInInterval();
 
@@ -931,8 +932,7 @@ void NinjamController::setSampleRate(int newSampleRate)
     recreateEncoders();
 }
 
-void NinjamController::handleIntervalDownloading(const User &user, quint8 channelIndex,
-                                                 const QByteArray &encodedAudio)
+void NinjamController::handleIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudio, bool isLastPart)
 {
     auto channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKeyForChannel(channel, user.getFullName());
@@ -945,6 +945,9 @@ void NinjamController::handleIntervalDownloading(const User &user, quint8 channe
     {
         if (!track->isPlaying())   // track is not playing yet and receive the first interval bytes
             emit channelXmitChanged(track->getID(), true);
+
         emit channelAudioChunkDownloaded(track->getID());
+
+        track->addVorbisEncodedChunk(encodedAudio, isLastPart);
     }
 }

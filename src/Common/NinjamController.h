@@ -71,7 +71,7 @@ public:
 
     void setSampleRate(int newSampleRate);
 
-    void reset(bool keepRecentIntervals);     // discard downloaded intervals and reset intervalPosition
+    void reset();     // discard downloaded intervals and reset intervalPosition
 
     bool isPreparedForTransmit() const;
 
@@ -178,7 +178,7 @@ private slots:
     void scheduleBpiChangeEvent(quint16 newBpi, quint16 oldBpi);
     void handleIntervalCompleted(const User &user, quint8 channelIndex,
                                  const QByteArray &encodedAudioData);
-    void handleIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudio);
+    void handleIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudio, bool isLastPart);
     void addNinjamRemoteChannel(const User &user, const UserChannel &channel);
     void removeNinjamRemoteChannel(const User &user, const UserChannel &channel);
     void updateNinjamRemoteChannel(const User &user, const UserChannel &channel);

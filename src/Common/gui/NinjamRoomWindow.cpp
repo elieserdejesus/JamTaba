@@ -469,7 +469,7 @@ void NinjamRoomWindow::changeChannel(const User &, const UserChannel &channel, l
     auto trackView = getTrackViewByID(channelID);
     if (trackView) {
         trackView->setChannelName(channel.getName());
-        trackView->setChannelMode(channel.isVoiceChatChannel() ? NinjamTrackView::VoiceChat : NinjamTrackView::Intervalic);
+        trackView->setChannelMode(channel.isVoiceChatChannel() ? NinjamTrackNode::VoiceChat : NinjamTrackNode::Intervalic);
     }
 }
 
@@ -551,7 +551,7 @@ void NinjamRoomWindow::addChannel(const User &user, const UserChannel &channel, 
 
     if (!trackGroups.contains(user.getFullName())) { // first channel from this user?
         auto channelName = channel.getName();
-        auto channelMode = channel.isVoiceChatChannel() ? NinjamTrackView::VoiceChat : NinjamTrackView::Intervalic;
+        auto channelMode = channel.isVoiceChatChannel() ? NinjamTrackNode::VoiceChat : NinjamTrackNode::Intervalic;
         auto userColor = usersColorsPool->get(user.getName()); // the user channel and your chat messages are painted with same color
         auto trackGroupView = new NinjamTrackGroupView(mainController, channelID, channelName,
                                                        channelMode, userColor, cacheEntry);
@@ -568,7 +568,7 @@ void NinjamRoomWindow::addChannel(const User &user, const UserChannel &channel, 
         if (trackGroup) {
             auto ninjamTrackView = trackGroup->addTrackView(channelID);
             ninjamTrackView->setChannelName(channel.getName());
-            ninjamTrackView->setChannelMode(channel.isVoiceChatChannel() ? NinjamTrackView::VoiceChat : NinjamTrackView::Intervalic);
+            ninjamTrackView->setChannelMode(channel.isVoiceChatChannel() ? NinjamTrackNode::VoiceChat : NinjamTrackNode::Intervalic);
             ninjamTrackView->setInitialValues(cacheEntry);
             ninjamTrackView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
             ninjamTrackView->setActivatedStatus(true); /** disabled/grayed until receive the first bytes. When the first bytes

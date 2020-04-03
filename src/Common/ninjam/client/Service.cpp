@@ -329,12 +329,13 @@ void Service::process(const DownloadIntervalWrite &msg)
         if (download.isAudio()) {
             if (user.getChannel(download.getChannelIndex()).isActive()) {
                 if (msg.downloadIsComplete()) {
-                    emit audioIntervalCompleted(user, download.getChannelIndex(), download.getEncodedData());
+                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData(), true); // the last chunk
+                    emit audioIntervalCompleted(user, download.getChannelIndex(), download.getEncodedData()); // full interval
                     downloads.remove(msg.getGUID());
-                } else {
-                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData());
                 }
-            }
+                else
+                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData(), false);
+             }
         }
         else if (msg.downloadIsComplete()) { // download is video
             emit videoIntervalCompleted(user, download.getEncodedData());

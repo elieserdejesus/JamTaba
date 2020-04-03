@@ -73,7 +73,8 @@ void NinjamTrackView::paintEvent(QPaintEvent *ev)
 {
     BaseTrackView::paintEvent(ev);
 
-    if (channelMode == NinjamTrackView::VoiceChat) {
+    auto trackNode = getTrackNode();
+    if (trackNode && trackNode->isVoiceChat()) {
 
         if (updateCounter % 10 == 0) // blinking voice chat icon every 10 updates
             return;
@@ -176,9 +177,9 @@ QString NinjamTrackView::getLowCutStateText() const
     if (trackNode) {
         switch(trackNode->getLowCutState())
         {
-        case NinjamTrackNode::OFF: return tr("Off");
-        case NinjamTrackNode::NORMAl: return tr("Normal");
-        case NinjamTrackNode::DRASTIC: return tr("Drastic");
+        case NinjamTrackNode::Off: return tr("Off");
+        case NinjamTrackNode::Normal: return tr("Normal");
+        case NinjamTrackNode::Drastic: return tr("Drastic");
         }
     }
 
@@ -236,10 +237,13 @@ void NinjamTrackView::setInitialValues(const persistence::CacheEntry &initialVal
 
 }
 
-void NinjamTrackView::setChannelMode(ChannelMode mode)
+void NinjamTrackView::setChannelMode(NinjamTrackNode::ChannelMode mode)
 {
-    this->channelMode = mode;
-    update();
+    auto trackNode = getTrackNode();
+    if (trackNode) {
+        trackNode->setChannelMode(mode);
+        update();
+    }
 }
 
 bool NinjamTrackView::isVideoChannel() const
@@ -256,10 +260,12 @@ qint8 NinjamTrackView::guessInstrumentIcon() const
 
 void NinjamTrackView::updateGuiElements()
 {
+    auto trackNode = getTrackNode();
+
     if (isActivated()) {
         BaseTrackView::updateGuiElements();
 
-        auto trackNode = getTrackNode();
+
         if (trackNode)
             levelSlider->setStereo(trackNode->isStereo());
     }
@@ -285,7 +291,7 @@ void NinjamTrackView::updateGuiElements()
         networkUsageLabel->setToolTip(toolTipText);
     }
 
-    if (channelMode == VoiceChat) {
+    if (trackNode && trackNode->isVoiceChat()) {
         updateCounter++; // used to blink the voice chat icon
         update();
     }
