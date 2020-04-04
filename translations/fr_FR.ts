@@ -5,18 +5,22 @@
     <name>BaseTrackView</name>
     <message>
         <source>L</source>
-        <translation>L</translation>
+        <translatorcomment>Gauche</translatorcomment>
+        <translation>G</translation>
     </message>
     <message>
         <source>R</source>
-        <translation>R</translation>
+        <translatorcomment>Droite</translatorcomment>
+        <translation>D</translation>
     </message>
     <message>
         <source>M</source>
+        <translatorcomment>Muet</translatorcomment>
         <translation>M</translation>
     </message>
     <message>
         <source>S</source>
+        <translatorcomment>Solo</translatorcomment>
         <translation>S</translation>
     </message>
 </context>
@@ -24,6 +28,7 @@
     <name>BoostSpinBox</name>
     <message>
         <source>Boost</source>
+        <translatorcomment>Augmenter</translatorcomment>
         <translation>Boost</translation>
     </message>
 </context>
@@ -31,18 +36,18 @@
     <name>BusyDialog</name>
     <message>
         <source>This is the busy dialog window</source>
-        <translation>Fenêtre de dialogue active</translation>
+        <translation>Ceci est la fenêtre de dialogue active</translation>
     </message>
     <message>
         <source>TextLabel</source>
-        <translation>Texte</translation>
+        <translation>Etiquette de texte</translation>
     </message>
 </context>
 <context>
     <name>ChatMessagePanel</name>
     <message>
         <source>translate ...</source>
-        <translation>traduction...</translation>
+        <translation>traduire...</translation>
     </message>
     <message>
         <source>T</source>
@@ -50,7 +55,7 @@
     </message>
     <message>
         <source>block chat messages from this user</source>
-        <translation>Bloquer les messages chat de cet utilisateur</translation>
+        <translation>bloquer les messages chat de cet utilisateur</translation>
     </message>
     <message>
         <source>B</source>
@@ -65,11 +70,11 @@
     <name>ChatPanel</name>
     <message>
         <source>Type your text to sent on the chat here</source>
-        <translation>Ecrire dans la boite de chat ici</translation>
+        <translation>Saisir votre texte à envoyer sur le chat ici</translation>
     </message>
     <message>
         <source>This is the chat scroll area</source>
-        <translation>&quot;Scroll&quot; du chat</translation>
+        <translation>Défilement du chat</translation>
     </message>
     <message>
         <source>clear the messages ...</source>
@@ -77,7 +82,7 @@
     </message>
     <message>
         <source>Press that button to clear your message</source>
-        <translation>Cliquer ce bouton pour effacer votre message</translation>
+        <translation>Cliquer sur ce bouton pour effacer votre message</translation>
     </message>
     <message>
         <source>Auto translate</source>
@@ -93,15 +98,15 @@
     </message>
     <message>
         <source>type here ...</source>
-        <translation>ecrire ici ...</translation>
+        <translation>écrire ici ...</translation>
     </message>
     <message>
         <source>Increase chat font size</source>
-        <translation>augmenter la taille des caractères</translation>
+        <translation>Augmenter la taille de la police de caractères</translation>
     </message>
     <message>
         <source>Decrease chat font size</source>
-        <translation>diminuer la taille des caractères</translation>
+        <translation>Diminuer la taille de la police de caractères</translation>
     </message>
     <message>
         <source>Turn on/off this chat</source>
@@ -131,35 +136,35 @@
     <name>ChordProgressionCreationDialog</name>
     <message>
         <source>Creating Chord Progression ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Création d&apos;une progression d&apos;accords ...</translation>
     </message>
     <message>
         <source>Measures:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mesures:</translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Chords per measure:</source>
-        <translation type="unfinished"></translation>
+        <translation>Accords par mesure:</translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; use TAB to navigate!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;type the first letter of chord name to quick jump!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Zone 1:&lt;/span&gt; utiliser TAB pour naviguer!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Zone 2: &lt;/span&gt;saisir la première lettre de l&apos;accord pour le trouver plus rapidement!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Load the chord progression!</source>
-        <translation type="unfinished"></translation>
+        <translation>Charger la progression d&apos;accords!</translation>
     </message>
     <message>
         <source>ok</source>
-        <translation type="unfinished">ok</translation>
+        <translation>ok</translation>
     </message>
 </context>
 <context>
@@ -182,18 +187,18 @@
     </message>
     <message>
         <source>Chords (server:2049)</source>
-        <translation type="unfinished"></translation>
+        <translation>Accords (server:2049)</translation>
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation>Accords</translation>
     </message>
 </context>
 <context>
     <name>DelayGui</name>
     <message>
         <source>Delay Time (ms):</source>
-        <translation>Temps de delay (ms):</translation>
+        <translation>Durée du delay (ms):</translation>
     </message>
     <message>
         <source>Feedback (db):</source>
@@ -201,7 +206,7 @@
     </message>
     <message>
         <source>Level:</source>
-        <translation>Niveau:</translation>
+        <translation>Ratio de rétroaction:</translation>
     </message>
 </context>
 <context>
@@ -216,21 +221,21 @@
     </message>
     <message>
         <source>remove</source>
-        <translation>effacer</translation>
+        <translation>enlever</translation>
     </message>
 </context>
 <context>
     <name>InactivityDetector</name>
     <message>
         <source>You are not transmiting for a long time! This is intentional?</source>
-        <translation>Vous ne transmettez aucun son depuis longtemps! Volontairement?</translation>
+        <translation>Vous ne transmettez aucun son depuis longtemps! Est-ce volontaire?</translation>
     </message>
 </context>
 <context>
     <name>IntervalChunksDisplay</name>
     <message>
         <source>Downloaded intervals</source>
-        <translation>Mesures chargées</translation>
+        <translation>Cycles téléchargés</translation>
     </message>
 </context>
 <context>
@@ -249,23 +254,23 @@
     </message>
     <message>
         <source>The audio stream of this room is not available at moment!</source>
-        <translation>Le stream audio pour ce salon n&apos;est pas disponible pour le moment!</translation>
+        <translation>Le flux audio pour ce salon n&apos;est pas disponible pour le moment!</translation>
     </message>
     <message>
         <source>This is the server name</source>
-        <translation>Nom du serveur</translation>
+        <translation>Ceci est le nom du serveur</translation>
     </message>
     <message>
         <source>Click that button to listen that room</source>
-        <translation>Cliquer ce bouton pour écouter ce salon</translation>
+        <translation>Cliquer sur ce bouton pour écouter ce salon</translation>
     </message>
     <message>
         <source>Click that button to enter in this room</source>
-        <translation>cliquer ce bouton pour entrer dans ce salon</translation>
+        <translation>Cliquer sur ce bouton pour entrer dans ce salon</translation>
     </message>
     <message>
         <source>That zone displays the waveform actually played</source>
-        <translation>Cette zone montre les ondes joués dans ce salon</translation>
+        <translation>Cette zone affiche les ondes jouées actuellement dans ce salon</translation>
     </message>
     <message>
         <source>This is the status of this room</source>
@@ -276,7 +281,7 @@
     <name>LocalTrackGroupView</name>
     <message>
         <source>Add or remove channels...</source>
-        <translation>Ajouter ou effacer les canaux...</translation>
+        <translation>Ajouter ou enlever des canaux...</translation>
     </message>
     <message>
         <source>Preparing</source>
@@ -284,15 +289,15 @@
     </message>
     <message>
         <source>Load preset</source>
-        <translation>Charger le preset</translation>
+        <translation>Charger le préréglage</translation>
     </message>
     <message>
         <source>Save preset</source>
-        <translation>Sauver le preset</translation>
+        <translation>Sauver le préréglage</translation>
     </message>
     <message>
         <source>Reset Track Controls</source>
-        <translation>Réinitialiser le preset</translation>
+        <translation>Réinitialiser le réglage de la piste</translation>
     </message>
     <message>
         <source>Add channel</source>
@@ -304,23 +309,23 @@
     </message>
     <message>
         <source>Save the preset ...</source>
-        <translation>Sauvegarder le preset ...</translation>
+        <translation>Sauvegarder le préréglage ...</translation>
     </message>
     <message>
         <source>Preset name:</source>
-        <translation>Nom du preset:</translation>
+        <translation>Nom du préréglage:</translation>
     </message>
     <message>
         <source>Transmit</source>
-        <translation>Transmission</translation>
+        <translation>Transmet</translation>
     </message>
     <message>
         <source>Delete preset</source>
-        <translation>Supprimer le preset</translation>
+        <translation>Supprimer le préréglage</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation>Suppression du preset ...</translation>
+        <translation>Suppression du préréglage ...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
@@ -328,7 +333,7 @@
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
-        <translation>Bloquer la transmisssion vers les autres</translation>
+        <translation>Activer/désactiver la transmisssion vers les autres</translation>
     </message>
 </context>
 <context>
@@ -346,7 +351,7 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation>Inversé la stéréo</translation>
+        <translation>Inverser la stéréo</translation>
     </message>
     <message>
         <source>Looper (Available when jamming)</source>
@@ -357,7 +362,7 @@
     <name>LocalTrackViewStandalone</name>
     <message>
         <source>Choose input channels ...</source>
-        <translation>Choisir les canaux d&apos;entrées ...</translation>
+        <translation>Choisir les canaux d&apos;entrée ...</translation>
     </message>
     <message>
         <source>Tools</source>
@@ -369,11 +374,11 @@
     </message>
     <message>
         <source>Stereo</source>
-        <translation>Stereo</translation>
+        <translation>Stéréo</translation>
     </message>
     <message>
         <source>%1  (not enough available inputs to make stereo)</source>
-        <translation>%1 (pas assez d&apos;entrees disponibles pour mode stereo)</translation>
+        <translation>%1 (pas assez d&apos;entrées disponibles pour la stéréo)</translation>
     </message>
     <message>
         <source>MIDI</source>
@@ -389,7 +394,7 @@
     </message>
     <message>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
-        <translation>%1 (pas de matériel midi detecté ou autorisé , voir dans Préferences)</translation>
+        <translation>%1 (pas de matériel midi détecté ou activé dans le menu &apos;Préferences&apos;)</translation>
     </message>
     <message>
         <source>no input</source>
@@ -400,11 +405,11 @@
     <name>LooperWindow</name>
     <message>
         <source>Load looper layers</source>
-        <translation>Charger les pistes du looper</translation>
+        <translation>Charger les couches du looper</translation>
     </message>
     <message>
         <source>Save looper layers</source>
-        <translation>Sauver les pistes du looper</translation>
+        <translation>Sauver les couches du looper</translation>
     </message>
     <message>
         <source>Reset</source>
@@ -428,31 +433,31 @@
     </message>
     <message>
         <source>Reset layers content</source>
-        <translation>Reset du contenu des pistes</translation>
+        <translation>Reset du contenu des couches</translation>
     </message>
     <message>
         <source>Reset layers controls</source>
-        <translation>Reset des controles de pistes</translation>
+        <translation>Reset des controles de couches</translation>
     </message>
     <message>
         <source>Reset layers content and controls</source>
-        <translation>Reset des controles et du contenu des pistes</translation>
+        <translation>Reset du contenu et des contrôles des couches</translation>
     </message>
     <message>
         <source>wait (%1)</source>
-        <translation>Attendez (%1)</translation>
+        <translation>attendez (%1)</translation>
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation>Sauver les pistes du looper ...</translation>
+        <translation>Sauver les couches du looper ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
-        <translation>Nom de la loop:</translation>
+        <translation>Nom de la boucle:</translation>
     </message>
     <message>
         <source>Hear all/Locked</source>
-        <translation>Toutes les pistes armées/Verouillé</translation>
+        <translation>Toutes les pistes Armées/Verrouillées</translation>
     </message>
     <message>
         <source>Overdub</source>
@@ -464,7 +469,7 @@
     </message>
     <message>
         <source>Locked</source>
-        <translation>Verouillé</translation>
+        <translation>Verrouillé</translation>
     </message>
     <message>
         <source>Non empty</source>
@@ -472,47 +477,47 @@
     </message>
     <message>
         <source>Hear all layers while recording</source>
-        <translation>Entendre toutes les pistes pendant l&apos;enregistrement</translation>
+        <translation>Entendre toutes les couches pendant l&apos;enregistrement</translation>
     </message>
     <message>
         <source>Overdub the current layer until REC button is pressed</source>
-        <translation>Overdub de la piste en cours jusqu&apos;à l&apos;appui sur touche REC</translation>
+        <translation>Overdub de la couche en cours jusqu&apos;à l&apos;appui sur touche REC</translation>
     </message>
     <message>
         <source>Randomize layers while playing</source>
-        <translation>Pistes au hasard pendant le jeu</translation>
+        <translation>Couches au hasard pendant le jeu</translation>
     </message>
     <message>
         <source>Play locked layers only</source>
-        <translation>Jouer uniquement les pistes vérouillées</translation>
+        <translation>Jouer uniquement les couches vérrouillées</translation>
     </message>
     <message>
         <source>%1 BPM loops</source>
-        <translation>%1 BPM loops</translation>
+        <translation>Boucles %1 BPM</translation>
     </message>
     <message>
         <source>No loops for %1 BPM</source>
-        <translation>Pas de loops pour %1 BPM</translation>
+        <translation>Pas de boucle pour %1 BPM</translation>
     </message>
     <message>
         <source>Import audio files ...</source>
-        <translation>Importer les fichiers audio...</translation>
+        <translation>Importer des fichiers audio...</translation>
     </message>
     <message>
         <source>Importing audio files ...</source>
-        <translation>Import des fichiers audio en cours...</translation>
+        <translation>Importation des fichiers audio en cours...</translation>
     </message>
     <message>
         <source>Browse JamTaba loops...</source>
-        <translation>Montrer les loops de Jamtaba...</translation>
+        <translation>Parcourir les boucles de JamTaba...</translation>
     </message>
     <message>
         <source>Open loop file</source>
-        <translation>Ouvrir le fichier de la loop</translation>
+        <translation>Ouvrir le fichier de boucle</translation>
     </message>
     <message>
         <source>Error loading audio file!</source>
-        <translation>Erreur en chargeant le fichier audio!</translation>
+        <translation>Erreur de chargement du fichier audio!</translation>
     </message>
     <message>
         <source>Can&apos;t load the file &apos;%1&apos;</source>
@@ -524,23 +529,23 @@
     </message>
     <message>
         <source>JamTaba Loop Files</source>
-        <translation>Fichiers des loops de Jamtaba</translation>
+        <translation>Fichiers de boucle de JamTaba</translation>
     </message>
     <message>
         <source>L</source>
-        <translation>L</translation>
+        <translation>G</translation>
     </message>
     <message>
         <source>R</source>
-        <translation>R</translation>
+        <translation>D</translation>
     </message>
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
-        <translation>Le fichier Loop existe déjà. Voulez-vous le remplacer?</translation>
+        <translation>Le fichier de boucle existe déjà. Voulez-vous le remplacer?</translation>
     </message>
     <message>
         <source>Play non empty layers</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer les couches non vides</translation>
     </message>
 </context>
 <context>
@@ -551,7 +556,7 @@
     </message>
     <message>
         <source>master</source>
-        <translation>master</translation>
+        <translation>principal</translation>
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
@@ -559,7 +564,7 @@
     </message>
     <message>
         <source>Preferences</source>
-        <translation>Préferences</translation>
+        <translation>Préférences</translation>
     </message>
     <message>
         <source>Ninjam</source>
@@ -571,7 +576,7 @@
     </message>
     <message>
         <source>Language</source>
-        <translation>Langues</translation>
+        <translation>Langue</translation>
     </message>
     <message>
         <source>Audio ...</source>
@@ -579,11 +584,11 @@
     </message>
     <message>
         <source>Midi ...</source>
-        <translation>Midi...</translation>
+        <translation>Midi ...</translation>
     </message>
     <message>
         <source>VST Plugins ...</source>
-        <translation>Vst Plugins...</translation>
+        <translation>Plugins VST ...</translation>
     </message>
     <message>
         <source>Recording ...</source>
@@ -599,7 +604,7 @@
     </message>
     <message>
         <source>Report bugs or suggest improvements ...</source>
-        <translation>Signaler bugs et suggestions d&apos;améliorations ...</translation>
+        <translation>Signaler des bugs et suggérer des améliorations ...</translation>
     </message>
     <message>
         <source>Wiki ...</source>
@@ -607,7 +612,7 @@
     </message>
     <message>
         <source>Users Manual ...</source>
-        <translation>Manuel d utilisation...</translation>
+        <translation>Manuel utilisateurs ...</translation>
     </message>
     <message>
         <source>Full View</source>
@@ -631,7 +636,7 @@
     </message>
     <message>
         <source>Metronome ...</source>
-        <translation>Métronome...</translation>
+        <translation>Métronome ...</translation>
     </message>
     <message>
         <source>Your Controls</source>
@@ -639,7 +644,7 @@
     </message>
     <message>
         <source>user name here</source>
-        <translation>nom d&apos;utilisateur</translation>
+        <translation>nom d&apos;utilisateur ici</translation>
     </message>
     <message>
         <source>View</source>
@@ -647,7 +652,7 @@
     </message>
     <message>
         <source>Metering</source>
-        <translation>Métrique</translation>
+        <translation>Mesure des niveaux</translation>
     </message>
     <message>
         <source>Theme</source>
@@ -655,23 +660,23 @@
     </message>
     <message>
         <source>Translators ...</source>
-        <translation>Tranducteurs...</translation>
+        <translation>Tranducteurs ...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
-        <translation>Montrer les crêtes mètres (peack meter) seulement</translation>
+        <translation>Montrer le niveau de crête seulement (QPPM)</translation>
     </message>
     <message>
         <source>Show RMS meter only</source>
-        <translation>Montrer les niveaux RMS seulement</translation>
+        <translation>Montrer la valeur efficace seulement (RMS)</translation>
     </message>
     <message>
         <source>Show peak + RMS meters</source>
-        <translation>Montrer pics et RMS</translation>
+        <translation>Montrer le niveau de crête et la valeur efficace (QPPM+RMS)</translation>
     </message>
     <message>
         <source>Show max peaks</source>
-        <translation>Montrer les pics maximum</translation>
+        <translation>Montrer les crêtes</translation>
     </message>
     <message>
         <source>Sound Wave</source>
@@ -687,11 +692,11 @@
     </message>
     <message>
         <source>Pixelated Sound Wave</source>
-        <translation>Onde sonore Pixélisée</translation>
+        <translation>Onde sonore pixélisée</translation>
     </message>
     <message>
         <source>Pixelated Buildings</source>
-        <translation>Rectangles Pixélisés</translation>
+        <translation>Rectangles pixélisés</translation>
     </message>
     <message>
         <source>Looper ...</source>
@@ -699,7 +704,7 @@
     </message>
     <message>
         <source>Connect with private server ...</source>
-        <translation>Connecté avec un serveur privé ...</translation>
+        <translation>Se connecter avec un serveur privé ...</translation>
     </message>
     <message>
         <source>Remember ...</source>
@@ -707,7 +712,7 @@
     </message>
     <message>
         <source>Host a private server in your machine ...</source>
-        <translation>Activé un serveur privé sur votre machine ...</translation>
+        <translation>Accueillir un serveur privé sur votre machine ...</translation>
     </message>
 </context>
 <context>
@@ -722,39 +727,39 @@
     </message>
     <message>
         <source>disconnecting ...</source>
-        <translation>Deconnection...</translation>
+        <translation>Déconnection ...</translation>
     </message>
     <message>
         <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>Votre version de jamtaba n&apos;est pas compatible avec les versions anterieures!</translation>
+        <translation>Votre version de JamTaba n&apos;est pas compatible avec les versions anterieures !</translation>
     </message>
     <message>
         <source>Server : Compatibility problem</source>
-        <translation>Serveur : probleme de compatibilite</translation>
+        <translation>Serveur : problème de compatibilité</translation>
     </message>
     <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
-        <translation>Une.nouvelle version de Jamtaba est disponible! Svp utiliser &lt;/a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</translation>
+        <translation>Une.nouvelle version de JamTaba est disponible au téléchargement ! SVP utilisez &lt;/a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt; !</translation>
     </message>
     <message>
         <source>New Jamtaba version available!</source>
-        <translation>Une nouvelle version de Jamtaba est disponible!</translation>
+        <translation>Une nouvelle version de JamTaba est disponible !</translation>
     </message>
     <message>
         <source>Warning!</source>
-        <translation>Attention!</translation>
+        <translation>Attention !</translation>
     </message>
     <message>
         <source>Empty name is not allowed!</source>
-        <translation>Un nom est necessaire!</translation>
+        <translation>Un nom est nécessaire !</translation>
     </message>
     <message>
         <source>Your name cannot be edited while jamming!</source>
-        <translation>Votre nom ne peut etre modifier pendant une session!</translation>
+        <translation>Votre nom ne peut être modifié en cours de session !</translation>
     </message>
     <message>
         <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
-        <translation>Seul lettres nombres &quot;_&quot; et &quot;-&quot; sont autorisés Les espaces seront remplacés par &quot;_&quot;.</translation>
+        <translation>Seuls les lettres, nombres, &quot;_&quot; et &quot;-&quot; sont autorisés ! Les espaces seront remplacés par &quot;_&quot;.</translation>
     </message>
     <message>
         <source>Error</source>
@@ -762,27 +767,27 @@
     </message>
     <message>
         <source>Disconnected from ninjam server</source>
-        <translation>Deconnecte des serveurs ninjam</translation>
+        <translation>Déconnecté du serveur Ninjam</translation>
     </message>
     <message>
         <source>About Jamtaba</source>
-        <translation>A propos de Jamtaba</translation>
+        <translation>A propos de JamTaba</translation>
     </message>
     <message>
         <source>Jamtaba version is %1</source>
-        <translation>Jamtaba version is %1</translation>
+        <translation>Cette version de JamTaba est la %1</translation>
     </message>
     <message>
         <source>These chords (%1 measures) can&apos;t be used in a %2 bpi interval!</source>
-        <translation>Ces accords (%1 mesures) ne peuvent etre utilises dans cet intervalle(bpi) %2!</translation>
+        <translation>Ces accords (%1 mesures) ne peuvent être utilisés dans ce cycle (%2 battements par cycle)!</translation>
     </message>
     <message>
         <source>Problem...</source>
-        <translation>Probleme...</translation>
+        <translation>Problème...</translation>
     </message>
     <message>
         <source>Black</source>
-        <translation>Noire</translation>
+        <translation>Noir</translation>
     </message>
     <message>
         <source>Flat</source>
@@ -790,12 +795,12 @@
     </message>
     <message>
         <source>Rounded</source>
-        <translation>Rond</translation>
+        <translation>Arrondi</translation>
     </message>
     <message>
         <source>Error connecting with Jamtaba server!
 </source>
-        <translation>Erreur de connection au serveur Jamtaba!</translation>
+        <translation>Erreur de connection au serveur JamTaba!</translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
@@ -827,11 +832,11 @@
     </message>
     <message>
         <source>%1 has left the room.</source>
-        <translation>%1 quitte le salon.</translation>
+        <translation>%1 a quitté le salon.</translation>
     </message>
     <message>
         <source>%1 has joined the room.</source>
-        <translation>%1 entrer dans le salon.</translation>
+        <translation>%1 a rejoint dans le salon.</translation>
     </message>
     <message>
         <source>Last chords used</source>
@@ -847,19 +852,19 @@
     </message>
     <message>
         <source>%1 is unblocked in the chat</source>
-        <translation>%1 est débloquer dans le chat</translation>
+        <translation>%1 est débloqué dans le chat</translation>
     </message>
     <message>
         <source>Uploading</source>
-        <translation>en envoi</translation>
+        <translation>En envoi</translation>
     </message>
     <message>
         <source>Downloading</source>
-        <translation>en telechargement</translation>
+        <translation>En téléchargement</translation>
     </message>
     <message>
         <source>Collapse bottom area</source>
-        <translation>Reduire la partie basse</translation>
+        <translation>Réduire la partie basse</translation>
     </message>
     <message>
         <source>Collapse chat</source>
@@ -907,18 +912,18 @@
     </message>
     <message>
         <source>Invite %1 to play in %2 [%3]</source>
-        <translation type="unfinished">Inviter %1 à jouer dans %2 [%3]</translation>
+        <translation>Inviter %1 à jouer dans %2 [%3]</translation>
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation>Accords</translation>
     </message>
 </context>
 <context>
     <name>MainWindowPlugin</name>
     <message>
         <source>Window Size</source>
-        <translation>Taille de la Fenêtre</translation>
+        <translation>Taille de la fenêtre</translation>
     </message>
     <message>
         <source>Increase</source>
@@ -945,7 +950,7 @@
     </message>
     <message>
         <source>Plugin Error!</source>
-        <translation>Erreur plugin!</translation>
+        <translation>Erreur de plugin!</translation>
     </message>
     <message>
         <source>Audio error!</source>
@@ -953,7 +958,7 @@
     </message>
     <message>
         <source>The audio device can&apos;t be started! Please check your audio device and try restart Jamtaba!</source>
-        <translation>Cette carte son ne peut démarrer!Svp vérifier votre interface audio et redémarrer Jamtaba!</translation>
+        <translation>Cette carte son ne peut pas être démarrée! SVP, vérifiez votre interface audio et essayez de redémarrer JamTaba!</translation>
     </message>
 </context>
 <context>
@@ -964,35 +969,35 @@
     </message>
     <message>
         <source>Slider to change the BPM of the metronome</source>
-        <translation>&quot;Slider&quot; pour changer le BPM du métronome</translation>
+        <translation>Curseur pour changer le tempo du métronome</translation>
     </message>
     <message>
         <source>L</source>
-        <translation>L</translation>
+        <translation>G</translation>
     </message>
     <message>
         <source>R</source>
-        <translation>R</translation>
+        <translation>D</translation>
     </message>
     <message>
         <source>Solo metronome</source>
-        <translation>Métronome solo</translation>
+        <translation>Solo métronome</translation>
     </message>
     <message>
         <source>Button to soloing the metronome</source>
-        <translation>Bouton pour métronome solo</translation>
+        <translation>Bouton pour activer le solo métronome</translation>
     </message>
     <message>
         <source>mute metronome</source>
-        <translation>Muter le metronome</translation>
+        <translation>Rendre le metronome muet</translation>
     </message>
     <message>
         <source>Button to mute the metronome</source>
-        <translation>Bouton pour muter le métronome</translation>
+        <translation>Bouton rendre le métronome muet</translation>
     </message>
     <message>
         <source>open a metronome floating window</source>
-        <translation>ouvrir le métronome en fenêtre flottante</translation>
+        <translation>ouvrir le métronome dans une fenêtre flottante</translation>
     </message>
     <message>
         <source>open metronome preferences</source>
@@ -1015,7 +1020,7 @@
     </message>
     <message>
         <source>learn</source>
-        <translation>apprendre</translation>
+        <translation>acquérir</translation>
     </message>
     <message>
         <source>Higher note:</source>
@@ -1031,7 +1036,7 @@
     </message>
     <message>
         <source>Route MIDI input to first subchannel</source>
-        <translation>Acheminer l&apos;entrée MIDI au premier sous-canal</translation>
+        <translation>Router l&apos;entrée MIDI vers le premier sous-canal</translation>
     </message>
 </context>
 <context>
@@ -1051,7 +1056,7 @@
     </message>
     <message>
         <source>Change the accent here</source>
-        <translation>Changer les accentuations ici</translation>
+        <translation>Changer l&apos;accentuation ici</translation>
     </message>
     <message>
         <source>Beats per minute</source>
@@ -1059,19 +1064,19 @@
     </message>
     <message>
         <source>BPM</source>
-        <translation>BPM</translation>
+        <translation>BPM (bpm)</translation>
     </message>
     <message>
         <source>Beats per interval</source>
-        <translation>Temps par mesures</translation>
+        <translation>Battements par cycle</translation>
     </message>
     <message>
         <source>BPI</source>
-        <translation>BPI</translation>
+        <translation>BPC (bpi)</translation>
     </message>
     <message>
         <source>Change the BPI here</source>
-        <translation>Changer le BPI ici</translation>
+        <translation>Changer le BPC (bpi) ici</translation>
     </message>
     <message>
         <source>Accent</source>
@@ -1103,7 +1108,7 @@
     </message>
     <message>
         <source>%1 beats</source>
-        <translation>%1 temps</translation>
+        <translation>%1 battements</translation>
     </message>
     <message>
         <source>Custom...</source>
@@ -1122,7 +1127,7 @@
     </message>
     <message>
         <source>Set tracks layout to horizontal</source>
-        <translation>Placer les pistes a l horizontale</translation>
+        <translation>Placer les pistes a l&apos;horizontale</translation>
     </message>
     <message>
         <source>Set tracks layout to vertical</source>
@@ -1130,7 +1135,7 @@
     </message>
     <message>
         <source>Wide tracks</source>
-        <translation>pistes larges</translation>
+        <translation>Pistes larges</translation>
     </message>
     <message>
         <source>Narrow tracks</source>
@@ -1138,7 +1143,7 @@
     </message>
     <message>
         <source>Server Licence</source>
-        <translation>Licence serveur</translation>
+        <translation>Licence du serveur</translation>
     </message>
     <message>
         <source>Connected as &lt;user_name&gt;</source>
@@ -1146,7 +1151,7 @@
     </message>
     <message>
         <source>Connected as %1</source>
-        <translation>Connecté avec comme pseudo %1</translation>
+        <translation>Connecté sous le pseudo %1</translation>
     </message>
     <message>
         <source>Set tracks layout to grid</source>
@@ -1158,7 +1163,7 @@
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation>Synchronisation hôte</translation>
+        <translation>Synchronisation de l&apos;hôte</translation>
     </message>
     <message>
         <source>The BPM has changed! Please stop %1 and change BPM to %2!</source>
@@ -1166,19 +1171,19 @@
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation>Synchronisation ...</translation>
+        <translation>Synchronisation en cours ...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation>Presser play/start dans %1 pour synchroniser avec Jamtaba!</translation>
+        <translation>Presser play/start dans %1 pour synchroniser avec JamTaba!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation>Essayer de synchroniser ...</translation>
+        <translation>Tentative de synchronisation ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation>Changez BPM du %1 en %2 et essayez la synchronisation à nouveau!</translation>
+        <translation>Changez BPM du %1 en %2 et essayez de synchroniser à nouveau!</translation>
     </message>
 </context>
 <context>
@@ -1212,11 +1217,11 @@
     </message>
     <message>
         <source>Downloading</source>
-        <translation>en telechargement</translation>
+        <translation>Téléchargement en cours</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation>Stereo</translation>
+        <translation>Stéréo</translation>
     </message>
     <message>
         <source>Mono</source>
@@ -1234,15 +1239,15 @@
     <name>PanSlider</name>
     <message>
         <source>center</source>
-        <translation type="unfinished">Centré</translation>
+        <translation>Centré</translation>
     </message>
     <message>
         <source>L</source>
-        <translation type="unfinished">L</translation>
+        <translation>G</translation>
     </message>
     <message>
         <source>R</source>
-        <translation type="unfinished">R</translation>
+        <translation>D</translation>
     </message>
 </context>
 <context>
@@ -1253,11 +1258,11 @@
     </message>
     <message>
         <source>This is the plugin scanning dialog box</source>
-        <translation>Boite de dialogue du scann des plugins</translation>
+        <translation>Ceci est la boîte de dialogue du scan des plugins</translation>
     </message>
     <message>
         <source>scanning plugins...</source>
-        <translation>scanner les plugins...</translation>
+        <translation>scan les plugins en cours...</translation>
     </message>
     <message>
         <source>scanning %1</source>
@@ -1273,14 +1278,14 @@
     </message>
     <message>
         <source>No plugins found!</source>
-        <translation>Aucun plugins retrouvés!</translation>
+        <translation>Aucun plugin trouvé!</translation>
     </message>
 </context>
 <context>
     <name>PreferencesDialog</name>
     <message>
         <source>Choosing Primary beat audio file...</source>
-        <translation>Choisir le fichier des accents de temps primaires...</translation>
+        <translation>Choisir le fichier audio pour le premier battement des cycles...</translation>
     </message>
     <message>
         <source>Audio Files</source>
@@ -1300,11 +1305,11 @@
     </message>
     <message>
         <source>Audio Device</source>
-        <translation>Materiel audio</translation>
+        <translation>Matériel audio</translation>
     </message>
     <message>
         <source>Inputs</source>
-        <translation>Entrees</translation>
+        <translation>Entrées</translation>
     </message>
     <message>
         <source>First</source>
@@ -1328,7 +1333,7 @@
     </message>
     <message>
         <source>Enable/disable your midi input devices:</source>
-        <translation>Autoriser/bloquer les entrees midi de sa carte son:</translation>
+        <translation>Autoriser/bloquer les entrées midi de la carte son:</translation>
     </message>
     <message>
         <source>VST</source>
@@ -1336,11 +1341,11 @@
     </message>
     <message>
         <source>Vst(i)s loaded</source>
-        <translation>Vst(i) chargés</translation>
+        <translation>VST(i) chargés</translation>
     </message>
     <message>
         <source>Scan only new plugins</source>
-        <translation>Scanner seulement les nouveaux plugins</translation>
+        <translation>Scanner uniquement les nouveaux plugins</translation>
     </message>
     <message>
         <source>Refresh</source>
@@ -1348,7 +1353,7 @@
     </message>
     <message>
         <source>Clear plugins cache and scan all plugin folders</source>
-        <translation>Effacer le cache des plugins et scanners les autres dossiers de plugins</translation>
+        <translation>Effacer le cache des plugins et scanners tous les dossiers de plugins</translation>
     </message>
     <message>
         <source>Clear and Scan</source>
@@ -1360,11 +1365,11 @@
     </message>
     <message>
         <source>Remove from blackList</source>
-        <translation>Effacer de la liste noire</translation>
+        <translation>Envlever de la liste noire</translation>
     </message>
     <message>
         <source>Plugin Paths:</source>
-        <translation>Chemin dossier des plugins:</translation>
+        <translation>Chemins des plugins:</translation>
     </message>
     <message>
         <source>Add a new folder to scan ...</source>
@@ -1372,15 +1377,15 @@
     </message>
     <message>
         <source>browse ...</source>
-        <translation>Parcourir...</translation>
+        <translation>parcourir...</translation>
     </message>
     <message>
         <source>Save multi tracks </source>
-        <translation>Sauvegarder multipistes</translation>
+        <translation>Sauvegarde multipiste</translation>
     </message>
     <message>
         <source>Record path:</source>
-        <translation>Chemin du dossier des enregistrements:</translation>
+        <translation>Chemin des enregistrements audio:</translation>
     </message>
     <message>
         <source>Metronome</source>
@@ -1388,11 +1393,11 @@
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
-        <translation>Sons personnels de métronome</translation>
+        <translation>Sons de métronome personnalisés</translation>
     </message>
     <message>
         <source>Primary Beat:</source>
-        <translation>Son des temps principaux de mesure:</translation>
+        <translation>Premier battement des cycles:</translation>
     </message>
     <message>
         <source>Browse ...</source>
@@ -1400,7 +1405,7 @@
     </message>
     <message>
         <source>Use 16 bit audio files!</source>
-        <translation>Choisir les fichiers audio en 16 bits!</translation>
+        <translation>Utiliser des fichiers audio en 16 bits!</translation>
     </message>
     <message>
         <source>ok</source>
@@ -1408,7 +1413,7 @@
     </message>
     <message>
         <source>Buffer size:</source>
-        <translation>Taille du buffer:</translation>
+        <translation>Taille du tampon:</translation>
     </message>
     <message>
         <source>Sample rate:</source>
@@ -1420,7 +1425,7 @@
     </message>
     <message>
         <source>Low (good for slow internet connections)</source>
-        <translation>Basse (pour les connections internet plus lentes)</translation>
+        <translation>Basse (pour les connections internet bas débit)</translation>
     </message>
     <message>
         <source>Normal (default)</source>
@@ -1444,11 +1449,11 @@
     </message>
     <message>
         <source>Save loop layers as ...</source>
-        <translation>Sauver les pistes du looper comme ...</translation>
+        <translation>Enregistrer les couches du looper sous ...</translation>
     </message>
     <message>
         <source>Ogg files (use less disk space)</source>
-        <translation>Fichiers Ogg (utiliser moins d&apos;espace disque)</translation>
+        <translation>Fichiers Ogg (utilisent moins d&apos;espace disque)</translation>
     </message>
     <message>
         <source>Wave files</source>
@@ -1460,23 +1465,23 @@
     </message>
     <message>
         <source>Loops folder</source>
-        <translation>Dossier des Loops</translation>
+        <translation>Dossier des boucles</translation>
     </message>
     <message>
         <source>Choosing loops folder ...</source>
-        <translation>Choisir le dossier des Loops ...</translation>
+        <translation>Choisir le dossier des boucles ...</translation>
     </message>
     <message>
         <source>Metronome Sound:</source>
-        <translation>Son du Métronome:</translation>
+        <translation>Son du métronome:</translation>
     </message>
     <message>
         <source>Off Beat:</source>
-        <translation>Temps faible:</translation>
+        <translation>Battement faible:</translation>
     </message>
     <message>
         <source>Accent Beat:</source>
-        <translation>Temps accentué:</translation>
+        <translation>Battement accentué:</translation>
     </message>
     <message>
         <source>Remember</source>
@@ -1484,11 +1489,11 @@
     </message>
     <message>
         <source>Remember these options when a musician enters the jam:</source>
-        <translation>Se rappeler de ses options qd un musicien entre:</translation>
+        <translation>Se rappeler de ses options quand un musicien entre:</translation>
     </message>
     <message>
         <source>The user channel level</source>
-        <translation>Niveau de la piste de l&apos;utilisateur</translation>
+        <translation>Niveau de la piste utilisateur</translation>
     </message>
     <message>
         <source>Level</source>
@@ -1496,23 +1501,23 @@
     </message>
     <message>
         <source>The user channel mute status</source>
-        <translation>Etat muté de la piste de l&apos;utilisateur</translation>
+        <translation>Etat pour la piste utilisateur (muet/normal)</translation>
     </message>
     <message>
         <source>Mute</source>
-        <translation>Muté</translation>
+        <translation>Muet</translation>
     </message>
     <message>
         <source>The user channel pan</source>
-        <translation>Pan de la piste de l&apos;utilisateur</translation>
+        <translation>Panoramique de la piste utilisateur</translation>
     </message>
     <message>
         <source>Pan</source>
-        <translation>Pan</translation>
+        <translation>PAN</translation>
     </message>
     <message>
         <source>The user channel boost</source>
-        <translation>Niveau de boost de l&apos;utilsateur</translation>
+        <translation>Niveau de boost de la piste utilsateur</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -1520,7 +1525,7 @@
     </message>
     <message>
         <source>The user channel low cut button status</source>
-        <translation>Bouton Low Cut de l&apos;utilisateur</translation>
+        <translation>Statut du bouton Low Cut utilisateur</translation>
     </message>
     <message>
         <source>Low cut</source>
@@ -1528,15 +1533,15 @@
     </message>
     <message>
         <source>Remember collapsible sections when starting JamTaba:</source>
-        <translation>Se rappeler des sections réduites à l&apos;ouverture de Jamtaba:</translation>
+        <translation>Se rappeler des sections réduites à l&apos;ouverture de JamTaba:</translation>
     </message>
     <message>
         <source>Local Channels (left side)</source>
-        <translation>Piste locale (Gauche)</translation>
+        <translation>Pistes locales (partie gauche)</translation>
     </message>
     <message>
         <source>Bottom Section (master fader and ninjam controls)</source>
-        <translation>Partie inferieure (master fader et controles ninjam)</translation>
+        <translation>Partie inférieure (master, fader et contrôles Ninjam)</translation>
     </message>
     <message>
         <source>Chat section (right side)</source>
@@ -1544,30 +1549,30 @@
     </message>
     <message>
         <source>Choosing Off beat audio file...</source>
-        <translation>Choisir le fichier temps faible...</translation>
+        <translation>Choisir le fichier audio pour le battement faible...</translation>
     </message>
     <message>
         <source>Choosing Accent beat audio file...</source>
-        <translation>Choisir fichier temps fort...</translation>
+        <translation>Choisir le fichier audio pour le battement fort...</translation>
     </message>
     <message>
         <source>Input</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrée</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortie</translation>
     </message>
     <message>
         <source>Directory name format:</source>
-        <translation type="unfinished"></translation>
+        <translation>Format du nom de dossier:</translation>
     </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
     <message>
         <source>Adding VST path ...</source>
-        <translation>Ajouter ce chemin de VST...</translation>
+        <translation>Ajouter ce chemin de plugins VST...</translation>
     </message>
     <message>
         <source>scanning %1</source>
@@ -1579,18 +1584,18 @@
     </message>
     <message>
         <source>Remove Vst(s) from Black List ...</source>
-        <translation>Effacer ce(s) Vst de la liste noire...</translation>
+        <translation>Enlever ce(s) VST de la liste noire...</translation>
     </message>
     <message>
         <source>No midi input device detected!</source>
-        <translation>Pas d entrée midi detectée pour cette carte son!</translation>
+        <translation>Pas d&apos;entrée MIDI detectée pour cette carte son!</translation>
     </message>
 </context>
 <context>
     <name>PrivateServerDialog</name>
     <message>
         <source>This the private server dialog</source>
-        <translation>Boite de dialogue serveur privé</translation>
+        <translation>Boîte de dialogue du serveur privé</translation>
     </message>
     <message>
         <source>Server:</source>
@@ -1598,7 +1603,7 @@
     </message>
     <message>
         <source>leave blank to connect as annonymous</source>
-        <translation>laisser vide pour se connecter en tant qu anonyme</translation>
+        <translation>laisser vide pour se connecter en tant qu&apos;anonyme</translation>
     </message>
     <message>
         <source>Password:</source>
@@ -1606,7 +1611,7 @@
     </message>
     <message>
         <source>type here the password</source>
-        <translation>écrire ici le mot de passe</translation>
+        <translation>écrire le mot de passe ici</translation>
     </message>
     <message>
         <source>Port:</source>
@@ -1657,19 +1662,19 @@
     </message>
     <message>
         <source>Upload (Kbps):</source>
-        <translation>Upload (Kbps):</translation>
+        <translation>Téléverement (up, Kbps):</translation>
     </message>
     <message>
         <source>Download (Kbps):</source>
-        <translation>Download (Kbps):</translation>
+        <translation>Téléchargement (down, Kbps):</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation>Log/</translation>
+        <translation>Journal</translation>
     </message>
     <message>
         <source>Connected Users</source>
-        <translation>Utilisateur connecté</translation>
+        <translation>Utilisateur(s) connecté(s)</translation>
     </message>
     <message>
         <source>Port closed in your router!</source>
@@ -1678,11 +1683,11 @@
     <message>
         <source>ERROR in UPnP protocol: %1</source>
         <extracomment>The &apos;%1&apos; symbol will be replaced by the UPnP error description, please keep the &apos;%1&apos; symbol in your translation</extracomment>
-        <translation>erreur protocol UPnP %1</translation>
+        <translation>ERREUR dans le protocol UPnP %1</translation>
     </message>
     <message>
         <source>Port opened in your router using UPnP protocol! Other ninjamers can connect in your server!</source>
-        <translation>Port ouver sur votre routeur avec protocol UPnP! Les autres ninjamers peuvers se connecté à votre serveur!</translation>
+        <translation>Port ouvert sur votre routeur en utilisant le protocol UPnP! Les autres ninjamers peuvent se connecter à votre serveur!</translation>
     </message>
     <message>
         <source>Your external IP is %1</source>
@@ -1694,7 +1699,7 @@
     </message>
     <message>
         <source>%1 entered in the server</source>
-        <translation>%1 est entré sur votre serveur </translation>
+        <translation>%1 a rejoint sur votre serveur </translation>
     </message>
     <message>
         <source>%1 left the server</source>
@@ -1702,51 +1707,51 @@
     </message>
     <message>
         <source>Server started</source>
-        <translation>Le serveur demarre</translation>
+        <translation>Serveur démarré</translation>
     </message>
     <message>
         <source>Server stopped!</source>
-        <translation>Serveur stoppé!</translation>
+        <translation>Serveur arrêté!</translation>
     </message>
     <message>
         <source>Trying to open the port %1 in your router (UPnP) to allow external connections ...</source>
-        <translation>Essai d&apos;ouverture du port %1 sur votre routeur pour permettre de connections externes ...</translation>
+        <translation>Essai d&apos;ouverture du port %1 en cours sur votre routeur (UPnP), pour permettre des connections externes ...</translation>
     </message>
     <message>
         <source>Hosting Ninjam Private Server</source>
-        <translation>Ouverture d&apos;un serveur ninjam privé</translation>
+        <translation>Accueil d&apos;un serveur Ninjam privé</translation>
     </message>
     <message>
         <source>Connect with private server ...</source>
-        <translation>Connecté avec un serveur privé ...</translation>
+        <translation>Connection en cours avec le serveur privé ...</translation>
     </message>
 </context>
 <context>
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
-        <translation>Généré un fichier reaper &apos;clipsort.log&apos;</translation>
+        <translation>Générer un fichier Reaper &apos;clipsort.log&apos;</translation>
     </message>
 </context>
 <context>
     <name>Recorder::ReaperProjectGenerator</name>
     <message>
         <source>Generate Reaper Project file (RPP)</source>
-        <translation>Généré un projet reaper(.RPP)</translation>
+        <translation>Générer un projet Reaper(.RPP)</translation>
     </message>
 </context>
 <context>
     <name>ScanFolderPanel</name>
     <message>
         <source>Remove this folder from scanning</source>
-        <translation>Effacer ce dossier du scan</translation>
+        <translation>Enlever ce dossier du scan</translation>
     </message>
 </context>
 <context>
     <name>ServerInviteButton</name>
     <message>
         <source>Accept!</source>
-        <translation>Accepté!</translation>
+        <translation>Accepter!</translation>
     </message>
 </context>
 <context>
@@ -1757,19 +1762,19 @@
     </message>
     <message>
         <source>This is the user name dialog box</source>
-        <translation>Boite de dialogue de l&apos;utilisateur</translation>
+        <translation>Ceci est la boîte de dialogue utilisateur</translation>
     </message>
     <message>
         <source> User name:</source>
-        <translation>Nom d utilisateur:</translation>
+        <translation>Nom d&apos;utilisateur:</translation>
     </message>
     <message>
         <source>Type your user name here</source>
-        <translation>Ecrire votre nom d utilisateur ici</translation>
+        <translation>Ecrire votre nom d&apos;utilisateur ici</translation>
     </message>
     <message>
         <source>Press this button if you are ok</source>
-        <translation>Cliquer ce bouton si vous êtes d&apos;accord</translation>
+        <translation>Cliquer sur ce bouton si vous êtes d&apos;accord</translation>
     </message>
 </context>
 <context>
@@ -1780,18 +1785,18 @@
     </message>
     <message>
         <source>All Layers</source>
-        <translation>Toutes les pistes</translation>
+        <translation>Toutes les couches</translation>
     </message>
     <message>
         <source>Selected Layer</source>
-        <translation>Piste sélectionnée</translation>
+        <translation>Couche(s) sélectionnée(s)</translation>
     </message>
 </context>
 <context>
     <name>login::MainChat</name>
     <message>
         <source>You can&apos;t send messages using an empty user name!</source>
-        <translation>Vous ne pouvez envoyer des message sans avoir un nom d&apos;utilisateur!</translation>
+        <translation>Vous ne pouvez pas envoyer des messages sans utiliser de nom d&apos;utilisateur!</translation>
     </message>
 </context>
 </TS>
