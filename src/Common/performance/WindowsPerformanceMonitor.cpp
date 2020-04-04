@@ -34,6 +34,8 @@ int PerformanceMonitor::getBatteryUsed()
 {
 
     //http://www.cplusplus.com/forum/beginner/72594/
+    //https://stackoverflow.com/questions/22516647/c-get-battery-life-under-windows-7
+
         SYSTEM_POWER_STATUS status; // note not LPSYSTEM_POWER_STATUS
     GetSystemPowerStatus(&status);
 
