@@ -16,6 +16,7 @@
 #include "audio/Resampler.h"
 #include "audio/SamplesBufferRecorder.h"
 #include "audio/vorbis/VorbisEncoder.h"
+#include "audio/vorbis/Vorbis.h"
 #include "gui/NinjamRoomWindow.h"
 #include "log/Logging.h"
 #include "MetronomeUtils.h"
@@ -210,19 +211,21 @@ private:
 class NinjamController::InputChannelChangedEvent : public SchedulableEvent
 {
 public:
-    InputChannelChangedEvent(NinjamController *controller, int channelIndex) :
+    InputChannelChangedEvent(NinjamController *controller, int channelIndex, bool voiceChannelActivated) :
         SchedulableEvent(controller),
-        channelIndex(channelIndex)
+        channelIndex(channelIndex),
+        voiceChannelActivated(voiceChannelActivated)
     {
     }
 
     void process()
     {
-        controller->recreateEncoderForChannel(channelIndex);
+        controller->recreateEncoderForChannel(channelIndex, voiceChannelActivated);
     }
 
 private:
     int channelIndex;
+    bool voiceChannelActivated;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -506,8 +509,10 @@ void NinjamController::start(const ServerInfo &server)
 
     // schedule the encoders creation (one encoder for each channel)
     int channels = mainController->getInputTrackGroupsCount();
-    for (int channelIndex = 0; channelIndex < channels; ++channelIndex)
-        scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex));
+    for (int channelIndex = 0; channelIndex < channels; ++channelIndex) {
+        bool voiceChannelActivated = mainController->isVoiceChatActivated(channelIndex);
+        scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex, voiceChannelActivated));
+    }
 
     processScheduledChanges();
 
@@ -856,9 +861,9 @@ void NinjamController::reset()
     intervalPosition = lastBeat = 0;
 }
 
-void NinjamController::scheduleEncoderChangeForChannel(int channelIndex)
+void NinjamController::scheduleEncoderChangeForChannel(int channelIndex, bool voiceChatActivated)
 {
-    scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex));
+    scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex, voiceChatActivated));
 }
 
 QByteArray NinjamController::encode(const audio::SamplesBuffer &buffer, uint channelIndex)
@@ -877,7 +882,7 @@ QByteArray NinjamController::encodeLastPartOfInterval(uint channelIndex)
     return QByteArray();
 }
 
-void NinjamController::recreateEncoderForChannel(int channelIndex)
+void NinjamController::recreateEncoderForChannel(int channelIndex, bool voiceChannelActivated)
 {
     QMutexLocker locker(&encodersMutex);
     int maxChannelsForEncoding = mainController->getMaxAudioChannelsForEncoding(channelIndex);
@@ -897,10 +902,9 @@ void NinjamController::recreateEncoderForChannel(int channelIndex)
             delete encoders[channelIndex];
 
         int sampleRate = mainController->getSampleRate();
-        float encodingQuality = mainController->getEncodingQuality();
+        float encodingQuality = voiceChannelActivated ? vorbis::EncoderQualityLow : mainController->getEncodingQuality();
 
-        encoders[channelIndex] = new vorbis::Encoder(maxChannelsForEncoding, sampleRate,
-                                                     encodingQuality);
+        encoders[channelIndex] = new vorbis::Encoder(maxChannelsForEncoding, sampleRate, encodingQuality);
     }
 }
 
@@ -914,8 +918,9 @@ void NinjamController::recreateEncoders()
         encoders.clear(); // new encoders will be create on demand
 
         int trackGroupsCount = mainController->getInputTrackGroupsCount();
-        for (int channelIndex = 0; channelIndex < trackGroupsCount; ++channelIndex)
-            recreateEncoderForChannel(channelIndex);
+        for (int channelIndex = 0; channelIndex < trackGroupsCount; ++channelIndex) {
+            recreateEncoderForChannel(channelIndex, mainController->isVoiceChatActivated(channelIndex));
+        }
     }
 }
 

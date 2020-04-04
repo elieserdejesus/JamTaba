@@ -19,6 +19,7 @@
 #include "gui/MainWindow.h"
 #include "gui/ThemeLoader.h"
 #include "log/Logging.h"
+#include "ninjam/client/Types.h"
 
 #include <QBuffer>
 #include <QByteArray>
@@ -349,7 +350,9 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, qui
 
         interval.appendData(encodedData);
 
-        bool canSend = interval.getTotalBytes() >= 4096;
+        auto sendThreshold = isVoiceChatActivated(channelIndex) ? 1 : 4096; // when voice chat is activated jamtaba will send all small packets
+        //qDebug() << "Sending threshdold: " << sendThreshold;
+        bool canSend = interval.getTotalBytes() >= sendThreshold;
         if (canSend) {
             ninjamService->sendIntervalPart(interval.getGUID(), interval.getData(), false); // is not the last part of interval
             interval.clear();
@@ -472,7 +475,7 @@ void MainController::removeInputTrackNode(int inputTrackIndex)
     if (inputTracks.contains(inputTrackIndex)) {
         // remove from group
         audio::LocalInputNode *inputTrack = inputTracks[inputTrackIndex];
-        int trackGroupIndex = inputTrack->getChanneGrouplIndex();
+        int trackGroupIndex = inputTrack->getChanneGroupIndex();
         if (trackGroups.contains(trackGroupIndex)) {
             trackGroups[trackGroupIndex]->removeInput(inputTrack);
             if (trackGroups[trackGroupIndex]->isEmpty())
@@ -490,7 +493,7 @@ int MainController::addInputTrackNode(audio::LocalInputNode *inputTrackNode)
     inputTracks.insert(inputTrackID, inputTrackNode);
     addTrack(inputTrackID, inputTrackNode);
 
-    int trackGroupIndex = inputTrackNode->getChanneGrouplIndex();
+    int trackGroupIndex = inputTrackNode->getChanneGroupIndex();
     if (!trackGroups.contains(trackGroupIndex))
         trackGroups.insert(trackGroupIndex, new audio::LocalInputGroup(trackGroupIndex, inputTrackNode));
     else
@@ -720,6 +723,22 @@ audio::AudioPeak MainController::getTrackPeak(int trackID)
 audio::AudioPeak MainController::getRoomStreamPeak()
 {
     return roomStreamer->getLastPeak();
+}
+
+void MainController::setVoiceChatStatus(int channelID, bool voiceChatActivated)
+{
+    if (trackGroups.contains(channelID)) {
+        auto trackGroup = trackGroups[channelID];
+        trackGroup->setVoiceChatStatus(voiceChatActivated);
+    }
+}
+
+bool MainController::isVoiceChatActivated(int channelID) const
+{
+    if (trackGroups.contains(channelID))
+        return trackGroups[channelID]->isVoiceChatActivated();
+
+    return false;
 }
 
 void MainController::setTransmitingStatus(int channelID, bool transmiting)
@@ -953,20 +972,20 @@ bool MainController::isPlayingRoomStream() const
     return roomStreamer && roomStreamer->isStreaming();
 }
 
-void MainController::enterInRoom(const login::RoomInfo &room, const QStringList &channelsNames, const QString &password)
+void MainController::enterInRoom(const login::RoomInfo &room, const QList<ninjam::client::ChannelMetadata> &channels, const QString &password)
 {
     qCDebug(jtCore) << "EnterInRoom slot";
 
     if (isPlayingRoomStream())
         stopRoomStream();
 
-    tryConnectInNinjamServer(room, channelsNames, password);
+    tryConnectInNinjamServer(room, channels, password);
 }
 
-void MainController::sendNewChannelsNames(const QStringList &channelsNames)
+void MainController::sendNewChannelsNames(const QList<ninjam::client::ChannelMetadata> &channels)
 {
     if (isPlayingInNinjamRoom())
-        ninjamService->sendNewChannelsListToServer(channelsNames);
+        ninjamService->sendNewChannelsListToServer(channels);
 }
 
 void MainController::sendRemovedChannelMessage(int removedChannelIndex)
@@ -975,7 +994,7 @@ void MainController::sendRemovedChannelMessage(int removedChannelIndex)
         ninjamService->sendRemovedChannelIndex(removedChannelIndex);
 }
 
-void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom, const QStringList &channelsNames, const QString &password)
+void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom, const QList<ninjam::client::ChannelMetadata> &channels, const QString &password)
 {
     qCDebug(jtCore) << "connecting...";
 
@@ -985,7 +1004,7 @@ void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom,
         QString userName = getUserName();
         QString pass = (password.isNull() || password.isEmpty()) ? "" : password;
 
-        this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames,
+        this->ninjamService->startServerConnection(serverIp, serverPort, userName, channels,
                                                    pass);
     } else {
         qCritical() << "user name not choosed yet!";

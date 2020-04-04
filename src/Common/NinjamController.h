@@ -64,7 +64,7 @@ public:
     QByteArray encode(const SamplesBuffer &buffer, uint channelIndex);
     QByteArray encodeLastPartOfInterval(uint channelIndex);
 
-    void scheduleEncoderChangeForChannel(int channelIndex);
+    void scheduleEncoderChangeForChannel(int channelIndex, bool voiceChatActivated);
     void removeEncoder(int groupChannelIndex);
 
     void scheduleXmitChange(int channelID, bool transmiting);     // schedule the change for the next interval
@@ -152,7 +152,7 @@ private:
     AudioEncoder *getEncoder(quint8 channelIndex);
 
     void handleNewInterval();
-    void recreateEncoderForChannel(int channelIndex);
+    void recreateEncoderForChannel(int channelIndex, bool voiceChannelActivated);
 
     void setXmitStatus(int channelID, bool transmiting);
 

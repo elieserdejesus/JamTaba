@@ -19,6 +19,7 @@ namespace ninjam { namespace client {
 class Service;
 class ServerInfo;
 class User;
+struct ChannelMetadata;
 }}
 
 namespace persistence {
@@ -46,6 +47,7 @@ class NinjamController;
 using ninjam::client::Service;
 using ninjam::client::ServerInfo;
 using ninjam::client::User;
+using ninjam::client::ChannelMetadata;
 using persistence::Settings;
 using persistence::LocalInputTrackSettings;
 using persistence::Preset;
@@ -107,7 +109,7 @@ public:
     // main audio processing routine
     virtual void process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate);
 
-    void sendNewChannelsNames(const QStringList &channelsNames);
+    void sendNewChannelsNames(const QList<ChannelMetadata> &channels);
     void sendRemovedChannelMessage(int removedChannelIndex);
 
     inline QString getTheme() const
@@ -123,6 +125,9 @@ public:
 
     bool isPlayingInNinjamRoom() const;
     virtual void stopNinjamController();
+
+    void setVoiceChatStatus(int channelID, bool voiceChat);
+    bool isVoiceChatActivated(int channelID) const;
 
     void setTransmitingStatus(int channelID, bool transmiting);
     bool isTransmiting(int channelID) const;
@@ -142,8 +147,7 @@ public:
 
     quint8 getLastWaveDrawingMode() const;
 
-    void enterInRoom(const RoomInfo &room, const QStringList &channelsNames,
-                     const QString &password = "");
+    void enterInRoom(const RoomInfo &room, const QList<ChannelMetadata> &channels, const QString &password = "");
 
     LoginService *getLoginService() const;
 
@@ -381,7 +385,7 @@ private:
 
     bool started;
 
-    void tryConnectInNinjamServer(const RoomInfo &ninjamRoom, const QStringList &channels,
+    void tryConnectInNinjamServer(const RoomInfo &ninjamRoom, const QList<ChannelMetadata> &channels,
                                   const QString &password = "");
 
     QList<JamRecorder *> jamRecorders;

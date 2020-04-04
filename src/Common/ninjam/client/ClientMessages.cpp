@@ -2,6 +2,7 @@
 #include "ninjam/client/User.h"
 #include "ninjam/client/UserChannel.h"
 #include "ninjam/Ninjam.h"
+#include "ninjam/client/Types.h"
 
 #include <QCryptographicHash>
 #include <QIODevice>
@@ -129,11 +130,13 @@ ClientSetChannel::ClientSetChannel() :
     payload = sizeof(quint16);
 }
 
-ClientSetChannel::ClientSetChannel(const QStringList &channelsNames) :
+ClientSetChannel::ClientSetChannel(const QList<ninjam::client::ChannelMetadata> &channels) :
     ClientSetChannel()
 {
-    for (auto channelName : channelsNames)
-        addChannel(channelName);
+    for (auto channel : channels) {
+        quint8 flags = channel.voiceChatActivated ? 2 : 0;  //Possible values: 0 - ninjam interval based , 2 - voice chat, 4 - session mode
+        addChannel(channel.name, flags);
+    }
 }
 
 void ClientSetChannel::addChannel(const QString &channelName, quint8 flags, bool active)
@@ -173,7 +176,7 @@ ClientSetChannel ClientSetChannel::unserializeFrom(QIODevice *device, quint32 pa
         bytesConsumed += channelName.toUtf8().size() + 1;
         bytesConsumed += sizeof(volume) + sizeof(pan) + sizeof(flags);
 
-        bool active = flags == 0;
+        bool active = true;// flags == 0;
 
         msg.addChannel(channelName, flags, active);
     }
@@ -188,6 +191,16 @@ void ClientSetChannel::serializeTo(QIODevice *device) const
 
     stream << static_cast<quint8>(msgType);
     stream << payload;
+
+//    QString str = "SEND ClientSetChannel{ ";
+//    for (auto channel : channels) {
+//        str += QString(" {%1, %2}, ").arg(channel.getName()).arg(channel.getFlags());
+//    }
+//    str += "}";
+
+//    qDebug() << str << endl;
+
+
     //++++++++
     stream << quint16(4); // parameter size (4 bytes - volume (2 bytes) + pan (1 byte) + flags (1 byte))
     for (const UserChannel &channel : channels) {

@@ -363,13 +363,14 @@ void Service::process(const AuthChallengeMessage &msg)
     serverKeepAlivePeriod = msg.getServerKeepAlivePeriod();
 }
 
-void Service::sendNewChannelsListToServer(const QStringList &channelsNames)
+void Service::sendNewChannelsListToServer(const QList<ChannelMetadata> &channels)
 {
-    this->channels = channelsNames;
+    this->channels = channels;
 
     ClientSetChannel msg;
-    for (auto channelName : channelsNames)
-        msg.addChannel(channelName);
+    for (auto channelMetadata : channels) {
+        msg.addChannel(channelMetadata.name, ClientSetChannel::toFlags(channelMetadata.voiceChatActivated));
+    }
 
     sendMessageToServer(msg);
 }
@@ -381,11 +382,7 @@ void Service::sendRemovedChannelIndex(int removedChannelIndex)
     channels.removeAt(removedChannelIndex);
 
     // send only remaining channels to server, the removed channel will be excluded in the clients
-    ClientSetChannel msg;
-    for (const auto &channel : channels)
-        msg.addChannel(channel, true);
-
-    sendMessageToServer(msg);
+    sendNewChannelsListToServer(channels);
 }
 
 void Service::process(const AuthReplyMessage &msg)
@@ -402,7 +399,7 @@ void Service::process(const AuthReplyMessage &msg)
 }
 
 void Service::startServerConnection(const QString &serverIp, int serverPort,
-                                    const QString &userName, const QStringList &channels,
+                                    const QString &userName, const QList<ChannelMetadata> &channels,
                                     const QString &password)
 {
 

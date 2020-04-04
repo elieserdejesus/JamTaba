@@ -7,7 +7,8 @@ using audio::SamplesBuffer;
 
 LocalInputGroup::LocalInputGroup(int groupIndex, LocalInputNode *firstInput) :
     groupIndex(groupIndex),
-    transmiting(true)
+    transmiting(true),
+    voiceChatActivated(false)
 {
     addInputNode(firstInput);
 }
@@ -30,7 +31,6 @@ LocalInputNode *LocalInputGroup::getInputNode(quint8 index) const
 
     return nullptr;
 }
-
 
 void LocalInputGroup::mixGroupedInputs(SamplesBuffer &out)
 {
@@ -73,4 +73,14 @@ int LocalInputGroup::getMaxInputChannelsForEncoding() const
 void LocalInputGroup::setTransmitingStatus(bool transmiting)
 {
     this->transmiting = transmiting;
+}
+
+void LocalInputGroup::setVoiceChatStatus(bool voiceChat)
+{
+    this->voiceChatActivated = voiceChat;
+}
+
+bool LocalInputGroup::isVoiceChatActivated() const
+{
+    return voiceChatActivated;
 }

@@ -56,7 +56,7 @@ public:
 
     ChannelRange getAudioInputRange() const;
 
-    int getChanneGrouplIndex() const;
+    int getChanneGroupIndex() const;
 
     const audio::SamplesBuffer &getLastBuffer() const;
     SamplesBuffer getLastBufferMixedToMono() const;
@@ -225,7 +225,7 @@ inline ChannelRange LocalInputNode::getAudioInputRange() const
     return audioInputRange;
 }
 
-inline int LocalInputNode::getChanneGrouplIndex() const
+inline int LocalInputNode::getChanneGroupIndex() const
 {
     return channelGroupIndex;
 }
