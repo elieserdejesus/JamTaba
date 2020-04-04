@@ -87,7 +87,7 @@ namespace client
         void serverBpmChanged(quint16 currentBpm);
         void audioIntervalCompleted(const User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
         void videoIntervalCompleted(const User &user, const QByteArray &encodedVideoData);
-        void audioIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudioData, bool isLastPart);
+        void audioIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudioData, bool isFirstPart, bool isLastPart);
         void disconnectedFromServer(const ServerInfo &server);
         void connectedInServer(const ServerInfo &server);
         void publicChatMessageReceived(const User &sender, const QString &message);

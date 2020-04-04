@@ -241,7 +241,7 @@ void NinjamTrackView::setChannelMode(NinjamTrackNode::ChannelMode mode)
 {
     auto trackNode = getTrackNode();
     if (trackNode) {
-        trackNode->setChannelMode(mode);
+        trackNode->schefuleSetChannelMode(mode);
         update();
     }
 }

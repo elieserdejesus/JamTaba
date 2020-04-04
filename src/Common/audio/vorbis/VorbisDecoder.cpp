@@ -22,7 +22,7 @@ Decoder::Decoder() :
 
 Decoder::~Decoder()
 {
-    qDebug() << "Destrutor Vorbis Decoder";
+    //qDebug() << "Destrutor Vorbis Decoder";
 
     if(initialized)
         ov_clear(&vorbisFile);
@@ -122,7 +122,7 @@ const audio::SamplesBuffer &Decoder::decode(int maxSamplesToDecode)
     }
     else {
         internalBuffer.zero();
-        qDebug() << "FINISHED EOF";
+        //qDebug() << "FINISHED EOF";
         finished = true; // when ov_read_float return 0 is EOF
     }
 
@@ -144,7 +144,7 @@ void Decoder::addInputData(const QByteArray &vorbisData)
 
 bool Decoder::initialize()
 {
-    qDebug() << "trying to initialize initialized: " << initialized;
+    //qDebug() << "trying to initialize initialized: " << initialized;
 
     ov_callbacks callbacks;
     callbacks.read_func = readOgg;
@@ -178,6 +178,6 @@ bool Decoder::initialize()
         valid = false;
     }
 
-    qDebug() << "Initialized: " << initialized;
+    //qDebug() << "Initialized: " << initialized;
     return initialized;
 }

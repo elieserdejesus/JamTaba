@@ -34,6 +34,8 @@ public:
 
     bool isFinished() const { return finished; }
 
+    bool isValid() const { return valid; }
+
 private:
 
     audio::SamplesBuffer internalBuffer;

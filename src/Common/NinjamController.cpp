@@ -780,6 +780,7 @@ void NinjamController::handleNinjamUserExiting(const User &user)
 {
     for (const auto &channel : user.getChannels())
         removeTrack(user, channel);
+
     emit userLeave(user.getFullName());
 }
 
@@ -932,7 +933,7 @@ void NinjamController::setSampleRate(int newSampleRate)
     recreateEncoders();
 }
 
-void NinjamController::handleIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudio, bool isLastPart)
+void NinjamController::handleIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudio, bool isFirstPart, bool isLastPart)
 {
     auto channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKeyForChannel(channel, user.getFullName());
@@ -948,6 +949,6 @@ void NinjamController::handleIntervalDownloading(const User &user, quint8 channe
 
         emit channelAudioChunkDownloaded(track->getID());
 
-        track->addVorbisEncodedChunk(encodedAudio, isLastPart);
+        track->addVorbisEncodedChunk(encodedAudio, isFirstPart, isLastPart);
     }
 }

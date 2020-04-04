@@ -178,7 +178,7 @@ private slots:
     void scheduleBpiChangeEvent(quint16 newBpi, quint16 oldBpi);
     void handleIntervalCompleted(const User &user, quint8 channelIndex,
                                  const QByteArray &encodedAudioData);
-    void handleIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudio, bool isLastPart);
+    void handleIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudio, bool isFirstPart, bool isLastPart);
     void addNinjamRemoteChannel(const User &user, const UserChannel &channel);
     void removeNinjamRemoteChannel(const User &user, const UserChannel &channel);
     void updateNinjamRemoteChannel(const User &user, const UserChannel &channel);

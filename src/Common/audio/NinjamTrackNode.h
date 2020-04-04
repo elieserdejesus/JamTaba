@@ -4,6 +4,7 @@
 #include "core/AudioNode.h"
 #include <QByteArray>
 #include "SamplesBufferResampler.h"
+#include "readerwriterqueue.h"
 
 namespace audio {
 class SamplesBuffer;
@@ -22,13 +23,14 @@ public:
 
     enum ChannelMode {
         Intervalic,
-        VoiceChat
+        VoiceChat,
+        Changing // used when waiting for the next interval do change the mode. Nothing is played in this 'transition state mode'
     };
 
     explicit NinjamTrackNode(int ID);
     virtual ~NinjamTrackNode();
     void addVorbisEncodedInterval(const QByteArray &fullIntervalBytes);
-    void addVorbisEncodedChunk(const QByteArray &chunkBytes, bool isLastPart);
+    void addVorbisEncodedChunk(const QByteArray &chunkBytes, bool isFirstPart, bool isLastPart);
     void processReplacing(const audio::SamplesBuffer &in, audio::SamplesBuffer &out, int sampleRate,
                           std::vector<midi::MidiMessage> &midiBuffer) override;
 
@@ -49,7 +51,7 @@ public:
 
     bool isVoiceChat() const { return mode == VoiceChat; }
 
-    void setChannelMode(ChannelMode mode);
+    void schefuleSetChannelMode(ChannelMode mode);
 
     // Discard all downloaded (but not played yet) intervals
     void discardDownloadedIntervals();
@@ -57,6 +59,22 @@ public:
     void stopDecoding();
 
     //void setProcessingLastPartOfInterval(bool status);
+
+protected:
+
+    class TrackNodeCommand {
+    protected:
+        TrackNodeCommand(NinjamTrackNode *node);
+        NinjamTrackNode *trackNode;
+
+    public:
+        virtual ~TrackNodeCommand() {}
+        virtual void execute() = 0;
+    };
+
+    class ChangeChannelModeCommand;
+
+    void setChannelMode(ChannelMode newMode);
 
 private:
     int ID;
@@ -81,12 +99,12 @@ private:
 
     ChannelMode mode = Intervalic;
 
+    moodycamel::ReaderWriterQueue<TrackNodeCommand *> pendingCommands;
+
+    void consumePendingEvents();
+
 };
 
-//inline void NinjamTrackNode::setProcessingLastPartOfInterval(bool status)
-//{
-//    this->processingLastPartOfInterval = status;
-//}
 
 inline int NinjamTrackNode::getID() const
 {

@@ -318,6 +318,9 @@ void Service::process(const DownloadIntervalWrite &msg)
 {
     if (downloads.contains(msg.getGUID())) {
         Download &download = downloads[msg.getGUID()];
+
+        bool isFirstPart = download.getEncodedData().isEmpty();
+
         download.appendEncodedData(msg.getEncodedData());
 
         auto &measurer = channelDownloadMeasurers[download.getUserFullName()][download.getChannelIndex()];
@@ -329,12 +332,12 @@ void Service::process(const DownloadIntervalWrite &msg)
         if (download.isAudio()) {
             if (user.getChannel(download.getChannelIndex()).isActive()) {
                 if (msg.downloadIsComplete()) {
-                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData(), true); // the last chunk
+                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData(), isFirstPart, true); // the last chunk
                     emit audioIntervalCompleted(user, download.getChannelIndex(), download.getEncodedData()); // full interval
                     downloads.remove(msg.getGUID());
                 }
                 else
-                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData(), false);
+                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData(), isFirstPart, false);
              }
         }
         else if (msg.downloadIsComplete()) { // download is video
