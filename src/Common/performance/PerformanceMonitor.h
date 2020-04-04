@@ -18,6 +18,7 @@ public:
     ~PerformanceMonitor();
     //int getMemmoryUsage();
     int getMemmoryUsed();
+    int getBatteryUsed();
     //double getCpuUsage();
     //double getTotalCpuUsage();
 
