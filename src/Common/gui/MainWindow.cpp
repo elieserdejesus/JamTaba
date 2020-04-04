@@ -2083,17 +2083,25 @@ void MainWindow::timerEvent(QTimerEvent *)
     if (now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME) {
 
         if (performanceMonitorLabel) {
-            QString string;
 
-                if (performanceMonitor->getMemmoryUsed() > 60) //memory meter only active if memory usage is <60%
-                    string = string + QString("MEM: %1%").arg(performanceMonitor->getMemmoryUsed());
+                   auto memmoryUsed = performanceMonitor->getMemmoryUsed();
+                   auto batteryUsed = performanceMonitor->getBatteryUsed();
 
-                if (performanceMonitor->getBatteryUsed() < 255) //Battery meter active only if battery is available
-                    string = string + QString(" BAT: %1%").arg(performanceMonitor->getBatteryUsed());
+                   bool showMemmory = memmoryUsed > 60; //memory meter only active if memory usage is <60%
+                   bool showBattery = batteryUsed < 255; //Battery meter active only if battery is available
 
-            performanceMonitorLabel->setText(string);
+                   QString string;
+                   if (showMemmory)
+                       string += QString("MEM: %1%").arg(performanceMonitor->getMemmoryUsed());
 
-        }
+                   if (showBattery)
+                       string += QString(" BAT: %1%").arg(performanceMonitor->getBatteryUsed());
+
+                   performanceMonitorLabel->setText(string);
+
+                   performanceMonitorLabel->setVisible(showMemmory || showBattery);
+
+               }
 
         lastPerformanceMonitorUpdate = now;
     }
