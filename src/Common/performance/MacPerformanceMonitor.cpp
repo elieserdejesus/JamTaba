@@ -19,3 +19,9 @@ int PerformanceMonitor::getMemmoryUsed(){
 
     return 0;
 }
+
+int PerformanceMonitor::getBatteryUsed()
+{
+
+    return 0;
+}
