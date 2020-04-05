@@ -2,7 +2,7 @@
 #define VSTLOADER_H
 
 #include <QString>
-#include "aeffectx.h"
+#include "../../VST_SDK/VST2_SDK/public.sdk/source/vst2.x/aeffectx.h"
 
 namespace vst {
 

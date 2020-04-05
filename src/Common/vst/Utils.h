@@ -3,7 +3,7 @@
 
 #include <QString>
 #include "audio/core/PluginDescriptor.h"
-#include "aeffectx.h"
+#include "../../VST_SDK/VST2_SDK/public.sdk/source/vst2.x/aeffectx.h"
 
 namespace vst {
 

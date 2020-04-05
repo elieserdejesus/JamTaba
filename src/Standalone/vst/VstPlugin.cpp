@@ -7,7 +7,7 @@
     #include <excpt.h>
 #endif
 
-#include "aeffectx.h"
+#include "../../VST_SDK/VST2_SDK/public.sdk/source/vst2.x/aeffectx.h"
 #include "vst/VstHost.h"
 #include "vst/VstLoader.h"
 #include "vst/Utils.h"

@@ -1,5 +1,5 @@
 #include "VstHost.h"
-#include "aeffectx.h"
+#include "../../VST_SDK/VST2_SDK/public.sdk/source/vst2.x/aeffectx.h"
 #include "midi/MidiDriver.h"
 #include <QDebug>
 #include <QDateTime>
