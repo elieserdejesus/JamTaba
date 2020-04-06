@@ -51,6 +51,8 @@ public:
     void setInstrumentIcon(int instrumentIndex);
     int getInstrumentIcon() const;
 
+    QBoxLayout *xmitVoiceChatLayout;
+
 protected:
 
     LocalTrackView *createTrackView(long trackID) override;
@@ -66,7 +68,7 @@ protected:
 private:
     QPushButton *toolButton;
     BlinkableButton *xmitButton;
-    QPushButton *voiceChatButton;
+    BlinkableButton *voiceChatButton;
     InstrumentsButton *instrumentsButton;
 
     bool preparingToTransmit;
@@ -79,7 +81,7 @@ private:
 
     QPushButton *createToolButton();
     BlinkableButton *createXmitButton();
-    QPushButton *createVoiceChatButton();
+    BlinkableButton *createVoiceChatButton();
 
     QMenu* createPresetsLoadingSubMenu();
     QMenu* createPresetsDeletingSubMenu();

@@ -14,6 +14,7 @@ public:
     ~BlinkableButton();
     void startBlink();
     void stopBlink();
+    void toggleBlink();
     bool isBlinking() const;
 
     static void setBlinkTime(quint32 blinkTime);

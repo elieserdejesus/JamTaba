@@ -14,6 +14,7 @@
 #include <QInputDialog>
 #include <QToolTip>
 #include <QDateTime>
+#include <QBoxLayout>
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindow) :
     TrackGroupView(mainWindow),
@@ -34,10 +35,15 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     topPanelLayout->addWidget(toolButton, 0, Qt::AlignTop | Qt::AlignRight);
 
     voiceChatButton = createVoiceChatButton();
-    layout()->addWidget(voiceChatButton);
 
     xmitButton = createXmitButton();
-    layout()->addWidget(xmitButton);
+
+    xmitVoiceChatLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    xmitVoiceChatLayout->setContentsMargins(0, 0, 0, 0);
+    xmitVoiceChatLayout->setSpacing(2);
+    xmitVoiceChatLayout->addWidget(xmitButton);
+    xmitVoiceChatLayout->addWidget(voiceChatButton);
+    mainLayout->addLayout(xmitVoiceChatLayout, mainLayout->rowCount(), 0);
 
     connect(toolButton, &QPushButton::clicked, this, &LocalTrackGroupView::showMenu);
 
@@ -139,7 +145,8 @@ void LocalTrackGroupView::toggleTransmitingStatus(bool checked)
 void LocalTrackGroupView::toggleVoiceChatStatus(bool checked)
 {
     mainWindow->setVoiceChatStatus(getChannelIndex(), checked);
-    //voiceChatButton->setChecked(checked);
+
+    voiceChatButton->toggleBlink();
 }
 
 BlinkableButton *LocalTrackGroupView::createXmitButton()
@@ -152,9 +159,9 @@ BlinkableButton *LocalTrackGroupView::createXmitButton()
     return button;
 }
 
-QPushButton *LocalTrackGroupView::createVoiceChatButton()
+BlinkableButton *LocalTrackGroupView::createVoiceChatButton()
 {
-    auto *button = new QPushButton();
+    auto *button = new BlinkableButton();
     button->setObjectName(QStringLiteral("voiceChatButton"));
     button->setCheckable(true);
     button->setChecked(false);
@@ -201,6 +208,9 @@ void LocalTrackGroupView::resetTracks()
 
     if (!xmitButton->isChecked())
         xmitButton->click(); // uncheck/reset the xmit button, the default is xmiting (button checked)
+
+    if (voiceChatButton->isChecked())
+        voiceChatButton->click(); // the default is NOT use voice chat
 }
 
 QMenu *LocalTrackGroupView::createPresetsDeletingSubMenu()
@@ -465,6 +475,8 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
         for (auto view : getTracks<LocalTrackView *>()) {
             view->setPeakMetersOnlyMode(peakMeterOnly);
         }
+
+        xmitVoiceChatLayout->setDirection(peakMeterOnly ? QBoxLayout::BottomToTop : QBoxLayout::LeftToRight);
 
         updateXmitButtonText();
         updateGeometry();
