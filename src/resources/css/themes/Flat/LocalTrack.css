@@ -103,7 +103,8 @@ LocalTrackView #inputPanel:hover
     border-color: rgb(100, 100, 100);
 }
 
-#xmitButton[preparing="true"]
+#xmitButton[preparing="true"],
+#voiceChatButton:checked[blinking="true"]
 {
     background-color: rgb(255, 255, 0);
     color: black;
@@ -125,6 +126,11 @@ LocalTrackView #inputPanel:hover
 {
     background-color: rgb(255, 40, 40);
     border-color: rgba(0, 0, 0, 90);
+}
+
+#voiceChatButton:!checked
+{
+    background-color: rgba(0, 0, 0, 55)
 }
 
 LocalTrackView #buttonLooper:disabled

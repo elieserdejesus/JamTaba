@@ -89,7 +89,8 @@ LocalTrackViewStandalone
     color: rgb(0, 60, 60);
 }
 
-#xmitButton[preparing="true"]
+#xmitButton[preparing="true"],
+#voiceChatButton:checked[blinking="true"]
 {
     background-color: rgb(180, 180, 20);
     color: rgb(20, 20, 20);
@@ -113,7 +114,13 @@ LocalTrackViewStandalone
     border-color: rgba(0, 0, 0, 90);
 }
 
-
+#voiceChatButton:!checked,
+#voiceChatButton:checked
+{
+    background-color: #58A9AA;
+    border-color: rgb(0, 110, 100);
+    color: rgb(0, 60, 60);
+}
 
 LocalTrackView #inputSelectionButton            /* Button used to open the input selection menu */
 {

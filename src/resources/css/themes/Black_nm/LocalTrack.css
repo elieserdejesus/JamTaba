@@ -154,7 +154,8 @@ LocalTrackView #midiToolsButton:hover                 /* The button used to open
     color: rgb(20, 20, 20);
 }
 
-#xmitButton[preparing="true"]
+#xmitButton[preparing="true"],
+#voiceChatButton:checked[blinking="true"]
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 20), stop:1 rgb(80, 80, 0));
     color: rgb(20, 20, 20);
@@ -181,6 +182,12 @@ background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 180,
 {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 20, 20), stop:1 rgb(80, 0, 0));
     border-color: rgba(0, 0, 0, 90);
+}
+
+#voiceChatButton:!checked
+{
+    background-color: rgba(0, 0, 0, 55);
+    border: none;
 }
 
 LocalTrackGroupView #groupNameField
