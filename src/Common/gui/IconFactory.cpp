@@ -124,6 +124,15 @@ QIcon IconFactory::createChatOnOffIcon(const QColor &tintColor)
     return QIcon(QPixmap::fromImage(image));
 }
 
+QPixmap IconFactory::createVoiceChatIcon()
+{
+    QImage image(":/images/mic.png");
+
+    //IconFactory::tintImage(image, Qt::red, false);
+
+    return QPixmap::fromImage(image);
+}
+
 QIcon IconFactory::createLooperResetIcon(const QColor &tintColor)
 {
     QImage image(":/images/delete_layer.png");

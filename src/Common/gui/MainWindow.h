@@ -41,6 +41,7 @@ class MainController;
 
 namespace ninjam { namespace client {
 class User;
+struct ChannelMetadata;
 }}
 
 namespace gui { namespace chat {
@@ -97,7 +98,10 @@ public:
     bool isTransmiting(int channelID) const;
     void setTransmitingStatus(int channelID, bool xmitStatus);
 
-    QStringList getChannelsNames() const;
+    void setVoiceChatStatus(int channelID, bool voiceChatStatus);
+
+
+    QList<ninjam::client::ChannelMetadata> getChannelsMetadata() const;
 
     void showMetronomePreferencesDialog();
 

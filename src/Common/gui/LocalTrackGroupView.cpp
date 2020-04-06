@@ -9,15 +9,17 @@
 #include "widgets/InstrumentsMenu.h"
 #include "gui/GuiUtils.h"
 #include "audio/core/LocalInputNode.h"
+#include "ninjam/client/Types.h"
 
 #include <QInputDialog>
 #include <QToolTip>
 #include <QDateTime>
+#include <QBoxLayout>
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindow) :
     TrackGroupView(mainWindow),
     index(channelIndex),
-    mainFrame(mainWindow),
+    mainWindow(mainWindow),
     peakMeterOnly(false),
     videoChannel(false),
     preparingToTransmit(false),
@@ -32,12 +34,22 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
     toolButton = createToolButton();
     topPanelLayout->addWidget(toolButton, 0, Qt::AlignTop | Qt::AlignRight);
 
+    voiceChatButton = createVoiceChatButton();
+
     xmitButton = createXmitButton();
-    layout()->addWidget(xmitButton);
+
+    xmitVoiceChatLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    xmitVoiceChatLayout->setContentsMargins(0, 0, 0, 0);
+    xmitVoiceChatLayout->setSpacing(2);
+    xmitVoiceChatLayout->addWidget(xmitButton);
+    xmitVoiceChatLayout->addWidget(voiceChatButton);
+    mainLayout->addLayout(xmitVoiceChatLayout, mainLayout->rowCount(), 0);
 
     connect(toolButton, &QPushButton::clicked, this, &LocalTrackGroupView::showMenu);
 
     connect(xmitButton, &QPushButton::toggled, this, &LocalTrackGroupView::toggleTransmitingStatus);
+
+    connect(voiceChatButton, &QPushButton::toggled, this, &LocalTrackGroupView::toggleVoiceChatStatus);
 
     translateUi();
 }
@@ -65,6 +77,8 @@ void LocalTrackGroupView::setAsVideoChannel()
     toolButton->setVisible(false);
 
     updateXmitButtonText();
+
+    voiceChatButton->setVisible(false);
 }
 
 InstrumentsButton *LocalTrackGroupView::createInstrumentsButton()
@@ -86,6 +100,9 @@ void LocalTrackGroupView::translateUi()
 
     xmitButton->setToolTip(tr("Enable/disable your audio transmission for others"));
     xmitButton->setAccessibleDescription(toolButton->toolTip());
+
+    voiceChatButton->setToolTip(tr("Send your audio 'almost' in real time using very low quality (useful for quick conversations only)"));
+    voiceChatButton->setAccessibleDescription(voiceChatButton->toolTip());
 
     toolButton->setToolTip(tr("Add or remove channels..."));
     toolButton->setAccessibleDescription(toolButton->toolTip());
@@ -121,8 +138,15 @@ void LocalTrackGroupView::toggleTransmitingStatus(bool checked)
 {
     if (!preparingToTransmit) { // users can't change xmit when is preparing
         setUnlightStatus(!checked);
-        mainFrame->setTransmitingStatus(getChannelIndex(), checked);
+        mainWindow->setTransmitingStatus(getChannelIndex(), checked);
     }
+}
+
+void LocalTrackGroupView::toggleVoiceChatStatus(bool checked)
+{
+    mainWindow->setVoiceChatStatus(getChannelIndex(), checked);
+
+    voiceChatButton->toggleBlink();
 }
 
 BlinkableButton *LocalTrackGroupView::createXmitButton()
@@ -132,6 +156,16 @@ BlinkableButton *LocalTrackGroupView::createXmitButton()
     button->setCheckable(true);
     button->setChecked(true);
     button->setIcon(QIcon(":/images/transmit.png"));
+    return button;
+}
+
+BlinkableButton *LocalTrackGroupView::createVoiceChatButton()
+{
+    auto *button = new BlinkableButton();
+    button->setObjectName(QStringLiteral("voiceChatButton"));
+    button->setCheckable(true);
+    button->setChecked(false);
+    button->setIcon(QIcon(":/images/mic.png"));
     return button;
 }
 
@@ -154,7 +188,7 @@ void LocalTrackGroupView::closePluginsWindows()
 
 void LocalTrackGroupView::addChannel()
 {
-    mainFrame->addChannelsGroup(-1); // using default instrument icon
+    mainWindow->addChannelsGroup(-1); // using default instrument icon
 }
 
 void LocalTrackGroupView::setInstrumentIcon(int instrumentIndex)
@@ -174,6 +208,9 @@ void LocalTrackGroupView::resetTracks()
 
     if (!xmitButton->isChecked())
         xmitButton->click(); // uncheck/reset the xmit button, the default is xmiting (button checked)
+
+    if (voiceChatButton->isChecked())
+        voiceChatButton->click(); // the default is NOT use voice chat
 }
 
 QMenu *LocalTrackGroupView::createPresetsDeletingSubMenu()
@@ -237,10 +274,10 @@ void LocalTrackGroupView::createChannelsActions(QMenu &menu)
     QAction *addChannelAction = menu.addAction(QIcon(":/images/more.png"), tr("Add channel"));
     connect(addChannelAction, &QAction::triggered, this, &LocalTrackGroupView::addChannel);
 
-    addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2); // at this moment users can't create more channels
-    if (mainFrame->getChannelGroupsCount() > 1) {
-        for (int i = 2; i <= mainFrame->getChannelGroupsCount(); ++i) {
-            QString channelName = mainFrame->getChannelGroupName(i-1);
+    addChannelAction->setEnabled(mainWindow->getChannelGroupsCount() < 2); // at this moment users can't create more channels
+    if (mainWindow->getChannelGroupsCount() > 1) {
+        for (int i = 2; i <= mainWindow->getChannelGroupsCount(); ++i) {
+            QString channelName = mainWindow->getChannelGroupName(i-1);
             QIcon icon(":/images/less.png");
             QString text = tr("Remove channel \"%1\"").arg(channelName);
             QAction *action = menu.addAction(icon, text);
@@ -296,9 +333,9 @@ LocalTrackView *LocalTrackGroupView::addTrackView(long trackID)
 
     LocalTrackView *newTrack = dynamic_cast<LocalTrackView *>(TrackGroupView::addTrackView(trackID));
 
-    bool enableLooperButton = mainFrame->getMainController()->isPlayingInNinjamRoom();
+    bool enableLooperButton = mainWindow->getMainController()->isPlayingInNinjamRoom();
     newTrack->enableLopperButton(enableLooperButton);
-    connect(newTrack, &LocalTrackView::openLooperEditor, mainFrame, &MainWindow::openLooperWindow);
+    connect(newTrack, &LocalTrackView::openLooperEditor, mainWindow, &MainWindow::openLooperWindow);
 
     if (newTrack)
         emit trackAdded();
@@ -308,7 +345,7 @@ LocalTrackView *LocalTrackGroupView::addTrackView(long trackID)
 
 LocalTrackView *LocalTrackGroupView::createTrackView(long trackID)
 {
-    return new LocalTrackView(mainFrame->getMainController(), trackID);
+    return new LocalTrackView(mainWindow->getMainController(), trackID);
 }
 
 void LocalTrackGroupView::setToWide()
@@ -334,8 +371,8 @@ void LocalTrackGroupView::setToNarrow()
 void LocalTrackGroupView::highlightHoveredChannel()
 {
     int channelGroupIndex = 1; // just the second channel can be highlighted at moment
-    if (channelGroupIndex < mainFrame->getChannelGroupsCount())
-        mainFrame->highlightChannelGroup(channelGroupIndex);
+    if (channelGroupIndex < mainWindow->getChannelGroupsCount())
+        mainWindow->highlightChannelGroup(channelGroupIndex);
 }
 
 void LocalTrackGroupView::highlightHoveredSubchannel()
@@ -361,20 +398,20 @@ void LocalTrackGroupView::detachMainControllerInSubchannels()
 
 void LocalTrackGroupView::removeChannel()
 {
-    mainFrame->removeChannelsGroup(mainFrame->getChannelGroupsCount()-1);
+    mainWindow->removeChannelsGroup(mainWindow->getChannelGroupsCount()-1);
 }
 
 // PRESETS
 void LocalTrackGroupView::loadPreset(QAction *action)
 {
-    auto mainController = mainFrame->getMainController();
+    auto mainController = mainWindow->getMainController();
     QString presetFileName = action->data().toString();
     auto preset = mainController->loadPreset(presetFileName);
     if (preset.isValid()) {
-        mainFrame->loadPreset(preset);
+        mainWindow->loadPreset(preset);
 
         // send the new channels to other musicians
-        mainController->sendNewChannelsNames(mainFrame->getChannelsNames());
+        mainController->sendNewChannelsNames(mainWindow->getChannelsMetadata());
     }
 }
 
@@ -386,13 +423,13 @@ void LocalTrackGroupView::savePreset()
                                          QDir::home().dirName(), &ok);
     if (ok && !text.isEmpty()) {
         text.append(".json");
-        mainFrame->getMainController()->savePreset(mainFrame->getInputsSettings(), text);
+        mainWindow->getMainController()->savePreset(mainWindow->getInputsSettings(), text);
     }
 }
 
 void LocalTrackGroupView::resetLocalTracks()
 {
-    mainFrame->resetLocalChannels(); // reset all local channels and subchannels
+    mainWindow->resetLocalChannels(); // reset all local channels and subchannels
 }
 
 QString LocalTrackGroupView::getStripedPresetName(const QString &presetName)
@@ -412,7 +449,7 @@ void LocalTrackGroupView::deletePreset(QAction *action)
     QString messageBoxText(tr("You want to delete the preset '%1'").arg(stripedName));
     reply = QMessageBox::question(this, messageBoxTitle, messageBoxText, QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes)
-        mainFrame->getMainController()->deletePreset(presetName);
+        mainWindow->getMainController()->deletePreset(presetName);
 }
 
 // +++++++++++++++++++++++++++++
@@ -439,6 +476,8 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
             view->setPeakMetersOnlyMode(peakMeterOnly);
         }
 
+        xmitVoiceChatLayout->setDirection(peakMeterOnly ? QBoxLayout::BottomToTop : QBoxLayout::LeftToRight);
+
         updateXmitButtonText();
         updateGeometry();
     }
@@ -448,3 +487,4 @@ void LocalTrackGroupView::togglePeakMeterOnlyMode()
 {
     setPeakMeterMode(!this->peakMeterOnly);
 }
+

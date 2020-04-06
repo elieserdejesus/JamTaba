@@ -159,7 +159,7 @@ private slots:
     // ninjam controller events
     void addChannel(const User &user, const UserChannel &channel, long channelID);
     void removeChannel(const User &user, const UserChannel &channel, long channelID);
-    void changeChannelName(const User &user, const UserChannel &channel, long channelID);
+    void changeChannel(const User &user, const UserChannel &channel, long channelID);
     void updateIntervalDownloadingProgressBar(long trackID);
     void hideIntervalDownloadingProgressBar(long trackID);
 

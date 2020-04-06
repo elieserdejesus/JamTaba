@@ -22,7 +22,7 @@ Decoder::Decoder() :
 
 Decoder::~Decoder()
 {
-    qCDebug(jtNinjamVorbisDecoder) << "Destrutor Vorbis Decoder";
+    //qDebug() << "Destrutor Vorbis Decoder";
 
     if(initialized)
         ov_clear(&vorbisFile);
@@ -73,13 +73,30 @@ size_t Decoder::readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *dec
 
 const audio::SamplesBuffer &Decoder::decode(int maxSamplesToDecode)
 {
-    if (!initialized) {
+    //qDebug() << "decoding INITIALIZED:" << initialized;
+
+    if (finished || !valid) {
+        //if (finished)
+        //    qDebug() << "Finished, returning ZERO";
+
+        //if (!valid)
+        //    qDebug() << "Not valid, returnin ZERO";
+
+        return audio::SamplesBuffer::ZERO_BUFFER;
+    }
+
+    static const int MIN_BUFFER_SIZE = 8192;
+
+    if (!initialized && vorbisInput.size() >= MIN_BUFFER_SIZE) {
+
         initialize();
     }
 
     if (!initialized) {
+        //qDebug() << "Not initialized, input size: " << vorbisInput.size();
         return audio::SamplesBuffer::ZERO_BUFFER;
     }
+
 
     float **outBuffer;
 
@@ -93,7 +110,8 @@ const audio::SamplesBuffer &Decoder::decode(int maxSamplesToDecode)
                 break;
             case OV_EINVAL: message = "VORBIS ERROR: the initial file headers couldn't be read or are corrupt, or that the initial open call for vf failed.";
         }
-        qCWarning(jtNinjamVorbisDecoder) << message;
+        qWarning() << message;
+        valid = false;
         return audio::SamplesBuffer::ZERO_BUFFER;
     }
     internalBuffer.setFrameLenght(samplesDecoded);
@@ -104,6 +122,8 @@ const audio::SamplesBuffer &Decoder::decode(int maxSamplesToDecode)
     }
     else {
         internalBuffer.zero();
+        //qDebug() << "FINISHED EOF";
+        finished = true; // when ov_read_float return 0 is EOF
     }
 
     return internalBuffer;
@@ -113,10 +133,19 @@ void Decoder::setInputData(const QByteArray &vorbisData)
 {
     vorbisInput.clear();
     vorbisInput.append(vorbisData);
+    //qDebug() << "Input data setted to " << vorbisData.left(32);
+}
+
+void Decoder::addInputData(const QByteArray &vorbisData)
+{
+    vorbisInput.append(vorbisData);
+    //qDebug() << vorbisData.size() << " bytes appended";
 }
 
 bool Decoder::initialize()
 {
+    //qDebug() << "trying to initialize initialized: " << initialized;
+
     ov_callbacks callbacks;
     callbacks.read_func = readOgg;
     callbacks.seek_func = NULL;
@@ -144,7 +173,11 @@ bool Decoder::initialize()
             break;
         case OV_EFAULT: message = "VORBIS DECODER INIT ERROR: Internal logic fault; indicates a bug or heap/stack corruption.";
         }
-        qCWarning(jtNinjamVorbisDecoder) << message;
+        qWarning() << message;
+
+        valid = false;
     }
+
+    //qDebug() << "Initialized: " << initialized;
     return initialized;
 }

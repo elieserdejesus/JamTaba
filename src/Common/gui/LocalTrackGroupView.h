@@ -14,7 +14,7 @@ class LocalTrackGroupView : public TrackGroupView
     Q_OBJECT
 
 public:
-    LocalTrackGroupView(int index, MainWindow *mainFrame);
+    LocalTrackGroupView(int index, MainWindow *mainWindow);
 
     virtual ~LocalTrackGroupView();
 
@@ -51,6 +51,8 @@ public:
     void setInstrumentIcon(int instrumentIndex);
     int getInstrumentIcon() const;
 
+    QBoxLayout *xmitVoiceChatLayout;
+
 protected:
 
     LocalTrackView *createTrackView(long trackID) override;
@@ -61,11 +63,12 @@ protected:
 
     static const int MAX_SUB_CHANNELS = 2;
 
-    MainWindow *mainFrame;
+    MainWindow *mainWindow;
 
 private:
     QPushButton *toolButton;
     BlinkableButton *xmitButton;
+    BlinkableButton *voiceChatButton;
     InstrumentsButton *instrumentsButton;
 
     bool preparingToTransmit;
@@ -78,6 +81,7 @@ private:
 
     QPushButton *createToolButton();
     BlinkableButton *createXmitButton();
+    BlinkableButton *createVoiceChatButton();
 
     QMenu* createPresetsLoadingSubMenu();
     QMenu* createPresetsDeletingSubMenu();
@@ -117,6 +121,7 @@ private slots:
     void deletePreset(QAction *action);
 
     void toggleTransmitingStatus(bool checked);
+    void toggleVoiceChatStatus(bool checked);
 };
 
 inline bool LocalTrackGroupView::isVideoChannel() const

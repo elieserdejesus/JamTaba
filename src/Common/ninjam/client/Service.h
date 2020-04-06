@@ -33,6 +33,7 @@ namespace client
     class DownloadIntervalWrite;
     class User;
     class UserChannel;
+    struct ChannelMetadata;
 
     class Service : public QObject
     {
@@ -56,7 +57,7 @@ namespace client
         void sendIntervalPart(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart);
         void sendIntervalBegin(const QByteArray &GUID, quint8 channelIndex, bool isAudioInterval);
 
-        void sendNewChannelsListToServer(const QStringList &channelsNames);
+        void sendNewChannelsListToServer(const QList<ChannelMetadata> &channelsMetadata);
         void sendRemovedChannelIndex(int removedChannelIndex);
 
         QString getConnectedUserName() const;
@@ -64,7 +65,7 @@ namespace client
         float getIntervalPeriod() const;
 
         void startServerConnection(const QString &serverIp, int serverPort, const QString &userName,
-                                   const QStringList &channels, const QString &password = "");
+                                   const QList<ChannelMetadata> &channels, const QString &password = "");
         void disconnectFromServer(bool emitDisconnectedSignal);
 
         void voteToChangeBPM(quint16 newBPM);
@@ -87,7 +88,7 @@ namespace client
         void serverBpmChanged(quint16 currentBpm);
         void audioIntervalCompleted(const User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
         void videoIntervalCompleted(const User &user, const QByteArray &encodedVideoData);
-        void audioIntervalDownloading(const User &user, quint8 channelIndex, int bytesDownloaded);
+        void audioIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudioData, bool isFirstPart, bool isLastPart);
         void disconnectedFromServer(const ServerInfo &server);
         void connectedInServer(const ServerInfo &server);
         void publicChatMessageReceived(const User &sender, const QString &message);
@@ -135,7 +136,7 @@ namespace client
         bool initialized;
         QString userName;
         QString password;
-        QStringList channels; // channels names
+        QList<ChannelMetadata> channels; // channels names and voice chat flag
 
         NetworkUsageMeasurer totalUploadMeasurer;
         NetworkUsageMeasurer totalDownloadMeasurer;

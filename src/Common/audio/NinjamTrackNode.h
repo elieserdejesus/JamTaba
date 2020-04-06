@@ -4,6 +4,7 @@
 #include "core/AudioNode.h"
 #include <QByteArray>
 #include "SamplesBufferResampler.h"
+#include "readerwriterqueue.h"
 
 namespace audio {
 class SamplesBuffer;
@@ -17,12 +18,19 @@ public:
 
     enum LowCutState
     {
-        OFF, NORMAl, DRASTIC
+        Off, Normal, Drastic
+    };
+
+    enum ChannelMode {
+        Intervalic,
+        VoiceChat,
+        Changing // used when waiting for the next interval do change the mode. Nothing is played in this 'transition state mode'
     };
 
     explicit NinjamTrackNode(int ID);
     virtual ~NinjamTrackNode();
-    void addVorbisEncodedInterval(const QByteArray &encodedBytes);
+    void addVorbisEncodedInterval(const QByteArray &fullIntervalBytes);
+    void addVorbisEncodedChunk(const QByteArray &chunkBytes, bool isFirstPart, bool isLastPart);
     void processReplacing(const audio::SamplesBuffer &in, audio::SamplesBuffer &out, int sampleRate,
                           std::vector<midi::MidiMessage> &midiBuffer) override;
 
@@ -39,12 +47,34 @@ public:
 
     bool isStereo() const;
 
+    bool isIntervalic() const { return mode == Intervalic; }
+
+    bool isVoiceChat() const { return mode == VoiceChat; }
+
+    void schefuleSetChannelMode(ChannelMode mode);
+
     // Discard all downloaded (but not played yet) intervals
-    void discardDownloadedIntervals(bool keepMostRecentInterval);
+    void discardDownloadedIntervals();
 
     void stopDecoding();
 
-    void setProcessingLastPartOfInterval(bool status);
+    //void setProcessingLastPartOfInterval(bool status);
+
+protected:
+
+    class TrackNodeCommand {
+    protected:
+        TrackNodeCommand(NinjamTrackNode *node);
+        NinjamTrackNode *trackNode;
+
+    public:
+        virtual ~TrackNodeCommand() {}
+        virtual void execute() = 0;
+    };
+
+    class ChangeChannelModeCommand;
+
+    void setChannelMode(ChannelMode newMode);
 
 private:
     int ID;
@@ -59,7 +89,7 @@ private:
 
     int getFramesToProcess(int targetSampleRate, int outFrameLenght);
 
-    bool processingLastPartOfInterval;
+    //bool processingLastPartOfInterval;
 
     class IntervalDecoder;
 
@@ -67,12 +97,14 @@ private:
     IntervalDecoder* currentDecoder;
     QMutex decodersMutex;
 
+    ChannelMode mode = Intervalic;
+
+    moodycamel::ReaderWriterQueue<TrackNodeCommand *> pendingCommands;
+
+    void consumePendingEvents();
+
 };
 
-inline void NinjamTrackNode::setProcessingLastPartOfInterval(bool status)
-{
-    this->processingLastPartOfInterval = status;
-}
 
 inline int NinjamTrackNode::getID() const
 {

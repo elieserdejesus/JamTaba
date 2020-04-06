@@ -28,7 +28,13 @@ public:
 
     void setInputData(const QByteArray &vorbisData);
 
+    void addInputData(const QByteArray &vorbisData);
+
     bool initialize();
+
+    bool isFinished() const { return finished; }
+
+    bool isValid() const { return valid; }
 
 private:
 
@@ -39,6 +45,9 @@ private:
     static size_t readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoderInstance);
 
     size_t consumeTo(void *oggOutBuffer, size_t bytesToConsume);
+
+    bool finished = false; // all input was decoded
+    bool valid = true;// will be flagged as invalid when an error is detected
 };
 
 inline bool Decoder::isStereo() const

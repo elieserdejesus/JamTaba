@@ -47,12 +47,15 @@ public:
 
     static void setNetworkUsageUpdatePeriod(quint32 periodInMilliseconds);
 
+    void setChannelMode(NinjamTrackNode::ChannelMode mode);
+
 protected:
 
     QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const override;
 
     void setupVerticalLayout() override;
     void resizeEvent(QResizeEvent *ev) override;
+    void paintEvent(QPaintEvent *ev) override;
 
 private:
     MultiStateButton *buttonLowCut;
@@ -62,6 +65,8 @@ private:
     persistence::CacheEntry cacheEntry; // used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay; // display downloaded interval chunks
     InstrumentsButton *instrumentsButton;
+
+    QPixmap voiceChatIcon;
 
     // used to send channel receive on/off messages
     QString userFullName;
@@ -94,6 +99,8 @@ private:
     qint64 lastNetworkUsageUpdate;
 
     static quint32 networkUsageUpdatePeriod;
+
+    quint64 updateCounter = 0;
 
 protected slots:
     // overriding the base class slots

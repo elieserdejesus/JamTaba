@@ -65,6 +65,7 @@ namespace client
 
         void updateChannelName(quint8 channelIndex, const QString &newName);
         void updateChannelReceiveStatus(quint8 channelIndex, bool receiving);
+        void updateChannelFlags(quint8 channelIndex, quint8 flags);
 
         void addChannel(const UserChannel &channel);
         void removeChannel(quint8 channelIndex);

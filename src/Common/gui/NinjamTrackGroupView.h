@@ -30,7 +30,7 @@ class NinjamTrackGroupView : public TrackGroupView
 
 public:
     NinjamTrackGroupView(controller::MainController *mainController, long trackID,
-                         const QString &channelName, const QColor &userColor, const persistence::CacheEntry &initialValues);
+                         const QString &channelName, NinjamTrackNode::ChannelMode channelMode, const QColor &userColor, const persistence::CacheEntry &initialValues);
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();

@@ -35,6 +35,7 @@
 #include "loginserver/MainChat.h"
 #include "TextEditorModifier.h"
 #include "widgets/InstrumentsMenu.h"
+#include "ninjam/client/Types.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
@@ -355,8 +356,15 @@ void MainWindow::changeCameraStatus(bool activated)
 
         auto secondChannel = localGroupChannels.at(1);
         secondChannel->setPeakMeterMode(localGroupChannels.first()->isShowingPeakMeterOnly());
-        if (secondChannel)
+        if (secondChannel) {
+            auto channelIndex = secondChannel->getChannelIndex();
+            auto voiceChatActivated = mainController->isVoiceChatActivated(channelIndex);
+            if (voiceChatActivated) {
+                mainController->setVoiceChatStatus(channelIndex, false);
+            }
+
             secondChannel->setAsVideoChannel();
+        }
     }
 
 }
@@ -850,10 +858,13 @@ void MainWindow::addChannelsGroup(int instrumentIndex)
     addLocalChannel(channelIndex, instrumentIndex, true);
 
     if (mainController->isPlayingInNinjamRoom()) {
-        mainController->sendNewChannelsNames(getChannelsNames());
+        mainController->sendNewChannelsNames(getChannelsMetadata());
 
         // create an encoder for this channel in next interval
-        mainController->getNinjamController()->scheduleEncoderChangeForChannel(channelIndex);
+        bool voiceChannelActivated = mainController->isVoiceChatActivated(channelIndex);
+        auto ninjamController = mainController->getNinjamController();
+        ninjamController->scheduleEncoderChangeForChannel(channelIndex, voiceChannelActivated);
+
     }
     updateLocalInputChannelsGeometry();
 }
@@ -886,7 +897,7 @@ void MainWindow::initializeMainTabWidget()
 
 void MainWindow::updateChannelsNames()
 {
-    mainController->sendNewChannelsNames(getChannelsNames());
+    mainController->sendNewChannelsNames(getChannelsMetadata());
 }
 
 // This is a factory method and is overrided in derived classes to create more specific instances.
@@ -975,7 +986,7 @@ void MainWindow::openLooperWindow(uint trackID)
 
         looperWindow->setLooper(inputTrack->getLooper());
 
-        auto channel = localGroupChannels.at(inputTrack->getChanneGrouplIndex());
+        auto channel = localGroupChannels.at(inputTrack->getChanneGroupIndex());
         Q_ASSERT(channel);
 
         int subchannelInternalIndex = channel->getSubchannelInternalIndex(trackID);
@@ -1227,13 +1238,18 @@ void MainWindow::stopPublicRoomStream(const login::RoomInfo &roomInfo)
     stopCurrentRoomStream();
 }
 
-QStringList MainWindow::getChannelsNames() const
+QList<ninjam::client::ChannelMetadata> MainWindow::getChannelsMetadata() const
 {
-    QStringList channelsNames;
-    for (auto channelGroup : localGroupChannels)
-        channelsNames.append(channelGroup->getChannelGroupName());
+    QList<ninjam::client::ChannelMetadata> channelsMetadata;
 
-    return channelsNames;
+    for (auto channelGroup : localGroupChannels) {
+        ninjam::client::ChannelMetadata channelData;
+        channelData.name = channelGroup->getChannelGroupName();
+        channelData.voiceChatActivated = mainController->isVoiceChatActivated(channelGroup->getChannelIndex());
+        channelsMetadata.append(channelData);
+    }
+
+    return channelsMetadata;
 }
 
 // user trying enter in a room
@@ -1275,7 +1291,7 @@ void MainWindow::tryEnterInRoom(const login::RoomInfo &roomInfo, const QString &
     }
     else if (mainController->userNameWasChoosed()) {
         showBusyDialog(tr("Connecting with %1 ... ").arg(roomInfo.getName()));
-        mainController->enterInRoom(roomInfo, getChannelsNames(), password);
+        mainController->enterInRoom(roomInfo, getChannelsMetadata(), password);
     }
 }
 
@@ -2016,7 +2032,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     } else {
         if (roomToJump) { // waiting the disconnection to connect in a new room?
             showBusyDialog(tr("Connecting with %1").arg(roomToJump->getName()));
-            mainController->enterInRoom(*roomToJump, getChannelsNames(),
+            mainController->enterInRoom(*roomToJump, getChannelsMetadata(),
                                         (passwordToJump.isNull()
                                          || passwordToJump.isEmpty()) ? "" : passwordToJump);
             roomToJump.reset();
@@ -2600,6 +2616,16 @@ void MainWindow::resetLocalChannels()
 void MainWindow::setTransmitingStatus(int channelID, bool xmitStatus)
 {
     mainController->setTransmitingStatus(channelID, xmitStatus);
+}
+
+void MainWindow::setVoiceChatStatus(int channelID, bool voiceChatStatus)
+{
+    mainController->setVoiceChatStatus(channelID, voiceChatStatus);
+
+    if (mainController->isPlayingInNinjamRoom()) {
+        auto ninjamService = mainController->getNinjamService();
+        ninjamService->sendNewChannelsListToServer(getChannelsMetadata());
+    }
 }
 
 bool MainWindow::isTransmiting(int channelID) const

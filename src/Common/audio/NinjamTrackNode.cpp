@@ -12,6 +12,7 @@
 #include "audio/core/AudioDriver.h"
 #include "audio/vorbis/VorbisDecoder.h"
 
+
 const double NinjamTrackNode::LOW_CUT_DRASTIC_FREQUENCY = 220.0; // in Hertz
 const double NinjamTrackNode::LOW_CUT_NORMAL_FREQUENCY = 120.0; // in Hertz
 
@@ -32,7 +33,7 @@ private:
 };
 
 NinjamTrackNode::LowCutFilter::LowCutFilter(double sampleRate) :
-    state(LowCutState::OFF),
+    state(LowCutState::Off),
     leftFilter(Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0),
     rightFilter(Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0)
 {
@@ -42,9 +43,9 @@ NinjamTrackNode::LowCutFilter::LowCutFilter(double sampleRate) :
 void NinjamTrackNode::LowCutFilter::setState(NinjamTrackNode::LowCutState state)
 {
     this->state = state;
-    if (state != LowCutState::OFF){
+    if (state != LowCutState::Off){
         double frequency = LOW_CUT_NORMAL_FREQUENCY;
-        if (state == LowCutState::DRASTIC)
+        if (state == LowCutState::Drastic)
             frequency = LOW_CUT_DRASTIC_FREQUENCY;
 
         leftFilter.setFrequency(frequency);
@@ -54,7 +55,7 @@ void NinjamTrackNode::LowCutFilter::setState(NinjamTrackNode::LowCutState state)
 
 void NinjamTrackNode::LowCutFilter::process(audio::SamplesBuffer &buffer)
 {
-    if (state == LowCutState::OFF)
+    if (state == LowCutState::Off)
         return;
 
     quint32 samples = buffer.getFrameLenght();
@@ -64,16 +65,44 @@ void NinjamTrackNode::LowCutFilter::process(audio::SamplesBuffer &buffer)
 }
 
 //--------------------------------------------------------------------------
+NinjamTrackNode::TrackNodeCommand::TrackNodeCommand(NinjamTrackNode *node)
+    : trackNode(node)
+{
+
+}
+
+class NinjamTrackNode::ChangeChannelModeCommand : public NinjamTrackNode::TrackNodeCommand
+{
+private:
+    ChannelMode newChannelMode;
+
+public:
+    ChangeChannelModeCommand(NinjamTrackNode *node, ChannelMode newChannelMode)
+        : NinjamTrackNode::TrackNodeCommand(node),
+          newChannelMode(newChannelMode)
+    {
+        //
+    }
+
+    void execute() override {
+        trackNode->setChannelMode(newChannelMode);
+    }
+};
+
+//--------------------------------------------------------------------------
 
 class NinjamTrackNode::IntervalDecoder
 {
 public:
-    explicit IntervalDecoder(const QByteArray &vorbisData);
+    explicit IntervalDecoder(const QByteArray &vorbisData = QByteArray());
     void decode(quint32 maxSamplesToDecode);
+    void addEncodedData(const QByteArray &vorbisData);
     quint32 getDecodedSamples(audio::SamplesBuffer &outBuffer, uint samplesToDecode);
     inline int getSampleRate() const { return vorbisDecoder.getSampleRate(); }
     inline bool isStereo() const { return vorbisDecoder.isStereo(); }
     void stopDecoding();
+    bool isFullyDecoded() const { return vorbisDecoder.isFinished(); }
+    bool isValid() const { return vorbisDecoder.isValid(); }
 private:
     vorbis::Decoder vorbisDecoder;
     audio::SamplesBuffer decodedBuffer;
@@ -83,7 +112,20 @@ private:
 NinjamTrackNode::IntervalDecoder::IntervalDecoder(const QByteArray &vorbisData)
     :decodedBuffer(2)
 {
+    // this funcion is called from GUI thread
+
+
+
+    QMutexLocker locker(&mutex);
     vorbisDecoder.setInputData(vorbisData);
+}
+
+void NinjamTrackNode::IntervalDecoder::addEncodedData(const QByteArray &vorbisData)
+{
+    // this funcion is called from GUI thread
+
+    QMutexLocker locker(&mutex);
+    vorbisDecoder.addInputData(vorbisData);
 }
 
 void NinjamTrackNode::IntervalDecoder::decode(quint32 maxSamplesToDecode)
@@ -129,7 +171,7 @@ quint32 NinjamTrackNode::IntervalDecoder::getDecodedSamples(audio::SamplesBuffer
 NinjamTrackNode::NinjamTrackNode(int ID) :
     ID(ID),
     lowCut(new NinjamTrackNode::LowCutFilter(44100)),
-    processingLastPartOfInterval(false),
+    //processingLastPartOfInterval(false),
     currentDecoder(nullptr),
     decodersMutex(QMutex::NonRecursive)
 {
@@ -146,7 +188,7 @@ bool NinjamTrackNode::isStereo() const
 
 void NinjamTrackNode::stopDecoding()
 {
-    discardDownloadedIntervals(false);
+    discardDownloadedIntervals();
 
     if (currentDecoder != nullptr)
         currentDecoder->stopDecoding();
@@ -154,18 +196,18 @@ void NinjamTrackNode::stopDecoding()
 
 NinjamTrackNode::LowCutState NinjamTrackNode::setLowCutToNextState()
 {
-    LowCutState newState = LowCutState::OFF;
+    LowCutState newState = LowCutState::Off;
 
     switch (lowCut->getState() ) {
 
-    case LowCutState::OFF:
-        newState = LowCutState::NORMAl;
+    case LowCutState::Off:
+        newState = LowCutState::Normal;
         break;
-    case LowCutState::NORMAl:
-        newState = LowCutState::DRASTIC;
+    case LowCutState::Normal:
+        newState = LowCutState::Drastic;
         break;
-    case LowCutState::DRASTIC:
-        newState = LowCutState::OFF;
+    case LowCutState::Drastic:
+        newState = LowCutState::Off;
         break;
     }
 
@@ -193,64 +235,140 @@ int NinjamTrackNode::getSampleRate() const
 
 NinjamTrackNode::~NinjamTrackNode()
 {
+    //qDebug() << "Deastrutor NinjamTrackNode";
+
     decodersMutex.lock();
-    foreach (IntervalDecoder *decoder, decoders)
+    for (auto decoder : decoders)
         delete decoder;
 
     decoders.clear();
     if (currentDecoder) {
-        delete currentDecoder;
+        //delete currentDecoder;
         currentDecoder = nullptr;
     }
     decodersMutex.unlock();
 }
 
-void NinjamTrackNode::discardDownloadedIntervals(bool keepMostRecentInterval)
+void NinjamTrackNode::discardDownloadedIntervals()
 {
-    decodersMutex.lock();
-    if (!keepMostRecentInterval) {
-        while (!decoders.isEmpty())
-            delete decoders.takeFirst();
-    } else {
-        while(decoders.size() > 1)//keep the last downloaded interval
-            delete decoders.takeFirst();
-    }
-    qDebug() << "intervals discarded";
-    decodersMutex.unlock();
+    QMutexLocker locker(&decodersMutex);
+
+    while (!decoders.isEmpty())
+        delete decoders.takeFirst();
+
+    currentDecoder = nullptr;
+
+    //qDebug() << "intervals discarded";
 }
 
 bool NinjamTrackNode::isPlaying()
 {
     QMutexLocker locker(&decodersMutex);
-    return currentDecoder != nullptr;
+
+    return currentDecoder != nullptr || mode == VoiceChat; // voice chat is always playing
+}
+
+void NinjamTrackNode::consumePendingEvents()
+{
+    TrackNodeCommand *command = nullptr;
+    while (pendingCommands.try_dequeue(command)) {
+        command->execute();
+        delete command;
+    }
 }
 
 bool NinjamTrackNode::startNewInterval()
 {
-    decodersMutex.lock();
-    if (currentDecoder) {
-        delete currentDecoder; //discard the previous interval decoder
-        currentDecoder = nullptr;
-    }
-    if (!decoders.isEmpty())
-        currentDecoder = decoders.takeFirst(); //using the next buffered decoder (next interval)
+    //qDebug() << "--------START INTERVAL------------";
 
-    decodersMutex.unlock();
+    consumePendingEvents();
+
+    if (mode == Intervalic) {
+        decodersMutex.lock();
+        if (currentDecoder) {
+            delete currentDecoder; //discard the previous interval decoder
+            currentDecoder = nullptr;
+        }
+        if (!decoders.isEmpty())
+            currentDecoder = decoders.takeFirst(); //using the next buffered decoder (next interval)
+
+        decodersMutex.unlock();
+    }
+
     return isPlaying();
 }
 
-void NinjamTrackNode::addVorbisEncodedInterval(const QByteArray &vorbisData)
+// this function is used only for voice chat mode. The parameter is not a full Ogg Vorbis interval, it's just a chunk of data.
+void NinjamTrackNode::addVorbisEncodedChunk(const QByteArray &chunkBytes, bool isFirstPart, bool isLastPart)
 {
+    //qDebug() << "   Chunk received " << chunkBytes.left(4) << "\tFirst:" << isFirstPart << " Last:" << isLastPart << " Bytes received:" << chunkBytes.size();
+
+    if(mode != VoiceChat)
+        return;
+
+
+    QMutexLocker locker(&decodersMutex);
+
+    if (decoders.isEmpty()) {
+
+        if (!isFirstPart) { // if decoders are empty and the chunk is not the first part we are receinving partial data of the previous interval, we must wait until receive a new interval
+            //qDebug() << "Returning, not the first part of an interval";
+            return;
+        }
+
+       // qDebug() << "First interval part received, creating new interval";
+        decoders.push_back(new IntervalDecoder());
+    }
+
+
+    decoders.last()->addEncodedData(chunkBytes);
+
+    if (isLastPart) {
+        //qDebug() << "Last part received, creating new IntervalDecoder";
+        decoders.push_back(new IntervalDecoder());
+    }
+
+}
+
+ // this function is used only for Intervalic mode. The parameter is a full Ogg Vorbis Interval data
+void NinjamTrackNode::addVorbisEncodedInterval(const QByteArray &fullIntervalBytes)
+{
+    //qDebug() << "Full Interval received " << fullIntervalBytes.left(4);
+
+    if (mode != Intervalic)
+        return;
+
+    auto newIntervalDecoder = new IntervalDecoder(fullIntervalBytes);
+
     decodersMutex.lock();
-    IntervalDecoder *newIntervalDecoder = new IntervalDecoder(vorbisData);
+
     decoders.append(newIntervalDecoder);
+
     decodersMutex.unlock();
 
     //decoding the first samples in a separated thread to avoid slow down the audio thread in interval start (first beat)
     QtConcurrent::run(newIntervalDecoder, &NinjamTrackNode::IntervalDecoder::decode, 256);
 }
 
+// ++++++++++++++
+
+void NinjamTrackNode::setChannelMode(ChannelMode newMode)
+{
+    if (newMode != this->mode) {
+        this->mode = newMode;
+    }
+}
+
 // ++++++++++++++++++++++++++++++++++++++
+
+void NinjamTrackNode::schefuleSetChannelMode(ChannelMode mode)
+{
+    this->mode = NinjamTrackNode::Changing; // nothing is played when is 'changing'
+
+    pendingCommands.enqueue(new ChangeChannelModeCommand(this, mode));
+
+    discardDownloadedIntervals();
+}
 
 int NinjamTrackNode::getFramesToProcess(int targetSampleRate, int outFrameLenght)
 {
@@ -264,19 +382,56 @@ void NinjamTrackNode::processReplacing(const audio::SamplesBuffer &in, audio::Sa
     if (!isPlaying())
         return;
 
-    Q_ASSERT(currentDecoder);
-    int framesToProcess = getFramesToProcess(sampleRate, out.getFrameLenght());
-    internalInputBuffer.setFrameLenght(framesToProcess);
-    currentDecoder->getDecodedSamples(internalInputBuffer, framesToProcess);
+    { // mutex scope
+        QMutexLocker locker(&decodersMutex);
+
+        if (!currentDecoder) {
+            if (mode == VoiceChat && !decoders.isEmpty()) {
+                currentDecoder = decoders.first();
+                //qDebug() << "USING FIRST DECODER";
+            }
+            else {
+                //qDebug() << "Current decoder is null, not playing!";
+                return;
+            }
+        }
+
+        if (!currentDecoder || !currentDecoder->isValid()) {
+            if (currentDecoder && !currentDecoder->isValid()){
+                //qDebug() << "Current decoder is not valid, returning!";
+                currentDecoder = nullptr; // the current decoder is corrupted, setting to nullptr to force a new decoder usage
+                decoders.clear();
+                internalInputBuffer.zero();
+            }
+            return;
+        }
+
+        auto framesToProcess = getFramesToProcess(sampleRate, out.getFrameLenght());
+        internalInputBuffer.setFrameLenght(framesToProcess);
+
+        auto samplesDecoded = 0;
+
+        if (currentDecoder)
+            currentDecoder->getDecodedSamples(internalInputBuffer, framesToProcess);
+
+        if (mode == VoiceChat) { // in voice chat we will not wait until startInterval to use the next available downloaded decoder
+            if (samplesDecoded <= framesToProcess && currentDecoder->isFullyDecoded()) {
+                //qDebug() << "current decoder consumed, using the next decoder";
+                currentDecoder = nullptr;
+                if (!decoders.isEmpty()) {
+                    auto decoder = decoders.takeFirst();
+                    delete decoder;
+                }
+            }
+        }
+
+    }
 
     if (!internalInputBuffer.isEmpty()) {
         if (needResamplingFor(sampleRate)) {
             const auto &resampledBuffer = resampler.resample(internalInputBuffer, out.getFrameLenght());
             internalInputBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
             internalInputBuffer.set(resampledBuffer);
-            if (internalInputBuffer.getFrameLenght() != out.getFrameLenght())
-                qWarning() << internalInputBuffer.getFrameLenght() << " != "
-                           << out.getFrameLenght();
         }
 
         lowCut->process(internalInputBuffer);
@@ -289,5 +444,6 @@ bool NinjamTrackNode::needResamplingFor(int targetSampleRate) const
 {
     if (currentDecoder)
         return currentDecoder->getSampleRate() != targetSampleRate;
+
     return false;
 }

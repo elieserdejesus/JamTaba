@@ -64,14 +64,14 @@ public:
     QByteArray encode(const SamplesBuffer &buffer, uint channelIndex);
     QByteArray encodeLastPartOfInterval(uint channelIndex);
 
-    void scheduleEncoderChangeForChannel(int channelIndex);
+    void scheduleEncoderChangeForChannel(int channelIndex, bool voiceChatActivated);
     void removeEncoder(int groupChannelIndex);
 
     void scheduleXmitChange(int channelID, bool transmiting);     // schedule the change for the next interval
 
     void setSampleRate(int newSampleRate);
 
-    void reset(bool keepRecentIntervals);     // discard downloaded intervals and reset intervalPosition
+    void reset();     // discard downloaded intervals and reset intervalPosition
 
     bool isPreparedForTransmit() const;
 
@@ -94,7 +94,7 @@ signals:
     void startProcessing(int intervalPosition);
     void channelAdded(const User &user, const UserChannel &channel, long channelID);
     void channelRemoved(const User &user, const UserChannel &channel, long channelID);
-    void channelNameChanged(const User &user, const UserChannel &channel, long channelID);
+    void channelChanged(const User &user, const UserChannel &channel, long channelID); // emmited when channel name or flags (intervalic or voice chat channel) changes
     void channelXmitChanged(long channelID, bool transmiting);
     void channelAudioChunkDownloaded(long channelID);
     void channelAudioFullyDownloaded(long channelID);
@@ -152,7 +152,7 @@ private:
     AudioEncoder *getEncoder(quint8 channelIndex);
 
     void handleNewInterval();
-    void recreateEncoderForChannel(int channelIndex);
+    void recreateEncoderForChannel(int channelIndex, bool voiceChannelActivated);
 
     void setXmitStatus(int channelID, bool transmiting);
 
@@ -178,7 +178,7 @@ private slots:
     void scheduleBpiChangeEvent(quint16 newBpi, quint16 oldBpi);
     void handleIntervalCompleted(const User &user, quint8 channelIndex,
                                  const QByteArray &encodedAudioData);
-    void handleIntervalDownloading(const User &user, quint8 channelIndex, int downloadedBytes);
+    void handleIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudio, bool isFirstPart, bool isLastPart);
     void addNinjamRemoteChannel(const User &user, const UserChannel &channel);
     void removeNinjamRemoteChannel(const User &user, const UserChannel &channel);
     void updateNinjamRemoteChannel(const User &user, const UserChannel &channel);

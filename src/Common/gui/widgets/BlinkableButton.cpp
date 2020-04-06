@@ -70,3 +70,11 @@ void BlinkableButton::stopBlink()
     blinking = false;
     setBlinkProperty(false);
 }
+
+void BlinkableButton::toggleBlink()
+{
+    if (blinking)
+        stopBlink();
+    else
+        startBlink();
+}

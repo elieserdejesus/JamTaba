@@ -16,6 +16,7 @@
 #include "audio/Resampler.h"
 #include "audio/SamplesBufferRecorder.h"
 #include "audio/vorbis/VorbisEncoder.h"
+#include "audio/vorbis/Vorbis.h"
 #include "gui/NinjamRoomWindow.h"
 #include "log/Logging.h"
 #include "MetronomeUtils.h"
@@ -210,19 +211,21 @@ private:
 class NinjamController::InputChannelChangedEvent : public SchedulableEvent
 {
 public:
-    InputChannelChangedEvent(NinjamController *controller, int channelIndex) :
+    InputChannelChangedEvent(NinjamController *controller, int channelIndex, bool voiceChannelActivated) :
         SchedulableEvent(controller),
-        channelIndex(channelIndex)
+        channelIndex(channelIndex),
+        voiceChannelActivated(voiceChannelActivated)
     {
     }
 
     void process()
     {
-        controller->recreateEncoderForChannel(channelIndex);
+        controller->recreateEncoderForChannel(channelIndex, voiceChannelActivated);
     }
 
 private:
     int channelIndex;
+    bool voiceChannelActivated;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -318,8 +321,8 @@ void NinjamController::process(const audio::SamplesBuffer &in, audio::SamplesBuf
 
         // +++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
         bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
-        for (NinjamTrackNode *track : trackNodes)
-            track->setProcessingLastPartOfInterval(isLastPart); // TODO resampler still need a flag indicating the last part?
+        //for (NinjamTrackNode *track : trackNodes)
+        //    track->setProcessingLastPartOfInterval(isLastPart); // TODO resampler still need a flag indicating the last part?
         mainController->doAudioProcess(tempInBuffer, tempOutBuffer, sampleRate);
         out.add(tempOutBuffer, offset); // generate audio output
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -506,8 +509,10 @@ void NinjamController::start(const ServerInfo &server)
 
     // schedule the encoders creation (one encoder for each channel)
     int channels = mainController->getInputTrackGroupsCount();
-    for (int channelIndex = 0; channelIndex < channels; ++channelIndex)
-        scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex));
+    for (int channelIndex = 0; channelIndex < channels; ++channelIndex) {
+        bool voiceChannelActivated = mainController->isVoiceChatActivated(channelIndex);
+        scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex, voiceChannelActivated));
+    }
 
     processScheduledChanges();
 
@@ -734,7 +739,7 @@ void NinjamController::handleNewInterval()
     if (hasScheduledChanges())
         processScheduledChanges();
 
-    // QMutexLocker locker(&mutex);
+    //mutex.lock();
     for (NinjamTrackNode *track : trackNodes.values())
     {
         bool trackWasPlaying = track->isPlaying();
@@ -742,6 +747,7 @@ void NinjamController::handleNewInterval()
         if (trackWasPlaying != trackIsPlaying)
             emit channelXmitChanged(track->getID(), trackIsPlaying);
     }
+    //mutex.unlock();
 
     emit startingNewInterval(); // update the UI
 
@@ -779,6 +785,7 @@ void NinjamController::handleNinjamUserExiting(const User &user)
 {
     for (const auto &channel : user.getChannels())
         removeTrack(user, channel);
+
     emit userLeave(user.getFullName());
 }
 
@@ -794,12 +801,14 @@ void NinjamController::removeNinjamRemoteChannel(const User &user, const UserCha
 
 void NinjamController::updateNinjamRemoteChannel(const User &user, const UserChannel &channel)
 {
-    QString uniqueKey = getUniqueKeyForChannel(channel, user.getFullName());
+    auto uniqueKey = getUniqueKeyForChannel(channel, user.getFullName());
     QMutexLocker locker(&mutex);
     if (trackNodes.contains(uniqueKey))
     {
         auto trackNode = trackNodes[uniqueKey];
-        emit channelNameChanged(user, channel, trackNode->getID());
+        if (trackNode) {
+            emit channelChanged(user, channel, trackNode->getID());
+        }
     }
 }
 
@@ -844,17 +853,17 @@ void NinjamController::handleIntervalCompleted(const User &user, quint8 channelI
     }
 }
 
-void NinjamController::reset(bool keepRecentIntervals)
+void NinjamController::reset()
 {
     QMutexLocker locker(&mutex);
     for (NinjamTrackNode *trackNode : trackNodes.values())
-        trackNode->discardDownloadedIntervals(keepRecentIntervals);
+        trackNode->discardDownloadedIntervals();
     intervalPosition = lastBeat = 0;
 }
 
-void NinjamController::scheduleEncoderChangeForChannel(int channelIndex)
+void NinjamController::scheduleEncoderChangeForChannel(int channelIndex, bool voiceChatActivated)
 {
-    scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex));
+    scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex, voiceChatActivated));
 }
 
 QByteArray NinjamController::encode(const audio::SamplesBuffer &buffer, uint channelIndex)
@@ -873,7 +882,7 @@ QByteArray NinjamController::encodeLastPartOfInterval(uint channelIndex)
     return QByteArray();
 }
 
-void NinjamController::recreateEncoderForChannel(int channelIndex)
+void NinjamController::recreateEncoderForChannel(int channelIndex, bool voiceChannelActivated)
 {
     QMutexLocker locker(&encodersMutex);
     int maxChannelsForEncoding = mainController->getMaxAudioChannelsForEncoding(channelIndex);
@@ -893,10 +902,9 @@ void NinjamController::recreateEncoderForChannel(int channelIndex)
             delete encoders[channelIndex];
 
         int sampleRate = mainController->getSampleRate();
-        float encodingQuality = mainController->getEncodingQuality();
+        float encodingQuality = voiceChannelActivated ? vorbis::EncoderQualityLow : mainController->getEncodingQuality();
 
-        encoders[channelIndex] = new vorbis::Encoder(maxChannelsForEncoding, sampleRate,
-                                                     encodingQuality);
+        encoders[channelIndex] = new vorbis::Encoder(maxChannelsForEncoding, sampleRate, encodingQuality);
     }
 }
 
@@ -910,8 +918,9 @@ void NinjamController::recreateEncoders()
         encoders.clear(); // new encoders will be create on demand
 
         int trackGroupsCount = mainController->getInputTrackGroupsCount();
-        for (int channelIndex = 0; channelIndex < trackGroupsCount; ++channelIndex)
-            recreateEncoderForChannel(channelIndex);
+        for (int channelIndex = 0; channelIndex < trackGroupsCount; ++channelIndex) {
+            recreateEncoderForChannel(channelIndex, mainController->isVoiceChatActivated(channelIndex));
+        }
     }
 }
 
@@ -920,7 +929,7 @@ void NinjamController::setSampleRate(int newSampleRate)
     if (!isRunning())
         return;
 
-    reset(false); // discard all downloaded intervals
+    reset(); // discard all downloaded intervals
 
     this->samplesInInterval = computeTotalSamplesInInterval();
 
@@ -929,10 +938,8 @@ void NinjamController::setSampleRate(int newSampleRate)
     recreateEncoders();
 }
 
-void NinjamController::handleIntervalDownloading(const User &user, quint8 channelIndex,
-                                                 int downloadedBytes)
+void NinjamController::handleIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudio, bool isFirstPart, bool isLastPart)
 {
-    Q_UNUSED(downloadedBytes);
     auto channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKeyForChannel(channel, user.getFullName());
 
@@ -944,6 +951,9 @@ void NinjamController::handleIntervalDownloading(const User &user, quint8 channe
     {
         if (!track->isPlaying())   // track is not playing yet and receive the first interval bytes
             emit channelXmitChanged(track->getID(), true);
+
         emit channelAudioChunkDownloaded(track->getID());
+
+        track->addVorbisEncodedChunk(encodedAudio, isFirstPart, isLastPart);
     }
 }

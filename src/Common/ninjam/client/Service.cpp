@@ -318,6 +318,9 @@ void Service::process(const DownloadIntervalWrite &msg)
 {
     if (downloads.contains(msg.getGUID())) {
         Download &download = downloads[msg.getGUID()];
+
+        bool isFirstPart = download.getEncodedData().isEmpty();
+
         download.appendEncodedData(msg.getEncodedData());
 
         auto &measurer = channelDownloadMeasurers[download.getUserFullName()][download.getChannelIndex()];
@@ -329,12 +332,13 @@ void Service::process(const DownloadIntervalWrite &msg)
         if (download.isAudio()) {
             if (user.getChannel(download.getChannelIndex()).isActive()) {
                 if (msg.downloadIsComplete()) {
-                    emit audioIntervalCompleted(user, download.getChannelIndex(), download.getEncodedData());
+                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData(), isFirstPart, true); // the last chunk
+                    emit audioIntervalCompleted(user, download.getChannelIndex(), download.getEncodedData()); // full interval
                     downloads.remove(msg.getGUID());
-                } else {
-                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData().size());
                 }
-            }
+                else
+                    emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedData(), isFirstPart, false);
+             }
         }
         else if (msg.downloadIsComplete()) { // download is video
             emit videoIntervalCompleted(user, download.getEncodedData());
@@ -359,13 +363,14 @@ void Service::process(const AuthChallengeMessage &msg)
     serverKeepAlivePeriod = msg.getServerKeepAlivePeriod();
 }
 
-void Service::sendNewChannelsListToServer(const QStringList &channelsNames)
+void Service::sendNewChannelsListToServer(const QList<ChannelMetadata> &channels)
 {
-    this->channels = channelsNames;
+    this->channels = channels;
 
     ClientSetChannel msg;
-    for (auto channelName : channelsNames)
-        msg.addChannel(channelName);
+    for (auto channelMetadata : channels) {
+        msg.addChannel(channelMetadata.name, ClientSetChannel::toFlags(channelMetadata.voiceChatActivated));
+    }
 
     sendMessageToServer(msg);
 }
@@ -377,11 +382,7 @@ void Service::sendRemovedChannelIndex(int removedChannelIndex)
     channels.removeAt(removedChannelIndex);
 
     // send only remaining channels to server, the removed channel will be excluded in the clients
-    ClientSetChannel msg;
-    for (const auto &channel : channels)
-        msg.addChannel(channel, true);
-
-    sendMessageToServer(msg);
+    sendNewChannelsListToServer(channels);
 }
 
 void Service::process(const AuthReplyMessage &msg)
@@ -398,7 +399,7 @@ void Service::process(const AuthReplyMessage &msg)
 }
 
 void Service::startServerConnection(const QString &serverIp, int serverPort,
-                                    const QString &userName, const QStringList &channels,
+                                    const QString &userName, const QList<ChannelMetadata> &channels,
                                     const QString &password)
 {
 
@@ -480,7 +481,8 @@ bool Service::channelIsOutdate(const User &user, const UserChannel &serverChanne
     //if (user.getFullName() == serverChannel.getUserFullName()) {
         if (user.hasChannel(serverChannel.getIndex())) {
             UserChannel userChannel = user.getChannel(serverChannel.getIndex());
-            return userChannel.getName() != serverChannel.getName();
+            return userChannel.getName() != serverChannel.getName()
+                    || userChannel.getFlags() != serverChannel.getFlags();
         }
     //}
     return false;

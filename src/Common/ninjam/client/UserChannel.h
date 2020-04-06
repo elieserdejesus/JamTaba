@@ -14,8 +14,7 @@ namespace client
     {
 
     public:
-        UserChannel(const QString &channelName, quint8 channelIndex,
-                    bool active=true, quint16 volume=0, quint8 pan=0, quint8 flags=0);
+        UserChannel(const QString &channelName, quint8 channelIndex, quint8 flags, bool active, quint16 volume=0, quint8 pan=0);
         UserChannel();
 
         ~UserChannel();
@@ -50,9 +49,21 @@ namespace client
             this->active = active;
         }
 
+        inline bool isIntervalicChannel() const {
+            return flags == 0;
+        }
+
+        inline bool isVoiceChatChannel() const {
+            return flags == 2;
+        }
+
         inline quint8 getFlags() const
         {
             return flags;
+        }
+
+        inline void setFlags(quint8 flags){
+            this->flags = flags;
         }
 
         inline quint16 getVolume() const
@@ -64,6 +75,17 @@ namespace client
         {
             return pan;
         }
+
+        QString toString() const {
+            return QString("Channel name: %1 \\n Active: %2 \\n Index: %3 \\n Volume: %4 \\n Pan: %5 \\n Flags: %6")
+                    .arg(channelName)
+                    .arg(active)
+                    .arg(index)
+                    .arg(volume)
+                    .arg(pan)
+                    .arg(flags);
+        }
+
 
     private:
         QString channelName;

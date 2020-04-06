@@ -31,12 +31,17 @@ public:
 
     void setTransmitingStatus(bool transmiting);
 
+    bool isVoiceChatActivated() const;
+
+    void setVoiceChatStatus(bool voiceChat);
+
     audio::LocalInputNode *getInputNode(quint8 index) const;
 
 private:
     int groupIndex;
     QList<audio::LocalInputNode *> groupedInputs;
     bool transmiting;
+    bool voiceChatActivated;
 };
 
 inline bool LocalInputGroup::isTransmiting() const

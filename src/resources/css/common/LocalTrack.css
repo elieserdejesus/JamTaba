@@ -112,13 +112,21 @@ LocalTrackGroupView InstrumentsButton
 
  /* The transmiting (xmit) button.
  ----------------------------------*/
-#xmitButton
+#xmitButton,
+#voiceChatButton
 {
     padding-left: 0px; /* using ZERO padding in left and right to fix #387 */
     padding-right: 0px;
 }
 
-#xmitButton:!checked                            /* default state (not checked) is 'not transmiting */
+#voiceChatButton
+{
+   max-height: 12px;
+   max-width: 20px;
+}
+
+#xmitButton:!checked,                            /* default state (not checked) is 'not transmiting */
+#voiceChatButton:!checked
 {
     border-width: 1px;
     font-size: 11px;
@@ -131,13 +139,15 @@ LocalTrackGroupView InstrumentsButton
     border-style: outset;
 }
 
-#xmitButton:checked                             /* when the button is checked we are 'Transmiting' */
+#xmitButton:checked,                             /* when the button is checked we are 'Transmiting' */
+#voiceChatButton:checked
 {
     border-style: inset;
     color: rgb(0, 40, 0);
 }
 
-#xmitButton:!checked[blinking="true"]
+#xmitButton:!checked[blinking="true"],
+#voiceChatButton:checked[blinking="true"]
 {
     background-color: orange;
     border-color: #B57200;

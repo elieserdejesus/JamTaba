@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QIODevice>
 #include "ninjam/Ninjam.h"
+#include "ninjam/client/Types.h"
 
 namespace ninjam {
 
@@ -74,10 +75,10 @@ class ClientSetChannel : public ClientMessage
 {
 public:
     ClientSetChannel();
-    explicit ClientSetChannel(const QStringList &channelsNames);
+    explicit ClientSetChannel(const QList<ChannelMetadata> &channels);
     static ClientSetChannel unserializeFrom(QIODevice *device, quint32 payload);
 
-    void addChannel(const QString &channelName, bool active = true);
+    void addChannel(const QString &channelName, quint8 flags, bool active = true);
 
     void serializeTo(QIODevice *device) const override;
     void printDebug(QDebug &dbg) const override;
@@ -85,6 +86,11 @@ public:
     inline QList<UserChannel> getChannels() const
     {
         return channels;
+    }
+
+    static quint8 toFlags(bool voiceChatActivated) {
+         //Possible values: 0 - ninjam interval based , 2 - voice chat, 4 - session mode
+        return voiceChatActivated ? 2 : 0;
     }
 private:
     QList<UserChannel> channels;
