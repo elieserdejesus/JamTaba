@@ -113,7 +113,8 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
     border-color: rgb(100, 100, 100);
 }
 
-#xmitButton[preparing="true"]
+#xmitButton[preparing="true"],
+#voiceChatButton:checked[blinking="true"]
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
         stop:0 rgb(255,255,0),
@@ -143,6 +144,12 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
         stop:0 rgba(255, 90, 62, 220),
         stop:1 rgba(175, 0, 0, 200));
     border-color: rgba(0, 0, 0, 90);
+}
+
+#voiceChatButton:!checked
+{
+    background-color: rgb(111, 157, 255);
+    border-radius: 6px;
 }
 
 LocalTrackView #buttonLooper:disabled
