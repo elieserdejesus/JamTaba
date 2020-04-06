@@ -2,7 +2,7 @@
 #define VST_PLUGIN_H
 
 #include "audio/core/Plugins.h"
-#include "../../VST_SDK/VST2_SDK/public.sdk/source/vst2.x/aeffectx.h"
+#include "aeffectx.h"
 #include <QMap>
 #include <QLibrary>
 

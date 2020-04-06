@@ -1,7 +1,7 @@
 #ifndef VSTHOST_H
 #define VSTHOST_H
 
-#include "../../VST_SDK/VST2_SDK/public.sdk/source/vst2.x/aeffectx.h"
+#include "aeffectx.h"
 #include <QScopedPointer>
 #include <QObject>
 #include "midi/MidiMessage.h"
