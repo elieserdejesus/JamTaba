@@ -17,7 +17,7 @@ PerformanceMonitor::~PerformanceMonitor()
 int PerformanceMonitor::getMemmoryUsed()
 {
 
-    //http://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
+    //https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
     MEMORYSTATUSEX memInfo;
     memInfo.dwLength = sizeof(MEMORYSTATUSEX);
     bool result = GlobalMemoryStatusEx(&memInfo);

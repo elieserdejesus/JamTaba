@@ -152,7 +152,7 @@ void MainWindow::setupMainTabCornerWidgets()
     performanceMonitorLabel->setObjectName(QStringLiteral("labelPerformanceMonitor"));
 
 #ifndef Q_OS_WIN
-   performanceMonitorLabel->setVisible(false); // showing RAM monitor in windows only
+    performanceMonitorLabel->setVisible(false); // showing RAM monitor in windows only
 #endif
 
     transmitTransferRateLabel = new QLabel(this);
@@ -2087,7 +2087,7 @@ void MainWindow::timerEvent(QTimerEvent *)
                    auto memmoryUsed = performanceMonitor->getMemmoryUsed();
                    auto batteryUsed = performanceMonitor->getBatteryUsed();
 
-                   bool showMemmory = memmoryUsed < 60; //memory meter only active if memory usage is <60%
+                   bool showMemmory = memmoryUsed > 60; //memory meter only active if memory usage is > 60%
                    bool showBattery = batteryUsed < 255; //Battery meter active only if battery is available
 
                    QString string;
