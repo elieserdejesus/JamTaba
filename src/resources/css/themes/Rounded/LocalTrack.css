@@ -99,6 +99,11 @@ FxPanelItem QPushButton:checked
     border: 1px outset rgb(100, 100, 100)
 }
 
+#voiceChatButton:hover
+{
+    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgba(100, 100, 100, 20), stop:1 rgba(100, 100, 100, 40));
+}
+
 LocalTrackView[highlighted="true"]
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(230, 230, 230), stop:1 rgb(140, 140, 140));

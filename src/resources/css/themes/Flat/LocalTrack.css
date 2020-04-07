@@ -88,10 +88,6 @@ LocalTrackView #inputPanel:hover
     background-color: rgba(0, 0, 0, 30);
 }
 
-
-
-
-
 #xmitButton
 {
     margin-top: 3px;
@@ -131,6 +127,11 @@ LocalTrackView #inputPanel:hover
 #voiceChatButton:!checked
 {
     background-color: rgba(0, 0, 0, 55)
+}
+
+#voiceChatButton:hover
+{
+    background-color: rgba(40, 40, 40, 55);
 }
 
 LocalTrackView #buttonLooper:disabled
