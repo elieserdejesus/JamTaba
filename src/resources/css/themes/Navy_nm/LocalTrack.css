@@ -115,6 +115,11 @@ LocalTrackViewStandalone
     border-color: rgba(0, 0, 0, 30);
 }
 
+#voiceChatButton:hover
+{
+    background-color: rgb(70, 70, 70);
+}
+
 LocalTrackView #inputSelectionButton            /* Button used to open the input selection menu */
 {
     background-image: url(':/images/arrow-down.png');
