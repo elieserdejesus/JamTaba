@@ -17,7 +17,7 @@ void NinjamControllerPlugin::stopAndWaitForHostSync()
     if (!waitingForHostSync) {
         waitingForHostSync = true;
 
-        reset(true); // discard the intervals but keep the most recent
+        reset(); // discard the intervals but keep the most recent
 
         deactivateAudioNodes(); // metronome and ninjam audio nodes will not be rendered
     }
