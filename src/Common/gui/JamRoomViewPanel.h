@@ -82,9 +82,6 @@ private:
     void updateStyleSheet();
     void createMapWidgets();
     void updateMap();
-
-    bool static canShowNinjamServerPort(const QString &serverName);
-
 };
 
 inline login::RoomInfo JamRoomViewPanel::getRoomInfo() const
