@@ -51,7 +51,7 @@ public:
     void setInstrumentIcon(int instrumentIndex);
     int getInstrumentIcon() const;
 
-    QBoxLayout *xmitVoiceChatLayout;
+    QBoxLayout *toolVoiceChatLayout;
 
 protected:
 

@@ -32,18 +32,18 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainWindo
 
 
     toolButton = createToolButton();
-    topPanelLayout->addWidget(toolButton, 0, Qt::AlignTop | Qt::AlignRight);
-
     voiceChatButton = createVoiceChatButton();
 
-    xmitButton = createXmitButton();
+    toolVoiceChatLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+    toolVoiceChatLayout->setContentsMargins(5, 5, 5, 5);
+    toolVoiceChatLayout->setSpacing(5);
+    toolVoiceChatLayout->addWidget(toolButton, 0, Qt::AlignTop | Qt::AlignCenter);
+    toolVoiceChatLayout->addWidget(voiceChatButton, 0, Qt::AlignBottom | Qt::AlignRight);
+    topPanelLayout->addLayout(toolVoiceChatLayout);
 
-    xmitVoiceChatLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    xmitVoiceChatLayout->setContentsMargins(0, 0, 0, 0);
-    xmitVoiceChatLayout->setSpacing(2);
-    xmitVoiceChatLayout->addWidget(xmitButton);
-    xmitVoiceChatLayout->addWidget(voiceChatButton);
-    mainLayout->addLayout(xmitVoiceChatLayout, mainLayout->rowCount(), 0);
+    xmitButton = createXmitButton();
+    layout()->addWidget(xmitButton);
+
 
     connect(toolButton, &QPushButton::clicked, this, &LocalTrackGroupView::showMenu);
 
@@ -468,15 +468,13 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
 {
     if (this->peakMeterOnly != peakMeterOnly) {
         this->peakMeterOnly = peakMeterOnly;
-        topPanel->setVisible(!peakMeterOnly);
 
-        instrumentsButton->setVisible(topPanel->isVisible());
+        toolButton->setVisible(!peakMeterOnly);
+        instrumentsButton->setVisible(!peakMeterOnly);
 
         for (auto view : getTracks<LocalTrackView *>()) {
             view->setPeakMetersOnlyMode(peakMeterOnly);
         }
-
-        xmitVoiceChatLayout->setDirection(peakMeterOnly ? QBoxLayout::BottomToTop : QBoxLayout::LeftToRight);
 
         updateXmitButtonText();
         updateGeometry();
