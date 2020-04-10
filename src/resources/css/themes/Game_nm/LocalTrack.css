@@ -117,9 +117,10 @@ LocalTrackViewStandalone
 #voiceChatButton:!checked,
 #voiceChatButton:checked
 {
-    background-color: #58A9AA;
-    border-color: rgb(0, 110, 100);
-    color: rgb(0, 60, 60);
+    border-image: url('/images/button_checked.png') 7px 8px 7px 7px;
+    color: green;
+    background-color: none;
+
 }
 
 #voiceChatButton:hover

@@ -126,12 +126,12 @@ LocalTrackView #inputPanel:hover
 
 #voiceChatButton:!checked
 {
-    background-color: rgba(0, 0, 0, 55)
+    background-color: rgba(100, 100, 100, 55);
 }
 
 #voiceChatButton:hover
 {
-    background-color: rgba(40, 40, 40, 55);
+    background-color: rgba(160, 160, 160, 55);
 }
 
 LocalTrackView #buttonLooper:disabled
