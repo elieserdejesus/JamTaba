@@ -121,6 +121,11 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
     color: black;
 }
 
+#voiceChatButton:checked[blinking="true"]
+{
+     border: none;
+}
+
 #xmitButton:!checked
 {
     background-color: rgb(255, 0, 0);
@@ -139,7 +144,8 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
     border-color: rgba(0, 0, 0, 90);
 }
 
-#voiceChatButton:!checked
+#voiceChatButton:!checked,
+TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button not blinking when not transmitting */
 {
     background-color:  rgb(189, 90, 29);
 }
