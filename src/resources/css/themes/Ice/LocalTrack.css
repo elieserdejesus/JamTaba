@@ -148,14 +148,25 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
 
 #voiceChatButton:!checked
 {
-    background-color: rgba(180, 207, 250, 60);
-    border: 1px outset rgba(0, 0, 140, 120, 60);
-    border-radius: 6px;
+    background-color: rgba(180, 207, 250, 120);
+    border: 1px outset rgba(0, 0, 0, 90);
 }
 
 #voiceChatButton:hover
 {
     background-color: rgba(207, 224, 252, 60);
+}
+
+#voiceChatButton:checked
+{
+    background-color: rgba(180, 207, 250, 120);
+    border: 1px outset rgba(0, 0, 0, 40);
+}
+
+TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button barely blinking when not transmitting */
+{
+    background-color: rgba(180, 207, 250, 80);
+    border: 1px outset rgba(0, 0, 0, 40);
 }
 
 LocalTrackView #buttonLooper:disabled

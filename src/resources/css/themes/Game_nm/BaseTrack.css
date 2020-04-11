@@ -28,4 +28,7 @@ QLabel#labelPanR
     color: rgb(55, 89, 89);
 }
 
-
+TrackGroupView[unlighted="true"] #topPanel
+{
+    background-color: rgb(15, 29, 30);
+}

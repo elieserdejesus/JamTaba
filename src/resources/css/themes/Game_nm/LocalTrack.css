@@ -115,7 +115,8 @@ LocalTrackViewStandalone
 }
 
 #voiceChatButton:!checked,
-#voiceChatButton:checked
+#voiceChatButton:checked,
+TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button not blinking when not transmitting */
 {
     border-image: url('/images/button_checked.png') 7px 8px 7px 7px;
     color: green;

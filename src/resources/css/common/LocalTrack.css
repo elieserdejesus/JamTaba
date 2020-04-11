@@ -126,7 +126,8 @@ LocalTrackGroupView InstrumentsButton
 }
 
 #xmitButton:!checked,                            /* default state (not checked) is 'not transmiting */
-#voiceChatButton:!checked
+#voiceChatButton:!checked,
+TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"]
 {
     border-width: 1px;
     font-size: 11px;

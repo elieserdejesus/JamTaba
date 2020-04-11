@@ -111,7 +111,13 @@ LocalTrackViewStandalone
 #voiceChatButton:!checked,
 #voiceChatButton:checked
 {
-    background-color: rgb(53, 53, 53);
+    background-color: rgb(55, 55, 55);
+    border-color: rgba(0, 0, 0, 30);
+}
+
+TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button barely blinking when not transmitting */
+{
+    background-color: rgb(40, 40, 40);
     border-color: rgba(0, 0, 0, 30);
 }
 

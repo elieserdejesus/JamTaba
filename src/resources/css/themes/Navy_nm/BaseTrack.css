@@ -35,7 +35,7 @@ NinjamTrackGroupView[horizontal="true"]
     border-radius: 2px;
 }
 
-
-
-
-
+TrackGroupView[unlighted="true"] #topPanel
+{
+     background-color: rgb(55, 55, 55);
+}

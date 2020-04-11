@@ -74,6 +74,11 @@ FxPanelItem QPushButton:checked
     color: rgb(20, 20, 20);
 }
 
+#voiceChatButton:checked[blinking="true"]
+{
+     border: 1px outset rgb(50, 50, 50);
+}
+
 #xmitButton:!checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 140), stop:1 rgba(175, 0, 0, 140));
@@ -94,9 +99,17 @@ FxPanelItem QPushButton:checked
 
 #voiceChatButton:!checked
 {
+    background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 40), stop:1 rgba(0, 0, 0, 60));
+    border-radius: 2px;
+    border: 1px outset rgb(50, 50, 50);
+}
+
+TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button barely blinking when not transmitting */
+
+{
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
     border-radius: 2px;
-    border: 1px outset rgb(100, 100, 100)
+    border: 1px outset rgb(50, 50, 50);
 }
 
 #voiceChatButton:hover
