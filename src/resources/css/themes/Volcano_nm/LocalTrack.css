@@ -123,7 +123,7 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
 
 #voiceChatButton:checked[blinking="true"]
 {
-     border: none;
+     border-color: 1px outset #68300F;
 }
 
 #xmitButton:!checked
@@ -148,6 +148,7 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
 TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button not blinking when not transmitting */
 {
     background-color:  rgb(189, 90, 29);
+    border: 1px inset #68300F;
 }
 
 #voiceChatButton:hover
