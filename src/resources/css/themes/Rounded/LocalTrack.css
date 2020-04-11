@@ -97,8 +97,13 @@ FxPanelItem QPushButton:checked
 
 }
 
-#voiceChatButton:!checked,
-TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button not blinking when not transmitting */
+#voiceChatButton:!checked
+{
+    background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:1 rgba(0, 0, 0, 70));
+    border-radius: 2px;
+}
+
+TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button barely blinking when not transmitting */
 
 {
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));

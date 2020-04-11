@@ -196,8 +196,13 @@ background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 20,
     border: none;
 }
 
-#voiceChatButton:checked,
-TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button not blinking when not transmitting */
+#voiceChatButton:checked
+{
+    background-color: rgb(41, 41, 41);
+    border: none;
+}
+
+TrackGroupView[unlighted="true"] #voiceChatButton:checked[blinking="true"] /* Voice chat button barely blinking when not transmitting */
 {
     background-color: rgb(31, 31, 31);
     border: none;
