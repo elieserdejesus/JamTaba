@@ -47,7 +47,7 @@
     <name>ChatMessagePanel</name>
     <message>
         <source>translate ...</source>
-        <translation>traduire...</translation>
+        <translation>traduire ...</translation>
     </message>
     <message>
         <source>T</source>
@@ -660,7 +660,7 @@
     </message>
     <message>
         <source>Translators ...</source>
-        <translation>Tranducteurs ...</translation>
+        <translation>Traducteurs ...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
