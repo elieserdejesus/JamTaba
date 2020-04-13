@@ -18,7 +18,14 @@ INCLUDEPATH += $$SOURCE_PATH/Standalone/gui
 
 INCLUDEPATH += $$VST_SDK_PATH/VST2_SDK/pluginterfaces/vst2.x
 
-HEADERS += MainControllerStandalone.h
+INCLUDEPATH += $$SOURCE_PATH/Libs/MiniUPnP
+INCLUDEPATH += $$SOURCE_PATH/Libs/minimp3
+
+DEPENDPATH += $$SOURCE_PATH/Libs/MiniUPnP
+DEPENDPATH += $$SOURCE_PATH/Libs/minimp3
+
+HEADERS += MainControllerStandalone.h \
+
 HEADERS += gui/MainWindowStandalone.h
 HEADERS += gui/PreferencesDialogStandalone.h
 HEADERS += gui/LocalTrackViewStandalone.h
@@ -40,6 +47,18 @@ HEADERS += vst/VstPluginFinder.h
 HEADERS += vst/Utils.h
 HEADERS += Libs/SingleApplication/singleapplication.h
 HEADERS += Libs/RtMidi/RtMidi.h
+HEADERS += Libs/MiniUPnP/igd_desc_parse.h
+HEADERS += Libs/MiniUPnP/miniupnpc.h
+HEADERS += Libs/MiniUPnP/miniupnpc_declspec.h
+HEADERS += Libs/MiniUPnP/miniupnpcstrings.h
+HEADERS += Libs/MiniUPnP/miniupnpctypes.h
+HEADERS += Libs/MiniUPnP/miniwget.h
+HEADERS += Libs/MiniUPnP/upnpcommands.h
+HEADERS += Libs/MiniUPnP/upnpdev.h
+HEADERS += Libs/MiniUPnP/upnperrors.h
+HEADERS += Libs/MiniUPnP/portlistingparse.h
+HEADERS += Libs/MiniUPnP/upnpreplyparse.h
+HEADERS += Libs/minimp3/minimp3.h
 
 mac:HEADERS += AU/AudioUnitHost.h
 mac:HEADERS += AU/AudioUnitPlugin.h
@@ -165,9 +184,13 @@ linux{
 
     DEFINES += __LINUX_ALSA__
 
-
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lavformat -lavcodec -lswscale -lavutil -lswresample -lminiupnpc -lx264
+    LIBS += -L$$SOURCE_PATH/Libs/MiniUPnP/ -lminiupnpc
+    LIBS += -L$$SOURCE_PATH/Libs/minimp3/ -lminimp3
+    LIBS += -lavcodec -lavformat -lavutil -logg -lportaudio -lrtmidi -lswresample -lswscale -lvorbis -lvorbisenc -lvorbisfile -lx264
     LIBS += -lasound
     LIBS += -ldl
     LIBS += -lz
+
+    PRE_TARGETDEPS += $$SOURCE_PATH/Libs/MiniUPnP/libminiupnpc.a
+    PRE_TARGETDEPS += $$PWD/../../src/Libs/minimp3/libminimp3.a
 }

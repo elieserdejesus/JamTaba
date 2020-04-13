@@ -15,5 +15,3 @@ win32 {
 }
 
 CONFIG += ordered #without 'ordered' QtCreator is freezing during compiling. Possibily something realted with multicore compiling.
-
-
