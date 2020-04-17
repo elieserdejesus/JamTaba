@@ -302,8 +302,10 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const
     PaStreamParameters outputParams;
     outputParams.channelCount = 1;
     outputParams.device = deviceIndex;
-    outputParams.sampleFormat = paFloat32 | paNonInterleaved;;
-    outputParams.suggestedLatency = Pa_GetDeviceInfo(deviceIndex)->defaultLowOutputLatency;
+    outputParams.sampleFormat = paFloat32 | paNonInterleaved;
+    const PaDeviceInfo *dev = Pa_GetDeviceInfo(deviceIndex);
+    if(dev)
+    { outputParams.suggestedLatency = dev->defaultLowOutputLatency; }
     outputParams.hostApiSpecificStreamInfo = NULL;
     QList<int> validSRs;
     validSRs.append(44100);
