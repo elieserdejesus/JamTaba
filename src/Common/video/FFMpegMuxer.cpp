@@ -81,6 +81,11 @@ FFMpegMuxer::FFMpegMuxer(QObject *parent) :
       videoPts(0),
       encodedFrames(0),
       audioStream(nullptr),
+      codec(nullptr),
+      codecContext(nullptr),
+      frame(nullptr),
+      tempFrame(nullptr),
+      swsContext(nullptr),
       videoResolution(QSize(320, 240)),
       videoFrameRate(25),
       videoBitRate(static_cast<uint>(FFMpegMuxer::VideoQualityLow)),
@@ -207,14 +212,24 @@ void FFMpegMuxer::finishCurrentInterval()
     initialized = false;
     encodedFrames = 0;
 
-    if (frame)
+    if (frame) {
         av_frame_free(&frame);
+        frame = nullptr;
+    }
 
-    if (tempFrame)
+    if (tempFrame) {
         av_frame_free(&tempFrame);
+        tempFrame = nullptr;
+    }
 
-    if (codecContext)
+    if (codecContext) {
         avcodec_free_context(&codecContext);
+        codecContext = nullptr;
+    }
+
+    if (codec) {
+        codec = nullptr;
+    }
 
     emit encodingFinished();
 }
@@ -407,9 +422,9 @@ bool FFMpegMuxer::doEncodeAudioFrame()
 
 AVFrame *FFMpegMuxer::allocPicture(enum AVPixelFormat pixelFormat, int width, int height)
 {
-    AVFrame *picture = av_frame_alloc();
+    auto picture = av_frame_alloc();
     if (!picture)
-        return NULL;
+        return nullptr;
 
     picture->format = pixelFormat;
     picture->width  = width;
@@ -419,6 +434,7 @@ AVFrame *FFMpegMuxer::allocPicture(enum AVPixelFormat pixelFormat, int width, in
     int ret = av_frame_get_buffer(picture, 32);
     if (ret < 0) {
         qCritical() << "Could not allocate frame data.";
+        return nullptr;
     }
 
     return picture;
@@ -426,6 +442,10 @@ AVFrame *FFMpegMuxer::allocPicture(enum AVPixelFormat pixelFormat, int width, in
 
 bool FFMpegMuxer::openVideoCodec(AVCodec *codec, AVDictionary **opts)
 {
+    if (!opts) {
+        qWarning() << "Error FFMpegMuxer::openVideoCodec, opts is null";
+        return false;
+    }
 
     int ret = avcodec_open2(codecContext, codec, opts); /* open the codec */
     if (ret < 0) {
@@ -442,7 +462,7 @@ bool FFMpegMuxer::openVideoCodec(AVCodec *codec, AVDictionary **opts)
     }
 
     /* If the output format is not YUV420P, then a temporary YUV420P picture is needed too. It is then converted to the required output format. */
-    tempFrame = NULL;
+    tempFrame = nullptr;
     if (codecContext->pix_fmt != AV_PIX_FMT_YUV420P) {
         tempFrame = allocPicture(AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height);
         if (!tempFrame) {
@@ -457,13 +477,16 @@ bool FFMpegMuxer::openVideoCodec(AVCodec *codec, AVDictionary **opts)
 void FFMpegMuxer::imageToYuvPicture(const QImage &image, AVFrame *picture, int width, int height)
 {
 
+    if (!picture)
+        return;
+
     //avoiding crash when camera preview is resized
     width = qMin(width, image.width());
     height = qMin(height, image.height());
 
     // Preparing the buffer to get YUV420P data
-    int size = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, width, height, 1);
-    uint8_t *pic_dat = (uint8_t *) av_malloc(size);
+    auto size = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, width, height, 1);
+    auto pic_dat = (uint8_t *) av_malloc(size);
 
     // Transforming data from RGB to YUV420P
     RGBtoYUV420P(image.bits(), pic_dat, image.depth()/8, true, width, height);
@@ -476,6 +499,9 @@ void FFMpegMuxer::imageToYuvPicture(const QImage &image, AVFrame *picture, int w
 
 void FFMpegMuxer::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint rgbIncrement, bool swapRGB, int width, int height)
 {
+    if (!bufferRGB || !bufferYUV)
+        return;
+
     const unsigned iPlaneSize = width * height;
     const unsigned iHalfWidth = width >> 1;
 
@@ -520,6 +546,11 @@ void FFMpegMuxer::fillFrameWithImageData(const QImage &image)
         return;
     }
 
+    if (!codecContext) {
+        qCritical() << "Error in FFMpegMuxer::fillFrameWithImageData, codecContext is null";
+        return;
+    }
+
     if (codecContext->pix_fmt != AV_PIX_FMT_YUV420P) { /* need image convertion? as we only generate a YUV420P picture, we must convert it to the codec pixel format if needed */
         if (!swsContext) {
             swsContext = sws_getContext(image.width(), image.height(), AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height, codecContext->pix_fmt, SWS_BICUBIC, NULL, NULL, NULL);
@@ -528,9 +559,20 @@ void FFMpegMuxer::fillFrameWithImageData(const QImage &image)
                 return;
             }
         }
+
+        if (!tempFrame) {
+            qCritical() << "Error in FFMpegMuxer::fillFrameWithImageData, tempFrame is null";
+            return;
+        }
+
         imageToYuvPicture(image, tempFrame, codecContext->width, codecContext->height);
         sws_scale(swsContext, (const uint8_t * const *)tempFrame->data, tempFrame->linesize, 0, codecContext->height, frame->data, frame->linesize);
-    } else {
+    }
+    else {
+        if (!frame) {
+            qCritical() << "Error in FFMpegMuxer::fillFrameWithImageData, frame is null";
+            return;
+        }
         imageToYuvPicture(image, frame, codecContext->width, codecContext->height);
     }
 
@@ -546,7 +588,7 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
     if (!initialized)
         return false;
 
-    if (!codec)
+    if (!codec || !codecContext)
         return false;
 
     if (!frame)
@@ -595,6 +637,7 @@ bool FFMpegMuxer::doEncodeVideoFrame(const QImage &image)
 
         return false;
     }
+
     av_free_packet(&packet);
 
     return true;

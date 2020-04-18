@@ -367,6 +367,9 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedData, qui
 
 void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, bool isFirstPart)
 {
+    if (!ninjamService)
+        return;
+
     if (isFirstPart) {
         if (videoIntervalToUpload) {
             // flush the end of previous interval
@@ -379,6 +382,9 @@ void MainController::enqueueVideoDataToUpload(const QByteArray &encodedData, boo
         static const auto videoChannelIndex = 1; // always sending video in 2nd channel to avoid drop intervals in first channel
         ninjamService->sendIntervalBegin(videoIntervalToUpload->getGUID(), videoChannelIndex, false); // starting a new video interval
     }
+
+    if (!videoIntervalToUpload || !ninjamService)
+        return;
 
     videoIntervalToUpload->appendData(encodedData);
 

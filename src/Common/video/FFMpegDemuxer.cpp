@@ -9,7 +9,6 @@ FFMpegDemuxer::FFMpegDemuxer(QObject *parent, const QByteArray &encodedData) :
     QObject(parent),
     formatContext(nullptr),
     avioContext(nullptr),
-    //codecContext(nullptr),
     swsContext(nullptr),
     frame(nullptr),
     frameRGB(nullptr),
@@ -62,8 +61,13 @@ void FFMpegDemuxer::close()
 
 int FFMpegDemuxer::readCallback(void *stream, uint8_t *buffer, int bufferSize)
 {
-    QIODevice *st = (QIODevice *)stream;
-    return st->read((char *)buffer, bufferSize);
+    if (!stream || !buffer)
+        return 0;
+
+    auto st = reinterpret_cast<QIODevice *>(stream);
+
+    if (st)
+        return st->read((char *)buffer, bufferSize);
 }
 
 bool FFMpegDemuxer::open()
@@ -80,6 +84,10 @@ bool FFMpegDemuxer::open()
 
     //avio_op
     avioContext = avio_alloc_context(buffer, FFMPEG_BUFFER_SIZE, 0, &(this->encodedBuffer), readCallback, nullptr, nullptr);
+
+    if (!avioContext || !formatContext)
+        return false;
+
     avioContext->seekable = 0; // no seek
 
     formatContext->pb = avioContext;
@@ -98,6 +106,11 @@ bool FFMpegDemuxer::open()
 
     auto stream = formatContext->streams[0]; // first stream
 
+    if (!stream) {
+        qWarning() << "Error in FFMpegDemuxer::open, the first stream is null";
+        return false;
+    }
+
     auto codecContext = stream->codec;
 
     /* find decoder for the stream */
@@ -107,14 +120,16 @@ bool FFMpegDemuxer::open()
         return false;
     }
 
+    if (!codecContext) {
+        qWarning() << "Error in FFMpegDemuxer::open, the codecContext is null";
+        return false;
+    }
+
     ret = avcodec_open2(codecContext, decoder, nullptr);
     if (ret < 0) {
         qCritical() << av_error_to_qt_string(ret);
         return false;
     }
-
-    if (!codecContext)
-        qCritical() << "video codec is null";
 
     frame = av_frame_alloc();
     if (!frame) {
@@ -129,9 +144,8 @@ uint FFMpegDemuxer::getFrameRate() const
 {
     if (formatContext && formatContext->nb_streams > 0) {
         auto firstStream = formatContext->streams[0];
-        if (firstStream->codec) {
-            auto codecContext = formatContext->streams[0]->codec;
-            return codecContext->framerate.num;
+        if (firstStream && firstStream->codec) {
+            return firstStream->codec->framerate.num;
         }
     }
 
@@ -152,6 +166,9 @@ void FFMpegDemuxer::decode()
         return;
 
     auto codecContext = formatContext->streams[0]->codec;
+
+    if (!codecContext)
+        return;
 
     /* initialize packet, set data to NULL, let the demuxer fill it */
     AVPacket packet;
