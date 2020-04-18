@@ -236,6 +236,8 @@ bool FFMpegMuxer::addVideoStream(AVCodecID codecID, AVDictionary **opts)
 
     codecContext->codec_id = codecID;
     codecContext->bit_rate = videoBitRate;
+    codecContext->rc_max_rate = videoBitRate;
+    codecContext->rc_buffer_size = videoBitRate;
     codecContext->width    = videoResolution.width(); // Resolution must be a multiple of two.
     codecContext->height   = videoResolution.height();
 
