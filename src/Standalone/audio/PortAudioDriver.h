@@ -11,7 +11,7 @@ class PortAudioDriver : public AudioDriver
 
 public:
     PortAudioDriver(controller::MainController *mainController,
-                    int audioInputDeviceIndex,int audioOutputDeviceIndex,
+                    QString audioInputDevice, QString audioOutputDevice,
                     int firstInputIndex, int lastInputIndex, int firstOutputIndex,
                     int lastOutputIndex, int sampleRate, int bufferSize);
 
@@ -52,6 +52,9 @@ public:
                                  unsigned long framesPerBuffer,
                                  const PaStreamCallbackTimeInfo *timeInfo,
                                  PaStreamCallbackFlags statusFlags, void *userData);
+
+protected:
+    int getDeviceIndexByName(const QString &deviceName) const;
 
 private:
     bool initPortAudio(int sampleRate, int bufferSize);

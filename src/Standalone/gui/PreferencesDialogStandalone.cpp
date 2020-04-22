@@ -421,19 +421,24 @@ void PreferencesDialogStandalone::changeAudioOutputDevice(int index)
 void PreferencesDialogStandalone::accept()
 {
     auto indexIn = ui->comboAudioInputDevice->currentIndex();
-    int selectedAudioInputDevice = ui->comboAudioInputDevice->itemData(indexIn).toInt();
-    int firstIn = ui->comboFirstInput->currentData().toInt();
-    int lastIn = ui->comboLastInput->currentData().toInt();
+    auto selectedAudioInputDevice = ui->comboAudioInputDevice->itemText(indexIn);
+    auto firstIn = ui->comboFirstInput->currentData().toInt();
+    auto lastIn = ui->comboLastInput->currentData().toInt();
 
     auto indexOut = ui->comboAudioOutputDevice->currentIndex();
-    int selectedAudioOutputDevice = ui->comboAudioOutputDevice->itemData(indexOut).toInt();
-    int firstOut = ui->comboFirstOutput->currentData().toInt();
-    int lastOut = ui->comboLastOutput->currentData().toInt();
+    auto selectedAudioOutputDevice = ui->comboAudioOutputDevice->itemText(indexOut);
+    if (!ui->comboAudioOutputDevice->isVisible()) { // not using separarated input & output devices
+        indexOut = indexIn;
+        selectedAudioOutputDevice = selectedAudioInputDevice;
+    }
+
+    auto firstOut = ui->comboFirstOutput->currentData().toInt();
+    auto lastOut = ui->comboLastOutput->currentData().toInt();
 
     QList<bool> midiInputsStatus;
     // build midi inputs devices status
-    QList<QCheckBox *> boxes = ui->midiContentPanel->findChildren<QCheckBox *>();
-    for (QCheckBox *check : boxes)
+    auto boxes = ui->midiContentPanel->findChildren<QCheckBox *>();
+    for (auto check : boxes)
         midiInputsStatus.append(check->isChecked());
 
     PreferencesDialog::accept();

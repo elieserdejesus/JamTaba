@@ -53,7 +53,7 @@ protected:
 
 protected slots: // TODO change to private slots?
 
-    void setGlobalPreferences(const QList<bool> &, int audioInputDevice, int audioOutputDevice, int firstIn, int lastIn, int firstOut, int lastOut);
+    void setGlobalPreferences(const QList<bool> &, QString audioInputDevice, QString audioOutputDevice, int firstIn, int lastIn, int firstOut, int lastOut);
 
     // plugin finder
     void showPluginScanDialog();

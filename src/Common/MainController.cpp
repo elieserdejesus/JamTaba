@@ -640,7 +640,7 @@ void MainController::storeWindowSettings(bool maximized, const QPointF &location
     settings.setWindowSettings(maximized, location, size);
 }
 
-void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioInputDevice, int audioOutputDevice,
+void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, QString audioInputDevice, QString audioOutputDevice,
                                      const QList<bool> &midiInputsStatus)
 {
     settings.setAudioSettings(firstIn, lastIn, firstOut, lastOut, audioInputDevice, audioOutputDevice);

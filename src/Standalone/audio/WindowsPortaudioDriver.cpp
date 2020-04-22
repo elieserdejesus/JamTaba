@@ -4,17 +4,21 @@
 
 namespace audio {
 
-PortAudioDriver::PortAudioDriver(controller::MainController* mainController, int audioInDeviceIndex, int audioOutDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize ) :
+PortAudioDriver::PortAudioDriver(controller::MainController* mainController, QString audioInputDevice, QString audioOutputDevice, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize ) :
     AudioDriver(mainController),
     useSystemDefaultDevices(false)
 {
-    globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
-    globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
-    audioInputDeviceIndex = audioInDeviceIndex;
-    audioOutputDeviceIndex = UseSingleAudioIODevice ? audioInputDeviceIndex :  audioOutDeviceIndex;
-    if(!initPortAudio(sampleRate, bufferSize)){
+    auto portAudioInitialized = initPortAudio(sampleRate, bufferSize);
+    if (portAudioInitialized) {
+        globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
+        globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
+        audioInputDeviceIndex = getDeviceIndexByName(audioInputDevice);
+        audioOutputDeviceIndex = UseSingleAudioIODevice ? audioInputDeviceIndex :  getDeviceIndexByName(audioOutputDevice);
+    }
+    else {
         audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice;
     }
+
 }
 
 void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters& inputParams){

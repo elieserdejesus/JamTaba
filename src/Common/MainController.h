@@ -209,7 +209,7 @@ public:
 
     void storeWindowSettings(bool maximized, const QPointF &location, const QSize &size);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut,
-                         int audioInputDevice, int audioOutputDevice,
+                         QString audioInputDevice, QString audioOutputDevice,
                          const QList<bool> &midiInputStatus);
 
     void storeMultiTrackRecordingStatus(bool savingMultiTracks);

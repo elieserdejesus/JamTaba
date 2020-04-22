@@ -56,8 +56,8 @@ public:
     int firstOut;
     int lastIn;
     int lastOut;
-    int audioInputDevice;
-    int audioOutputDevice;
+    QString audioInputDevice;
+    QString audioOutputDevice;
     float encodingQuality;
 };
 
@@ -534,7 +534,7 @@ public:
     bool windowsWasFullScreenViewMode() const;
     void setFullScreenView(bool v);
     // ++++++++++++++++++++++++++++++++++++++++
-    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioInputDevice, int audioOutputDevice);
+    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, QString audioInputDevice, QString audioOutputDevice);
     void setSampleRate(int newSampleRate);
     void setBufferSize(int bufferSize);
 
@@ -542,8 +542,8 @@ public:
     int getLastGlobalAudioInput() const;
     int getFirstGlobalAudioOutput() const;
     int getLastGlobalAudioOutput() const;
-    int getLastAudioInputDevice() const;
-    int getLastAudioOutputDevice() const;
+    QString getLastAudioInputDevice() const;
+    QString getLastAudioOutputDevice() const;
 
     void setMidiSettings(const QList<bool> &inputDevicesStatus);
 
@@ -806,12 +806,12 @@ inline int Settings::getLastGlobalAudioOutput() const
     return audioSettings.lastOut;
 }
 
-inline int Settings::getLastAudioInputDevice() const
+inline QString Settings::getLastAudioInputDevice() const
 {
     return audioSettings.audioInputDevice;
 }
 
-inline int Settings::getLastAudioOutputDevice() const
+inline QString Settings::getLastAudioOutputDevice() const
 {
     return audioSettings.audioOutputDevice;
 }

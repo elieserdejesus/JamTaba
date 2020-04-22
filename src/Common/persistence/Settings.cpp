@@ -244,8 +244,8 @@ AudioSettings::AudioSettings() :
     firstOut(-1),
     lastIn(-1),
     lastOut(-1),
-    audioInputDevice(-1),
-    audioOutputDevice(-1)
+    audioInputDevice(""),
+    audioOutputDevice("")
 {
     qCDebug(jtSettings) << "AudioSettings ctor";
 }
@@ -258,8 +258,8 @@ void AudioSettings::read(const QJsonObject &in)
     firstOut = getValueFromJson(in, "firstOut", 0);
     lastIn = getValueFromJson(in, "lastIn", 0);
     lastOut = getValueFromJson(in, "lastOut", 0);
-    audioInputDevice = getValueFromJson(in, "audioInputDevice", -1);
-    audioOutputDevice = getValueFromJson(in, "audioOutputDevice", -1);
+    audioInputDevice = getValueFromJson(in, "audioInputDevice", QString(""));
+    audioOutputDevice = getValueFromJson(in, "audioOutputDevice", QString(""));
 
     encodingQuality = getValueFromJson(in, "encodingQuality", vorbis::EncoderQualityNormal); // using normal quality as fallback value.
 
@@ -290,9 +290,6 @@ void AudioSettings::write(QJsonObject &out) const
     out["lastIn"] = lastIn;
     out["lastOut"] = lastOut;
 
-    // Note that this index based approach below is sub-optimal,
-    // as when system adds / removes devices and we would loose our mapping.
-    // Storing / restoring from device names would probably be more effective in future ...
     out["audioInputDevice"] = audioInputDevice;
     out["audioOutputDevice"] = audioOutputDevice;
 
@@ -1017,7 +1014,7 @@ void Settings::setWindowSettings(bool windowIsMaximized, const QPointF &location
 }
 
 // ++++++++++++++++++++++++++++++++++++++++
-void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioInputDevice, int audioOutputDevice)
+void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, QString audioInputDevice, QString audioOutputDevice)
 {
     qCDebug(jtSettings) << "Settings setAudioSettings: firstIn from " << audioSettings.firstIn << " to " << firstIn
                         << "; lastIn from " << audioSettings.lastIn << " to " << lastIn

@@ -20,6 +20,18 @@
 namespace audio
 {
 
+int PortAudioDriver::getDeviceIndexByName(const QString &deviceName) const
+{
+    auto deviceCount = Pa_GetDeviceCount();
+    for (int i = 0; i < deviceCount; ++i) {
+        auto deviceInfo = Pa_GetDeviceInfo(i);
+        if (QString(deviceInfo->name) == deviceName)
+            return i;
+    }
+
+    return paNoDevice;
+}
+
 bool PortAudioDriver::canBeStarted() const
 {
     if (useSystemDefaultDevices) {
@@ -55,6 +67,7 @@ bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
     // check for invalid audio device index
     if (!useSystemDefaultDevices) {
         if (audioInputDeviceIndex < 0 ||  audioInputDeviceIndex  >= Pa_GetDeviceCount() ) {
+            qCDebug(jtAudio) << "Trying to use default audio device to input";
             audioInputDeviceIndex = Pa_GetDefaultInputDevice();
             if (audioInputDeviceIndex == paNoDevice) {
                 audioInputDeviceIndex = Pa_GetDefaultInputDevice();
@@ -62,6 +75,7 @@ bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
         }
 
         if (audioOutputDeviceIndex < 0 ||  audioOutputDeviceIndex  >= Pa_GetDeviceCount() ) {
+            qCDebug(jtAudio) << "Trying to use default audio device to output";
             audioOutputDeviceIndex = Pa_GetDefaultOutputDevice();
             if (audioOutputDeviceIndex == paNoDevice) {
                 audioOutputDeviceIndex = Pa_GetDefaultOutputDevice();

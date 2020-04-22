@@ -464,7 +464,7 @@ void MainWindowStandalone::initializePluginFinder()
     }
 }
 
-void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus, int audioInputDevice, int audioOutputDevice, int firstIn, int lastIn,
+void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus, QString audioInputDevice, QString audioOutputDevice, int firstIn, int lastIn,
                                                 int firstOut, int lastOut)
 {
     qDebug(jtGUI) << "Setting global preferences ...";
