@@ -85,7 +85,7 @@ void PrivateServerWindow::portOpened(const QString &localIP, const QString &exte
     auto buttons = QMessageBox::StandardButtons(QMessageBox::Yes|QMessageBox::No);
     int result = QMessageBox::question(this, title, text, buttons);
     if (result == QMessageBox::Yes) {
-        emit userConnectingInPrivateServer(externalIP, PREFERRED_PORT);
+        emit userConnectingInPrivateServer(localIP, PREFERRED_PORT);
     }
 }
 
