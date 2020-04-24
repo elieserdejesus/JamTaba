@@ -68,6 +68,8 @@ int FFMpegDemuxer::readCallback(void *stream, uint8_t *buffer, int bufferSize)
 
     if (st)
         return st->read((char *)buffer, bufferSize);
+
+    return 0;
 }
 
 bool FFMpegDemuxer::open()
