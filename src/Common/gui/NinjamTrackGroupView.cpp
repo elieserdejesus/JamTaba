@@ -122,9 +122,12 @@ void NinjamTrackGroupView::addVideoInterval(const QByteArray &encodedVideoData)
 
     // hide the video (2nd) channel
     if (trackViews.size() > 1) {
+        auto audioChannel = getTracks<NinjamTrackView *>().at(0);
         auto videoChannel = getTracks<NinjamTrackView *>().at(1);
         if (videoChannel->isVideoChannel()) {
             videoChannel->setVisible(false);
+
+            audioChannel->setToWide(); // when using video the audio channel is forced to wide
         }
     }
 
@@ -437,8 +440,10 @@ Qt::Orientation NinjamTrackGroupView::getTracksOrientation() const
 
 void NinjamTrackGroupView::setNarrowStatus(bool narrow)
 {
-    for (BaseTrackView *trackView : trackViews) {
-        bool setToWide = !narrow && trackViews.size() <= 1;
+    auto containsVideoChannel = trackViews.size() > 1 && getTracks<NinjamTrackView *>().at(1)->isVideoChannel();
+    auto setToWide = (!narrow && trackViews.size() <= 1) || containsVideoChannel;
+
+    for (auto trackView : trackViews) {
         if (setToWide)
             trackView->setToWide();
         else
