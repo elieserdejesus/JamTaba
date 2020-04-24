@@ -240,10 +240,6 @@
         <translation>%1 / %2 participantes </translation>
     </message>
     <message>
-        <source>The audio stream of this room is not available at moment!</source>
-        <translation>¡El sonido de esta sala no está disponible!</translation>
-    </message>
-    <message>
         <source>enter</source>
         <translation>entrar</translation>
     </message>
@@ -329,6 +325,10 @@
     <message>
         <source>Enable/disable your audio transmission for others</source>
         <translation>Habilitar/deshabilitar la transmisión de audio a otros</translation>
+    </message>
+    <message>
+        <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
+        <translation>Enviar audio &quot;casi&quot; en tiempo real usando baja calidad (útil solo para conversaciones rápidas)</translation>
     </message>
 </context>
 <context>
@@ -725,14 +725,6 @@
         <translation>desconectando ...</translation>
     </message>
     <message>
-        <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>¡Tu versión de Jamtaba no es compatible con versiones previas!</translation>
-    </message>
-    <message>
-        <source>Server : Compatibility problem</source>
-        <translation>Servidor : Problema de compatibilidad</translation>
-    </message>
-    <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
         <translation>¡Una nueva versión de Jamtaba está disponible para descarga! ¡Por favor usa la &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;nueva version&lt;/a&gt;!</translation>
     </message>
@@ -781,11 +773,6 @@
         <translation>¡Solo son aceptadas letras, guiones, números y guiones bajos! Los espacios se reemplazarán por guiones bajos.</translation>
     </message>
     <message>
-        <source>Error connecting with Jamtaba server!
-</source>
-        <translation>¡Error al conectar con el servidor de Jamtaba!</translation>
-    </message>
-    <message>
         <source>Connecting with %1 ... </source>
         <translation>Conectando con %1 ... </translation>
     </message>
@@ -832,10 +819,6 @@
     <message>
         <source>%1 has joined the room.</source>
         <translation>%1 ha ingresado a la sala.</translation>
-    </message>
-    <message>
-        <source>Last chords used</source>
-        <translation>Últimos acordes utilizados</translation>
     </message>
     <message>
         <source>Private chat with %1</source>
@@ -1340,7 +1323,7 @@
     </message>
     <message>
         <source>Scan only new plugins</source>
-        <translation>Buscar sólo plugins nuevos</translation>
+        <translation>Buscar solo plugins nuevos</translation>
     </message>
     <message>
         <source>Refresh</source>
