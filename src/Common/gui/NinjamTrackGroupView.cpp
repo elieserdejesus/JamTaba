@@ -13,7 +13,7 @@
 #include <QtConcurrent>
 
 const uint NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT = 350;
-const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = NinjamTrackGroupView::MAX_WIDTH_IN_GRID_LAYOUT * 0.78;
+const uint NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT = 165;
 
 using controller::MainController;
 using controller::NinjamController;
@@ -308,17 +308,21 @@ void NinjamTrackGroupView::setupGridLayout()
     mainLayout->removeItem(tracksLayout);
     mainLayout->removeWidget(videoWidget);
 
-    int topPanelRowSpan = videoWidget->isVisible() ? 1 : mainLayout->rowCount();
-    mainLayout->addWidget(topPanel, 0, 0, topPanelRowSpan, 1);
+    auto topPanelRowSpan = videoWidget->isVisible() ? 1 : mainLayout->rowCount();
+    auto topPanelCollumn = videoWidget->isVisible() ? 1 : 0;
+    mainLayout->addWidget(topPanel, 0, topPanelCollumn, topPanelRowSpan, 1);
 
-    if (videoWidget->isVisible())
-        mainLayout->addWidget(videoWidget, 1, 0, 1, 1);
+    if (videoWidget->isVisible()) {
+        mainLayout->addWidget(videoWidget, 0, 0, 2, 1);
+        videoWidget->setMaximumHeight(NinjamTrackGroupView::MAX_HEIGHT_IN_GRID_LAYOUT);
+    }
 
-    mainLayout->addLayout(tracksLayout, 0, 1, mainLayout->rowCount(), 1);
+    auto tracksLayoutRow = videoWidget->isVisible() ? 1 : 0;
+    mainLayout->addLayout(tracksLayout, tracksLayoutRow, 1, 1, 1);
 
     resetMainLayoutStretch();
     mainLayout->setColumnStretch(0, 1); // video is streched
-    mainLayout->setRowStretch(1, 1);
+    mainLayout->setRowStretch(0, 1);
 
     mainLayout->setSpacing(3);
 
@@ -326,7 +330,7 @@ void NinjamTrackGroupView::setupGridLayout()
 
     tracksLayout->setDirection(QBoxLayout::LeftToRight);
 
-    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 }
 
 void NinjamTrackGroupView::setupHorizontalLayout()

@@ -545,4 +545,7 @@ void NinjamTrackView::updateExtraWidgetsVisibility()
     mainLayout->setVerticalSpacing(showExtraWidgets ? 6 : 3);
 
     networkUsageLabel->setVisible(showExtraWidgets);
+    buttonReceive->setVisible(showExtraWidgets);
+    instrumentsButton->setVisible(showExtraWidgets);
+    buttonLowCut->setVisible(showExtraWidgets);
 }
