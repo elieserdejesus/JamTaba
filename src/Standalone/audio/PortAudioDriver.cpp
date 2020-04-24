@@ -22,6 +22,9 @@ namespace audio
 
 int PortAudioDriver::getDeviceIndexByName(const QString &deviceName) const
 {
+    if (deviceName.isEmpty())
+        return Pa_GetDefaultOutputDevice();
+
     auto deviceCount = Pa_GetDeviceCount();
     for (int i = 0; i < deviceCount; ++i) {
         auto deviceInfo = Pa_GetDeviceInfo(i);
