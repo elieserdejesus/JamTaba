@@ -53,6 +53,8 @@ protected:
 
     QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const override;
 
+    void setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight) override;
+
     void setupVerticalLayout() override;
     void resizeEvent(QResizeEvent *ev) override;
     void paintEvent(QPaintEvent *ev) override;
