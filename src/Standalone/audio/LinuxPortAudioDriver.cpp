@@ -6,7 +6,7 @@ using controller::MainController;
 
 namespace audio {
 
-PortAudioDriver::PortAudioDriver(MainController *mainController, int deviceInputIndex, int deviceOutputIndex,
+PortAudioDriver::PortAudioDriver(MainController *mainController, QString audioInputDevice, QString audioOutputDevice,
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
     AudioDriver(mainController),
@@ -21,8 +21,8 @@ PortAudioDriver::PortAudioDriver(MainController *mainController, int deviceInput
     // initialize portaudio using default devices
     PaError error = Pa_Initialize();
     if (error == paNoError) {
-        audioInputDeviceIndex = deviceInputIndex; // Pa_GetDefaultOutputDevice();
-        audioOutputDeviceIndex = deviceOutputIndex;
+        audioInputDeviceIndex = getDeviceIndexByName(audioInputDevice);
+        audioOutputDeviceIndex = getDeviceIndexByName(audioOutputDevice);
         globalInputRange = ChannelRange(0, getMaxInputs());
         globalOutputRange = ChannelRange(0, 2);// 2 channels for output
 
