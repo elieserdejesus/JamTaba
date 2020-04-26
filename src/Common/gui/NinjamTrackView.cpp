@@ -73,7 +73,7 @@ void NinjamTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, f
 {
     BaseTrackView::setPeaks(peakLeft, peakRight, rmsLeft, rmsRight);
 
-    static const float AUTO_MUTE_THRESHOLD = 0.501187; // -6 dB RMS (~ +12 db peak)
+    static const float AUTO_MUTE_THRESHOLD = 0.707946; // -3 dB RMS
 
     if (rmsLeft >= AUTO_MUTE_THRESHOLD || rmsRight >= AUTO_MUTE_THRESHOLD) {
         muteButton->click(); // auto mute when rms peaks are very high
