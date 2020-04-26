@@ -5,7 +5,7 @@
 namespace audio {
 
 PortAudioDriver::PortAudioDriver(controller::MainController *mainController,
-                                 int deviceInputIndex, int deviceOutputIndex,
+                                 QString deviceInput, QString deviceOutput,
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
     AudioDriver(mainController),
@@ -20,8 +20,8 @@ PortAudioDriver::PortAudioDriver(controller::MainController *mainController,
     // initialize portaudio using default devices, mono input and try estereo output if possible
     PaError error = Pa_Initialize();
     if (error == paNoError) {
-        audioInputDeviceIndex = deviceInputIndex;
-        audioOutputDeviceIndex = UseSingleAudioIODevice ? deviceInputIndex : deviceOutputIndex;
+        audioInputDeviceIndex = getDeviceIndexByName(deviceInput);
+        audioOutputDeviceIndex = UseSingleAudioIODevice ? audioInputDeviceIndex : getDeviceIndexByName(deviceOutput);
 
         globalInputRange = ChannelRange(0, getMaxInputs());
 
