@@ -74,6 +74,8 @@ cp $qtLibDir/libQt5Widgets.so.* packageFiles/
 cp $qtLibDir/libQt5Gui.so.* packageFiles/ 
 cp $qtLibDir/libQt5Core.so.* packageFiles/
 cp $qtLibDir/libQt5Network.so.* packageFiles/
+cp $qtLibDir/libQt5Multimedia.so.* packageFiles/
+cp $qtLibDir/libQt5WebSockets.so.* packageFiles/
 cp $qtLibDir/libQt5DBus.so.* packageFiles/
 cp $qtLibDir/libQt5XcbQpa.so.* packageFiles/
 cp $qtLibDir/libicui18n.so.* packageFiles/
