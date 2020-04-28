@@ -73,8 +73,12 @@ void NinjamTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, f
 {
     BaseTrackView::setPeaks(peakLeft, peakRight, rmsLeft, rmsRight);
 
-    static const float AUTO_MUTE_THRESHOLD = 0.707946; // -3 dB RMS
+    static const float AUTO_MUTE_THRESHOLD = 1; // 0 dB RMS
+    static const float AUTO_BOOST_THRESHOLD = 0.707946; // -3 dB RMS
 
+    if (rmsLeft >= AUTO_BOOST_THRESHOLD || rmsRight >= AUTO_BOOST_THRESHOLD) {
+        boostSpinBox->setToMin(); // auto lower boost gain by -12db  when rms peaks are high
+    }
     if (rmsLeft >= AUTO_MUTE_THRESHOLD || rmsRight >= AUTO_MUTE_THRESHOLD) {
         muteButton->click(); // auto mute when rms peaks are very high
     }
