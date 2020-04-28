@@ -2647,6 +2647,7 @@ void MainWindow::showJamtabaCurrentVersion()
     text += QString("FFMpeg:\t %1 \n").arg(av_version_info());
     text += QString("Vorbis:\t %1 \n").arg(vorbis_version_string());
     text += QString("MiniUpnP:\t %1 \n").arg(MINIUPNPC_VERSION);
+    text += QString("Architecture:\t %1 \n").arg(QSysInfo::buildCpuArchitecture());
 
     auto box = new QMessageBox();
     box->setWindowIcon(this->windowIcon());
