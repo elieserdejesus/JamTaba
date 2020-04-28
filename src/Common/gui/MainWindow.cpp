@@ -37,6 +37,11 @@
 #include "widgets/InstrumentsMenu.h"
 #include "ninjam/client/Types.h"
 
+// to get versions
+#include "libavutil/avutil.h"
+#include "vorbis/codec.h"
+#include "miniupnpc.h"
+
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QRect>
@@ -2635,11 +2640,15 @@ bool MainWindow::isTransmiting(int channelID) const
 
 void MainWindow::showJamtabaCurrentVersion()
 {
-    QString title = tr("About Jamtaba");
-    QString text = tr("Jamtaba version is %1").arg(QApplication::applicationVersion());
-    text += QString(" (%1 bits)").arg(QSysInfo::WordSize);
+    auto title = tr("About Jamtaba");
+    auto text = tr("Jamtaba version is %1").arg(QApplication::applicationVersion());
+    text += QString(" (%1 bits) \n\n").arg(QSysInfo::WordSize);
+    text += QString("Qt: \t %1 \n").arg(qVersion());
+    text += QString("FFMpeg:\t %1 \n").arg(av_version_info());
+    text += QString("Vorbis:\t %1 \n").arg(vorbis_version_string());
+    text += QString("MiniUpnP:\t %1 \n").arg(MINIUPNPC_VERSION);
 
-    QMessageBox *box = new QMessageBox();
+    auto box = new QMessageBox();
     box->setWindowIcon(this->windowIcon());
     box->setWindowTitle(title);
     box->setText(text);
