@@ -80,17 +80,31 @@ win32 {
     CONFIG(release, debug|release): LIBS += -lQt5PlatformSupport
     CONFIG(release, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
     CONFIG(release, debug|release):   LIBS += -L$(QTDIR)\plugins\mediaservice\ -ldsengine # necessary to use QCamera
+    CONFIG(release, debug|release):   LIBS += -L$(QTDIR)\plugins\mediaservice\ -lqtfreetype
+
+
 
     #debug platform libs
     CONFIG(debug, debug|release): LIBS += -lQt5PlatformSupportd #link windows platform statically
     CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindowsd #link windows platform statically
     CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\mediaservice\ -ldsengined # necessary to use QCamera
+    CONFIG(release, debug|release):   LIBS += -L$(QTDIR)\plugins\mediaservice\ -lqtfreetyped
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lminimp3 -lvorbisfile -lvorbis -logg -lx264 -lavcodec -lavutil -lavformat -lswscale -lswresample -lstackwalker -lminiupnpc
 
     LIBS += -lIPHlpApi # used by miniupnp lib
     LIBS += -lSecur32   # used by libx264
+    LIBS += -lMfplat
+    LIBS += -lmfuuid
+    LIBS += -lD3D9
+    LIBS += -lMf
+    LIBS += -lDxva2
+    LIBS += -lMfreadwrite
+    LIBS += -levr
+    LIBS += -lWtsapi32
+    LIBS += -lwmcodecdspuuid
+
 
 
     CONFIG(release, debug|release) {
