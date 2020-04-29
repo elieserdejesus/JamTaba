@@ -49,7 +49,7 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/)
     if (dwReason == DLL_PROCESS_ATTACH) {
         QApplication::setApplicationName("Jamtaba 2");
         QApplication::setApplicationVersion(APP_VERSION);
-        //QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // fixing issue https://github.com/elieserdejesus/JamTaba/issues/1216
+        QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // fixing issue https://github.com/elieserdejesus/JamTaba/issues/1216
 
         // start the configurator
         Configurator *configurator = Configurator::getInstance();

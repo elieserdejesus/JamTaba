@@ -13,7 +13,7 @@ int main(int argc, char *args[])
 {
     QApplication::setApplicationName("JamTaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
-    //QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // fixing issue https://github.com/elieserdejesus/JamTaba/issues/1216
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // fixing issue https://github.com/elieserdejesus/JamTaba/issues/1216
 
     auto configurator = Configurator::getInstance();
     if (!configurator->setUp())
