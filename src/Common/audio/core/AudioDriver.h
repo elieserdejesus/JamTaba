@@ -292,18 +292,18 @@ inline QString NullAudioDriver::getOutputChannelName(const unsigned int) const
 
 inline QString NullAudioDriver::getAudioInputDeviceName(int index) const
 {
-    return index == CurrentAudioDeviceSelection ? getAudioInputDeviceName(0) : "NullAudioInputDriver";
+    return index == CurrentAudioDeviceSelection ? getAudioInputDeviceName(0) : "";
 }
 
 inline QString NullAudioDriver::getAudioOutputDeviceName(int index) const
 {
-    return index == CurrentAudioDeviceSelection ? getAudioOutputDeviceName(0) : "NullAudioOutputDriver";
+    return index == CurrentAudioDeviceSelection ? getAudioOutputDeviceName(0) : "";
 }
 
 inline QString NullAudioDriver::getAudioDeviceInfo(int index,unsigned& nIn, unsigned& nOut ) const
 {
     nIn = nOut = 1;
-    return index==0 ? "NullAudioInputDriver" : "NullAudioOutputDriver";
+    return index==0 ? "" : "";
 }
 
 inline int NullAudioDriver::getAudioInputDeviceIndex() const
