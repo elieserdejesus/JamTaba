@@ -248,10 +248,6 @@
         <translation>%1 / %2 graczy</translation>
     </message>
     <message>
-        <source>The audio stream of this room is not available at moment!</source>
-        <translation>W tej chwili strumień audio z tego pokoju jest niedostępny!</translation>
-    </message>
-    <message>
         <source>This is the server name</source>
         <translation>To jest nazwa serwera</translation>
     </message>
@@ -329,6 +325,10 @@
     <message>
         <source>Enable/disable your audio transmission for others</source>
         <translation>Włącz/wyłącz transmisję audio dla innych</translation>
+    </message>
+    <message>
+        <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -746,19 +746,6 @@
         <translation>odłączony ...</translation>
     </message>
     <message>
-        <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>Twoja wersja Jamtaby nie jest kompatybilna z poprzednią wersją!</translation>
-    </message>
-    <message>
-        <source>Server : Compatibility problem</source>
-        <translation>Serwer : problem z kompatybilnością</translation>
-    </message>
-    <message>
-        <source>Error connecting with Jamtaba server!
-</source>
-        <translation>Błąd połączenia z serwerem Jamtaby!</translation>
-    </message>
-    <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
         <translation>Dostępna jest nowsza wersja Jamtaby. Sciągnij tu &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</translation>
     </message>
@@ -833,10 +820,6 @@
     <message>
         <source>%1 has joined the room.</source>
         <translation>%1 dołączył do pokoju.</translation>
-    </message>
-    <message>
-        <source>Last chords used</source>
-        <translation>Ostatnio używane akordy</translation>
     </message>
     <message>
         <source>Private chat with %1</source>

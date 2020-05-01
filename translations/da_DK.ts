@@ -240,10 +240,6 @@
         <translation>%1 / %2 players </translation>
     </message>
     <message>
-        <source>The audio stream of this room is not available at moment!</source>
-        <translation>Lydstrømmen i dette rum er ikke tilgængelig i øjeblikket!</translation>
-    </message>
-    <message>
         <source>enter</source>
         <translation>Gå ind</translation>
     </message>
@@ -329,6 +325,10 @@
     <message>
         <source>Enable/disable your audio transmission for others</source>
         <translation type="unfinished">Aktivér / deaktiver din lydoverførsel til andre</translation>
+    </message>
+    <message>
+        <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -725,14 +725,6 @@
         <translation>frakobler ...</translation>
     </message>
     <message>
-        <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>Din Jamtaba-version er ikke kompatibel med tidligere versioner!</translation>
-    </message>
-    <message>
-        <source>Server : Compatibility problem</source>
-        <translation>Server: Kompatibilitetsproblem</translation>
-    </message>
-    <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
         <translation>En ny Jamtaba version er tilgængelig til download! Brug venligst &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</translation>
     </message>
@@ -793,11 +785,6 @@
         <translation>Rundet</translation>
     </message>
     <message>
-        <source>Error connecting with Jamtaba server!
-</source>
-        <translation>Fejl ved at oprette forbindelse til Jamtaba server!</translation>
-    </message>
-    <message>
         <source>Connecting with %1 ... </source>
         <translation>Forbinder med %1 ... </translation>
     </message>
@@ -832,10 +819,6 @@
     <message>
         <source>%1 has joined the room.</source>
         <translation>%1 har sluttet sig til værelset.</translation>
-    </message>
-    <message>
-        <source>Last chords used</source>
-        <translation>Sidst brugte akkorder</translation>
     </message>
     <message>
         <source>Private chat with %1</source>
