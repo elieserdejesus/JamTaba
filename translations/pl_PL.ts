@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pl_PL" sourcelanguage="en_US">
+<TS version="2.0" language="pl_PL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -131,31 +131,31 @@
     <name>ChordProgressionCreationDialog</name>
     <message>
         <source>Creating Chord Progression ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tworzenie progresji akordów ...</translation>
     </message>
     <message>
         <source>Measures:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Środki:</translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">4</translation>
     </message>
     <message>
         <source>Chords per measure:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Akordy na miarę:</translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; use TAB to navigate!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;type the first letter of chord name to quick jump!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; nawiguj za pomocą TAB!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;wpisz pierwszą literę nazwy akordu do szybkiego skoku!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Load the chord progression!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Załaduj progresję akordów!</translation>
     </message>
     <message>
         <source>ok</source>
@@ -182,11 +182,11 @@
     </message>
     <message>
         <source>Chords (server:2049)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Akordy (serwer: 2049)</translation>
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Akordy</translation>
     </message>
 </context>
 <context>
@@ -328,7 +328,7 @@
     </message>
     <message>
         <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wysyłaj swój dźwięk „prawie” w czasie rzeczywistym, używając bardzo niskiej jakości (przydatne tylko w przypadku szybkich rozmów)</translation>
     </message>
 </context>
 <context>
@@ -540,7 +540,7 @@
     </message>
     <message>
         <source>Play non empty layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Graj w niepuste warstwy</translation>
     </message>
 </context>
 <context>
@@ -895,7 +895,7 @@
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Akordy</translation>
     </message>
 </context>
 <context>
@@ -1536,15 +1536,15 @@
     </message>
     <message>
         <source>Input</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wejście</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">wynik</translation>
     </message>
     <message>
         <source>Directory name format:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Format nazwy katalogu:</translation>
     </message>
 </context>
 <context>
