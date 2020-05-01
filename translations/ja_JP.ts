@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.0" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -136,11 +136,11 @@
     <name>ChordProgressionCreationDialog</name>
     <message>
         <source>Creating Chord Progression ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">コード進行を作成する ...</translation>
     </message>
     <message>
         <source>Measures:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">対策:</translation>
     </message>
     <message>
         <source>4</source>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>Chords per measure:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">小節ごとのコード:</translation>
     </message>
     <message>
         <source>2</source>
@@ -156,11 +156,12 @@
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; use TAB to navigate!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;type the first letter of chord name to quick jump!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; TABを使用してナビゲートしてください!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;
+コード名の最初の文字を入力してすばやくジャンプ!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Load the chord progression!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">コード進行をロードしてください!</translation>
     </message>
     <message>
         <source>ok</source>
@@ -187,11 +188,12 @@
     </message>
     <message>
         <source>Chords (server:2049)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">
+コード（サーバー：2049</translation>
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">和音</translation>
     </message>
 </context>
 <context>
@@ -333,7 +335,7 @@
     </message>
     <message>
         <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">非常に低い品質を使用して、オーディオをリアルタイムで「ほぼ」送信します（迅速な会話にのみ役立ちます）</translation>
     </message>
 </context>
 <context>
@@ -545,7 +547,7 @@
     </message>
     <message>
         <source>Play non empty layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">空でないレイヤーを再生する</translation>
     </message>
 </context>
 <context>
@@ -900,7 +902,7 @@
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">和音</translation>
     </message>
 </context>
 <context>
@@ -1543,15 +1545,15 @@
     </message>
     <message>
         <source>Input</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">入力</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">出力</translation>
     </message>
     <message>
         <source>Directory name format:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ディレクトリ名の形式:</translation>
     </message>
 </context>
 <context>
