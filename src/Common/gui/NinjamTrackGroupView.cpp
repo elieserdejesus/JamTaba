@@ -326,7 +326,7 @@ void NinjamTrackGroupView::setupGridLayout()
 
     mainLayout->setSpacing(3);
 
-    topPanelLayout->setDirection(videoWidget->isVisible() ? QBoxLayout::LeftToRight : QBoxLayout::TopToBottom);
+    //topPanelLayout->setDirection(videoWidget->isVisible() ? QBoxLayout::LeftToRight : QBoxLayout::TopToBottom);
 
     tracksLayout->setDirection(QBoxLayout::LeftToRight);
 
