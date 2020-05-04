@@ -251,10 +251,6 @@
         <translation>%1 / %2 músicos</translation>
     </message>
     <message>
-        <source>The audio stream of this room is not available at moment!</source>
-        <translation>O stream de áudio desta sala não está disponível no momento!</translation>
-    </message>
-    <message>
         <source>This is the server name</source>
         <translation>Este é o nome do servidor</translation>
     </message>
@@ -332,6 +328,10 @@
     <message>
         <source>Enable/disable your audio transmission for others</source>
         <translation>Ativa/Desativa a transmissão do seu áudio para os outros músicos</translation>
+    </message>
+    <message>
+        <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -728,14 +728,6 @@
         <translation>desconectando ...</translation>
     </message>
     <message>
-        <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>Sua versão do Jamtaba não é compatível com as versões anteriores!</translation>
-    </message>
-    <message>
-        <source>Server : Compatibility problem</source>
-        <translation>Problema de compatibilidade com o servidor</translation>
-    </message>
-    <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
         <translation>Uma nova versão do Jamtaba está disponível para download! Por favor use a &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;nova versão&lt;/a&gt;!</translation>
     </message>
@@ -796,11 +788,6 @@
         <translation>Arredondado</translation>
     </message>
     <message>
-        <source>Error connecting with Jamtaba server!
-</source>
-        <translation>Erro conectando com o servidor do Jamtaba!</translation>
-    </message>
-    <message>
         <source>Connecting with %1 ... </source>
         <translation>Conectando com %1 ...</translation>
     </message>
@@ -835,10 +822,6 @@
     <message>
         <source>%1 has joined the room.</source>
         <translation>%1 entrou na sala.</translation>
-    </message>
-    <message>
-        <source>Last chords used</source>
-        <translation>Últimos acordes usados</translation>
     </message>
     <message>
         <source>Private chat with %1</source>

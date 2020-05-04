@@ -240,10 +240,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>The audio stream of this room is not available at moment!</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>enter</source>
         <translation></translation>
     </message>
@@ -329,6 +325,10 @@
     <message>
         <source>Enable/disable your audio transmission for others</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -725,14 +725,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Server : Compatibility problem</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
         <translation></translation>
     </message>
@@ -793,11 +785,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Error connecting with Jamtaba server!
-</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Connecting with %1 ... </source>
         <translation></translation>
     </message>
@@ -831,10 +818,6 @@
     </message>
     <message>
         <source>%1 has joined the room.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Last chords used</source>
         <translation></translation>
     </message>
     <message>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pl_PL" sourcelanguage="en_US">
+<TS version="2.0" language="pl_PL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -131,31 +131,31 @@
     <name>ChordProgressionCreationDialog</name>
     <message>
         <source>Creating Chord Progression ...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tworzenie progresji akordów ...</translation>
     </message>
     <message>
         <source>Measures:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Środki:</translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">4</translation>
     </message>
     <message>
         <source>Chords per measure:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Akordy na miarę:</translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; use TAB to navigate!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;type the first letter of chord name to quick jump!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 1:&lt;/span&gt; nawiguj za pomocą TAB!&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tip 2: &lt;/span&gt;wpisz pierwszą literę nazwy akordu do szybkiego skoku!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Load the chord progression!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Załaduj progresję akordów!</translation>
     </message>
     <message>
         <source>ok</source>
@@ -182,11 +182,11 @@
     </message>
     <message>
         <source>Chords (server:2049)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Akordy (serwer: 2049)</translation>
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Akordy</translation>
     </message>
 </context>
 <context>
@@ -246,10 +246,6 @@
     <message>
         <source>%1 / %2 players </source>
         <translation>%1 / %2 graczy</translation>
-    </message>
-    <message>
-        <source>The audio stream of this room is not available at moment!</source>
-        <translation>W tej chwili strumień audio z tego pokoju jest niedostępny!</translation>
     </message>
     <message>
         <source>This is the server name</source>
@@ -329,6 +325,10 @@
     <message>
         <source>Enable/disable your audio transmission for others</source>
         <translation>Włącz/wyłącz transmisję audio dla innych</translation>
+    </message>
+    <message>
+        <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
+        <translation type="unfinished">Wysyłaj swój dźwięk „prawie” w czasie rzeczywistym, używając bardzo niskiej jakości (przydatne tylko w przypadku szybkich rozmów)</translation>
     </message>
 </context>
 <context>
@@ -540,7 +540,7 @@
     </message>
     <message>
         <source>Play non empty layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Graj w niepuste warstwy</translation>
     </message>
 </context>
 <context>
@@ -746,19 +746,6 @@
         <translation>odłączony ...</translation>
     </message>
     <message>
-        <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>Twoja wersja Jamtaby nie jest kompatybilna z poprzednią wersją!</translation>
-    </message>
-    <message>
-        <source>Server : Compatibility problem</source>
-        <translation>Serwer : problem z kompatybilnością</translation>
-    </message>
-    <message>
-        <source>Error connecting with Jamtaba server!
-</source>
-        <translation>Błąd połączenia z serwerem Jamtaby!</translation>
-    </message>
-    <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
         <translation>Dostępna jest nowsza wersja Jamtaby. Sciągnij tu &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</translation>
     </message>
@@ -835,10 +822,6 @@
         <translation>%1 dołączył do pokoju.</translation>
     </message>
     <message>
-        <source>Last chords used</source>
-        <translation>Ostatnio używane akordy</translation>
-    </message>
-    <message>
         <source>Private chat with %1</source>
         <translation>Prywatny czat z %1</translation>
     </message>
@@ -912,7 +895,7 @@
     </message>
     <message>
         <source>Chords</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Akordy</translation>
     </message>
 </context>
 <context>
@@ -1553,15 +1536,15 @@
     </message>
     <message>
         <source>Input</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wejście</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">wynik</translation>
     </message>
     <message>
         <source>Directory name format:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Format nazwy katalogu:</translation>
     </message>
 </context>
 <context>
