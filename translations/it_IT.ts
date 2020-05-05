@@ -538,7 +538,7 @@
     </message>
     <message>
         <source>Loop file already exists. Do you want to overwrite?</source>
-        <translation>Il file di loop esiste gia?. Vuoi sovrascrivere?</translation>
+        <translation>Il file di loop esiste gia. Vuoi sovrascrivere?</translation>
     </message>
     <message>
         <source>Play non empty layers</source>
