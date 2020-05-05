@@ -333,7 +333,7 @@
     </message>
     <message>
         <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
-        <translation type="unfinished"></translation>
+        <translation>Envoyer votre audio &apos;presque&apos; en temps réel en utilisant une très basse qualité (utile pour les conversation courtes seulement)</translation>
     </message>
 </context>
 <context>
