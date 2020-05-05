@@ -999,7 +999,7 @@
         <source>open metronome preferences</source>
         <translation>apri le impostazioni del metronomo</translation>
     </message>
-</context
+</context>
 <context>
     <name>MidiToolsDialog</name>
     <message>
