@@ -252,10 +252,10 @@ QMenu
 AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
-    qproperty-rmsColor: rgb(150, 150, 150);
+    qproperty-rmsColor: rgb(110, 110, 110);
     qproperty-peakStartColor: rgb(0, 180, 0);
     qproperty-peakEndColor: rgb(255, 50, 50);
-    qproperty-maxPeakColor: rgb(150, 150, 150);
+    qproperty-maxPeakColor: rgb(110, 110, 110);
 }
 
 AudioSlider#masterFader
