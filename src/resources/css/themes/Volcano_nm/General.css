@@ -241,10 +241,10 @@ AudioSlider::handle {
 AudioSlider
 {
     /* changing Audio Peak meter custom CSS properties */
-    qproperty-rmsColor: rgb(181, 37, 3);
+    qproperty-rmsColor: rgb(183, 61, 2);
     qproperty-peakStartColor: orange;
     qproperty-peakEndColor: red;
-    qproperty-maxPeakColor: rgb(181, 37, 3);
+    qproperty-maxPeakColor: rgb(183, 61, 2);
 
     qproperty-dBMarksColor: rgba(0, 0, 0, 120);
 }
