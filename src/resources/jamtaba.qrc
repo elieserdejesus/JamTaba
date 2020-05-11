@@ -115,6 +115,7 @@
         <file alias="da_DK.qm">../../translations/da_DK.qm</file>
         <file alias="pl_PL.qm">../../translations/pl_PL.qm</file>
         <file alias="it_IT.qm">../../translations/it_IT.qm</file>
+        <file alias="kr_KR.qm">../../translations/kr_KR.qm</file>
     </qresource>
     <qresource prefix="/qt_tr">
         <file alias="qtbase_de.qm">../../translations/Qt/qtbase_de.qm</file>
