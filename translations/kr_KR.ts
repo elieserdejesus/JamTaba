@@ -525,7 +525,7 @@
     <message>
         <location filename="../src/Common/gui/LooperWindow.cpp" line="761"/>
         <source>Loop file already exists. Do you want to overwrite?</source>
-        <translation">루프파일이 존재합니다. 덮어쓰길 원하십니까?</translation>
+        <translation>루프파일이 존재합니다. 덮어쓰길 원하십니까?</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/LooperWindow.cpp" line="792"/>
@@ -725,7 +725,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="504"/>
         <source>Ninjam Official Site ...</source>
-        <translation">닌잼공식사이트</translation>
+        <translation>닌잼공식사이트</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="509"/>
@@ -870,7 +870,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="592"/>
         <source>Volcano</source>
-        <translation type="unfinished"볼케이노></translation>
+        <translation>볼케이노></translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="593"/>
