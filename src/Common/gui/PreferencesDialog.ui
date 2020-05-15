@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>3</number>
+      <number>6</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -57,6 +57,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="accessibleDescription">
+             <string>Select audio input device here</string>
+            </property>
            </widget>
           </item>
           <item>
@@ -74,6 +77,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="accessibleDescription">
+             <string>select audio ouput device here</string>
+            </property>
            </widget>
           </item>
           <item>
@@ -83,6 +89,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="accessibleDescription">
+             <string>open ASIO configuration window</string>
             </property>
             <property name="text">
              <string>ASIO panel ...</string>
@@ -117,7 +126,11 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QComboBox" name="comboFirstInput"/>
+             <widget class="QComboBox" name="comboFirstInput">
+              <property name="accessibleDescription">
+               <string>Select first audio input channel</string>
+              </property>
+             </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="lastInputLabel_2">
@@ -127,7 +140,11 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QComboBox" name="comboLastInput"/>
+             <widget class="QComboBox" name="comboLastInput">
+              <property name="accessibleDescription">
+               <string>Select last audio input channel</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -156,7 +173,11 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QComboBox" name="comboFirstOutput"/>
+             <widget class="QComboBox" name="comboFirstOutput">
+              <property name="accessibleDescription">
+               <string>Select first audio output channel</string>
+              </property>
+             </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="lastOutputLabel_2">
@@ -166,7 +187,11 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QComboBox" name="comboLastOutput"/>
+             <widget class="QComboBox" name="comboLastOutput">
+              <property name="accessibleDescription">
+               <string>Select last audio output channel</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -205,6 +230,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="accessibleDescription">
+            <string>Select audio buffer size</string>
+           </property>
           </widget>
          </item>
          <item row="1" column="0">
@@ -228,6 +256,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="accessibleDescription">
+            <string>Select audio sample rate</string>
+           </property>
           </widget>
          </item>
          <item row="2" column="0">
@@ -250,6 +281,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="accessibleDescription">
+            <string>Select audio encoder quality</string>
            </property>
           </widget>
          </item>
@@ -343,6 +377,9 @@
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
            <widget class="QPlainTextEdit" name="vstListWidget">
+            <property name="accessibleDescription">
+             <string>VSTs loaded</string>
+            </property>
             <property name="undoRedoEnabled">
              <bool>false</bool>
             </property>
@@ -361,6 +398,9 @@
               <property name="toolTip">
                <string>Scan only new plugins</string>
               </property>
+              <property name="accessibleDescription">
+               <string>Refresh VSTs list</string>
+              </property>
               <property name="text">
                <string>Refresh</string>
               </property>
@@ -371,6 +411,9 @@
               <property name="toolTip">
                <string>Clear plugins cache and scan all plugin folders</string>
               </property>
+              <property name="accessibleDescription">
+               <string>Clear and Scan your VSTs</string>
+              </property>
               <property name="text">
                <string>Clear and Scan</string>
               </property>
@@ -378,6 +421,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="buttonAddVstToBlackList">
+              <property name="accessibleDescription">
+               <string>Add a VST plugin to the blacklist</string>
+              </property>
               <property name="text">
                <string>Add to black List</string>
               </property>
@@ -385,6 +431,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="buttonRemoveVstFromBlackList">
+              <property name="accessibleDescription">
+               <string>Remove a plugin from the blacklist</string>
+              </property>
               <property name="text">
                <string>Remove from blackList</string>
               </property>
@@ -458,6 +507,9 @@
             <property name="toolTip">
              <string>Add a new folder to scan ...</string>
             </property>
+            <property name="accessibleDescription">
+             <string>Add VST scan folder</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -476,6 +528,9 @@
               <width>0</width>
               <height>50</height>
              </size>
+            </property>
+            <property name="accessibleDescription">
+             <string>Your VST folders</string>
             </property>
             <property name="widgetResizable">
              <bool>true</bool>
@@ -536,6 +591,9 @@
        </property>
        <item row="0" column="0" colspan="3">
         <widget class="QCheckBox" name="recordingCheckBox">
+         <property name="accessibleDescription">
+          <string>Save multitrack audio</string>
+         </property>
          <property name="text">
           <string>Save multi tracks </string>
          </property>
@@ -564,6 +622,9 @@
        </item>
        <item row="3" column="2">
         <widget class="QPushButton" name="browseRecPathButton">
+         <property name="accessibleDescription">
+          <string>Select a folder to save the multitrack audio</string>
+         </property>
          <property name="text">
           <string>browse ...</string>
          </property>
@@ -608,6 +669,9 @@
        </property>
        <item>
         <widget class="QGroupBox" name="groupBoxBuiltInMetronomes">
+         <property name="accessibleDescription">
+          <string>Use built-in metronome sound</string>
+         </property>
          <property name="title">
           <string>Metronome Sound:</string>
          </property>
@@ -616,7 +680,11 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QComboBox" name="comboBuiltInMetronomes"/>
+           <widget class="QComboBox" name="comboBuiltInMetronomes">
+            <property name="accessibleDescription">
+             <string>Select a built-in metronome sound</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -628,6 +696,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="accessibleDescription">
+          <string>Use custom metronome sound</string>
          </property>
          <property name="title">
           <string>Custom Metronome Sounds</string>
@@ -647,6 +718,9 @@
             <property name="enabled">
              <bool>true</bool>
             </property>
+            <property name="accessibleDescription">
+             <string>Choose a metronome primary beat sound</string>
+            </property>
             <property name="text">
              <string>Browse ...</string>
             </property>
@@ -660,6 +734,9 @@
           </item>
           <item row="3" column="3">
            <widget class="QPushButton" name="browseOffBeatButton">
+            <property name="accessibleDescription">
+             <string>Choose a metronome off beat sound</string>
+            </property>
             <property name="text">
              <string>Browse ...</string>
             </property>
@@ -680,6 +757,9 @@
           </item>
           <item row="6" column="2">
            <widget class="QLabel" name="label16BitWarning">
+            <property name="accessibleDescription">
+             <string>Use 16 bit audio files as metronome sounds!</string>
+            </property>
             <property name="text">
              <string>Use 16 bit audio files!</string>
             </property>
@@ -716,6 +796,9 @@
           </item>
           <item row="5" column="3">
            <widget class="QPushButton" name="browseAccentBeatButton">
+            <property name="accessibleDescription">
+             <string>Choose a metronome accent beat sound</string>
+            </property>
             <property name="text">
              <string>Browse ...</string>
             </property>
@@ -758,6 +841,9 @@
          <layout class="QVBoxLayout" name="verticalLayout_9">
           <item>
            <widget class="QRadioButton" name="radioButtonLooperOggEncoding">
+            <property name="accessibleDescription">
+             <string>Save looper layer as Ogg files</string>
+            </property>
             <property name="text">
              <string>Ogg files (use less disk space)</string>
             </property>
@@ -770,6 +856,9 @@
            <layout class="QHBoxLayout" name="waveFileLayout">
             <item>
              <widget class="QRadioButton" name="radioButtonWaveFile">
+              <property name="accessibleDescription">
+               <string>Save looper layer as wav files</string>
+              </property>
               <property name="text">
                <string>Wave files</string>
               </property>
@@ -808,6 +897,9 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="accessibleDescription">
+               <string>Looper layer wave file bit depth</string>
               </property>
              </widget>
             </item>
@@ -852,6 +944,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="accessibleDescription">
+             <string>Choose a folder to save your loops</string>
             </property>
             <property name="text">
              <string>browse ...</string>
@@ -911,6 +1006,9 @@
             <property name="toolTip">
              <string>The user channel level</string>
             </property>
+            <property name="accessibleDescription">
+             <string>Remember user level settings when enter in a server</string>
+            </property>
             <property name="text">
              <string>Level</string>
             </property>
@@ -920,6 +1018,9 @@
            <widget class="QCheckBox" name="checkBoxRememberMute">
             <property name="toolTip">
              <string>The user channel mute status</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>Remember user mute settings when enter in a server</string>
             </property>
             <property name="text">
              <string>Mute</string>
@@ -931,6 +1032,9 @@
             <property name="toolTip">
              <string>The user channel pan</string>
             </property>
+            <property name="accessibleDescription">
+             <string>Remember user mute settings when enter in a server</string>
+            </property>
             <property name="text">
              <string>Pan</string>
             </property>
@@ -941,6 +1045,9 @@
             <property name="toolTip">
              <string>The user channel boost</string>
             </property>
+            <property name="accessibleDescription">
+             <string>Remember user Boost settings when enter in a server</string>
+            </property>
             <property name="text">
              <string>Boost</string>
             </property>
@@ -950,6 +1057,9 @@
            <widget class="QCheckBox" name="checkBoxRememberLowCut">
             <property name="toolTip">
              <string>The user channel low cut button status</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>Remember user Low cut settings when enter in a server</string>
             </property>
             <property name="text">
              <string>Low cut</string>
@@ -970,6 +1080,9 @@
           </property>
           <item>
            <widget class="QCheckBox" name="checkBoxRememberLocalChannels">
+            <property name="accessibleDescription">
+             <string>Remember is local channel is collapsed or not</string>
+            </property>
             <property name="text">
              <string>Local Channels (left side)</string>
             </property>
@@ -977,6 +1090,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="checkBoxRememberBottomSection">
+            <property name="accessibleDescription">
+             <string>Remember if bottom section is collapsed or not</string>
+            </property>
             <property name="text">
              <string>Bottom Section (master fader and ninjam controls)</string>
             </property>
@@ -984,6 +1100,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="checkBoxRememberChatSection">
+            <property name="accessibleDescription">
+             <string>Remember if chat session is collapsed or not</string>
+            </property>
             <property name="text">
              <string>Chat section (right side)</string>
             </property>
@@ -1037,6 +1156,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="accessibleDescription">
+        <string>Confirm audio IO changes</string>
        </property>
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>

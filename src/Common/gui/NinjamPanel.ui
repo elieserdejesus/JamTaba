@@ -80,7 +80,7 @@
       <item row="4" column="1">
        <widget class="QComboBox" name="comboShape">
         <property name="accessibleDescription">
-         <string>Change the shape here</string>
+         <string>Change the visual interval shape here</string>
         </property>
         <property name="sizeAdjustPolicy">
          <enum>QComboBox::AdjustToContents</enum>
@@ -149,6 +149,9 @@
         </property>
         <property name="toolTip">
          <string extracomment="Enter accent beats separated by space"/>
+        </property>
+        <property name="accessibleDescription">
+         <string>Accent pattern</string>
         </property>
        </widget>
       </item>

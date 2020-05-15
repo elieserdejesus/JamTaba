@@ -80,6 +80,12 @@
            <property name="toolTip">
             <string>collapse/expand your controls ...</string>
            </property>
+           <property name="accessibleName">
+            <string>Local controls collapse button</string>
+           </property>
+           <property name="accessibleDescription">
+            <string>Collapse or expand your local controls</string>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -115,6 +121,12 @@
               <horstretch>1</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="accessibleName">
+             <string>User name field</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>Type your user name here</string>
             </property>
             <property name="text">
              <string notr="true"/>
@@ -352,6 +364,12 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="accessibleName">
+             <string>Master fader</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>User this master fader to control global level</string>
+            </property>
             <property name="maximum">
              <number>148</number>
             </property>
@@ -453,6 +471,12 @@
     <addaction name="actionFullscreenMode"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
+    <property name="accessibleName">
+     <string>Language menu</string>
+    </property>
+    <property name="accessibleDescription">
+     <string>Select language using this menu</string>
+    </property>
     <property name="title">
      <string>Language</string>
     </property>
@@ -665,6 +689,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

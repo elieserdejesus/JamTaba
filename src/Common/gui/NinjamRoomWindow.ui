@@ -59,6 +59,9 @@
        </property>
        <item>
         <widget class="QLabel" name="labelUserName">
+         <property name="accessibleDescription">
+          <string>Current server details</string>
+         </property>
          <property name="text">
           <string>Connected as &lt;user_name&gt;</string>
          </property>
@@ -84,6 +87,9 @@
        <property name="toolTip">
         <string>read the server licence ...</string>
        </property>
+       <property name="accessibleDescription">
+        <string>Read the server licence</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -105,6 +111,9 @@
          <width>16</width>
          <height>16</height>
         </size>
+       </property>
+       <property name="accessibleDescription">
+        <string>User chors</string>
        </property>
        <property name="text">
         <string/>
@@ -163,6 +172,7 @@
   </layout>
  </widget>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>
