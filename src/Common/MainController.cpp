@@ -647,6 +647,17 @@ void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int 
     settings.setMidiSettings(midiInputsStatus);
 }
 
+void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, QString audioInputDevice, QString audioOutputDevice)
+{
+    storeIOSettings(
+                firstIn, lastIn,
+                firstOut, lastOut,
+                audioInputDevice, audioOutputDevice,
+                settings.getMidiInputDevicesStatus()
+    );
+
+}
+
 void MainController::removeTrack(long trackID)
 {
     QMutexLocker locker(&mutex);

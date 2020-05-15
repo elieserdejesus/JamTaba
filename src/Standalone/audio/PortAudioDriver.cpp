@@ -20,19 +20,17 @@
 namespace audio
 {
 
-int PortAudioDriver::getDeviceIndexByName(const QString &deviceName) const
+QStringList PortAudioDriver::getDeviceNames() const
 {
-    if (deviceName.isEmpty())
-        return Pa_GetDefaultOutputDevice();
+    QStringList devicesNames;
 
     auto deviceCount = Pa_GetDeviceCount();
     for (int i = 0; i < deviceCount; ++i) {
         auto deviceInfo = Pa_GetDeviceInfo(i);
-        if (QString(deviceInfo->name) == deviceName)
-            return i;
+        devicesNames << QString(deviceInfo->name);
     }
 
-    return paNoDevice;
+    return devicesNames;
 }
 
 bool PortAudioDriver::canBeStarted() const
@@ -59,12 +57,7 @@ int PortAudioDriver::getAudioOutputDeviceIndex() const
 
 bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 {
-    qCDebug(jtAudio) << QString("initializing portaudio (%1)...").arg(Pa_GetVersionText());
-    PaError error = Pa_Initialize();
-    if (error != paNoError) {
-        qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-        return false;
-    }
+
     paStream = nullptr;// inputBuffer = outputBuffer = NULL;
 
     // check for invalid audio device index

@@ -212,6 +212,9 @@ public:
                          QString audioInputDevice, QString audioOutputDevice,
                          const QList<bool> &midiInputStatus);
 
+    void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut,
+                         QString audioInputDevice, QString audioOutputDevice);
+
     void storeMultiTrackRecordingStatus(bool savingMultiTracks);
     bool isMultiTrackRecordingActivated() const;
     void storeMultiTrackRecordingPath(const QString &newPath);
