@@ -20,6 +20,58 @@
 namespace audio
 {
 
+PortAudioDriver::PortAudioDriver(controller::MainController* mainController, QString audioInputDevice, QString audioOutputDevice, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize ) :
+    AudioDriver(mainController),
+    useSystemDefaultDevices(false)
+{
+    qCDebug(jtAudio) << QString("initializing portaudio (%1)...").arg(Pa_GetVersionText());
+    auto error = Pa_Initialize();
+    if (error != paNoError) {
+        qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+        return;
+    }
+
+    auto devicesNames = getDeviceNames();
+
+    auto devicesFound = devicesNames.contains(audioInputDevice) && devicesNames.contains(audioOutputDevice);
+
+    if (devicesFound) {
+        audioInputDeviceIndex = devicesNames.indexOf(audioInputDevice);
+        audioOutputDeviceIndex = UseSingleAudioIODevice ? audioInputDeviceIndex : devicesNames.indexOf(audioOutputDevice);
+        globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
+        globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
+    }
+    else {
+        audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice; // forcing system default device
+    }
+
+    auto portAudioInitialized = initPortAudio(sampleRate, bufferSize);
+
+    if (portAudioInitialized) {
+        if (!devicesFound) {
+
+            // if the previous device not found store the default system device as 'last used device'
+
+            auto firstIn = globalInputRange.getFirstChannel();
+            auto firstOut = globalOutputRange.getFirstChannel();
+            auto lastIn = globalInputRange.getLastChannel();
+            auto lastOut = globalOutputRange.getLastChannel();
+            auto inputDevice = (audioInputDeviceIndex >= 0 && audioInputDeviceIndex < devicesNames.size()) ? devicesNames[audioInputDeviceIndex] : "";
+            auto outputDevice = (audioOutputDeviceIndex >= 0 && audioOutputDeviceIndex < devicesNames.size()) ? devicesNames[audioOutputDeviceIndex] : "";
+
+            mainController->storeIOSettings(
+                        firstIn, lastIn,            // input channels
+                        firstOut, lastOut,          // output channels
+                        inputDevice, outputDevice   // I/O device names
+            );
+        }
+    }
+    else {
+        audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice;
+    }
+
+}
+
 QStringList PortAudioDriver::getDeviceNames() const
 {
     QStringList devicesNames;
