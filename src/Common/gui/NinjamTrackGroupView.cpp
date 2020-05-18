@@ -109,6 +109,11 @@ NinjamTrackGroupView::NinjamTrackGroupView(MainController *mainController, long 
     setupVerticalLayout();
 }
 
+bool NinjamTrackGroupView::isShowingVideo() const
+{
+    return videoWidget && videoWidget->isVisible();
+}
+
 QColor NinjamTrackGroupView::getTintColor() const
 {
     if (trackViews.empty())

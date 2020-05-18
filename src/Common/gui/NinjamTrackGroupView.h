@@ -38,6 +38,8 @@ public:
     void updateGuiElements() override;
     void setEstimatedChunksPerInterval(int estimatedChunks);
 
+    bool isShowingVideo() const;
+
     NinjamTrackView *addTrackView(long trackID) override;
 
     void setTracksLayout(TracksLayout newLayout);
