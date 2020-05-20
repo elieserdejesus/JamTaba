@@ -48,7 +48,7 @@ The library **portaudio** was **pre compiled** in windows using **only the ASIO 
 ## Compiling JamTaba Standalone
 
 - Download and install [Qt](http://www.qt.io/download-open-source/). The Qt installer will install the **Qt Framework** and the **QtCreator**, the Qt IDE.
-- Download [VST SDK](http://www.steinberg.net/en/company/developers.html)
+- Download [VST SDK](https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0)
 - Unpack the VST SDK content inside a **VST_SDK** folder (you need create this folder) in JamTaba source code path. After this you have something like that:
 ```
 [JamTaba source code folder in your hard disk]
