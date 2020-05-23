@@ -126,6 +126,9 @@
         <file alias="qtbase_es.qm">../../translations/Qt/qtbase_es.qm</file>
         <file alias="qtbase_pt.qm">../../translations/Qt/qtbase_pt.qm</file>
         <file alias="qtbase_da.qm">../../translations/Qt/qtbase_da.qm</file>
+        <file alias="qtbase_it.qm">../../translations/Qt/qtbase_it.qm</file>
+        <file alias="qtbase_ko.qm">../../translations/Qt/qtbase_ko.qm</file>
+
     </qresource>
     <qresource prefix="/images">
         <file>mic.png</file>
