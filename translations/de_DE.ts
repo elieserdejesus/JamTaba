@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<TS version="2.0" language="de_DE">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -324,11 +324,11 @@
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
-        <translation>deakiviere deine audioübertragung für andere</translation>
+        <translation>deaktiviere deine audioübertragung für andere</translation>
     </message>
     <message>
         <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
-        <translation type="unfinished"></translation>
+        <translation> Sende dein Audio &apos;fast&apos; in echtzeit sehr geringe qualität (nur sinnvoll für schnelle konversation)</translation>
     </message>
 </context>
 <context>
