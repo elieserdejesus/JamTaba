@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="it_IT" sourcelanguage="en_US">
+<TS version="2.0" language="it_IT" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -115,7 +115,7 @@
     </message>
     <message>
         <source>Connected Users (%1)</source>
-        <translation>Utenti connessi (% 1)</translation>
+        <translation>Utenti connessi (%1)</translation>
     </message>
 </context>
 <context>
@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>Chords per measure:</source>
-        <translation>Accordi per battuta</translation>
+        <translation>Accordi per battuta:</translation>
     </message>
     <message>
         <source>2</source>
@@ -446,7 +446,7 @@
     </message>
     <message>
         <source>Saving looper layers ...</source>
-        <translation>Salvataggio dei strati del looper</translation>
+        <translation>Salvataggio dei strati del looper ...</translation>
     </message>
     <message>
         <source>Loop file name:</source>
@@ -765,7 +765,7 @@
     </message>
     <message>
         <source>Type your user name here</source>
-        <translation type="unfinished">Digita qui il tuo nome utente</translation>
+        <translation>Digita qui il tuo nome utente</translation>
     </message>
     <message>
         <source>Master fader</source>
