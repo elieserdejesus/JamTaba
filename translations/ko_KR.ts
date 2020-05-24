@@ -294,7 +294,7 @@
     <message>
         <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="71"/>
         <source>Click that button to enter in this room</source>
-        <translation>연주방입장을 위해 버튼을 누르세요</translation>
+        <translation>연주방 입장을 위해 버튼을 누르세요</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="74"/>
@@ -660,7 +660,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="394"/>
         <source>Preferences</source>
-        <translation>사용자환셩설정</translation>
+        <translation>사용자환경설정</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="411"/>
@@ -906,7 +906,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="1157"/>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
-        <translation>JamTaba의 새로운 버젼이 나왔습니다. 이곳에서 다운하세요! &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</translation>
+        <translation>JamTaba의 새로운 버젼이 나왔습니다. 이곳에서 다운로드하세요! &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="1169"/>
@@ -946,7 +946,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="1635"/>
         <source>Let&apos;s play in my private server?</source>
-        <translation type="unfinished">개인서버에서 연주 하시겠습니까?</translation>
+        <translation type="unfinished">개인서버에서 연주하시겠습니까?</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="1694"/>
@@ -991,7 +991,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="1947"/>
         <source>%1 is unblocked in the chat</source>
-        <translation type="unfinished">%1 채팅 언블록되었습니다.</translation>
+        <translation type="unfinished">%1 채팅 블록해제되었습니다.</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="1964"/>
@@ -1821,12 +1821,12 @@
     <message>
         <location filename="../src/Common/gui/PreferencesDialog.ui" line="974"/>
         <source>Local Channels (left side)</source>
-        <translation>로컬채널 (좌)</translation>
+        <translation>로컬채널(좌)</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/PreferencesDialog.ui" line="981"/>
         <source>Bottom Section (master fader and ninjam controls)</source>
-        <translation>아래부분 (마스터페이더와 닌잼 콘트롤)</translation>
+        <translation>아래부분(마스터페이더와 닌잼 콘트롤)</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/PreferencesDialog.ui" line="988"/>
@@ -1846,7 +1846,7 @@
     <message>
         <location filename="../src/Common/gui/PreferencesDialog.cpp" line="204"/>
         <source>Low (good for slow internet connections)</source>
-        <translation>낮음 (느린 인터넷 사용시)</translation>
+        <translation>낮음(느린 인터넷 사용시)</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/PreferencesDialog.cpp" line="205"/>
@@ -2094,7 +2094,7 @@
     <message>
         <location filename="../src/Common/recorder/ClipSortLogGenerator.h" line="22"/>                     
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
-        <translation>Reaper &apos;clipsort.log&apos; 파일 생성</translation>
+        <translation>Reaper &apos;clipsort.log&apos; 파일생성</translation>
     </message>
 </context>
 <context>
@@ -2102,7 +2102,7 @@
     <message>
         <location filename="../src/Common/recorder/ReaperProjectGenerator.h" line="22"/>                      
         <source>Generate Reaper Project file (RPP)</source>
-        <translation>Reaper 프로젝트 파일 (RPP) 생성</translation>
+        <translation>Reaper 프로젝트 파일(RPP) 생성</translation>
     </message>
 </context>
 <context>
@@ -2110,7 +2110,7 @@
     <message>
         <location filename="../src/Standalone/gui/ScanFolderPanel.cpp" line="16"/>                      
         <source>Remove this folder from scanning</source>
-        <translation>스캔을 위해서 이 폴더를 제거 합니다.</translation>
+        <translation>스캔에서 이 폴더를 제거 합니다.</translation>
     </message>
 </context>
 <context>
