@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>Chords per measure:</source>
-        <translation >Accordi per battuta</translation>
+        <translation>Accordi per battuta</translation>
     </message>
     <message>
         <source>2</source>
@@ -243,7 +243,7 @@
     </message>
     <message>
         <source>The audio stream of this room is not available at moment!</source>
-        <translation>Il flusso audio di questa stanza non e al momento disponibile!</translation>
+        <translation type="vanished">Il flusso audio di questa stanza non e al momento disponibile!</translation>
     </message>
     <message>
         <source>enter</source>
@@ -331,6 +331,10 @@
     <message>
         <source>Enable/disable your audio transmission for others</source>
         <translation>Abilita/disabilita la trasmissione audio per gli altri</translation>
+    </message>
+    <message>
+        <source>Send your audio &apos;almost&apos; in real time using very low quality (useful for quick conversations only)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -544,6 +548,46 @@
         <source>Play non empty layers</source>
         <translation>Suona a strati non vuoti</translation>
     </message>
+    <message>
+        <source>Loop record button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loop play button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load saved loops button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>save loops button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>reset looper button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This is the looper main level slider</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Looper mode selector</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>looper recording options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Looper play options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>looper layers</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainFrameClass</name>
@@ -711,6 +755,38 @@
         <source>Host a private server in your machine ...</source>
         <translation>Ospita un server privato nella tua macchina ...</translation>
     </message>
+    <message>
+        <source>Local controls collapse button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collapse or expand your local controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User name field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type your user name here</source>
+        <translation type="unfinished">Digita qui il tuo nome utente</translation>
+    </message>
+    <message>
+        <source>Master fader</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User this master fader to control global level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select language using this menu</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -728,11 +804,11 @@
     </message>
     <message>
         <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>La tua versione di Jamtaba non e compatibile con le versioni precedenti!</translation>
+        <translation type="vanished">La tua versione di Jamtaba non e compatibile con le versioni precedenti!</translation>
     </message>
     <message>
         <source>Server : Compatibility problem</source>
-        <translation>Server: problema di compatibilit?</translation>
+        <translation type="vanished">Server: problema di compatibilit?</translation>
     </message>
     <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
@@ -796,7 +872,7 @@
     </message>
     <message>
         <source>Error connecting with Jamtaba server!</source>
-        <translation>Errore durante la connessione con il server Jamtaba!</translation>
+        <translation type="vanished">Errore durante la connessione con il server Jamtaba!</translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
@@ -836,7 +912,7 @@
     </message>
     <message>
         <source>Last chords used</source>
-        <translation>Ultimi accordi utilizzati</translation>
+        <translation type="vanished">Ultimi accordi utilizzati</translation>
     </message>
     <message>
         <source>Private chat with %1</source>
@@ -965,7 +1041,7 @@
     </message>
     <message>
         <source>Slider to change the BPM of the metronome</source>
-        <translation>Dispositivo di scorrimento per modificare il BPM del metronomo</translation>
+        <translation type="vanished">Dispositivo di scorrimento per modificare il BPM del metronomo</translation>
     </message>
     <message>
         <source>L</source>
@@ -998,6 +1074,22 @@
     <message>
         <source>open metronome preferences</source>
         <translation>apri le impostazioni del metronomo</translation>
+    </message>
+    <message>
+        <source>Slider to change the level of the metronome</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slider to change the metronome pan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show metronome in a separated window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Metronome preferences window</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1044,7 +1136,7 @@
     </message>
     <message>
         <source>Change the shape here</source>
-        <translation>Cambia qui la forma</translation>
+        <translation type="vanished">Cambia qui la forma</translation>
     </message>
     <message>
         <source>Shape</source>
@@ -1110,6 +1202,14 @@
         <source>Custom...</source>
         <translation>Personalizzata ...</translation>
     </message>
+    <message>
+        <source>Change the visual interval shape here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accent pattern</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NinjamRoomWindow</name>
@@ -1152,6 +1252,18 @@
     <message>
         <source>Set tracks layout to grid</source>
         <translation>Imposta il layout delle tracce sulla griglia</translation>
+    </message>
+    <message>
+        <source>Current server details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Read the server licence</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User chors</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1563,6 +1675,158 @@
         <source>Directory name format:</source>
         <translation>Formato del nome della directory:</translation>
     </message>
+    <message>
+        <source>Select audio input device here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>select audio ouput device here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>open ASIO configuration window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select first audio input channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select last audio input channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select first audio output channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select last audio output channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select audio buffer size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select audio sample rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select audio encoder quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VSTs loaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh VSTs list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear and Scan your VSTs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add a VST plugin to the blacklist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove a plugin from the blacklist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add VST scan folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your VST folders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save multitrack audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a folder to save the multitrack audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use built-in metronome sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a built-in metronome sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use custom metronome sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a metronome primary beat sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a metronome off beat sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use 16 bit audio files as metronome sounds!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a metronome accent beat sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save looper layer as Ogg files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save looper layer as wav files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Looper layer wave file bit depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a folder to save your loops</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember user level settings when enter in a server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember user mute settings when enter in a server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember user Boost settings when enter in a server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember user Low cut settings when enter in a server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember is local channel is collapsed or not</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember if bottom section is collapsed or not</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember if chat session is collapsed or not</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm audio IO changes</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PreferencesDialogStandalone</name>
@@ -1632,6 +1896,14 @@
     <message>
         <source>User name:</source>
         <translation>Nome utente:</translation>
+    </message>
+    <message>
+        <source>Private server name or ip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>type here the user name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1720,6 +1992,38 @@
     <message>
         <source>Connect with private server ...</source>
         <translation>Connettiti con un server privato ...</translation>
+    </message>
+    <message>
+        <source>Start hosting your private server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop hosting your private server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You server IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your server port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your private server log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected users list</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
