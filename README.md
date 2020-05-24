@@ -18,10 +18,10 @@ JamTaba is builded using **Qt framework**. We are using Qt for GUI, threads, soc
 JamTaba is using some libraries: [portaudio](http://www.portaudio.com/), [rtmidi](https://www.music.mcgill.ca/~gary/rtmidi/), [minimp3](http://keyj.emphy.de/minimp3/), [libvorbis and libogg](http://www.vorbis.com/). We are distributing **pre compiled static libs** just for convenience (see more details in the next sections), but feel free to compile the libs yourself!
 
 ### Ubuntu Linux
-On Ubuntu Linux, run the following command to install a missing dependency for Qt 5 Websockets:
+On Ubuntu Linux, run the following command to install a missing dependency for Qt 5 Websockets and Qt 5 Widgets:
 
 ```
-sudo apt install libqt5websockets5
+sudo apt install libqt5websockets5 libqt5widgets5
 ```
 
 ### IMPORTANT FOR WINDOWS if you will use the pre compiled libs (recommended):
