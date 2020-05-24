@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -544,43 +544,43 @@
     </message>
     <message>
         <source>Loop record button</source>
-        <translation type="unfinished"></translation>
+        <translation>Botón de grabación de loops</translation>
     </message>
     <message>
         <source>Loop play button</source>
-        <translation type="unfinished"></translation>
+        <translation>Botón de reproduccón de loops</translation>
     </message>
     <message>
         <source>Load saved loops button</source>
-        <translation type="unfinished"></translation>
+        <translation>Botón de carga de loops guardados</translation>
     </message>
     <message>
         <source>save loops button</source>
-        <translation type="unfinished"></translation>
+        <translation>Botón para guardar loops</translation>
     </message>
     <message>
         <source>reset looper button</source>
-        <translation type="unfinished"></translation>
+        <translation>Botón de reinicio del looper</translation>
     </message>
     <message>
         <source>This is the looper main level slider</source>
-        <translation type="unfinished"></translation>
+        <translation>Este es el deslizador de volumen principal del looper</translation>
     </message>
     <message>
         <source>Looper mode selector</source>
-        <translation type="unfinished"></translation>
+        <translation>Selector de modo del looper</translation>
     </message>
     <message>
         <source>looper recording options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opciones de grabación del looper</translation>
     </message>
     <message>
         <source>Looper play options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opciones de reproducción del looper</translation>
     </message>
     <message>
         <source>looper layers</source>
-        <translation type="unfinished"></translation>
+        <translation>Pistas del looper</translation>
     </message>
 </context>
 <context>
@@ -751,35 +751,35 @@
     </message>
     <message>
         <source>Local controls collapse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Botón para ocultar los controles locales</translation>
     </message>
     <message>
         <source>Collapse or expand your local controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Oculta o muestra los controles locales</translation>
     </message>
     <message>
         <source>User name field</source>
-        <translation type="unfinished"></translation>
+        <translation>Campo de nombre de usuario</translation>
     </message>
     <message>
         <source>Type your user name here</source>
-        <translation type="unfinished">Escribe tu nombre aquí</translation>
+        <translation>Escribe tu nombre de usuario aquí</translation>
     </message>
     <message>
         <source>Master fader</source>
-        <translation type="unfinished"></translation>
+        <translation>Volumen general</translation>
     </message>
     <message>
         <source>User this master fader to control global level</source>
-        <translation type="unfinished"></translation>
+        <translation>Usa este deslizador para manejar el nivel general de mezcla</translation>
     </message>
     <message>
         <source>Language menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menú de lenguaje</translation>
     </message>
     <message>
         <source>Select language using this menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecciona el lenguaje usando este menu</translation>
     </message>
 </context>
 <context>
@@ -1019,7 +1019,7 @@
     </message>
     <message>
         <source>Slider to change the BPM of the metronome</source>
-        <translation type="vanished">Deslizador para cambiar los BPM del metrónomo</translation>
+        <translation>Deslizador para cambiar los BPM del metrónomo</translation>
     </message>
     <message>
         <source>L</source>
@@ -1055,19 +1055,19 @@
     </message>
     <message>
         <source>Slider to change the level of the metronome</source>
-        <translation type="unfinished"></translation>
+        <translation>Deslizador para cambiar el volumen del metrónomo</translation>
     </message>
     <message>
         <source>Slider to change the metronome pan</source>
-        <translation type="unfinished"></translation>
+        <translation>Deslizador para cambiar el paneo del metrónomo</translation>
     </message>
     <message>
         <source>Show metronome in a separated window</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar el metrónomo en una ventana separada</translation>
     </message>
     <message>
         <source>Open Metronome preferences window</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir la ventana de preferencias del metrónomo</translation>
     </message>
 </context>
 <context>
@@ -1114,7 +1114,7 @@
     </message>
     <message>
         <source>Change the shape here</source>
-        <translation type="vanished">Cambie la forma del metrónomo aquí</translation>
+        <translation>Cambie la forma del metrónomo aquí</translation>
     </message>
     <message>
         <source>Shape</source>
@@ -1182,11 +1182,11 @@
     </message>
     <message>
         <source>Change the visual interval shape here</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambia la forma visual del intervalo</translation>
     </message>
     <message>
         <source>Accent pattern</source>
-        <translation type="unfinished"></translation>
+        <translation>Patrón acentuado</translation>
     </message>
 </context>
 <context>
@@ -1233,15 +1233,15 @@
     </message>
     <message>
         <source>Current server details</source>
-        <translation type="unfinished"></translation>
+        <translation>Detalles del servidor actual</translation>
     </message>
     <message>
         <source>Read the server licence</source>
-        <translation type="unfinished"></translation>
+        <translation>Leer la licencia de servidor</translation>
     </message>
     <message>
         <source>User chors</source>
-        <translation type="unfinished"></translation>
+        <translation>Acordes de usuario</translation>
     </message>
 </context>
 <context>
@@ -1655,155 +1655,155 @@
     </message>
     <message>
         <source>Select audio input device here</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecciona la interfaz de sonido para la entrada aquí</translation>
     </message>
     <message>
         <source>select audio ouput device here</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecciona la interfaz de sonido para la salida aquí</translation>
     </message>
     <message>
         <source>open ASIO configuration window</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir la ventana de configuración ASIO</translation>
     </message>
     <message>
         <source>Select first audio input channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar el primer canal de entrada de sonido</translation>
     </message>
     <message>
         <source>Select last audio input channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar el último canal de entrada de sonido</translation>
     </message>
     <message>
         <source>Select first audio output channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar el primer canal de salida de sonido</translation>
     </message>
     <message>
         <source>Select last audio output channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar el último canal de salida de sonido</translation>
     </message>
     <message>
         <source>Select audio buffer size</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecciona el tamaño del búfer de sonido</translation>
     </message>
     <message>
         <source>Select audio sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar la frecuencia de muestreo de sonido</translation>
     </message>
     <message>
         <source>Select audio encoder quality</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar la calidad del codificador de sonido</translation>
     </message>
     <message>
         <source>VSTs loaded</source>
-        <translation type="unfinished"></translation>
+        <translation>plugins VST cargados</translation>
     </message>
     <message>
         <source>Refresh VSTs list</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizar la lista de plugins VST</translation>
     </message>
     <message>
         <source>Clear and Scan your VSTs</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpiar y escanear tus plugins VST</translation>
     </message>
     <message>
         <source>Add a VST plugin to the blacklist</source>
-        <translation type="unfinished"></translation>
+        <translation>Agregar un plugin VST a la lista negra</translation>
     </message>
     <message>
         <source>Remove a plugin from the blacklist</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar un plugin de la lista negra</translation>
     </message>
     <message>
         <source>Add VST scan folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Agregar carpeta donde escanear plugins VST</translation>
     </message>
     <message>
         <source>Your VST folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Tus carpetas VST</translation>
     </message>
     <message>
         <source>Save multitrack audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardar  los archivos multipista</translation>
     </message>
     <message>
         <source>Select a folder to save the multitrack audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecciona una carpeta donde guardar los archivos multipista</translation>
     </message>
     <message>
         <source>Use built-in metronome sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Utiliza un sonido predefinido para el metrónomo</translation>
     </message>
     <message>
         <source>Select a built-in metronome sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecciona un sonido predefinido para el metrónomo</translation>
     </message>
     <message>
         <source>Use custom metronome sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Escoge un sonido personalizado para el metrónomo</translation>
     </message>
     <message>
         <source>Choose a metronome primary beat sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Escoge un sonido para el beat primario del metrónomo</translation>
     </message>
     <message>
         <source>Choose a metronome off beat sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Escoge el sonido cuando no hay acento en el metrónomo</translation>
     </message>
     <message>
         <source>Use 16 bit audio files as metronome sounds!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Usar archivos de 16 bits para los sonidos del metrónomo!</translation>
     </message>
     <message>
         <source>Choose a metronome accent beat sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Escoge el sonido del acento del metrónomo</translation>
     </message>
     <message>
         <source>Save looper layer as Ogg files</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardar pistas de loops como archivo Ogg</translation>
     </message>
     <message>
         <source>Save looper layer as wav files</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardar pistas de loops como archivo wav</translation>
     </message>
     <message>
         <source>Looper layer wave file bit depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Profundidad de bits de las pistas de archivo wav</translation>
     </message>
     <message>
         <source>Choose a folder to save your loops</source>
-        <translation type="unfinished"></translation>
+        <translation>Escoge una carpeta para guardar tus loops</translation>
     </message>
     <message>
         <source>Remember user level settings when enter in a server</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar la posición del volumen del usuario al ingresar a un servidor</translation>
     </message>
     <message>
         <source>Remember user mute settings when enter in a server</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar el estado del botón silencio del usuario al ingresar a un servidor</translation>
     </message>
     <message>
         <source>Remember user Boost settings when enter in a server</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar el estado del botón de ganancia del usuario al ingresar a un servidor</translation>
     </message>
     <message>
         <source>Remember user Low cut settings when enter in a server</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar el estado del botón de atenuación de bajos del usuario al ingresar a un servidor</translation>
     </message>
     <message>
         <source>Remember is local channel is collapsed or not</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar si los controles locales están ocultos o no</translation>
     </message>
     <message>
         <source>Remember if bottom section is collapsed or not</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar s el panel inferior está oculto o no</translation>
     </message>
     <message>
         <source>Remember if chat session is collapsed or not</source>
-        <translation type="unfinished"></translation>
+        <translation>Recordar si la ventana del chat está oculta o no</translation>
     </message>
     <message>
         <source>Confirm audio IO changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Confirmar cambios de sonido en la entrada/salida</translation>
     </message>
 </context>
 <context>
@@ -1877,11 +1877,11 @@
     </message>
     <message>
         <source>Private server name or ip</source>
-        <translation type="unfinished"></translation>
+        <translation>IP o nombre del servidor privado</translation>
     </message>
     <message>
         <source>type here the user name</source>
-        <translation type="unfinished"></translation>
+        <translation>Escribe aquí el nombre de usuario</translation>
     </message>
 </context>
 <context>
@@ -1973,35 +1973,35 @@
     </message>
     <message>
         <source>Start hosting your private server</source>
-        <translation type="unfinished"></translation>
+        <translation>Comenzar ejecución del servidor privado</translation>
     </message>
     <message>
         <source>Stop hosting your private server</source>
-        <translation type="unfinished"></translation>
+        <translation>Detener ejecución del servidor privado</translation>
     </message>
     <message>
         <source>You server IP</source>
-        <translation type="unfinished"></translation>
+        <translation>IP del servidor privado</translation>
     </message>
     <message>
         <source>Your server port</source>
-        <translation type="unfinished"></translation>
+        <translation>Puerto del servidor privado</translation>
     </message>
     <message>
         <source>Upload</source>
-        <translation type="unfinished"></translation>
+        <translation>Subida</translation>
     </message>
     <message>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Bajada</translation>
     </message>
     <message>
         <source>Your private server log</source>
-        <translation type="unfinished"></translation>
+        <translation>Log del servidor privado</translation>
     </message>
     <message>
         <source>Connected users list</source>
-        <translation type="unfinished"></translation>
+        <translation>Lista de usuarios conectados</translation>
     </message>
 </context>
 <context>
