@@ -58,6 +58,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="accessibleDescription">
+         <string>Loop record button</string>
+        </property>
         <property name="text">
          <string notr="true"/>
         </property>
@@ -77,6 +80,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="accessibleDescription">
+         <string>Loop play button</string>
         </property>
         <property name="text">
          <string notr="true"/>
@@ -134,6 +140,9 @@
         <property name="toolTip">
          <string>Load looper layers</string>
         </property>
+        <property name="accessibleDescription">
+         <string>Load saved loops button</string>
+        </property>
         <property name="text">
          <string notr="true"/>
         </property>
@@ -147,6 +156,9 @@
        <widget class="QPushButton" name="saveButton">
         <property name="toolTip">
          <string>Save looper layers</string>
+        </property>
+        <property name="accessibleDescription">
+         <string>save loops button</string>
         </property>
         <property name="text">
          <string notr="true"/>
@@ -167,6 +179,9 @@
         </property>
         <property name="toolTip">
          <string>Reset</string>
+        </property>
+        <property name="accessibleDescription">
+         <string>reset looper button</string>
         </property>
         <property name="text">
          <string notr="true"/>
@@ -215,6 +230,9 @@
       <layout class="QVBoxLayout" name="mainVolumeLayout">
        <item>
         <widget class="AudioSlider" name="mainLevelSlider">
+         <property name="accessibleDescription">
+          <string>This is the looper main level slider</string>
+         </property>
          <property name="maximum">
           <number>120</number>
          </property>
@@ -280,6 +298,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="accessibleDescription">
+           <string>Looper mode selector</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -302,6 +323,9 @@
       </item>
       <item alignment="Qt::AlignBottom">
        <widget class="QGroupBox" name="groupBoxRecording">
+        <property name="accessibleDescription">
+         <string>looper recording options</string>
+        </property>
         <property name="title">
          <string>Record</string>
         </property>
@@ -328,6 +352,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="accessibleDescription">
+         <string>Looper play options</string>
         </property>
         <property name="title">
          <string>Play</string>
@@ -387,6 +414,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="accessibleDescription">
+           <string>looper layers</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -409,6 +439,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

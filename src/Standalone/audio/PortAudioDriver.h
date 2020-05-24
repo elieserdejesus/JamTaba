@@ -54,7 +54,7 @@ public:
                                  PaStreamCallbackFlags statusFlags, void *userData);
 
 protected:
-    int getDeviceIndexByName(const QString &deviceName) const;
+     QStringList getDeviceNames() const;
 
 private:
     bool initPortAudio(int sampleRate, int bufferSize);

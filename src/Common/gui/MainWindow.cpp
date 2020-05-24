@@ -50,7 +50,7 @@
 #include <QCameraInfo>
 #include <QToolTip>
 
-const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 685);
+const QSize MainWindow::MAIN_WINDOW_MIN_SIZE = QSize(1100, 695);
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
 const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz

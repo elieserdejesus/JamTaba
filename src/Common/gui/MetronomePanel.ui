@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>244</width>
+    <width>314</width>
     <height>92</height>
    </rect>
   </property>
@@ -57,7 +57,7 @@
       </sizepolicy>
      </property>
      <property name="accessibleDescription">
-      <string>Slider to change the BPM of the metronome</string>
+      <string>Slider to change the level of the metronome</string>
      </property>
      <property name="maximum">
       <number>160</number>
@@ -106,6 +106,9 @@
            <width>60</width>
            <height>16777215</height>
           </size>
+         </property>
+         <property name="accessibleDescription">
+          <string>Slider to change the metronome pan</string>
          </property>
          <property name="minimum">
           <number>-4</number>
@@ -232,6 +235,9 @@
        <property name="toolTip">
         <string>open a metronome floating window</string>
        </property>
+       <property name="accessibleDescription">
+        <string>Show metronome in a separated window</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -254,6 +260,9 @@
        </property>
        <property name="toolTip">
         <string>open metronome preferences</string>
+       </property>
+       <property name="accessibleDescription">
+        <string>Open Metronome preferences window</string>
        </property>
        <property name="text">
         <string/>
@@ -281,6 +290,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

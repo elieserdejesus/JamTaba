@@ -6,39 +6,6 @@ using controller::MainController;
 
 namespace audio {
 
-PortAudioDriver::PortAudioDriver(MainController *mainController, QString audioInputDevice, QString audioOutputDevice,
-                                 int firstInIndex, int lastInIndex, int firstOutIndex,
-                                 int lastOutIndex, int sampleRate, int bufferSize) :
-    AudioDriver(mainController),
-    useSystemDefaultDevices(false)
-{
-
-    Q_UNUSED(firstInIndex)
-    Q_UNUSED(firstOutIndex)
-    Q_UNUSED(lastInIndex)
-    Q_UNUSED(lastOutIndex)
-
-    // initialize portaudio using default devices
-    PaError error = Pa_Initialize();
-    if (error == paNoError) {
-        audioInputDeviceIndex = getDeviceIndexByName(audioInputDevice);
-        audioOutputDeviceIndex = getDeviceIndexByName(audioOutputDevice);
-        globalInputRange = ChannelRange(0, getMaxInputs());
-        globalOutputRange = ChannelRange(0, 2);// 2 channels for output
-
-        int maxOutputs = getMaxOutputs();
-        if (maxOutputs > 1)
-            globalOutputRange.setToStereo();
-        if(!initPortAudio(sampleRate, bufferSize)){
-            qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-            audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice;
-        }
-    } else {
-        qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-        audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice;
-    }
-}
-
 void PortAudioDriver::preInitializePortAudioStream(PaStream *stream)
 {
     qCDebug(jtAudio) << "Enablind Realtime Scheduling in ALSA";

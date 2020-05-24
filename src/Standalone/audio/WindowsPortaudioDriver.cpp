@@ -1,25 +1,11 @@
 #include "PortAudioDriver.h"
 #include "pa_asio.h"
 #include "log/Logging.h"
+#include "MainController.h"
 
 namespace audio {
 
-PortAudioDriver::PortAudioDriver(controller::MainController* mainController, QString audioInputDevice, QString audioOutputDevice, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize ) :
-    AudioDriver(mainController),
-    useSystemDefaultDevices(false)
-{
-    auto portAudioInitialized = initPortAudio(sampleRate, bufferSize);
-    if (portAudioInitialized) {
-        globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
-        globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
-        audioInputDeviceIndex = getDeviceIndexByName(audioInputDevice);
-        audioOutputDeviceIndex = UseSingleAudioIODevice ? audioInputDeviceIndex :  getDeviceIndexByName(audioOutputDevice);
-    }
-    else {
-        audioInputDeviceIndex = audioOutputDeviceIndex = paNoDevice;
-    }
 
-}
 
 void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters& inputParams){
 

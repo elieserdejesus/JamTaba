@@ -58,6 +58,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="accessibleDescription">
+        <string>Private server name or ip</string>
+       </property>
        <property name="editable">
         <bool>true</bool>
        </property>
@@ -126,7 +129,7 @@
         <string/>
        </property>
        <property name="accessibleDescription">
-        <string>type here the password</string>
+        <string>type here the user name</string>
        </property>
        <property name="text">
         <string notr="true"/>

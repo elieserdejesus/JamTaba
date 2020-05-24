@@ -294,7 +294,7 @@
     <message>
         <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="71"/>
         <source>Click that button to enter in this room</source>
-        <translation>연주방 입장을 위해 버튼을 누르세요</translation>
+        <translation>연주방입장을 위해 버튼을 누르세요</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="74"/>
@@ -525,7 +525,7 @@
     <message>
         <location filename="../src/Common/gui/LooperWindow.cpp" line="761"/>
         <source>Loop file already exists. Do you want to overwrite?</source>
-        <translation">루프파일이 존재합니다. 덮어쓰길 원하십니까?</translation>
+        <translation>루프파일이 존재합니다. 덮어쓰길 원하십니까?</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/LooperWindow.cpp" line="792"/>
@@ -725,7 +725,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="504"/>
         <source>Ninjam Official Site ...</source>
-        <translation">닌잼공식사이트</translation>
+        <translation>닌잼공식사이트</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="509"/>
@@ -870,7 +870,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="592"/>
         <source>Volcano</source>
-        <translation type="unfinished"볼케이노></translation>
+        <translation>볼케이노</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="593"/>
@@ -946,7 +946,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="1635"/>
         <source>Let&apos;s play in my private server?</source>
-        <translation type="unfinished">개인서버에서 연주하시겠습니까?</translation>
+        <translation type="unfinished">개인서버에서 연주 하시겠습니까?</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.cpp" line="1694"/>

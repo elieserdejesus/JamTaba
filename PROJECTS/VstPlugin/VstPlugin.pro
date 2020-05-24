@@ -88,7 +88,7 @@ win32 {
     CONFIG(debug, debug|release): LIBS += -lQt5PlatformSupportd #link windows platform statically
     CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindowsd #link windows platform statically
     CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\mediaservice\ -ldsengined # necessary to use QCamera
-    CONFIG(release, debug|release):   LIBS += -L$(QTDIR)\plugins\mediaservice\ -lqtfreetyped
+    CONFIG(debug, debug|release):   LIBS += -L$(QTDIR)\plugins\mediaservice\ -lqtfreetyped
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lminimp3 -lvorbisfile -lvorbis -logg -lx264 -lavcodec -lavutil -lavformat -lswscale -lswresample -lstackwalker -lminiupnpc

@@ -8,5 +8,5 @@ TRANSLATIONS += $$PWD/de_DE.ts
 TRANSLATIONS += $$PWD/pl_PL.ts
 TRANSLATIONS += $$PWD/da_DK.ts
 TRANSLATIONS += $$PWD/it_IT.ts
-TRANSLATIONS += $$PWD/kr_KR.ts
+TRANSLATIONS += $$PWD/ko_KR.ts
 TRANSLATIONS += $$PWD/en.ts  #this is an empty file (non translated)

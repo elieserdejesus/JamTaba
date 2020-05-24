@@ -527,12 +527,23 @@ void NinjamRoomWindow::resizeEvent(QResizeEvent *ev)
 
 }
 
+bool cameraSorter(NinjamTrackGroupView *track1, NinjamTrackGroupView *)
+{
+     return track1 && track1->isShowingVideo();
+}
+
 void NinjamRoomWindow::reAddTrackGroups()
 {
     for (auto trackGroup : trackGroups.values()) // remove all tracks from layout
         ui->tracksLayout->removeWidget(trackGroup);
 
-    for (auto trackGroup : trackGroups.values())
+    auto itemsToAdd = trackGroups.values();
+
+    if (tracksLayout == TracksLayout::GridLayout) { // if layout is Grid reorder trackGroups to show active cams first
+        qSort(itemsToAdd.begin(), itemsToAdd.end(), cameraSorter);
+    }
+
+    for (auto trackGroup : itemsToAdd)
         addTrack(trackGroup);
 
     adjustTracksPanelSizePolicy();

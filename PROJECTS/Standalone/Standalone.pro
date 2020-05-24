@@ -140,7 +140,7 @@ win32{
 macx{
     #message("Mac x86_64 build")
     LIBS_PATH = "static/mac64"
-
+    LIBS += -lz
     LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg -lx264 -lavcodec -lavutil -lavformat -lswscale -lswresample -liconv -lminiupnpc
     LIBS += -framework IOKit
     LIBS += -framework CoreAudio

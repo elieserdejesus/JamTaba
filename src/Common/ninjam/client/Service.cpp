@@ -208,6 +208,7 @@ QStringList Service::buildBotNamesList()
     names.append(QStringLiteral("dojcbot"));
     names.append(QStringLiteral("DOJCbot"));
     names.append(QStringLiteral("booga"));
+    names.append(QStringLiteral("server@server"));
     return names;
 }
 
@@ -395,6 +396,15 @@ void Service::process(const AuthReplyMessage &msg)
         QString serverIp = socket->peerName();
         quint16 serverPort = socket->peerPort();
         currentServer.reset(new ServerInfo(serverIp, serverPort, serverMaxChannels));
+
+        if (!initialized) {
+            initialized = true;
+
+            // server licence is received when the hand shake with server is started
+            currentServer->setLicence(serverLicence);
+            emit connectedInServer(*currentServer);
+        }
+
     }
     // when user is not authenticated the socketErrorSlot is called and dispatch an error signal
 }
@@ -521,7 +531,15 @@ void Service::process(const ServerToClientChatMessage &msg)
     {
         QString messageSender = msg.getArguments().at(0);
         QString messageText = msg.getArguments().at(1);
-        emit privateChatMessageReceived(User(messageSender), messageText);
+
+        auto isServerPrivateMessage = messageSender == "*";
+        if (isServerPrivateMessage) {
+            if (!messageText.isEmpty()) // discarding empty messages
+                emit publicChatMessageReceived(User("server@server"), messageText);
+        }
+        else {
+            emit privateChatMessageReceived(User(messageSender), messageText);
+        }
         break;
     }
     case ChatCommandType::TOPIC:
@@ -532,17 +550,8 @@ void Service::process(const ServerToClientChatMessage &msg)
         QString topicText = msg.getArguments().at(1);
         currentServer->setTopic(topicText);
 
-        if (!initialized) {
-            initialized = true;
+        emit serverTopicMessageReceived(topicText);
 
-            // server licence is received when the hand shake with server is started
-            currentServer->setLicence(serverLicence);
-            emit connectedInServer(*currentServer);
-            emit serverTopicMessageReceived(topicText);
-        }
-        else {
-            emit serverTopicMessageReceived(topicText);
-        }
         break;
     }
     case ChatCommandType::USERCOUNT:
