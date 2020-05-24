@@ -715,7 +715,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="494"/>
         <source>Connect with private server ...</source>
-        <translation>개인서버에 연결 할 수 없습니다...</translation>
+        <translation>개인서버에 연결하기...</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="499"/>
