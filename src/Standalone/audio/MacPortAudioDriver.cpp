@@ -21,20 +21,18 @@ QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const
 
 QString PortAudioDriver::getOutputChannelName(const unsigned int index) const
 {
-    PaDeviceIndex device = Pa_GetDefaultOutputDevice();
-    if (device == paNoDevice)
+    if (audioOutputDeviceIndex == paNoDevice)
         return "Error! No Output!";
 
-    return QString(PaMacCore_GetChannelName(device, index, false));
+    return QString(PaMacCore_GetChannelName(audioOutputDeviceIndex, index, false));
 }
 
 QString PortAudioDriver::getInputChannelName(const unsigned int index) const
 {
-    PaDeviceIndex device = Pa_GetDefaultInputDevice();
-    if (device == paNoDevice)
+    if (audioInputDeviceIndex == paNoDevice)
         return "Error! No Input!";
 
-    return QString(PaMacCore_GetChannelName(device, index, true));
+    return QString(PaMacCore_GetChannelName(audioInputDeviceIndex, index, true));
 }
 
 void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters &inputParameters)
