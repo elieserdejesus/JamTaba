@@ -24,7 +24,12 @@ QString PortAudioDriver::getOutputChannelName(const unsigned int index) const
     if (audioOutputDeviceIndex == paNoDevice)
         return "Error! No Output!";
 
-    return QString(PaMacCore_GetChannelName(audioOutputDeviceIndex, index, false));
+    auto channelName = QString(PaMacCore_GetChannelName(audioOutputDeviceIndex, index, false));
+
+    if (channelName.isEmpty())
+        channelName = QString("Out %1").arg(index + 1);
+
+    return channelName;
 }
 
 QString PortAudioDriver::getInputChannelName(const unsigned int index) const
@@ -32,7 +37,12 @@ QString PortAudioDriver::getInputChannelName(const unsigned int index) const
     if (audioInputDeviceIndex == paNoDevice)
         return "Error! No Input!";
 
-    return QString(PaMacCore_GetChannelName(audioInputDeviceIndex, index, true));
+    auto channelName = QString(PaMacCore_GetChannelName(audioInputDeviceIndex, index, true));
+
+    if (channelName.isEmpty())
+        channelName = QString("In %1").arg(index + 1);
+
+    return channelName;
 }
 
 void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters &inputParameters)
