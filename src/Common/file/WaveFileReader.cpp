@@ -148,7 +148,7 @@ bool WaveFileReader::read(const QString &filePath, audio::SamplesBuffer &outBuff
     char fileType[4];
     quint32 fileSize;
     char waveName[4];
-    char fmtName[3];
+    char fmtName[4];
     quint32 fmtLength;
     quint16 fmtType;
     quint16 channels;
