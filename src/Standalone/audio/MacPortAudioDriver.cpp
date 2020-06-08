@@ -14,8 +14,12 @@ QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const
         buffersSize.append(256);
         return buffersSize;// return 256 as the only possible value
     }
-    for (long size = minBufferSize; size <= maxBufferSize; size *= 2)
+
+    minBufferSize = qMax(64L, minBufferSize); // 64 is the minimum allowed value
+
+    for (long size = minBufferSize; size <= maxBufferSize; size *= 2) // 64, 128, 256, 512, etc.
         buffersSize.append(size);
+
     return buffersSize;
 }
 

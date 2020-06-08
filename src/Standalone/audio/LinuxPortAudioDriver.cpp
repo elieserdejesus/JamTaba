@@ -17,7 +17,7 @@ QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const
 {
     Q_UNUSED(deviceIndex);
 
-    int value = 32;
+    int value = 64;
     QList<int> bufferSizes;
     while (value <= 4096) {
         bufferSizes.append(value);
