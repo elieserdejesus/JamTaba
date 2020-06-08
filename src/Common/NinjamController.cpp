@@ -432,8 +432,10 @@ void NinjamController::stop(bool emitDisconnectedSignal)
         }
 
         // clear all tracks
-        for (auto trackNode : trackNodes.values())
-            mainController->removeTrack(trackNode->getID());
+        for (auto trackNode : trackNodes.values()) {
+            if (trackNode)
+                mainController->removeTrack(trackNode->getID());
+        }
         trackNodes.clear();
     }
 
@@ -740,12 +742,14 @@ void NinjamController::handleNewInterval()
         processScheduledChanges();
 
     //mutex.lock();
-    for (NinjamTrackNode *track : trackNodes.values())
+    for (auto track : trackNodes.values())
     {
-        bool trackWasPlaying = track->isPlaying();
-        bool trackIsPlaying = track->startNewInterval();
-        if (trackWasPlaying != trackIsPlaying)
-            emit channelXmitChanged(track->getID(), trackIsPlaying);
+        if (track) {
+            bool trackWasPlaying = track->isPlaying();
+            bool trackIsPlaying = track->startNewInterval();
+            if (trackWasPlaying != trackIsPlaying)
+                emit channelXmitChanged(track->getID(), trackIsPlaying);
+        }
     }
     //mutex.unlock();
 
@@ -856,8 +860,10 @@ void NinjamController::handleIntervalCompleted(const User &user, quint8 channelI
 void NinjamController::reset()
 {
     QMutexLocker locker(&mutex);
-    for (NinjamTrackNode *trackNode : trackNodes.values())
-        trackNode->discardDownloadedIntervals();
+    for (auto trackNode : trackNodes.values()) {
+        if (trackNode)
+            trackNode->discardDownloadedIntervals();
+    }
     intervalPosition = lastBeat = 0;
 }
 
