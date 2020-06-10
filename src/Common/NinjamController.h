@@ -54,6 +54,7 @@ public:
     void voteBpm(int newBpm);
 
     void setBpm(int newBpm);
+    void setBpmBpi(int initialBpm, int initalBpi);
 
     void sendChatMessage(const QString &msg);
 

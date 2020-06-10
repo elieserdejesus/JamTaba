@@ -461,6 +461,15 @@ void Service::setBpi(quint16 bpi)
         emit serverBpiChanged(currentServer->getBpi(), lastBpi);
 }
 
+void Service::setInitialBpmBpi(quint16 bpm, quint16 bpi)
+{
+    Q_ASSERT(currentServer);
+    currentServer->setBpi(bpi);
+    currentServer->setBpm(bpm);
+
+    emit serverInitialBpmBpiAvailable(bpm, bpi);
+}
+
 // +++++++++++++ SERVER MESSAGE HANDLERS +++++++++++++=
 void Service::handleUserChannels(const User &remoteUser)
 {
@@ -568,14 +577,10 @@ void Service::process(const ServerToClientChatMessage &msg)
 
 void Service::process(const ConfigChangeNotifyMessage &msg)
 {
-    quint16 bpi = msg.getBpi();
-    quint16 bpm = msg.getBpm();
+    auto bpi = msg.getBpi();
+    auto bpm = msg.getBpm();
 
-    if (bpi != currentServer->getBpi())
-        setBpi(bpi);
-
-    if (bpm != currentServer->getBpm())
-        setBpm(bpm);
+    setInitialBpmBpi(bpm, bpi);
 }
 
 QTcpSocket * Service::createSocket()

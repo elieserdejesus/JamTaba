@@ -86,6 +86,7 @@ namespace client
         void userCountMessageReceived(quint32 users, quint32 maxUsers);
         void serverBpiChanged(quint16 currentBpi, quint16 lastBpi);
         void serverBpmChanged(quint16 currentBpm);
+        void serverInitialBpmBpiAvailable(quint16 bpm, quint16 bpi);
         void audioIntervalCompleted(const User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
         void videoIntervalCompleted(const User &user, const QByteArray &encodedVideoData);
         void audioIntervalDownloading(const User &user, quint8 channelIndex, const QByteArray &encodedAudioData, bool isFirstPart, bool isLastPart);
@@ -148,6 +149,7 @@ namespace client
 
         void setBpm(quint16 newBpm);
         void setBpi(quint16 newBpi);
+        void setInitialBpmBpi(quint16 bpm, quint16 bpi);
 
         class Download; // using a nested class here. This class is for internal purpouses only.
         QMap<QByteArray, Download> downloads; // using GUID as key

@@ -268,6 +268,17 @@ void NinjamController::setBpm(int newBpm)
     emit currentBpmChanged(currentBpm);
 }
 
+void NinjamController::setBpmBpi(int initialBpm, int initialBpi)
+{
+    currentBpi = initialBpi;
+    currentBpm = initialBpm;
+    samplesInInterval = computeTotalSamplesInInterval();
+    metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
+
+    emit currentBpmChanged(currentBpm);
+    emit currentBpiChanged(currentBpi);
+}
+
 void NinjamController::removeEncoder(int groupChannelIndex)
 {
     QMutexLocker locker(&mutex);
@@ -281,6 +292,9 @@ void NinjamController::process(const audio::SamplesBuffer &in, audio::SamplesBuf
                                int sampleRate)
 {
     QMutexLocker locker(&mutex);
+
+    if (currentBpi == 0 || currentBpm == 0)
+        processScheduledChanges(); // check if we have the initial bpm and bpi change pending
 
     if (!running || samplesInInterval <= 0)
         return; // not initialized
@@ -504,8 +518,14 @@ void NinjamController::start(const ServerInfo &server)
     QMutexLocker locker(&mutex);
 
     // schedule an update in internal attributes
-    scheduledEvents.append(new BpiChangeEvent(this, server.getBpi()));
-    scheduledEvents.append(new BpmChangeEvent(this, server.getBpm()));
+    auto bpi = server.getBpi();
+    if (bpi > 0)
+        scheduledEvents.append(new BpiChangeEvent(this, bpi));
+
+    auto bpm = server.getBpm();
+    if (bpm > 0)
+        scheduledEvents.append(new BpmChangeEvent(this, bpm));
+
     preparedForTransmit = false; // the xmit start after the first interval is received
     emit preparingTransmission();
 
@@ -542,6 +562,9 @@ void NinjamController::start(const ServerInfo &server)
                 &NinjamController::scheduleBpiChangeEvent);
         connect(ninjamService, &Service::audioIntervalCompleted, this,
                 &NinjamController::handleIntervalCompleted);
+
+        connect(ninjamService, &Service::serverInitialBpmBpiAvailable,
+                this, &NinjamController::setBpmBpi);
 
         connect(ninjamService, &Service::userChannelCreated, this,
                 &NinjamController::addNinjamRemoteChannel);
@@ -824,7 +847,6 @@ void NinjamController::scheduleBpiChangeEvent(quint16 newBpi, quint16 oldBpi)
 
 void NinjamController::scheduleBpmChangeEvent(quint16 newBpm)
 {
-    Q_UNUSED(newBpm)
     scheduledEvents.append(new BpmChangeEvent(this, newBpm));
 }
 
