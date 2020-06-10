@@ -61,6 +61,15 @@ InstrumentIndex stringToInstrumentIndex(const QString &string)
     if (str.contains("harmonica") || str.contains("blues harp"))
         return InstrumentIndex::Harmonica;
 
+    if (str.contains("sax"))
+        return InstrumentIndex::Saxophone;
+
+    if (str.contains("flute"))
+        return InstrumentIndex::Flute;
+
+    if (str.contains("trombone"))
+        return InstrumentIndex::Trombone;
+
     return InstrumentIndex::JamTabaIcon;
 }
 
@@ -86,6 +95,9 @@ QString instrumentIndexToString(InstrumentIndex index)
     case InstrumentIndex::Violin:           return "Violin";
     case InstrumentIndex::Video:            return "Video";
     case InstrumentIndex::Harmonica:        return "Harmonica";
+    case InstrumentIndex::Saxophone:        return "Saxophone";
+    case InstrumentIndex::Flute:            return "Flute";
+    case InstrumentIndex::Trombone:         return "Trombone";
     }
 
     return "";

@@ -1363,6 +1363,9 @@
         <file>instruments/pads.png</file>
         <file>instruments/percussion.png</file>
         <file>instruments/harmonica.png</file>
+        <file>instruments/saxophone.png</file>
+        <file>instruments/flute.png</file>
+        <file>instruments/trombone.png</file>
     </qresource>
     <qresource prefix="/tiles">
         <file>map/0/0/0.png</file>

@@ -24,7 +24,10 @@ enum class InstrumentIndex : qint8
     Piano,
     TrollFace,
     Trumpet,
-    Violin
+    Violin,
+    Saxophone,
+    Flute,
+    Trombone
 };
 
 
