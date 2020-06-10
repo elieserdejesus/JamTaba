@@ -13,6 +13,7 @@ enum class InstrumentIndex : qint8
     Computer,
     DoubleBass,
     Drums,
+    Flute,
     Guitar,
     Harmonica,
     JamTabaIcon,
@@ -22,12 +23,11 @@ enum class InstrumentIndex : qint8
     Pads,
     Percussion,
     Piano,
-    TrollFace,
-    Trumpet,
-    Violin,
     Saxophone,
-    Flute,
-    Trombone
+    TrollFace,
+    Trombone,
+    Trumpet,
+    Violin
 };
 
 
