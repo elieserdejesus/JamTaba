@@ -269,6 +269,7 @@ private:
 
     static QString buildAudioFileName(const QString &userName, quint8 channelIndex, int currentInterval);
     static QString buildVideoFileName(const QString &userName, int currentInterval, const QString &fileExtension);
+    static QString buildPaddedFileNumber(int fileNumber);
 
     void writeProjectFile();
 

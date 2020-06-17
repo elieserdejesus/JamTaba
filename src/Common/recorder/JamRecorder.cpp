@@ -139,13 +139,21 @@ void JamRecorder::writeEncodedFile(const QByteArray& encodedData, const QString 
 
 QString JamRecorder::buildVideoFileName(const QString &userName, int currentInterval, const QString &fileExtension)
 {
-    return userName + "_video_" + QString::number(currentInterval) + "." + fileExtension;
+    return userName + "_video_" + buildPaddedFileNumber(currentInterval) + "." + fileExtension;
 }
 
 QString JamRecorder::buildAudioFileName(const QString &userName, quint8 channelIndex, int currentInterval)
 {
     QString channelName = "Channel " + QString::number(channelIndex + 1);
-    return userName + " (" + channelName + ") part " + QString::number(currentInterval) + ".ogg";
+    return userName + " (" + channelName + ") part " + buildPaddedFileNumber(currentInterval) + ".ogg";
+}
+
+QString JamRecorder::buildPaddedFileNumber(int fileNumber)
+{
+    const int padDigits = 3;
+    const QChar padChar('0');
+
+    return QString("%1").arg(fileNumber, padDigits, 10, padChar);
 }
 
 JamRecorder::JamRecorder(JamMetadataWriter* jamMetadataWritter) :
