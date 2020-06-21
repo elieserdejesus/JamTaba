@@ -23,11 +23,15 @@ public:
     virtual void release() = 0;
 
     virtual bool hasInputDevices() const = 0;
+    virtual bool hasOutputDevices() const = 0;
 
     virtual int getMaxInputDevices() const = 0;
+    virtual int getMaxOutputDevices() const = 0;
 
     virtual QString getInputDeviceName(uint index) const = 0;
     virtual std::vector<MidiMessage> getBuffer() = 0;
+
+    virtual QString getOutputDeviceName(uint index) const = 0;
 
     virtual bool deviceIsGloballyEnabled(int deviceIndex) const;
     int getFirstGloballyEnableInputDevice() const;
@@ -57,7 +61,17 @@ class NullMidiDriver : public MidiDriver
         return false;
     }
 
+    inline virtual bool hasOutputDevices() const override
+    {
+        return false;
+    }
+
     inline virtual int getMaxInputDevices() const override
+    {
+        return 0;
+    }
+
+    inline virtual int getMaxOutputDevices() const override
     {
         return 0;
     }
@@ -71,6 +85,12 @@ class NullMidiDriver : public MidiDriver
     inline std::vector<MidiMessage> getBuffer() override
     {
         return std::vector<MidiMessage>();
+    }
+
+    inline virtual QString getOutputDeviceName(uint index) const override
+    {
+        Q_UNUSED(index);
+        return "";
     }
 };
 

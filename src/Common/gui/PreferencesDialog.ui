@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>589</width>
-    <height>507</height>
+    <height>551</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,10 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>6</number>
+      <number>2</number>
+     </property>
+     <property name="usesScrollButtons">
+      <bool>true</bool>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -361,6 +364,47 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tabSync">
+      <attribute name="title">
+       <string>Sync</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_14" stretch="0,0,0">
+       <item>
+        <widget class="QLabel" name="midiTabMessage_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Enable/disable sending MIDI clock sync:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QWidget" name="syncContentPanel" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_15"/>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tabVST">
       <property name="styleSheet">
        <string notr="true"/>
@@ -540,7 +584,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>484</width>
+               <width>471</width>
                <height>45</height>
               </rect>
              </property>

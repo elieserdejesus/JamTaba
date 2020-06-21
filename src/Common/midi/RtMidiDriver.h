@@ -19,8 +19,11 @@ public:
     void setInputDevicesStatus(const QList<bool> &statuses) override;
 
     bool hasInputDevices() const override;
+    bool hasOutputDevices() const override;
     int getMaxInputDevices() const override;
+    int getMaxOutputDevices() const override;
     QString getInputDeviceName(uint index) const override;
+    QString getOutputDeviceName(uint index) const override;
     std::vector<midi::MidiMessage> getBuffer() override;
 
 private:

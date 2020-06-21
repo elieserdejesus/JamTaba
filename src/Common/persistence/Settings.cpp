@@ -329,6 +329,38 @@ void MidiSettings::read(const QJsonObject &in)
 
 // ++++++++++++++++++++++++++++++
 
+SyncSettings::SyncSettings() :
+    SettingsObject("sync")
+{
+    qCDebug(jtSettings) << "SyncSettings ctor";
+}
+
+void SyncSettings::write(QJsonObject &out) const
+{
+    qCDebug(jtSettings) << "SyncSettings write";
+    QJsonArray midiArray;
+
+    for (bool state : syncOutputDevicesStatus)
+        midiArray.append(state);
+
+    out["syncOutputsState"] = midiArray;
+}
+
+void SyncSettings::read(const QJsonObject &in)
+{
+    syncOutputDevicesStatus.clear();
+    if (in.contains("syncOutputsState")) {
+        QJsonArray inputsArray = in["syncOutputsState"].toArray();
+        for (int i = 0; i < inputsArray.size(); ++i)
+            syncOutputDevicesStatus.append(inputsArray.at(i).toBool(true));
+    }
+
+    qCDebug(jtSettings) << "SyncSettings: syncOutputDevicesStatus " << syncOutputDevicesStatus;
+}
+
+// ++++++++++++++++++++++++++++++
+
+
 MultiTrackRecordingSettings::MultiTrackRecordingSettings() :
     SettingsObject("recording"),
     saveMultiTracksActivated(false),

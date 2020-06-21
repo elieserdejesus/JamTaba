@@ -74,6 +74,17 @@ public:
 
 // +++++++++++++++++++++++++++++++++++
 
+class SyncSettings : public SettingsObject
+{
+public:
+    SyncSettings();
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+    QList<bool> syncOutputDevicesStatus;
+};
+
+// +++++++++++++++++++++++++++++++++++
+
 class PrivateServerSettings : public SettingsObject
 {
 
@@ -396,6 +407,7 @@ private:
     static QString fileName;
     AudioSettings audioSettings;
     MidiSettings midiSettings;
+    SyncSettings syncSettings;
     WindowSettings windowSettings;
     MetronomeSettings metronomeSettings;
     VstSettings vstSettings;
@@ -548,6 +560,10 @@ public:
     void setMidiSettings(const QList<bool> &inputDevicesStatus);
 
     QList<bool> getMidiInputDevicesStatus() const;
+
+    void setSyncSettings(const QList<bool> &syncOutputDevicesStatus);
+
+    QList<bool> getSyncOutputDevicesStatus() const;
 
     qint8 getChatFontSizeOffset() const;
     void storeChatFontSizeOffset(qint8 sizeOffset);
@@ -821,9 +837,19 @@ inline void Settings::setMidiSettings(const QList<bool> &inputDevicesStatus)
     midiSettings.inputDevicesStatus = inputDevicesStatus;
 }
 
+inline void Settings::setSyncSettings(const QList<bool> &syncOutputDevicesStatus)
+{
+    syncSettings.syncOutputDevicesStatus = syncOutputDevicesStatus;
+}
+
 inline QList<bool> Settings::getMidiInputDevicesStatus() const
 {
     return midiSettings.inputDevicesStatus;
+}
+
+inline QList<bool> Settings::getSyncOutputDevicesStatus() const
+{
+    return syncSettings.syncOutputDevicesStatus;
 }
 
 inline bool Settings::windowWasMaximized() const

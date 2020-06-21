@@ -115,6 +115,13 @@ QString RtMidiDriver::getInputDeviceName(uint index) const{
     return "";
 }
 
+QString RtMidiDriver::getOutputDeviceName(uint index) const{
+    RtMidiOut rtMidi;
+    if(index < rtMidi.getPortCount())
+        return QString::fromStdString(rtMidi.getPortName(index));
+    return "";
+}
+
 void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<midi::MidiMessage> &outBuffer)
 {
     //qCDebug(jtMidi) << "consuming messages from stream - RtMidiDriver";
@@ -148,6 +155,10 @@ bool RtMidiDriver::hasInputDevices() const{
     return getMaxInputDevices() > 0;
 }
 
+bool RtMidiDriver::hasOutputDevices() const{
+    return getMaxOutputDevices() > 0;
+}
+
 int RtMidiDriver::getMaxInputDevices() const{
     try
     {
@@ -158,7 +169,23 @@ int RtMidiDriver::getMaxInputDevices() const{
         qCDebug(jtMidi) << QString::fromStdString(e.getMessage());
     }
     catch(...) {
-        qCritical() << "ERRO NO MIDI!" ;
+        qCritical() << "ERROR NO MIDI!";
+    }
+
+    return 0;
+}
+
+int RtMidiDriver::getMaxOutputDevices() const{
+    try
+    {
+        RtMidiOut rtMidiOut;
+        return rtMidiOut.getPortCount();
+    }
+    catch(const RtMidiError &e) {
+        qCDebug(jtMidi) << QString::fromStdString(e.getMessage());
+    }
+    catch(...) {
+        qCritical() << "ERROR NO MIDI!";
     }
 
     return 0;

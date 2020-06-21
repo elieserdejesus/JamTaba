@@ -88,6 +88,7 @@ private:
     void populateAudioTab();
 
     void populateMidiTab();
+    void populateSyncTab();
 
     void createWidgetsToNewFolder(const QString &path);
 
