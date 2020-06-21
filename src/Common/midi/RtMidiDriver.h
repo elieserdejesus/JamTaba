@@ -26,8 +26,12 @@ public:
     QString getOutputDeviceName(uint index) const override;
     std::vector<midi::MidiMessage> getBuffer() override;
 
+    void sendClockStart() const override;
+    void sendClockTick() const override;
+
 private:
-    QList<RtMidiIn *> midiStreams;
+    QList<RtMidiIn *> midiInStreams;
+    QList<RtMidiOut *> midiOutStreams;
 
     void consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<MidiMessage> &outBuffer);
 

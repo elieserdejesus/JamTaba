@@ -29,13 +29,16 @@ public:
     virtual int getMaxOutputDevices() const = 0;
 
     virtual QString getInputDeviceName(uint index) const = 0;
-    virtual std::vector<MidiMessage> getBuffer() = 0;
-
     virtual QString getOutputDeviceName(uint index) const = 0;
+
+    virtual std::vector<MidiMessage> getBuffer() = 0;
 
     virtual bool deviceIsGloballyEnabled(int deviceIndex) const;
     int getFirstGloballyEnableInputDevice() const;
     virtual void setInputDevicesStatus(const QList<bool> &statuses);
+
+    virtual void sendClockStart() const = 0;
+    virtual void sendClockTick() const = 0;
 
 protected:
     QList<bool> inputDevicesEnabledStatuses; // store the globally enabled midi input devices
@@ -82,15 +85,23 @@ class NullMidiDriver : public MidiDriver
         return "";
     }
 
+    inline virtual QString getOutputDeviceName(uint index) const override
+    {
+        Q_UNUSED(index);
+        return "";
+    }
+
     inline std::vector<MidiMessage> getBuffer() override
     {
         return std::vector<MidiMessage>();
     }
 
-    inline virtual QString getOutputDeviceName(uint index) const override
+    void sendClockStart() const override
     {
-        Q_UNUSED(index);
-        return "";
+    }
+
+    void sendClockTick() const override
+    {
     }
 };
 
