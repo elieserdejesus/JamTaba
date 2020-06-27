@@ -1,0 +1,14 @@
+{
+   "servers": [
+      {
+         "server_name": "example_server.com:2049",
+         "server_max_users": "4"
+      },
+      {
+         "server_name": "another_example_server.com:2050",
+         "server_max_users": "4",
+         "user_name": "my cool name",
+         "user_pass": "1234"
+      }
+   ]
+}

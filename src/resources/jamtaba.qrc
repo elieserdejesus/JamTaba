@@ -1366,6 +1366,7 @@
         <file>instruments/saxophone.png</file>
         <file>instruments/flute.png</file>
         <file>instruments/trombone.png</file>
+        <file>private_servers_example.json</file>
     </qresource>
     <qresource prefix="/tiles">
         <file>map/0/0/0.png</file>

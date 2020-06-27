@@ -34,6 +34,8 @@ public:
     QDir getBaseDir() const;
     QDir getThemesDir() const;
 
+    QString getPrivateServersFilePath() const;
+
     // Presets
     QString getPresetPath(const QString &JsonFile); // used by Settings
     QStringList getPresetFilesNames(bool fullpath); // all the files names in a folder
@@ -48,6 +50,7 @@ private:
     static const QString PRESETS_FOLDER_NAME;
     static const QString CACHE_FOLDER_NAME;
     static const QString LOG_CONFIG_FILE_NAME;
+    static const QString PRIVATE_SERVERS_FILE_NAME;
     static const QString THEMES_FOLDER_NAME;
     static const QString THEMES_FOLDER_IN_RESOURCES;
 
@@ -71,6 +74,7 @@ private:
     void createFoldersTree();
     void initializeDirs(); // this function is implemented in ConfiguratorStandalone.cpp and in ConfiguratorVST.cpp. Only the correct .cpp file is included in .pro files.
     void exportLogIniFile();
+    void exportPrivateServersExampleFile();
     void setupLogConfigFile();
 
     void exportThemes() const;

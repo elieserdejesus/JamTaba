@@ -53,6 +53,7 @@ public:
 
     bool isEmpty() const;
     bool isFull() const;
+    bool isPrivateServer() const { return isPrivate; }
 
     int getPort() const;
 
@@ -71,6 +72,13 @@ public:
 
     QString getUniqueName() const;
 
+    void setPreferredUserCredentials(const QString userName, const QString userPass = QString());
+
+    bool hasPreferredUserCredentials() const;
+
+    QString getPreferredUserName() const { return userCredentials.name; }
+    QString getPreferredUserPass() const { return userCredentials.pass; }
+
 protected:
 
     QString name;
@@ -86,6 +94,15 @@ protected:
 
     int bpi;
     int bpm;
+
+    struct UserCredentials {
+        QString name;
+        QString pass;
+    };
+
+    UserCredentials userCredentials;
+
+    bool isPrivate;
 };
 
 inline bool RoomInfo::isFull() const

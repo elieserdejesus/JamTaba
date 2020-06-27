@@ -1019,10 +1019,14 @@ void MainController::tryConnectInNinjamServer(const login::RoomInfo &ninjamRoom,
         QString serverIp = ninjamRoom.getName();
         int serverPort = ninjamRoom.getPort();
         QString userName = getUserName();
-        QString pass = (password.isNull() || password.isEmpty()) ? "" : password;
+        QString userPass = (password.isNull() || password.isEmpty()) ? "" : password;
 
-        this->ninjamService->startServerConnection(serverIp, serverPort, userName, channels,
-                                                   pass);
+        if (ninjamRoom.hasPreferredUserCredentials()) {
+            userName = ninjamRoom.getPreferredUserName();
+            userPass = ninjamRoom.getPreferredUserPass();
+        }
+
+        this->ninjamService->startServerConnection(serverIp, serverPort, userName, channels, userPass);
     } else {
         qCritical() << "user name not choosed yet!";
     }

@@ -10,6 +10,7 @@
 #include <QCameraInfo>
 #include <QVideoFrame>
 #include <QComboBox>
+#include <QFileInfo>
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -375,6 +376,8 @@ private:
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
     void wireNinjamSignals();
+
+    QList<login::RoomInfo> loadPrivateServersFromJson(const QFileInfo &privateServersFile);
 
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;

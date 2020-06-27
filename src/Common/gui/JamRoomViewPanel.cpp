@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QButtonGroup>
+#include <QPainter>
 
 #include "MainController.h"
 #include "ninjam/client/User.h"
@@ -128,6 +129,27 @@ void JamRoomViewPanel::updateUserLocation(const QString &userIP)
 
 }
 
+void JamRoomViewPanel::paintEvent(QPaintEvent *ev)
+{
+    QFrame::paintEvent(ev);
+
+    if (getRoomInfo().isPrivateServer()) {
+        QPainter painter(this);
+        painter.setPen(QPen(QBrush(Qt::black), 1.0));
+        painter.drawRect(0, 0, width()-1, height()-1);
+    }
+}
+
+QSize JamRoomViewPanel::sizeHint() const
+{
+    auto hint = QFrame::sizeHint();
+
+    if (roomInfo.isPrivateServer())
+        hint.setHeight(60);
+
+    return hint;
+}
+
 void JamRoomViewPanel::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange){
@@ -197,9 +219,12 @@ void JamRoomViewPanel::refresh(const login::RoomInfo &roomInfo)
 
     updateMap();
 
-    setProperty("empty", roomInfo.isEmpty());
+    setProperty("empty", roomInfo.isEmpty() && !roomInfo.isPrivateServer());
 
     updateStyleSheet();
+
+    if (roomInfo.isPrivateServer())
+        ui->labelRoomStatus->setText(tr("Private Server"));
 
 }
 

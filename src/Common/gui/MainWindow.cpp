@@ -1122,6 +1122,9 @@ void MainWindow::centerBusyDialog()
 
 bool MainWindow::jamRoomLessThan(const login::RoomInfo &r1, const login::RoomInfo &r2)
 {
+    if( r1.isPrivateServer())
+        return true;
+
     return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
 }
 
@@ -1187,15 +1190,71 @@ bool MainWindow::canUseTwoColumnLayoutInPublicRooms() const
     return ui.contentTabWidget->width() >= 860;
 }
 
+QList<login::RoomInfo> MainWindow::loadPrivateServersFromJson(const QFileInfo &privateServersFile)
+{
+    QList<login::RoomInfo> privateServers;
+
+    QFile jsonFile(privateServersFile.absoluteFilePath());
+
+    if (jsonFile.exists() && jsonFile.open(QFile::ReadOnly)) {
+        auto root = QJsonDocument::fromJson(jsonFile.readAll()).object();
+        if (root.contains("servers")) {
+            auto serversArray = root["servers"].toArray();
+            for (int i = 0; i < serversArray.size(); ++i) {
+                auto serverJson = serversArray[i].toObject();
+                if (serverJson.contains("server_name") && serverJson.contains("server_max_users")) {
+                    auto serverName = serverJson["server_name"].toString("Error");
+                    auto serverMaxUsers = serverJson["server_max_users"].toInt(8);
+
+                    auto indexOfSeparator = serverName.indexOf(":");
+                    if (indexOfSeparator > 0) {
+                        auto name = serverName.left(indexOfSeparator);
+                        auto port = serverName.right(serverName.length() - (indexOfSeparator + 1)).toInt();
+                        auto userName = serverJson["user_name"].toString(mainController->getUserName());
+                        auto userPass = serverJson["user_pass"].toString(QString());
+                        RoomInfo privateServer(name, port, serverMaxUsers);
+                        privateServer.setPreferredUserCredentials(userName, userPass);
+                        privateServers.append(privateServer);
+                    }
+                }
+            }
+        }
+    }
+    else {
+        if (!jsonFile.exists()) {
+            qDebug() << "The private servers json file not found!";
+        }
+        else {
+            qDebug() << "Error opening private server json file: " << jsonFile.errorString();
+        }
+    }
+
+    return privateServers;
+}
+
 void MainWindow::refreshPublicRoomsList(const QList<login::RoomInfo> &publicRooms)
 {
-    if (publicRooms.isEmpty())
+    auto privateServersFilePath = Configurator::getInstance()->getPrivateServersFilePath();
+
+    QFileInfo privateServersFileInfo(privateServersFilePath);
+
+    if (publicRooms.isEmpty() && !privateServersFileInfo.exists())
         return;
 
     hideBusyDialog();
 
     QList<login::RoomInfo> sortedRooms(publicRooms);
     qSort(sortedRooms.begin(), sortedRooms.end(), jamRoomLessThan);
+
+    // put the private servers (if available) at the first positions
+    int totalPrivateServers = 0;
+    if (privateServersFileInfo.exists()) {
+        auto privateServers = loadPrivateServersFromJson(privateServersFileInfo);
+        for (int i = 0; i < privateServers.size(); ++i) {
+            sortedRooms.insert(0, privateServers[i]);
+        }
+        totalPrivateServers = privateServers.size();
+    }
 
     int index = 0;
     bool twoCollumns = canUseTwoColumnLayoutInPublicRooms();
@@ -1218,6 +1277,7 @@ void MainWindow::refreshPublicRoomsList(const QList<login::RoomInfo> &publicRoom
         }
         auto layout = dynamic_cast<QGridLayout *>(ui.allRoomsContent->layout());
         layout->addWidget(roomViewPanel, rowIndex, collumnIndex);
+
         index++;
     }
 
@@ -2534,8 +2594,10 @@ void MainWindow::updatePublicRoomsListLayout()
 {
     QList<login::RoomInfo> roomInfos;
 
-    for (auto roomView : roomViewPanels)
-        roomInfos.append(roomView->getRoomInfo());
+    for (auto roomView : roomViewPanels) {
+        if (!roomView->getRoomInfo().isPrivateServer())
+            roomInfos.append(roomView->getRoomInfo());
+    }
 
     refreshPublicRoomsList(roomInfos);
 }

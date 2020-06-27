@@ -24,6 +24,7 @@ const QString Configurator::CACHE_FOLDER_NAME = "Cache";
 const QString Configurator::LOG_CONFIG_FILE_NAME = "logging.ini";
 const QString Configurator::THEMES_FOLDER_NAME = "Themes";
 const QString Configurator::THEMES_FOLDER_IN_RESOURCES = ":/css/themes";
+const QString Configurator::PRIVATE_SERVERS_FILE_NAME = "private_servers.json";
 
 // from https://sites.google.com/a/embeddedlab.org/community/technical-articles/qt/qt-posts/howtodocoloredloggingusingqtdebug
 #define COLOR_DEBUG         "\033[35;1m"
@@ -46,6 +47,11 @@ QString Configurator::getDebugColor(const QMessageLogContext &context)
         return COLOR_DEBUG_GUI;
 
     return COLOR_DEBUG;
+}
+
+QString Configurator::getPrivateServersFilePath() const
+{
+    return getBaseDir().filePath(PRIVATE_SERVERS_FILE_NAME);
 }
 
 void Configurator::logHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -204,6 +210,8 @@ bool Configurator::setUp()
     lastLogFileContent = loadPreviousLogContent();
 
     exportLogIniFile(); // copy log config file from resources to user hard disk
+
+    exportPrivateServersExampleFile();
 
     setupLogConfigFile();
 
@@ -391,6 +399,25 @@ void Configurator::exportLogIniFile()
             qDebug(jtConfigurator) << "Log Config file copied in :" << logConfigFilePath;
         else
             qDebug(jtConfigurator) << "FAILED to copy the log config file in :" << logConfigFilePath << "Error:" << logFile.errorString();
+    }
+}
+
+void Configurator::exportPrivateServersExampleFile()
+{
+    QString privateServerFileExample = "private_servers_example.json";
+    QString privateServersExampleFilePath(baseDir.absoluteFilePath(privateServerFileExample));
+
+    QFile file(privateServersExampleFilePath);
+    if (!file.exists()) {
+        qDebug(jtConfigurator) << "Private servers example file file don't exist in' :" << privateServersExampleFilePath;
+
+        // copy the example file from resources to 'filePath'
+        QFile file(":/" + privateServerFileExample);
+        bool result = file.copy(privateServersExampleFilePath);
+        if (result)
+            qDebug(jtConfigurator) << "Private servers example file copied in :" << privateServersExampleFilePath;
+        else
+            qDebug(jtConfigurator) << "FAILED to copy the Private servers example file in :" << privateServersExampleFilePath << "Error:" << file.errorString();
     }
 }
 

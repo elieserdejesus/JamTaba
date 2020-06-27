@@ -40,7 +40,8 @@ RoomInfo::RoomInfo(const QString &roomName, int roomPort,
     users(users),
     bpi(bpi),
     bpm(bpm),
-    streamUrl(streamUrl)
+    streamUrl(streamUrl),
+    isPrivate(false)
 {
     //
 }
@@ -48,7 +49,18 @@ RoomInfo::RoomInfo(const QString &roomName, int roomPort,
 RoomInfo::RoomInfo(const QString &roomName, int roomPort, int maxUsers, int maxChannels) :
     RoomInfo(roomName, roomPort, maxUsers, QList<login::UserInfo>(), maxChannels, 0, 0, "")
 {
-        //
+    isPrivate = true;
+}
+
+void RoomInfo::setPreferredUserCredentials(const QString userName, const QString userPass)
+{
+    userCredentials.name = userName;
+    userCredentials.pass = userPass;
+}
+
+bool RoomInfo::hasPreferredUserCredentials() const
+{
+    return !userCredentials.name.isEmpty();
 }
 
 QString RoomInfo::getUniqueName() const {

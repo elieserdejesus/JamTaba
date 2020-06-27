@@ -53,6 +53,8 @@ signals:
 
 protected:
     void changeEvent(QEvent *) override;
+    void paintEvent(QPaintEvent *) override;
+    QSize sizeHint() const override;
 
 private slots:
     void toggleRoomListening();
