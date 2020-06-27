@@ -580,7 +580,16 @@ void Service::process(const ConfigChangeNotifyMessage &msg)
     auto bpi = msg.getBpi();
     auto bpm = msg.getBpm();
 
-    setInitialBpmBpi(bpm, bpi);
+    if (initialized) {
+        if (bpi != currentServer->getBpi())
+            setBpi(bpi);
+
+        if (bpm != currentServer->getBpm())
+            setBpm(bpm);
+    }
+    else {
+        setInitialBpmBpi(bpm, bpi);
+    }
 }
 
 QTcpSocket * Service::createSocket()
