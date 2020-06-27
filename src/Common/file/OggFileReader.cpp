@@ -28,12 +28,22 @@ bool OggFileReader::read(const QString &filePath, SamplesBuffer &outBuffer, quin
     // decode and append decoded data in 'outBuffer'
     int decodedFrames = 0;
     const int MAX_SAMPLES_PER_DECODE = 1024;
+    bool append = outBuffer.getFrameLenght() == 0;
+    auto remaining = outBuffer.getFrameLenght();
     do
     {
         const auto &decodedBuffer = decoder.decode(MAX_SAMPLES_PER_DECODE);
         decodedFrames = decodedBuffer.getFrameLenght();
         if (!decodedBuffer.isEmpty()) {
-            outBuffer.append(decodedBuffer);
+            if (append) {
+                outBuffer.append(decodedBuffer);
+            }
+            else {
+                auto samplesToCopy = std::min(decodedBuffer.getFrameLenght(), remaining);
+                auto outBufferOffset = outBuffer.getFrameLenght() - remaining;
+                outBuffer.set(decodedBuffer, 0, samplesToCopy, outBufferOffset);
+                remaining -= samplesToCopy;
+            }
         }
     }
     while(decodedFrames > 0);
