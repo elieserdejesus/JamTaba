@@ -122,6 +122,11 @@ void ChatPanel::turnOff()
         toggleOnOff();
 }
 
+bool ChatPanel::isOn() const
+{
+    return on;
+}
+
 void ChatPanel::toggleOnOff()
 {
     on = !on;

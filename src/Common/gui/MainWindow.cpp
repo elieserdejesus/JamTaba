@@ -1708,10 +1708,16 @@ void MainWindow::createMainChat(bool turnedOn)
     });
 
     connect(mainChat.data(), &MainChat::error, [=](const QString &errorMessage){
-        if (mainController) {
+        Q_UNUSED(errorMessage)
+
+        if (mainController && mainChatPanel->isOn()) {
             auto localUserName = mainController->getUserName();
             auto author = JAMTABA_CHAT_BOT_NAME;
-            mainChatPanel->addMessage(localUserName, author, errorMessage, true, false);
+            QString message(tr("Public chat error - service is temporarily unavailable"));
+            mainChatPanel->addMessage(localUserName, author, message, true, false);
+            mainChatPanel->turnOff();
+            mainChatPanel->hideOnOffButton();
+            mainChatPanel->setDisabled(true);
         }
     });
 

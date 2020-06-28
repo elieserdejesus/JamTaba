@@ -62,6 +62,8 @@ public:
     void turnOn();
     void turnOff();
 
+    bool isOn() const;
+
     static void setFontSizeOffset(qint8 sizeOffset);
 
 public slots:
