@@ -2,6 +2,7 @@
 #include "MainController.h"
 #include "MetronomeUtils.h"
 #include "audio/core/AudioDriver.h"
+#include <algorithm>
 
 using audio::MidiSyncTrackNode;
 using audio::SamplesBuffer;
@@ -42,6 +43,10 @@ void MidiSyncTrackNode::setIntervalPosition(long intervalPosition)
     if (samplesPerPulse <= 0)
         return;
 
+    const long latencyOffset = 512;
+
+    intervalPosition += latencyOffset;
+
     // new interval, reset the things
     if (intervalPosition < this->intervalPosition) {
         this->lastPlayedPulse = -1;
@@ -49,7 +54,7 @@ void MidiSyncTrackNode::setIntervalPosition(long intervalPosition)
 
     this->intervalPosition = intervalPosition;
     this->pulsePosition = intervalPosition % samplesPerPulse;
-    this->currentPulse = (intervalPosition / samplesPerPulse);
+    this->currentPulse = intervalPosition / samplesPerPulse;
 }
 
 void MidiSyncTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
@@ -63,8 +68,10 @@ void MidiSyncTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer 
 
     int nextPulseSample = pulsePosition + out.getFrameLenght();
     if (nextPulseSample > samplesPerPulse && currentPulse > lastPlayedPulse) { // next pulse starting in this audio buffer?
-        if (currentPulse == 0)
+        if (currentPulse == 0){
+            mainController->stopMidiClock();
             mainController->startMidiClock();
+        }
         while (currentPulse - lastPlayedPulse >= 1) {
             mainController->sendMidiClockPulse();
             lastPlayedPulse++;
