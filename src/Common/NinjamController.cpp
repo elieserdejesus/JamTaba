@@ -266,7 +266,7 @@ void NinjamController::setBpm(int newBpm)
     currentBpm = newBpm;
     samplesInInterval = computeTotalSamplesInInterval();
     metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
-    midiSyncTrackNode->setSamplesPerPulse(getSamplesPerBeat()/24);
+    midiSyncTrackNode->setSamplesPerPulse(getSamplesPerBeat()/24.0);
 
     emit currentBpmChanged(currentBpm);
 }
@@ -277,7 +277,7 @@ void NinjamController::setBpmBpi(int initialBpm, int initialBpi)
     currentBpm = initialBpm;
     samplesInInterval = computeTotalSamplesInInterval();
     metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
-    midiSyncTrackNode->setSamplesPerPulse(getSamplesPerBeat()/24);
+    midiSyncTrackNode->setSamplesPerPulse(getSamplesPerBeat()/24.0);
 
     emit currentBpmChanged(currentBpm);
     emit currentBpiChanged(currentBpi);
