@@ -38,7 +38,8 @@ public:
     virtual void setInputDevicesStatus(const QList<bool> &statuses);
 
     virtual void sendClockStart() const = 0;
-    virtual void sendClockTick() const = 0;
+    virtual void sendClockStop() const = 0;
+    virtual void sendClockPulse() const = 0;
 
 protected:
     QList<bool> inputDevicesEnabledStatuses; // store the globally enabled midi input devices
@@ -100,7 +101,11 @@ class NullMidiDriver : public MidiDriver
     {
     }
 
-    void sendClockTick() const override
+    void sendClockStop() const override
+    {
+    }
+
+    void sendClockPulse() const override
     {
     }
 };

@@ -289,6 +289,11 @@ public:
 
     void setAllLoopersStatus(bool activated);
 
+    // sync methods
+    virtual void startMidiClock() const = 0;
+    virtual void stopMidiClock() const = 0;
+    virtual void sendMidiClockPulse() const = 0;
+
     // collapse settings
     void setLocalChannelsCollapsed(bool collapsed);
     void setBottomSectionCollapsed(bool collapsed);

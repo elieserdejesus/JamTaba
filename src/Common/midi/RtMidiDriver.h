@@ -27,7 +27,8 @@ public:
     std::vector<midi::MidiMessage> getBuffer() override;
 
     void sendClockStart() const override;
-    void sendClockTick() const override;
+    void sendClockStop() const override;
+    void sendClockPulse() const override;
 
 private:
     QList<RtMidiIn *> midiInStreams;

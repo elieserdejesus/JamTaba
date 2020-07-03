@@ -174,7 +174,16 @@ void RtMidiDriver::sendClockStart() const{
     }
 }
 
-void RtMidiDriver::sendClockTick() const{
+
+void RtMidiDriver::sendClockStop() const{
+    const std::vector<unsigned char> message = {252};
+    for(auto stream : midiOutStreams) {
+        stream->sendMessage(&message);
+    }
+}
+
+
+void RtMidiDriver::sendClockPulse() const{
     const std::vector<unsigned char> message = {248};
     for(auto stream : midiOutStreams) {
         stream->sendMessage(&message);
