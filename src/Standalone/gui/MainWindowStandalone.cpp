@@ -476,7 +476,7 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
                                 audioOutputDevice, midiInputsStatus);
 
     auto midiDriver = controller->getMidiDriver();
-    midiDriver->setInputDevicesStatus(midiInputsStatus);
+    midiDriver->setDevicesStatus(midiInputsStatus);
 
     controller->updateInputTracksRange();
 

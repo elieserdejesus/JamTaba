@@ -45,7 +45,8 @@ CONFIG += c++11
 
 PRECOMPILED_HEADER += PreCompiledHeaders.h
 
-HEADERS += midi/MidiDriver.h
+HEADERS += midi/MidiDriver.h \
+    $$PWD/../src/Common/audio/MidiSyncTrackNode.h
 HEADERS += midi/MidiMessage.h
 HEADERS += looper/Looper.h
 HEADERS += looper/LooperLayer.h
@@ -168,7 +169,8 @@ HEADERS += UploadIntervalData.h
 HEADERS += performance/PerformanceMonitor.h
 HEADERS += upnp/UPnPManager.h
 
-SOURCES += MainController.cpp
+SOURCES += MainController.cpp \
+    $$PWD/../src/Common/audio/MidiSyncTrackNode.cpp
 SOURCES += NinjamController.cpp
 SOURCES += MetronomeUtils.cpp
 SOURCES += midi/MidiDriver.cpp

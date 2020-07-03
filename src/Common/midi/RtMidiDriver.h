@@ -16,7 +16,7 @@ public:
     void stop() override;
     void release() override;
 
-    void setInputDevicesStatus(const QList<bool> &statuses) override;
+    void setDevicesStatus(const QList<bool> &inputStatuses) override;
 
     bool hasInputDevices() const override;
     bool hasOutputDevices() const override;

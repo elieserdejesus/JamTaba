@@ -13,6 +13,7 @@
 #include "file/FileReader.h"
 #include "audio/NinjamTrackNode.h"
 #include "audio/MetronomeTrackNode.h"
+#include "audio/MidiSyncTrackNode.h"
 #include "audio/Resampler.h"
 #include "audio/SamplesBufferRecorder.h"
 #include "audio/vorbis/VorbisEncoder.h"
@@ -235,6 +236,7 @@ NinjamController::NinjamController(controller::MainController *mainController) :
     samplesInInterval(0),
     mainController(mainController),
     metronomeTrackNode(createMetronomeTrackNode(mainController->getSampleRate())),
+    midiSyncTrackNode(new audio::MidiSyncTrackNode(mainController)),
     lastBeat(0),
     currentBpi(0),
     currentBpm(0),
@@ -264,6 +266,7 @@ void NinjamController::setBpm(int newBpm)
     currentBpm = newBpm;
     samplesInInterval = computeTotalSamplesInInterval();
     metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
+    midiSyncTrackNode->setSamplesPerPulse(getSamplesPerBeat()/24);
 
     emit currentBpmChanged(currentBpm);
 }
@@ -274,6 +277,7 @@ void NinjamController::setBpmBpi(int initialBpm, int initialBpi)
     currentBpm = initialBpm;
     samplesInInterval = computeTotalSamplesInInterval();
     metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
+    midiSyncTrackNode->setSamplesPerPulse(getSamplesPerBeat()/24);
 
     emit currentBpmChanged(currentBpm);
     emit currentBpiChanged(currentBpi);
@@ -326,6 +330,7 @@ void NinjamController::process(const audio::SamplesBuffer &in, audio::SamplesBuf
             handleNewInterval();
 
         metronomeTrackNode->setIntervalPosition(this->intervalPosition);
+        midiSyncTrackNode->setIntervalPosition(this->intervalPosition);
         int currentBeat = intervalPosition / getSamplesPerBeat();
         if (currentBeat != lastBeat)
         {
@@ -552,6 +557,8 @@ void NinjamController::start(const ServerInfo &server)
                                      mainController->getSettings().getMetronomeGain());
         mainController->setTrackPan(METRONOME_TRACK_ID,
                                     mainController->getSettings().getMetronomePan());
+
+        mainController->addTrack(MIDI_SYNC_TRACK_ID, this->midiSyncTrackNode);
 
         this->intervalPosition = lastBeat = 0;
 
