@@ -23,11 +23,15 @@ public:
     void setIntervalPosition(long intervalPosition);
     void resetInterval();
 
+    void start();
+    void stop();
+
 private:
     double samplesPerPulse;
     long intervalPosition;
     int currentPulse;
     int lastPlayedPulse;
+    bool running;
 
     MainController *mainController;
 };

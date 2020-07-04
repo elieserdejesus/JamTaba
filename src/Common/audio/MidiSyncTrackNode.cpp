@@ -12,6 +12,7 @@ MidiSyncTrackNode::MidiSyncTrackNode(MainController *controller) :
     intervalPosition(0),
     currentPulse(0),
     lastPlayedPulse(-1),
+    running(false),
     mainController(controller)
 {
     resetInterval();
@@ -19,7 +20,6 @@ MidiSyncTrackNode::MidiSyncTrackNode(MainController *controller) :
 
 MidiSyncTrackNode::~MidiSyncTrackNode()
 {
-    mainController->stopMidiClock();
 }
 
 void MidiSyncTrackNode::setSamplesPerPulse(double samplesPerPulse)
@@ -46,19 +46,26 @@ void MidiSyncTrackNode::setIntervalPosition(long intervalPosition)
     this->currentPulse = ((double)intervalPosition / samplesPerPulse);
 }
 
+void MidiSyncTrackNode::start()
+{
+    running = true;
+}
+
+void MidiSyncTrackNode::stop()
+{
+    running = false;
+    mainController->stopMidiClock();
+}
+
 void MidiSyncTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
                                           int SampleRate, std::vector<midi::MidiMessage> &midiBuffer)
 {
     if (samplesPerPulse <= 0)
         return;
 
-    internalInputBuffer.setFrameLenght(out.getFrameLenght());
-    internalInputBuffer.zero();
-
     if (currentPulse == 0 && currentPulse != lastPlayedPulse) {
-        mainController->stopMidiClock();
-        mainController->startMidiClock();
-        this->lastPlayedPulse = -1;
+        if (running) { mainController->startMidiClock(); }
+        lastPlayedPulse = -1;
     }
     while (currentPulse - lastPlayedPulse >= 1) {
         mainController->sendMidiClockPulse();

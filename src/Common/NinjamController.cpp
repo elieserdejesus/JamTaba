@@ -438,6 +438,10 @@ void NinjamController::stop(bool emitDisconnectedSignal)
     {
         this->running = false;
 
+        // stop midi sync track
+        this->midiSyncTrackNode->stop();
+        mainController->removeTrack(MIDI_SYNC_TRACK_ID);
+
         // store metronome settings
         auto metronomeTrack = mainController->getTrackNode(METRONOME_TRACK_ID);
         if (metronomeTrack)
@@ -559,6 +563,7 @@ void NinjamController::start(const ServerInfo &server)
                                     mainController->getSettings().getMetronomePan());
 
         mainController->addTrack(MIDI_SYNC_TRACK_ID, this->midiSyncTrackNode);
+        midiSyncTrackNode->start();
 
         this->intervalPosition = lastBeat = 0;
 
