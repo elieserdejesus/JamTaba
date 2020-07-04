@@ -141,6 +141,7 @@ private slots:
     void setNewBpi(const QString &);
     void setNewBpm(const QString &);
     void handleAccentBeatsComboChange(int);
+    void handleMidiSyncChange(bool);
     void handleCustomAccentBeatsChange(const QList<int> &);
     void setNewIntervalShape(int);
 

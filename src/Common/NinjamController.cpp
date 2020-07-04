@@ -283,6 +283,15 @@ void NinjamController::setBpmBpi(int initialBpm, int initialBpi)
     emit currentBpiChanged(currentBpi);
 }
 
+void NinjamController::setSyncEnabled(bool enabled)
+{
+    if (enabled) {
+        midiSyncTrackNode->start();
+    } else {
+        midiSyncTrackNode->stop();
+    }
+}
+
 void NinjamController::removeEncoder(int groupChannelIndex)
 {
     QMutexLocker locker(&mutex);
@@ -563,7 +572,6 @@ void NinjamController::start(const ServerInfo &server)
                                     mainController->getSettings().getMetronomePan());
 
         mainController->addTrack(MIDI_SYNC_TRACK_ID, this->midiSyncTrackNode);
-        midiSyncTrackNode->start();
 
         this->intervalPosition = lastBeat = 0;
 

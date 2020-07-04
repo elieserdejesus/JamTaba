@@ -58,6 +58,8 @@ public:
     void setBpm(int newBpm);
     void setBpmBpi(int initialBpm, int initalBpi);
 
+    void setSyncEnabled(bool enabled);
+
     void sendChatMessage(const QString &msg);
 
     static const long METRONOME_TRACK_ID = 123456789;     // just a number :)

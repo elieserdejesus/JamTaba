@@ -71,6 +71,7 @@ signals:
     void accentsBeatsChanged(const QList<int> &);
     void hostSyncStateChanged(bool syncWithHost);
     void intervalShapeChanged(int newShape);
+    void midiSyncChanged(bool syncOn);
 
 protected:
     void changeEvent(QEvent *) override;
