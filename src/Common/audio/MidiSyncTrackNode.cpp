@@ -73,11 +73,10 @@ void MidiSyncTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer 
                 mainController->startMidiClock();
                 hasSentStart = true;
             }
-            // Attempt to reset each interval - need to make optional
-//            else {
-//                mainController->stopMidiClock();
-//                mainController->continueMidiClock();
-//            }
+            else {
+                mainController->stopMidiClock();
+                mainController->continueMidiClock();
+            }
         }
 //        qDebug() << "Pulses played in interval: " << lastPlayedPulse;
         lastPlayedPulse = -1;
