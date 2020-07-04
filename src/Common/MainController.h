@@ -292,6 +292,7 @@ public:
     // sync methods
     virtual void startMidiClock() const = 0;
     virtual void stopMidiClock() const = 0;
+    virtual void continueMidiClock() const = 0;
     virtual void sendMidiClockPulse() const = 0;
 
     // collapse settings

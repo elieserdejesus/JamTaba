@@ -189,7 +189,6 @@ void RtMidiDriver::sendClockStart() const{
     }
 }
 
-
 void RtMidiDriver::sendClockStop() const{
     const std::vector<unsigned char> message = {252};
     for(auto stream : midiOutStreams) {
@@ -198,6 +197,13 @@ void RtMidiDriver::sendClockStop() const{
     }
 }
 
+void RtMidiDriver::sendClockContinue() const{
+    const std::vector<unsigned char> message = {251};
+    for(auto stream : midiOutStreams) {
+        if (stream->isPortOpen())
+            stream->sendMessage(&message);
+    }
+}
 
 void RtMidiDriver::sendClockPulse() const{
     const std::vector<unsigned char> message = {248};

@@ -8,6 +8,7 @@ using audio::MidiSyncTrackNode;
 using audio::SamplesBuffer;
 
 MidiSyncTrackNode::MidiSyncTrackNode(MainController *controller) :
+    pulsesPerInterval(0),
     samplesPerPulse(0),
     intervalPosition(0),
     currentPulse(0),
@@ -23,11 +24,12 @@ MidiSyncTrackNode::~MidiSyncTrackNode()
 {
 }
 
-void MidiSyncTrackNode::setSamplesPerPulse(double samplesPerPulse)
+void MidiSyncTrackNode::setPulseTiming(long pulsesPerInterval, double samplesPerPulse)
 {
-    if (samplesPerPulse <= 0)
-        qCritical() << "samples per pulse <= 0";
+    if (pulsesPerInterval <= 0 || samplesPerPulse <= 0)
+        qCritical() << "invalid sync timing params";
 
+    this->pulsesPerInterval = pulsesPerInterval;
     this->samplesPerPulse = samplesPerPulse;
     resetInterval();
 }
@@ -62,17 +64,26 @@ void MidiSyncTrackNode::stop()
 void MidiSyncTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
                                           int SampleRate, std::vector<midi::MidiMessage> &midiBuffer)
 {
-    if (samplesPerPulse <= 0)
+    if (pulsesPerInterval <= 0 || samplesPerPulse <= 0)
         return;
 
     if (currentPulse == 0 && currentPulse != lastPlayedPulse) {
-        if (running && !hasSentStart) {
-            mainController->startMidiClock();
-            hasSentStart = true;
+        if (running)  {
+            if (!hasSentStart) {
+                mainController->startMidiClock();
+                hasSentStart = true;
+            }
+            // Attempt to reset each interval - need to make optional
+//            else {
+//                mainController->stopMidiClock();
+//                mainController->continueMidiClock();
+//            }
         }
+//        qDebug() << "Pulses played in interval: " << lastPlayedPulse;
         lastPlayedPulse = -1;
     }
-    while (currentPulse - lastPlayedPulse >= 1) {
+
+    while (currentPulse < pulsesPerInterval && currentPulse - lastPlayedPulse >= 1) {
         mainController->sendMidiClockPulse();
         lastPlayedPulse++;
     }

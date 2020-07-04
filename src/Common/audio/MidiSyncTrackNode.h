@@ -19,7 +19,7 @@ public:
 
     ~MidiSyncTrackNode();
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, std::vector<midi::MidiMessage> &midiBuffer) override;
-    void setSamplesPerPulse(double samplesPerPulse);
+    void setPulseTiming(long pulsesPerInterval, double samplesPerPulse);
     void setIntervalPosition(long intervalPosition);
     void resetInterval();
 
@@ -27,6 +27,7 @@ public:
     void stop();
 
 private:
+    long pulsesPerInterval;
     double samplesPerPulse;
     long intervalPosition;
     int currentPulse;

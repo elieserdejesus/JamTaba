@@ -28,6 +28,7 @@ public:
 
     void sendClockStart() const override;
     void sendClockStop() const override;
+    void sendClockContinue() const override;
     void sendClockPulse() const override;
 
 private:

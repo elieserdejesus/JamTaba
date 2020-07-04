@@ -766,15 +766,23 @@ std::vector<midi::MidiMessage> MainControllerStandalone::pullMidiMessagesFromPlu
     return receivedMidiMessages;
 }
 
-void MainControllerStandalone::startMidiClock() const {
+void MainControllerStandalone::startMidiClock() const
+{
     midiDriver->sendClockStart();
 }
 
-void MainControllerStandalone::stopMidiClock() const {
+void MainControllerStandalone::stopMidiClock() const
+{
     midiDriver->sendClockStop();
 }
 
-void MainControllerStandalone::sendMidiClockPulse() const {
+void MainControllerStandalone::continueMidiClock() const
+{
+    midiDriver->sendClockContinue();
+}
+
+void MainControllerStandalone::sendMidiClockPulse() const
+{
     midiDriver->sendClockPulse();
 }
 

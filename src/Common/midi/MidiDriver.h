@@ -40,6 +40,7 @@ public:
 
     virtual void sendClockStart() const = 0;
     virtual void sendClockStop() const = 0;
+    virtual void sendClockContinue() const = 0;
     virtual void sendClockPulse() const = 0;
 
 protected:
@@ -106,6 +107,10 @@ class NullMidiDriver : public MidiDriver
     }
 
     void sendClockStop() const override
+    {
+    }
+
+    void sendClockContinue() const override
     {
     }
 
