@@ -32,6 +32,7 @@ private:
     int currentPulse;
     int lastPlayedPulse;
     bool running;
+    bool hasSentStart;
 
     MainController *mainController;
 };

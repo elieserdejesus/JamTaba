@@ -13,6 +13,7 @@ MidiSyncTrackNode::MidiSyncTrackNode(MainController *controller) :
     currentPulse(0),
     lastPlayedPulse(-1),
     running(false),
+    hasSentStart(false),
     mainController(controller)
 {
     resetInterval();
@@ -54,6 +55,7 @@ void MidiSyncTrackNode::start()
 void MidiSyncTrackNode::stop()
 {
     running = false;
+    hasSentStart = false;
     mainController->stopMidiClock();
 }
 
@@ -64,7 +66,10 @@ void MidiSyncTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer 
         return;
 
     if (currentPulse == 0 && currentPulse != lastPlayedPulse) {
-        if (running) { mainController->startMidiClock(); }
+        if (running && !hasSentStart) {
+            mainController->startMidiClock();
+            hasSentStart = true;
+        }
         lastPlayedPulse = -1;
     }
     while (currentPulse - lastPlayedPulse >= 1) {
