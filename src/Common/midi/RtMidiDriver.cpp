@@ -7,12 +7,12 @@
 using midi::RtMidiDriver;
 using midi::MidiMessage;
 
-RtMidiDriver::RtMidiDriver(const QList<bool> &deviceStatuses){
+RtMidiDriver::RtMidiDriver(const QList<bool> &inputDeviceStatuses, const QList<bool> &outputDeviceStatuses){
 
     qCDebug(jtMidi) << "Initializing rtmidi...";
 
-    QList<bool> inputStatuses(deviceStatuses);
-//    QList<bool> outputStatuses();
+    QList<bool> inputStatuses(inputDeviceStatuses);
+    QList<bool> outputStatuses(outputDeviceStatuses);
 
     int maxInputDevices = getMaxInputDevices();
 
@@ -28,20 +28,19 @@ RtMidiDriver::RtMidiDriver(const QList<bool> &deviceStatuses){
     int maxOutputDevices = getMaxOutputDevices();
     qCDebug(jtMidi) << "MIDI OUTPUT DEVICES FOUND idx:" << maxOutputDevices;
 
-//    if(true /*statuses.size() < maxInputDevices*/){
-//        int itemsToAdd = maxOutputDevices; // - statuses.size();
-//        for (int i = 0; i < itemsToAdd; ++i) {
-//            statuses.append(true);
-//        }
-//    }
-//    setInputDevicesStatus(statuses);
+    if(outputStatuses.size() < maxOutputDevices){
+        int itemsToAdd = maxOutputDevices - outputStatuses.size();
+        for (int i = 0; i < itemsToAdd; ++i) {
+            outputStatuses.append(true);
+        }
+    }
 
-    setDevicesStatus(inputStatuses);
+    setDevicesStatus(inputStatuses, outputStatuses);
 
     qCDebug(jtMidi) << "rtmidi initialized!";
 }
 
-void RtMidiDriver::setDevicesStatus(const QList<bool> &inputStatuses){ //}, const QList<bool> &outputStatuses){
+void RtMidiDriver::setDevicesStatus(const QList<bool> &inputStatuses, const QList<bool> &outputStatuses){
     qCDebug(jtMidi) << "Setting devices status in RtMidiDriver";
 
     release();
@@ -55,28 +54,29 @@ void RtMidiDriver::setDevicesStatus(const QList<bool> &inputStatuses){ //}, cons
             validInputStatuses.append(true); //new connected devices are enabled by default
     }
 
-//    int outputDevicesCount = getMaxOutputDevices();
-//    QList<bool> validOutputStatuses;
-//    for (int i = 0; i < outputDevicesCount; ++i) {
-//        if (i < outputStatuses.count())
-//            validOutputStatuses.append(outputStatuses.at(i));
-//        else
-//            validOutputStatuses.append(true); //new connected devices are enabled by default
-//    }
+    int outputDevicesCount = getMaxOutputDevices();
+    QList<bool> validOutputStatuses;
+    for (int i = 0; i < outputDevicesCount; ++i) {
+        if (i < outputStatuses.count())
+            validOutputStatuses.append(outputStatuses.at(i));
+        else
+            validOutputStatuses.append(true); //new connected devices are enabled by default
+    }
 
-    MidiDriver::setDevicesStatus(inputStatuses);
+    MidiDriver::setDevicesStatus(inputStatuses, outputStatuses);
+
     for (int s = 0; s < validInputStatuses.size(); ++s) {
         midiInStreams.append(new RtMidiIn());
     }
-    for (int s = 0; s < getMaxOutputDevices(); ++s) {
+    for (int s = 0; s < validOutputStatuses.size(); ++s) {
         midiOutStreams.append(new RtMidiOut());
     }
 }
 
-void RtMidiDriver::start(const QList<bool> &deviceStatuses){
+void RtMidiDriver::start(const QList<bool> &inputDeviceStatuses, const QList<bool> &outputDeviceStatuses){
     qCDebug(jtMidi) << "Starting RtMidiDriver";
 
-    setDevicesStatus(deviceStatuses);
+    setDevicesStatus(inputDeviceStatuses, outputDeviceStatuses);
 
     if(!hasInputDevices() && !hasOutputDevices()){
         return;
@@ -104,10 +104,10 @@ void RtMidiDriver::start(const QList<bool> &deviceStatuses){
         }
     }
 
-    for(int deviceIndex=0; deviceIndex < getMaxOutputDevices()/*inputDevicesEnabledStatuses.size()*/; deviceIndex++) {
+    for(int deviceIndex=0; deviceIndex < outputDevicesEnabledStatuses.size(); deviceIndex++) {
         if(deviceIndex < midiOutStreams.size()){
             RtMidiOut* stream = midiOutStreams.at(deviceIndex);
-            if(stream /*&& inputDevicesEnabledStatuses.at(deviceIndex)*/){//device is globally enabled?
+            if(stream && outputDevicesEnabledStatuses.at(deviceIndex)){//device is globally enabled?
                 if(!stream->isPortOpen()){
                     try{
                         qCInfo(jtMidi) << "Starting MIDI Output in " << QString::fromStdString(stream->getPortName(deviceIndex));
@@ -184,7 +184,8 @@ QString RtMidiDriver::getOutputDeviceName(uint index) const{
 void RtMidiDriver::sendClockStart() const{
     const std::vector<unsigned char> message = {250};
     for(auto stream : midiOutStreams) {
-        stream->sendMessage(&message);
+        if (stream->isPortOpen())
+            stream->sendMessage(&message);
     }
 }
 
@@ -192,7 +193,8 @@ void RtMidiDriver::sendClockStart() const{
 void RtMidiDriver::sendClockStop() const{
     const std::vector<unsigned char> message = {252};
     for(auto stream : midiOutStreams) {
-        stream->sendMessage(&message);
+        if (stream->isPortOpen())
+            stream->sendMessage(&message);
     }
 }
 
@@ -200,7 +202,8 @@ void RtMidiDriver::sendClockStop() const{
 void RtMidiDriver::sendClockPulse() const{
     const std::vector<unsigned char> message = {248};
     for(auto stream : midiOutStreams) {
-        stream->sendMessage(&message);
+        if (stream->isPortOpen())
+            stream->sendMessage(&message);
     }
 }
 

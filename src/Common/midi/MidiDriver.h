@@ -18,7 +18,7 @@ public:
     MidiDriver();
     virtual ~MidiDriver();
 
-    virtual void start(const QList<bool> &inputDeviceStatuses) = 0;
+    virtual void start(const QList<bool> &inputDeviceStatuses, const QList<bool> &outputDeviceStatuses) = 0;
     virtual void stop() = 0;
     virtual void release() = 0;
 
@@ -33,9 +33,10 @@ public:
 
     virtual std::vector<MidiMessage> getBuffer() = 0;
 
-    virtual bool deviceIsGloballyEnabled(int deviceIndex) const;
+    virtual bool inputDeviceIsGloballyEnabled(int deviceIndex) const;
+    virtual bool outputDeviceIsGloballyEnabled(int deviceIndex) const;
     int getFirstGloballyEnableInputDevice() const;
-    virtual void setDevicesStatus(const QList<bool> &inputStatuses);
+    virtual void setDevicesStatus(const QList<bool> &inputStatuses, const QList<bool> &outputStatuses);
 
     virtual void sendClockStart() const = 0;
     virtual void sendClockStop() const = 0;
@@ -43,13 +44,16 @@ public:
 
 protected:
     QList<bool> inputDevicesEnabledStatuses; // store the globally enabled midi input devices
+    QList<bool> outputDevicesEnabledStatuses; // store the globally enabled midi output devices
+
 };
 
 class NullMidiDriver : public MidiDriver
 {
-    inline virtual void start(const QList<bool> &inputDeviceStatuses) override
+    inline virtual void start(const QList<bool> &inputDeviceStatuses, const QList<bool> &outputDeviceStatuses) override
     {
         Q_UNUSED(inputDeviceStatuses)
+        Q_UNUSED(outputDeviceStatuses)
     }
 
     inline virtual void stop() override

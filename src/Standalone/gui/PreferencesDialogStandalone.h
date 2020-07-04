@@ -31,7 +31,8 @@ public slots:
     void setCurrentScannedVstPlugin(const QString &pluginPath);
 
 signals:
-    void ioPreferencesChanged(QList<bool> midiInputsStatus, QString selectedInputAudioDevice, QString selectedOutputAudioDevice,
+    void ioPreferencesChanged(QList<bool> midiInputsStatus, QList<bool> syncOutputsStatus,
+                              QString selectedInputAudioDevice, QString selectedOutputAudioDevice,
                               int firstIn, int lastIn, int firstOut, int lastOut);
 
     void sampleRateChanged(int newSampleRate);

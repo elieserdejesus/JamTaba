@@ -383,7 +383,7 @@ void MainControllerStandalone::setMainWindow(MainWindow *mainWindow)
 midi::MidiDriver *MainControllerStandalone::createMidiDriver()
 {
     // return new Midi::PortMidiDriver(settings.getMidiInputDevicesStatus());
-    return new midi::RtMidiDriver(settings.getMidiInputDevicesStatus());
+    return new midi::RtMidiDriver(settings.getMidiInputDevicesStatus(), settings.getSyncOutputDevicesStatus());
     // return new Midi::NullMidiDriver();
 }
 
@@ -484,7 +484,7 @@ void MainControllerStandalone::start()
     }
 
     if (midiDriver)
-        midiDriver->start(settings.getMidiInputDevicesStatus());
+        midiDriver->start(settings.getMidiInputDevicesStatus(), settings.getSyncOutputDevicesStatus());
 
     qCInfo(jtCore) << "Creating plugin finder...";
     vstPluginFinder.reset(new audio::VSTPluginFinder());
@@ -847,7 +847,7 @@ void MainControllerStandalone::updateInputTracksRange()
                 int selectedDevice = inputTrack->getMidiDeviceIndex();
                 bool deviceIsValid = selectedDevice >= 0
                                      && selectedDevice < midiDriver->getMaxInputDevices()
-                                     && midiDriver->deviceIsGloballyEnabled(selectedDevice);
+                                     && midiDriver->inputDeviceIsGloballyEnabled(selectedDevice);
                 if (!deviceIsValid)
                 {
                     // try another available midi input device

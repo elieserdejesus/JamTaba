@@ -338,21 +338,21 @@ SyncSettings::SyncSettings() :
 void SyncSettings::write(QJsonObject &out) const
 {
     qCDebug(jtSettings) << "SyncSettings write";
-    QJsonArray midiArray;
+    QJsonArray syncArray;
 
     for (bool state : syncOutputDevicesStatus)
-        midiArray.append(state);
+        syncArray.append(state);
 
-    out["syncOutputsState"] = midiArray;
+    out["syncOutputsState"] = syncArray;
 }
 
 void SyncSettings::read(const QJsonObject &in)
 {
     syncOutputDevicesStatus.clear();
     if (in.contains("syncOutputsState")) {
-        QJsonArray inputsArray = in["syncOutputsState"].toArray();
-        for (int i = 0; i < inputsArray.size(); ++i)
-            syncOutputDevicesStatus.append(inputsArray.at(i).toBool(true));
+        QJsonArray outputsArray = in["syncOutputsState"].toArray();
+        for (int i = 0; i < outputsArray.size(); ++i)
+            syncOutputDevicesStatus.append(outputsArray.at(i).toBool(true));
     }
 
     qCDebug(jtSettings) << "SyncSettings: syncOutputDevicesStatus " << syncOutputDevicesStatus;
@@ -1271,6 +1271,7 @@ void Settings::load()
     QList<persistence::SettingsObject *> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
+    sections.append(&syncSettings);
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
@@ -1310,6 +1311,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     QList<persistence::SettingsObject *> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
+    sections.append(&syncSettings);
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);

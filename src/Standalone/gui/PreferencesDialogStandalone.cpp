@@ -462,13 +462,19 @@ void PreferencesDialogStandalone::accept()
 
     QList<bool> midiInputsStatus;
     // build midi inputs devices status
-    auto boxes = ui->midiContentPanel->findChildren<QCheckBox *>();
-    for (auto check : boxes)
+    auto midiBoxes = ui->midiContentPanel->findChildren<QCheckBox *>();
+    for (auto check : midiBoxes)
         midiInputsStatus.append(check->isChecked());
+
+    QList<bool> syncOutputsStatus;
+    auto syncBoxes = ui->syncContentPanel->findChildren<QCheckBox *>();
+    for (auto check : syncBoxes)
+        syncOutputsStatus.append(check->isChecked());
 
     PreferencesDialog::accept();
 
-    emit ioPreferencesChanged(midiInputsStatus, selectedAudioInputDevice, selectedAudioOutputDevice,
+    emit ioPreferencesChanged(midiInputsStatus, syncOutputsStatus,
+                              selectedAudioInputDevice, selectedAudioOutputDevice,
                               firstIn, lastIn, firstOut, lastOut);
 }
 
