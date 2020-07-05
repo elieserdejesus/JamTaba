@@ -45,8 +45,7 @@ CONFIG += c++11
 
 PRECOMPILED_HEADER += PreCompiledHeaders.h
 
-HEADERS += midi/MidiDriver.h \
-    $$PWD/../src/Common/audio/MidiSyncTrackNode.h
+HEADERS += midi/MidiDriver.h
 HEADERS += midi/MidiMessage.h
 HEADERS += looper/Looper.h
 HEADERS += looper/LooperLayer.h
@@ -69,6 +68,7 @@ HEADERS += audio/vorbis/VorbisEncoder.h
 HEADERS += audio/RoomStreamerNode.h
 HEADERS += audio/NinjamTrackNode.h
 HEADERS += audio/MetronomeTrackNode.h
+HEADERS += audio/MidiSyncTrackNode.h
 HEADERS += audio/SamplesBufferResampler.h
 HEADERS += audio/SamplesBufferRecorder.h
 HEADERS += audio/Mp3Decoder.h
@@ -169,8 +169,7 @@ HEADERS += UploadIntervalData.h
 HEADERS += performance/PerformanceMonitor.h
 HEADERS += upnp/UPnPManager.h
 
-SOURCES += MainController.cpp \
-    $$PWD/../src/Common/audio/MidiSyncTrackNode.cpp
+SOURCES += MainController.cpp
 SOURCES += NinjamController.cpp
 SOURCES += MetronomeUtils.cpp
 SOURCES += midi/MidiDriver.cpp
@@ -192,6 +191,7 @@ SOURCES += audio/core/Plugins.cpp
 SOURCES += audio/Mp3Decoder.cpp
 SOURCES += audio/NinjamTrackNode.cpp
 SOURCES += audio/MetronomeTrackNode.cpp
+SOURCES += audio/MidiSyncTrackNode.cpp
 SOURCES += audio/core/SamplesBuffer.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
 SOURCES += audio/SamplesBufferResampler.cpp
