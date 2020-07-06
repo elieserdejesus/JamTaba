@@ -7,6 +7,8 @@
 using audio::MidiSyncTrackNode;
 using audio::SamplesBuffer;
 
+using namespace controller;
+
 MidiSyncTrackNode::MidiSyncTrackNode(MainController *controller) :
     pulsesPerInterval(0),
     samplesPerPulse(0),

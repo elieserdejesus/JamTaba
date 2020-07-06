@@ -70,6 +70,11 @@ public:
         return std::vector<midi::MidiMessage>(); // empty buffer
     }
 
+    void startMidiClock() const override {};
+    void stopMidiClock() const override {};
+    void continueMidiClock() const override {};
+    void sendMidiClockPulse() const override {};
+
 protected:
     inline std::vector<midi::MidiMessage> pullMidiMessagesFromDevices() override
     {
