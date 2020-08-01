@@ -23,6 +23,7 @@ public:
     enum PreferencesTab {
         TabAudio,
         TabMidi,
+        TabSync,
         TabVST,
         TabMultiTrackRecording,
         TabMetronome,

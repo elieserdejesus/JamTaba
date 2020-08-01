@@ -115,6 +115,12 @@ namespace controller
 
         std::vector<midi::MidiMessage> pullMidiMessagesFromPlugins() override;
 
+        void startMidiClock() const override;
+        void stopMidiClock() const override;
+        void continueMidiClock() const override;
+        void sendMidiClockPulse() const override;
+
+
     public slots:
         void setSampleRate(int newSampleRate) override;
         void setBufferSize(int newBufferSize);

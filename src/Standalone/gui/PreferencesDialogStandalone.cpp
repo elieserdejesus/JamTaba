@@ -264,6 +264,31 @@ void PreferencesDialogStandalone::populateMidiTab()
     }
 }
 
+void PreferencesDialogStandalone::populateSyncTab() {
+    clearWidgetLayout(ui->syncContentPanel);
+    int maxOutputDevices = midiDriver->getMaxOutputDevices();
+    if (maxOutputDevices > 0) {
+        QList<bool> syncOutputsStatus = settings->getSyncOutputDevicesStatus();
+        for (int i = 0; i < maxOutputDevices; ++i) {
+            QString midiDeviceName = midiDriver->getOutputDeviceName(i);
+            if (!midiDeviceName.isEmpty()) {
+                QCheckBox *checkBox = new QCheckBox(midiDeviceName);
+                ui->syncContentPanel->layout()->addWidget(checkBox);
+                bool deviceIsSelected = i < syncOutputsStatus.size() && syncOutputsStatus.at(i);
+                bool isNewDevice = i >= syncOutputsStatus.size();
+                checkBox->setChecked(syncOutputsStatus.isEmpty() || deviceIsSelected || isNewDevice);
+            }
+        }
+        QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        ui->syncContentPanel->layout()->addItem(spacer);
+    }
+    else { // no devices detected
+        QLabel *label = new QLabel(tr("No midi output device detected!"));
+        ui->syncContentPanel->layout()->addWidget(label);
+        ui->syncContentPanel->layout()->setAlignment(label, Qt::AlignCenter);
+    }
+}
+
 void PreferencesDialogStandalone::populateAudioTab()
 {
     populateAsioDriverCombo();
@@ -437,13 +462,19 @@ void PreferencesDialogStandalone::accept()
 
     QList<bool> midiInputsStatus;
     // build midi inputs devices status
-    auto boxes = ui->midiContentPanel->findChildren<QCheckBox *>();
-    for (auto check : boxes)
+    auto midiBoxes = ui->midiContentPanel->findChildren<QCheckBox *>();
+    for (auto check : midiBoxes)
         midiInputsStatus.append(check->isChecked());
+
+    QList<bool> syncOutputsStatus;
+    auto syncBoxes = ui->syncContentPanel->findChildren<QCheckBox *>();
+    for (auto check : syncBoxes)
+        syncOutputsStatus.append(check->isChecked());
 
     PreferencesDialog::accept();
 
-    emit ioPreferencesChanged(midiInputsStatus, selectedAudioInputDevice, selectedAudioOutputDevice,
+    emit ioPreferencesChanged(midiInputsStatus, syncOutputsStatus,
+                              selectedAudioInputDevice, selectedAudioOutputDevice,
                               firstIn, lastIn, firstOut, lastOut);
 }
 
@@ -475,6 +506,9 @@ void PreferencesDialogStandalone::selectTab(int index)
         break;
     case PreferencesTab::TabMidi:
         populateMidiTab();
+        break;
+    case PreferencesTab::TabSync:
+        populateSyncTab();
         break;
     case PreferencesTab::TabVST:
         populateVstTab();

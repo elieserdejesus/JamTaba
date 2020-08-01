@@ -602,7 +602,7 @@ QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
     int totalMidiDevices = midiDriver->getMaxInputDevices();
     int globallyEnabledMidiDevices = 0;
     for (int d = 0; d < totalMidiDevices; ++d) {
-        if (midiDriver->deviceIsGloballyEnabled(d)) {
+        if (midiDriver->inputDeviceIsGloballyEnabled(d)) {
             globallyEnabledMidiDevices++;
             auto midiChannelsMenu = new QMenu(midiInputsMenu);
             auto actionGroup = new QActionGroup(midiChannelsMenu);
@@ -680,7 +680,7 @@ QPixmap LocalTrackViewStandalone::getInputTypePixmap()
 bool LocalTrackViewStandalone::canUseMidiDeviceIndex(int midiDeviceIndex) const
 {
     auto midiDriver = controller->getMidiDriver();
-    if (midiDeviceIndex < midiDriver->getMaxInputDevices() && midiDriver->deviceIsGloballyEnabled(midiDeviceIndex))
+    if (midiDeviceIndex < midiDriver->getMaxInputDevices() && midiDriver->inputDeviceIsGloballyEnabled(midiDeviceIndex))
         return true;
 
     return false;
@@ -745,7 +745,7 @@ QString LocalTrackViewStandalone::getMidiInputText()
 {
     auto midiDriver = controller->getMidiDriver();
     int selectedDeviceIndex = inputNode->getMidiDeviceIndex();
-    if (selectedDeviceIndex < midiDriver->getMaxInputDevices() && midiDriver->deviceIsGloballyEnabled(selectedDeviceIndex)) {
+    if (selectedDeviceIndex < midiDriver->getMaxInputDevices() && midiDriver->inputDeviceIsGloballyEnabled(selectedDeviceIndex)) {
         return midiDriver->getInputDeviceName(selectedDeviceIndex);
     } // midi device index invalid
 

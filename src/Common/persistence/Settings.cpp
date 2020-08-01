@@ -329,6 +329,38 @@ void MidiSettings::read(const QJsonObject &in)
 
 // ++++++++++++++++++++++++++++++
 
+SyncSettings::SyncSettings() :
+    SettingsObject("sync")
+{
+    qCDebug(jtSettings) << "SyncSettings ctor";
+}
+
+void SyncSettings::write(QJsonObject &out) const
+{
+    qCDebug(jtSettings) << "SyncSettings write";
+    QJsonArray syncArray;
+
+    for (bool state : syncOutputDevicesStatus)
+        syncArray.append(state);
+
+    out["syncOutputsState"] = syncArray;
+}
+
+void SyncSettings::read(const QJsonObject &in)
+{
+    syncOutputDevicesStatus.clear();
+    if (in.contains("syncOutputsState")) {
+        QJsonArray outputsArray = in["syncOutputsState"].toArray();
+        for (int i = 0; i < outputsArray.size(); ++i)
+            syncOutputDevicesStatus.append(outputsArray.at(i).toBool(true));
+    }
+
+    qCDebug(jtSettings) << "SyncSettings: syncOutputDevicesStatus " << syncOutputDevicesStatus;
+}
+
+// ++++++++++++++++++++++++++++++
+
+
 MultiTrackRecordingSettings::MultiTrackRecordingSettings() :
     SettingsObject("recording"),
     saveMultiTracksActivated(false),
@@ -1239,6 +1271,7 @@ void Settings::load()
     QList<persistence::SettingsObject *> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
+    sections.append(&syncSettings);
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
@@ -1278,6 +1311,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     QList<persistence::SettingsObject *> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
+    sections.append(&syncSettings);
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);

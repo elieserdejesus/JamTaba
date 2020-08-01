@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>320</width>
-    <height>141</height>
+    <height>190</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -50,13 +50,10 @@
       <property name="spacing">
        <number>6</number>
       </property>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="comboAccentBeats">
-        <property name="accessibleDescription">
-         <string>Change the accent here</string>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
+      <item row="4" column="0">
+       <widget class="QLabel" name="labelShape">
+        <property name="text">
+         <string>Shape</string>
         </property>
        </widget>
       </item>
@@ -70,33 +67,13 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0" alignment="Qt::AlignRight">
-       <widget class="QLabel" name="labelShape">
-        <property name="text">
-         <string>Shape</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="comboShape">
+      <item row="2" column="1">
+       <widget class="QComboBox" name="comboAccentBeats">
         <property name="accessibleDescription">
-         <string>Change the visual interval shape here</string>
+         <string>Change the accent here</string>
         </property>
         <property name="sizeAdjustPolicy">
          <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" alignment="Qt::AlignRight">
-       <widget class="QLabel" name="labelBPI">
-        <property name="toolTip">
-         <string>Beats per interval</string>
-        </property>
-        <property name="text">
-         <string>BPI</string>
-        </property>
-        <property name="margin">
-         <number>0</number>
         </property>
        </widget>
       </item>
@@ -104,19 +81,6 @@
        <widget class="QLabel" name="labelAccent">
         <property name="text">
          <string>Accent</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="comboBpi">
-        <property name="toolTip">
-         <string>Beats per interval</string>
-        </property>
-        <property name="accessibleDescription">
-         <string>Change the BPI here</string>
-        </property>
-        <property name="editable">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -152,6 +116,73 @@
         </property>
         <property name="accessibleDescription">
          <string>Accent pattern</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" alignment="Qt::AlignRight">
+       <widget class="QLabel" name="labelBPI">
+        <property name="toolTip">
+         <string>Beats per interval</string>
+        </property>
+        <property name="text">
+         <string>BPI</string>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBpi">
+        <property name="toolTip">
+         <string>Beats per interval</string>
+        </property>
+        <property name="accessibleDescription">
+         <string>Change the BPI here</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="comboShape">
+        <property name="accessibleDescription">
+         <string>Change the visual interval shape here</string>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="checkboxSync">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
+        </property>
+        <property name="toolTip">
+         <string>Send MIDI clock sync to devices selected in Preferences</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>10</number>
+        </property>
+        <property name="accessibleDescription">
+         <string>Preferences</string>
+        </property>
+        <property name="text">
+         <string>MIDI Sync</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
         </property>
        </widget>
       </item>

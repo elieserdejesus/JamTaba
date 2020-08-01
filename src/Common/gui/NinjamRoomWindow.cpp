@@ -299,6 +299,7 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
     connect(panel, &NinjamPanel::bpmComboActivated, this, &NinjamRoomWindow::setNewBpm);
     connect(panel, &NinjamPanel::accentsComboChanged, this, &NinjamRoomWindow::handleAccentBeatsComboChange);
     connect(panel, &NinjamPanel::accentsBeatsChanged, this, &NinjamRoomWindow::handleCustomAccentBeatsChange);
+    connect(panel, &NinjamPanel::midiSyncChanged, this, &NinjamRoomWindow::handleMidiSyncChange);
 
     return panel;
 }
@@ -701,6 +702,11 @@ void NinjamRoomWindow::handleAccentBeatsComboChange(int index)
 void NinjamRoomWindow::handleCustomAccentBeatsChange(const QList<int> &accentBeats)
 {
     mainController->getNinjamController()->setMetronomeAccentBeats(accentBeats);
+}
+
+void NinjamRoomWindow::handleMidiSyncChange(const bool syncOn)
+{
+    mainController->getNinjamController()->setSyncEnabled(syncOn);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -437,7 +437,8 @@ void MainWindowStandalone::restartAudioAndMidi()
     Q_ASSERT(midiDriver);
     Q_ASSERT(audioDriver);
 
-    midiDriver->start(controller->getSettings().getMidiInputDevicesStatus());
+    midiDriver->start(controller->getSettings().getMidiInputDevicesStatus(),
+                      controller->getSettings().getSyncOutputDevicesStatus());
     audioDriver->start();
 }
 
@@ -464,8 +465,9 @@ void MainWindowStandalone::initializePluginFinder()
     }
 }
 
-void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus, QString audioInputDevice, QString audioOutputDevice, int firstIn, int lastIn,
-                                                int firstOut, int lastOut)
+void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus, const QList<bool> &syncOutputsStatus,
+                                                QString audioInputDevice, QString audioOutputDevice,
+                                                int firstIn, int lastIn, int firstOut, int lastOut)
 {
     qDebug(jtGUI) << "Setting global preferences ...";
 
@@ -473,17 +475,17 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
 
     audioDriver->setProperties(firstIn, lastIn, firstOut, lastOut);
     controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioInputDevice,
-                                audioOutputDevice, midiInputsStatus);
+                                audioOutputDevice, midiInputsStatus, syncOutputsStatus);
 
     auto midiDriver = controller->getMidiDriver();
-    midiDriver->setInputDevicesStatus(midiInputsStatus);
+    midiDriver->setDevicesStatus(midiInputsStatus, syncOutputsStatus);
 
     controller->updateInputTracksRange();
 
     for (auto channel : getLocalChannels<LocalTrackGroupViewStandalone *>())
         channel->refreshInputSelectionNames();
 
-    midiDriver->start(midiInputsStatus);
+    midiDriver->start(midiInputsStatus, syncOutputsStatus);
     if (!audioDriver->start()) {
         qCritical() << "Error starting audio device";
         QMessageBox::warning(this, tr("Audio error!"),

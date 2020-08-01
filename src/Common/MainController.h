@@ -210,7 +210,7 @@ public:
     void storeWindowSettings(bool maximized, const QPointF &location, const QSize &size);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut,
                          QString audioInputDevice, QString audioOutputDevice,
-                         const QList<bool> &midiInputStatus);
+                         const QList<bool> &midiInputStatus, const QList<bool> &syncOutputsStatus);
 
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut,
                          QString audioInputDevice, QString audioOutputDevice);
@@ -288,6 +288,12 @@ public:
     quint8 getLooperBitDepth() const;
 
     void setAllLoopersStatus(bool activated);
+
+    // sync methods
+    virtual void startMidiClock() const = 0;
+    virtual void stopMidiClock() const = 0;
+    virtual void continueMidiClock() const = 0;
+    virtual void sendMidiClockPulse() const = 0;
 
     // collapse settings
     void setLocalChannelsCollapsed(bool collapsed);
