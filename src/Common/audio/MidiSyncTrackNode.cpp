@@ -70,15 +70,9 @@ void MidiSyncTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer 
         return;
 
     if (currentPulse == 0 && currentPulse != lastPlayedPulse) {
-        if (running)  {
-            if (!hasSentStart) {
-                mainController->startMidiClock();
-                hasSentStart = true;
-            }
-            else {
-                mainController->stopMidiClock();
-                mainController->continueMidiClock();
-            }
+        if (running && !hasSentStart) {
+            mainController->startMidiClock();
+            hasSentStart = true;
         }
 //        qDebug() << "Pulses played in interval: " << lastPlayedPulse;
         lastPlayedPulse = -1;
