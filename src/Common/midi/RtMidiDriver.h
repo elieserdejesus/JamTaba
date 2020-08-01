@@ -36,7 +36,7 @@ private:
     QList<RtMidiOut *> midiOutStreams;
 
     void consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<MidiMessage> &outBuffer);
-
+    void sendMessageToOutputs(const std::vector<unsigned char> message) const;
 };
 }
 #endif // RTMIDIDRIVER_H

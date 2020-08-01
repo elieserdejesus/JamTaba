@@ -182,35 +182,19 @@ QString RtMidiDriver::getOutputDeviceName(uint index) const{
 }
 
 void RtMidiDriver::sendClockStart() const{
-    const std::vector<unsigned char> message = {250};
-    for (auto stream : midiOutStreams) {
-        if (stream->isPortOpen())
-            stream->sendMessage(&message);
-    }
+    sendMessageToOutputs({250});
 }
 
 void RtMidiDriver::sendClockStop() const{
-    const std::vector<unsigned char> message = {252};
-    for (auto stream : midiOutStreams) {
-        if (stream->isPortOpen())
-            stream->sendMessage(&message);
-    }
+    sendMessageToOutputs({252});
 }
 
 void RtMidiDriver::sendClockContinue() const{
-    const std::vector<unsigned char> message = {251};
-    for (auto stream : midiOutStreams) {
-        if (stream->isPortOpen())
-            stream->sendMessage(&message);
-    }
+    sendMessageToOutputs({251});
 }
 
 void RtMidiDriver::sendClockPulse() const{
-    const std::vector<unsigned char> message = {248};
-    for (auto stream : midiOutStreams) {
-        if (stream->isPortOpen())
-            stream->sendMessage(&message);
-    }
+    sendMessageToOutputs({248});
 }
 
 void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, std::vector<midi::MidiMessage> &outBuffer)
@@ -229,6 +213,13 @@ void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, 
         }
     }
     while (!messageBytes.empty());
+}
+
+void RtMidiDriver::sendMessageToOutputs(const std::vector<unsigned char> message) const {
+    for (auto stream : midiOutStreams) {
+        if (stream->isPortOpen())
+            stream->sendMessage(&message);
+    }
 }
 
 std::vector<MidiMessage> RtMidiDriver::getBuffer()
