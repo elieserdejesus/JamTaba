@@ -289,11 +289,17 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
     TextEditorModifier *bpiComboModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
     TextEditorModifier *bpmComboModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
     TextEditorModifier *accentBeatsModifier = mainWindow ? mainWindow->createTextEditorModifier() : nullptr;
-    NinjamPanel *panel = new NinjamPanel(bpiComboModifier, bpmComboModifier, accentBeatsModifier, this);
+
+    auto panel = new NinjamPanel(bpiComboModifier, bpmComboModifier, accentBeatsModifier, this);
 
     panel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
     panel->setAccentBeatsReadOnly(true);
     panel->setAccentBeatsVisible(false);
+
+    auto runningAsPlugin = mainController->getJamtabaFlavor().contains("plugin", Qt::CaseInsensitive);
+    if (runningAsPlugin) {
+        panel->hideMidiSyncCheckBox();
+    }
 
     connect(panel, &NinjamPanel::bpiComboActivated, this, &NinjamRoomWindow::setNewBpi);
     connect(panel, &NinjamPanel::bpmComboActivated, this, &NinjamRoomWindow::setNewBpm);

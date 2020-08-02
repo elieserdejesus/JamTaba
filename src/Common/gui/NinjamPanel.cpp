@@ -33,6 +33,11 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
     qCDebug(jtNinjamGUI) << "NinjamPanel::NinjamPanel done";
 }
 
+void NinjamPanel::hideMidiSyncCheckBox()
+{
+    ui->checkboxSync->hide();
+}
+
 void NinjamPanel::setMetronomeFloatingWindow(IntervalProgressWindow *floatingWindow)
 {
     metronomeFloatingWindow = floatingWindow;
