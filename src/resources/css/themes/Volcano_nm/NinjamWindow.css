@@ -173,6 +173,7 @@ MetronomePanel #muteButton
     stop: 1.0 #FFB301);
 }
 
+#panelCombos QCheckBox,
 #panelCombos QLabel             /* The labels in left side of comboboxes (bpi, bpm, accents and shape) */
 {
     color: rgb(40, 40, 40);
