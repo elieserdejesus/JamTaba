@@ -233,6 +233,7 @@ IntervalProgressWindow
     stop: 1.0   rgba(13, 13, 13));
 }
 
+#panelCombos QCheckBox,
 #panelCombos QLabel             /* The labels in left side of comboboxes (bpi, bpm, accents and shape) */
 {
     color: rgb(140, 140, 140);
