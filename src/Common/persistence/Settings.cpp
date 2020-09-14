@@ -1126,7 +1126,7 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         if(root.contains("intervalsBeforeInactivityWarning")) {
             intervalsBeforeInactivityWarning = root["intervalsBeforeInactivityWarning"].toInt();
             if (intervalsBeforeInactivityWarning < 1)
-                intervalsBeforeInactivityWarning = 1;
+                intervalsBeforeInactivityWarning = 0;
         }
 
         if (root.contains("recentEmojis")) {
