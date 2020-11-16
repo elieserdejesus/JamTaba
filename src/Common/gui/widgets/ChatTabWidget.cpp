@@ -155,7 +155,7 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, Text
     Q_ASSERT(!ninjamServerChat);
 
     // add ninjam main chat
-    auto index = tabBar->addTab(serverName);
+    auto index = tabBar->addTab("Ninjam Chat");
 
     auto botNames = mainController->getBotNames();
     auto emojiManager = mainController->getEmojiManager();
@@ -173,6 +173,7 @@ ChatPanel *ChatTabWidget::createNinjamServerChat(const QString &serverName, Text
     ninjamServerChat->setPreferredTranslationLanguage(mainController->getTranslationLanguage());
 
     tabBar->setCurrentIndex(index); // auto change the chat focus no ninjam chat when enter in a server
+    tabBar->setToolTip(serverName);
 
     return ninjamServerChat;
 }
