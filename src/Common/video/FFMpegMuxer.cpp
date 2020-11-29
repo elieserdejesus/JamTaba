@@ -88,7 +88,7 @@ FFMpegMuxer::FFMpegMuxer(QObject *parent) :
       swsContext(nullptr),
       videoResolution(QSize(320, 240)),
       videoFrameRate(25),
-      videoBitRate(static_cast<uint>(FFMpegMuxer::VideoQualityLow)),
+      videoBitRate(static_cast<uint>(FFMpegMuxer::VideoQualityMedium)),
       initialized(false),
       startNewIntervalRequested(false)
 {
