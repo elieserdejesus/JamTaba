@@ -1538,7 +1538,7 @@
             startingLineNumber = "53"
             endingLineNumber = "53"
             landmarkName = "NinjamControllerPlugin::startSynchronizedWithHost(qint32 startPosition)"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

@@ -365,6 +365,8 @@
 		2A67BDAB1E41112600A8FFF1 /* MainWindowPlugin.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3D81E0AB913005A940A /* MainWindowPlugin.h */; };
 		2A73C8141E44F84900DF124A /* TopLevelTextEditorModifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A73C8131E44F84900DF124A /* TopLevelTextEditorModifier.h */; };
 		2A73C8161E44F85C00DF124A /* TopLevelTextEditorModifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A73C8151E44F85C00DF124A /* TopLevelTextEditorModifier.cpp */; };
+		2A7A159B2590098D002D0B8B /* MidiSyncTrackNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7A15992590098D002D0B8B /* MidiSyncTrackNode.cpp */; };
+		2A7A159C2590098D002D0B8B /* MidiSyncTrackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A7A159A2590098D002D0B8B /* MidiSyncTrackNode.h */; };
 		2AAAA79F2032459F0005C3F5 /* UPnPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAA79D2032459F0005C3F5 /* UPnPManager.cpp */; };
 		2AAAA7A02032459F0005C3F5 /* UPnPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AAAA79E2032459F0005C3F5 /* UPnPManager.h */; };
 		2AAAA7A1203245AE0005C3F5 /* UPnPManager.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAA79E2032459F0005C3F5 /* UPnPManager.h */; };
@@ -805,6 +807,8 @@
 		2A67BDA51E410FE400A8FFF1 /* ScreensaverBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreensaverBlocker.h; sourceTree = "<group>"; };
 		2A73C8131E44F84900DF124A /* TopLevelTextEditorModifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TopLevelTextEditorModifier.h; path = ../../src/Plugins/TopLevelTextEditorModifier.h; sourceTree = "<group>"; };
 		2A73C8151E44F85C00DF124A /* TopLevelTextEditorModifier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TopLevelTextEditorModifier.cpp; path = ../../src/Plugins/TopLevelTextEditorModifier.cpp; sourceTree = "<group>"; };
+		2A7A15992590098D002D0B8B /* MidiSyncTrackNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MidiSyncTrackNode.cpp; sourceTree = "<group>"; };
+		2A7A159A2590098D002D0B8B /* MidiSyncTrackNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MidiSyncTrackNode.h; sourceTree = "<group>"; };
 		2AAAA79D2032459F0005C3F5 /* UPnPManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UPnPManager.cpp; sourceTree = "<group>"; };
 		2AAAA79E2032459F0005C3F5 /* UPnPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPnPManager.h; sourceTree = "<group>"; };
 		2AAAA7A42032462B0005C3F5 /* ClientMessages.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientMessages.cpp; sourceTree = "<group>"; };
@@ -1194,6 +1198,8 @@
 		2A0DBB141E0AF46800BEF1FF /* audio */ = {
 			isa = PBXGroup;
 			children = (
+				2A7A15992590098D002D0B8B /* MidiSyncTrackNode.cpp */,
+				2A7A159A2590098D002D0B8B /* MidiSyncTrackNode.h */,
 				2AF5A9631E761DBC00D1150A /* Mp3Decoder.cpp */,
 				2AF5A9611E761DAD00D1150A /* Mp3Decoder.h */,
 				2AF5A95F1E761D9900D1150A /* Encoder.h */,
@@ -1862,6 +1868,7 @@
 				2A14FF712007A6DA00ADAEB0 /* IconFactory.h in Headers */,
 				2AF5A9601E761D9900D1150A /* Encoder.h in Headers */,
 				2A0DBDC71E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */,
+				2A7A159C2590098D002D0B8B /* MidiSyncTrackNode.h in Headers */,
 				2A4E3F9F1F99877300677E9C /* MetronomePanel.h in Headers */,
 				2A0DBD951E0AF46B00BEF1FF /* NinjamRoomWindow.h in Headers */,
 				2A0DBE6B1E0AF46E00BEF1FF /* UploadIntervalData.h in Headers */,
@@ -2192,6 +2199,7 @@
 				2A120A641E0BEF5C00E0E596 /* MainWindow.h in Sources */,
 				2A120A5E1E0BEF4800E0E596 /* Highligther.h in Sources */,
 				2A120A681E0BEF6400E0E596 /* NinjamTrackView.h in Sources */,
+				2A7A159B2590098D002D0B8B /* MidiSyncTrackNode.cpp in Sources */,
 				2A120A671E0BEF6300E0E596 /* NinjamTrackGroupView.h in Sources */,
 				2A120A721E0BF05800E0E596 /* NinjamRoomWindowPlugin.h in Sources */,
 				2A120A731E0BF05A00E0E596 /* PreferencesDialogPlugin.h in Sources */,
