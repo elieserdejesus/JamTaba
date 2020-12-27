@@ -217,8 +217,13 @@ void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, 
 
 void RtMidiDriver::sendMessageToOutputs(const std::vector<unsigned char> message) const {
     for (auto stream : midiOutStreams) {
-        if (stream->isPortOpen())
+        if (!stream->isPortOpen()) return;
+        try {
             stream->sendMessage(&message);
+        } catch (RtMidiError &e) {
+            qCritical() << "Error sending midi message to output " << QString::fromStdString(e.getMessage());
+            stream->closePort();
+        }
     }
 }
 
