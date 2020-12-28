@@ -81,7 +81,7 @@ cp $qtLibDir/libQt5XcbQpa.so.* packageFiles/
 cp $qtLibDir/libicui18n.so.* packageFiles/
 cp $qtLibDir/libicuuc.so.* packageFiles/
 cp $qtLibDir/libicudata.so.* packageFiles/
-cp $qtLibDir/qt5/plugins/platforms/libqxcb.so packageFiles/platforms
+cp $qtDir/plugins/platforms/libqxcb.so packageFiles/platforms
 
 
 chmod +x packageFiles/installer_script.sh 
