@@ -188,7 +188,7 @@ RoomInfo LoginService::buildRoomInfoFromJson(const QJsonObject &jsonObject)
     auto name =  getServerName(serverNameText);
     int port = getServerPort(serverNameText);
     int maxUsers = jsonObject.contains("user_max") ? jsonObject["user_max"].toString().toInt() : getServerGuessedMaxUsers(name, port);
-    if (name.contains("ninbot") || name.contains("ninjamer")) maxUsers--; // ugly hack to get bots subtracted from maxusers in jamroomview
+    if (name.contains(QRegExp("ninbot|ninjamer|discordonlinejammingcentral|mutant"))) maxUsers--; // ugly hack to get bots subtracted from maxusers in jamroomview
     auto streamLink = jsonObject.contains("stream") ? jsonObject["stream"].toString() : QString("");
     int bpi = jsonObject.contains("bpi") ? jsonObject["bpi"].toString().toInt() : 16;
     int bpm = jsonObject.contains("bpm") ? jsonObject["bpm"].toString().toInt() : 120;
