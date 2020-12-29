@@ -382,6 +382,7 @@ private:
     int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
     static const quint8 DEFAULT_REFRESH_RATE;
     static const quint8 MAX_REFRESH_RATE;
+    static const quint8 MIN_REFRESH_RATE;
 
     QPointF computeLocation() const;
 

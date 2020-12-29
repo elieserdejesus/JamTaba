@@ -55,6 +55,7 @@ const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
 const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
 const quint8 MainWindow::MAX_REFRESH_RATE = 60; // in Hertz
+const quint8 MainWindow::MIN_REFRESH_RATE = 10; // in Hertz
 
 const quint32 MainWindow::DEFAULT_NETWORK_USAGE_UPDATE_PERIOD = 4000; // 4 seconds
 
@@ -642,8 +643,8 @@ void MainWindow::initializeLanguageMenu()
 void MainWindow::initializeGuiRefreshTimer()
 {
     quint8 refreshRate = mainController->getSettings().getMeterRefreshRate();
-    if (refreshRate <= 0)
-        refreshRate = DEFAULT_REFRESH_RATE;
+    if (refreshRate < MIN_REFRESH_RATE)
+        refreshRate = MIN_REFRESH_RATE;
     else if (refreshRate > MAX_REFRESH_RATE)
         refreshRate = MAX_REFRESH_RATE;
 
