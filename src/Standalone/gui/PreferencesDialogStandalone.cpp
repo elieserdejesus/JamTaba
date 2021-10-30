@@ -471,11 +471,11 @@ void PreferencesDialogStandalone::accept()
     for (auto check : syncBoxes)
         syncOutputsStatus.append(check->isChecked());
 
-    PreferencesDialog::accept();
-
     emit ioPreferencesChanged(midiInputsStatus, syncOutputsStatus,
                               selectedAudioInputDevice, selectedAudioOutputDevice,
                               firstIn, lastIn, firstOut, lastOut);
+
+    PreferencesDialog::accept();
 }
 
 void PreferencesDialogStandalone::populateVstTab()
