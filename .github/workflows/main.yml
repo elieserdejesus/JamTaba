@@ -1,0 +1,191 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: '5.9'
+          host: 'mac'
+          target: 'desktop'
+          extra: '--external 7z'
+              
+      - name: Fetch JamTaba static library dependencies
+        run: |
+          curl -L "https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=1" -o JamTaba-static-libs.zip
+          unzip JamTaba-static-libs.zip -d ${GITHUB_WORKSPACE}
+
+      - name: Fetch VST SDK
+        run: |
+          curl -L "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -o VST_SDK.zip
+          unzip VST_SDK.zip -d ${GITHUB_WORKSPACE}
+          
+      - name: Create xcrun symlink for old Qmake
+        run: |
+          sudo ln -s /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild /Applications/Xcode.app/Contents/Developer/usr/bin/xcrun
+          
+      - name: Build Standalone MacOS
+        run: |
+          pushd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
+          qmake Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
+          lrelease Standalone.pro
+          make -s -j 4
+          macdeployqt Jamtaba2.app
+          popd          
+          
+      # - name: Build AU plugin
+      #   run: |
+      #     pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
+      #     #xcodebuild -project JamTaba.xcodeproj -scheme JamTaba -target CocoaUI clean build
+      #     xcodebuild -project JamTaba.xcodeproj -target JamTaba clean build
+      #     popd
+          
+      - name: Create MacOS installer
+        run: |
+          pushd ${GITHUB_WORKSPACE}/installers/mac
+          npm install -g appdmg
+          mv ${GITHUB_WORKSPACE}/PROJECTS/Standalone/JamTaba2.app .
+          # mv ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin/Release/JamTaba.component .
+          touch JamTaba.component
+          appdmg node-appdmg.json ~/JamTaba_2_Installer.dmg
+          popd
+             
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: macOS Standalone 64-bit
+          path: ~/JamTaba_2_Installer.dmg
+          
+  build-win:
+    runs-on: windows-2016
+
+    steps:
+      - uses: actions/checkout@v2
+
+     # - name: Cache Visual Studio 2013
+     #   id: cache-vs2013
+     #   uses: actions/cache@v2
+     #   with: 
+     #     path: C:\Program Files (x86)\Microsoft Visual Studio 12.0
+     #     key: ${{ runner.os }}-vs2013
+
+      - name: Install Visual Studio 2013
+     #   if: steps.cache-vs2013.outputs.cache-hit != 'true'
+        run: |
+          choco install visualstudio2013professional
+                
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: '5.9'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2013_64'
+          extra: '--external 7z'
+    
+      - name: Fetch JamTaba static library dependencies
+        run: |
+          Invoke-WebRequest -Uri "https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=1" -OutFile JamTaba-static-libs.zip
+          Expand-Archive -Force -Path JamTaba-static-libs.zip -DestinationPath $env:GITHUB_WORKSPACE
+
+      - name: Fetch VST SDK
+        run: |
+          Invoke-WebRequest -Uri "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -OutFile VST_SDK.zip
+          Expand-Archive -Force -Path VST_SDK.zip -DestinationPath $env:GITHUB_WORKSPACE
+
+      - name: Build Standalone Windows
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
+          pushd %GITHUB_WORKSPACE%\PROJECTS\Standalone
+          qmake.exe Standalone.pro -r -spec win32-msvc CONFIG+=release
+          nmake.exe
+          mkdir artifact
+          windeployqt --dir artifact release\JamTaba2.exe
+          copy release\JamTaba2.exe artifact
+          popd
+          
+      # - name: Build VST Plugin
+      #   shell: cmd
+      #   run: |
+      #     call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
+      #     pushd %GITHUB_WORKSPACE%\PROJECTS\VstPlugin
+      #     LIB=%LIB%;"%Qt5_Dir%\lib"
+      #     QMAKE_MSC_VER=1800
+      #     qmake.exe VstPlugin.pro -r -spec win32-msvc CONFIG+=release
+      #     nmake.exe 
+      #     copy release\JamtabaVST2.dll %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
+      #     popd
+          
+      - name: Build VST Scanner
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
+          pushd %GITHUB_WORKSPACE%\PROJECTS\VstScanner
+          qmake.exe VstScanner.pro -r -spec win32-msvc CONFIG+=release
+          nmake.exe
+          copy %GITHUB_WORKSPACE%\PROJECTS\Standalone\release\VstScanner.exe %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
+          popd
+          
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Windows Standalone 64-bit
+          path: PROJECTS/Standalone/artifact
+
+          
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: '5.9'
+          host: 'linux'
+          target: 'desktop'
+          extra: '--external 7z'
+              
+      - name: Fetch JamTaba static library dependencies
+        run: |
+          curl -L "https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=1" -o JamTaba-static-libs.zip
+          unzip JamTaba-static-libs.zip -d ${GITHUB_WORKSPACE}
+
+      - name: Fetch VST SDK
+        run: |
+          curl -L "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -o VST_SDK.zip
+          unzip VST_SDK.zip -d ${GITHUB_WORKSPACE}
+          
+      - name: Install Linux package dependencies
+        run: |
+          sudo apt-get install libasound2-dev
+          
+      - name: Build Linux Projects and Create Installer
+        run: |
+          pushd ${GITHUB_WORKSPACE}/installers/linux
+          curl -L "https://github.com/megastep/makeself/releases/download/release-2.4.2/makeself-2.4.2.run" -O
+          chmod a+x makeself-2.4.2.run
+          ./makeself-2.4.2.run
+          export PATH=${PATH}:${PWD}/makeself-2.4.2
+          mkdir ~/Desktop
+          source ./build_installer.sh "${Qt5_DIR}" "${Qt5_DIR}/lib"
+          popd
+             
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Linux Installer
+          path: ~/Desktop/*.run
