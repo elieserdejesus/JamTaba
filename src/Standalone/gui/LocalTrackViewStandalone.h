@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QSpacerItem>
+#include <QPainterPath>
 
 class LocalTrackViewStandalone : public LocalTrackView
 {

@@ -1,4 +1,5 @@
 #include "IntervalProgressDisplay.h"
+#include <QPainterPath>
 #include <QPainter>
 
 void IntervalProgressDisplay::PiePaintStrategy::paint(QPainter &p, const PaintContext &context, const PaintColors &colors)

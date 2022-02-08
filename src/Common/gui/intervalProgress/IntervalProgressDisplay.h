@@ -3,6 +3,7 @@
 
 #include <QFrame>
 #include <QScopedPointer>
+#include <QPainterPath>
 
 class QResizeEvent;
 class QPaintEvent;
