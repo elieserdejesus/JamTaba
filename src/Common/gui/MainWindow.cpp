@@ -389,7 +389,7 @@ void MainWindow::initializeCameraWidget()
 
         if (!cameraView) {
             QIcon webcamIcon = IconFactory::createWebcamIcon(tintColor);
-            cameraView = new VideoWidget(this, webcamIcon, false);
+            cameraView = new VideoWidget(this, webcamIcon, true);
             cameraView->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
             cameraView->setMaximumHeight(136);
 
